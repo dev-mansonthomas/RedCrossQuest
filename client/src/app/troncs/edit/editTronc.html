@@ -1,0 +1,74 @@
+
+<div class="container">
+
+  <div>
+    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+  </div>
+
+<div class="container">
+
+  <div class="jumbotron">
+    <h1>Tronc</h1>
+    <p>Taking care of your people, one at a time.</p>
+  </div>
+
+
+  <div class="col-xs-12" data-ng-controller="TroncEditController as tronc">
+    <div class="well">
+      <div class="row">
+        <div class="col-xs-12 col-md-4 col-md-offset-4">
+          <form novalidate ng-submit='tronc.save();' name="troncForm">
+
+
+            <div class="form-group" ng-class="{'has-error':troncForm.firstName.$invalid}">
+              <label for="firstName" class="control-label">First name</label>
+              <input name="firstName" id="firstName" class="form-control" ng-model="tronc.current.firstName" required />
+              <span class="help-block" ng-show="troncForm.firstName.$error.required">Required</span>
+            </div>
+            <div class="form-group" ng-class="{'has-error':troncForm.lastName.$invalid}">
+              <label for="lastName" class="control-label">Last name</label>
+              <input name="lastName" id="lastName" class="form-control" ng-model="tronc.current.lastName" required/>
+              <span class="help-block" ng-show="troncForm.lastName.$error.required">Required</span>
+            </div>
+            <div class="form-group">
+              <label for="secteur" class="control-label">Secteur</label>
+              <select name="secteur" id="secteur" class="form-control" ng-model="tronc.current.secteur" required>
+                <option value="1">Action Sociale</option>
+                <option value="2">Secours</option>
+                <option value="3">Hybride</option>
+                <option value="4">Extérieur</option>
+                <option value="5">Lycéen</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="parentAuthorization" class="control-label">Authorisation Parentale</label>
+              <input type="file" name="parentAuthorization" id="parentAuthorization"/>
+              <span class="help-block">Scanner l'autorisation parentale et ajouter le fichier ici</span>
+            </div>
+
+            <div class="form-group">
+              <label for="temporaryVolunteerForm" class="control-label">Formulaire du Quêteur occasionel</label>
+              <input type="file" name="temporaryVolunteerForm" id="temporaryVolunteerForm"/>
+              <span class="help-block">Scanner le formulaire de bénévole occasionnel et ajouter le fichier ici</span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':troncForm.mobile.$invalid}">
+              <label for="mobile" class="control-label">Téléphone</label>
+              <input name="mobile" id="mobile" class="form-control" ng-model="tronc.current.mobile" required ng-pattern="/^0[6-7][0-9]{8,8}$/" />
+              <span class="help-block">Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain</span>
+              <span class="help-block" ng-show="troncForm.mobile.$error.pattern">Le format doit être 0601020304 ou 0601020304</span>
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="troncForm.$invalid" />
+              <a ng-href="#/list" class="btn btn-link">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+</div>
