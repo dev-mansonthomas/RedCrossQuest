@@ -1,0 +1,36 @@
+
+<div class="container">
+
+  <div>
+    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+  </div>
+
+<div class="container">
+
+  <div class="jumbotron">
+    <h1>Les Quêteurs</h1>
+    <p>Taking care of your people, one at a time.</p>
+  </div>
+
+
+  <div class="col-xs-12" data-ng-controller="TestQRCodeController">
+
+    <div class="well">
+      <div class="row">
+        <div class="col-xs-12 col-md-2 col-md-offset-5" id="camera">
+          <qr-scanner ng-success="TestQRCode.onSuccess(data)" ng-error="TestQRCode.onError(error)" width="400" height="300"/>
+        </div>
+      </div>
+      <div class="row">
+        <span class="col-xs-12 col-md-6 col-md-offset-2">{{TestQRCode.decodedData}}</span>
+      </div>
+      <div class="row">
+        <span class="col-xs-12 col-md-6 col-md-offset-2">{{TestQRCode.errorMessage}}</span>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+</div>

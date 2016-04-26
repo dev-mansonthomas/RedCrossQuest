@@ -1,0 +1,65 @@
+
+<div class="container">
+
+  <div>
+    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+  </div>
+
+<div class="container">
+
+  <div class="jumbotron">
+    <h1>Départ Tronc</h1>
+    <p>Taking care of your people, one at a time.</p>
+  </div>
+
+
+  <div class="col-xs-12" data-ng-controller="DepartTroncController">
+    <div class="well">
+      <div class="row">
+        <div class="col-xs-12 col-md-4 col-md-offset-4">
+          <form novalidate ng-submit='departTronc.save();' name="departTroncForm">
+
+
+            <div class="form-group" ng-class="{'has-error':departTroncForm.queteurId.$invalid}">
+              <label for="queteurId" class="control-label">Recherche du Quêteur</label>
+              <input name="queteurId" id="queteurId" class="form-control" ng-model="departTronc.current.queteurId" required />
+              <span class="help-block" ng-show="departTroncForm.queteurId.$error.required">Required</span>
+            </div>
+            <div class="form-group" ng-class="{'has-error':departTroncForm.horaireDepartTheorique.$invalid}">
+              <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
+              <input name="horaireDepartTheorique" id="horaireDepartTheorique" class="form-control" ng-model="departTronc.current.horaireDepartTheorique" required/>
+              <span class="help-block" ng-show="departTroncForm.horaireDepartTheorique.$error.required">Required</span>
+            </div>
+            <div class="form-group">
+              <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
+              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="departTronc.current.lieuDeQuete" required>
+                <option value="1">Pont D'Arcole</option>
+                <option value="2">BHV</option>
+                <option value="3">Voie Sur Berge 1</option>
+                <option value="4">Voie Sur Berge 2</option>
+                <option value="5">Voie Sur Berge 3</option>
+                <option value="6">Voie Sur Berge 4</option>
+                <option value="7">Notre Dame</option>
+                <option value="8">Pont de Sully</option>
+              </select>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':departTroncForm.troncId.$invalid}">
+              <label for="troncId" class="control-label">Id Tronc</label>
+              <input name="troncId" id="troncId" class="form-control" ng-model="departTronc.current.troncId" required/>
+              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="departTroncForm.$invalid" />
+              <a ng-href="#/list" class="btn btn-link">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+</div>

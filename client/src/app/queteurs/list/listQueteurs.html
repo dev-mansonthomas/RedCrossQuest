@@ -1,0 +1,58 @@
+<div class="container">
+
+  <div>
+    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+  </div>
+
+
+  <div class="container">
+
+    <div class="jumbotron">
+      <h1>Les Quêteurs</h1>
+      <p>Taking care of your people, one at a time.</p>
+    </div>
+
+    <div class="row" data-ng-controller="QueteursController as q">
+
+      <div class="col-xs-12 col-md-12">
+        <div class="well">
+          <form class="form-search">
+            <div class="form-group">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                <input class="form-control" placeholder="Search" data-ng-model="q.search">
+              </div>
+              <div data-ng-show="q.search">
+                            <span data-ng-pluralize
+                                  data-count="filteredContacts.length"
+                                  data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
+                            </span>
+              </div>
+              {{q.search}}
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-md-12">
+        <div class="row">
+
+          <div class="contact-card col-xs-12 col-sm-4" data-ng-repeat="queteur in q.list | filter:q.search | orderBy:'lastName'">
+            <div class="contact-card-inner">
+              <h4>
+                <a ng-href="#/queteurs/edit/{{queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                &nbsp;{{::queteur.lastName | uppercase}} {{::queteur.firstName}}
+              </h4>
+              <div class="contact-address">{{::queteur.address}}</div>
+              <div class="contact-phone">{{::queteur.phone}}</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>

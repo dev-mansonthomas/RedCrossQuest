@@ -1,0 +1,147 @@
+
+<div class="container">
+
+  <div>
+    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+  </div>
+
+<div class="container">
+
+  <div class="jumbotron">
+    <h1>Départ Tronc</h1>
+    <p>Taking care of your people, one at a time.</p>
+  </div>
+
+
+  <div class="col-xs-12" data-ng-controller="RetourTroncController">
+    <div class="well">
+
+
+        <form novalidate ng-submit='retourTronc.save();' name="retourTroncForm">
+
+          <div class="row">
+
+            <div class="form-group  col-md-4" ng-class="{'has-error':retourTroncForm.troncId.$invalid}">
+              <label for="troncId" class="control-label">Id Tronc</label>
+              <input name="troncId" id="troncId" class="form-control" ng-model="retourTronc.current.troncId" required/>
+              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+            </div>
+
+            <div class="form-group col-md-4" ng-show="retourTronc.current.troncId">
+              <span class="help-block">Tronc N° {{retourTronc.current.troncId}} - {{retourTronc.current.firstName}} {{retourTronc.current.lastName}} - {{retourTronc.current.nivol}} - parti à {{retourTronc.current.horaireDepartTronc}}</span>
+            </div>
+
+            <div class="form-group col-md-4" ng-class="{'has-error':retourTroncForm.horaireRetourTheorique.$invalid}">
+              <label for="horaireRetourTheorique" class="control-label">Horaire réelle de Retour</label>
+              <input name="horaireRetourTheorique" id="horaireRetourTheorique" class="form-control" ng-model="retourTronc.current.horaireRetourTheorique" required/>
+              <span class="help-block" ng-show="retourTroncForm.horaireRetourTheorique.$error.required">Required</span>
+            </div>
+
+
+          </div>
+          <div class="row">
+
+            <div class="form-group  col-md-2 col-md-offset-4" ng-class="{'has-error':retourTroncForm.euro2.$invalid}">
+              <label for="euro2" class="control-label">2€</label>
+              <input name="euro2" id="euro2" class="form-control" ng-model="retourTronc.current.euro2" required/>
+              <span class="help-block">{{retourTronc.current.euro2}}</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro1.$invalid}">
+              <label for="euro1" class="control-label">1€</label>
+              <input name="euro1" id="euro1" class="form-control" ng-model="retourTronc.current.euro1" required/>
+            </div>
+
+          </div>
+
+
+          <div class="row">
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents50.$invalid}">
+              <label for="cents50" class="control-label">50 cents</label>
+              <input name="cents50" id="cents50" class="form-control" ng-model="retourTronc.current.cents50" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents20.$invalid}">
+              <label for="cents20" class="control-label">20 cents</label>
+              <input name="cents20" id="cents20" class="form-control" ng-model="retourTronc.current.cents20" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents10.$invalid}">
+              <label for="cents10" class="control-label">10 cents</label>
+              <input name="cents10" id="cents10" class="form-control" ng-model="retourTronc.current.cents10" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents05.$invalid}">
+              <label for="cents05" class="control-label">5 cents</label>
+              <input name="cents05" id="cents05" class="form-control" ng-model="retourTronc.current.cents05" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents02.$invalid}">
+              <label for="cents02" class="control-label">2 cents</label>
+              <input name="cents02" id="cents02" class="form-control" ng-model="retourTronc.current.cents02" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents01.$invalid}">
+              <label for="cents01" class="control-label">1 cent</label>
+              <input name="cents01" id="cents01" class="form-control" ng-model="retourTronc.current.cents01" required/>
+            </div>
+
+          </div>
+
+
+          <div class="row">
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro5.$invalid}">
+              <label for="euro5" class="control-label">5€</label>
+              <input name="euro5" id="euro5" class="form-control" ng-model="retourTronc.current.euro5" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro10.$invalid}">
+              <label for="euro10" class="control-label">10€</label>
+              <input name="euro10" id="euro10" class="form-control" ng-model="retourTronc.current.euro10" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro20.$invalid}">
+              <label for="euro20" class="control-label">20€</label>
+              <input name="euro20" id="euro20" class="form-control" ng-model="retourTronc.current.euro20" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro50.$invalid}">
+              <label for="euro50" class="control-label">50€</label>
+              <input name="euro50" id="euro50" class="form-control" ng-model="retourTronc.current.euro50" required/>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro100.$invalid}">
+              <label for="euro100" class="control-label">100€</label>
+              <input name="euro100" id="euro100" class="form-control" ng-model="retourTronc.current.euro100" required/>
+            </div>
+
+            <div class="form-group  col-md-1" ng-class="{'has-error':retourTroncForm.euro200.$invalid}">
+              <label for="euro200" class="control-label">200€</label>
+              <input name="euro200" id="euro200" class="form-control" ng-model="retourTronc.current.euro200" required/>
+            </div>
+
+            <div class="form-group  col-md-1" ng-class="{'has-error':retourTroncForm.euro500.$invalid}">
+              <label for="euro500" class="control-label">500€</label>
+              <input name="euro500" id="euro500" class="form-control" ng-model="retourTronc.current.euro500" required/>
+            </div>
+
+
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid" />
+              <a ng-href="#/list" class="btn btn-link">Cancel</a>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+</div>
