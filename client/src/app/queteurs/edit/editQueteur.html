@@ -7,27 +7,43 @@
 
 <div class="container">
 
-  <div class="jumbotron">
-    <h1>Les Quêteurs</h1>
-    <p>Taking care of your people, one at a time.</p>
-  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">Un Quêteur</div>
+
+   </div>
 
 
   <div class="col-xs-12" data-ng-controller="QueteurEditController as queteur">
     <div class="well">
       <div class="row">
         <div class="col-xs-12 col-md-4 col-md-offset-4">
-          <form novalidate ng-submit='queteur.save();' name="queteurForm">
-            <div class="form-group" ng-class="{'has-error':queteurForm.firstName.$invalid}">
-              <label for="firstName" class="control-label">First name</label>
-              <input name="firstName" id="firstName" class="form-control" ng-model="queteur.current.firstName" required />
-              <span class="help-block" ng-show="queteurForm.firstName.$error.required">Required</span>
+          <form novalidate ng-submit='queteur.save(queteur.current);' name="queteurForm">
+            <div class="form-group" ng-class="{'has-error':queteurForm.first_name.$invalid}">
+              <label for="first_name" class="control-label">First name</label>
+              <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required />
+              <span class="help-block" ng-show="queteurForm.first_name.$error.required">Required</span>
             </div>
-            <div class="form-group" ng-class="{'has-error':queteurForm.lastName.$invalid}">
-              <label for="lastName" class="control-label">Last name</label>
-              <input name="lastName" id="lastName" class="form-control" ng-model="queteur.current.lastName" required/>
-              <span class="help-block" ng-show="queteurForm.lastName.$error.required">Required</span>
+            <div class="form-group" ng-class="{'has-error':queteurForm.last_name.$invalid}">
+              <label for="last_name" class="control-label">Last name</label>
+              <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required/>
+              <span class="help-block" ng-show="queteurForm.last_name.$error.required">Required</span>
             </div>
+
+            <div class="form-group" ng-class="{'has-error':queteurForm.minor.$invalid}">
+              <label for="minorRadio1" class="control-label">Mineur</label>
+
+
+              <label class="radio-inline">
+                <input type="radio" name="minor" id="minorRadio1" ng-model="queteur.current.minor" value="1" required> Oui
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="minor" id="minorRadio2" ng-model="queteur.current.minor" value="0" required> Non
+              </label>
+
+
+              <span class="help-block" ng-show="queteurForm.minor.$error.required">Required</span>
+            </div>
+
             <div class="form-group">
               <label for="secteur" class="control-label">Secteur</label>
               <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required>
@@ -42,19 +58,19 @@
             <div class="form-group" ng-class="{'has-error':queteurForm.nivol.$invalid}" ng-show="queteur.current.secteur >= 1 && queteur.current.secteur <= 4">
               <label for="nivol" class="control-label">NIVOL</label>
               <input name="nivol" id="nivol" class="form-control" ng-model="queteur.current.nivol" ng-required="queteur.current.secteur >= 1 && queteur.current.secteur <= 3"/>
-              <span class="help-block" ng-show="queteurForm.lastName.$error.required">Required</span>
+              <span class="help-block" ng-show="queteurForm.last_name.$error.required">Required</span>
               <span class="help-block">Si Extérieur et bénévole Croix Rouge, saisir son NIVOL, sinon laisser vide</span>
             </div>
 
             <div class="form-group" ng-show="queteur.current.secteur > 3 ">
-              <label for="parentAuthorization" class="control-label">Authorisation Parentale</label>
-              <input type="file" name="parentAuthorization" id="parentAuthorization"/>
+              <label for="parent_authorization" class="control-label">Authorisation Parentale</label>
+              <input type="file" name="parent_authorization" id="parent_authorization"/>
               <span class="help-block">Scanner l'autorisation parentale et ajouter le fichier ici</span>
             </div>
 
             <div class="form-group" ng-show="queteur.current.secteur > 3 ">
-              <label for="temporaryVolunteerForm" class="control-label">Formulaire du Quêteur occasionel</label>
-              <input type="file" name="temporaryVolunteerForm" id="temporaryVolunteerForm"/>
+              <label for="temporary_volunteer_form" class="control-label">Formulaire du Quêteur occasionel</label>
+              <input type="file" name="temporary_volunteer_form" id="temporary_volunteer_form"/>
               <span class="help-block">Scanner le formulaire de bénévole occasionnel et ajouter le fichier ici</span>
             </div>
 
@@ -67,8 +83,19 @@
 
             <div class="form-group">
               <label for="notes" class="control-label">Notes</label>
-              <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="contact.current.notes"></textarea>
+              <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="queteur.current.notes"></textarea>
               <span class="help-block">Info importantes sur le quêteurs, ex: Allergie, Diabétique, Asmathique, Contraintes horaires etc...</span>
+            </div>
+
+
+            <div class="form-group">
+              <label for="created" class="control-label">Créé le</label>
+              <input name="created" id="created" class="form-control" ng-model="queteur.current.created" readonly/>
+            </div>
+
+            <div class="form-group">
+              <label for="updated" class="control-label">Mise à jour le</label>
+              <input name="updated" id="updated" class="form-control" ng-model="queteur.current.updated" readonly/>
             </div>
 
             <div class="form-group">

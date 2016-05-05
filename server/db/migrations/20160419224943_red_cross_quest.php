@@ -32,7 +32,7 @@ class RedCrossQuest extends AbstractMigration
                   ->addColumn('phone'       , 'string' , array('limit' => 13))
                   ->addColumn('latitude'    , 'decimal', array('precision' => 10, 'scale' => 6))
                   ->addColumn('longitude'   , 'decimal', array('precision' => 10, 'scale' => 6))
-                  ->addColumn('address'     , 'string' , array('limit' => 70))
+                  ->addColumn('address'     , 'string' , array('limit' => 200))
                   ->addColumn('postal_code' , 'string' , array('limit' => 15))
                   ->addColumn('city'        , 'string' , array('limit' => 70))
                   ->addColumn('external_id' , 'integer')
@@ -46,8 +46,9 @@ class RedCrossQuest extends AbstractMigration
 
         $queteur_table = $this->table('queteur');
         $queteur_table
-          ->addColumn('first_name'   , 'string', array('limit' => 50))
-          ->addColumn('last_name'    , 'string', array('limit' => 50))
+          ->addColumn('first_name'   , 'string', array('limit' => 100))
+          ->addColumn('last_name'    , 'string', array('limit' => 100))
+          ->addColumn('minor'        , 'boolean')
           ->addColumn('email'        , 'string', array('limit' => 100))     //non unique : parents may leave there email for child
           ->addColumn('password'     , 'string', array('limit' => 50, 'null' => true))
           ->addColumn('password_salt', 'string', array('limit' => 50, 'null' => true))
@@ -71,6 +72,8 @@ class RedCrossQuest extends AbstractMigration
       $tronc_table
         ->addColumn('ul_id', 'integer')
         ->addColumn('created'      , 'datetime')
+        ->addColumn('enabled'      , 'boolean', array('default', 1))
+        ->addColumn('notes', 'string', array('limit' => 255, 'null' => true))
         ->addForeignKey('ul_id', 'ul', 'id')
         ->create();
 
@@ -136,6 +139,42 @@ class RedCrossQuest extends AbstractMigration
 
         ->create();
 
+      $daily_stats_before_rcq = $this->table('daily_stats_before_rcq');
+      $daily_stats_before_rcq
+        ->addColumn('ul_id'           , 'integer', array('null' => false))
+        ->addColumn('date'            , 'date'   , array('null' => false))
+        ->addColumn('amount'          , 'decimal', array('null' => false, 'precision' => 10, 'scale' => 2))
 
+        ->addForeignKey('ul_id', 'ul', 'id')
+        ->create();
+
+      $yearly_goal = $this->table('yearly_goal');
+      $yearly_goal
+        ->addColumn('ul_id'           , 'integer', array('null' => false))
+        ->addColumn('year'            , 'integer', array('null' => false))
+        ->addColumn('amount'          , 'decimal', array('null' => false, 'precision' => 10, 'scale' => 2))
+
+        ->addForeignKey('ul_id', 'ul', 'id')
+        ->create();
+
+
+      $check_donation = $this->table('named_donation');
+      $check_donation
+        ->addColumn('ul_id'           , 'integer', array('null'  => false))
+        ->addColumn('ref_recu_fiscal' , 'string' , array('null'  => false,'limit' => 100))
+        ->addColumn('first_name'      , 'string' , array('null'  => false,'limit' => 100))
+        ->addColumn('last_name'       , 'string' , array('null'  => false,'limit' => 100))
+        ->addColumn('date'            , 'date'   , array('null'  => false))
+        ->addColumn('amount'          , 'decimal', array('null'  => false, 'precision' => 10, 'scale' => 2))
+        ->addColumn('address'         , 'string' , array('null'  => false,'limit' => 200))
+        ->addColumn('postal_code'     , 'string' , array('null'  => false,'limit' => 15))
+        ->addColumn('city'            , 'string' , array('null'  => false,'limit' => 70))
+        ->addColumn('phone'           , 'string' , array('null'  => false,'limit' => 20))
+
+        ->addColumn('donation_type'   , 'string' , array('null'  => false,'limit' => 70))
+        ->addColumn('donation_nature' , 'string' , array('null'  => false,'limit' => 70))
+
+        ->addForeignKey('ul_id', 'ul', 'id')
+        ->create();
     }
 }

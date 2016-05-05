@@ -6,12 +6,23 @@
 
 
 $app->get('/queteurs', function ($request, $response, $args) {
-    $this->logger->addInfo("Queteur list");
-    $mapper = new RedCrossQuest\QueteurMapper($this->db);
-    $queteurs = $mapper->getQueteurs();
+  $this->logger->addInfo("Queteur list");
+  $mapper = new RedCrossQuest\QueteurMapper($this->db, $this->logger);
 
-    $response->getBody()->write(json_encode($queteurs));
-    return $response;
+  $params = $request->getQueryParams();
+  if(array_key_exists('q',$params))
+  {
+    $queteurs = $mapper->getQueteurs($params['q']);
+  }
+  else
+  {
+    $queteurs = $mapper->getQueteurs(null);
+  }
+
+
+  $response->getBody()->write(json_encode($queteurs));
+
+  return $response;
 });
 
 
@@ -22,9 +33,7 @@ $app->get('/queteurs/{id}', function ($request, $response, $args) {
 
     try
     {
-      $this->logger->addError("before encode");
       $response->getBody()->write(json_encode($queteur));
-      $this->logger->addError(json_last_error());
     }
     catch(Exception $e)
     {
@@ -34,6 +43,27 @@ $app->get('/queteurs/{id}', function ($request, $response, $args) {
 
     return $response;
 });
+
+
+$app->put('/queteurs/{id}', function ($request, $response, $args)
+{
+  $mapper = new RedCrossQuest\QueteurMapper($this->db);
+  $input = $request->getParsedBody();
+  $queteur = new \RedCrossQuest\QueteurEntity($input);
+  try
+  {
+    $mapper->update($queteur);
+  }
+  catch(Exception $e)
+  {
+    $this->logger->addError($e);
+  }
+  return $response;
+});
+
+
+
+
 
 /*
 $app->get('/[{name}]', function ($request, $response, $args) {
