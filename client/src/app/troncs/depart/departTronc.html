@@ -7,28 +7,61 @@
 
 <div class="container">
 
-  <div class="jumbotron">
-    <h1>Départ Tronc</h1>
-    <p>Taking care of your people, one at a time.</p>
+  <div class="panel panel-primary">
+    <div class="panel-heading">Départ Tronc</div>
+
   </div>
 
 
-  <div class="col-xs-12" data-ng-controller="DepartTroncController">
+  <div class="" data-ng-controller="DepartTroncController as dt">
     <div class="well">
-      <div class="row">
-        <div class="col-xs-12 col-md-4 col-md-offset-4">
-          <form novalidate ng-submit='departTronc.save();' name="departTroncForm">
+      <form novalidate ng-submit='departTronc.save();' name="departTroncForm">
+        <div class="row">
+          <div class="col-md-4">
 
+            <qr-scanner ng-success="departTronc.onSuccess(data)" ng-error="departTronc.onError(error)" width="300" height="300"/>
 
+            <span class=" col-md-6 col-md-offset-2">{{departTronc.decodedData}}</span>
+            <br/>
+            <span class="col-md-6 col-md-offset-2">{{departTronc.errorMessage}}</span>
+            <span class="col-md-6 col-md-offset-2">{{departTronc.errorMessageVideo}}</span>
+          </div>
+
+          <div class=" col-md-4">
             <div class="form-group" ng-class="{'has-error':departTroncForm.queteurId.$invalid}">
+
+
               <label for="queteurId" class="control-label">Recherche du Quêteur</label>
-              <input name="queteurId" id="queteurId" class="form-control" ng-model="departTronc.current.queteurId" required />
-              <span class="help-block" ng-show="departTroncForm.queteurId.$error.required">Required</span>
+              <input
+                     id="queteurId"
+                     type="text"
+                     ng-model="departTronc.current.queteur"
+                     placeholder="Scanner le QRCode de la carte du quêteur"
+                     uib-typeahead="queteur as queteur.full_name for queteur in dt.searchQueteur($viewValue)"
+                     typeahead-loading="loadingLocations"
+                     typeahead-no-results="noResults"
+                     typeahead-wait-ms="20"
+                     class="form-control">
+              <i   ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+              <div ng-show="noResults">
+                <i class="glyphicon glyphicon-remove"></i> No Results Found
+              </div>
+
+
+              <!-- queteur as queteur.first_name for queteur in searchQueteur($viewValue) -->
+
             </div>
             <div class="form-group" ng-class="{'has-error':departTroncForm.horaireDepartTheorique.$invalid}">
               <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
               <input name="horaireDepartTheorique" id="horaireDepartTheorique" class="form-control" ng-model="departTronc.current.horaireDepartTheorique" required/>
               <span class="help-block" ng-show="departTroncForm.horaireDepartTheorique.$error.required">Required</span>
+            </div>
+          </div>
+          <div class=" col-md-4">
+            <div class="form-group" ng-class="{'has-error':departTroncForm.troncId.$invalid}">
+              <label for="troncId" class="control-label">Id Tronc</label>
+              <input name="troncId" id="troncId" class="form-control" ng-model="departTronc.current.troncId" required/>
+              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
             </div>
             <div class="form-group">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
@@ -43,20 +76,19 @@
                 <option value="8">Pont de Sully</option>
               </select>
             </div>
-
-            <div class="form-group" ng-class="{'has-error':departTroncForm.troncId.$invalid}">
-              <label for="troncId" class="control-label">Id Tronc</label>
-              <input name="troncId" id="troncId" class="form-control" ng-model="departTronc.current.troncId" required/>
-              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
-
-            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pull-right">
             <div class="form-group">
               <input type="submit" class="btn btn-primary" value="Save" ng-disabled="departTroncForm.$invalid" />
               <a ng-href="#/list" class="btn btn-link">Cancel</a>
             </div>
-          </form>
+          </div>
         </div>
-      </div>
+
+
+      </form>
     </div>
   </div>
 

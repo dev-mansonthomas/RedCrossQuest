@@ -10,17 +10,72 @@
     .controller('DepartTroncController', DepartTroncController);
 
   /** @ngInject */
-  function DepartTroncController($log) {
+  function DepartTroncController($scope, $log, QueteurResource) {
     var vm = this;
 
-    vm.current = { id: 0, lastName: 'Wayne', firstName: 'Bruce', secteur: '2', mobile: '0631107592', parentAuthorization:'',  temporaryVolunteerForm:''};
+    $scope.$watch('departTronc.current.queteur', function(newValue, oldValue) {
 
-    vm.save = save;
+      try
+      {
+        $scope.departTronc.current.queteurId = newValue.id;
+      }
+      catch(exception)
+      {
 
-    function save()
+      }
+
+
+    });
+
+    vm.save = function ()
     {
       $log.debug("Saved called");
       $log.debug(vm.current);
+    }
+
+
+    vm.searchQueteur=function(queryString)
+    {
+      $log.info("search for '"+queryString+"'");
+
+
+      return QueteurResource.query({"q":queryString}).$promise.then(function(response){
+
+        return response.map(function(queteur)
+        {
+          queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
+          return queteur;
+        });
+      });
+    }
+
+
+
+
+
+    vm.onSuccess = function(data)
+    {
+      if(/*match a tronc*/ 1==1)
+      {
+        //play sound
+         vm.current.troncId=data;
+      }
+      else if(/*match a queteurId*/ 1==2)
+      {
+        //play sound
+        vm.current.queteurId=data;
+      }
+      vm.decodedData = data;
+      $log.info(data);
+    }
+    vm.onError = function(error)
+    {
+      vm.errorMessage=error;
+    }
+    vm.onVideoError = function(error)
+    {
+      vm.errorMessageVideo = error;
+      $log.error(error);
     }
 
   }

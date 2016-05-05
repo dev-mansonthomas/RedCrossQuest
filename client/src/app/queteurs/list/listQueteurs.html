@@ -41,10 +41,11 @@
             <div class="contact-card-inner">
               <h4>
                 <a ng-href="#/queteurs/edit/{{queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
-                &nbsp;{{::queteur.lastName | uppercase}} {{::queteur.firstName}}
+                &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
               </h4>
-              <div class="contact-address">{{::queteur.address}}</div>
-              <div class="contact-phone">{{::queteur.phone}}</div>
+              <div class="contact-address">{{::queteur.email}}</div>
+              <div class="contact-phone">{{::queteur.mobile}}</div>
+              <div class="contact-phone">{{::queteur.nivol}}</div>
             </div>
           </div>
 

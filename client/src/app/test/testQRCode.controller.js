@@ -25,7 +25,7 @@
       vm.errorMessage=error;
     };
     vm.onVideoError = function(error) {
-      vm.errorMessage = error;
+      vm.errorMessageVideo = error;
       $log.error(error);
     };
 
