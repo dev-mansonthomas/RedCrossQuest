@@ -1,342 +1,166 @@
-[2016-05-04 22:25:39] slim-app.ERROR: exception 'PDOException' with message 'SQLSTATE[HY000]: General error: 1366 Incorrect integer value: 'false' for column 'minor' at row 1' in /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/src/QueteurMapper.php:91 Stack trace: #0 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/src/QueteurMapper.php(91): PDOStatement->execute(Array) #1 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/src/routes.php(48): RedCrossQuest\QueteurMapper->update(Object(RedCrossQuest\QueteurEntity)) #2 [internal function]: Closure->{closure}(Object(Slim\Http\Request), Object(Slim\Http\Response), Array) #3 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/vendor/slim/slim/Slim/Handlers/Strategies/RequestResponse.php(41): call_user_func(Object(Closure), Object(Slim\Http\Request), Object(Slim\Http\Response), Array) #4 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/vendor/slim/slim/Slim/Route.php(325): Slim\Handlers\Strategies\RequestResponse->__invoke(Object(Closure), Object(Slim\Http\Request), Object(Slim\Http\Response), Array) #5 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/vendor/slim/slim/Slim/MiddlewareAwareTrait.php(116): Slim\Route->__invoke(Object(Slim\Http\Request), Object(Slim\Http\Response)) #6 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/vendor/slim/slim/Slim/Route.php(297): Slim\Route->callMiddlewareStack(Object(Slim\Http\Request), Object(Slim\Http\Response)) #7 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/vendor/slim/slim/Slim/App.php(441): Slim\Route->run(Object(Slim\Http\Request), Object(Slim\Http\Response)) #8 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/vendor/slim/slim/Slim/MiddlewareAwareTrait.php(116): Slim\App->__invoke(Object(Slim\Http\Request), Object(Slim\Http\Response)) #9 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/vendor/slim/slim/Slim/App.php(337): Slim\App->callMiddlewareStack(Object(Slim\Http\Request), Object(Slim\Http\Response)) #10 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/vendor/slim/slim/Slim/App.php(298): Slim\App->process(Object(Slim\Http\Request), Object(Slim\Http\Response)) #11 /Users/tmanson/Dropbox/crf2/RedCrossQuest/server/public/rest/index.php(29): Slim\App->run() #12 {main} [] {"uid":"b2af38d"}
-[2016-05-04 22:25:39] slim-app.INFO: Queteur list [] {"uid":"6b41eac"}
-[2016-05-04 22:25:39] slim-app.INFO: Queteur list [] {"uid":"49c5e02"}
-[2016-05-04 22:26:54] slim-app.INFO: Queteur list [] {"uid":"306b865"}
-[2016-05-04 22:26:54] slim-app.INFO: Queteur list [] {"uid":"bb6f13a"}
-[2016-05-04 22:30:15] slim-app.INFO: Queteur list [] {"uid":"edacf69"}
-[2016-05-04 22:30:15] slim-app.INFO: Queteur list [] {"uid":"e0b7a80"}
-[2016-05-04 22:55:23] slim-app.INFO: Queteur list [] {"uid":"142bf5c"}
-[2016-05-04 22:55:23] slim-app.INFO: Queteur list [] {"uid":"8d050c4"}
-[2016-05-04 23:32:49] slim-app.INFO: Queteur list [] {"uid":"39178d4"}
-[2016-05-04 23:32:49] slim-app.INFO: Queteur list [] {"uid":"2ca2fe0"}
-[2016-05-04 23:33:30] slim-app.INFO: Queteur list [] {"uid":"2e15ff5"}
-[2016-05-04 23:33:30] slim-app.INFO: Queteur list [] {"uid":"d97ba98"}
-[2016-05-04 23:34:01] slim-app.INFO: Queteur list [] {"uid":"e527bca"}
-[2016-05-04 23:34:01] slim-app.INFO: Queteur list [] {"uid":"a7663ae"}
-[2016-05-04 23:43:36] slim-app.INFO: Queteur list [] {"uid":"9e70f51"}
-[2016-05-04 23:43:36] slim-app.INFO: Queteur list [] {"uid":"4940084"}
-[2016-05-05 00:19:16] slim-app.INFO: Queteur list [] {"uid":"d0b2a59"}
-[2016-05-05 00:19:41] slim-app.INFO: Queteur list [] {"uid":"b1cac0b"}
-[2016-05-05 00:19:44] slim-app.INFO: Queteur list [] {"uid":"f57ecde"}
-[2016-05-05 00:19:45] slim-app.INFO: Queteur list [] {"uid":"88d8886"}
-[2016-05-05 00:19:45] slim-app.INFO: Queteur list [] {"uid":"0dad030"}
-[2016-05-05 00:19:45] slim-app.INFO: Queteur list [] {"uid":"9da31d1"}
-[2016-05-05 00:19:45] slim-app.INFO: Queteur list [] {"uid":"f93940a"}
-[2016-05-05 00:20:51] slim-app.INFO: Queteur list [] {"uid":"48e65e8"}
-[2016-05-05 00:20:51] slim-app.INFO: Queteur list [] {"uid":"4b44b2a"}
-[2016-05-05 00:20:51] slim-app.INFO: Queteur list [] {"uid":"21a54d6"}
-[2016-05-05 00:20:53] slim-app.INFO: Queteur list [] {"uid":"d42e8d9"}
-[2016-05-05 00:20:53] slim-app.INFO: Queteur list [] {"uid":"bc11561"}
-[2016-05-05 00:20:53] slim-app.INFO: Queteur list [] {"uid":"05772c8"}
-[2016-05-05 00:20:53] slim-app.INFO: Queteur list [] {"uid":"11e9cf3"}
-[2016-05-05 00:20:54] slim-app.INFO: Queteur list [] {"uid":"79a90a2"}
-[2016-05-05 00:20:54] slim-app.INFO: Queteur list [] {"uid":"10f4ea6"}
-[2016-05-05 00:20:54] slim-app.INFO: Queteur list [] {"uid":"9e2e140"}
-[2016-05-05 00:20:54] slim-app.INFO: Queteur list [] {"uid":"6bec0ce"}
-[2016-05-05 00:20:55] slim-app.INFO: Queteur list [] {"uid":"778fc41"}
-[2016-05-05 00:20:56] slim-app.INFO: Queteur list [] {"uid":"3f53634"}
-[2016-05-05 00:20:56] slim-app.INFO: Queteur list [] {"uid":"ac18885"}
-[2016-05-05 00:20:56] slim-app.INFO: Queteur list [] {"uid":"b1f188c"}
-[2016-05-05 00:20:56] slim-app.INFO: Queteur list [] {"uid":"70d2764"}
-[2016-05-05 00:21:13] slim-app.INFO: Queteur list [] {"uid":"3575258"}
-[2016-05-05 00:21:13] slim-app.INFO: Queteur list [] {"uid":"ccfd09b"}
-[2016-05-05 00:21:13] slim-app.INFO: Queteur list [] {"uid":"eb7cb8d"}
-[2016-05-05 00:21:13] slim-app.INFO: Queteur list [] {"uid":"17ad232"}
-[2016-05-05 00:21:13] slim-app.INFO: Queteur list [] {"uid":"9c2d645"}
-[2016-05-05 00:21:13] slim-app.INFO: Queteur list [] {"uid":"b04290c"}
-[2016-05-05 00:21:36] slim-app.INFO: Queteur list [] {"uid":"0289709"}
-[2016-05-05 00:21:36] slim-app.INFO: Queteur list [] {"uid":"6a4e721"}
-[2016-05-05 00:21:37] slim-app.INFO: Queteur list [] {"uid":"3210d4a"}
-[2016-05-05 00:21:37] slim-app.INFO: Queteur list [] {"uid":"3f2ae76"}
-[2016-05-05 00:21:37] slim-app.INFO: Queteur list [] {"uid":"2c64119"}
-[2016-05-05 00:21:37] slim-app.INFO: Queteur list [] {"uid":"5b02f32"}
-[2016-05-05 00:23:51] slim-app.INFO: Queteur list [] {"uid":"ffdaf93"}
-[2016-05-05 00:23:51] slim-app.INFO: Queteur list [] {"uid":"e41045b"}
-[2016-05-05 00:23:51] slim-app.INFO: Queteur list [] {"uid":"6498027"}
-[2016-05-05 00:23:51] slim-app.INFO: Queteur list [] {"uid":"a901571"}
-[2016-05-05 00:23:52] slim-app.INFO: Queteur list [] {"uid":"b1496c4"}
-[2016-05-05 00:23:52] slim-app.INFO: Queteur list [] {"uid":"92acf4b"}
-[2016-05-05 00:26:02] slim-app.INFO: Queteur list [] {"uid":"a32c489"}
-[2016-05-05 00:26:03] slim-app.INFO: Queteur list [] {"uid":"b903d0a"}
-[2016-05-05 00:26:03] slim-app.INFO: Queteur list [] {"uid":"dc0e913"}
-[2016-05-05 00:26:03] slim-app.INFO: Queteur list [] {"uid":"60f9670"}
-[2016-05-05 00:26:03] slim-app.INFO: Queteur list [] {"uid":"4b80aae"}
-[2016-05-05 00:26:03] slim-app.INFO: Queteur list [] {"uid":"d4e7a16"}
-[2016-05-05 00:27:31] slim-app.INFO: Queteur list [] {"uid":"c05dac9"}
-[2016-05-05 00:27:32] slim-app.INFO: Queteur list [] {"uid":"8718b4c"}
-[2016-05-05 00:27:32] slim-app.INFO: Queteur list [] {"uid":"6a2c03e"}
-[2016-05-05 00:27:32] slim-app.INFO: Queteur list [] {"uid":"75b0074"}
-[2016-05-05 00:27:32] slim-app.INFO: Queteur list [] {"uid":"c2a9b6d"}
-[2016-05-05 00:27:32] slim-app.INFO: Queteur list [] {"uid":"e7b722a"}
-[2016-05-05 00:28:59] slim-app.INFO: Queteur list [] {"uid":"955def5"}
-[2016-05-05 00:28:59] slim-app.INFO: Queteur list [] {"uid":"e32371f"}
-[2016-05-05 00:28:59] slim-app.INFO: Queteur list [] {"uid":"c56057d"}
-[2016-05-05 00:28:59] slim-app.INFO: Queteur list [] {"uid":"683d6c9"}
-[2016-05-05 00:28:59] slim-app.INFO: Queteur list [] {"uid":"757f8ab"}
-[2016-05-05 00:28:59] slim-app.INFO: Queteur list [] {"uid":"df4ed38"}
-[2016-05-05 00:30:47] slim-app.INFO: Queteur list [] {"uid":"acbb755"}
-[2016-05-05 00:30:49] slim-app.INFO: Queteur list [] {"uid":"92e27e5"}
-[2016-05-05 00:32:32] slim-app.INFO: Queteur list [] {"uid":"071e491"}
-[2016-05-05 00:32:33] slim-app.INFO: Queteur list [] {"uid":"0d3d8d4"}
-[2016-05-05 00:34:26] slim-app.INFO: Queteur list [] {"uid":"e790e3a"}
-[2016-05-05 00:34:26] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"e790e3a"}
-[2016-05-05 00:34:26] slim-app.INFO: Queteur list [] {"uid":"16f8ceb"}
-[2016-05-05 00:34:26] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"16f8ceb"}
-[2016-05-05 00:34:27] slim-app.INFO: Queteur list [] {"uid":"43f2bf3"}
-[2016-05-05 00:34:27] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"43f2bf3"}
-[2016-05-05 00:35:34] slim-app.INFO: Queteur list [] {"uid":"742dc4d"}
-[2016-05-05 00:35:34] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"742dc4d"}
-[2016-05-05 00:35:36] slim-app.INFO: Queteur list [] {"uid":"32164f1"}
-[2016-05-05 00:35:36] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"32164f1"}
-[2016-05-05 00:35:36] slim-app.INFO: Queteur list [] {"uid":"a194de1"}
-[2016-05-05 00:35:36] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"a194de1"}
-[2016-05-05 00:35:39] slim-app.INFO: Queteur list [] {"uid":"9d93b1d"}
-[2016-05-05 00:35:39] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"9d93b1d"}
-[2016-05-05 00:35:40] slim-app.INFO: Queteur list [] {"uid":"f3f4cc9"}
-[2016-05-05 00:35:40] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"f3f4cc9"}
-[2016-05-05 00:35:42] slim-app.INFO: Queteur list [] {"uid":"8751c38"}
-[2016-05-05 00:35:42] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"8751c38"}
-[2016-05-05 00:35:43] slim-app.INFO: Queteur list [] {"uid":"696a77c"}
-[2016-05-05 00:35:43] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"696a77c"}
-[2016-05-05 00:35:44] slim-app.INFO: Queteur list [] {"uid":"be8fe6e"}
-[2016-05-05 00:35:44] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"be8fe6e"}
-[2016-05-05 00:35:44] slim-app.INFO: Queteur list [] {"uid":"1e23e4b"}
-[2016-05-05 00:35:44] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) = UPPER(:first_name) OR    UPPER(q.`last_name`)  = UPPER(:last_name) OR    UPPER(q.`nivol`)      = UPPER(:nivol)  [] {"uid":"1e23e4b"}
-[2016-05-05 00:36:53] slim-app.INFO: Queteur list [] {"uid":"d22d1de"}
-[2016-05-05 00:36:53] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"d22d1de"}
-[2016-05-05 00:36:54] slim-app.INFO: Queteur list [] {"uid":"f2e53b9"}
-[2016-05-05 00:36:54] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"f2e53b9"}
-[2016-05-05 00:36:54] slim-app.INFO: Queteur list [] {"uid":"c131257"}
-[2016-05-05 00:36:54] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"c131257"}
-[2016-05-05 00:36:54] slim-app.INFO: Queteur list [] {"uid":"87cb0fb"}
-[2016-05-05 00:36:54] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"87cb0fb"}
-[2016-05-05 00:36:54] slim-app.INFO: Queteur list [] {"uid":"81eb6a3"}
-[2016-05-05 00:36:54] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"81eb6a3"}
-[2016-05-05 00:36:59] slim-app.INFO: Queteur list [] {"uid":"51948b4"}
-[2016-05-05 00:36:59] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"51948b4"}
-[2016-05-05 00:37:00] slim-app.INFO: Queteur list [] {"uid":"5e3f161"}
-[2016-05-05 00:37:00] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"5e3f161"}
-[2016-05-05 00:37:00] slim-app.INFO: Queteur list [] {"uid":"67b8dcb"}
-[2016-05-05 00:37:00] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"67b8dcb"}
-[2016-05-05 00:37:00] slim-app.INFO: Queteur list [] {"uid":"61b2119"}
-[2016-05-05 00:37:00] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"61b2119"}
-[2016-05-05 00:37:00] slim-app.INFO: Queteur list [] {"uid":"ef1b59d"}
-[2016-05-05 00:37:00] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ef1b59d"}
-[2016-05-05 00:37:03] slim-app.INFO: Queteur list [] {"uid":"942ea03"}
-[2016-05-05 00:37:03] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"942ea03"}
-[2016-05-05 00:37:11] slim-app.INFO: Queteur list [] {"uid":"17f8ec4"}
-[2016-05-05 00:37:11] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"17f8ec4"}
-[2016-05-05 00:37:11] slim-app.INFO: Queteur list [] {"uid":"ce87c7c"}
-[2016-05-05 00:37:11] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ce87c7c"}
-[2016-05-05 00:37:11] slim-app.INFO: Queteur list [] {"uid":"bef5683"}
-[2016-05-05 00:37:11] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"bef5683"}
-[2016-05-05 00:37:11] slim-app.INFO: Queteur list [] {"uid":"a09473d"}
-[2016-05-05 00:37:11] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"a09473d"}
-[2016-05-05 00:37:11] slim-app.INFO: Queteur list [] {"uid":"d463e6a"}
-[2016-05-05 00:37:11] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"d463e6a"}
-[2016-05-05 00:37:12] slim-app.INFO: Queteur list [] {"uid":"bf44eaa"}
-[2016-05-05 00:37:12] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"bf44eaa"}
-[2016-05-05 00:37:12] slim-app.INFO: Queteur list [] {"uid":"52a4aa3"}
-[2016-05-05 00:37:12] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"52a4aa3"}
-[2016-05-05 00:37:12] slim-app.INFO: Queteur list [] {"uid":"7a5e8f0"}
-[2016-05-05 00:37:12] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"7a5e8f0"}
-[2016-05-05 00:37:12] slim-app.INFO: Queteur list [] {"uid":"b476f32"}
-[2016-05-05 00:37:12] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"b476f32"}
-[2016-05-05 00:37:12] slim-app.INFO: Queteur list [] {"uid":"1160ed5"}
-[2016-05-05 00:37:12] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"1160ed5"}
-[2016-05-05 00:37:12] slim-app.INFO: Queteur list [] {"uid":"0a7b60d"}
-[2016-05-05 00:37:12] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"0a7b60d"}
-[2016-05-05 00:37:12] slim-app.INFO: Queteur list [] {"uid":"dd82026"}
-[2016-05-05 00:37:12] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"dd82026"}
-[2016-05-05 00:37:13] slim-app.INFO: Queteur list [] {"uid":"16afe60"}
-[2016-05-05 00:37:13] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"16afe60"}
-[2016-05-05 00:37:13] slim-app.INFO: Queteur list [] {"uid":"8be032e"}
-[2016-05-05 00:37:13] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"8be032e"}
-[2016-05-05 00:37:13] slim-app.INFO: Queteur list [] {"uid":"d9ce231"}
-[2016-05-05 00:37:13] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"d9ce231"}
-[2016-05-05 00:37:13] slim-app.INFO: Queteur list [] {"uid":"dbfa51a"}
-[2016-05-05 00:37:13] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"dbfa51a"}
-[2016-05-05 00:37:14] slim-app.INFO: Queteur list [] {"uid":"4046dd0"}
-[2016-05-05 00:37:14] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"4046dd0"}
-[2016-05-05 00:37:14] slim-app.INFO: Queteur list [] {"uid":"9f3d950"}
-[2016-05-05 00:37:14] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"9f3d950"}
-[2016-05-05 00:37:16] slim-app.INFO: Queteur list [] {"uid":"09db3ac"}
-[2016-05-05 00:37:16] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"09db3ac"}
-[2016-05-05 00:37:16] slim-app.INFO: Queteur list [] {"uid":"76c1b4f"}
-[2016-05-05 00:37:16] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"76c1b4f"}
-[2016-05-05 00:37:16] slim-app.INFO: Queteur list [] {"uid":"0c6ed6a"}
-[2016-05-05 00:37:16] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"0c6ed6a"}
-[2016-05-05 00:37:17] slim-app.INFO: Queteur list [] {"uid":"ee1e6dd"}
-[2016-05-05 00:37:17] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ee1e6dd"}
-[2016-05-05 00:37:17] slim-app.INFO: Queteur list [] {"uid":"6ff1d4e"}
-[2016-05-05 00:37:17] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"6ff1d4e"}
-[2016-05-05 00:37:17] slim-app.INFO: Queteur list [] {"uid":"33a45b6"}
-[2016-05-05 00:37:17] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"33a45b6"}
-[2016-05-05 00:37:18] slim-app.INFO: Queteur list [] {"uid":"1b1c9af"}
-[2016-05-05 00:37:18] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"1b1c9af"}
-[2016-05-05 00:39:40] slim-app.INFO: Queteur list [] {"uid":"0476a5a"}
-[2016-05-05 00:39:40] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"0476a5a"}
-[2016-05-05 00:39:41] slim-app.INFO: Queteur list [] {"uid":"3f88a9e"}
-[2016-05-05 00:39:41] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"3f88a9e"}
-[2016-05-05 00:39:41] slim-app.INFO: Queteur list [] {"uid":"fd7ff7c"}
-[2016-05-05 00:39:41] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"fd7ff7c"}
-[2016-05-05 00:39:41] slim-app.INFO: Queteur list [] {"uid":"2f7d0b0"}
-[2016-05-05 00:39:41] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"2f7d0b0"}
-[2016-05-05 00:39:41] slim-app.INFO: Queteur list [] {"uid":"8e07a58"}
-[2016-05-05 00:39:41] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"8e07a58"}
-[2016-05-05 00:39:41] slim-app.INFO: Queteur list [] {"uid":"ee22227"}
-[2016-05-05 00:39:41] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ee22227"}
-[2016-05-05 00:42:02] slim-app.INFO: Queteur list [] {"uid":"685b5ef"}
-[2016-05-05 00:42:02] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"685b5ef"}
-[2016-05-05 00:42:03] slim-app.INFO: Queteur list [] {"uid":"f138acc"}
-[2016-05-05 00:42:03] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"f138acc"}
-[2016-05-05 00:42:03] slim-app.INFO: Queteur list [] {"uid":"5600588"}
-[2016-05-05 00:42:03] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"5600588"}
-[2016-05-05 00:42:03] slim-app.INFO: Queteur list [] {"uid":"132a860"}
-[2016-05-05 00:42:03] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"132a860"}
-[2016-05-05 00:42:03] slim-app.INFO: Queteur list [] {"uid":"611f3ca"}
-[2016-05-05 00:42:03] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"611f3ca"}
-[2016-05-05 00:42:03] slim-app.INFO: Queteur list [] {"uid":"69db7f9"}
-[2016-05-05 00:42:03] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"69db7f9"}
-[2016-05-05 00:42:16] slim-app.INFO: Queteur list [] {"uid":"3a61cb2"}
-[2016-05-05 00:42:16] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"3a61cb2"}
-[2016-05-05 00:42:17] slim-app.INFO: Queteur list [] {"uid":"67e320c"}
-[2016-05-05 00:42:17] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"67e320c"}
-[2016-05-05 00:42:17] slim-app.INFO: Queteur list [] {"uid":"ad6a427"}
-[2016-05-05 00:42:17] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ad6a427"}
-[2016-05-05 00:42:17] slim-app.INFO: Queteur list [] {"uid":"c5230f6"}
-[2016-05-05 00:42:17] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"c5230f6"}
-[2016-05-05 00:42:17] slim-app.INFO: Queteur list [] {"uid":"1509fce"}
-[2016-05-05 00:42:17] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"1509fce"}
-[2016-05-05 00:42:17] slim-app.INFO: Queteur list [] {"uid":"e937635"}
-[2016-05-05 00:42:17] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"e937635"}
-[2016-05-05 00:42:21] slim-app.INFO: Queteur list [] {"uid":"4b4f1f8"}
-[2016-05-05 00:42:21] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"4b4f1f8"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"db60369"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"db60369"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"381de7d"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"381de7d"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"4f31a99"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"4f31a99"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"0c834de"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"0c834de"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"cf12a0b"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"cf12a0b"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"ac5f89d"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ac5f89d"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"2931c33"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"2931c33"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"a90cf66"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"a90cf66"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"b927b5d"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"b927b5d"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"bc37f65"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"bc37f65"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"5bba0b6"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"5bba0b6"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"f0ae385"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"f0ae385"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"ae71a1b"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ae71a1b"}
-[2016-05-05 00:42:22] slim-app.INFO: Queteur list [] {"uid":"ecffa5a"}
-[2016-05-05 00:42:22] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ecffa5a"}
-[2016-05-05 00:42:23] slim-app.INFO: Queteur list [] {"uid":"2149769"}
-[2016-05-05 00:42:23] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"2149769"}
-[2016-05-05 00:42:24] slim-app.INFO: Queteur list [] {"uid":"99c94f2"}
-[2016-05-05 00:42:24] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"99c94f2"}
-[2016-05-05 00:42:24] slim-app.INFO: Queteur list [] {"uid":"92a3611"}
-[2016-05-05 00:42:24] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"92a3611"}
-[2016-05-05 00:42:24] slim-app.INFO: Queteur list [] {"uid":"52ba542"}
-[2016-05-05 00:42:24] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"52ba542"}
-[2016-05-05 00:42:24] slim-app.INFO: Queteur list [] {"uid":"39faf63"}
-[2016-05-05 00:42:24] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"39faf63"}
-[2016-05-05 00:42:24] slim-app.INFO: Queteur list [] {"uid":"e870f5c"}
-[2016-05-05 00:42:24] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"e870f5c"}
-[2016-05-05 00:42:29] slim-app.INFO: Queteur list [] {"uid":"a1e6c95"}
-[2016-05-05 00:42:29] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"a1e6c95"}
-[2016-05-05 00:42:29] slim-app.INFO: Queteur list [] {"uid":"f57692c"}
-[2016-05-05 00:42:29] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"f57692c"}
-[2016-05-05 00:42:29] slim-app.INFO: Queteur list [] {"uid":"d075115"}
-[2016-05-05 00:42:29] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"d075115"}
-[2016-05-05 00:42:29] slim-app.INFO: Queteur list [] {"uid":"9cb7b91"}
-[2016-05-05 00:42:29] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"9cb7b91"}
-[2016-05-05 00:42:29] slim-app.INFO: Queteur list [] {"uid":"a62ba5a"}
-[2016-05-05 00:42:29] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"a62ba5a"}
-[2016-05-05 00:42:30] slim-app.INFO: Queteur list [] {"uid":"ad73a92"}
-[2016-05-05 00:42:30] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ad73a92"}
-[2016-05-05 00:42:30] slim-app.INFO: Queteur list [] {"uid":"0899573"}
-[2016-05-05 00:42:30] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"0899573"}
-[2016-05-05 00:42:30] slim-app.INFO: Queteur list [] {"uid":"dbb03ed"}
-[2016-05-05 00:42:30] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"dbb03ed"}
-[2016-05-05 00:42:30] slim-app.INFO: Queteur list [] {"uid":"c59e638"}
-[2016-05-05 00:42:30] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"c59e638"}
-[2016-05-05 00:42:30] slim-app.INFO: Queteur list [] {"uid":"2636bd2"}
-[2016-05-05 00:42:30] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"2636bd2"}
-[2016-05-05 00:42:30] slim-app.INFO: Queteur list [] {"uid":"2a4cdad"}
-[2016-05-05 00:42:30] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"2a4cdad"}
-[2016-05-05 00:42:34] slim-app.INFO: Queteur list [] {"uid":"2fe9309"}
-[2016-05-05 00:42:34] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"2fe9309"}
-[2016-05-05 00:42:34] slim-app.INFO: Queteur list [] {"uid":"ed73a11"}
-[2016-05-05 00:42:34] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ed73a11"}
-[2016-05-05 00:42:34] slim-app.INFO: Queteur list [] {"uid":"5619989"}
-[2016-05-05 00:42:34] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"5619989"}
-[2016-05-05 00:42:34] slim-app.INFO: Queteur list [] {"uid":"6afe22a"}
-[2016-05-05 00:42:34] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"6afe22a"}
-[2016-05-05 00:42:34] slim-app.INFO: Queteur list [] {"uid":"9b51eb7"}
-[2016-05-05 00:42:34] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"9b51eb7"}
-[2016-05-05 00:42:35] slim-app.INFO: Queteur list [] {"uid":"73d9e64"}
-[2016-05-05 00:42:35] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"73d9e64"}
-[2016-05-05 00:42:35] slim-app.INFO: Queteur list [] {"uid":"936e79e"}
-[2016-05-05 00:42:35] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"936e79e"}
-[2016-05-05 00:42:35] slim-app.INFO: Queteur list [] {"uid":"daa8057"}
-[2016-05-05 00:42:35] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"daa8057"}
-[2016-05-05 00:42:35] slim-app.INFO: Queteur list [] {"uid":"1272323"}
-[2016-05-05 00:42:35] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"1272323"}
-[2016-05-05 00:42:35] slim-app.INFO: Queteur list [] {"uid":"782ebac"}
-[2016-05-05 00:42:35] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"782ebac"}
-[2016-05-05 00:42:35] slim-app.INFO: Queteur list [] {"uid":"0126001"}
-[2016-05-05 00:42:35] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"0126001"}
-[2016-05-05 00:42:37] slim-app.INFO: Queteur list [] {"uid":"753ead3"}
-[2016-05-05 00:42:37] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"753ead3"}
-[2016-05-05 00:42:37] slim-app.INFO: Queteur list [] {"uid":"9ca2079"}
-[2016-05-05 00:42:37] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"9ca2079"}
-[2016-05-05 00:42:37] slim-app.INFO: Queteur list [] {"uid":"fb49094"}
-[2016-05-05 00:42:37] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"fb49094"}
-[2016-05-05 00:42:37] slim-app.INFO: Queteur list [] {"uid":"d20e0a1"}
-[2016-05-05 00:42:37] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"d20e0a1"}
-[2016-05-05 00:42:37] slim-app.INFO: Queteur list [] {"uid":"8bf190d"}
-[2016-05-05 00:42:37] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"8bf190d"}
-[2016-05-05 00:42:38] slim-app.INFO: Queteur list [] {"uid":"3474141"}
-[2016-05-05 00:42:38] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"3474141"}
-[2016-05-05 00:42:39] slim-app.INFO: Queteur list [] {"uid":"a48073a"}
-[2016-05-05 00:42:39] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"a48073a"}
-[2016-05-05 00:42:39] slim-app.INFO: Queteur list [] {"uid":"43f9570"}
-[2016-05-05 00:42:39] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"43f9570"}
-[2016-05-05 00:42:39] slim-app.INFO: Queteur list [] {"uid":"8043f01"}
-[2016-05-05 00:42:39] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"8043f01"}
-[2016-05-05 00:42:39] slim-app.INFO: Queteur list [] {"uid":"d16edae"}
-[2016-05-05 00:42:39] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"d16edae"}
-[2016-05-05 00:42:39] slim-app.INFO: Queteur list [] {"uid":"5942bf7"}
-[2016-05-05 00:42:39] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"5942bf7"}
-[2016-05-05 00:43:00] slim-app.INFO: Queteur list [] {"uid":"ff33636"}
-[2016-05-05 00:43:00] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"ff33636"}
-[2016-05-05 00:43:01] slim-app.INFO: Queteur list [] {"uid":"e256057"}
-[2016-05-05 00:43:01] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"e256057"}
-[2016-05-05 00:43:08] slim-app.INFO: Queteur list [] {"uid":"99c5ecd"}
-[2016-05-05 00:43:08] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"99c5ecd"}
-[2016-05-05 00:43:09] slim-app.INFO: Queteur list [] {"uid":"dcdb5ea"}
-[2016-05-05 00:43:09] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"dcdb5ea"}
-[2016-05-05 00:49:51] slim-app.INFO: Queteur list [] {"uid":"05fff73"}
-[2016-05-05 00:49:51] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"05fff73"}
-[2016-05-05 00:49:51] slim-app.INFO: Queteur list [] {"uid":"3c2ae92"}
-[2016-05-05 00:49:51] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"3c2ae92"}
-[2016-05-05 00:49:51] slim-app.INFO: Queteur list [] {"uid":"a14f696"}
-[2016-05-05 00:49:51] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"a14f696"}
-[2016-05-05 00:49:51] slim-app.INFO: Queteur list [] {"uid":"d38e1e9"}
-[2016-05-05 00:49:51] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"d38e1e9"}
-[2016-05-05 00:49:51] slim-app.INFO: Queteur list [] {"uid":"5e654e6"}
-[2016-05-05 00:49:51] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%') OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%') OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')  [] {"uid":"5e654e6"}
-[2016-05-05 02:37:40] slim-app.INFO: Queteur list [] {"uid":"6d477ad"}
-[2016-05-05 02:37:40] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  [] {"uid":"6d477ad"}
-[2016-05-05 02:37:40] slim-app.INFO: Queteur list [] {"uid":"34b87eb"}
-[2016-05-05 02:37:40] slim-app.ERROR: SELECT q.`id`,     q.`email`,     q.`first_name`,     q.`last_name`,     q.`minor`,     q.`secteur`,     q.`nivol`,     q.`mobile`,     q.`created`,     q.`updated`,     q.`ul_id`,     q.`notes` FROM `queteur` q  [] {"uid":"34b87eb"}
+[2016-05-06 19:16:16] slim-app.INFO: Queteur list [] {"uid":"24dd150"}
+[2016-05-06 19:16:16] slim-app.INFO: 1 [] {"uid":"24dd150"}
+[2016-05-06 19:19:09] slim-app.INFO: Queteur list [] {"uid":"29e4ef6"}
+[2016-05-06 19:19:09] slim-app.INFO: Queteur by search type defaulted to type='0' [] {"uid":"29e4ef6"}
+[2016-05-06 19:19:09] slim-app.INFO: Queteur list [] {"uid":"925b6fc"}
+[2016-05-06 19:19:09] slim-app.INFO: Queteur by search type defaulted to type='0' [] {"uid":"925b6fc"}
+[2016-05-06 19:19:31] slim-app.INFO: Queteur list [] {"uid":"ef1e50d"}
+[2016-05-06 19:19:31] slim-app.INFO: Queteur by search type '1'' [] {"uid":"ef1e50d"}
+[2016-05-06 19:19:43] slim-app.INFO: Queteur list [] {"uid":"4798286"}
+[2016-05-06 19:19:43] slim-app.INFO: Queteur by search type '2'' [] {"uid":"4798286"}
+[2016-05-06 19:19:48] slim-app.INFO: Queteur list [] {"uid":"c958bd7"}
+[2016-05-06 19:19:48] slim-app.INFO: Queteur by search type '0'' [] {"uid":"c958bd7"}
+[2016-05-06 19:20:37] slim-app.INFO: Queteur list [] {"uid":"8c74919"}
+[2016-05-06 19:20:37] slim-app.INFO: Queteur by search type '0'' [] {"uid":"8c74919"}
+[2016-05-06 19:20:37] slim-app.INFO: Queteur list [] {"uid":"5368893"}
+[2016-05-06 19:20:37] slim-app.INFO: Queteur by search type '0'' [] {"uid":"5368893"}
+[2016-05-06 19:23:40] slim-app.INFO: Queteur list [] {"uid":"3c4ee4a"}
+[2016-05-06 19:23:40] slim-app.INFO: Queteur by search type '1'' [] {"uid":"3c4ee4a"}
+[2016-05-06 19:24:24] slim-app.INFO: Queteur list [] {"uid":"819f3b5"}
+[2016-05-06 19:24:24] slim-app.INFO: Queteur by search type '1'' [] {"uid":"819f3b5"}
+[2016-05-06 19:24:26] slim-app.INFO: Queteur list [] {"uid":"dbd3ed8"}
+[2016-05-06 19:24:26] slim-app.INFO: Queteur by search type '2'' [] {"uid":"dbd3ed8"}
+[2016-05-06 19:24:31] slim-app.INFO: Queteur list [] {"uid":"167ef43"}
+[2016-05-06 19:24:31] slim-app.INFO: Queteur by search type '0'' [] {"uid":"167ef43"}
+[2016-05-06 19:27:44] slim-app.INFO: Queteur list [] {"uid":"3472d1b"}
+[2016-05-06 19:27:44] slim-app.INFO: Queteur by search type '1'' [] {"uid":"3472d1b"}
+[2016-05-06 19:27:46] slim-app.INFO: Queteur list [] {"uid":"df5ab19"}
+[2016-05-06 19:27:46] slim-app.INFO: Queteur by search type '2'' [] {"uid":"df5ab19"}
+[2016-05-06 19:28:52] slim-app.INFO: Queteur list [] {"uid":"af199ae"}
+[2016-05-06 19:28:52] slim-app.INFO: Queteur by search type '0'' [] {"uid":"af199ae"}
+[2016-05-06 19:28:52] slim-app.INFO: Queteur list [] {"uid":"4e69cba"}
+[2016-05-06 19:28:52] slim-app.INFO: Queteur by search type '0'' [] {"uid":"4e69cba"}
+[2016-05-06 19:51:23] slim-app.INFO: Queteur list [] {"uid":"b8e35c9"}
+[2016-05-06 19:51:23] slim-app.INFO: Queteur by search type '0'' [] {"uid":"b8e35c9"}
+[2016-05-06 19:51:36] slim-app.INFO: Queteur list [] {"uid":"c0b3600"}
+[2016-05-06 19:51:36] slim-app.INFO: Queteur by search type '0'' [] {"uid":"c0b3600"}
+[2016-05-06 19:51:36] slim-app.INFO: Queteur list [] {"uid":"fcf9fe0"}
+[2016-05-06 19:51:36] slim-app.INFO: Queteur by search type '0'' [] {"uid":"fcf9fe0"}
+[2016-05-06 19:57:23] slim-app.INFO: Queteur list [] {"uid":"ecfedc7"}
+[2016-05-06 19:57:23] slim-app.INFO: Queteur by search type '0'' [] {"uid":"ecfedc7"}
+[2016-05-06 19:57:23] slim-app.INFO: Queteur list [] {"uid":"ee4e6d6"}
+[2016-05-06 19:57:23] slim-app.INFO: Queteur by search type '0'' [] {"uid":"ee4e6d6"}
+[2016-05-06 19:57:54] slim-app.INFO: Queteur list [] {"uid":"37cbeb0"}
+[2016-05-06 19:57:54] slim-app.INFO: Queteur by search type '0'' [] {"uid":"37cbeb0"}
+[2016-05-06 19:57:54] slim-app.INFO: Queteur list [] {"uid":"9bf3b43"}
+[2016-05-06 19:57:54] slim-app.INFO: Queteur by search type '0'' [] {"uid":"9bf3b43"}
+[2016-05-06 19:58:08] slim-app.INFO: Queteur list [] {"uid":"40dda6e"}
+[2016-05-06 19:58:08] slim-app.INFO: Queteur by search type '0'' [] {"uid":"40dda6e"}
+[2016-05-06 19:58:08] slim-app.INFO: Queteur list [] {"uid":"b360c0e"}
+[2016-05-06 19:58:08] slim-app.INFO: Queteur by search type '0'' [] {"uid":"b360c0e"}
+[2016-05-06 19:58:26] slim-app.INFO: Queteur list [] {"uid":"3e3036d"}
+[2016-05-06 19:58:26] slim-app.INFO: Queteur by search type '0'' [] {"uid":"3e3036d"}
+[2016-05-06 19:58:27] slim-app.INFO: Queteur list [] {"uid":"6628da4"}
+[2016-05-06 19:58:27] slim-app.INFO: Queteur by search type '0'' [] {"uid":"6628da4"}
+[2016-05-06 19:58:34] slim-app.INFO: Queteur list [] {"uid":"06dddb3"}
+[2016-05-06 19:58:34] slim-app.INFO: Queteur by search type '0'' [] {"uid":"06dddb3"}
+[2016-05-06 19:58:35] slim-app.INFO: Queteur list [] {"uid":"dece411"}
+[2016-05-06 19:58:35] slim-app.INFO: Queteur by search type '0'' [] {"uid":"dece411"}
+[2016-05-06 19:59:36] slim-app.INFO: Queteur list [] {"uid":"1294ef9"}
+[2016-05-06 19:59:36] slim-app.INFO: Queteur by search type '0'' [] {"uid":"1294ef9"}
+[2016-05-06 19:59:36] slim-app.INFO: Queteur list [] {"uid":"5c1b4de"}
+[2016-05-06 19:59:36] slim-app.INFO: Queteur by search type '0'' [] {"uid":"5c1b4de"}
+[2016-05-06 19:59:49] slim-app.INFO: Queteur list [] {"uid":"50291c8"}
+[2016-05-06 19:59:49] slim-app.INFO: Queteur by search type '0'' [] {"uid":"50291c8"}
+[2016-05-06 19:59:49] slim-app.INFO: Queteur list [] {"uid":"4259148"}
+[2016-05-06 19:59:49] slim-app.INFO: Queteur by search type '0'' [] {"uid":"4259148"}
+[2016-05-06 20:01:58] slim-app.INFO: Queteur list [] {"uid":"e72b4d5"}
+[2016-05-06 20:01:58] slim-app.INFO: Queteur by search type '0'' [] {"uid":"e72b4d5"}
+[2016-05-06 20:01:58] slim-app.INFO: Queteur list [] {"uid":"b9218fb"}
+[2016-05-06 20:01:58] slim-app.INFO: Queteur by search type '0'' [] {"uid":"b9218fb"}
+[2016-05-06 20:02:38] slim-app.INFO: Queteur list [] {"uid":"229aa71"}
+[2016-05-06 20:02:38] slim-app.INFO: Queteur by search type '0'' [] {"uid":"229aa71"}
+[2016-05-06 20:02:38] slim-app.INFO: Queteur list [] {"uid":"5d1fd52"}
+[2016-05-06 20:02:38] slim-app.INFO: Queteur by search type '0'' [] {"uid":"5d1fd52"}
+[2016-05-06 20:03:36] slim-app.INFO: Queteur list [] {"uid":"9658bdd"}
+[2016-05-06 20:03:36] slim-app.INFO: Queteur by search type '0'' [] {"uid":"9658bdd"}
+[2016-05-06 20:03:36] slim-app.INFO: Queteur list [] {"uid":"5f99f8f"}
+[2016-05-06 20:03:36] slim-app.INFO: Queteur by search type '0'' [] {"uid":"5f99f8f"}
+[2016-05-06 20:15:40] slim-app.INFO: Queteur list [] {"uid":"0b7a866"}
+[2016-05-06 20:15:40] slim-app.INFO: Queteur by search type '0'' [] {"uid":"0b7a866"}
+[2016-05-06 20:15:40] slim-app.INFO: Queteur list [] {"uid":"93f7e4e"}
+[2016-05-06 20:15:40] slim-app.INFO: Queteur by search type '0'' [] {"uid":"93f7e4e"}
+[2016-05-06 20:18:52] slim-app.INFO: Queteur list [] {"uid":"e18f532"}
+[2016-05-06 20:18:52] slim-app.INFO: Queteur by search type '0'' [] {"uid":"e18f532"}
+[2016-05-06 20:18:52] slim-app.INFO: Queteur list [] {"uid":"4266a2a"}
+[2016-05-06 20:18:52] slim-app.INFO: Queteur by search type '0'' [] {"uid":"4266a2a"}
+[2016-05-06 20:19:16] slim-app.INFO: Queteur list [] {"uid":"0beac89"}
+[2016-05-06 20:19:16] slim-app.INFO: Queteur by search type '0'' [] {"uid":"0beac89"}
+[2016-05-06 20:19:16] slim-app.INFO: Queteur list [] {"uid":"ef55371"}
+[2016-05-06 20:19:16] slim-app.INFO: Queteur by search type '0'' [] {"uid":"ef55371"}
+[2016-05-06 20:20:37] slim-app.INFO: Queteur list [] {"uid":"a146621"}
+[2016-05-06 20:20:37] slim-app.INFO: Queteur by search type '0'' [] {"uid":"a146621"}
+[2016-05-06 20:20:37] slim-app.INFO: Queteur list [] {"uid":"84c6e00"}
+[2016-05-06 20:20:37] slim-app.INFO: Queteur by search type '0'' [] {"uid":"84c6e00"}
+[2016-05-06 20:32:47] slim-app.INFO: Queteur list [] {"uid":"76d297c"}
+[2016-05-06 20:32:47] slim-app.INFO: Queteur by search type '0'' [] {"uid":"76d297c"}
+[2016-05-06 20:33:26] slim-app.INFO: Queteur list [] {"uid":"ffe6fb7"}
+[2016-05-06 20:33:26] slim-app.INFO: Queteur by search type '0'' [] {"uid":"ffe6fb7"}
+[2016-05-06 20:33:26] slim-app.INFO: Queteur list [] {"uid":"d9bb593"}
+[2016-05-06 20:33:26] slim-app.INFO: Queteur by search type '0'' [] {"uid":"d9bb593"}
+[2016-05-06 20:33:31] slim-app.INFO: Queteur list [] {"uid":"7ebb8d4"}
+[2016-05-06 20:33:31] slim-app.INFO: Queteur by search type '0'' [] {"uid":"7ebb8d4"}
+[2016-05-06 20:33:31] slim-app.INFO: Queteur list [] {"uid":"26c1ddc"}
+[2016-05-06 20:33:31] slim-app.INFO: Queteur by search type '0'' [] {"uid":"26c1ddc"}
+[2016-05-06 20:33:50] slim-app.INFO: Queteur list [] {"uid":"21f254a"}
+[2016-05-06 20:33:50] slim-app.INFO: Queteur by search type '0'' [] {"uid":"21f254a"}
+[2016-05-06 20:33:52] slim-app.INFO: Queteur list [] {"uid":"e6a2b4f"}
+[2016-05-06 20:33:52] slim-app.INFO: Queteur by search type '0'' [] {"uid":"e6a2b4f"}
+[2016-05-06 20:35:43] slim-app.INFO: Queteur list [] {"uid":"401f931"}
+[2016-05-06 20:35:43] slim-app.INFO: Queteur by search type '0'' [] {"uid":"401f931"}
+[2016-05-06 20:35:43] slim-app.INFO: Queteur list [] {"uid":"a4565cd"}
+[2016-05-06 20:35:43] slim-app.INFO: Queteur by search type '0'' [] {"uid":"a4565cd"}
+[2016-05-06 21:12:21] slim-app.INFO: Troncs list [] {"uid":"ad0d0c5"}
+[2016-05-06 21:12:21] slim-app.INFO: Troncs list [] {"uid":"c6f3db7"}
+[2016-05-06 21:13:53] slim-app.INFO: Troncs list [] {"uid":"88880aa"}
+[2016-05-06 21:13:53] slim-app.INFO: Troncs list [] {"uid":"7c829ac"}
+[2016-05-06 21:15:15] slim-app.INFO: Troncs list [] {"uid":"1abdf8d"}
+[2016-05-06 21:15:15] slim-app.INFO: Troncs list [] {"uid":"791db51"}
+[2016-05-06 21:15:15] slim-app.INFO: Troncs list [] {"uid":"0eceba3"}
+[2016-05-06 21:15:15] slim-app.INFO: Troncs list [] {"uid":"9796f68"}
+[2016-05-06 21:17:09] slim-app.INFO: Troncs list [] {"uid":"cac7081"}
+[2016-05-06 21:17:09] slim-app.INFO: Troncs list [] {"uid":"37065a6"}
+[2016-05-06 21:17:09] slim-app.INFO: Troncs list [] {"uid":"bf08527"}
+[2016-05-06 21:17:09] slim-app.INFO: Troncs list [] {"uid":"fa0b220"}
+[2016-05-06 21:17:28] slim-app.INFO: Troncs list [] {"uid":"70daab2"}
+[2016-05-06 21:17:28] slim-app.INFO: Troncs list [] {"uid":"0e79cee"}
+[2016-05-06 21:17:28] slim-app.INFO: Troncs list [] {"uid":"8553207"}
+[2016-05-06 21:17:28] slim-app.INFO: Troncs list [] {"uid":"3f8805d"}
+[2016-05-06 21:18:03] slim-app.INFO: Troncs list [] {"uid":"7fab055"}
+[2016-05-06 21:18:03] slim-app.INFO: Troncs list [] {"uid":"c742752"}
+[2016-05-06 21:18:04] slim-app.INFO: Troncs list [] {"uid":"f82aa91"}
+[2016-05-06 21:18:04] slim-app.INFO: Troncs list [] {"uid":"19816ea"}
+[2016-05-06 21:18:04] slim-app.INFO: Troncs list [] {"uid":"0f45ac9"}
+[2016-05-06 21:18:04] slim-app.INFO: Troncs list [] {"uid":"8655327"}
+[2016-05-06 21:20:14] slim-app.INFO: Queteur list [] {"uid":"ffc1758"}
+[2016-05-06 21:20:14] slim-app.INFO: Queteur by search type '0'' [] {"uid":"ffc1758"}
+[2016-05-06 21:20:14] slim-app.INFO: Queteur list [] {"uid":"4e577e0"}
+[2016-05-06 21:20:14] slim-app.INFO: Queteur by search type '0'' [] {"uid":"4e577e0"}
+[2016-05-06 21:20:19] slim-app.INFO: Troncs list [] {"uid":"605e1c9"}
+[2016-05-06 21:20:19] slim-app.INFO: Troncs list [] {"uid":"c7d4479"}
+[2016-05-06 21:23:13] slim-app.INFO: Troncs list [] {"uid":"e09ad60"}
+[2016-05-06 21:23:13] slim-app.INFO: Troncs list [] {"uid":"97659c9"}
+[2016-05-06 21:28:09] slim-app.INFO: Queteur list [] {"uid":"ef54e6d"}
+[2016-05-06 21:28:09] slim-app.INFO: Queteur by search type '0'' [] {"uid":"ef54e6d"}
+[2016-05-06 21:28:09] slim-app.INFO: Queteur list [] {"uid":"180f73f"}
+[2016-05-06 21:28:09] slim-app.INFO: Queteur by search type '0'' [] {"uid":"180f73f"}
+[2016-05-06 21:28:10] slim-app.INFO: Queteur list [] {"uid":"e7edb87"}
+[2016-05-06 21:28:10] slim-app.INFO: Queteur by search type '0'' [] {"uid":"e7edb87"}
+[2016-05-06 21:28:10] slim-app.INFO: Queteur list [] {"uid":"c916087"}
+[2016-05-06 21:28:10] slim-app.INFO: Queteur by search type '0'' [] {"uid":"c916087"}
+[2016-05-06 21:28:10] slim-app.INFO: Queteur list [] {"uid":"cf5a10c"}
+[2016-05-06 21:28:10] slim-app.INFO: Queteur by search type '0'' [] {"uid":"cf5a10c"}
+[2016-05-06 21:28:10] slim-app.INFO: Queteur list [] {"uid":"fae9469"}
+[2016-05-06 21:28:10] slim-app.INFO: Queteur by search type '0'' [] {"uid":"fae9469"}
+[2016-05-06 21:28:11] slim-app.INFO: Queteur list [] {"uid":"7b10636"}
+[2016-05-06 21:28:11] slim-app.INFO: Queteur by search type '0'' [] {"uid":"7b10636"}
+[2016-05-06 21:28:11] slim-app.INFO: Queteur list [] {"uid":"d83f9c7"}
+[2016-05-06 21:28:11] slim-app.INFO: Queteur by search type '0'' [] {"uid":"d83f9c7"}
+[2016-05-06 21:29:01] slim-app.INFO: Troncs list [] {"uid":"b033611"}
+[2016-05-06 21:29:01] slim-app.INFO: Troncs list [] {"uid":"7211adb"}
+[2016-05-06 21:29:01] slim-app.INFO: Troncs list [] {"uid":"6bf3059"}
+[2016-05-06 21:29:01] slim-app.INFO: Troncs list [] {"uid":"9313611"}
+[2016-05-06 21:29:01] slim-app.INFO: Troncs list [] {"uid":"4dfb6d8"}
+[2016-05-06 21:29:01] slim-app.INFO: Troncs list [] {"uid":"83610b4"}
+[2016-05-06 21:29:01] slim-app.INFO: Troncs list [] {"uid":"6916be3"}
+[2016-05-06 21:29:01] slim-app.INFO: Troncs list [] {"uid":"bc87f84"}
