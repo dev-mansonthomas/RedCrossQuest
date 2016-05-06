@@ -7,5 +7,7 @@
     <file url="file://$PROJECT_DIR$/server/db/privateData/migrate_data_2014.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/db/privateData/point_de_quete.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/db/seeds/QueteurSeeder.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/server/src/QueteurMapper.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/server/src/TroncMapper.php" dialect="MySQL" />
   </component>
 </project>

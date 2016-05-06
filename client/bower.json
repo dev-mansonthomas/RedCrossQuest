@@ -18,7 +18,8 @@
     "moment": "~2.13.0",
     "animate.css": "~3.5.1",
     "angular": "~1.5.5",
-    "angular-qr-scanner": "^0.1.0"
+    "angular-qr-scanner": "^0.1.0",
+    "angular-qr": "^0.2.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.5"

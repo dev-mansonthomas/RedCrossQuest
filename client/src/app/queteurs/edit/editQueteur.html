@@ -2,112 +2,167 @@
 <div class="container">
 
   <div>
-    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+    <acme-navbar></acme-navbar>
   </div>
 
-<div class="container">
+<div class="container" data-ng-controller="QueteurEditController as queteur">
 
   <div class="panel panel-primary">
-    <div class="panel-heading">Un Quêteur</div>
+    <div class="panel-heading">Un Quêteur:  <b><span ng-bind="queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span></b></div>
 
    </div>
 
+  <div class="well">
+    <form novalidate ng-submit='queteur.save(queteur.current);' name="queteurForm">
 
-  <div class="col-xs-12" data-ng-controller="QueteurEditController as queteur">
-    <div class="well">
+
       <div class="row">
-        <div class="col-xs-12 col-md-4 col-md-offset-4">
-          <form novalidate ng-submit='queteur.save(queteur.current);' name="queteurForm">
-            <div class="form-group" ng-class="{'has-error':queteurForm.first_name.$invalid}">
-              <label for="first_name" class="control-label">First name</label>
-              <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required />
-              <span class="help-block" ng-show="queteurForm.first_name.$error.required">Required</span>
-            </div>
-            <div class="form-group" ng-class="{'has-error':queteurForm.last_name.$invalid}">
-              <label for="last_name" class="control-label">Last name</label>
-              <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required/>
-              <span class="help-block" ng-show="queteurForm.last_name.$error.required">Required</span>
-            </div>
-
-            <div class="form-group" ng-class="{'has-error':queteurForm.minor.$invalid}">
-              <label for="minorRadio1" class="control-label">Mineur</label>
-
-
-              <label class="radio-inline">
-                <input type="radio" name="minor" id="minorRadio1" ng-model="queteur.current.minor" value="1" required> Oui
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="minor" id="minorRadio2" ng-model="queteur.current.minor" value="0" required> Non
-              </label>
-
-
-              <span class="help-block" ng-show="queteurForm.minor.$error.required">Required</span>
-            </div>
-
-            <div class="form-group">
-              <label for="secteur" class="control-label">Secteur</label>
-              <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required>
-                <option value="1">Action Sociale</option>
-                <option value="2">Secours</option>
-                <option value="3">Hybride</option>
-                <option value="4">Extérieur</option>
-                <option value="5">Lycéen</option>
-              </select>
-            </div>
-
-            <div class="form-group" ng-class="{'has-error':queteurForm.nivol.$invalid}" ng-show="queteur.current.secteur >= 1 && queteur.current.secteur <= 4">
-              <label for="nivol" class="control-label">NIVOL</label>
-              <input name="nivol" id="nivol" class="form-control" ng-model="queteur.current.nivol" ng-required="queteur.current.secteur >= 1 && queteur.current.secteur <= 3"/>
-              <span class="help-block" ng-show="queteurForm.last_name.$error.required">Required</span>
-              <span class="help-block">Si Extérieur et bénévole Croix Rouge, saisir son NIVOL, sinon laisser vide</span>
-            </div>
-
-            <div class="form-group" ng-show="queteur.current.secteur > 3 ">
-              <label for="parent_authorization" class="control-label">Authorisation Parentale</label>
-              <input type="file" name="parent_authorization" id="parent_authorization"/>
-              <span class="help-block">Scanner l'autorisation parentale et ajouter le fichier ici</span>
-            </div>
-
-            <div class="form-group" ng-show="queteur.current.secteur > 3 ">
-              <label for="temporary_volunteer_form" class="control-label">Formulaire du Quêteur occasionel</label>
-              <input type="file" name="temporary_volunteer_form" id="temporary_volunteer_form"/>
-              <span class="help-block">Scanner le formulaire de bénévole occasionnel et ajouter le fichier ici</span>
-            </div>
-
-            <div class="form-group" ng-class="{'has-error':queteurForm.mobile.$invalid}">
-              <label for="mobile" class="control-label">Téléphone</label>
-              <input name="mobile" id="mobile" class="form-control" ng-model="queteur.current.mobile" required ng-pattern="/^0[6-7][0-9]{8,8}$/" />
-              <span class="help-block">Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain</span>
-              <span class="help-block" ng-show="queteurForm.mobile.$error.pattern">Le format doit être 0601020304 ou 0601020304</span>
-            </div>
-
-            <div class="form-group">
-              <label for="notes" class="control-label">Notes</label>
-              <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="queteur.current.notes"></textarea>
-              <span class="help-block">Info importantes sur le quêteurs, ex: Allergie, Diabétique, Asmathique, Contraintes horaires etc...</span>
-            </div>
-
-
-            <div class="form-group">
-              <label for="created" class="control-label">Créé le</label>
-              <input name="created" id="created" class="form-control" ng-model="queteur.current.created" readonly/>
-            </div>
-
-            <div class="form-group">
-              <label for="updated" class="control-label">Mise à jour le</label>
-              <input name="updated" id="updated" class="form-control" ng-model="queteur.current.updated" readonly/>
-            </div>
-
-            <div class="form-group">
-              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="queteurForm.$invalid" />
-              <a ng-href="#/list" class="btn btn-link">Cancel</a>
-            </div>
-          </form>
+        <div class="col-md-4 col-md-offset-2">
+          <div class="form-group" ng-class="{'has-error':queteurForm.first_name.$invalid}">
+            <label for="first_name" class="control-label">First name</label>
+            <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required />
+            <span class="help-block" ng-show="queteurForm.first_name.$error.required">Required</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group" ng-class="{'has-error':queteurForm.last_name.$invalid}">
+            <label for="last_name" class="control-label">Last name</label>
+            <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required/>
+            <span class="help-block" ng-show="queteurForm.last_name.$error.required">Required</span>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
+      <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+
+          <div class="form-group" ng-class="{'has-error':queteurForm.email.$invalid}">
+            <label for="email" class="control-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon1">@</span>
+              <input name="email" id="email" class="form-control" type="email" ng-model="queteur.current.email" required/>
+            </div>
+            <span class="help-block" ng-show="queteurForm.email.$error.required">Required</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group" ng-class="{'has-error':queteurForm.minor.$invalid}">
+            <label for="minorRadio1" class="control-label">Mineur</label>
+            <label class="radio-inline">
+              <input type="radio" name="minor" id="minorRadio1" ng-model="queteur.current.minor" value="1" required> Oui
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="minor" id="minorRadio2" ng-model="queteur.current.minor" value="0" required> Non
+            </label>
+            <span class="help-block" ng-show="queteurForm.minor.$error.required">Required</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+          <div class="form-group">
+            <label for="secteur" class="control-label">Secteur</label>
+            <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required>
+              <option value="1">Action Sociale</option>
+              <option value="2">Secours</option>
+              <option value="3">Hybride</option>
+              <option value="4">Quêteur Occasionnel</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="ul_id" class="control-label">Unité Locale</label>
+            <select name="ul_id" id="ul_id" class="form-control" ng-model="queteur.current.ul_id" required>
+              <option value="1">Non Bénévole</option>
+              <option value="2">PARIS IV</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+          <div class="form-group" ng-class="{'has-error':queteurForm.mobile.$invalid}">
+            <label for="mobile" class="control-label">Téléphone</label>
+            <div class="input-group">
+              <span class="input-group-addon glyphicon glyphicon-phone-alt" aria-hidden="true" id="basic-addon2" style="top:0px;"></span>
+              <input name="mobile" id="mobile" class="form-control" ng-model="queteur.current.mobile" required ng-pattern="/^0[6-7][0-9]{8,8}$/" />
+            </div>
+            <span class="help-block">Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain</span>
+            <span class="help-block" ng-show="queteurForm.mobile.$error.pattern">Le format doit être 0601020304 ou 0701020304</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group" ng-class="{'has-error':queteurForm.nivol.$invalid}" ng-show="queteur.current.secteur >= 1 && queteur.current.secteur <= 4">
+            <label for="nivol" class="control-label">NIVOL</label>
+            <input name="nivol" id="nivol" class="form-control" ng-model="queteur.current.nivol" ng-required="queteur.current.secteur >= 1 && queteur.current.secteur <= 3"/>
+            <span class="help-block" ng-show="queteurForm.last_name.$error.required">Required</span>
+            <span class="help-block">Si Extérieur et bénévole Croix Rouge, saisir son NIVOL, sinon laisser vide</span>
+          </div>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+          <div class="form-group" ng-show="queteur.current.secteur > 3 ">
+            <label for="temporary_volunteer_form" class="control-label">Formulaire du Quêteur occasionel</label>
+            <input type="file" name="temporary_volunteer_form" id="temporary_volunteer_form"/>
+            <span class="help-block">Scanner le formulaire de bénévole occasionnel et ajouter le fichier ici</span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group" ng-show="queteur.current.secteur > 3 && queteur.current.minor == true ">
+            <label for="parent_authorization" class="control-label">Authorisation Parentale</label>
+            <input type="file" name="parent_authorization" id="parent_authorization"/>
+            <span class="help-block">Scanner l'autorisation parentale et ajouter le fichier ici</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+          <div class="form-group">
+            <label for="notes" class="control-label">Notes</label>
+            <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="queteur.current.notes"></textarea>
+            <span class="help-block">Info importantes sur le quêteurs, ex: Allergie, Diabétique, Asmathique, Contraintes horaires etc...</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+
+          <div class="form-group" ng-show="queteur.current.id">
+            <label for="created" class="control-label">Créé le</label>
+            <input name="created" id="created" class="form-control" ng-model="queteur.current.created" readonly/>
+          </div>
+        </div>
+        <div class="col-md-4">
+
+          <div class="form-group"ng-show="queteur.current.id">
+            <label for="updated" class="control-label">Mise à jour le</label>
+            <input name="updated" id="updated" class="form-control" ng-model="queteur.current.updated" readonly/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2 col-md-offset-2">
+          <a ng-href="#/list" class="btn btn-link">Cancel</a>
+        </div>
+        <div class="col-md-2 col-md-offset-5">
+          <input type="submit" class="btn btn-primary" value="Save" ng-disabled="queteurForm.$invalid" />
+
+        </div>
+      </div>
+
+    </form>
+  </div>
 
 </div>
 </div>

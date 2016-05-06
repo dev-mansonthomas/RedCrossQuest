@@ -5,30 +5,27 @@
     <acme-navbar creation-date="main.creationDate"></acme-navbar>
   </div>
 
-<div class="container">
+<div class="container" data-ng-controller="TroncEditController as tronc">
 
-  <div class="jumbotron">
-    <h1>Tronc</h1>
-    <p>Taking care of your people, one at a time.</p>
+  <div class="panel panel-primary">
+    <div class="panel-heading">Un Tronc:  <b><span ng-bind="tronc.current.id"></span></b></div>
   </div>
 
-
-  <div class="col-xs-12" data-ng-controller="TroncEditController as tronc">
+  <div class="col-xs-12">
     <div class="well">
       <div class="row">
         <div class="col-xs-12 col-md-4 col-md-offset-4">
           <form novalidate ng-submit='tronc.save();' name="troncForm">
 
 
-            <div class="form-group" ng-class="{'has-error':troncForm.firstName.$invalid}">
-              <label for="firstName" class="control-label">First name</label>
-              <input name="firstName" id="firstName" class="form-control" ng-model="tronc.current.firstName" required />
-              <span class="help-block" ng-show="troncForm.firstName.$error.required">Required</span>
+            <div class="form-group" ng-class="{'has-error':troncForm.enabled.$invalid}">
+              <label for="enabled" class="control-label">Actif</label>
+              <input name="enabled" id="enabled" class="form-control" ng-model="tronc.current.enabled" required />
+              <span class="help-block" ng-show="troncForm.enabled.$error.required">Required</span>
             </div>
-            <div class="form-group" ng-class="{'has-error':troncForm.lastName.$invalid}">
-              <label for="lastName" class="control-label">Last name</label>
-              <input name="lastName" id="lastName" class="form-control" ng-model="tronc.current.lastName" required/>
-              <span class="help-block" ng-show="troncForm.lastName.$error.required">Required</span>
+            <div class="form-group" ng-show="tronc.current.id">
+              <label for="created" class="control-label">Créé le</label>
+              <input name="created" id="created" class="form-control" ng-model="tronc.current.created" readonly/>
             </div>
             <div class="form-group">
               <label for="secteur" class="control-label">Secteur</label>

@@ -9,7 +9,6 @@
 
   <div class="panel panel-primary">
     <div class="panel-heading">Départ Tronc</div>
-
   </div>
 
 
@@ -19,18 +18,18 @@
         <div class="row">
           <div class="col-md-4">
 
-            <qr-scanner ng-success="departTronc.onSuccess(data)" ng-error="departTronc.onError(error)" width="300" height="300"/>
+            <qr-scanner
+              ng-success="departTronc.qrCodeScanOnSuccess(data)"
+                ng-error="departTronc.qrCodeScanOnError(error)"
+          ng-video-error="departTronc.qrCodeScanOnVideoError(error)"
+                   width="300"
+                  height="300"/>
 
-            <span class=" col-md-6 col-md-offset-2">{{departTronc.decodedData}}</span>
-            <br/>
-            <span class="col-md-6 col-md-offset-2">{{departTronc.errorMessage}}</span>
-            <span class="col-md-6 col-md-offset-2">{{departTronc.errorMessageVideo}}</span>
+            <span ng-bind="departTronc.decodedData"></span>
           </div>
 
           <div class=" col-md-4">
             <div class="form-group" ng-class="{'has-error':departTroncForm.queteurId.$invalid}">
-
-
               <label for="queteurId" class="control-label">Recherche du Quêteur</label>
               <input
                      id="queteurId"
@@ -41,19 +40,17 @@
                      typeahead-loading="loadingLocations"
                      typeahead-no-results="noResults"
                      typeahead-wait-ms="20"
-                     class="form-control">
+                     class="form-control"
+                      ng-required>
               <i   ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
               <div ng-show="noResults">
                 <i class="glyphicon glyphicon-remove"></i> No Results Found
               </div>
-
-
-              <!-- queteur as queteur.first_name for queteur in searchQueteur($viewValue) -->
-
+              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
             </div>
             <div class="form-group" ng-class="{'has-error':departTroncForm.horaireDepartTheorique.$invalid}">
               <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
-              <input name="horaireDepartTheorique" id="horaireDepartTheorique" class="form-control" ng-model="departTronc.current.horaireDepartTheorique" required/>
+              <input name="horaireDepartTheorique" id="horaireDepartTheorique" type="time" class="form-control" ng-model="departTronc.current.horaireDepartTheorique" required/>
               <span class="help-block" ng-show="departTroncForm.horaireDepartTheorique.$error.required">Required</span>
             </div>
           </div>

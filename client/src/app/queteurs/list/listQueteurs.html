@@ -1,38 +1,55 @@
 <div class="container">
 
   <div>
-    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+    <acme-navbar></acme-navbar>
   </div>
 
 
-  <div class="container">
+  <div class="container" data-ng-controller="QueteursController as q">
 
-    <div class="jumbotron">
-      <h1>Les Quêteurs</h1>
-      <p>Taking care of your people, one at a time.</p>
+    <div class="panel panel-primary">
+      <div class="panel-heading">Les Quêteurs</div>
     </div>
+    <div class="well">
+      <form class="form-search" name="searchForm" novalidate ng-submit='q.doSearch();'>
+        <div class="row">
 
-    <div class="row" data-ng-controller="QueteursController as q">
-
-      <div class="col-xs-12 col-md-12">
-        <div class="well">
-          <form class="form-search">
+          <div class="col-md-6">
             <div class="form-group">
               <div class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
                 <input class="form-control" placeholder="Search" data-ng-model="q.search">
               </div>
               <div data-ng-show="q.search">
-                            <span data-ng-pluralize
-                                  data-count="filteredContacts.length"
-                                  data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
-                            </span>
+                <span data-ng-pluralize
+                      data-count="filteredContacts.length"
+                      data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
+                </span>
               </div>
-              {{q.search}}
             </div>
-          </form>
+          </div>
+          <div class="col-md-5">
+
+            <div class="form-group">
+              <label for="searchTypeRadio1" class="control-label">Type de Recherche</label>
+              <label class="radio-inline">
+                <input type="radio" name="searchType" id="searchTypeRadio1" ng-model="q.searchType" value="0" required> Tous
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="searchType" id="searchTypeRadio2" ng-model="q.searchType" value="1" required> Non Parti
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="searchType" id="searchTypeRadio3" ng-model="q.searchType" value="2" required> Pas Rentré
+              </label>
+            </div>
+          </div>
+          <div class="col-md-1">
+            <input type="submit" class="btn btn-primary" value="Search" />
+          </div>
         </div>
-      </div>
+      </form>
+    </div>
+
 
       <div class="col-xs-12 col-md-12">
         <div class="row">
@@ -44,8 +61,14 @@
                 &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
               </h4>
               <div class="contact-address">{{::queteur.email}}</div>
-              <div class="contact-phone">{{::queteur.mobile}}</div>
-              <div class="contact-phone">{{::queteur.nivol}}</div>
+              <div class="contact-phone">{{::queteur.mobile}} - {{::queteur.nivol}}</div>
+              <div class="contact-phone">{{::queteur.point_quete_name}}</div>
+              <div class="contact-phone">{{::queteur.depart_theorique}}</div>
+              <div class="queteur-status">
+                <abbr title="{{::queteur.depart_theorique}}"><span class="glyphicon glyphicon-stop"    aria-hidden="true" style="color:mediumblue" ng-show="!queteur.retour && !queteur.depart"></span></abbr>
+                <abbr title="{{::queteur.depart          }}"><span class="glyphicon glyphicon-globe"   aria-hidden="true" style="color:#00DD00"    ng-show="!queteur.retour && queteur.depart"></span></abbr>
+                <abbr title="{{::queteur.retour          }}"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:purple"     ng-show="queteur.retour"></span></abbr>
+              </div>
             </div>
           </div>
 

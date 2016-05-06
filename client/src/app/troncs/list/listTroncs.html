@@ -5,14 +5,13 @@
   </div>
 
 
-  <div class="container">
+  <div class="container" data-ng-controller="TroncsController as t">
 
-    <div class="jumbotron">
-      <h1>Les Quêteurs</h1>
-      <p>Taking care of your people, one at a time.</p>
+    <div class="panel panel-primary">
+      <div class="panel-heading">Les Troncs</div>
     </div>
 
-    <div class="row" data-ng-controller="QueteursController as q">
+    <div class="row">
 
       <div class="col-xs-12 col-md-12">
         <div class="well">
@@ -20,14 +19,13 @@
             <div class="form-group">
               <div class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                <input class="form-control" placeholder="Search" data-ng-model="q.search">
+                <input class="form-control" placeholder="Search" data-ng-model="t.search">
               </div>
               <div data-ng-show="q.search">
-                            <span data-ng-pluralize
-                                  data-count="filteredContacts.length"
-                                  data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
-                            </span>
-                for: {{list.search}}
+                <span data-ng-pluralize
+                      data-count="filteredContacts.length"
+                      data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
+                </span>
               </div>
             </div>
           </form>
@@ -37,14 +35,14 @@
       <div class="col-xs-12 col-md-12">
         <div class="row">
 
-          <div class="contact-card col-xs-12 col-sm-4" data-ng-repeat="queteur in q.list | filter:q.search | orderBy:'lastName'">
+          <div class="contact-card col-sm-2" data-ng-repeat="tronc in t.list | filter:t.search | orderBy:'lastName'">
             <div class="contact-card-inner">
               <h4>
-                <a ng-href="#/queteurs/edit/{{queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
-                &nbsp;{{::queteur.lastName | uppercase}} {{::queteur.firstName}}
+                <a ng-href="#/troncs/edit/{{tronc.id}}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span></a>
+                &nbsp;{{::tronc.id}}
               </h4>
-              <div class="contact-address">{{::queteur.address}}</div>
-              <div class="contact-phone">{{::queteur.phone}}</div>
+              <div class="contact-address">{{::tronc.enabled}}</div>
+              <div class="contact-phone">{{::tronc.notes}}</div>
             </div>
           </div>
 
