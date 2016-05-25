@@ -10,22 +10,73 @@
     .controller('DepartTroncController', DepartTroncController);
 
   /** @ngInject */
-  function DepartTroncController($scope, $log, QueteurResource, TroncResource) {
+  function DepartTroncController($scope, $log, $location, $uibModal,
+                                 QueteurResource, PointQueteResource, TroncResource, TroncQueteurResource,
+                                 QRDecodeService )
+  {
     var vm = this;
+
     vm.current = {};
     vm.current.ul_id=2;
+    vm.current.horaireDepartTheorique = new Date();
+
+    vm.current.horaireDepartTheorique.setHours(9) ;
+    vm.current.horaireDepartTheorique.setMinutes(0) ;
+    vm.current.horaireDepartTheorique.setSeconds(0) ;
+    vm.current.horaireDepartTheorique.setMilliseconds(0) ;
+    //pointQuete list
+    vm.current.pointsQuete = PointQueteResource.query();
+
+    //This watch change on queteur variable to update the queteurId field
     $scope.$watch('departTronc.current.queteur', function(newValue/*, oldValue*/)
     {
-      try
+      if(newValue != null)
       {
-        $scope.departTronc.current.queteurId = newValue.id;
-      }
-      catch(exception)
-      {
-        $log.debug(exception);
+        try
+        {
+          $scope.departTronc.current.queteurId = newValue.id;
+        }
+        catch(exception)
+        {
+          $log.debug(exception);
+        }
       }
     });
 
+
+    function redirectToSlash()
+    {
+      $location.path('/');
+    }
+
+    function onSaveError(errorMessage)
+    {
+
+      $log.error(errorMessage);
+      vm.errorOnSave = errorMessage.data.exception[0].message;
+
+
+      $uibModal.open({
+        animation: true,
+        templateUrl: 'myModalContent.html',
+        controller: 'ModalInstanceCtrl',
+        size: 'lg',
+        resolve: {
+          errorOnSave: function () {
+            return vm.errorOnSave;
+          },
+          troncId:function()
+          {
+            return $scope.departTronc.current.tronc.id;
+          }
+        }
+      });
+
+
+
+
+
+    }
     /***
      * Save a Départ Tronc
      * */
@@ -33,6 +84,15 @@
     {
       $log.debug("Saved called");
       $log.debug(vm.current);
+
+      var troncQueteur = new TroncQueteurResource();
+      troncQueteur.queteur_id       = $scope.departTronc.current.queteurId;
+      troncQueteur.tronc_id         = $scope.departTronc.current.troncId;
+      troncQueteur.point_quete_id   = $scope.departTronc.current.lieuDeQuete;
+      troncQueteur.depart_theorique = $scope.departTronc.current.horaireDepartTheorique;
+
+      troncQueteur.$save(redirectToSlash, onSaveError);
+      $log.debug("Saved completed");
     }
 
     /**
@@ -41,18 +101,41 @@
      * */
     vm.searchQueteur=function(queryString)
     {
-      $log.info("Manual Search for '"+queryString+"'");
+      $log.info("Queteur : Manual Search for '"+queryString+"'");
       return QueteurResource.query({"q":queryString}).$promise.then(function(response)
       {
         return response.map(function(queteur)
         {
           queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
           return queteur;
+        },
+        function(reason)
+        {
+          $log.debug("error while searching for queteur with query='"+queryString+"' with reason='"+reason+"'");
         });
       });
     };
 
-
+    /**
+     * Function used while performing a manual search for a Queteur
+     * @param queryString the search string (search is performed on first_name, last_name, nivol)
+     * */
+    vm.searchTronc=function(queryString)
+    {
+      $log.info("Tronc: Manual Search for '"+queryString+"'");
+      return TroncResource.query({"q":queryString}).$promise.then(function(response)
+      {
+        return response.map(function(tronc)
+        {
+          tronc.stringView = tronc.id+" - "+tronc.created;
+          return tronc;
+        });
+      },
+      function(reason)
+      {
+        $log.debug("error while searching for tronc with query='"+queryString+"' with reason='"+reason+"'");
+      });
+    };
 
 
     /**
@@ -71,70 +154,65 @@
     {
       $log.debug("Successfully decoded : '"+data+"'");
 
-      if(data != null /* && data instanceof String */)
+      if(data != null  && angular.isString(data) )
       {
         $log.debug("data is a String of length :" +data.length);
-        if(data.length == 24)
-        {//queteur
-          $log.debug("data length is 24 => QUETEUR");
 
-          var queteurRegEx = /^QUETEUR-([0-9]{6})-([0-9]{9})$/g
-          var match = queteurRegEx.exec(data);
-          if(match != null)
+        var checkQueteurNotAlreadyDecocededFunction = function()
+        {
+          var notAlreadyDecoded = (typeof $scope.departTronc.current.queteurId === 'undefined');
+          if(!notAlreadyDecoded)
           {
-            $log.debug("Queteur data match RegEx");
-            var ulId       = parseInt(match[1]);
-            var queteurId  = parseInt(match[2]);
-
-            $log.debug("ulId:"+ulId );
-            $log.debug("queteurId:"+queteurId);
-
-            QueteurResource.get({'id':queteurId}).$promise.then(function(queteur)
-              {
-                $log.debug("queteurId:"+queteurId +" found in Database");
-                $log.debug(queteur);
-
-
-                //TODO play sound
-                vm.current.queteur = queteur;
-                vm.current.queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
-                $scope.departTronc.current.queteurId = queteur.id;
-              },
-              function(reason)
-              {
-                //TODO display an error to the user
-                $log.error(reason);
-              }
-            );
+              $log.debug("Queteur is already decoded with value '"+$scope.departTronc.current.queteurId+"'")
           }
-          else
-          {
-            $log.info("data do not match RegEx");
-
-          }
+          return notAlreadyDecoded;
         }
-        else if(data.length == 22)
-        {//tronc
-          $log.debug("data length is 22 => TRONC");
-          var troncrRegEx = /^TRONC-([0-9]{6})-([0-9]{9})$/g
-          var matchTronc = troncrRegEx.exec(data);
-          if(matchTronc != null)
-          {
-            $log.debug("TRONC data match RegEx");
-            var ulIdTronc = parseInt(matchTronc[1]);
-            var troncId   = parseInt(matchTronc[2]);
-
-            $log.debug("ulId:"+ulIdTronc );
-            $log.debug("troncId:"+troncId);
-
-
-          }
+        var queteurDecodedAndFoundInDB = function(queteur)
+        {
+          vm.current.queteur = queteur;
+          vm.current.queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
+          $scope.departTronc.current.queteurId = queteur.id;
         }
-        //else: erreur de scan
+        var queteurDecodedAndNotFoundInDB=function (reason, queteurId, ulId)
+        {
+          //TODO display a message to the user
+          alert(reason +' ' + queteurId+' '+ulId) ;
+        }
+
+        var foundSomething = QRDecodeService.decodeQueteur(data, checkQueteurNotAlreadyDecocededFunction, queteurDecodedAndFoundInDB, queteurDecodedAndNotFoundInDB);
+
+        if(!foundSomething)
+        {//if data is not 24 long, try to decode tronc (22)
+          var checkTroncNotAlreadyDecocededFunction = function()
+          {
+            var notAlreadyDecoded = (typeof $scope.departTronc.current.troncId === 'undefined');
+
+            if(!notAlreadyDecoded)
+            {
+              $log.debug("Tronc is already decoded with value '"+$scope.departTronc.current.troncId+"'")
+            }
+            return notAlreadyDecoded;
+          };
+
+          var troncDecodedAndFoundInDB = function(tronc)
+          {
+            vm.current.tronc = tronc;
+            vm.current.tronc.stringView = tronc.id+" - "+tronc.created;
+            $scope.departTronc.current.troncId = tronc.id;
+          };
+
+          var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
+          {
+            alert(reason +' ' + troncId+' '+ulId) ;
+          };
+          QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
+
+        }
+        else
+        {
+          $log.debug("unrecognized QRCode :'"+data+"'");
+        }
       }
-
-
-
       vm.decodedData = data;
 
     };
@@ -155,5 +233,34 @@
     };
 
   }
+
+
+  angular
+    .module('client')
+    .controller('ModalInstanceCtrl',
+      function ($scope, $uibModalInstance, $log,
+                TroncQueteurResource, errorOnSave, troncId)
+  {
+    $scope.message=errorOnSave;
+
+
+    $scope.deleteNonReturnedTronc = function ()
+    {
+      TroncQueteurResource.deleteNonReturnedTroncQueteur({'id':troncId}, function()
+      {
+        $uibModalInstance.close();
+      }, function(reason){
+        alert(reason);
+      });
+    };
+
+    $scope.cancel = function ()
+    {
+      $uibModalInstance.dismiss('cancel');
+    };
+  });
+
+
+
 })();
 

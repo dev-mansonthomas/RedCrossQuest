@@ -3,7 +3,7 @@ namespace RedCrossQuest;
 
 class TroncMapper extends Mapper
 {
-    public function getTroncs()
+    public function getTroncs($query=null)
     {
 
       $sql = "
@@ -12,11 +12,28 @@ SELECT `id`,
        `created`,
        `enabled`,
        `notes`
-FROM   `tronc` as t";
+FROM   `tronc` as t
+";
+      if($query != null)
+      {
+        $sql .="
+        WHERE CONVERT(id, CHAR) like concat(:query,'%') ;
+";
+      }
 
-
+      $sql .="
+      ORDER BY id ASC
+";
+      $this->logger->debug($sql);
       $stmt = $this->db->prepare($sql);
-      $result = $stmt->execute([]);
+      if($query != null)
+      {
+        $result = $stmt->execute([ "query" => $query]);
+      }
+      else
+      {
+        $result = $stmt->execute([]);
+      }
 
 
       $results = [];
@@ -43,30 +60,33 @@ FROM   `tronc` as t";
 
     $sql = "
 SELECT 	`id`,
-       `ul_id`,
-       `created`,
-       `enabled`,
-       `notes`
-FROM   `tronc` as t
+        `ul_id`,
+        `created`,
+        `enabled`,
+        `notes`
+FROM    `tronc` as t
 ";
 
-    if($searchType != "0")
+    if($searchType == "1")
     {
-      $sql .="
-WHERE t.enabled = :enabled
+      $sql .= "
+WHERE t.enabled = 1
 ";
-    }
-
-    $stmt = $this->db->prepare($sql);
-
-    if($searchType != "0")
-    {
-      $result = $stmt->execute([]);
     }
     else
     {
-      $result = $stmt->execute([$searchType == "1"?1:0]);
+      $sql .= "
+WHERE t.enabled = 0
+";
+
     }
+
+    $sql .="
+ORDER BY id ASC
+    ";
+    $stmt = $this->db->prepare($sql);
+
+    $result = $stmt->execute([]);
 
     $results = [];
     $i=0;
@@ -94,7 +114,7 @@ WHERE t.enabled = :enabled
      */
     public function getTroncById($tronc_id)
     {
-        $sql = "
+      $sql = "
 SELECT `id`,
        `ul_id`,
        `created`,
@@ -104,16 +124,20 @@ FROM  `tronc` as t
 WHERE  t.id = :tronc_id
 ";
 
-        $stmt = $this->db->prepare($sql);
+      $stmt = $this->db->prepare($sql);
 
-        $result = $stmt->execute(["tronc_id" => $tronc_id]);
+      $result = $stmt->execute(["tronc_id" => $tronc_id]);
 
-        if($result)
-        {
-          $tronc = new TroncEntity($stmt->fetch());
-          $stmt->closeCursor();
-          return $tronc;
-        }
+      if($result && $stmt->rowCount() == 1 )
+      {
+        $tronc = new TroncEntity($stmt->fetch());
+        $stmt->closeCursor();
+        return $tronc;
+      }
+      else
+      {
+        throw new \Exception("Tronc with ID:'".$tronc_id . "' not found");
+      }
     }
 
 

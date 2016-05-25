@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="mock:///TroncQueteurMapper.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/db/migrations/20160419224943_red_cross_quest.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/db/privateData/import_data_2014.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/db/privateData/import_data_2015.sql" dialect="MySQL" />
@@ -9,5 +10,6 @@
     <file url="file://$PROJECT_DIR$/server/db/seeds/QueteurSeeder.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/src/QueteurMapper.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/src/TroncMapper.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/server/src/TroncQueteurMapper.php" dialect="MySQL" />
   </component>
 </project>

@@ -57,7 +57,7 @@
           <div class="contact-card col-xs-12 col-sm-4" data-ng-repeat="queteur in q.list | filter:q.search | orderBy:'lastName'">
             <div class="contact-card-inner">
               <h4>
-                <a ng-href="#/queteurs/edit/{{queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                <a ng-href="#/queteurs/edit/{{::queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
                 &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
               </h4>
               <div class="contact-address">{{::queteur.email}}</div>
