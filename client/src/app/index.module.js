@@ -4,10 +4,9 @@
   angular
     .module('client', ['ngAnimate', 'ngCookies', 'ngTouch',
             'ngSanitize', 'ngMessages', 'ngAria', 'ngResource',
-            'ngRoute', 'ui.bootstrap', 'toastr', 'qrScanner', 'ui.bootstrap']);
+            'ngRoute', 'ui.bootstrap', 'toastr', 'qrScanner', 'ui.bootstrap', 'ngAudio']);
 
-  angular
-    .module('queteurs', ['ngRoute', 'ngResource']);
+
 
 
 })();

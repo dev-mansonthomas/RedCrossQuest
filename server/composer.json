@@ -17,7 +17,8 @@
         "slim/php-view": "^2.0",
         "monolog/monolog": "^1.17",
         "robmorgan/phinx": "^0.5.3",
-        "fzaninotto/faker": "^1.5"
+        "fzaninotto/faker": "^1.5",
+        "nesbot/carbon": "^1.21"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

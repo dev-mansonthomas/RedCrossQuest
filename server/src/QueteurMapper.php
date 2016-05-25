@@ -25,8 +25,8 @@ FROM `queteur` q
       {
         $sql .= "
 WHERE UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%')
-OR    UPPER(q.`last_name`)  like concat('%', UPPER(:last_name), '%')
-OR    UPPER(q.`nivol`)      like concat('%', UPPER(:nivol), '%')
+OR    UPPER(q.`last_name` ) like concat('%', UPPER(:last_name ), '%')
+OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:nivol     ), '%')
 ";
       }
 
