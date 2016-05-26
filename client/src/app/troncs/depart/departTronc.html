@@ -1,23 +1,5 @@
 <div class="container"  data-ng-controller="DepartTroncController as dt">
 
-
-<!-- Modal window in case of error -->
-  <script type="text/ng-template" id="myModalContent.html">
-    <div class="modal-header">
-      <h3 class="modal-title">Erreur lors de la sauvegarde du départ du tronc!</h3>
-    </div>
-    <div class="modal-body">
-      <ng-bind-html  ng-bind-html="message"></ng-bind-html>
-
-      {{troncId}}
-
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()">Supprimer les Anciens Troncs</button>
-      <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le tronc au bon quêteur (ou contacter Thomas)</button>
-    </div>
-  </script>
-
 <!-- Nav Bar -->
   <div>
     <acme-navbar creation-date="main.creationDate"></acme-navbar>
@@ -32,7 +14,7 @@
 
   <div class="">
     <div class="well">
-      <form novalidate ng-submit='departTronc.save();' name="departTroncForm">
+      <form novalidate  name="departTroncForm">
         <div class="row">
           <div class="col-md-4">
 
@@ -46,33 +28,6 @@
             <span ng-bind="departTronc.decodedData"></span>
           </div>
 
-          <div class=" col-md-4">
-            <div class="form-group" ng-class="{'has-error':departTroncForm.queteurId.$invalid}">
-              <label for="queteurId" class="control-label">Recherche du Quêteur</label>
-              <input
-               id="queteurId"
-               type="text"
-               ng-model="departTronc.current.queteur"
-               placeholder="Scanner le QRCode de la carte du quêteur"
-               uib-typeahead="queteur as queteur.full_name for queteur in dt.searchQueteur($viewValue)"
-               typeahead-loading="loadingQueteurs"
-               typeahead-no-results="noResults"
-               typeahead-wait-ms="20"
-               class="form-control"
-               ng-required
-               autocomplete="off">
-              <i   ng-show="loadingQueteurs" class="glyphicon glyphicon-refresh"></i>
-              <div ng-show="noResults">
-                <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
-              </div>
-              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
-            </div>
-            <div class="form-group" ng-class="{'has-error':departTroncForm.horaireDepartTheorique.$invalid}">
-              <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
-              <input name="horaireDepartTheorique" id="horaireDepartTheorique" type="datetime-local" class="form-control" ng-model="departTronc.current.horaireDepartTheorique" required/>
-              <span class="help-block" ng-show="departTroncForm.horaireDepartTheorique.$error.required">Required</span>
-            </div>
-          </div>
           <div class=" col-md-4">
             <div class="form-group" ng-class="{'has-error':departTroncForm.troncId.$invalid}">
               <label for="troncId" class="control-label">Id Tronc</label>
@@ -97,12 +52,31 @@
             </div>
             <div class="form-group">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
-              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="departTronc.current.lieuDeQuete" required>
+              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="departTronc.current.tronc_queteur.point_quete.id" disabled>
                 <option value=""></option>
-
                 <option ng-repeat="pointQuete in dt.current.pointsQuete" value="{{::pointQuete.id}}">{{::pointQuete.code}} - {{::pointQuete.name}}</option>
               </select>
             </div>
+          </div>
+          <div class=" col-md-4">
+
+            <div class="form-group" ng-class="{'has-error':departTroncForm.horaireDepartTheorique.$invalid}">
+              <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
+              <input name="horaireDepartTheorique" id="horaireDepartTheorique" type="datetime-local" class="form-control" ng-model="departTronc.current.tronc_queteur.depart_theorique"  readonly/>
+              <span class="help-block">C'est l'horaire qui avait été planifié</span>
+              <span class="help-block" ng-show="departTroncForm.horaireDepartTheorique.$error.required">Required</span>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':departTroncForm.depart.$invalid}">
+              <label for="depart" class="control-label">Horaire Départ Réel</label>
+              <input name="depart" id="depart" type="datetime-local" class="form-control" ng-model="departTronc.current.tronc_queteur.depart"  readonly/>
+              <span class="help-block" ng-show="departTroncForm.depart.$error.required">Required</span>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-show="departTronc.current.tronc_queteur" style="vertical-align: middle;">
+          <div class="col-md-8 col-md-offset-4">
+            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="font-size:40px;color:green;"></span> {{departTronc.current.tronc_queteur.queteur.first_name}} {{departTronc.current.tronc_queteur.queteur.last_name}} est <span ng-show="departTronc.current.tronc_queteur.departAlreadyRegistered" style="font-size:24px; color:rebeccapurple:">déjà</span> enregistré comme parti le {{departTronc.current.tronc_queteur.depart}}
           </div>
         </div>
         <div class="row">

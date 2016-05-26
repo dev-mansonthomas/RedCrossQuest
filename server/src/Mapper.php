@@ -1,8 +1,10 @@
 <?php
 namespace RedCrossQuest;
 
-abstract class Mapper {
+abstract class Mapper
+{
     protected $db;
+    protected $logger;
 
     public function __construct($db, $logger)
     {

@@ -21,7 +21,8 @@
     "angular-qr-scanner": "^0.1.0",
     "angular-qr": "^0.2.0",
     "angular-i18n": "^1.5.5",
-    "angular-audio": "^1.7.2"
+    "angular-audio": "^1.7.2",
+    "moment-timezone": "^0.5.4"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.5"

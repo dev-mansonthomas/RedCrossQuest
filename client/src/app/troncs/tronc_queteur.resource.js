@@ -17,6 +17,28 @@ angular.module('client').factory('TroncQueteurResource', function($resource) {
         action:'getTroncQueteurForTroncId',
         tronc_id:'@tronc_id'
       }
+    },
+    getTroncQueteurForTroncIdAndSetDepart:{
+      method:'POST',
+      params:{
+        action:'getTroncQueteurForTroncIdAndSetDepart',
+        tronc_id:'@tronc_id'
+      }
+    },
+    saveReturnDate:{
+      method:'POST',
+      params:{
+        action:'saveReturnDate'
+      }
+    },
+    saveCoins:{
+      method:'POST',
+      params:{
+        action:'saveCoins'
+      }
     }
+
+
+
   });
 });

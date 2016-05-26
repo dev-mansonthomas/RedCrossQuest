@@ -1,0 +1,40 @@
+
+<div class="container" data-ng-controller="QRCodeTroncsController as qrcTroncs">
+
+  <div>
+    <acme-navbar></acme-navbar>
+  </div>
+
+  <div class="container">
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">QR Code des Troncs</div>
+    </div>
+
+    <div class="row">
+      Size: {{qrcTroncs.size}}
+      <input type="range" id="size" class="range ng-valid ng-dirty ng-touched" ng-model="qrcTroncs.size" min="100" max="500">
+    </div>
+
+
+
+    <div class="col-md-12">
+      <div class="row">
+
+        <div class="contact-card col-md-3" data-ng-repeat="tronc in qrcTroncs.list | orderBy:'id'">
+          <div class="contact-card-inner">
+
+            <qr text="tronc.id" size="qrcTroncs.size"></qr>
+            <span class="help-block" style="font-size:10px;">TRONC-{{("000000"+tronc.ul_id).slice(-6)}}-{{("00000000"+tronc.id).slice(-9)}}</span>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+</div>
