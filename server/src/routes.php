@@ -71,27 +71,108 @@ $app->delete('/tronc_queteur/{id}', function ($request, $response, $args)
   }
 });
 
+
 /**
  * créer un départ de tronc (id_queteur, id_tronc, départ_théorique, point_quete)
  *
  */
-$app->post('/tronc_queteur', function ($request, $response, $args)
+$app->post('/tronc_queteur/{id}', function ($request, $response, $args)
 {
-  $mapper = new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger);
-  $input = $request->getParsedBody();
-
-  $tq = new \RedCrossQuest\TroncQueteurEntity($input, $this->logger);
-  $this->logger->debug("tronc_queteur", [$tq]);
   try
   {
-    $mapper->insert($tq);
+    $params = $request->getQueryParams();
+    $troncQueteurMapper = new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger);
+
+    if(array_key_exists('action', $params))
+    {
+      $action = $params['action'];
+      $this->logger->debug("action found with value '".$action."'");
+
+      $input  = $request->getParsedBody();
+
+      $this->logger->debug("parsed json input : ",[$input]);
+      $tq = new \RedCrossQuest\TroncQueteurEntity($input, $this->logger);
+
+      if ($action =="saveReturnDate")
+      {
+        $this->logger->debug("Saving return date");
+        $troncQueteurMapper->updateRetour($tq);
+      }
+      elseif ($action =="saveCoins")
+      {
+        $this->logger->debug("Saving Coins");
+        $troncQueteurMapper->updateCoinsCount($tq);
+      }
+    }
   }
   catch(Exception $e)
   {
     $this->logger->addError($e);
     throw $e;
   }
-  return $response;
+
+
+});
+
+/**
+ * créer un départ de tronc (id_queteur, id_tronc, départ_théorique, point_quete)
+ *
+ */
+$app->post('/tronc_queteur', function ($request, $response, $args)
+{
+  $params = $request->getQueryParams();
+  $troncQueteurMapper = new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger);
+
+  if(array_key_exists('action', $params))
+  {
+    $action   = $params['action'  ];
+    $tronc_id = $params['tronc_id'];
+
+    $troncQueteurAction = new RedCrossQuest\TroncQueteurAction($this->logger,
+                                                                $troncQueteurMapper,
+                                                                new RedCrossQuest\QueteurMapper                   ($this->db, $this->logger),
+                                                                new RedCrossQuest\PointQueteMapper                ($this->db, $this->logger));
+
+
+    if($action == "getTroncQueteurForTroncIdAndSetDepart")
+    {
+      $troncQueteur = $troncQueteurAction->getLastTroncQueteurFromTroncId($tronc_id);
+
+      if($troncQueteur->depart == null)
+      {
+        $departDate = $troncQueteurMapper->setDepartToNow($troncQueteur->id);
+        $troncQueteur->depart = $departDate;
+      }
+      else
+      {
+        $troncQueteur->departAlreadyRegistered=true;
+        $this->logger->warn("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it");
+      }
+
+      $response->getBody()->write(json_encode($troncQueteur));
+      return $response;
+    }
+
+  }
+  else
+  {
+
+    $input  = $request->getParsedBody();
+
+    $tq = new \RedCrossQuest\TroncQueteurEntity($input, $this->logger);
+    $this->logger->debug("tronc_queteur", [$tq]);
+    try
+    {
+      $troncQueteurMapper->insert($tq);
+    }
+    catch(Exception $e)
+    {
+      $this->logger->addError($e);
+      throw $e;
+    }
+    return $response;
+  }
+
 });
 
 /**
@@ -109,23 +190,15 @@ $app->get('/tronc_queteur', function ($request, $response, $args)
       $action   = $params['action'  ];
       $tronc_id = $params['tronc_id'];
 
-      $troncQueteurMapper = new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger);
+      $troncQueteurAction = new RedCrossQuest\TroncQueteurAction($this->logger,
+                                                                  new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger),
+                                                                  new RedCrossQuest\QueteurMapper($this->db, $this->logger),
+                                                                  new RedCrossQuest\PointQueteMapper($this->db, $this->logger));
 
       if($action == "getTroncQueteurForTroncId")
       {
-        $troncQueteur = $troncQueteurMapper->getLastTroncQueteurByTroncId($tronc_id);
-
-        $queteurMapper = new RedCrossQuest\QueteurMapper($this->db, $this->logger);
-        $queteur = $queteurMapper->getQueteurById($troncQueteur->queteur_id);
-        $troncQueteur->queteur = $queteur;
-
-
-        $pointQueteMapper = new RedCrossQuest\PointQueteMapper($this->db, $this->logger);
-        $point_quete = $pointQueteMapper->getPointQueteById($troncQueteur->point_quete_id);
-        $troncQueteur->point_quete = $point_quete;
-
-
-        $response->getBody()->write(json_encode($troncQueteur));
+        $troncQueteur = $troncQueteurAction->getLastTroncQueteurFromTroncId($tronc_id);
+        $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
         return $response;
       }
     }

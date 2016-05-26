@@ -1,68 +1,242 @@
-[2016-05-25 01:05:03] slim-app.INFO: Point Quete list [] {"uid":"722cc18"}
-[2016-05-25 01:05:03] slim-app.INFO: PointQuetes query [] {"uid":"722cc18"}
-[2016-05-25 01:05:03] slim-app.INFO: Point Quete list [] {"uid":"a1a988b"}
-[2016-05-25 01:05:03] slim-app.INFO: PointQuetes query [] {"uid":"a1a988b"}
-[2016-05-25 01:05:12] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"60b3c09"}
-[2016-05-25 01:05:12] slim-app.DEBUG:  [] {"uid":"60b3c09"}
-[2016-05-25 01:05:12] slim-app.DEBUG:  [] {"uid":"60b3c09"}
-[2016-05-25 01:06:26] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"6c88c2f"}
-[2016-05-25 01:06:26] slim-app.DEBUG:  [] {"uid":"6c88c2f"}
-[2016-05-25 01:06:26] slim-app.DEBUG:  [] {"uid":"6c88c2f"}
-[2016-05-25 01:14:45] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"e8c9ba0"}
-[2016-05-25 01:14:45] slim-app.DEBUG:  [] {"uid":"e8c9ba0"}
-[2016-05-25 01:14:45] slim-app.DEBUG:  [] {"uid":"e8c9ba0"}
-[2016-05-25 01:20:30] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"8396124"}
-[2016-05-25 01:20:30] slim-app.DEBUG:  [] {"uid":"8396124"}
-[2016-05-25 01:20:30] slim-app.DEBUG:  [] {"uid":"8396124"}
-[2016-05-25 01:21:24] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"185225c"}
-[2016-05-25 01:21:24] slim-app.DEBUG:  [] {"uid":"185225c"}
-[2016-05-25 01:21:24] slim-app.DEBUG:  [] {"uid":"185225c"}
-[2016-05-25 01:23:33] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"492e432"}
-[2016-05-25 01:23:33] slim-app.DEBUG:  [] {"uid":"492e432"}
-[2016-05-25 01:23:33] slim-app.DEBUG:  [] {"uid":"492e432"}
-[2016-05-25 01:24:00] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"7f938ed"}
-[2016-05-25 01:24:00] slim-app.DEBUG:  [] {"uid":"7f938ed"}
-[2016-05-25 01:24:00] slim-app.DEBUG:  [] {"uid":"7f938ed"}
-[2016-05-25 01:24:28] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"aa6e8ca"}
-[2016-05-25 01:24:28] slim-app.DEBUG:  [] {"uid":"aa6e8ca"}
-[2016-05-25 01:24:28] slim-app.DEBUG:  [] {"uid":"aa6e8ca"}
-[2016-05-25 01:26:52] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"fc3cbe9"}
-[2016-05-25 01:26:52] slim-app.DEBUG:  [] {"uid":"fc3cbe9"}
-[2016-05-25 01:26:52] slim-app.DEBUG:  [] {"uid":"fc3cbe9"}
-[2016-05-25 01:28:17] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"c39da4e"}
-[2016-05-25 01:28:17] slim-app.DEBUG:  [] {"uid":"c39da4e"}
-[2016-05-25 01:28:17] slim-app.DEBUG:  [] {"uid":"c39da4e"}
-[2016-05-25 01:29:47] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"71cdd12"}
-[2016-05-25 01:29:47] slim-app.DEBUG:  [] {"uid":"71cdd12"}
-[2016-05-25 01:29:47] slim-app.DEBUG:  [] {"uid":"71cdd12"}
-[2016-05-25 01:30:20] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"5401f0f"}
-[2016-05-25 01:30:20] slim-app.DEBUG:  [] {"uid":"5401f0f"}
-[2016-05-25 01:30:20] slim-app.DEBUG:  [] {"uid":"5401f0f"}
-[2016-05-25 01:31:40] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"6c6e960"}
-[2016-05-25 01:31:40] slim-app.DEBUG:  [] {"uid":"6c6e960"}
-[2016-05-25 01:31:40] slim-app.DEBUG:  [] {"uid":"6c6e960"}
-[2016-05-25 01:34:18] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"2f1a9e8"}
-[2016-05-25 01:34:18] slim-app.DEBUG:  [] {"uid":"2f1a9e8"}
-[2016-05-25 01:34:18] slim-app.DEBUG:  [] {"uid":"2f1a9e8"}
-[2016-05-25 01:35:51] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"c538a6e"}
-[2016-05-25 01:35:51] slim-app.DEBUG:  [] {"uid":"c538a6e"}
-[2016-05-25 01:35:51] slim-app.DEBUG:  [] {"uid":"c538a6e"}
-[2016-05-25 01:53:10] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"8aa06fc"}
-[2016-05-25 01:53:10] slim-app.DEBUG:  [] {"uid":"8aa06fc"}
-[2016-05-25 01:53:10] slim-app.DEBUG:  [] {"uid":"8aa06fc"}
-[2016-05-25 01:54:32] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"76301d6"}
-[2016-05-25 01:54:32] slim-app.DEBUG:  [] {"uid":"76301d6"}
-[2016-05-25 01:54:32] slim-app.DEBUG:  [] {"uid":"76301d6"}
-[2016-05-25 01:54:59] slim-app.DEBUG: 2016-05-24 07:00:00 [] {"uid":"812121d"}
-[2016-05-25 01:54:59] slim-app.DEBUG:  [] {"uid":"812121d"}
-[2016-05-25 01:54:59] slim-app.DEBUG:  [] {"uid":"812121d"}
-[2016-05-25 09:56:51] slim-app.INFO: Queteur list [] {"uid":"955aefd"}
-[2016-05-25 09:56:51] slim-app.INFO: Queteur by search type '0'' [] {"uid":"955aefd"}
-[2016-05-25 09:56:51] slim-app.INFO: Queteur list [] {"uid":"6278218"}
-[2016-05-25 09:56:51] slim-app.INFO: Queteur by search type '0'' [] {"uid":"6278218"}
-[2016-05-25 09:56:54] slim-app.INFO: Queteur list [] {"uid":"18c1bd0"}
-[2016-05-25 09:56:54] slim-app.INFO: Queteur by search type '2'' [] {"uid":"18c1bd0"}
-[2016-05-25 09:57:29] slim-app.INFO: Point Quete list [] {"uid":"51d0801"}
-[2016-05-25 09:57:29] slim-app.INFO: PointQuetes query [] {"uid":"51d0801"}
-[2016-05-25 09:57:29] slim-app.INFO: Point Quete list [] {"uid":"d817bfd"}
-[2016-05-25 09:57:29] slim-app.INFO: PointQuetes query [] {"uid":"d817bfd"}
+[2016-05-25 23:17:03] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"0655266"}
+[2016-05-25 23:18:09] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"f723455"}
+[2016-05-25 23:19:19] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"108a7dd"}
+[2016-05-25 23:21:34] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"35fb68c"}
+[2016-05-25 23:21:34] slim-app.WARNING: 1 [] {"uid":"35fb68c"}
+[2016-05-25 23:41:58] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"735c3c3"}
+[2016-05-25 23:41:58] slim-app.WARNING: 1 [] {"uid":"735c3c3"}
+[2016-05-26 00:34:27] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"5e735f6"}
+[2016-05-26 00:34:27] slim-app.WARNING: 0 [] {"uid":"5e735f6"}
+[2016-05-26 00:38:59] slim-app.DEBUG: action found with value 'saveCoins' [] {"uid":"2f3f082"}
+[2016-05-26 00:38:59] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"2f3f082"}
+[2016-05-26 00:38:59] slim-app.DEBUG: Saving Coins [] {"uid":"2f3f082"}
+[2016-05-26 00:40:07] slim-app.DEBUG: action found with value 'saveCoins' [] {"uid":"21eb4c1"}
+[2016-05-26 00:40:07] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"21eb4c1"}
+[2016-05-26 00:40:07] slim-app.DEBUG: Saving Coins [] {"uid":"21eb4c1"}
+[2016-05-26 00:40:07] slim-app.DEBUG: Saving coins  ["[object] (RedCrossQuest\\TroncQueteurEntity: {\"id\":\"2330\",\"queteur_id\":\"2500\",\"queteur\":null,\"point_quete\":null,\"point_quete_id\":\"8\",\"tronc_id\":\"2656\",\"depart_theorique\":{\"date\":\"2016-05-25 07:00:00.000000\",\"timezone_type\":3,\"timezone\":\"Europe/Paris\"},\"depart\":{\"date\":\"2016-05-25 19:49:02.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"retour\":{\"date\":\"2016-05-25 21:06:07.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"euro500\":null,\"euro200\":null,\"euro100\":null,\"euro50\":null,\"euro20\":null,\"euro10\":null,\"euro5\":null,\"euro2\":null,\"euro1\":null,\"cents50\":null,\"cents20\":null,\"cents10\":null,\"cents5\":null,\"cents2\":null,\"cent1\":null,\"foreign_coins\":null,\"foreign_banknote\":null,\"notes\":null})"] {"uid":"21eb4c1"}
+[2016-05-26 00:40:07] slim-app.WARNING: 0 [] {"uid":"21eb4c1"}
+[2016-05-26 00:42:38] slim-app.DEBUG: action found with value 'saveCoins' [] {"uid":"4badf3d"}
+[2016-05-26 00:42:38] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"4badf3d"}
+[2016-05-26 00:42:38] slim-app.DEBUG: Saving Coins [] {"uid":"4badf3d"}
+[2016-05-26 00:42:38] slim-app.DEBUG: Saving coins  ["[object] (RedCrossQuest\\TroncQueteurEntity: {\"id\":\"2330\",\"queteur_id\":\"2500\",\"queteur\":null,\"point_quete\":null,\"point_quete_id\":\"8\",\"tronc_id\":\"2656\",\"depart_theorique\":{\"date\":\"2016-05-25 07:00:00.000000\",\"timezone_type\":3,\"timezone\":\"Europe/Paris\"},\"depart\":{\"date\":\"2016-05-25 19:49:02.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"retour\":{\"date\":\"2016-05-25 21:06:07.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"euro500\":null,\"euro200\":null,\"euro100\":null,\"euro50\":null,\"euro20\":null,\"euro10\":null,\"euro5\":null,\"euro2\":null,\"euro1\":null,\"cents50\":null,\"cents20\":null,\"cents10\":null,\"cents5\":null,\"cents2\":null,\"cent1\":null,\"foreign_coins\":null,\"foreign_banknote\":null,\"notes\":null})"] {"uid":"4badf3d"}
+[2016-05-26 00:42:38] slim-app.WARNING: 0 [] {"uid":"4badf3d"}
+[2016-05-26 00:47:45] slim-app.DEBUG: action found with value 'saveCoins' [] {"uid":"3498999"}
+[2016-05-26 00:47:45] slim-app.DEBUG: parsed json input :  [{"id":"2330","queteur_id":"2500","queteur":{"id":"2500","email":"n@a.com","first_name":"Tichet","last_name":"Anna","minor":"0","secteur":"1","nivol":"N/A","mobile":"N/A","created":"2016-04-29 18:00:53","updated":"2016-04-29 18:00:53","parent_authorization":null,"temporary_volunteer_form":null,"notes":null,"ul_id":"2","point_quete_id":null,"point_quete_name":null,"depart_theorique":null,"depart":null,"retour":null},"point_quete":{"id":"8","ul_id":"2","code":"MLD","name":"Boulevard Morland","latitude":"48.850925","longitude":"2.362327","address":"23 Boulevard Morland","postal_code":"75004","city":"Paris","max_people":"2","advice":"","localization":"Les voitures qui viennent du 12ème","minor_allowed":"0","created":{"year":2016,"month":4,"day":27,"hour":0,"minute":48,"second":58,"fraction":0,"warning_count":0,"warnings":[],"error_count":0,"errors":[],"is_localtime":false}},"point_quete_id":"8","tronc_id":"2656","depart_theorique":{"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"},"depart":"2016-05-25T19:49:02.000Z","retour":"2016-05-25T21:06:07.000Z","euro500":null,"euro200":null,"euro100":null,"euro50":null,"euro20":null,"euro10":null,"euro5":null,"euro2":null,"euro1":null,"cents50":null,"cents20":null,"cents10":null,"cents5":null,"cents2":null,"cent1":null,"foreign_coins":null,"foreign_banknote":null,"notes":null}] {"uid":"3498999"}
+[2016-05-26 00:47:45] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"3498999"}
+[2016-05-26 00:47:45] slim-app.DEBUG: Saving Coins [] {"uid":"3498999"}
+[2016-05-26 00:47:45] slim-app.DEBUG: Saving coins  ["[object] (RedCrossQuest\\TroncQueteurEntity: {\"id\":\"2330\",\"queteur_id\":\"2500\",\"queteur\":null,\"point_quete\":null,\"point_quete_id\":\"8\",\"tronc_id\":\"2656\",\"depart_theorique\":{\"date\":\"2016-05-25 07:00:00.000000\",\"timezone_type\":3,\"timezone\":\"Europe/Paris\"},\"depart\":{\"date\":\"2016-05-25 19:49:02.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"retour\":{\"date\":\"2016-05-25 21:06:07.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"euro500\":null,\"euro200\":null,\"euro100\":null,\"euro50\":null,\"euro20\":null,\"euro10\":null,\"euro5\":null,\"euro2\":null,\"euro1\":null,\"cents50\":null,\"cents20\":null,\"cents10\":null,\"cents5\":null,\"cents2\":null,\"cent1\":null,\"foreign_coins\":null,\"foreign_banknote\":null,\"notes\":null})"] {"uid":"3498999"}
+[2016-05-26 00:47:45] slim-app.WARNING: 0 [] {"uid":"3498999"}
+[2016-05-26 00:52:35] slim-app.DEBUG: action found with value 'saveCoins' [] {"uid":"eaa8b26"}
+[2016-05-26 00:52:35] slim-app.DEBUG: parsed json input :  [{"id":"2330","queteur_id":"2500","queteur":{"id":"2500","email":"n@a.com","first_name":"Tichet","last_name":"Anna","minor":"0","secteur":"1","nivol":"N/A","mobile":"N/A","created":"2016-04-29 18:00:53","updated":"2016-04-29 18:00:53","parent_authorization":null,"temporary_volunteer_form":null,"notes":null,"ul_id":"2","point_quete_id":null,"point_quete_name":null,"depart_theorique":null,"depart":null,"retour":null},"point_quete":{"id":"8","ul_id":"2","code":"MLD","name":"Boulevard Morland","latitude":"48.850925","longitude":"2.362327","address":"23 Boulevard Morland","postal_code":"75004","city":"Paris","max_people":"2","advice":"","localization":"Les voitures qui viennent du 12ème","minor_allowed":"0","created":{"year":2016,"month":4,"day":27,"hour":0,"minute":48,"second":58,"fraction":0,"warning_count":0,"warnings":[],"error_count":0,"errors":[],"is_localtime":false}},"point_quete_id":"8","tronc_id":"2656","depart_theorique":{"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"},"depart":"2016-05-25T19:49:02.000Z","retour":"2016-05-25T21:06:07.000Z","euro500":500,"euro200":200,"euro100":100,"euro50":50,"euro20":20,"euro10":10,"euro5":5,"euro2":2,"euro1":1,"cents50":50,"cents20":20,"cents10":10,"cents5":null,"cents2":null,"cent1":null,"foreign_coins":null,"foreign_banknote":null,"notes":null,"cents05":5,"cents02":2,"cents01":1}] {"uid":"eaa8b26"}
+[2016-05-26 00:52:35] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"eaa8b26"}
+[2016-05-26 00:52:35] slim-app.DEBUG: Saving Coins [] {"uid":"eaa8b26"}
+[2016-05-26 00:52:35] slim-app.DEBUG: Saving coins  ["[object] (RedCrossQuest\\TroncQueteurEntity: {\"id\":\"2330\",\"queteur_id\":\"2500\",\"queteur\":null,\"point_quete\":null,\"point_quete_id\":\"8\",\"tronc_id\":\"2656\",\"depart_theorique\":{\"date\":\"2016-05-25 07:00:00.000000\",\"timezone_type\":3,\"timezone\":\"Europe/Paris\"},\"depart\":{\"date\":\"2016-05-25 19:49:02.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"retour\":{\"date\":\"2016-05-25 21:06:07.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"euro500\":500,\"euro200\":200,\"euro100\":100,\"euro50\":50,\"euro20\":20,\"euro10\":10,\"euro5\":5,\"euro2\":2,\"euro1\":1,\"cents50\":50,\"cents20\":20,\"cents10\":10,\"cents5\":null,\"cents2\":null,\"cent1\":null,\"foreign_coins\":null,\"foreign_banknote\":null,\"notes\":null})"] {"uid":"eaa8b26"}
+[2016-05-26 00:52:35] slim-app.WARNING: 1 [] {"uid":"eaa8b26"}
+[2016-05-26 01:03:08] slim-app.DEBUG: action found with value 'saveCoins' [] {"uid":"604fb31"}
+[2016-05-26 01:03:08] slim-app.DEBUG: parsed json input :  [{"id":2330,"queteur_id":2500,"queteur":{"id":2500,"email":"n@a.com","first_name":"Tichet","last_name":"Anna","minor":0,"secteur":1,"nivol":"N/A","mobile":"N/A","created":"2016-04-29 18:00:53","updated":"2016-04-29 18:00:53","parent_authorization":null,"temporary_volunteer_form":null,"notes":null,"ul_id":2,"point_quete_id":null,"point_quete_name":null,"depart_theorique":null,"depart":null,"retour":null},"point_quete":{"id":8,"ul_id":2,"code":"MLD","name":"Boulevard Morland","latitude":48.850925,"longitude":2.362327,"address":"23 Boulevard Morland","postal_code":75004,"city":"Paris","max_people":2,"advice":"","localization":"Les voitures qui viennent du 12ème","minor_allowed":0,"created":{"year":2016,"month":4,"day":27,"hour":0,"minute":48,"second":58,"fraction":0,"warning_count":0,"warnings":[],"error_count":0,"errors":[],"is_localtime":false}},"point_quete_id":8,"tronc_id":2656,"depart_theorique":{"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"},"depart":"2016-05-25T19:49:02.000Z","retour":"2016-05-25T21:06:07.000Z","euro500":500,"euro200":200,"euro100":100,"euro50":50,"euro20":20,"euro10":10,"euro5":5,"euro2":2,"euro1":1,"cents50":50,"cents20":20,"cents10":10,"cents5":5,"cents2":2,"cent1":null,"foreign_coins":null,"foreign_banknote":null,"notes":null,"cents1":1}] {"uid":"604fb31"}
+[2016-05-26 01:03:08] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"604fb31"}
+[2016-05-26 01:03:08] slim-app.DEBUG: Saving Coins [] {"uid":"604fb31"}
+[2016-05-26 01:03:08] slim-app.DEBUG: Saving coins  ["[object] (RedCrossQuest\\TroncQueteurEntity: {\"id\":2330,\"queteur_id\":2500,\"queteur\":null,\"point_quete\":null,\"point_quete_id\":8,\"tronc_id\":2656,\"depart_theorique\":{\"date\":\"2016-05-25 07:00:00.000000\",\"timezone_type\":3,\"timezone\":\"Europe/Paris\"},\"depart\":{\"date\":\"2016-05-25 19:49:02.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"retour\":{\"date\":\"2016-05-25 21:06:07.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"euro500\":500,\"euro200\":200,\"euro100\":100,\"euro50\":50,\"euro20\":20,\"euro10\":10,\"euro5\":5,\"euro2\":2,\"euro1\":1,\"cents50\":50,\"cents20\":20,\"cents10\":10,\"cents5\":5,\"cents2\":2,\"cent1\":null,\"foreign_coins\":null,\"foreign_banknote\":null,\"notes\":null})"] {"uid":"604fb31"}
+[2016-05-26 01:03:08] slim-app.WARNING: 1 [] {"uid":"604fb31"}
+[2016-05-26 01:04:01] slim-app.DEBUG: action found with value 'saveCoins' [] {"uid":"cd51123"}
+[2016-05-26 01:04:01] slim-app.DEBUG: parsed json input :  [{"id":2330,"queteur_id":2500,"queteur":{"id":2500,"email":"n@a.com","first_name":"Tichet","last_name":"Anna","minor":0,"secteur":1,"nivol":"N/A","mobile":"N/A","created":"2016-04-29 18:00:53","updated":"2016-04-29 18:00:53","parent_authorization":null,"temporary_volunteer_form":null,"notes":null,"ul_id":2,"point_quete_id":null,"point_quete_name":null,"depart_theorique":null,"depart":null,"retour":null},"point_quete":{"id":8,"ul_id":2,"code":"MLD","name":"Boulevard Morland","latitude":48.850925,"longitude":2.362327,"address":"23 Boulevard Morland","postal_code":75004,"city":"Paris","max_people":2,"advice":"","localization":"Les voitures qui viennent du 12ème","minor_allowed":0,"created":{"year":2016,"month":4,"day":27,"hour":0,"minute":48,"second":58,"fraction":0,"warning_count":0,"warnings":[],"error_count":0,"errors":[],"is_localtime":false}},"point_quete_id":8,"tronc_id":2656,"depart_theorique":{"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"},"depart":"2016-05-25T19:49:02.000Z","retour":"2016-05-25T21:06:07.000Z","euro500":500,"euro200":200,"euro100":100,"euro50":50,"euro20":20,"euro10":10,"euro5":5,"euro2":2,"euro1":1,"cents50":50,"cents20":20,"cents10":10,"cents5":5,"cents2":2,"cent1":1,"foreign_coins":null,"foreign_banknote":null,"notes":null}] {"uid":"cd51123"}
+[2016-05-26 01:04:01] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"cd51123"}
+[2016-05-26 01:04:01] slim-app.DEBUG: Saving Coins [] {"uid":"cd51123"}
+[2016-05-26 01:04:01] slim-app.DEBUG: Saving coins  ["[object] (RedCrossQuest\\TroncQueteurEntity: {\"id\":2330,\"queteur_id\":2500,\"queteur\":null,\"point_quete\":null,\"point_quete_id\":8,\"tronc_id\":2656,\"depart_theorique\":{\"date\":\"2016-05-25 07:00:00.000000\",\"timezone_type\":3,\"timezone\":\"Europe/Paris\"},\"depart\":{\"date\":\"2016-05-25 19:49:02.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"retour\":{\"date\":\"2016-05-25 21:06:07.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"euro500\":500,\"euro200\":200,\"euro100\":100,\"euro50\":50,\"euro20\":20,\"euro10\":10,\"euro5\":5,\"euro2\":2,\"euro1\":1,\"cents50\":50,\"cents20\":20,\"cents10\":10,\"cents5\":5,\"cents2\":2,\"cent1\":1,\"foreign_coins\":null,\"foreign_banknote\":null,\"notes\":null})"] {"uid":"cd51123"}
+[2016-05-26 01:04:01] slim-app.WARNING: 1 [] {"uid":"cd51123"}
+[2016-05-26 01:04:49] slim-app.INFO: Troncs list [] {"uid":"9f58072"}
+[2016-05-26 01:04:49] slim-app.INFO: Tronc by search type '2'' [] {"uid":"9f58072"}
+[2016-05-26 01:04:49] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"9f58072"}
+[2016-05-26 01:04:50] slim-app.INFO: Troncs list [] {"uid":"50a0093"}
+[2016-05-26 01:04:50] slim-app.INFO: Tronc by search type '233'' [] {"uid":"50a0093"}
+[2016-05-26 01:04:50] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"50a0093"}
+[2016-05-26 01:04:51] slim-app.INFO: Troncs list [] {"uid":"df7504b"}
+[2016-05-26 01:04:51] slim-app.INFO: Tronc by search type '2330'' [] {"uid":"df7504b"}
+[2016-05-26 01:04:51] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"df7504b"}
+[2016-05-26 01:04:54] slim-app.INFO: Troncs list [] {"uid":"1bd7cfb"}
+[2016-05-26 01:04:54] slim-app.INFO: Tronc by search type '233'' [] {"uid":"1bd7cfb"}
+[2016-05-26 01:04:54] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"1bd7cfb"}
+[2016-05-26 01:04:55] slim-app.INFO: Troncs list [] {"uid":"ed4db5a"}
+[2016-05-26 01:04:55] slim-app.INFO: Tronc by search type '23'' [] {"uid":"ed4db5a"}
+[2016-05-26 01:04:55] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"ed4db5a"}
+[2016-05-26 01:04:56] slim-app.INFO: Troncs list [] {"uid":"e735e4b"}
+[2016-05-26 01:04:56] slim-app.INFO: Tronc by search type '2'' [] {"uid":"e735e4b"}
+[2016-05-26 01:04:56] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"e735e4b"}
+[2016-05-26 01:04:59] slim-app.INFO: Troncs list [] {"uid":"b45b75b"}
+[2016-05-26 01:04:59] slim-app.INFO: Tronc by search type '23'' [] {"uid":"b45b75b"}
+[2016-05-26 01:04:59] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"b45b75b"}
+[2016-05-26 01:05:00] slim-app.INFO: Troncs list [] {"uid":"c06f3fe"}
+[2016-05-26 01:05:00] slim-app.INFO: Tronc by search type '2'' [] {"uid":"c06f3fe"}
+[2016-05-26 01:05:00] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"c06f3fe"}
+[2016-05-26 01:07:03] slim-app.INFO: Troncs list [] {"uid":"ea3b5dd"}
+[2016-05-26 01:07:03] slim-app.INFO: Tronc by search type '2'' [] {"uid":"ea3b5dd"}
+[2016-05-26 01:07:03] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"ea3b5dd"}
+[2016-05-26 01:07:04] slim-app.INFO: Troncs list [] {"uid":"68a15da"}
+[2016-05-26 01:07:04] slim-app.INFO: Tronc by search type '2656'' [] {"uid":"68a15da"}
+[2016-05-26 01:07:04] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"68a15da"}
+[2016-05-26 01:09:48] slim-app.INFO: Troncs list [] {"uid":"8778a5d"}
+[2016-05-26 01:09:48] slim-app.INFO: Tronc by search type '2'' [] {"uid":"8778a5d"}
+[2016-05-26 01:09:48] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"8778a5d"}
+[2016-05-26 01:09:58] slim-app.INFO: Troncs list [] {"uid":"6bffbf4"}
+[2016-05-26 01:09:58] slim-app.INFO: Tronc by search type '268'' [] {"uid":"6bffbf4"}
+[2016-05-26 01:09:58] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"6bffbf4"}
+[2016-05-26 01:09:59] slim-app.INFO: Troncs list [] {"uid":"5dbbffb"}
+[2016-05-26 01:09:59] slim-app.INFO: Tronc by search type '268'' [] {"uid":"5dbbffb"}
+[2016-05-26 01:09:59] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"5dbbffb"}
+[2016-05-26 01:10:00] slim-app.INFO: Troncs list [] {"uid":"81664f8"}
+[2016-05-26 01:10:00] slim-app.INFO: Tronc by search type '268'' [] {"uid":"81664f8"}
+[2016-05-26 01:10:00] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"81664f8"}
+[2016-05-26 01:10:00] slim-app.INFO: Troncs list [] {"uid":"08acb67"}
+[2016-05-26 01:10:00] slim-app.INFO: Tronc by search type '268'' [] {"uid":"08acb67"}
+[2016-05-26 01:10:00] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"08acb67"}
+[2016-05-26 01:10:00] slim-app.INFO: Troncs list [] {"uid":"a3f4a39"}
+[2016-05-26 01:10:00] slim-app.INFO: Tronc by search type '268'' [] {"uid":"a3f4a39"}
+[2016-05-26 01:10:00] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"a3f4a39"}
+[2016-05-26 01:10:01] slim-app.INFO: Troncs list [] {"uid":"5237fd2"}
+[2016-05-26 01:10:01] slim-app.INFO: Tronc by search type '268'' [] {"uid":"5237fd2"}
+[2016-05-26 01:10:01] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"5237fd2"}
+[2016-05-26 01:10:01] slim-app.INFO: Troncs list [] {"uid":"f24c9e0"}
+[2016-05-26 01:10:01] slim-app.INFO: Tronc by search type '268'' [] {"uid":"f24c9e0"}
+[2016-05-26 01:10:01] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"f24c9e0"}
+[2016-05-26 01:10:02] slim-app.INFO: Troncs list [] {"uid":"09751d8"}
+[2016-05-26 01:10:02] slim-app.INFO: Tronc by search type '268'' [] {"uid":"09751d8"}
+[2016-05-26 01:10:02] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"09751d8"}
+[2016-05-26 01:10:07] slim-app.INFO: Troncs list [] {"uid":"a3cd071"}
+[2016-05-26 01:10:07] slim-app.INFO: Tronc by search type '265'' [] {"uid":"a3cd071"}
+[2016-05-26 01:10:07] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"a3cd071"}
+[2016-05-26 01:10:07] slim-app.INFO: Troncs list [] {"uid":"cef579e"}
+[2016-05-26 01:10:07] slim-app.INFO: Tronc by search type '2656'' [] {"uid":"cef579e"}
+[2016-05-26 01:10:07] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"cef579e"}
+[2016-05-26 01:10:09] slim-app.INFO: Troncs list [] {"uid":"c3d5f88"}
+[2016-05-26 01:10:09] slim-app.INFO: Tronc by search type '265'' [] {"uid":"c3d5f88"}
+[2016-05-26 01:10:09] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"c3d5f88"}
+[2016-05-26 01:10:09] slim-app.INFO: Troncs list [] {"uid":"bef387a"}
+[2016-05-26 01:10:09] slim-app.INFO: Tronc by search type '265'' [] {"uid":"bef387a"}
+[2016-05-26 01:10:09] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"bef387a"}
+[2016-05-26 01:10:10] slim-app.INFO: Troncs list [] {"uid":"93235d3"}
+[2016-05-26 01:10:10] slim-app.INFO: Tronc by search type '265'' [] {"uid":"93235d3"}
+[2016-05-26 01:10:10] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"93235d3"}
+[2016-05-26 01:10:19] slim-app.INFO: Troncs list [] {"uid":"ee7e221"}
+[2016-05-26 01:10:19] slim-app.INFO: Tronc by search type '265'' [] {"uid":"ee7e221"}
+[2016-05-26 01:10:19] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"ee7e221"}
+[2016-05-26 01:10:19] slim-app.INFO: Troncs list [] {"uid":"b51c260"}
+[2016-05-26 01:10:19] slim-app.INFO: Tronc by search type '26596'' [] {"uid":"b51c260"}
+[2016-05-26 01:10:19] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"b51c260"}
+[2016-05-26 01:17:42] slim-app.INFO: Troncs list [] {"uid":"5dfe3cc"}
+[2016-05-26 01:17:42] slim-app.INFO: Tronc by search type '2'' [] {"uid":"5dfe3cc"}
+[2016-05-26 01:17:42] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"5dfe3cc"}
+[2016-05-26 01:17:43] slim-app.INFO: Troncs list [] {"uid":"ae7fc80"}
+[2016-05-26 01:17:43] slim-app.INFO: Tronc by search type '2656'' [] {"uid":"ae7fc80"}
+[2016-05-26 01:17:43] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"ae7fc80"}
+[2016-05-26 01:18:28] slim-app.INFO: Troncs list [] {"uid":"8133105"}
+[2016-05-26 01:18:28] slim-app.INFO: Tronc by search type '2'' [] {"uid":"8133105"}
+[2016-05-26 01:18:28] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"8133105"}
+[2016-05-26 01:18:29] slim-app.INFO: Troncs list [] {"uid":"cc2482c"}
+[2016-05-26 01:18:29] slim-app.INFO: Tronc by search type '2656'' [] {"uid":"cc2482c"}
+[2016-05-26 01:18:29] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"cc2482c"}
+[2016-05-26 01:19:28] slim-app.INFO: Troncs list [] {"uid":"2ef387e"}
+[2016-05-26 01:19:28] slim-app.INFO: Tronc by search type '2'' [] {"uid":"2ef387e"}
+[2016-05-26 01:19:28] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"2ef387e"}
+[2016-05-26 01:19:30] slim-app.INFO: Troncs list [] {"uid":"5eed0d4"}
+[2016-05-26 01:19:30] slim-app.INFO: Tronc by search type '2656'' [] {"uid":"5eed0d4"}
+[2016-05-26 01:19:30] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"5eed0d4"}
+[2016-05-26 01:20:29] slim-app.INFO: Troncs list [] {"uid":"aa7193b"}
+[2016-05-26 01:20:29] slim-app.INFO: Tronc by search type '2'' [] {"uid":"aa7193b"}
+[2016-05-26 01:20:29] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"aa7193b"}
+[2016-05-26 01:20:30] slim-app.INFO: Troncs list [] {"uid":"28aeb50"}
+[2016-05-26 01:20:30] slim-app.INFO: Tronc by search type '2656'' [] {"uid":"28aeb50"}
+[2016-05-26 01:20:30] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"28aeb50"}
+[2016-05-26 01:21:13] slim-app.DEBUG: action found with value 'saveCoins' [] {"uid":"54584a4"}
+[2016-05-26 01:21:13] slim-app.DEBUG: parsed json input :  [{"id":2330,"queteur_id":2500,"queteur":{"id":2500,"email":"n@a.com","first_name":"Tichet","last_name":"Anna","minor":0,"secteur":1,"nivol":"N/A","mobile":"N/A","created":"2016-04-29 18:00:53","updated":"2016-04-29 18:00:53","parent_authorization":null,"temporary_volunteer_form":null,"notes":null,"ul_id":2,"point_quete_id":null,"point_quete_name":null,"depart_theorique":null,"depart":null,"retour":null},"point_quete":{"id":8,"ul_id":2,"code":"MLD","name":"Boulevard Morland","latitude":48.850925,"longitude":2.362327,"address":"23 Boulevard Morland","postal_code":75004,"city":"Paris","max_people":2,"advice":"","localization":"Les voitures qui viennent du 12ème","minor_allowed":0,"created":{"year":2016,"month":4,"day":27,"hour":0,"minute":48,"second":58,"fraction":0,"warning_count":0,"warnings":[],"error_count":0,"errors":[],"is_localtime":false}},"point_quete_id":8,"tronc_id":2656,"depart_theorique":{"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"},"depart":"2016-05-25T19:49:02.000Z","retour":"2016-05-25T21:06:07.000Z","euro500":5000,"euro200":2000,"euro100":1000,"euro50":500,"euro20":200,"euro10":100,"euro5":50,"euro2":20,"euro1":10,"cents50":500,"cents20":200,"cents10":100,"cents5":50,"cents2":20,"cent1":10,"foreign_coins":null,"foreign_banknote":null,"notes":null}] {"uid":"54584a4"}
+[2016-05-26 01:21:13] slim-app.DEBUG: Date from Javascript {"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"} {"uid":"54584a4"}
+[2016-05-26 01:21:13] slim-app.DEBUG: Saving Coins [] {"uid":"54584a4"}
+[2016-05-26 01:21:13] slim-app.DEBUG: Saving coins  ["[object] (RedCrossQuest\\TroncQueteurEntity: {\"id\":2330,\"queteur_id\":2500,\"queteur\":null,\"point_quete\":null,\"point_quete_id\":8,\"tronc_id\":2656,\"depart_theorique\":{\"date\":\"2016-05-25 07:00:00.000000\",\"timezone_type\":3,\"timezone\":\"Europe/Paris\"},\"depart\":{\"date\":\"2016-05-25 19:49:02.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"retour\":{\"date\":\"2016-05-25 21:06:07.000000\",\"timezone_type\":2,\"timezone\":\"Z\"},\"euro500\":5000,\"euro200\":2000,\"euro100\":1000,\"euro50\":500,\"euro20\":200,\"euro10\":100,\"euro5\":50,\"euro2\":20,\"euro1\":10,\"cents50\":500,\"cents20\":200,\"cents10\":100,\"cents5\":50,\"cents2\":20,\"cent1\":10,\"foreign_coins\":null,\"foreign_banknote\":null,\"notes\":null})"] {"uid":"54584a4"}
+[2016-05-26 01:21:13] slim-app.WARNING: 1 [] {"uid":"54584a4"}
+[2016-05-26 01:21:18] slim-app.INFO: Troncs list [] {"uid":"c4a5e5f"}
+[2016-05-26 01:21:18] slim-app.INFO: Tronc by search type '2'' [] {"uid":"c4a5e5f"}
+[2016-05-26 01:21:18] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"c4a5e5f"}
+[2016-05-26 01:21:20] slim-app.INFO: Troncs list [] {"uid":"6194d98"}
+[2016-05-26 01:21:20] slim-app.INFO: Tronc by search type '2656'' [] {"uid":"6194d98"}
+[2016-05-26 01:21:20] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t          WHERE CONVERT(id, CHAR) like concat(:query,'%') ;        ORDER BY id ASC  [] {"uid":"6194d98"}
+[2016-05-26 01:36:44] slim-app.INFO: Troncs list [] {"uid":"b48c8ce"}
+[2016-05-26 01:36:44] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"b48c8ce"}
+[2016-05-26 01:36:44] slim-app.INFO: Troncs list [] {"uid":"8b36cb7"}
+[2016-05-26 01:36:44] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"8b36cb7"}
+[2016-05-26 01:37:09] slim-app.INFO: Troncs list [] {"uid":"497a1cf"}
+[2016-05-26 01:37:09] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"497a1cf"}
+[2016-05-26 01:37:09] slim-app.INFO: Troncs list [] {"uid":"42d08f1"}
+[2016-05-26 01:37:09] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"42d08f1"}
+[2016-05-26 01:37:11] slim-app.INFO: Troncs list [] {"uid":"06f9c5a"}
+[2016-05-26 01:37:11] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"06f9c5a"}
+[2016-05-26 01:37:11] slim-app.INFO: Troncs list [] {"uid":"e30730e"}
+[2016-05-26 01:37:11] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"e30730e"}
+[2016-05-26 01:38:42] slim-app.INFO: Troncs list [] {"uid":"a7d4384"}
+[2016-05-26 01:38:42] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"a7d4384"}
+[2016-05-26 01:38:42] slim-app.INFO: Troncs list [] {"uid":"e6e3009"}
+[2016-05-26 01:38:42] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"e6e3009"}
+[2016-05-26 01:41:26] slim-app.INFO: Troncs list [] {"uid":"3068b9f"}
+[2016-05-26 01:41:26] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"3068b9f"}
+[2016-05-26 01:41:26] slim-app.INFO: Troncs list [] {"uid":"4fc3c4d"}
+[2016-05-26 01:41:26] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"4fc3c4d"}
+[2016-05-26 01:41:48] slim-app.INFO: Troncs list [] {"uid":"6fb483f"}
+[2016-05-26 01:41:48] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"6fb483f"}
+[2016-05-26 01:41:48] slim-app.INFO: Troncs list [] {"uid":"3a201c6"}
+[2016-05-26 01:41:48] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"3a201c6"}
+[2016-05-26 01:42:33] slim-app.INFO: Troncs list [] {"uid":"d2a9d46"}
+[2016-05-26 01:42:33] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"d2a9d46"}
+[2016-05-26 01:44:35] slim-app.INFO: Troncs list [] {"uid":"c95b052"}
+[2016-05-26 01:44:35] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"c95b052"}
+[2016-05-26 01:44:35] slim-app.INFO: Troncs list [] {"uid":"776c0bc"}
+[2016-05-26 01:44:35] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"776c0bc"}
+[2016-05-26 01:44:43] slim-app.INFO: Troncs list [] {"uid":"ea753d0"}
+[2016-05-26 01:44:43] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"ea753d0"}
+[2016-05-26 01:44:43] slim-app.INFO: Troncs list [] {"uid":"da709cb"}
+[2016-05-26 01:44:43] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"da709cb"}
+[2016-05-26 01:45:47] slim-app.INFO: Troncs list [] {"uid":"d2b8932"}
+[2016-05-26 01:45:47] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"d2b8932"}
+[2016-05-26 01:45:47] slim-app.INFO: Troncs list [] {"uid":"c7fa836"}
+[2016-05-26 01:45:47] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"c7fa836"}
+[2016-05-26 01:50:26] slim-app.INFO: Troncs list [] {"uid":"6780936"}
+[2016-05-26 01:50:26] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"6780936"}
+[2016-05-26 01:50:26] slim-app.INFO: Troncs list [] {"uid":"8cdcda5"}
+[2016-05-26 01:50:26] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"8cdcda5"}
+[2016-05-26 01:51:57] slim-app.INFO: Troncs list [] {"uid":"acf5d61"}
+[2016-05-26 01:51:57] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"acf5d61"}
+[2016-05-26 01:51:57] slim-app.INFO: Troncs list [] {"uid":"2f38c44"}
+[2016-05-26 01:51:57] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"2f38c44"}
+[2016-05-26 01:55:06] slim-app.INFO: Point Quete list [] {"uid":"72be1bd"}
+[2016-05-26 01:55:06] slim-app.INFO: PointQuetes query [] {"uid":"72be1bd"}
+[2016-05-26 01:55:06] slim-app.INFO: Point Quete list [] {"uid":"3430de4"}
+[2016-05-26 01:55:06] slim-app.INFO: PointQuetes query [] {"uid":"3430de4"}
+[2016-05-26 01:55:12] slim-app.INFO: Troncs list [] {"uid":"bcc2d05"}
+[2016-05-26 01:55:12] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"bcc2d05"}
+[2016-05-26 01:55:12] slim-app.INFO: Troncs list [] {"uid":"d5dc192"}
+[2016-05-26 01:55:12] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"d5dc192"}
+[2016-05-26 01:55:13] slim-app.INFO: Point Quete list [] {"uid":"7154773"}
+[2016-05-26 01:55:13] slim-app.INFO: PointQuetes query [] {"uid":"7154773"}
+[2016-05-26 01:55:13] slim-app.INFO: Point Quete list [] {"uid":"87b33b2"}
+[2016-05-26 01:55:13] slim-app.INFO: PointQuetes query [] {"uid":"87b33b2"}
+[2016-05-26 01:55:28] slim-app.INFO: Troncs list [] {"uid":"f468243"}
+[2016-05-26 01:55:28] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"f468243"}
+[2016-05-26 01:55:28] slim-app.INFO: Troncs list [] {"uid":"6978b7a"}
+[2016-05-26 01:55:28] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"6978b7a"}
+[2016-05-26 01:56:15] slim-app.INFO: Troncs list [] {"uid":"2316cfe"}
+[2016-05-26 01:56:15] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"2316cfe"}
+[2016-05-26 01:56:15] slim-app.INFO: Troncs list [] {"uid":"17dd29b"}
+[2016-05-26 01:56:15] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"17dd29b"}
+[2016-05-26 02:01:16] slim-app.INFO: Troncs list [] {"uid":"1c7222e"}
+[2016-05-26 02:01:16] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"1c7222e"}
+[2016-05-26 02:01:16] slim-app.INFO: Troncs list [] {"uid":"1fbdc2a"}
+[2016-05-26 02:01:16] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"1fbdc2a"}
+[2016-05-26 02:02:19] slim-app.INFO: Troncs list [] {"uid":"a37e001"}
+[2016-05-26 02:02:19] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"a37e001"}
+[2016-05-26 02:02:19] slim-app.INFO: Troncs list [] {"uid":"59ed29b"}
+[2016-05-26 02:02:19] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"59ed29b"}
+[2016-05-26 02:03:05] slim-app.INFO: Troncs list [] {"uid":"fbdf4ce"}
+[2016-05-26 02:03:05] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"fbdf4ce"}
+[2016-05-26 02:03:05] slim-app.INFO: Troncs list [] {"uid":"81736e4"}
+[2016-05-26 02:03:05] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"81736e4"}
+[2016-05-26 02:04:02] slim-app.INFO: Troncs list [] {"uid":"5ad327b"}
+[2016-05-26 02:04:02] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"5ad327b"}
+[2016-05-26 02:04:02] slim-app.INFO: Troncs list [] {"uid":"152c3a6"}
+[2016-05-26 02:04:02] slim-app.DEBUG:  SELECT `id`,        `ul_id`,        `created`,        `enabled`,        `notes` FROM   `tronc` as t        ORDER BY id ASC  [] {"uid":"152c3a6"}

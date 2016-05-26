@@ -60,7 +60,7 @@ LIMIT 1
     }
     else
     {
-      throw new \Exception("Tronc Queteur with ID:'".$id . "' not found");
+      throw new \Exception("Tronc Queteur with ID:'".$tronc_id . "' not found");
     }
   }
 
@@ -124,6 +124,64 @@ WHERE  t.id = :id
       }
     }
 
+  /**
+   * Update one tronc
+   *
+   * @param TroncQueteurEntity $tronc The tronc to update
+   */
+  public function setDepartToNow($tronc_queteur_id)
+  {
+    $sql = "
+UPDATE `tronc_queteur`
+SET `depart`            = :depart            
+ WHERE `id` = :id;
+";
+    $currentDate = new Carbon();
+    $stmt        = $this->db->prepare($sql);
+    $result      = $stmt->execute([
+      "depart"            => $currentDate->format('Y-m-d H:i:s'),
+      "id"                => $tronc_queteur_id
+    ]);
+
+    $this->logger->warning($stmt->rowCount());
+    $stmt->closeCursor();
+
+    return $currentDate;
+
+    if(!$result) {
+      throw new Exception("could not save record");
+    }
+  }
+
+
+  /**
+   * Update one tronc
+   *
+   * @param TroncQueteurEntity $tronc The tronc to update
+   */
+  public function updateRetour(TroncQueteurEntity $tq)
+  {
+    $sql = "
+UPDATE `tronc_queteur`
+SET    `retour` = :retour            
+ WHERE `id`     = :id;
+";
+    $currentDate = new Carbon();
+    $stmt        = $this->db->prepare($sql);
+    $result      = $stmt->execute([
+      "retour"            => $tq->retour->format('Y-m-d H:i:s'),
+      "id"                => $tq->id
+    ]);
+
+    $this->logger->warning($stmt->rowCount());
+    $stmt->closeCursor();
+
+    return $currentDate;
+
+    if(!$result) {
+      throw new Exception("could not save record");
+    }
+  }
 
   /**
    * Update one tronc
@@ -132,6 +190,8 @@ WHERE  t.id = :id
    */
     public function updateCoinsCount(TroncQueteurEntity $tq)
     {
+
+      $this->logger->debug("Saving coins ", [$tq]);
       $sql = "
 UPDATE `tronc_queteur`
 SET

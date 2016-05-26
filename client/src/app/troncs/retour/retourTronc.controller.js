@@ -10,14 +10,81 @@
     .controller('RetourTroncController', RetourTroncController);
 
   /** @ngInject */
-  function RetourTroncController($scope, $log,
-                                 TroncResource,
-                                 TroncQueteurResource,
+  function RetourTroncController($scope, $log, $location,
+                                 TroncResource, TroncQueteurResource,
                                  QRDecodeService,
                                  moment)
   {
     var vm = this;
     vm.current = {};
+
+
+    vm.onlyNumbers = /^\d+$/;
+
+    function redirectToSlash()
+    {
+      $location.path('/');
+    }
+
+    function onSaveError(error)
+    {
+      $log.debug(error)
+      alert(error);
+    }
+
+    //This watch change on tronc variable to update the rest of the form
+    $scope.$watch('rt.current.tronc', function(newValue/*, oldValue*/)
+    {
+      if(newValue != null && !(typeof newValue === 'string'))
+      {
+        try
+        {
+          $log.debug("new value for tronc");
+          troncDecodedAndFoundInDB (newValue, true);
+        }
+        catch(exception)
+        {
+          $log.debug(exception);
+        }
+      }
+    });
+
+    //function used when scanning QR Code or using autocompletion
+    function troncDecodedAndFoundInDB (tronc, doNotReassingTronc)
+    {
+      if( !doNotReassingTronc )
+      {
+        vm.current.tronc = tronc;
+      }
+
+      vm.current.tronc.stringView = tronc.id;
+
+      TroncQueteurResource.getTroncQueteurForTroncId({'tronc_id':tronc.id},function(tronc_queteur)
+      {
+        vm.current.tronc_queteur =  tronc_queteur;
+
+        if(vm.current.tronc_queteur.depart != null)
+        {
+          vm.current.tronc_queteur.depart =  moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+        }
+
+        if(vm.current.tronc_queteur.retour == null)
+        {
+          vm.current.tronc_queteur.retour = new Date();
+        }
+        else
+        {
+          //date store in UTC + Timezone offset with Carbon on php side.
+          //this parse the Carbon time without '000' ending in the UTC timezone, and then convert it to Europe/Paris (the value of the tronc_queteur.retour.timezone)
+          var tempRetour = moment.tz( tronc_queteur.retour.date.substring(0, tronc_queteur.retour.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS", 'UTC');
+          vm.current.tronc_queteur.retour = tempRetour.clone().tz(tronc_queteur.retour.timezone)  .toDate();
+          //if the return date is non null, then it's time to fill the number of coins
+          vm.current.fillTronc=true;
+        }
+        $log.debug(tronc_queteur);
+      });
+    };
+
 
 
     /**
@@ -45,9 +112,19 @@
     {
       $log.debug("Saved called");
       $log.debug(vm.current);
+
+      if(vm.current.fillTronc == true)
+      {
+        $log.debug("Saving the number of coins");
+        $log.debug(vm.current.tronc_queteur);
+        vm.current.tronc_queteur.$saveCoins(redirectToSlash, onSaveError);
+      }
+      else
+      {
+        $log.debug("Saving the return date");
+        vm.current.tronc_queteur.$saveReturnDate(redirectToSlash, onSaveError);
+      }
     };
-
-
 
 
     /**
@@ -71,7 +148,7 @@
 
         var checkTroncNotAlreadyDecocededFunction = function()
         {
-          var notAlreadyDecoded = (typeof vm.current.tronc === 'undefined');
+          var notAlreadyDecoded = (typeof vm.current.tronc === 'undefined') || vm.current.tronc == 'undefined';
           if(!notAlreadyDecoded)
           {
             $log.debug("Tronc is already decoded with value '"+vm.current.tronc.id+"'")
@@ -79,40 +156,7 @@
           return notAlreadyDecoded;
         };
 
-        var troncDecodedAndFoundInDB = function(tronc)
-        {
-          vm.current.tronc = tronc;
-          vm.current.tronc.stringView = tronc.id;
 
-          TroncQueteurResource.getTroncQueteurForTroncId({'tronc_id':tronc.id},function(tronc_queteur)
-          {
-            vm.current.tronc_queteur =  tronc_queteur;
-
-
-
-
-            if(vm.current.tronc_queteur.depart != null)
-            {
-              vm.current.tronc_queteur.depart =  moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").format();
-            }
-            if(vm.current.tronc_queteur.retour == null)
-            {
-              vm.current.tronc_queteur.retour = new Date();
-              vm.current.tronc_queteur.retour.setHours        (0) ;
-              vm.current.tronc_queteur.retour.setMinutes      (0) ;
-              vm.current.tronc_queteur.retour.setSeconds      (0) ;
-              vm.current.tronc_queteur.retour.setMilliseconds (0) ;
-            }
-
-
-
-
-            $log.debug(tronc_queteur);
-          });
-
-
-
-        };
 
         var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
         {

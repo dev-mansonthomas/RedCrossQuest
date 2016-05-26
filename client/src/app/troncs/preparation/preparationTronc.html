@@ -1,0 +1,124 @@
+<div class="container"  data-ng-controller="PreparationTroncController as pt">
+
+
+<!-- Modal window in case of error -->
+  <script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header">
+      <h3 class="modal-title">Erreur lors de la sauvegarde du départ du tronc!</h3>
+    </div>
+    <div class="modal-body">
+      <ng-bind-html  ng-bind-html="message"></ng-bind-html>
+
+      {{troncId}}
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()">Supprimer les Anciens Troncs</button>
+      <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le tronc au bon quêteur (ou contacter Thomas)</button>
+    </div>
+  </script>
+
+<!-- Nav Bar -->
+  <div>
+    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+  </div>
+
+<div class="container">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">Préparation Tronc</div>
+  </div>
+
+
+  <div class="">
+    <div class="well">
+      <form novalidate ng-submit='pt.save();' name="prepaTroncForm">
+        <div class="row">
+          <div class="col-md-4">
+
+            <qr-scanner
+              ng-success="pt.qrCodeScanOnSuccess(data)"
+                ng-error="pt.qrCodeScanOnError(error)"
+          ng-video-error="pt.qrCodeScanOnVideoError(error)"
+                   width="320"
+                  height="200"/>
+
+            <span ng-bind="pt.decodedData"></span>
+          </div>
+
+          <div class=" col-md-4">
+            <div class="form-group" ng-class="{'has-error':prepaTroncForm.queteurId.$invalid}">
+              <label for="queteurId" class="control-label">Recherche du Quêteur</label>
+              <input
+               id="queteurId"
+               type="text"
+               ng-model="pt.current.queteur"
+               placeholder="Scanner le QRCode de la carte du quêteur"
+               uib-typeahead="queteur as queteur.full_name for queteur in pt.searchQueteur($viewValue)"
+               typeahead-loading="loadingQueteurs"
+               typeahead-no-results="noResults"
+               typeahead-wait-ms="20"
+               class="form-control"
+               ng-required
+               autocomplete="off">
+              <i   ng-show="loadingQueteurs" class="glyphicon glyphicon-refresh"></i>
+              <div ng-show="noResults">
+                <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
+              </div>
+              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+            </div>
+            <div class="form-group" ng-class="{'has-error':prepaTroncForm.horaireDepartTheorique.$invalid}">
+              <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
+              <input name="horaireDepartTheorique" id="horaireDepartTheorique" type="datetime-local" class="form-control" ng-model="pt.current.horaireDepartTheorique" required/>
+              <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Required</span>
+            </div>
+          </div>
+          <div class=" col-md-4">
+            <div class="form-group" ng-class="{'has-error':prepaTroncForm.troncId.$invalid}">
+              <label for="troncId" class="control-label">Id Tronc</label>
+              <input
+                id="troncId"
+                type="text"
+                ng-model="pt.current.tronc"
+                placeholder="Scanner le QRCode du tronc"
+                uib-typeahead="tronc as tronc.stringView for tronc in pt.searchTronc($viewValue)"
+                typeahead-loading="loadingTroncs"
+                typeahead-no-results="noTroncsResults"
+                typeahead-wait-ms="20"
+                class="form-control"
+                ng-required
+                autocomplete="off">
+              <i   ng-show="loadingTroncs" class="glyphicon glyphicon-refresh"></i>
+              <div ng-show="noTroncResults">
+                <i class="glyphicon glyphicon-remove"></i> Aucun Tronc trouvé
+              </div>
+
+              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+            </div>
+            <div class="form-group">
+              <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
+              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required>
+                <option value=""></option>
+
+                <option ng-repeat="pointQuete in pt.current.pointsQuete" value="{{::pointQuete.id}}">{{::pointQuete.code}} - {{::pointQuete.name}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pull-right">
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="prepaTroncForm.$invalid" />
+              <a ng-href="#/list" class="btn btn-link">Cancel</a>
+            </div>
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+  </div>
+
+
+</div>
+</div>

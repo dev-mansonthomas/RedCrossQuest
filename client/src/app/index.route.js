@@ -49,6 +49,11 @@
         controller: 'TroncEditController',
         controllerAs: 'troncEdit'
       })
+      .when('/troncs/prepa', {
+        templateUrl: 'app/troncs/preparation/preparationTronc.html',
+        controller: 'PreparationTroncController',
+        controllerAs: 'prepaTronc'
+      })
       .when('/troncs/depart', {
         templateUrl: 'app/troncs/depart/departTronc.html',
         controller: 'DepartTroncController',
@@ -59,6 +64,19 @@
         controller: 'RetourTroncController',
         controllerAs: 'retourTronc'
       })
+      // ============== QRCode Generator ==============
+
+      .when('/QRCode/troncs', {
+        templateUrl: 'app/QRCode/troncs/QRCodeTroncs.html',
+        controller: 'QRCodeTroncsController',
+        controllerAs: 'qrcTroncs'
+      })
+      .when('/QRCode/queteurs', {
+        templateUrl: 'app/QRCode/queteurs/QRCodeQueteurs.html',
+        controller: 'QRCodeQueteursController',
+        controllerAs: 'qrcQueteurs'
+      })
+
       // ============== OTHERWISE ==============
       .otherwise({
         redirectTo: '/'
