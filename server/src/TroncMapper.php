@@ -5,7 +5,7 @@ class TroncMapper extends Mapper
 {
     public function getTroncs($query=null)
     {
-
+//TODO ajouter un filtre sur l'UL en cours
       $sql = "
 SELECT `id`,
        `ul_id`,
@@ -17,7 +17,14 @@ FROM   `tronc` as t
       if($query != null)
       {
         $sql .="
-        WHERE CONVERT(id, CHAR) like concat(:query,'%') ;
+        WHERE CONVERT(id, CHAR) like concat(:query,'%')
+        AND enabled = 1;
+";
+      }
+      else
+      {
+        $sql .="
+        WHERE enabled = 1;
 ";
       }
 

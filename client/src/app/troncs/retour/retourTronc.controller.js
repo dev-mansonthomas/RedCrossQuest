@@ -35,7 +35,7 @@
     //This watch change on tronc variable to update the rest of the form
     $scope.$watch('rt.current.tronc', function(newValue/*, oldValue*/)
     {
-      if(newValue != null && !(typeof newValue === 'string'))
+      if(newValue != null && !angular.isString(newValue))
       {
         try
         {
@@ -83,7 +83,7 @@
         }
         $log.debug(tronc_queteur);
       });
-    };
+    }
 
 
 

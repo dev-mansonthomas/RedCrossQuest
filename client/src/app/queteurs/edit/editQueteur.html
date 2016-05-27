@@ -21,14 +21,12 @@
           <div class="form-group" ng-class="{'has-error':queteurForm.first_name.$invalid}">
             <label for="first_name" class="control-label">First name</label>
             <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required />
-            <span class="help-block" ng-show="queteurForm.first_name.$error.required">Required</span>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group" ng-class="{'has-error':queteurForm.last_name.$invalid}">
             <label for="last_name" class="control-label">Last name</label>
             <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required/>
-            <span class="help-block" ng-show="queteurForm.last_name.$error.required">Required</span>
           </div>
         </div>
       </div>
@@ -42,7 +40,6 @@
               <span class="input-group-addon" id="basic-addon1">@</span>
               <input name="email" id="email" class="form-control" type="email" ng-model="queteur.current.email" required/>
             </div>
-            <span class="help-block" ng-show="queteurForm.email.$error.required">Required</span>
           </div>
         </div>
         <div class="col-md-4">
@@ -54,7 +51,6 @@
             <label class="radio-inline">
               <input type="radio" name="minor" id="minorRadio2" ng-model="queteur.current.minor" value="0" required> Non
             </label>
-            <span class="help-block" ng-show="queteurForm.minor.$error.required">Required</span>
           </div>
         </div>
       </div>
@@ -68,7 +64,9 @@
               <option value="1">Action Sociale</option>
               <option value="2">Secours</option>
               <option value="3">Hybride</option>
-              <option value="4">Quêteur Occasionnel</option>
+              <option value="4">Quêteur Non Bénévole</option>
+              <option value="5">Commerçant</option>
+              <option value="6">Special</option>
             </select>
           </div>
         </div>
@@ -99,7 +97,6 @@
           <div class="form-group" ng-class="{'has-error':queteurForm.nivol.$invalid}" ng-show="queteur.current.secteur >= 1 && queteur.current.secteur <= 4">
             <label for="nivol" class="control-label">NIVOL</label>
             <input name="nivol" id="nivol" class="form-control" ng-model="queteur.current.nivol" ng-required="queteur.current.secteur >= 1 && queteur.current.secteur <= 3"/>
-            <span class="help-block" ng-show="queteurForm.last_name.$error.required">Required</span>
             <span class="help-block">Si Extérieur et bénévole Croix Rouge, saisir son NIVOL, sinon laisser vide</span>
           </div>
 
