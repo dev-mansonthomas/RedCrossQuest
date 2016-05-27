@@ -72,7 +72,7 @@ class RedCrossQuest extends AbstractMigration
       $tronc_table
         ->addColumn('ul_id', 'integer')
         ->addColumn('created'      , 'datetime')
-        ->addColumn('enabled'      , 'boolean', array('default', 1))
+        ->addColumn('enabled'      , 'boolean', array('default' => 1))
         ->addColumn('notes', 'string', array('limit' => 255, 'null' => true))
         ->addForeignKey('ul_id', 'ul', 'id')
         ->create();

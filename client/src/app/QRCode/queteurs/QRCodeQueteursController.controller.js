@@ -7,29 +7,30 @@
 
   angular
     .module('client')
-    .controller('QRCodeTroncsController', QRCodeTroncsController);
+    .controller('QRCodeQueteursController', QRCodeQueteursController);
 
   /** @ngInject */
-  function QRCodeTroncsController($log,
-                                  TroncResource)
+  function QRCodeQueteursController($log,
+                                    QueteurResource)
   {
     var vm = this;
 
     vm.size=113;
 
-    TroncResource.query().$promise.then(function(response)
+    QueteurResource.query({'searchType':0}).$promise.then(function(response)
     {
-      vm.list = response.map(function(tronc)
+      vm.list = response.map(function(queteur)
         {
-          tronc.qr_code="TRONC-"+("000000"+tronc.ul_id).slice(-6)+"-"+("00000000"+tronc.id).slice(-9);
-          return tronc;
+          //the Q of Queteur is put in the HTML page, with a font size of 11px to exactly match the same template as TRONC, so that it print exactly on the stickers
+          queteur.qr_code="UETEUR-"+("000000"+queteur.ul_id).slice(-6)+"-"+("00000000"+queteur.id).slice(-9);
+          return queteur;
         },
         function(reason)
         {
-          $log.debug("error while loading for tronc with reason='"+reason+"'");
+          $log.debug("error while loading for queteur with reason='"+reason+"'");
         });
 
-      $log.debug("There is "+vm.list.length+" troncs, "+Math.round(vm.list.length/32)+" tableaux") ;
+      $log.debug("There is "+vm.list.length+" queteur, "+Math.round(vm.list.length/32)+" tableaux") ;
 
       var numberOfTable= Math.round(vm.list.length/32);
       vm.tables = [];
