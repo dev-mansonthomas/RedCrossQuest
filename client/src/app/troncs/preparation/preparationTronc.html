@@ -4,7 +4,7 @@
 <!-- Modal window in case of error -->
   <script type="text/ng-template" id="myModalContent.html">
     <div class="modal-header">
-      <h3 class="modal-title">Erreur lors de la sauvegarde du départ du tronc!</h3>
+      <h3 class="modal-title">Erreur lors de la sauvegarde de la préparation du tronc!</h3>
     </div>
     <div class="modal-body">
       <ng-bind-html  ng-bind-html="message"></ng-bind-html>
@@ -13,7 +13,7 @@
 
     </div>
     <div class="modal-footer">
-      <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()">Supprimer les Anciens Troncs</button>
+      <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()">Supprimer les Anciens Troncs et sauver la préparation du tronc courant</button>
       <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le tronc au bon quêteur (ou contacter Thomas)</button>
     </div>
   </script>
@@ -42,7 +42,7 @@
           ng-video-error="pt.qrCodeScanOnVideoError(error)"
                    width="320"
                   height="200"/>
-
+            <br/>
             <span ng-bind="pt.decodedData"></span>
           </div>
 
@@ -100,7 +100,7 @@
               <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required>
                 <option value=""></option>
 
-                <option ng-repeat="pointQuete in pt.current.pointsQuete" value="{{::pointQuete.id}}">{{::pointQuete.code}} - {{::pointQuete.name}}</option>
+                <option ng-repeat="pointQuete in pt.pointsQuete" value="{{::pointQuete.id}}">{{::pointQuete.code}} - {{::pointQuete.name}}</option>
               </select>
             </div>
           </div>

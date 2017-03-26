@@ -10,7 +10,7 @@
     .controller('RetourTroncController', RetourTroncController);
 
   /** @ngInject */
-  function RetourTroncController($scope, $log, $location,
+  function RetourTroncController($scope, $log, $location, $routeParams,
                                  TroncResource, TroncQueteurResource,
                                  QRDecodeService,
                                  moment)
@@ -18,12 +18,65 @@
     var vm = this;
     vm.current = {};
 
+    var tronc_queteur_id = $routeParams.id;
+
+    if (angular.isDefined(tronc_queteur_id))
+    {
+      $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
+      TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
+    }
+
 
     vm.onlyNumbers = /^\d+$/;
 
-    function redirectToSlash()
+    function savedSuccessfully()
     {
-      $location.path('/');
+      vm.current = {};
+    }
+
+
+
+    vm.setNonFilledBillToZero=function()
+    {
+      if(vm.current.tronc_queteur.euro5 == null || vm.current.tronc_queteur.euro5 == "" || vm.current.tronc_queteur.euro5.length == 0)
+      {
+        vm.current.tronc_queteur.euro5 = 0;
+      }
+      if(vm.current.tronc_queteur.euro10 == null || vm.current.tronc_queteur.euro10 == "" || vm.current.tronc_queteur.euro10.length == 0)
+      {
+        vm.current.tronc_queteur.euro10 = 0;
+      }
+      if(vm.current.tronc_queteur.euro20 == null || vm.current.tronc_queteur.euro20 == "" || vm.current.tronc_queteur.euro20.length == 0)
+      {
+        vm.current.tronc_queteur.euro20 = 0;
+      }
+      if(vm.current.tronc_queteur.euro50 == null || vm.current.tronc_queteur.euro50 == "" || vm.current.tronc_queteur.euro50.length == 0)
+      {
+        vm.current.tronc_queteur.euro50 = 0;
+      }
+
+      if(vm.current.tronc_queteur.euro100 == null || vm.current.tronc_queteur.euro100 == "" || vm.current.tronc_queteur.euro100.length == 0)
+      {
+        vm.current.tronc_queteur.euro100 = 0;
+      }
+      if(vm.current.tronc_queteur.euro200 == null || vm.current.tronc_queteur.euro200 == "" || vm.current.tronc_queteur.euro200.length == 0)
+      {
+        vm.current.tronc_queteur.euro200 = 0;
+      }
+      if(vm.current.tronc_queteur.euro500 == null || vm.current.tronc_queteur.euro500 == "" || vm.current.tronc_queteur.euro500.length == 0)
+      {
+        vm.current.tronc_queteur.euro500 = 0;
+      }
+    }
+
+    vm.back=function()
+    {
+      $log.debug(window.history);
+      window.history.back();
+
+      //var prevUrl = history.length > 1 ? history.splice(-2)[0] : "/";
+      //$log.debug(prevUrl);
+      //$location.path(prevUrl);
     }
 
     function onSaveError(error)
@@ -49,40 +102,57 @@
       }
     });
 
+
+    function handleTroncQueteur(tronc_queteur)
+    {
+      vm.current.tronc_queteur =  tronc_queteur;
+
+      if(angular.isUndefined(vm.current.tronc))
+      {
+        //if the tronc is not defined, it means that we've reached this page from the URL http://localhost:3000/#/troncs/retour/820
+        // (from the queteur page) to visualize the data rather than editing it.
+        vm.current.tronc = tronc_queteur.tronc;
+        vm.current.readOnlyView=true;
+      }
+
+      if(vm.current.tronc_queteur.depart != null)
+      {
+        vm.current.tronc_queteur.depart =  moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+      }
+
+      if(vm.current.tronc_queteur.retour == null)
+      {
+        vm.current.tronc_queteur.retour = new Date();
+      }
+      else
+      {
+        //date store in UTC + Timezone offset with Carbon on php side.
+        //this parse the Carbon time without '000' ending in the UTC timezone, and then convert it to Europe/Paris (the value of the tronc_queteur.retour.timezone)
+        var tempRetour = moment.tz( tronc_queteur.retour.date.substring(0, tronc_queteur.retour.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS", 'UTC');
+        vm.current.tronc_queteur.retour = tempRetour.clone().tz(tronc_queteur.retour.timezone)  .toDate();
+        //if the return date is non null, then it's time to fill the number of coins
+        vm.current.fillTronc=true;
+      }
+      $log.debug(tronc_queteur);
+    }
+
+
     //function used when scanning QR Code or using autocompletion
     function troncDecodedAndFoundInDB (tronc, doNotReassingTronc)
     {
-      if( !doNotReassingTronc )
-      {
-        vm.current.tronc = tronc;
+      if(vm.current.readOnlyView!=true)
+      { //if true, it means we're coming from the queteur form just to view the data.
+        // So we're not using the QRDecode function to get a tronc_id, and get the last tronc_queteur from it
+
+        if( !doNotReassingTronc )
+        {//vm.current.tronc is watch, in some case we must not modify it to not enter in an endless loop.
+          vm.current.tronc = tronc;
+        }
+
+        vm.current.tronc.stringView = tronc.id;
+
+        TroncQueteurResource.getTroncQueteurForTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
       }
-
-      vm.current.tronc.stringView = tronc.id;
-
-      TroncQueteurResource.getTroncQueteurForTroncId({'tronc_id':tronc.id},function(tronc_queteur)
-      {
-        vm.current.tronc_queteur =  tronc_queteur;
-
-        if(vm.current.tronc_queteur.depart != null)
-        {
-          vm.current.tronc_queteur.depart =  moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
-        }
-
-        if(vm.current.tronc_queteur.retour == null)
-        {
-          vm.current.tronc_queteur.retour = new Date();
-        }
-        else
-        {
-          //date store in UTC + Timezone offset with Carbon on php side.
-          //this parse the Carbon time without '000' ending in the UTC timezone, and then convert it to Europe/Paris (the value of the tronc_queteur.retour.timezone)
-          var tempRetour = moment.tz( tronc_queteur.retour.date.substring(0, tronc_queteur.retour.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS", 'UTC');
-          vm.current.tronc_queteur.retour = tempRetour.clone().tz(tronc_queteur.retour.timezone)  .toDate();
-          //if the return date is non null, then it's time to fill the number of coins
-          vm.current.fillTronc=true;
-        }
-        $log.debug(tronc_queteur);
-      });
     }
 
 
@@ -117,12 +187,12 @@
       {
         $log.debug("Saving the number of coins");
         $log.debug(vm.current.tronc_queteur);
-        vm.current.tronc_queteur.$saveCoins(redirectToSlash, onSaveError);
+        vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
       }
       else
       {
         $log.debug("Saving the return date");
-        vm.current.tronc_queteur.$saveReturnDate(redirectToSlash, onSaveError);
+        vm.current.tronc_queteur.$saveReturnDate(savedSuccessfully, onSaveError);
       }
     };
 

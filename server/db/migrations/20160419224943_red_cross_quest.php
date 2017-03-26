@@ -53,7 +53,7 @@ class RedCrossQuest extends AbstractMigration
           ->addColumn('password'     , 'string', array('limit' => 50, 'null' => true))
           ->addColumn('password_salt', 'string', array('limit' => 50, 'null' => true))
           ->addColumn('secteur'      , 'integer')
-          ->addColumn('nivol'        , 'string', array('limit' => 10))     //non unique : non volunteer won't have NIVOL, some volunteer may not know there NIVOL
+          ->addColumn('nivol'        , 'string', array('limit' => 10, 'null' => true))     //non unique : non volunteer won't have NIVOL, some volunteer may not know there NIVOL
           ->addColumn('mobile'       , 'string', array('limit' => 13))     //non unique : parents may leave there mobile for child
           ->addColumn('created'      , 'datetime')
           ->addColumn('updated'      , 'datetime', array('null' => true))
@@ -67,6 +67,28 @@ class RedCrossQuest extends AbstractMigration
           ->addForeignKey('ul_id', 'ul', 'id')
           ->create();
 
+
+      $queteur_table->insert(
+       [`id`                      =>   0,
+        `first_name`              =>   'No One',
+        `last_name`               =>   'No One',
+        `minor`                   =>   0,
+        `email`                   =>   'N/A',
+        `password`                =>   null,
+        `password_salt`           =>   null,
+        `secteur`                 =>   0,
+        `nivol`                   =>   null,
+        `mobile`                  =>   'N/A',
+        `created`                 =>   NOW(),
+        `updated`                 =>   NOW(),
+        `parent_authorization`    =>   null,
+        `temporary_volunteer_form`=>   null,
+        `notes`                   =>   'user created to satisfy foreign key2',
+        `ul_id`                   =>   1])
+        ->saveData();
+
+      $this->execute("update queteur set id = 0 where id = 1");
+      $this->execute("commit");
 
       $tronc_table = $this->table('tronc');
       $tronc_table

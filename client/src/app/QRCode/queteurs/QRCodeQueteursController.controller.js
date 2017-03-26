@@ -22,7 +22,7 @@
       vm.list = response.map(function(queteur)
         {
           //the Q of Queteur is put in the HTML page, with a font size of 11px to exactly match the same template as TRONC, so that it print exactly on the stickers
-          queteur.qr_code="UETEUR-"+("000000"+queteur.ul_id).slice(-6)+"-"+("00000000"+queteur.id).slice(-9);
+          queteur.qr_code="QUETEUR-"+("000000"+queteur.ul_id).slice(-6)+"-"+("00000000"+queteur.id).slice(-9);
           return queteur;
         },
         function(reason)
@@ -30,9 +30,9 @@
           $log.debug("error while loading for queteur with reason='"+reason+"'");
         });
 
-      $log.debug("There is "+vm.list.length+" queteur, "+Math.round(vm.list.length/32)+" tableaux") ;
+      $log.debug("There is "+vm.list.length+" queteur, "+Math.ceil(vm.list.length/32)+" tableaux") ;
 
-      var numberOfTable= Math.round(vm.list.length/32);
+      var numberOfTable= Math.ceil(vm.list.length/32);
       vm.tables = [];
       var global_i=0;
 

@@ -2,7 +2,9 @@
  * Created by tmanson on 03/05/2016.
  */
 
-angular.module('client').factory('QRDecodeService', function ($resource, $log, QueteurResource, TroncResource, ngAudio) {
+angular
+  .module('client')
+  .factory('QRDecodeService', function ($resource, $log, QueteurResource, TroncResource, ngAudio) {
 
   var instance = {};
 
@@ -104,7 +106,7 @@ angular.module('client').factory('QRDecodeService', function ($resource, $log, Q
         if(match != null)
         {
           $log.debug("Tronc data match RegEx");
-          var ulId       = parseInt(match[1]);
+          var ulId     = parseInt(match[1]);
           var troncId  = parseInt(match[2]);
 
           $log.debug("ulId:"+ulId );

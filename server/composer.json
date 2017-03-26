@@ -18,7 +18,8 @@
         "monolog/monolog": "^1.17",
         "robmorgan/phinx": "^0.5.3",
         "fzaninotto/faker": "^1.5",
-        "nesbot/carbon": "^1.21"
+        "nesbot/carbon": "^1.21",
+        "lcobucci/jwt": "^3.2"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

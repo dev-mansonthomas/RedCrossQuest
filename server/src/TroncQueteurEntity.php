@@ -77,7 +77,12 @@ class TroncQueteurEntity
       $this->getString('cent1', $data);
       $this->getString('foreign_coins', $data);
       $this->getString('foreign_banknote', $data);
-      $this->getString('notes', $data);
+
+      $this->getString('notes_depart_theorique', $data);
+      $this->getString('notes_depart', $data);
+      $this->getString('notes_retour', $data);
+      $this->getString('notes_retour_comptage_pieces', $data);
+      $this->getString('notes_update', $data);
     }
 
   private function getString($key, $data)

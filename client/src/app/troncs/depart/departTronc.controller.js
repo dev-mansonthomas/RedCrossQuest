@@ -27,14 +27,49 @@
     //pointQuete list
     vm.current.pointsQuete = PointQueteResource.query();
 
+
+    var troncDecodedAndFoundInDB = function(tronc)
+    {
+
+      vm.current.tronc = tronc;
+      vm.current.tronc.stringView = tronc.id+" - "+tronc.created;
+      $scope.departTronc.current.troncId = tronc.id;
+
+
+      TroncQueteurResource.getTroncQueteurForTroncIdAndSetDepart({'tronc_id':tronc.id},function(tronc_queteur)
+      {
+        $log.debug("Tronc Queteur returned");
+        $log.debug(tronc_queteur);
+
+        vm.current.tronc_queteur =  tronc_queteur;
+
+        if(tronc_queteur.depart != null)
+        {
+          vm.current.tronc_queteur.depart = moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+        }
+
+        if(tronc_queteur.depart_theorique != null)
+        {
+          vm.current.tronc_queteur.depart_theorique = moment( tronc_queteur.depart_theorique.date.substring(0, tronc_queteur.depart_theorique.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+        }
+
+        $log.debug(tronc_queteur);
+        $log.debug("deleting troncId to allow a new scan directly");
+        delete $scope.departTronc.current.troncId;
+      });
+    };
+
+
+
     //This watch change on queteur variable to update the queteurId field
-    $scope.$watch('departTronc.current.queteur', function(newValue/*, oldValue*/)
+    $scope.$watch('departTronc.current.tronc', function(newValue/*, oldValue*/)
     {
       if(newValue != null)
       {
         try
         {
-          $scope.departTronc.current.queteurId = newValue.id;
+          $scope.departTronc.current.troncId = newValue.id;
+          troncDecodedAndFoundInDB(newValue);
         }
         catch(exception)
         {
@@ -59,7 +94,7 @@
       $uibModal.open({
         animation: true,
         templateUrl: 'myModalContent.html',
-        controller: 'ModalInstanceCtrl',
+        controller: 'ModalInstanceController',
         size: 'lg',
         resolve: {
           errorOnSave: function () {
@@ -71,12 +106,11 @@
           }
         }
       });
-
-
-
-
-
     }
+
+
+
+
     /***
      * Save a Départ Tronc
      * */
@@ -171,40 +205,7 @@
           return notAlreadyDecoded;
         };
 
-        var troncDecodedAndFoundInDB = function(tronc)
-        {
 
-          vm.current.tronc = tronc;
-          vm.current.tronc.stringView = tronc.id+" - "+tronc.created;
-          $scope.departTronc.current.troncId = tronc.id;
-
-
-          TroncQueteurResource.getTroncQueteurForTroncIdAndSetDepart({'tronc_id':tronc.id},function(tronc_queteur)
-          {
-            $log.debug("Tronc Queteur returned");
-            $log.debug(tronc_queteur);
-
-            vm.current.tronc_queteur =  tronc_queteur;
-
-            if(tronc_queteur.depart != null)
-            {
-              vm.current.tronc_queteur.depart = moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
-            }
-
-            if(tronc_queteur.depart_theorique != null)
-            {
-              vm.current.tronc_queteur.depart_theorique = moment( tronc_queteur.depart_theorique.date.substring(0, tronc_queteur.depart_theorique.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
-            }
-
-            $log.debug(tronc_queteur);
-            $log.debug("deleting troncId to allow a new scan directly");
-            delete $scope.departTronc.current.troncId;
-          });
-
-
-
-
-        };
 
         var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
         {
