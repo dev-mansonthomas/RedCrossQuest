@@ -29,9 +29,9 @@
           $log.debug("error while loading for tronc with reason='"+reason+"'");
         });
 
-      $log.debug("There is "+vm.list.length+" troncs, "+Math.round(vm.list.length/32)+" tableaux") ;
+      $log.debug("There is "+vm.list.length+" troncs, "+Math.ceil(vm.list.length/32)+" tableaux") ;
 
-      var numberOfTable= Math.round(vm.list.length/32);
+      var numberOfTable= Math.ceil(vm.list.length/32);
       vm.tables = [];
       var global_i=0;
 

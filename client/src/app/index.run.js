@@ -8,9 +8,11 @@
 
 
   /** @ngInject */
-  function runBlock($log) {
+  function runBlock(authManager /*$rootScope, $http, $location, $localStorage, $log*/)
+  {
+    //Angular JWT
+    authManager.redirectWhenUnauthenticated();
 
-    $log.debug('runBlock end');
   }
 
 })();

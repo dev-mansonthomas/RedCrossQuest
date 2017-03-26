@@ -30,7 +30,7 @@
   }
   .mediumthickborder
   {
-    border-bottom: 4mm solid silver;
+    border-bottom: 6mm solid silver;
   }
 </style><style type="text/css" media="print">
 
@@ -75,7 +75,7 @@
     <table class="QRCodeTable" ng-repeat="table in qrcQueteurs.tables">
       <tbody>
         <tr ng-repeat="table_tr in table" ng-class="{thickborder:($index+1)%4==0 && ($index+1)%8!=0, mediumthickborder:($index+1)%6==0 }">
-          <td ng-repeat="table_td in table_tr"><qr text="table_td.qr_code" size="qrcQueteurs.size"></qr><br/><span style="font-size:11px;">Q</span>{{table_td.qr_code}}-{{table_td.first_name}}-{{table_td.last_name}}</td>
+          <td ng-repeat="table_td in table_tr"><qr text="::table_td.qr_code" size="qrcQueteurs.size"></qr><br/><span style="font-size:11px;">I</span>{{::table_td.qr_code}}-{{::table_td.first_name}}-{{::table_td.last_name}}</td>
         </tr>
       </tbody>
     </table>

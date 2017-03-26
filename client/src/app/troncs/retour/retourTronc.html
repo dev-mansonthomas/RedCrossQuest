@@ -27,14 +27,14 @@
 
           <div class="row">
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-4" ng-if="!rt.current.readOnlyView">
               <qr-scanner
                 ng-success="rt.qrCodeScanOnSuccess(data)"
                 ng-error="rt.qrCodeScanOnError(error)"
                 ng-video-error="rt.qrCodeScanOnVideoError(error)"
                 width="320"
                 height="200"/>
-
+              <br/>
               <span ng-bind="departTronc.decodedData"></span>
             </div>
 
@@ -45,12 +45,13 @@
                 type="text"
                 ng-model="rt.current.tronc"
                 placeholder="Scanner le QRCode du tronc"
-                uib-typeahead="tronc as tronc.stringView for tronc in rt.searchTronc($viewValue)"
+                uib-typeahead="tronc as tronc.id for tronc in rt.searchTronc($viewValue)"
                 typeahead-loading="loadingTroncs"
                 typeahead-no-results="noTroncsResults"
                 typeahead-wait-ms="20"
                 class="form-control"
                 ng-required
+                ng-disabled="rt.current.readOnlyView"
                 autocomplete="off">
               <i   ng-show="loadingTroncs" class="glyphicon glyphicon-refresh"></i>
               <div ng-show="noTroncResults">
@@ -70,7 +71,7 @@
                      class="form-control"
                      ng-model="rt.current.tronc_queteur.retour"
                      ng-min="rt.current.tronc_queteur.depart"
-                     ng-readonly="rt.current.fillTronc"
+                     ng-readonly="rt.current.readOnlyView || rt.current.fillTronc"
                      required/>
               <span class="help-block">Vous pouvez rentrer seulement l'horaire de retour, et remplir les montants ultérieurement</span>
             </div>
@@ -83,6 +84,8 @@
                      type="checkbox"
                      class="form-control"
                      ng-model="rt.current.fillTronc"
+                     ng-disabled="rt.current.readOnlyView"
+
               />
               <span class="help-block">Cocher cette case pour remplir le nombre de pièces récoltés par type maintenant</span>
             </div>
@@ -94,113 +97,242 @@
 
 
 
-        <div ng-show="rt.current.fillTronc">
-          <div class="row">
-            <div class="form-group col-md-8 col-md-offset-4" style="font-size: 25px; color:red;">
-              Saisir le <b>nombre</b> de pièce (<b>pas</b> les montants!)
+        <div ng-show="rt.current.fillTronc" >
+          <div class="row" ng-if="!rt.current.readOnlyView">
+            <div class="form-group col-md-4">
+                <button type="button"  ng-click="rt.setNonFilledBillToZero();">Mettre à zéro les champs billets non rempli</button>
+            </div>
+            <div class="form-group col-md-8" style="font-size: 25px; color:red;">
+              Saisir le <b>nombre</b> de pièces/billets (<b>pas</b> les montants!)
             </div>
           </div>
 
-          <div class="row">
-            <div class="form-group  col-md-2 col-md-offset-4" ng-class="{'has-error':retourTroncForm.euro2.$invalid}">
-              <label for="euro2" class="control-label">Nombre de 2€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro2" id="euro2" class="form-control" ng-model="rt.current.tronc_queteur.euro2" ng-required="rt.current.fillTronc"/>
-              <span class="help-block" ng-show="rt.current.tronc_queteur.euro2">Montant : {{rt.current.tronc_queteur.euro2*2}} €</span>
-            </div>
 
-            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro1.$invalid}">
-              <label for="euro1" class="control-label">Nombre de 1€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro1" id="euro1" class="form-control" ng-model="rt.current.tronc_queteur.euro1" ng-required="rt.current.fillTronc"/>
-              <span class="help-block" ng-show="rt.current.tronc_queteur.euro1">Montant : {{rt.current.tronc_queteur.euro1*1}} €</span>
-            </div>
-          </div>
 
-          <div class="row">
 
-            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents50.$invalid}">
-              <label for="cents50" class="control-label">Nombre de 50 cents</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="cents50" id="cents50" class="form-control" ng-model="rt.current.tronc_queteur.cents50" ng-required="rt.current.fillTronc"/>
-              <span class="help-block" ng-show="rt.current.tronc_queteur.cents50">Montant : {{rt.current.tronc_queteur.cents50*0.5}} €</span>
-            </div>
-
-            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents20.$invalid}">
-              <label for="cents20" class="control-label">Nombre de 20 cents</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="cents20" id="cents20" class="form-control" ng-model="rt.current.tronc_queteur.cents20" ng-required="rt.current.fillTronc"/>
-              <span class="help-block" ng-show="rt.current.tronc_queteur.cents20">Montant : {{rt.current.tronc_queteur.cents20*0.2}} €</span>
-            </div>
-
-            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents10.$invalid}">
-              <label for="cents10" class="control-label">Nombre de 10 cents</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="cents10" id="cents10" class="form-control" ng-model="rt.current.tronc_queteur.cents10" ng-required="rt.current.fillTronc"/>
-              <span class="help-block" ng-show="rt.current.tronc_queteur.cents10">Montant : {{rt.current.tronc_queteur.cents10*0.1}} €</span>
-            </div>
-
-            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents05.$invalid}">
-              <label for="cents05" class="control-label">Nombre de 5 cents</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="cents05" id="cents05" class="form-control" ng-model="rt.current.tronc_queteur.cents5" ng-required="rt.current.fillTronc"/>
-              <span class="help-block" ng-show="rt.current.tronc_queteur.cents5">Montant : {{rt.current.tronc_queteur.cents5*0.05}} €</span>
-            </div>
-
-            <div class="form-group  col-md-2" ng-class="{'has-error': retourTroncForm.cents02.$invalid}">
-              <label for="cents02" class="control-label">Nombre de 2 cents</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="cents02" id="cents02" class="form-control" ng-model="rt.current.tronc_queteur.cents2" ng-required="rt.current.fillTronc"/>
-              <span class="help-block" ng-show="rt.current.tronc_queteur.cents2">Montant : {{rt.current.tronc_queteur.cents2*0.02}} €</span>
-            </div>
-
-            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents01.$invalid}">
-              <label for="cents01" class="control-label">Nombre de 1 cent</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="cents01" id="cents01" class="form-control" ng-model="rt.current.tronc_queteur.cent1" ng-required="rt.current.fillTronc"/>
-              <span class="help-block" ng-show="rt.current.tronc_queteur.cents1">Montant : {{rt.current.tronc_queteur.cent1*0.01}} €</span>
-            </div>
-
-          </div>
           <div class="row">
 
             <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro5.$invalid}">
               <label for="euro5" class="control-label">Nombre de 5€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro5" id="euro5" class="form-control" ng-model="rt.current.tronc_queteur.euro5" ng-required="rt.current.fillTronc"/>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro5"
+                      id="euro5"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro5"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
               <span class="help-block" ng-show="rt.current.tronc_queteur.euro5">Montant : {{rt.current.tronc_queteur.euro5*5}} €</span>
             </div>
 
             <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro10.$invalid}">
               <label for="euro10" class="control-label">Nombre de 10€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro10" id="euro10" class="form-control" ng-model="rt.current.tronc_queteur.euro10" ng-required="rt.current.fillTronc"/>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro10"
+                      id="euro10"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro10"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
               <span class="help-block" ng-show="rt.current.tronc_queteur.euro10">Montant : {{rt.current.tronc_queteur.euro10*10}} €</span>
             </div>
 
             <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro20.$invalid}">
               <label for="euro20" class="control-label">Nombre de 20€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro20" id="euro20" class="form-control" ng-model="rt.current.tronc_queteur.euro20" ng-required="rt.current.fillTronc"/>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro20"
+                      id="euro20"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro20"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
               <span class="help-block" ng-show="rt.current.tronc_queteur.euro20">Montant : {{rt.current.tronc_queteur.euro20*20}} €</span>
             </div>
 
             <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro50.$invalid}">
               <label for="euro50" class="control-label">Nombre de 50€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro50" id="euro50" class="form-control" ng-model="rt.current.tronc_queteur.euro50" ng-required="rt.current.fillTronc"/>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro50"
+                      id="euro50"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro50"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
               <span class="help-block" ng-show="rt.current.tronc_queteur.euro50">Montant : {{rt.current.tronc_queteur.euro50*50}} €</span>
             </div>
 
             <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro100.$invalid}">
               <label for="euro100" class="control-label">Nombre de 100€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro100" id="euro100" class="form-control" ng-model="rt.current.tronc_queteur.euro100" ng-required="rt.current.fillTronc"/>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro100"
+                      id="euro100"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro100"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
               <span class="help-block" ng-show="rt.current.tronc_queteur.euro100">Montant : {{rt.current.tronc_queteur.euro100*100}} €</span>
             </div>
 
             <div class="form-group  col-md-1" ng-class="{'has-error':retourTroncForm.euro200.$invalid}">
               <label for="euro200" class="control-label" style="font-size:11.5px;">Nb de 200€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro200" id="euro200" class="form-control" ng-model="rt.current.tronc_queteur.euro200" ng-required="rt.current.fillTronc"/>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro200"
+                      id="euro200"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro200"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
               <span class="help-block" ng-show="rt.current.tronc_queteur.euro200">Montant : {{rt.current.tronc_queteur.euro200*200}} €</span>
             </div>
 
             <div class="form-group  col-md-1" ng-class="{'has-error':retourTroncForm.euro500.$invalid}">
               <label for="euro500" class="control-label" style="font-size:11.5px;">Nb de 500€</label>
-              <input  type="number" ng-pattern="retourTronc.onlyNumbers" name="euro500" id="euro500" class="form-control" ng-model="rt.current.tronc_queteur.euro500" ng-required="rt.current.fillTronc"/>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro500"
+                      id="euro500"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro500"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
               <span class="help-block" ng-show="rt.current.tronc_queteur.euro500">Montant : {{rt.current.tronc_queteur.euro500*500}} €</span>
             </div>
-           </div>
+          </div>
           <div class="row">
             <div class="form-group col-md-8 col-md-offset-4" style="font-size:20px;color:darkblue;">
-              Montant Total du Tronc (pour Contrôle) : {{
+              Montant Total pour les billets  du Tronc (pour Contrôle) : {{
+              rt.current.tronc_queteur.euro5*5       +
+              rt.current.tronc_queteur.euro10*10     +
+              rt.current.tronc_queteur.euro20*20     +
+              rt.current.tronc_queteur.euro50*50     +
+              rt.current.tronc_queteur.euro100*100   +
+              rt.current.tronc_queteur.euro200*200   +
+              rt.current.tronc_queteur.euro500*500
+              }} €
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group  col-md-2 col-md-offset-2" ng-class="{'has-error':retourTroncForm.euro2.$invalid}">
+              <label for="euro2" class="control-label">Nombre de 2€</label>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro2"
+                      id="euro2"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro2"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
+              <span class="help-block" ng-show="rt.current.tronc_queteur.euro2">Montant : {{rt.current.tronc_queteur.euro2*2}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents50.$invalid}">
+              <label for="cents50" class="control-label">Nombre de 50 cents</label>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="cents50"
+                      id="cents50"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.cents50"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
+              <span class="help-block" ng-show="rt.current.tronc_queteur.cents50">Montant : {{rt.current.tronc_queteur.cents50*0.5}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.euro1.$invalid}">
+              <label for="euro1" class="control-label">Nombre de 1€</label>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="euro1"
+                      id="euro1"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.euro1"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
+              <span class="help-block" ng-show="rt.current.tronc_queteur.euro1">Montant : {{rt.current.tronc_queteur.euro1*1}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents20.$invalid}">
+              <label for="cents20" class="control-label">Nombre de 20 cents</label>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="cents20"
+                      id="cents20"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.cents20"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
+              <span class="help-block" ng-show="rt.current.tronc_queteur.cents20">Montant : {{rt.current.tronc_queteur.cents20*0.2}} €</span>
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <div class="form-group  col-md-2  col-md-offset-2" ng-class="{'has-error':retourTroncForm.cents05.$invalid}">
+              <label for="cents05" class="control-label">Nombre de 5 cents</label>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="cents05"
+                      id="cents05"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.cents5"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
+              <span class="help-block" ng-show="rt.current.tronc_queteur.cents5">Montant : {{rt.current.tronc_queteur.cents5*0.05}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents10.$invalid}">
+              <label for="cents10" class="control-label">Nombre de 10 cents</label>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="cents10"
+                      id="cents10"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.cents10"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
+              <span class="help-block" ng-show="rt.current.tronc_queteur.cents10">Montant : {{rt.current.tronc_queteur.cents10*0.1}} €</span>
+            </div>
+
+
+            <div class="form-group  col-md-2" ng-class="{'has-error': retourTroncForm.cents02.$invalid}">
+              <label for="cents02" class="control-label">Nombre de 2 cents</label>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="cents02"
+                      id="cents02"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.cents2"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"/>
+              <span class="help-block" ng-show="rt.current.tronc_queteur.cents2">Montant : {{rt.current.tronc_queteur.cents2*0.02}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':retourTroncForm.cents01.$invalid}">
+              <label for="cents01" class="control-label">Nombre de 1 cent</label>
+              <input  type="number"
+                      ng-pattern="retourTronc.onlyNumbers"
+                      name="cents01"
+                      id="cents01"
+                      class="form-control"
+                      ng-model="rt.current.tronc_queteur.cent1"
+                      ng-readonly="rt.current.readOnlyView"
+                      ng-required="rt.current.fillTronc"
+              />
+              <span class="help-block" ng-show="rt.current.tronc_queteur.cent1">Montant : {{rt.current.tronc_queteur.cent1*0.01}} €</span>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-8 col-md-offset-4" style="font-size:20px;color:darkblue;">
+              Montant Total pour les pièces (pour Contrôle) : {{
               rt.current.tronc_queteur.euro2*2       +
               rt.current.tronc_queteur.euro1*1       +
               rt.current.tronc_queteur.cents50*0.5   +
@@ -208,7 +340,23 @@
               rt.current.tronc_queteur.cents10*0.1   +
               rt.current.tronc_queteur.cents5*0.05  +
               rt.current.tronc_queteur.cents2*0.02  +
-              rt.current.tronc_queteur.cent1*0.01  +
+              rt.current.tronc_queteur.cent1*0.01
+              }} €
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="form-group col-md-8 col-md-offset-4" style="font-size:20px;color:darkgreen;">
+              Montant Total du Tronc (pour Contrôle) : {{
+              rt.current.tronc_queteur.euro2*2       +
+              rt.current.tronc_queteur.euro1*1       +
+              rt.current.tronc_queteur.cents50*0.5   +
+              rt.current.tronc_queteur.cents20*0.2   +
+              rt.current.tronc_queteur.cents10*0.1   +
+              rt.current.tronc_queteur.cents5*0.05   +
+              rt.current.tronc_queteur.cents2*0.02   +
+              rt.current.tronc_queteur.cent1*0.01    +
               rt.current.tronc_queteur.euro5*5       +
               rt.current.tronc_queteur.euro10*10     +
               rt.current.tronc_queteur.euro20*20     +
@@ -221,6 +369,13 @@
           </div>
         </div>
 
+          <div class="row" >
+            <div class="form-group col-md-2 col-md-offset-10">
+              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid" ng-if="!rt.current.readOnlyView" />
+              <a  ng-click="rt.back();" class="btn btn-link">Cancel</a>
+            </div>
+
+          </div>
         </form>
       </div>
     </div>

@@ -2,11 +2,9 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/server/db/migrations/20160419224943_red_cross_quest.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/server/db/privateData/01-import_data_2014.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/server/db/privateData/02-import_data_2015.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/server/db/privateData/03-point_de_quete.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/server/db/privateData/04-migrate_data_2014.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/server/db/privateData/05-tronc_reel_2016.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/server/db/privateData/Initial build of DB/04-migrate_data_2014.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/server/db/privateData/base_access_1999_2012/CRFParisIV_access_1999_to_2012.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/server/db/privateData/base_access_1999_2012/migrate_data.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/db/seeds/QueteurSeeder.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/src/QueteurMapper.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/server/src/TroncMapper.php" dialect="MySQL" />

@@ -10,18 +10,34 @@
     .controller('QueteurEditController', QueteurEditController);
 
   /** @ngInject */
-  function QueteurEditController($scope, $log, $routeParams, $location, QueteurResource) {
+  function QueteurEditController($scope, $log, $routeParams, $location,
+                                 QueteurResource, TroncQueteurResource, moment)
+  {
     var vm = this;
 
     var queteurId = $routeParams.id;
 
-    if (angular.isDefined(queteurId)) {
-      vm.current = QueteurResource.get({ 'id': queteurId });
-    } else {
+    if (angular.isDefined(queteurId))
+    {
+      QueteurResource.get({ 'id': queteurId }).$promise.then(function(queteur)
+      {
+        vm.current = queteur;
+        vm.current.troncs_queteur =  TroncQueteurResource.getTroncsOfQueteur({'queteur_id': queteurId});
+
+        if(vm.current.birthdate != null)
+        {
+          vm.current.birthdate =  moment( queteur.birthdate.date.substring(0, queteur.birthdate.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+        }
+
+      });
+
+    }
+    else
+    {
       vm.current = new QueteurResource();
     }
 
-    function redirectToList()
+    function savedSuccessfully()
     {
       $location.path('/queteurs');
     }
@@ -34,10 +50,10 @@
 
       if (angular.isDefined(vm.current.id))
       {
-        vm.current.$update(redirectToList);
+        vm.current.$update(savedSuccessfully);
       } else
       {
-        vm.current.$save(redirectToList);
+        vm.current.$save(savedSuccessfully);
       }
 
     };

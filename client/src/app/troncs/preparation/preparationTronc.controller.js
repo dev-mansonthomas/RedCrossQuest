@@ -20,12 +20,12 @@
     vm.current.ul_id=2;
     vm.current.horaireDepartTheorique = new Date();
 
-    vm.current.horaireDepartTheorique.setHours(9) ;
+    //on laisse l'heure courante.
     vm.current.horaireDepartTheorique.setMinutes(0) ;
     vm.current.horaireDepartTheorique.setSeconds(0) ;
     vm.current.horaireDepartTheorique.setMilliseconds(0) ;
     //pointQuete list
-    vm.current.pointsQuete = PointQueteResource.query();
+    vm.pointsQuete = PointQueteResource.query();
 
     //This watch change on queteur variable to update the queteurId field
     $scope.$watch('pt.current.queteur', function(newValue/*, oldValue*/)
@@ -44,9 +44,16 @@
     });
 
 
-    function redirectToSlash()
+    function savedSuccessfully()
     {
-      $location.path('/');
+      vm.current = {};
+      vm.current.horaireDepartTheorique = new Date();
+
+      //on laisse l'heure courante.
+      vm.current.horaireDepartTheorique.setMinutes(0) ;
+      vm.current.horaireDepartTheorique.setSeconds(0) ;
+      vm.current.horaireDepartTheorique.setMilliseconds(0) ;
+
     }
 
     function onSaveError(errorMessage)
@@ -59,7 +66,7 @@
       $uibModal.open({
         animation: true,
         templateUrl: 'myModalContent.html',
-        controller: 'ModalInstanceCtrl',
+        controller: 'ModalInstanceController',
         size: 'lg',
         resolve: {
           errorOnSave: function () {
@@ -68,6 +75,9 @@
           troncId:function()
           {
             return $scope.pt.current.tronc.id;
+          },
+          saveFunction : function(){
+            return vm.save;
           }
         }
       });
@@ -86,12 +96,12 @@
       $log.debug(vm.current);
 
       var troncQueteur = new TroncQueteurResource();
-      troncQueteur.queteur_id       = $scope.pt.current.queteurId;
-      troncQueteur.tronc_id         = $scope.pt.current.troncId;
+      troncQueteur.queteur_id       = $scope.pt.current.queteur.id;
+      troncQueteur.tronc_id         = $scope.pt.current.tronc.id;
       troncQueteur.point_quete_id   = $scope.pt.current.lieuDeQuete;
       troncQueteur.depart_theorique = $scope.pt.current.horaireDepartTheorique;
 
-      troncQueteur.$save(redirectToSlash, onSaveError);
+      troncQueteur.$save(savedSuccessfully, onSaveError);
       $log.debug("Saved completed");
     }
 
@@ -237,9 +247,9 @@
 
   angular
     .module('client')
-    .controller('ModalInstanceCtrl',
+    .controller('ModalInstanceController',
       function ($scope, $uibModalInstance, $log,
-                TroncQueteurResource, errorOnSave, troncId)
+                TroncQueteurResource, errorOnSave, troncId, saveFunction)
   {
     $scope.message=errorOnSave;
 
@@ -248,6 +258,7 @@
     {
       TroncQueteurResource.deleteNonReturnedTroncQueteur({'id':troncId}, function()
       {
+        saveFunction();
         $uibModalInstance.close();
       }, function(reason){
         alert(reason);

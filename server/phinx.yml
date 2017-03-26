@@ -7,11 +7,11 @@ environments:
     default_database: development
     production:
         adapter: mysql
-        host: localhost
-        name: production_db
-        user: root
+        host: 127.0.0.1
+        name: rcq
+        user: rcq
         pass: ''
-        port: 3306
+        port: 3307
         charset: utf8
 
     development:

@@ -2,8 +2,13 @@
  * Created by tmanson on 03/05/2016.
  */
 
-angular.module('client').factory('TroncQueteurResource', function($resource) {
-  return $resource('/rest/tronc_queteur/:id', { id: '@id' }, {
+angular.module('client').factory('TroncQueteurResource', function($resource, $localStorage) {
+  return $resource('/rest/:roleId/ul/:ulId/tronc_queteur/:id',
+    {
+      roleId: $localStorage.currentUser.roleId,
+      ulId  : $localStorage.currentUser.ulId,
+      id    : '@id'
+    }, {
     update: {
       method: 'PUT' // this method issues a PUT request
     },
@@ -36,9 +41,14 @@ angular.module('client').factory('TroncQueteurResource', function($resource) {
       params:{
         action:'saveCoins'
       }
+    },
+    getTroncsOfQueteur:{
+      method:'GET',
+      isArray: true,
+      params:{
+        action:'getTroncsOfQueteur',
+        queteur_id:'@queteur_id'
+      }
     }
-
-
-
   });
 });

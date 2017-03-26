@@ -3,6 +3,7 @@ namespace RedCrossQuest;
 
 
 use Carbon\Carbon;
+use DateTimeZone;
 
 class TroncQueteurMapper extends Mapper
 {
@@ -41,7 +42,11 @@ SELECT
  `cent1`             ,
  `foreign_coins`     ,
  `foreign_banknote`  ,
- `notes`
+ `notes_depart_theorique`      ,
+ `notes_depart`                ,
+ `notes_retour`                ,
+ `notes_retour_comptage_pieces`,
+ `notes_update`
 FROM  `tronc_queteur` as t
 WHERE  t.tronc_id = :tronc_id
 ORDER BY id DESC
@@ -69,60 +74,115 @@ LIMIT 1
 
 
 
-    /**
-     * Get one tronc_queteur by its ID
-     *
-     * @param int $tronc_queteur_id The ID of the tronc_quete row
-     * @return TroncQueteurEntity  The tronc
-     */
-    public function getTroncQueteurById($id)
-    {
-      $sql = "
+  /**
+   * Get one tronc_queteur by its ID
+   *
+   * @param int $tronc_queteur_id The ID of the tronc_quete row
+   * @return TroncQueteurEntity  The tronc
+   */
+  public function getTroncQueteurById($id)
+  {
+    $sql = "
 SELECT 
- `id`                ,
- `queteur_id`        ,
- `point_quete_id`    ,
- `tronc_id`          ,
- `depart_theorique`  ,
- `depart`            ,
- `retour`            ,
- `euro500`           ,
- `euro200`           ,
- `euro100`           ,
- `euro50`            ,
- `euro20`            ,
- `euro10`            ,
- `euro5`             ,
- `euro2`             ,
- `euro1`             ,
- `cents50`           ,
- `cents20`           ,
- `cents10`           ,
- `cents5`            ,
- `cents2`            ,
- `cent1`             ,
- `foreign_coins`     ,
- `foreign_banknote`  ,
- `notes`
+`id`                ,
+`queteur_id`        ,
+`point_quete_id`    ,
+`tronc_id`          ,
+`depart_theorique`  ,
+`depart`            ,
+`retour`            ,
+`euro500`           ,
+`euro200`           ,
+`euro100`           ,
+`euro50`            ,
+`euro20`            ,
+`euro10`            ,
+`euro5`             ,
+`euro2`             ,
+`euro1`             ,
+`cents50`           ,
+`cents20`           ,
+`cents10`           ,
+`cents5`            ,
+`cents2`            ,
+`cent1`             ,
+`foreign_coins`     ,
+`foreign_banknote`  ,
+`notes_depart_theorique`      ,
+`notes_depart`                ,
+`notes_retour`                ,
+`notes_retour_comptage_pieces`,
+`notes_update`
+
 FROM  `tronc_queteur` as t
 WHERE  t.id = :id
 ";
 
-      $stmt = $this->db->prepare($sql);
+    $stmt = $this->db->prepare($sql);
 
-      $result = $stmt->execute(["id" => $id]);
+    $result = $stmt->execute(["id" => $id]);
 
-      if($result && $stmt->rowCount() == 1 )
-      {
-        $tronc = new TroncQueteurEntity($stmt->fetch());
-        $stmt->closeCursor();
-        return $tronc;
-      }
-      else
-      {
-        throw new \Exception("Tronc Queteur with ID:'".$id . "' not found");
-      }
+    if($result && $stmt->rowCount() == 1 )
+    {
+      $tronc = new TroncQueteurEntity($stmt->fetch(), $this->logger);
+      $stmt->closeCursor();
+      return $tronc;
     }
+    else
+    {
+      throw new \Exception("Tronc Queteur with ID:'".$id . "' not found");
+    }
+  }
+
+
+  public function getTroncsQueteur($queteur_id)
+  {
+    $sql = "
+SELECT 
+`id`                ,
+`queteur_id`        ,
+`point_quete_id`    ,
+`tronc_id`          ,
+`depart_theorique`  ,
+`depart`            ,
+`retour`            ,
+`euro500`           ,
+`euro200`           ,
+`euro100`           ,
+`euro50`            ,
+`euro20`            ,
+`euro10`            ,
+`euro5`             ,
+`euro2`             ,
+`euro1`             ,
+`cents50`           ,
+`cents20`           ,
+`cents10`           ,
+`cents5`            ,
+`cents2`            ,
+`cent1`             ,
+`foreign_coins`     ,
+`foreign_banknote`  
+FROM  `tronc_queteur` as t
+WHERE  t.queteur_id = :queteur_id
+ORDER BY t.id desc 
+";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(["queteur_id" => $queteur_id]);
+
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
+    }
+    return $results;
+  }
+
+
+
 
   /**
    * Update one tronc
@@ -133,15 +193,20 @@ WHERE  t.id = :id
   {
     $sql = "
 UPDATE `tronc_queteur`
-SET `depart`            = :depart            
- WHERE `id` = :id;
+SET    `depart`= :depart            
+WHERE  `id`    = :id;
 ";
     $currentDate = new Carbon();
+    $currentDate->tz='UTC';
+
     $stmt        = $this->db->prepare($sql);
     $result      = $stmt->execute([
       "depart"            => $currentDate->format('Y-m-d H:i:s'),
       "id"                => $tronc_queteur_id
     ]);
+
+
+    $this->logger->warning("Depart Tronc $tronc_queteur_id='".$tronc_queteur_id."' with date : '".$currentDate->format('Y-m-d H:i:s')."''");
 
     $this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
@@ -212,7 +277,7 @@ SET
  `cent1`             = :cent1  ,           
  `foreign_coins`     = :foreign_coins,     
  `foreign_banknote`  = :foreign_banknote,  
- `notes`             = :notes             
+ notes_retour_comptage_pieces             = :notes             
  WHERE `id` = :id;
 ";
 

@@ -18,7 +18,11 @@ SELECT  q.`id`,
         q.`created`,
         q.`updated`,
         q.`ul_id`,
-        q.`notes`
+        q.`notes`,
+        q.`active`,
+        q.`man`,
+        q.`birthdate`,
+        q.`qr_code_printed`
 FROM `queteur` q
 ";
       if($query!==null)
@@ -79,6 +83,10 @@ SELECT 	q.`id`,
         q.`updated`,
         q.`ul_id`,
         q.`notes`,
+        q.`active`,
+        q.`man`,
+        q.`birthdate`,
+        q.`qr_code_printed`,
        tq.`point_quete_id`,
        pq.name as 'point_quete_name',
        tq.`depart_theorique`,       
@@ -120,6 +128,10 @@ SELECT 	q.`id`,
         q.`updated`,
         q.`ul_id`,
         q.`notes`,
+        q.`active`,
+        q.`man`,
+        q.`birthdate`,
+        q.`qr_code_printed`,
        tq.`point_quete_id`, 
        tq.`depart_theorique`, 
        tq.`depart`, 
@@ -135,7 +147,7 @@ AND    tq.id = (
       ORDER BY depart_theorique DESC
       LIMIT 1
 		)
-ORDER BY q.last_name ASC;
+ORDER BY q.last_name ASC
 ";
 
     $sqlSearchNotReturned = "
@@ -151,6 +163,10 @@ SELECT 	q.`id`,
         q.`updated`,
         q.`ul_id`,
         q.`notes`,
+        q.`active`,
+        q.`man`,
+        q.`birthdate`,
+        q.`qr_code_printed`,
        tq.`point_quete_id`, 
        tq.`depart_theorique`, 
        tq.`depart`, 
@@ -167,7 +183,7 @@ AND    tq.id = (
       ORDER BY depart_theorique DESC
       LIMIT 1
 		)
-ORDER BY q.last_name ASC;
+ORDER BY q.last_name ASC
 ";
     $sql = null;
     switch ($searchType)
@@ -201,8 +217,36 @@ ORDER BY q.last_name ASC;
 
 
 
+    /**
+     * Return the UL_ID of the queteur with id $queteur_id
+     *
+     *  
+     * @return the UL_ID or -1 if not found
+     *
+     */
+    public function getQueteurUlId($queteur_id)
+    {
+      $sql = "
+SELECT  q.`ul_id`
+FROM  `queteur` q
+WHERE  q.id = :queteur_id";
 
+      $stmt = $this->db->prepare($sql);
 
+      $result = $stmt->execute(["queteur_id" => $queteur_id]);
+
+      if($result)
+      {
+        $key="ul_id";
+        $data =$stmt->fetch();
+
+        if(array_key_exists($key, $data))
+        {
+          return $data[$key];
+        }
+      }
+      return -1;
+    }
 
 
 
@@ -226,9 +270,14 @@ SELECT  q.`id`,
         q.`created`,
         q.`updated`,
         q.`notes`,
-        q.`ul_id`
+        q.`ul_id`,
+        q.`active`,
+        q.`man`,
+        q.`birthdate`,
+        q.`qr_code_printed`
 FROM  `queteur` q
-WHERE  q.id = :queteur_id";
+WHERE  q.id = :queteur_id
+";
 
         $stmt = $this->db->prepare($sql);
 
@@ -299,6 +348,8 @@ WHERE `id` = :id;
    */
   public function insert(QueteurEntity $queteur)
   {
+
+    //TODO update query to match new columns
     $sql = "
 INSERT INTO `queteur`
 (
@@ -326,7 +377,7 @@ VALUES
   NOW(),
   :notes,
   :ul_id,
-  :minor
+ false
 );
 ";
 
@@ -341,8 +392,7 @@ VALUES
       "nivol"      => $queteur->nivol,
       "mobile"     => $queteur->mobile,
       "notes"      => $queteur->notes,
-      "ul_id"      => $queteur->ul_id,
-      "minor"      => $queteur->minor
+      "ul_id"      => $queteur->ul_id
     ]);
 
     $stmt->closeCursor();
