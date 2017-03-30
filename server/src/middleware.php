@@ -69,15 +69,25 @@ class AuthorisationMiddleware
     {
       $this->logger->addInfo("JWT Validation OK:".print_r($tokenStr, true));
     }
+    try
+    {
+      $decodedToken = new DecodedToken(
+        $validation,
+        $token->getClaim("username"),
+        $token->getClaim("id"),
+        $token->getClaim("ulId"),
+        $token->getClaim("queteurId"),
+        $token->getClaim("roleId")
+      );
 
+    }
+    catch(Exception $error)
+    {
+      $this->logger->addError("Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode");
+      throw $error;
+    }
 
-    return new DecodedToken(
-      $validation,
-      $token->getClaim("username"),
-      $token->getClaim("uid"),
-      $token->getClaim("ulId"),
-      $token->getClaim("roleId")
-    );
+    return $decodedToken;
 
   }
 

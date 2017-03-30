@@ -12,8 +12,10 @@
 
 /**
  * récupère les queteurs
+ *
+ * Dispo pour tout les roles
  */
-$app->get('/{role-id:[1-9]+}/ul/{ul-id}/queteurs', function ($request, $response, $args)
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
 
   try
@@ -60,8 +62,10 @@ $app->get('/{role-id:[1-9]+}/ul/{ul-id}/queteurs', function ($request, $response
 
 /**
  * Récupère un queteur
+ *
+ * Dispo pour tout les roles
  */
-$app->get('/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 {
 
   try
@@ -87,8 +91,10 @@ $app->get('/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 
 /**
  * update un queteur
+ *
+ * Dispo pour les roles de 2 à 9
  */
-$app->put('/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 {
   try
   {
@@ -113,7 +119,7 @@ $app->put('/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 /**
  * Crée un nouveau queteur
  */
-$app->post('/ul/{ul-id}/queteurs', function ($request, $response, $args)
+$app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
   try
   {
