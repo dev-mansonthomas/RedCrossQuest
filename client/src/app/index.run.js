@@ -5,14 +5,19 @@
     .module('client')
     .run(runBlock);
 
-
-
   /** @ngInject */
-  function runBlock(authManager /*$rootScope, $http, $location, $localStorage, $log*/)
+  function runBlock($rootScope, $http, $location, $localStorage, $log, jwtHelper)
   {
-    //Angular JWT
-    authManager.redirectWhenUnauthenticated();
+    //check if there's a token and it's not expired. Otherwise, redirect the page to the login page.
+    $rootScope.$on('$routeChangeStart', function(event, next/*, current*/)
+    {
+      if (next == 'login') return;
 
+      var token = $localStorage.RCQ_JWT_Token;
+
+      if (!token || jwtHelper.isTokenExpired(token)) {
+        $location.path('/login').replace();
+      }
+    });
   }
-
 })();

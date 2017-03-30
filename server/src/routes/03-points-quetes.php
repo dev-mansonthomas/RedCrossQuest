@@ -10,7 +10,7 @@
 
 /********************************* POINT_QUETE ****************************************/
 
-$app->get('/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
 {
   try
   {

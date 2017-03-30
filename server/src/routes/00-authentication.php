@@ -11,6 +11,16 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 
 /********************************* Authentication ****************************************/
 
+
+/**
+ * Get username/password from request, trim it.
+ * If size is above 10 for username or 20 for the password  ==> authentication error
+ * Then get the user object from username and check the passwords
+ * if authentication succeed, get the Queteur object
+ * Build the JWT Token with id, username, ulId, queteurId, roleId inside it.
+ *
+ */
+                                                            
 $app->post('/authenticate', function ($request, $response, $args) use ($app)
 {
   $jwtSecret = $this->get('settings')['jwt']['secret'  ];
@@ -46,8 +56,6 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       password_verify($password, $user->password))
     {
       $queteur = $queteurMapper->getQueteurById($user->queteur_id);
-
-
 
       $signer = new Sha256();
       
