@@ -90,3 +90,9 @@ server/vendor/
 .dropbox.cache
 
 # Created by .ignore support plugin (hsz.mobi)
+/public_html/
+/.idea/
+/server/logs/app.log
+/server/selective-sync.sh
+/server/complete-sync.sh
+/client/sync.sh

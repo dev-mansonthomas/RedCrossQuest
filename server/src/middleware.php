@@ -9,7 +9,16 @@ use Lcobucci\JWT\ValidationData;
 
 class AuthorisationMiddleware
 {
-  
+  private static $errorMessage = [
+    '0001' => "Rejecting non https (%s) connection on '%s'",
+    '0002' => "Rejecting request as \$authorizations is empty (so no token)",
+    '0003' => "Rejecting request, fails to decode Token or Authentication fails: %s",
+    '0004' => "Rejecting request, failed to parse roleId from roleIdStr (%s') in Path: '%s' decoded token:%s",
+    '0005' => "Rejecting request, retrieving the roleId : explode function fails to return 2 elements array as expected for Path: '%s', explodedPath: %s DecodedToken: %s",
+    '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: '%s', DecodedToken: %s",
+    '0007' => "General Error while authenticating the request : %s",
+    '0008' => 4
+  ];
   public function __construct($app)
   {
     //Define the urls that you want to exclude from Authentication, aka public urls
@@ -33,12 +42,12 @@ class AuthorisationMiddleware
    */
   public function authenticate($tokenStr)
   {
-    $this->logger->addInfo("Authentication check on :".print_r($tokenStr, true));
-
+    $this->logger->addDebug("Authentication check on :".print_r($tokenStr, true));
+    
     if(substr_count($tokenStr, ".") !=  2)
     {
-      $this->logger->addInfo("wrong format for a jwt token (should have exactly 2 '.')  '$tokenStr'");
-      return new DecodedToken(false);
+      $this->logger->addError("'0008': wrong format for a jwt token (should have exactly 2 '.')  '$tokenStr'");
+      return new DecodedToken(false, '0008');
     }
 
     $token = (new Parser())->parse((string) $tokenStr);
@@ -51,19 +60,22 @@ class AuthorisationMiddleware
 
     if(!$token->verify($signer, $jwtSecret))
     {
-      $this->app->logger->addInfo("rejecting token, signature verification fails. Token : '$tokenStr'");
-      return new DecodedToken(false);
+      $this->app->logger->addInfo("'0009': rejecting token, signature verification fails. Token : '$tokenStr'");
+      return new DecodedToken(false, '0009');
     }
-    $this->logger->addInfo("JWT Token not altered:".print_r($tokenStr, true));
+    $this->logger->addDebug("JWT Token not altered:".print_r($tokenStr, true));
 
     $data = new ValidationData(); // It will use the current time to validate (iat, nbf and exp)
     $data->setIssuer  ($issuer  );
     $data->setAudience($audience);
 
     $validation = $token->validate($data);
+    $errorCode = '';
+
     if(!$validation)
     {
-      $this->logger->addInfo("JWT Validation fails:".print_r($tokenStr, true));
+      $this->logger->addInfo("'0010' JWT Validation fails:".print_r($tokenStr, true));
+      $errorCode = '0010';
     }
     else
     {
@@ -73,6 +85,7 @@ class AuthorisationMiddleware
     {
       $decodedToken = new DecodedToken(
         $validation,
+        $errorCode,
         $token->getClaim("username"),
         $token->getClaim("id"),
         $token->getClaim("ulId"),
@@ -109,11 +122,11 @@ class AuthorisationMiddleware
       $scheme = $request->getUri()->getScheme ();
       $host   = $request->getUri()->getHost   ();
 
-
+      //check https for non localhost request
       if($scheme!="https" && $host != "localhost" )
       {//must be https except on localhost
-        $this->logger->addInfo("Rejecting non https ($scheme) connection on '$host'");
-        return $this->denyRequest($response);
+        $this->logger->addInfo(sprintf(AuthorisationMiddleware::$errorMessage['0001'], $scheme, $host));
+        return $this->denyRequest($response, "0001");
       }
 
       //public path
@@ -121,12 +134,13 @@ class AuthorisationMiddleware
       {
         return $next($request, $response);
       }
+
       $authorizations = $request->getHeader('Authorization');
       //get token
       if(count($authorizations) == 0)
       {
-        $this->logger->addInfo("Rejecting request as \$authorizations is empty (so no token)");
-        return $this->denyRequest($response);
+        $this->logger->addInfo(AuthorisationMiddleware::$errorMessage['0002']);
+        return $this->denyRequest($response, '0002');
       }
       $authorization = $authorizations[0];
       $tokenStr = substr($authorization, $this->bearerStrLen, strlen($authorization) - $this->bearerStrLen);
@@ -136,29 +150,63 @@ class AuthorisationMiddleware
       //check if authenticated
       if(!($decodedToken instanceof DecodedToken) || $decodedToken->getAuthenticated() === false)
       {//token invalid
-        $this->logger->addInfo("Rejecting tokenStr:".print_r($tokenStr, true));
-        return $this->denyRequest($response);
+        $this->logger->addInfo(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true)));
+        return $this->denyRequest($response, sprintf('0003'.'.%s',$decodedToken->getErrorCode()));
+      }
+      
+      //check if the roleId in the URL match the one in the JWT Token (user might have changed the URL)
+
+      $path = $request->getUri()->getPath();
+
+      $explodedPath = explode("/", $path,2);
+
+      if(count($explodedPath) == 2) //explode with limit 2 will return one element + the rest of the string, so array size is 2.
+      {
+        $roleIdStr = $explodedPath[0];
+
+        if($roleIdStr == "1")
+        {//intVal return 1 in case of error
+          $roleId = 1;
+        }
+        else
+        {
+          $roleId = intVal($roleIdStr);
+          if($roleId == 1)
+          { //intVal return 1 when an error happen
+            $this->logger->addInfo(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, print_r($decodedToken, true)));
+            return $this->denyRequest($response, '0004');
+          }
+        }
+      }
+      else
+      {
+        $this->logger->addInfo(sprintf(AuthorisationMiddleware::$errorMessage['0005'], $path, print_r($explodedPath, true), print_r($decodedToken, true)));
+        return $this->denyRequest($response, '0005');
       }
 
-      //check if authorized to access service
-      $method = $request->getMethod();
+      if($decodedToken->getRoleId() != $roleId)
+      {
+        $this->logger->addInfo(sprintf(AuthorisationMiddleware::$errorMessage['0006'], $path, print_r($decodedToken, true)));
+        return $this->denyRequest($response, '0006');
+      }
 
+      
       //token valid
       return $next($request, $response);
     }
     catch(Exception $error)
     {
-      $this->logger->addError("Error while authenticating the request : " . print_r($error, true));
-      return $this->denyRequest($response);
+      $this->logger->addInfo(sprintf(AuthorisationMiddleware::$errorMessage['0007'], print_r($error, true)));
+      return $this->denyRequest($response, '0007');
     }
 
   }
 
 
-  private function denyRequest($response)
+  private function denyRequest($response, $errorCode)
   {
     $response401 = $response->withStatus(401);
-    $response401->getBody()->write(json_encode("{error:'authentication fails'}"));
+    $response401->getBody()->write(json_encode("{error:'authentication fails - $errorCode'}"));
     return $response401;
   }
 
@@ -167,14 +215,32 @@ class AuthorisationMiddleware
 
 class DecodedToken
 {
-  public function __construct($authenticated, $username, $uid, $ulId, $roleId)
+  public function __construct($authenticated, $errorCode, $username, $uid, $ulId, $queteurId, $roleId)
   {
     $this->authenticated = $authenticated;
+    $this->errorCode     = $errorCode;
 
     $this->username      = $username;
     $this->uid           = intval($uid);
     $this->ulId          = intval($ulId);
+    $this->queteurId     = intVal($queteurId);
     $this->roleId        = intval($roleId);
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getErrorCode()
+  {
+    return $this->errorCode;
+  }
+
+  /**
+   * @return int
+   */
+  public function getQueteurId(): int
+  {
+    return $this->queteurId;
   }
 
   /**
