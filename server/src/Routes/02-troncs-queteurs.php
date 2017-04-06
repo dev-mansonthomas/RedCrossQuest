@@ -6,6 +6,19 @@
  * Time: 18:35
  */
 
+use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
+use \RedCrossQuest\DBService\TroncQueteurDBService;
+use \RedCrossQuest\DBService\QueteurDBService     ;
+use \RedCrossQuest\DBService\PointQueteDBService  ;
+use \RedCrossQuest\DBService\TroncDBService       ;
+
+use \RedCrossQuest\Entity\TroncQueteurEntity;
+
+include_once("../../src/DBService/TroncQueteurDBService.php");
+include_once("../../src/DBService/QueteurDBService.php");
+include_once("../../src/DBService/PointQueteDBService.php");
+include_once("../../src/DBService/TroncDBService.php");
+include_once("../../src/BusinessService/TroncQueteurBusinessService.php");
 
 /********************************* TRONC_QUETEUR ****************************************/
 
@@ -16,13 +29,12 @@ $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($reques
 {
   try
   {
-    $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
-
-    $mapper = new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger);
+    $ulId    = (int)$args['ul-id'];
     //c'est bien le troncId qu'on passe ici, on va supprimer tout les tronc_queteur qui ont ce tronc_id et départ ou retour à nulle
     $troncId = (int)$args['id'];
-    $mapper->deleteNonReturnedTroncQueteur($troncId);
+
+    $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
+    $troncQueteurDBService->deleteNonReturnedTroncQueteur($troncId, $ulId);
   }
   catch(Exception $e)
   {
@@ -42,10 +54,9 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
   try
   {
     $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
-
     $params = $request->getQueryParams();
-    $troncQueteurMapper = new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger);
+
+    $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
 
     if(array_key_exists('action', $params))
     {
@@ -55,17 +66,17 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       $input  = $request->getParsedBody();
 
       $this->logger->debug("parsed json input : ",[$input]);
-      $tq = new \RedCrossQuest\TroncQueteurEntity($input, $this->logger);
+      $tq = new TroncQueteurEntity($input, $this->logger);
 
       if ($action =="saveReturnDate")
       {
         $this->logger->debug("Saving return date");
-        $troncQueteurMapper->updateRetour($tq);
+        $troncQueteurDBService->updateRetour($tq, $ulId);
       }
       elseif ($action =="saveCoins")
       {
         $this->logger->debug("Saving Coins");
-        $troncQueteurMapper->updateCoinsCount($tq);
+        $troncQueteurDBService->updateCoinsCount($tq, $ulId);
       }
     }
   }
@@ -90,32 +101,29 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
   try
   {
     $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
-
-
     $params = $request->getQueryParams();
-    $troncQueteurMapper = new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger);
+    $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
 
     if(array_key_exists('action', $params))
     {
       $action   = $params['action'  ];
       $tronc_id = $params['tronc_id'];
 
-      $troncQueteurAction = new RedCrossQuest\TroncQueteurAction( $this->logger,
-        $troncQueteurMapper,
-        new RedCrossQuest\QueteurMapper   ($this->db, $this->logger),
-        new RedCrossQuest\PointQueteMapper($this->db, $this->logger),
-        new RedCrossQuest\TroncMapper     ($this->db, $this->logger)
+      $troncQueteurBusinessService = new TroncQueteurBusinessService( $this->logger,
+        $troncQueteurDBService,
+        new QueteurDBService   ($this->db, $this->logger),
+        new PointQueteDBService($this->db, $this->logger),
+        new TroncDBService     ($this->db, $this->logger)
       );
 
 
       if($action == "getTroncQueteurForTroncIdAndSetDepart")
       {
-        $troncQueteur = $troncQueteurAction->getLastTroncQueteurFromTroncId($tronc_id);
+        $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId );
 
         if($troncQueteur->depart == null)
         {
-          $departDate = $troncQueteurMapper->setDepartToNow($troncQueteur->id);
+          $departDate = $troncQueteurDBService->setDepartToNow($troncQueteur->id, $ulId );
           $troncQueteur->depart = $departDate;
         }
         else
@@ -134,11 +142,11 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
 
       $input  = $request->getParsedBody();
 
-      $tq = new \RedCrossQuest\TroncQueteurEntity($input, $this->logger);
+      $tq = new TroncQueteurEntity($input, $this->logger);
       $this->logger->debug("tronc_queteur", [$tq]);
       try
       {
-        $troncQueteurMapper->insert($tq);
+        $troncQueteurDBService->insert($tq, $ulId );
       }
       catch(Exception $e)
       {
@@ -165,34 +173,35 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
   try
   {
     $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
 
     $params = $request->getQueryParams();
 
     if(array_key_exists('action', $params))
     {
       $action   = $params['action'  ];
-      $troncQueteurAction = new RedCrossQuest\TroncQueteurAction($this->logger,
-        new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger),
-        new RedCrossQuest\QueteurMapper     ($this->db, $this->logger),
-        new RedCrossQuest\PointQueteMapper  ($this->db, $this->logger),
-        new RedCrossQuest\TroncMapper       ($this->db, $this->logger));
+      $troncQueteurBusinessService = new TroncQueteurBusinessService($this->logger,
+        new TroncQueteurDBService($this->db, $this->logger),
+        new QueteurDBService     ($this->db, $this->logger),
+        new PointQueteDBService  ($this->db, $this->logger),
+        new TroncDBService       ($this->db, $this->logger));
 
       if($action == "getTroncQueteurForTroncId")
       {
         $this->logger->debug("action='getTroncQueteurForTroncId'");
         $tronc_id     = $params['tronc_id'];
-        $troncQueteur = $troncQueteurAction->getLastTroncQueteurFromTroncId($tronc_id);
+        $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId);
         $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
         return $response;
       }
       else if($action == "getTroncsOfQueteur")
       {
         $this->logger->debug("action='getTroncsOfQueteur'");
-        $queteur_id         = $params['queteur_id'];
-        $troncQueteurMapper = new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger);
-        $troncsQueteur      = $troncQueteurMapper->getTroncsQueteur($queteur_id);
+        $queteur_id             = $params['queteur_id'];
+        $troncQueteurDBService  = new TroncQueteurDBService($this->db, $this->logger);
+        $troncsQueteur          = $troncQueteurDBService->getTroncsQueteur($queteur_id, $ulId);
+
         $response->getBody()->write(json_encode($troncsQueteur, JSON_NUMERIC_CHECK));
+
         return $response;
       }
     }
@@ -217,20 +226,17 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
 {
   try
   {
-    $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
-
+    $ulId           = (int)$args['ul-id'];
     $troncQueteurId = (int)$args['id'];
     $this->logger->debug("Getting tronc_queteur with id '".$troncQueteurId."'");
 
-    $params = $request->getQueryParams();
-    $troncQueteurAction = new RedCrossQuest\TroncQueteurAction($this->logger,
-      new RedCrossQuest\TroncQueteurMapper($this->db, $this->logger),
-      new RedCrossQuest\QueteurMapper     ($this->db, $this->logger),
-      new RedCrossQuest\PointQueteMapper  ($this->db, $this->logger),
-      new RedCrossQuest\TroncMapper       ($this->db, $this->logger));
+    $troncQueteurAction = new TroncQueteurBusinessService($this->logger,
+      new TroncQueteurDBService($this->db, $this->logger),
+      new QueteurDBService     ($this->db, $this->logger),
+      new PointQueteDBService  ($this->db, $this->logger),
+      new TroncDBService       ($this->db, $this->logger));
 
-    $troncQueteur = $troncQueteurAction->getTroncQueteurFromTroncQueteurId($troncQueteurId);
+    $troncQueteur = $troncQueteurAction->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId);
 
     $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
 

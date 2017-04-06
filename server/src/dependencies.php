@@ -20,7 +20,7 @@ $container['logger'] = function ($c)
 
   return $logger;
 };
-
+// DB connection
 $container['db'] = function ($c)
 {
   $db = $c['settings']['db'];
@@ -31,3 +31,5 @@ $container['db'] = function ($c)
 
   return $pdo;
 };
+
+//

@@ -1,11 +1,21 @@
 <?php
-namespace RedCrossQuest;
+namespace RedCrossQuest\DBService;
 
-class TroncMapper extends Mapper
+use \RedCrossQuest\Entity\TroncEntity;
+use Symfony\Component\Config\Definition\Exception\Exception;
+
+class TroncDBService extends DBService
 {
-    public function getTroncs($query=null)
+
+  /**
+   * search all tronc, that are enabled, if query is specified, search on the ID
+   * @param int $query
+   * @param int    $ulId  : the ID of the UniteLocal on which the search is limited
+   * @return list of QueteurEntity
+   *
+   */
+    public function getTroncs($query=null, $ulId)
     {
-//TODO ajouter un filtre sur l'UL en cours
       $sql = "
 SELECT `id`,
        `ul_id`,
@@ -13,18 +23,13 @@ SELECT `id`,
        `enabled`,
        `notes`
 FROM   `tronc` as t
+WHERE enabled = 1
+AND   t.ul_id = :ul_id
 ";
       if($query != null)
       {
         $sql .="
-        WHERE CONVERT(id, CHAR) like concat(:query,'%')
-        AND enabled = 1;
-";
-      }
-      else
-      {
-        $sql .="
-        WHERE enabled = 1;
+AND CONVERT(id, CHAR) like concat(:query,'%')
 ";
       }
 
@@ -35,11 +40,11 @@ FROM   `tronc` as t
       $stmt = $this->db->prepare($sql);
       if($query != null)
       {
-        $result = $stmt->execute([ "query" => $query]);
+        $result = $stmt->execute([ "query" => $query, "ul_id" => $ulId]);
       }
       else
       {
-        $result = $stmt->execute([]);
+        $result = $stmt->execute(["ul_id" => $ulId]);
       }
 
 
@@ -56,13 +61,15 @@ FROM   `tronc` as t
 
 
 /**
- * search all tronc acording to a query type
- *
+ * search all tronc according to a query type
+ * @param int $searchType
  * 0 : All troncs
  * 1 : enabled troncs
  * 2 : disabled troncs
+ *@param $ulId
+ * @return list of tronc
  */
-  public function getTroncsBySearchType($searchType)
+  public function getTroncsBySearchType($searchType, $ulId)
   {
 
     $sql = "
@@ -72,18 +79,19 @@ SELECT 	`id`,
         `enabled`,
         `notes`
 FROM    `tronc` as t
+WHERE  t.ul_id = :ul_id
 ";
 
     if($searchType == "1")
     {
       $sql .= "
-WHERE t.enabled = 1
+AND t.enabled = 1
 ";
     }
     else
     {
       $sql .= "
-WHERE t.enabled = 0
+AND t.enabled = 0
 ";
 
     }
@@ -93,7 +101,7 @@ ORDER BY id ASC
     ";
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute([]);
+    $result = $stmt->execute(["ul_id" => $ulId]);
 
     $results = [];
     $i=0;
@@ -108,18 +116,15 @@ ORDER BY id ASC
 
 
 
-
-
-
-
-
     /**
      * Get one tronc by its ID
      *
      * @param int $tronc_id The ID of the tronc
+     * @param int $ulId the ID of the UniteLocal
      * @return TroncEntity  The tronc
+     * @throws \Exception if the tronc is not found
      */
-    public function getTroncById($tronc_id)
+    public function getTroncById($tronc_id, $ulId)
     {
       $sql = "
 SELECT `id`,
@@ -128,12 +133,13 @@ SELECT `id`,
        `enabled`,
        `notes`
 FROM  `tronc` as t
-WHERE  t.id = :tronc_id
+WHERE  t.id    = :tronc_id
+AND    t.ul_id = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
 
-      $result = $stmt->execute(["tronc_id" => $tronc_id]);
+      $result = $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
 
       if($result && $stmt->rowCount() == 1 )
       {
@@ -143,7 +149,7 @@ WHERE  t.id = :tronc_id
       }
       else
       {
-        throw new \Exception("Tronc with ID:'".$tronc_id . "' not found");
+        throw new \Exception("Tronc with ID:'".$tronc_id . "' for ul with id: $ulId not found");
       }
     }
 
@@ -152,25 +158,26 @@ WHERE  t.id = :tronc_id
    * Update one tronc
    *
    * @param TroncEntity $tronc The tronc to update
+   * @param int $ulId the ID of the UniteLocal
    * @return TroncEntity  The tronc
    */
-    public function update(TroncEntity $tronc)
+    public function update(TroncEntity $tronc, $ulId)
     {
       $sql = "
 UPDATE `tronc`
 SET
   `notes`       = :notes,
-  `ul_id`       = :ul_id,
   `enabled`     = :enabled
-WHERE `id` = :id;
+WHERE `id`  = :id
+AND   ul_id = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
       $result = $stmt->execute([
         "notes"      => $tronc->notes,
-        "ul_id"      => $tronc->ul_id,
         "enabled"    => $tronc->enabled,
-        "id"         => $tronc->id
+        "id"         => $tronc->id,
+        "ul_id"      => $ulId
       ]);
 
       $this->logger->warning($stmt->rowCount());
@@ -187,9 +194,10 @@ WHERE `id` = :id;
    * Insert one Tronc
    *
    * @param TroncEntity $tronc The tronc to update
+   * @param int $ulId the ID of the UniteLocal
    * @return int the primary key of the new tronc
    */
-  public function insert(TroncEntity $tronc)
+  public function insert(TroncEntity $tronc, $ulId)
   {
     $sql = "
 INSERT INTO `tronc`
@@ -212,7 +220,7 @@ VALUES
 
     $this->db->beginTransaction();
     $result = $stmt->execute([
-      "ul_id"    => $tronc->ul_id,
+      "ul_id"    => $ulId,
       "enabled"  => $tronc->enabled,
       "notes"    => $tronc->notes
     ]);

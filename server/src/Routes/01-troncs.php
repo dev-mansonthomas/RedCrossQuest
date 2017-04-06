@@ -6,6 +6,7 @@
  * Time: 18:33
  */
 
+use \RedCrossQuest\DBService\TroncDBService;
 
 /********************************* TRONC ****************************************/
 
@@ -18,27 +19,25 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
   try
   {
     $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
+    $this->logger->addInfo("Troncs list, UL ID '".$ulId."''");
 
-    $this->logger->addInfo("Troncs list");
-
-    $mapper = new RedCrossQuest\TroncMapper($this->db, $this->logger);
+    $troncDBService = new TroncDBService($this->db, $this->logger);
     $params = $request->getQueryParams();
 
 
     if(array_key_exists('q',$params))
     {
       $this->logger->addInfo("Tronc by search type '".$params['q']."''");
-      $troncs = $mapper->getTroncs($params['q']);
+      $troncs = $troncDBService->getTroncs($params['q'], $ulId);
     }
     else if(array_key_exists('searchType',$params))
     {
       $this->logger->addInfo("Tronc by search type '".$params['searchType']."''");
-      $troncs = $mapper->getTroncsBySearchType($params['searchType']);
+      $troncs = $troncDBService->getTroncsBySearchType($params['searchType'], $ulId);
     }
     else
     {
-      $troncs = $mapper->getTroncs();
+      $troncs = $troncDBService->getTroncs();
     }
 
     $response->getBody()->write(json_encode($troncs));
@@ -62,16 +61,14 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
 
   try
   {
-    $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
-
-
+    $ulId    = (int)$args['ul-id'];
     $troncId = (int)$args['id'];
-    $mapper = new RedCrossQuest\TroncMapper($this->db, $this->logger);
-    $tronc = $mapper->getTroncById($troncId);
+
+    $troncDBService = new TroncDBService($this->db, $this->logger);
 
     try
     {
+      $tronc = $troncDBService->getTroncById($troncId, $ulId);
       $response->getBody()->write(json_encode($tronc));
     }
     catch(Exception $e)

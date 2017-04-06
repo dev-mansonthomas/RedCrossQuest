@@ -1,9 +1,8 @@
 <?php
-namespace RedCrossQuest;
+namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
 
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class UserEntity
 {

@@ -1,20 +1,26 @@
 <?php
-namespace RedCrossQuest;
+namespace RedCrossQuest\DBService;
 
 
 use Carbon\Carbon;
 use DateTimeZone;
 
-class TroncQueteurMapper extends Mapper
+use \RedCrossQuest\Entity\TroncQueteurEntity;
+
+
+
+class TroncQueteurDBService extends DBService
 {
 
   /**
    * Get the last tronc_queteur for the tronc_id
    *
    * @param int $tronc_id The ID of the tronc
+   * @param int $ulId the id of the unite locale  (join with queteur table)
    * @return TroncQueteurEntity  The tronc
+   * @throws \Exception if tronc not found
    */
-  public function getLastTroncQueteurByTroncId($tronc_id)
+  public function getLastTroncQueteurByTroncId($tronc_id, $ulId)
   {
     $sql = "
 SELECT 
@@ -47,15 +53,17 @@ SELECT
  `notes_retour`                ,
  `notes_retour_comptage_pieces`,
  `notes_update`
-FROM  `tronc_queteur` as t
-WHERE  t.tronc_id = :tronc_id
+FROM  `tronc_queteur` as t, `queteur` as q
+WHERE  t.tronc_id   = :tronc_id
+AND    t.queteur_id = q.id
+AND    q.ul_id      = :ul_id
 ORDER BY id DESC
 LIMIT 1
 ";
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["tronc_id" => $tronc_id]);
+    $result = $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
 
     if($result && $stmt->rowCount() == 1 )
     {
@@ -78,9 +86,11 @@ LIMIT 1
    * Get one tronc_queteur by its ID
    *
    * @param int $tronc_queteur_id The ID of the tronc_quete row
+   * @param int $ulId the Id of the Unite Local
    * @return TroncQueteurEntity  The tronc
+   * @throws \Exception if tronc_queteur not found
    */
-  public function getTroncQueteurById($id)
+  public function getTroncQueteurById($id, $ulId)
   {
     $sql = "
 SELECT 
@@ -114,13 +124,17 @@ SELECT
 `notes_retour_comptage_pieces`,
 `notes_update`
 
-FROM  `tronc_queteur` as t
-WHERE  t.id = :id
+FROM  `tronc_queteur` as t, 
+      `queteur`       as q
+WHERE  t.id         = :id
+AND    t.queteur_id = q.id
+AND    q.ul_id      = :ul_id
+
 ";
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["id" => $id]);
+    $result = $stmt->execute(["id" => $id, "ul_id" => $ulId]);
 
     if($result && $stmt->rowCount() == 1 )
     {
@@ -134,8 +148,15 @@ WHERE  t.id = :id
     }
   }
 
+  /**
+   * Get all tronc form  queteur ID
+   *
+   * @param int $queteur_id The ID of the queteur
+   * @param int $ulId the Id of the Unite Local
+   * @return List of TroncQueteurEntity
 
-  public function getTroncsQueteur($queteur_id)
+   */
+  public function getTroncsQueteur($queteur_id, $ulId)
   {
     $sql = "
 SELECT 
@@ -163,13 +184,16 @@ SELECT
 `cent1`             ,
 `foreign_coins`     ,
 `foreign_banknote`  
-FROM  `tronc_queteur` as t
+FROM  `tronc_queteur` as t, 
+      `queteur`       as q
 WHERE  t.queteur_id = :queteur_id
+AND    t.queteur_id = q.id
+AND    q.ul_id      = :ul_id
 ORDER BY t.id desc 
 ";
 
     $stmt = $this->db->prepare($sql);
-    $stmt->execute(["queteur_id" => $queteur_id]);
+    $stmt->execute(["queteur_id" => $queteur_id, "ul_id" => $ulId]);
 
 
     $results = [];
@@ -185,16 +209,21 @@ ORDER BY t.id desc
 
 
   /**
-   * Update one tronc
+   * Update one tronc with Date Depart set to current time
    *
-   * @param TroncQueteurEntity $tronc The tronc to update
+   * @param  $tronc_queteur_id The id of tronc_queteur table to update
+   * @param  $ulId the Id of the Unite Local
+   * @return the Date that has been set to tronc_queteur.dateDepart
+   * @throws \Exception if update fails
    */
-  public function setDepartToNow($tronc_queteur_id)
+  public function setDepartToNow($tronc_queteur_id, $ulId)
   {
+
+//TODO limit the query by UL_ID
     $sql = "
 UPDATE `tronc_queteur`
 SET    `depart`= :depart            
-WHERE  `id`    = :id;
+WHERE  `id`    = :id
 ";
     $currentDate = new Carbon();
     $currentDate->tz='UTC';
@@ -205,17 +234,15 @@ WHERE  `id`    = :id;
       "id"                => $tronc_queteur_id
     ]);
 
-
-    $this->logger->warning("Depart Tronc $tronc_queteur_id='".$tronc_queteur_id."' with date : '".$currentDate->format('Y-m-d H:i:s')."''");
-
-    $this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
-
-    return $currentDate;
 
     if(!$result) {
       throw new Exception("could not save record");
     }
+    $this->logger->info("Depart Tronc $tronc_queteur_id='".$tronc_queteur_id."' with date : '".$currentDate->format('Y-m-d H:i:s')."'', numRows updated : ".$stmt->rowCount());
+
+    return $currentDate;
+
   }
 
 
@@ -372,22 +399,30 @@ VALUES
   }
 
 
-
-  public function checkTroncNotAlreadyInUse($troncId)
+  /****
+   * when preparing the tronc, upon saving, this function is called to check if this tronc is not already associated
+   * with a tronc_queteur row for which the dateDepart or dateRetour is null (which means it should be in use)
+   * @param $troncId the Id of the tronc that we want to check
+   * @param $ulId the Id of the unite locale
+   * @return an html table to be displayed in case the tronc is already in use
+   */
+  public function checkTroncNotAlreadyInUse($troncId, $ulId)
   {
     $sql = "
 SELECT 	tq.id, tq.queteur_id, tq.depart_theorique, tq.depart, q.first_name, q.last_name, q.email, q.mobile, q.nivol
 FROM 	tronc_queteur tq,
       queteur q
-WHERE 	tq.tronc_id=:tronc_id
+WHERE 	q.ul_id       = :ul_id
+AND     tq.tronc_id   =:tronc_id
 AND     tq.queteur_id = q.id
-AND    (tq.depart is null OR 
-        tq.retour is null)
+AND    (tq.depart     is null OR 
+        tq.retour     is null)
 ";
 
     $stmt = $this->db->prepare($sql);
     $result = $stmt->execute([
-      "tronc_id"        => $troncId
+      "tronc_id"        => $troncId,
+      "ul_id"           => $ulId
     ]);
 
     $rowCount = $stmt->rowCount();
@@ -449,9 +484,17 @@ AND    (tq.depart is null OR
 
 
 
-
-  public function deleteNonReturnedTroncQueteur($troncId)
+   /***
+    *  work with  checkTroncNotAlreadyInUse($troncId, $ulId).
+    * If the use decide to delete the tronc_queteur row because the existing rows
+    * represents a session of quete that has not been performed
+    *
+    *
+    */
+  public function deleteNonReturnedTroncQueteur($troncId, $ulId)
   {
+
+    //TODO : limit the deletion to ulId
     $sql ="
 DELETE FROM tronc_queteur
 WHERE       tronc_id=:tronc_id

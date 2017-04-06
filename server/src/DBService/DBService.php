@@ -1,7 +1,7 @@
 <?php
-namespace RedCrossQuest;
+namespace RedCrossQuest\DBService;
 
-abstract class Mapper
+abstract class DBService
 {
     protected $db;
     protected $logger;

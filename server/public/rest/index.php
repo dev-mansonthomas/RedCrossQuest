@@ -9,8 +9,8 @@ if (PHP_SAPI == 'cli-server') {
 }
 
 require __DIR__ . '/../../vendor/autoload.php';
-
-session_start();
+//REST services do not need server sessions
+//session_start();
 
 // Instantiate the app
 $settings = require __DIR__ . '/../../src/settings.php';

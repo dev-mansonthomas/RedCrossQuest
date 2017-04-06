@@ -1,8 +1,20 @@
 <?php
-namespace RedCrossQuest;
+namespace RedCrossQuest\DBService;
 
-class UserMapper extends Mapper
+include_once("../../src/DBService/DBService.php");
+
+use RedCrossQuest\Entity\UserEntity;
+
+class UserDBService extends DBService
 {
+
+  /***
+   * This function is used by the authenticate method, to get the user info from its nivol.
+   * Can't be restricted by ULID since the UL is not known.
+   *
+   * @param $nivol the Nivol passed at login
+   * @return an instance of UserEntity, null if nothing is found
+   */
   public function getUserInfoWithNivol($nivol)
   {
     $sql = "
