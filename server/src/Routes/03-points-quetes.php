@@ -6,7 +6,7 @@
  * Time: 18:36
  */
 
-
+use \RedCrossQuest\DBService\PointQueteDBService;
 
 /********************************* POINT_QUETE ****************************************/
 
@@ -15,15 +15,12 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
   try
   {
     $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
 
-    $this->logger->addInfo("Point Quete list");
+    $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
 
-    $mapper = new RedCrossQuest\PointQueteMapper($this->db, $this->logger);
-    $params = $request->getQueryParams();
 
-    $this->logger->addInfo("PointQuetes query");
-    $pointQuetes = $mapper->getPointQuetes();
+    $this->logger->addInfo("PointQuetes query for ul: $ulId");
+    $pointQuetes = $pointQueteDBService->getPointQuetes($ulId);
 
 
     $response->getBody()->write(json_encode($pointQuetes));

@@ -9,6 +9,15 @@
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 
+use \RedCrossQuest\DBService\UserDBService;
+use \RedCrossQuest\DBService\QueteurDBService;
+
+use \RedCrossQuest\Entity\UserEntity;
+
+include_once("../../src/DBService/UserDBService.php");
+include_once("../../src/DBService/QueteurDBService.php");
+
+
 /********************************* Authentication ****************************************/
 
 
@@ -27,8 +36,8 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
   $issuer    = $this->get('settings')['jwt']['issuer'  ];
   $audience  = $this->get('settings')['jwt']['audience'];
 
-  $userMapper    = new RedCrossQuest\UserMapper   ($this->db, $this->logger);
-  $queteurMapper = new RedCrossQuest\QueteurMapper($this->db, $this->logger);
+  $userMapper    = new UserDBService   ($this->db, $this->logger);
+  $queteurMapper = new QueteurDBService($this->db, $this->logger);
 
   try
   {
@@ -42,7 +51,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       strlen($username) > 10 || strlen($password) > 20)
     {
       $response201 = $response->withStatus(201);
-      $response201->getBody()->write(json_encode("{error:'username or password error'}"));
+      $response201->getBody()->write(json_encode("{error:'username or password error. Code 1'}"));
 
       return $response201;
     }
@@ -52,7 +61,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
 
     $user = $userMapper->getUserInfoWithNivol($username);
 
-    if($user instanceof \RedCrossQuest\UserEntity &&
+    if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
       $queteur = $queteurMapper->getQueteurById($user->queteur_id);
@@ -81,14 +90,17 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
     }
 
     $response201 = $response->withStatus(201);
-    $response201->getBody()->write(json_encode("{body:'username or password error'}"));
+    $response201->getBody()->write(json_encode("{error:'username or password error. Code 2'}"));
 
     return $response201;
   }
   catch(Exception $e)
   {
     $this->logger->addError($e);
-    throw $e;
+
+    $response201 = $response->withStatus(201);
+    $response201->getBody()->write(json_encode("{error:'username or password error. Code 3.'}"));
+    return $response201;
   }
 });
 

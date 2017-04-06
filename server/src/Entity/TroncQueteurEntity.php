@@ -1,5 +1,5 @@
 <?php
-namespace RedCrossQuest;
+namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
 
