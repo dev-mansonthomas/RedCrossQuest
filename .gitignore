@@ -96,3 +96,5 @@ server/vendor/
 /server/selective-sync.sh
 /server/complete-sync.sh
 /client/sync.sh
+/.idea/sqldialects.xml
+/.idea/dictionaries/tmanson.xml
