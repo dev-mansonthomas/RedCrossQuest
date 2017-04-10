@@ -24,7 +24,7 @@ class TroncQueteurDBService extends DBService
   {
     $sql = "
 SELECT 
- `id`                ,
+ t.`id`                ,
  `queteur_id`        ,
  `point_quete_id`    ,
  `tronc_id`          ,
@@ -53,7 +53,8 @@ SELECT
  `notes_retour`                ,
  `notes_retour_comptage_pieces`,
  `notes_update`
-FROM  `tronc_queteur` as t, `queteur` as q
+FROM  `tronc_queteur` as t, 
+      `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
 AND    t.queteur_id = q.id
 AND    q.ul_id      = :ul_id
@@ -94,7 +95,7 @@ LIMIT 1
   {
     $sql = "
 SELECT 
-`id`                ,
+t.`id`                ,
 `queteur_id`        ,
 `point_quete_id`    ,
 `tronc_id`          ,
@@ -160,7 +161,7 @@ AND    q.ul_id      = :ul_id
   {
     $sql = "
 SELECT 
-`id`                ,
+t.`id`                ,
 `queteur_id`        ,
 `point_quete_id`    ,
 `tronc_id`          ,
@@ -265,14 +266,15 @@ SET    `retour` = :retour
       "id"                => $tq->id
     ]);
 
+    if(!$result) {
+      throw new Exception("could not save record");
+    }
+
     $this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
 
     return $currentDate;
 
-    if(!$result) {
-      throw new Exception("could not save record");
-    }
   }
 
   /**
@@ -304,7 +306,7 @@ SET
  `cent1`             = :cent1  ,           
  `foreign_coins`     = :foreign_coins,     
  `foreign_banknote`  = :foreign_banknote,  
- notes_retour_comptage_pieces             = :notes             
+ `notes_retour_comptage_pieces` = :notes             
  WHERE `id` = :id;
 ";
 
@@ -347,11 +349,11 @@ SET
    * @param TroncQueteurEntity $tronc The tronc to update
    * @return int the primary key of the new tronc
    */
-  public function insert(TroncQueteurEntity $tq)
+  public function insert(TroncQueteurEntity $tq, $ulId)
   {
 
 
-    $checkTroncResult = $this->checkTroncNotAlreadyInUse($tq->tronc_id);
+    $checkTroncResult = $this->checkTroncNotAlreadyInUse($tq->tronc_id, $ulId);
 
     if($checkTroncResult != null)
     {

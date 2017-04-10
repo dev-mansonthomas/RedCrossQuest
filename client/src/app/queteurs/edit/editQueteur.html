@@ -197,7 +197,7 @@
             </thead>
             <tbody>
               <tr ng-repeat="tq in queteur.current.troncs_queteur">
-                <th><a ng-href="/#troncs/retour/{{::tq.id}}">{{::tq.id}}</a></th>
+                <th><a ng-href="/#tronc_queteur/edit/{{::tq.id}}">{{::tq.id}}</a></th>
                 <td>{{::tq.depart_theorique.date | date : 'yyyy/MM/dd HH:mm:ss' : '+0200'}} </td>
                 <td>{{::tq.depart.date}}</td>
                 <td>{{::tq.retour.date}}</td>
@@ -205,8 +205,8 @@
                 <td>{{::tq.point_quete_id}}</td>
                 <td>
 
-                  {{tq.euro500 * 500 + tq.euro200 * 200 + tq.euro100 * 100 + tq.euro50  * 50  + tq.euro20  * 20  + tq.euro10 * 10   + tq.euro5  * 5    +
-                  tq.euro2   * 2   + tq.euro1   * 1   + tq.cents50 * 0.5 + tq.cents20 * 0.2 + tq.cents10 * 0.1 + tq.cents5 * 0.05 + tq.cents2 * 0.02 + tq.cent1 * 0.01}}
+                  {{(tq.euro500 * 500 + tq.euro200 * 200 + tq.euro100 * 100 + tq.euro50  * 50  + tq.euro20  * 20  + tq.euro10 * 10   + tq.euro5  * 5    +
+                  tq.euro2   * 2   + tq.euro1   * 1   + tq.cents50 * 0.5 + tq.cents20 * 0.2 + tq.cents10 * 0.1 + tq.cents5 * 0.05 + tq.cents2 * 0.02 + tq.cent1 * 0.01).toFixed(2)}}
                   €
                 </td>
               </tr>

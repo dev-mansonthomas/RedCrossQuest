@@ -91,7 +91,10 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
 
 
 /**
- * créer un départ théorique de tronc (id_queteur, id_tronc, départ_théorique, point_quete)
+ * créer un départ théorique de tronc (insertion du tronc_queteur) (id_queteur, id_tronc, départ_théorique, point_quete)
+ *
+ * ou met à jour le tronc avec la date de départ. Si la date de départ est déjà mise à jour,
+ * departAlreadyRegistered=true est initialisé dans tronc_queteur qui est retourné
  *
  * autoriser pour role >2
  *
@@ -138,7 +141,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
 
     }
     else
-    {
+    { // préparation du tronc
 
       $input  = $request->getParsedBody();
 
