@@ -36,8 +36,8 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
   $issuer    = $this->get('settings')['jwt']['issuer'  ];
   $audience  = $this->get('settings')['jwt']['audience'];
 
-  $userMapper    = new UserDBService   ($this->db, $this->logger);
-  $queteurMapper = new QueteurDBService($this->db, $this->logger);
+  $userDBService    = new UserDBService   ($this->db, $this->logger);
+  $queteurDBService = new QueteurDBService($this->db, $this->logger);
 
   try
   {
@@ -59,12 +59,12 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
 
     $this->logger->addInfo("attempting to login with username='$username' and password size='".strlen($password)."'");
 
-    $user = $userMapper->getUserInfoWithNivol($username);
+    $user = $userDBService->getUserInfoWithNivol($username);
 
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
-      $queteur = $queteurMapper->getQueteurById($user->queteur_id);
+      $queteur = $queteurDBService->getQueteurById($user->queteur_id);
 
       $signer = new Sha256();
       

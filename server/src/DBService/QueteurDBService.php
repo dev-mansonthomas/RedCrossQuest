@@ -234,12 +234,11 @@ ORDER BY q.last_name ASC
 
   /**
    * Get one queteur by its ID
-   *
+   * No UL_ID passed, as this method is used by the login process, which don't know yet the UL_ID
    * @param int $queteur_id The ID of the queteur
-   * @param int $ulId  : the ID of the UniteLocal on which the search is limited
    * @return QueteurEntity  The queteur
    */
-  public function getQueteurById($queteur_id, $ulId)
+  public function getQueteurById($queteur_id)
   {
     $sql = "
 SELECT  q.`id`,
@@ -257,15 +256,15 @@ SELECT  q.`id`,
         q.`active`,
         q.`man`,
         q.`birthdate`,
-        q.`qr_code_printed`
+        q.`qr_code_printed`,
+        q.`referent_volunteer`
 FROM  `queteur` q
 WHERE  q.id   = :queteur_id
-AND    q.ul_id= :ul_id  
 ";
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["queteur_id" => $queteur_id, "ul_id" => $ulId]);
+    $result = $stmt->execute(["queteur_id" => $queteur_id]);
 
     if ($result) {
       $queteur = new QueteurEntity($stmt->fetch());
@@ -333,8 +332,6 @@ AND   `ul_id` = :ul_id
    */
   public function insert(QueteurEntity $queteur, $ulId)
   {
-
-    //TODO update query to match new columns
     $sql = "
 INSERT INTO `queteur`
 (
@@ -348,7 +345,11 @@ INSERT INTO `queteur`
   `updated`,
   `notes`,
   `ul_id`,
-  `minor`
+  `birthdate`,
+  `man`,
+  `active`,
+  `qr_code_printed`,
+  `referent_volunteer`
 )
 VALUES
 (
@@ -362,7 +363,11 @@ VALUES
   NOW(),
   :notes,
   :ul_id,
- FALSE
+  :birthdate,
+  :man,
+  :active,
+  :qr_code_printed,
+  :referent_volunteer
 );
 ";
 
@@ -370,14 +375,19 @@ VALUES
 
     $this->db->beginTransaction();
     $result = $stmt->execute([
-      "first_name"  => $queteur->first_name,
-      "last_name"   => $queteur->last_name,
-      "email"       => $queteur->email,
-      "secteur"     => $queteur->secteur,
-      "nivol"       => $queteur->nivol,
-      "mobile"      => $queteur->mobile,
-      "notes"       => $queteur->notes,
-      "ul_id"       => $ulId  //this ulId is safer, checked with JWT Token
+      "first_name"         => $queteur->first_name,
+      "last_name"          => $queteur->last_name,
+      "email"              => $queteur->email,
+      "secteur"            => $queteur->secteur,
+      "nivol"              => $queteur->nivol,
+      "mobile"             => $queteur->mobile,
+      "notes"              => $queteur->notes,
+      "ul_id"              => $ulId,  //this ulId is safer, checked with JWT Token
+      "birthdate"          => $queteur->birthdate,
+      "man"                => $queteur->man,
+      "active"             => $queteur->active,
+      "qr_code_printed"    => $queteur->qr_code_printed,
+      "referent_volunteer" => $queteur->referent_volunteer
     ]);
 
     $stmt->closeCursor();

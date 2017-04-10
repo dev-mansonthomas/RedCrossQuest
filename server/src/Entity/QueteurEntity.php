@@ -32,6 +32,7 @@ class QueteurEntity
   public $man                         ;
   public $birthdate                   ;
   public $qr_code_printed             ;
+  public $referent_volunteer          ;
 
   /**
      * Accept an array of data matching properties of this class
@@ -59,14 +60,15 @@ class QueteurEntity
     $this->getString('point_quete_id'              , $data);
     $this->getString('point_quete_name'            , $data);
     $this->getString('depart_theorique'            , $data);
-    $this->getString('depart'                      , $data);
-    $this->getString('retour'                      , $data);
+    $this->getDate  ('depart'                      , $data);
+    $this->getDate  ('retour'                      , $data);
 
     $this->getString('active'                      , $data);
     $this->getString('man'                         , $data);
-    $this->getString('birthdate'                   , $data);
+    $this->getDate  ('birthdate'                   , $data);
 
     $this->getString('qr_code_printed'             , $data);
+    $this->getString('referent_volunteer'          , $data);
 
   }
 

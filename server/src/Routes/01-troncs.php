@@ -37,7 +37,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
     }
     else
     {
-      $troncs = $troncDBService->getTroncs();
+      $troncs = $troncDBService->getTroncs(null,$ulId);
     }
 
     $response->getBody()->write(json_encode($troncs));

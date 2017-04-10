@@ -19,7 +19,10 @@ class AuthorisationMiddleware
     '0005' => "Rejecting request, retrieving the roleId : explode function fails to return 2 elements array as expected for Path: '%s', explodedPath: %s DecodedToken: %s",
     '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: '%s', DecodedToken: %s",
     '0007' => "General Error while authenticating the request : %s",
-    '0008' => 4
+    '0008' => "wrong format for a jwt token (should have exactly 2 '.')  '%s'",
+    '0009' => "rejecting token, signature verification fails. Token : '%s'",
+    '0010' => "JWT Validation fails: %s",
+    '0011' => "Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode. %s"
   ];
   public function __construct($app)
   {
@@ -48,7 +51,7 @@ class AuthorisationMiddleware
     
     if(substr_count($tokenStr, ".") !=  2)
     {
-      $this->logger->addError("'0008': wrong format for a jwt token (should have exactly 2 '.')  '$tokenStr'");
+      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0008'],$tokenStr));
       return new DecodedToken(false, '0008');
     }
 
@@ -62,7 +65,7 @@ class AuthorisationMiddleware
 
     if(!$token->verify($signer, $jwtSecret))
     {
-      $this->app->logger->addInfo("'0009': rejecting token, signature verification fails. Token : '$tokenStr'");
+      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0009'],$tokenStr));
       return new DecodedToken(false, '0009');
     }
     $this->logger->addDebug("JWT Token not altered:".print_r($tokenStr, true));
@@ -76,7 +79,7 @@ class AuthorisationMiddleware
 
     if(!$validation)
     {
-      $this->logger->addInfo("'0010' JWT Validation fails:".print_r($tokenStr, true));
+      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
       $errorCode = '0010';
     }
     else
@@ -98,7 +101,7 @@ class AuthorisationMiddleware
     }
     catch(Exception $error)
     {
-      $this->logger->addError("Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode");
+      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0010'], print_r($error, true)));
       throw $error;
     }
 
