@@ -97,7 +97,6 @@ class TroncQueteurEntity
   {
     if(array_key_exists($key, $data))
     {
-
       if(is_array($data[$key]))
       {//json parsing
         $this->logger->debug("Date from Javascript", $data[$key]);
@@ -116,8 +115,6 @@ class TroncQueteurEntity
           $this->$key = Carbon::parse($stringValue);
         }
       }
-
-
     }
   }
 }

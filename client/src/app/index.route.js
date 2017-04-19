@@ -85,6 +85,12 @@
         controllerAs: 'troncQueteur'
       })
 
+      // ============== Daily Stats ==============
+      .when('/dailyStats', {
+        templateUrl: 'app/dailyStats/list/listDailyStats.html',
+        controller: 'DailyStatsController',
+        controllerAs: 'ds'
+      })
       // ============== QRCode Generator ==============
 
       .when('/QRCode/troncs', {

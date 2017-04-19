@@ -368,7 +368,7 @@ VALUES
   :active,
   :qr_code_printed,
   :referent_volunteer
-);
+)
 ";
 
     $stmt = $this->db->prepare($sql);

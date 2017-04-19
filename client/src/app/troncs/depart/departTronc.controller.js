@@ -45,7 +45,7 @@
 
         if(tronc_queteur.depart != null)
         {
-          vm.current.tronc_queteur.depart = moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+          vm.current.tronc_queteur.depart           = moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
         }
 
         if(tronc_queteur.depart_theorique != null)
