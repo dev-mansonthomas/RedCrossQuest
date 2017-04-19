@@ -97,10 +97,9 @@
             </div>
             <div class="form-group">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
-              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required>
+              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required
+                      ng-options="pointQuete.id as (pointQuete.code - pointQuete.name) for pt in pt.pointsQuete">
                 <option value=""></option>
-
-                <option ng-repeat="pointQuete in pt.pointsQuete" value="{{::pointQuete.id}}">{{::pointQuete.code}} - {{::pointQuete.name}}</option>
               </select>
             </div>
           </div>
