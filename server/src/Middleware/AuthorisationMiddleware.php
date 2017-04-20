@@ -135,7 +135,7 @@ class AuthorisationMiddleware
       }
 
       //public path
-      if($path == 'authenticate' || $path == 'sendInit' || $path == 'resetPwd')
+      if($path == 'authenticate' || $path == 'sendInit' || $path == 'resetPassword' || $path == 'getInfoFromUUID')
       {
         return $next($request, $response);
       }

@@ -122,7 +122,7 @@ VALUES
     $oneDate = DateTime::createFromFormat("Y-m-d", $startDate);
 
     $this->logger->info('$startDate:', [print_r($startDate,true)]);
-    $this->logger->info('$oneDate:', [print_r($oneDate,true)]);
+    $this->logger->info('$oneDate:'  , [print_r($oneDate  ,true)]);
     $stmt         = $this->db->prepare($sql);
 
 

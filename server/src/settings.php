@@ -25,6 +25,18 @@ return [
           'secret'   => 'secret-rcq',
           'issuer'   => 'https://rcq.paquerette.com',
           'audience' => 'https://rcq.paquerette.com'
+        ],
+        'appSettings' => [
+          'appUrl'        => 'http://localhost:3000/',
+          'resetPwdPath'  => '#/resetPassword?key='
+
+        ],
+        'email' => [
+          'server'    => 'smtp.server.com',
+          'port'      => 465,
+          'from'      => 'email@server.com',
+          'username'  => 'login',
+          'password'  => 'password'
         ]
     ],
 ];
