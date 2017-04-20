@@ -19,7 +19,9 @@
         "robmorgan/phinx": "^0.5.3",
         "fzaninotto/faker": "^1.5",
         "nesbot/carbon": "^1.21",
-        "lcobucci/jwt": "^3.2"
+        "lcobucci/jwt": "^3.2",
+        "phpmailer/phpmailer": "^5.2",
+        "ramsey/uuid": "^3.6"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

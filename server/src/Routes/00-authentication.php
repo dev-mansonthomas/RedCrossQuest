@@ -14,6 +14,9 @@ use \RedCrossQuest\DBService\QueteurDBService;
 
 use \RedCrossQuest\Entity\UserEntity;
 
+use RedCrossQuest\BusinessService\EmailBusinessService; 
+
+
 include_once("../../src/DBService/UserDBService.php");
 include_once("../../src/DBService/QueteurDBService.php");
 
@@ -32,16 +35,8 @@ include_once("../../src/DBService/QueteurDBService.php");
                                                             
 $app->post('/authenticate', function ($request, $response, $args) use ($app)
 {
-  $jwtSecret = $this->get('settings')['jwt']['secret'  ];
-  $issuer    = $this->get('settings')['jwt']['issuer'  ];
-  $audience  = $this->get('settings')['jwt']['audience'];
-
-  $userDBService    = new UserDBService   ($this->db, $this->logger);
-  $queteurDBService = new QueteurDBService($this->db, $this->logger);
-
   try
   {
-
     $username = trim($request->getParsedBodyParam("username"));
     $password = trim($request->getParsedBodyParam("password"));
 
@@ -59,6 +54,9 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
 
     $this->logger->addInfo("attempting to login with username='$username' and password size='".strlen($password)."'");
 
+    $userDBService    = new UserDBService   ($this->db, $this->logger);
+    $queteurDBService = new QueteurDBService($this->db, $this->logger);
+
     $user = $userDBService->getUserInfoWithNivol($username);
 
     if($user instanceof UserEntity &&
@@ -67,7 +65,12 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       $queteur = $queteurDBService->getQueteurById($user->queteur_id);
 
       $signer = new Sha256();
-      
+
+      $jwtSecret = $this->get('settings')['jwt']['secret'  ];
+      $issuer    = $this->get('settings')['jwt']['issuer'  ];
+      $audience  = $this->get('settings')['jwt']['audience'];
+
+
       $token = (new Builder())
         ->setIssuer    ($issuer       ) // Configures the issuer (iss claim)
         ->setAudience  ($audience     ) // Configures the audience (aud claim)
@@ -85,7 +88,6 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
         ->getToken     ();                           // Retrieves the generated token
 
       $response->getBody()->write('{"token":"'.$token.'"}');
-      
       return $response;
     }
 
@@ -104,3 +106,99 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
   }
 });
 
+
+/**
+ * for the user with the specified nivol, update the 'init_passwd_uuid' and 'init_passwd_date' field in DB
+ * and send the user an email with a link, to reach the reset password form
+ *
+ */
+
+$app->post('/sendInit', function ($request, $response, $args) use ($app)
+{
+  $username = trim($request->getParsedBodyParam("username"));
+  $userDBService = new UserDBService   ($this->db, $this->logger);
+  $uuid = $userDBService->sendInit($username);
+
+  if($uuid != null)
+  {
+    $queteurDBService = new QueteurDBService($this->db, $this->logger);
+    $queteur = $queteurDBService->getQueteurByNivol($username);
+    $this->logger->debug(print_r($queteur,true));
+    $this->mailer->sendInitEmail($queteur, $uuid);
+
+    $response->getBody()->write('{"success":true,"email":"'.$queteur->email.'"}');
+    return $response;
+
+  }
+  else
+  {//the user do not have an account
+    $response->getBody()->write('{"success":false}');
+    return $response;
+  }
+});
+
+
+
+
+/**
+ * Get user information from the UUID
+ *
+ */
+$app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
+{
+  $uuid = trim($request->getParam("uuid"));
+  if(strlen($uuid) != 36)
+  {
+    $response->getBody()->write('{"success":false}');
+    return $response;
+  }
+  $userDBService = new UserDBService   ($this->db, $this->logger);
+  $user = $userDBService->getUserInfoWithUUID($uuid);
+
+
+  if($uuid != null)
+  {
+    $queteurDBService = new QueteurDBService($this->db, $this->logger);
+    $queteur = $queteurDBService->getQueteurById($user->queteur_id);
+
+    $response->getBody()->write('{"success":true,"first_name":"'.$queteur->first_name.'","last_name":"'.$queteur->last_name.'","email":"'.$queteur->email.'","mobile":"'.$queteur->mobile.'","nivol":"'.$queteur->nivol.'"}');
+    return $response;
+
+  }
+  else
+  {//the user do not have an account
+    $response->getBody()->write('{"success":false}');
+    return $response;
+  }
+});
+
+
+$app->post('/resetPassword', function ($request, $response, $args) use ($app)
+{
+  $uuid     = trim($request->getParsedBodyParam("uuid"));
+  $password = trim($request->getParsedBodyParam("password"));
+
+  $userDBService = new UserDBService   ($this->db, $this->logger);
+  $user = $userDBService->getUserInfoWithUUID($uuid);
+
+  if($user instanceof UserEntity)
+  {
+    $success = $userDBService->resetPassword($uuid, $password);
+
+    if($success)
+    {
+      $queteurDBService = new QueteurDBService($this->db, $this->logger);
+      $queteur = $queteurDBService->getQueteurById($user->queteur_id);
+
+      $this->mailer->sendResetPasswordEmailConfirmation($queteur);
+
+      $response->getBody()->write('{"success":true,"email":"'.$queteur->email.'"}');
+      return $response;
+    }
+  }
+
+  //the user do not have an account
+  $response->getBody()->write('{"success":false}');
+  return $response;
+
+});

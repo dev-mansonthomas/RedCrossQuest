@@ -11,7 +11,7 @@
     //check if there's a token and it's not expired. Otherwise, redirect the page to the login page.
     $rootScope.$on('$routeChangeStart', function(event, next/*, current*/)
     {
-      if (next == 'login') return;
+      if (next == 'login' || next.$$route.originalPath == '/resetPassword') return;
 
       var token = $localStorage.RCQ_JWT_Token;
 

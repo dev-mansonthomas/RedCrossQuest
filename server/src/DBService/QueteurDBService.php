@@ -275,6 +275,49 @@ WHERE  q.id   = :queteur_id
 
 
   /**
+   * Get one queteur by its NIVOL
+   * No UL_ID passed, as this method is used by the login process, which don't know yet the UL_ID
+   * @param int $queteur_id The ID of the queteur
+   * @return QueteurEntity  The queteur
+   */
+  public function getQueteurByNivol($nivol)
+  {
+    $sql = "
+SELECT  q.`id`,
+        q.`email`,
+        q.`first_name`,
+        q.`last_name`,
+        q.`minor`,
+        q.`secteur`,
+        q.`nivol`,
+        q.`mobile`,
+        q.`created`,
+        q.`updated`,
+        q.`notes`,
+        q.`ul_id`,
+        q.`active`,
+        q.`man`,
+        q.`birthdate`,
+        q.`qr_code_printed`,
+        q.`referent_volunteer`
+FROM  `queteur` q
+WHERE  UPPER(q.nivol)   = UPPER(:nivol)
+AND    q.active  = 1
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $result = $stmt->execute(["nivol" => $nivol]);
+
+    if ($result) {
+      $queteur = new QueteurEntity($stmt->fetch());
+      $stmt->closeCursor();
+      return $queteur;
+    }
+  }
+
+
+  /**
    * Update one queteur
    *
    * @param QueteurEntity $queteur The queteur to update
