@@ -43,7 +43,8 @@ class AuthorisationMiddleware
    * Check the validity of the JWT token
    *
    * @param string $tokenStr
-   * @return bool
+   * @return DecodedToken
+   * @throws \Exception exception
    */
   public function authenticate($tokenStr)
   {
@@ -88,20 +89,21 @@ class AuthorisationMiddleware
     }
     try
     {
-      $decodedToken = new DecodedToken(
-        $validation,
-        $errorCode,
-        $token->getClaim("username"),
-        $token->getClaim("id"),
-        $token->getClaim("ulId"),
+      $decodedToken = DecodedToken::withData(
+        $validation                        ,
+        $errorCode                         ,
+        $token->getClaim("username" ),
+        $token->getClaim("id"       ),
+        $token->getClaim("ulId"     ),
+        $token->getClaim("ulName"   ),
         $token->getClaim("queteurId"),
-        $token->getClaim("roleId")
+        $token->getClaim("roleId"   )
       );
 
     }
     catch(Exception $error)
-    {
-      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0010'], print_r($error, true)));
+    { //getClaim can raise exception if the claim is not here
+      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0011'], print_r($error, true)));
       throw $error;
     }
 
@@ -220,16 +222,110 @@ class AuthorisationMiddleware
 
 class DecodedToken
 {
-  public function __construct($authenticated, $errorCode, $username, $uid, $ulId, $queteurId, $roleId)
+  private $authenticated ;
+  private $errorCode     ;
+  private $username      ;
+  private $uid           ;
+  private $ulId          ;
+  private $ulName        ;
+  private $queteurId     ;
+  private $roleId        ;
+
+
+  public function __construct($authenticated, $errorCode)
   {
     $this->authenticated = $authenticated;
     $this->errorCode     = $errorCode;
 
-    $this->username      = $username;
-    $this->uid           = intval($uid);
-    $this->ulId          = intval($ulId);
-    $this->queteurId     = intVal($queteurId);
-    $this->roleId        = intval($roleId);
+
+  }
+
+  public static function withData($authenticated, $errorCode,
+                                  $username, $uid, $ulId, $ulName, $queteurId, $roleId)
+  {
+    $instance = new self($authenticated, $errorCode);
+
+    $instance->setUsername   ($username         );
+    $instance->setUid        (intval($uid)      );
+    $instance->setUlId       (intval($ulId)     );
+    $instance->setUlName     ($ulName           );
+    $instance->setQueteurId  (intVal($queteurId));
+    $instance->setRoleId     (intval($roleId)   );
+
+
+    return $instance;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getUlName()
+  {
+    return $this->ulName;
+  }
+
+  /**
+   * @param mixed $authenticated
+   */
+  public function setAuthenticated($authenticated)
+  {
+    $this->authenticated = $authenticated;
+  }
+
+  /**
+   * @param mixed $errorCode
+   */
+  public function setErrorCode($errorCode)
+  {
+    $this->errorCode = $errorCode;
+  }
+
+  /**
+   * @param mixed $username
+   */
+  public function setUsername($username)
+  {
+    $this->username = $username;
+  }
+
+  /**
+   * @param mixed $uid
+   */
+  public function setUid($uid)
+  {
+    $this->uid = $uid;
+  }
+
+  /**
+   * @param mixed $ulId
+   */
+  public function setUlId($ulId)
+  {
+    $this->ulId = $ulId;
+  }
+
+  /**
+   * @param mixed $queteurId
+   */
+  public function setQueteurId($queteurId)
+  {
+    $this->queteurId = $queteurId;
+  }
+
+  /**
+   * @param mixed $roleId
+   */
+  public function setRoleId($roleId)
+  {
+    $this->roleId = $roleId;
+  }
+
+  /**
+   * @param mixed $ulName
+   */
+  public function setUlName($ulName)
+  {
+    $this->ulName = $ulName;
   }
 
   /**

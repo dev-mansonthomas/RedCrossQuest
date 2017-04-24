@@ -46,7 +46,7 @@
 
         <div class="form-group col-md-4" ng-class="{'has-error':queteurForm.birthdate.$invalid}">
           <label for="birthdate" class="control-label">Date de naissance</label>
-          <input name="birthdate" id="birthdate" type="datetime-local" class="form-control" ng-model="pt.current.birthdate" required/>
+          <input name="birthdate" id="birthdate" type="date" class="form-control" ng-model="queteur.current.birthdate" required/>
         </div>
       </div>
 
@@ -190,7 +190,7 @@
                 <th>départ Théorique</th>
                 <th>départ</th>
                 <th>retour</th>
-                <th>durée</th>
+                <th>durée(min)</th>
                 <th>point_quete id</th>
                 <th>Montant</th>
               </tr>
@@ -198,10 +198,10 @@
             <tbody>
               <tr ng-repeat="tq in queteur.current.troncs_queteur">
                 <th><a ng-href="/#tronc_queteur/edit/{{::tq.id}}">{{::tq.id}}</a></th>
-                <td>{{::tq.depart_theorique.date | date : 'yyyy/MM/dd HH:mm:ss' : '+0200'}} </td>
-                <td>{{::tq.depart.date}}</td>
-                <td>{{::tq.retour.date}}</td>
-                <td></td>
+                <td>{{::tq.depart_theorique.toDate() | date : 'dd/MM/yyyy HH:mm:ss'}} </td>
+                <td>{{::tq.depart.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+                <td>{{::tq.retour.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+                <td>{{::tq.duration.toFixed(2)}}</td>
                 <td>{{::tq.point_quete_id}}</td>
                 <td>
 

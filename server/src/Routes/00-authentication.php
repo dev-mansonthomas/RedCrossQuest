@@ -11,11 +11,9 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 
 use \RedCrossQuest\DBService\UserDBService;
 use \RedCrossQuest\DBService\QueteurDBService;
+use \RedCrossQuest\DBService\UniteLocaleDBService;
 
 use \RedCrossQuest\Entity\UserEntity;
-
-use RedCrossQuest\BusinessService\EmailBusinessService; 
-
 
 include_once("../../src/DBService/UserDBService.php");
 include_once("../../src/DBService/QueteurDBService.php");
@@ -54,15 +52,18 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
 
     $this->logger->addInfo("attempting to login with username='$username' and password size='".strlen($password)."'");
 
-    $userDBService    = new UserDBService   ($this->db, $this->logger);
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
+    $userDBService        = new UserDBService       ($this->db, $this->logger);
+    $queteurDBService     = new QueteurDBService    ($this->db, $this->logger);
+    $uniteLocaleDBService = new UniteLocaleDBService($this->db, $this->logger);
+
 
     $user = $userDBService->getUserInfoWithNivol($username);
 
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
-      $queteur = $queteurDBService->getQueteurById($user->queteur_id);
+      $queteur = $queteurDBService    ->getQueteurById   ($user   ->queteur_id);
+      $ul      = $uniteLocaleDBService->getPointQueteById($queteur->ul_id     );
 
       $signer = new Sha256();
 
@@ -81,6 +82,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
         ->set          ('username' , $username      )
         ->set          ('id'       , $user->id      )
         ->set          ('ulId'     , $queteur->ul_id)
+        ->set          ('ulName'   , $ul->name      )
         ->set          ('queteurId', $queteur->id   )
         ->set          ('roleId'   , $user->role    )
 

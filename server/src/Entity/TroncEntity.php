@@ -1,7 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-class TroncEntity
+class TroncEntity extends Entity
 {
   public $id      ;
   public $ul_id   ;
@@ -17,20 +17,11 @@ class TroncEntity
      */
     public function __construct($data)
     {
-      if(array_key_exists('id', $data))
-      {
-        $this->id                     = $data['id'];
-      }
-      $this->ul_id                    = $data['ul_id'];
-      if(array_key_exists('created', $data))
-      {
-        $this->created                = $data['created'];
-      }
-      $this->enabled                  = $data['enabled'];
-
-      if(array_key_exists('notes', $data))
-      {
-        $this->notes = $data['notes'];
-      }
+      $this->getString('id'       , $data);
+      $this->getString('ul_id'    , $data);
+      $this->getString('created'  , $data);
+      $this->getString('created'  , $data);
+      $this->getString('enabled'  , $data);
+      $this->getString('notes'    , $data);
     }
 }

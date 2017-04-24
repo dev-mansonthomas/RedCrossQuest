@@ -57,7 +57,7 @@
           <div class="contact-card col-xs-12 col-sm-4" data-ng-repeat="queteur in q.list | filter:q.search | orderBy:'lastName'">
             <div class="contact-card-inner">
               <h4>
-                <a ng-href="#/queteurs/edit/{{::queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+                <a ng-href="/#!/queteurs/edit/{{::queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
                 &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
               </h4>
               <div class="contact-address">{{::queteur.email}}</div>
@@ -66,8 +66,8 @@
               <div class="contact-phone">{{::queteur.depart_theorique}}</div>
               <div class="queteur-status">
                 <abbr title="{{::queteur.depart_theorique}}"><span class="glyphicon glyphicon-stop"    aria-hidden="true" style="color:mediumblue" ng-show="!queteur.retour && !queteur.depart"></span></abbr>
-                <abbr title="{{::queteur.depart          }}"><span class="glyphicon glyphicon-globe"   aria-hidden="true" style="color:#00DD00"    ng-show="!queteur.retour && queteur.depart"></span></abbr>
-                <abbr title="{{::queteur.retour          }}"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:purple"     ng-show="queteur.retour"></span></abbr>
+                <abbr title="{{::queteur.depart          }}"><span class="glyphicon glyphicon-globe"   aria-hidden="true" style="color:#00DD00" ng-show="!queteur.retour &&  queteur.depart"></span></abbr>
+                <abbr title="{{::queteur.retour          }}"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:purple" ng-show=" queteur.retour"></span></abbr>
               </div>
             </div>
           </div>

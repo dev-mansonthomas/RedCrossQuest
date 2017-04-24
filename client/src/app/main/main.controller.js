@@ -6,13 +6,16 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($timeout, toastr) {
+  function MainController($timeout, toastr, $localStorage) {
     var vm = this;
 
     vm.awesomeThings = [];
     vm.classAnimation = '';
     vm.creationDate = 1456333782311;
     vm.showToastr = showToastr;
+
+    vm.username=$localStorage.currentUser.username;
+    vm.ulName=$localStorage.currentUser.ulName;
 
     activate();
 

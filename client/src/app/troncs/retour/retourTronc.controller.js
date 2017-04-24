@@ -26,16 +26,12 @@
       TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
     }
 
-
     vm.onlyNumbers = /^\d+$/;
 
     function savedSuccessfully()
     {
       vm.current = {};
     }
-
-
-
 
     vm.back=function()
     {
@@ -44,8 +40,7 @@
 
     function onSaveError(error)
     {
-      $log.debug(error)
-      alert(error);
+      $log.error(error)
     }
 
     //This watch change on tronc variable to update the rest of the form
