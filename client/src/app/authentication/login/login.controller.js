@@ -9,13 +9,13 @@
   function LoginController($location, AuthenticationService) {
     var vm = this;
 
-    vm.login = login;
+    vm.login    = login   ;
     vm.sendInit = sendInit;
-    vm.resetPassword=resetPassword;
 
     initController();
 
-    function initController() {
+    function initController()
+    {
       // reset login status
       AuthenticationService.logout();
     }
@@ -63,15 +63,7 @@
           vm.success=null;
           vm.loading=false;
         }
-
-
       });
-
-    }
-
-    function resetPassword()
-    {
-
     }
   }
 })();

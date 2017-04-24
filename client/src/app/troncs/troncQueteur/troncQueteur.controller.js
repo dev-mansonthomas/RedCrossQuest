@@ -77,7 +77,6 @@
     function onSaveError(error)
     {
       $log.debug(error)
-      alert(error);
     }
 
     //This watch change on tronc variable to update the rest of the form

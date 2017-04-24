@@ -28,13 +28,13 @@ return [
         ],
         'appSettings' => [
           'appUrl'        => 'http://localhost:3000/',
-          'resetPwdPath'  => '#/resetPassword?key='
+          'resetPwdPath'  => '#!/resetPassword?key='
 
         ],
         'email' => [
           'server'    => 'smtp.server.com',
           'port'      => 465,
-          'from'      => 'email@server.com',
+          'from'      => 'user@server.com',
           'username'  => 'login',
           'password'  => 'password'
         ]

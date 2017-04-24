@@ -1,19 +1,19 @@
 <nav class="navbar navbar-static-top navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" ng-href="#/">
+      <a class="navbar-brand" ng-href="/#!/">
         <span class="glyphicon glyphicon-plus" style="color:#E3001B;"></span> Red Cross Quest
       </a>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
       <ul class="nav navbar-nav">
-        <li><a ng-href="#queteurs">Quêteurs</a></li>
-        <li><a ng-href="#queteurs/edit">Ajout d'un Quêteurs</a></li>
-        <li><a ng-href="#troncs/prepa">Préparation Tronc</a></li>
-        <li><a ng-href="#troncs/depart">Départ Tronc</a></li>
-        <li><a ng-href="#troncs/retour">Retour Tronc</a></li>
-        <li><a ng-href="#tronc_queteur">Comptage</a></li>
+        <li><a ng-href="/#!/queteurs">Quêteurs</a></li>
+        <li><a ng-href="/#!/queteurs/edit">Ajout d'un Quêteurs</a></li>
+        <li><a ng-href="/#!/troncs/prepa">Préparation Tronc</a></li>
+        <li><a ng-href="/#!/troncs/depart">Départ Tronc</a></li>
+        <li><a ng-href="/#!/troncs/retour">Retour Tronc</a></li>
+        <li><a ng-href="/#!/tronc_queteur">Comptage</a></li>
       </ul>
 
       <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="vm.logout();">
@@ -25,15 +25,15 @@
           Administration <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-          <li role="menuitem"><a ng-href="#troncs">Liste des Troncs</a></li>
-          <li role="menuitem"><a ng-href="#dailyStats">Résultats Journalier (avant RCQ)</a></li>
-          <li role="menuitem"><a ng-href="#pointsQuetes">Points de Quêtes</a></li>
+          <li role="menuitem"><a ng-href="/#!/troncs">Liste des Troncs</a></li>
+          <li role="menuitem"><a ng-href="/#!/dailyStats">Résultats Journalier (avant RCQ)</a></li>
+          <li role="menuitem"><a ng-href="/#!/pointsQuetes">Points de Quêtes</a></li>
 
           <li class="divider"></li>
-          <li role="menuitem"><a ng-href="#QRCode/troncs">Troncs - Impression des QRCode</a></li>
-          <li role="menuitem"><a ng-href="#QRCode/queteurs">Queteurs - Impression des QRCode</a></li>
+          <li role="menuitem"><a ng-href="/#!/QRCode/troncs">Troncs - Impression des QRCode</a></li>
+          <li role="menuitem"><a ng-href="/#!/QRCode/queteurs">Queteurs - Impression des QRCode</a></li>
           <li class="divider"></li>
-          <li role="menuitem"><a ng-href="#ulSettings">Paramétrage de l'UL</a></li>
+          <li role="menuitem"><a ng-href="/#!/ulSettings">Paramétrage de l'UL</a></li>
         </ul>
       </div>
 

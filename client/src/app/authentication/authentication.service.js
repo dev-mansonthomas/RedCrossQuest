@@ -6,7 +6,7 @@ angular
   .module('client')
   .factory('AuthenticationService', AuthenticationService);
 
-function AuthenticationService ($http, $localStorage, jwtHelper)
+function AuthenticationService ($http, $localStorage, jwtHelper, $log)
 {
   var service = {};
 
@@ -21,36 +21,43 @@ function AuthenticationService ($http, $localStorage, jwtHelper)
   function sendInit(username, callback)
   {
     $http.post('/rest/sendInit', { username: username })
-      .success(function (response) {
+      .then(function success(response) {
         // login successful if there's a token in the response
-        if(response.success)
+        if(response.data.success)
         {
           // execute callback with true to indicate successful login
-          callback(true, response.email);
+          callback(true, response.data.email);
         }
         else
         {
           // execute callback with false to indicate failed login
           callback(false);
         }
+      },
+      function error(error)
+      {
+        $log.error(error);
       });
   }
 
   function getUserInfoWithUUID(uuid, callback)
   {
     $http.get('/rest/getInfoFromUUID', { params:{uuid: uuid} })
-      .success(function (response) {
+      .then(function successCallback(response) {
         // login successful if there's a token in the response
-        if(response.success)
+        if(response.data.success)
         {
           // execute callback with true to indicate successful login
-          callback(true, response);
+          callback(true, response.data);
         }
         else
         {
           // execute callback with false to indicate failed login
           callback(false);
         }
+      },
+      function errorCallback(error){
+        $log.error(error);
       });
   }
 
@@ -59,18 +66,21 @@ function AuthenticationService ($http, $localStorage, jwtHelper)
   function resetPassword(uuid, password, callback)
   {
     $http.post('/rest/resetPassword', { uuid: uuid, password: password })
-      .success(function (response) {
+      .then(function successCallback(response) {
         // login successful if there's a token in the response
-        if(response.success)
+        if(response.data.success)
         {
           // execute callback with true to indicate successful login
-          callback(true, response.email);
+          callback(true, response.data.email);
         }
         else
         {
           // execute callback with false to indicate failed login
           callback(false);
         }
+      }, function errorCallback(error)
+      {
+        $log.error(error);
       });
   }
 
@@ -78,12 +88,12 @@ function AuthenticationService ($http, $localStorage, jwtHelper)
   function login(username, password, callback)
   {
     $http.post('/rest/authenticate', { username: username, password: password })
-      .success(function (response) {
+      .then(function successCallback(response) {
         // login successful if there's a token in the response
-        if (response.token)
+        if (response.data.token)
         {
 
-          var tokenPayload = jwtHelper.decodeToken(response.token);
+          var tokenPayload = jwtHelper.decodeToken(response.data.token);
 
           // store username and token in local storage to keep user logged in between page refreshes
           $localStorage.currentUser = {
@@ -91,9 +101,10 @@ function AuthenticationService ($http, $localStorage, jwtHelper)
             id        : tokenPayload.id       ,
             queteurId : tokenPayload.queteurId,
             ulId      : tokenPayload.ulId     ,
+            ulName    : tokenPayload.ulName   ,
             roleId    : tokenPayload.roleId
           };
-          $localStorage.RCQ_JWT_Token = response.token;
+          $localStorage.RCQ_JWT_Token = response.data.token;
 
           // execute callback with true to indicate successful login
           callback(true);
@@ -103,6 +114,9 @@ function AuthenticationService ($http, $localStorage, jwtHelper)
           // execute callback with false to indicate failed login
           callback(false);
         }
+      },
+      function errorCallBack(error){
+        $log.error(error);
       });
   }
 

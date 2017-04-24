@@ -1,7 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-class PointQueteEntity
+class PointQueteEntity  extends Entity
 {
   public $id           ;
   public $ul_id        ;
@@ -40,22 +40,5 @@ class PointQueteEntity
     $this->getString('localization' , $data);
     $this->getString('minor_allowed', $data);
     $this->getDate  ('created'      , $data);
-  }
-
-  private function getString($key, $data)
-  {
-    if(array_key_exists($key, $data))
-    {
-      $this->$key = $data[$key];
-    }
-  }
-
-  private function getDate($key, $data)
-  {
-    if(array_key_exists($key, $data))
-    {
-      $stringValue = $data[$key];
-      $this->$key = date_parse($stringValue);
-    }
   }
 }
