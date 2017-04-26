@@ -18,8 +18,9 @@
             <label for="year" class="control-label">Année de Quête</label>
 
             <select name="year" id="year" class="form-control" ng-model="ds.selectedYear" required
-
-                    ng-options="i as (i) for i in ds.years">
+                    ng-options="i as i
+                     for
+                     i in ds.years">
               <option> </option>
             </select>
 
@@ -45,7 +46,7 @@
           <tbody data-ng-repeat="dailyStats in ds.list">
             <tr>
               <td>{{::dailyStats.id}}</td>
-              <td style="width:70px;"><input name="tobedone" id="horaireDepartTheorique" type="date" class="form-control" ng-model="dailyStats.date" required/></td>
+              <td style="width:70px;"><input name="tobedone" id="horaireDepartTheorique" type="date" class="form-control" ng-model="dailyStats.date" ng-readonly="true"/></td>
               <td><input name="amount" id="amount" type="number" class="form-control" ng-model="dailyStats.amount" required/></td>
               <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="ds.save(dailyStats.id, dailyStats.amount);">Sauvegarder</button></td>
             </tr>

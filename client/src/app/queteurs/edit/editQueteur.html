@@ -20,13 +20,13 @@
         <div class="col-md-4 col-md-offset-2">
           <div class="form-group" ng-class="{'has-error':queteurForm.first_name.$invalid}">
             <label for="first_name" class="control-label">First name</label>
-            <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required />
+            <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required ng-blur="queteur.capitalize($event)"/>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group" ng-class="{'has-error':queteurForm.last_name.$invalid}">
             <label for="last_name" class="control-label">Last name</label>
-            <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required/>
+            <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required ng-blur="queteur.capitalize($event)"/>
           </div>
         </div>
       </div>
@@ -46,7 +46,18 @@
 
         <div class="form-group col-md-4" ng-class="{'has-error':queteurForm.birthdate.$invalid}">
           <label for="birthdate" class="control-label">Date de naissance</label>
-          <input name="birthdate" id="birthdate" type="date" class="form-control" ng-model="queteur.current.birthdate" required/>
+          <div class="input-group">
+            <span class="input-group-addon" ng-class="{'majeur':queteur.current.age>=18, 'mineur':queteur.current.age<18}">{{queteur.current.age}}</span>
+            <input name="birthdate" id="birthdate"
+                   type="date"
+                   class="form-control"
+                   required
+                   ng-model="queteur.current.birthdate"
+                   ng-min="queteur.oldestBirthDate"
+                   ng-max="queteur.youngestBirthDate"
+                   ng-change="queteur.computeAge()"/>
+          </div>
+
         </div>
       </div>
 
