@@ -17,6 +17,10 @@
 
     var queteurId = $routeParams.id;
 
+    vm.youngestBirthDate=moment().subtract(10 ,'years').toDate();
+    vm.oldestBirthDate  =moment().subtract(100,'years').toDate();
+
+
     if (angular.isDefined(queteurId))
     {
       QueteurResource.get({ 'id': queteurId }).$promise.then(function(queteur)
@@ -60,7 +64,8 @@
 
         if(vm.current.birthdate != null)
         {
-          vm.current.birthdate =  moment( queteur.birthdate.date.substring(0, queteur.birthdate.date.length -16 ),"YYYY-MM-DD").toDate();
+          vm.current.birthdate = moment( queteur.birthdate.date.substring(0, queteur.birthdate.date.length -16 ),"YYYY-MM-DD").toDate();
+          vm.computeAge();
         }
 
       });
@@ -91,6 +96,21 @@
       }
 
     };
+
+    vm.computeAge=function()
+    {
+      vm.current.age       = moment().diff(vm.current.birthdate, 'years');
+    }
+
+    vm.capitalize = function($event)
+    {
+      $event.currentTarget.value = $event.currentTarget.value.replace(/\w\S*/g,
+        function(txt)
+        {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+      );
+    }
 
 
     // $scope.$watch('queteur.current.secteur', function(newValue/*, oldValue*/)
