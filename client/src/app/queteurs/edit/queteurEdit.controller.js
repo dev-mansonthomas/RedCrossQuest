@@ -10,12 +10,17 @@
     .controller('QueteurEditController', QueteurEditController);
 
   /** @ngInject */
-  function QueteurEditController($scope, $log, $routeParams, $location,
+  function QueteurEditController($scope, $log, $routeParams, $location, $localStorage,
                                  QueteurResource, TroncQueteurResource, moment)
   {
     var vm = this;
 
     var queteurId = $routeParams.id;
+
+    vm.ulId   = $localStorage.currentUser.ulId;
+    vm.ulName = $localStorage.currentUser.ulName;
+
+
 
     vm.youngestBirthDate=moment().subtract(10 ,'years').toDate();
     vm.oldestBirthDate  =moment().subtract(100,'years').toDate();
@@ -26,6 +31,33 @@
       QueteurResource.get({ 'id': queteurId }).$promise.then(function(queteur)
       {
         vm.current = queteur;
+        if(typeof vm.current.mobile === "string")
+        {
+          if(vm.current.mobile === "N/A")
+          {
+            vm.current.mobile = null;
+          }
+          try
+          {
+            vm.current.mobile = parseInt(vm.current.mobile.slice(1));
+          }
+          catch(e)
+          {
+            vm.current.mobile = null;
+          }
+
+        }
+
+        /*lack of data with previous model (minor instead of birthdate), only for ULParisIV, minor and major where set fixed birthdate
+        * if editing one of these ==> set birthdate to null to force user to update the data*/
+
+        var birthdate = vm.current.birthdate.date.toLocaleString().substr(0,10);
+
+        if(birthdate === '1902-02-02' || birthdate === '2007-07-07')
+        {
+          vm.current.birthdate = null;
+        }
+
 
         TroncQueteurResource.getTroncsOfQueteur({'queteur_id': queteurId}).$promise.then(
           function success(data)
@@ -62,7 +94,7 @@
 
         );
 
-        if(vm.current.birthdate != null)
+        if(vm.current.birthdate !== null)
         {
           vm.current.birthdate = moment( queteur.birthdate.date.substring(0, queteur.birthdate.date.length -16 ),"YYYY-MM-DD").toDate();
           vm.computeAge();
@@ -74,6 +106,7 @@
     else
     {
       vm.current = new QueteurResource();
+      vm.current.ul_id = vm.ulId;
     }
 
     function savedSuccessfully()
@@ -112,29 +145,45 @@
       );
     }
 
+    /**
+     * Set the queteur.id of the selected queteur in the model
+     * */
+    $scope.$watch('queteur.current.referent_volunteerQueteur', function(newValue/*, oldValue*/)
+    {
+      if(newValue !== null && typeof newValue === "object")
+      {
+        try
+        {
+          $log.info("queteurID set to "+newValue.id);
+          $scope.queteur.current.referent_volunteer = newValue.id;
+        }
+        catch(exception)
+        {
+          $log.debug(exception);
+        }
+      }
+    });
 
-    // $scope.$watch('queteur.current.secteur', function(newValue/*, oldValue*/)
-    // {
-    //
-    //   $log.debug("secteur change to "+newValue)
-    //   try
-    //   {
-    //     if(newValue > 3)
-    //     {
-    //       $scope.queteur.current.ul_id = 1;
-    //     }
-    //     else
-    //     {
-    //       $scope.queteur.current.ul_id = 2;
-    //     }
-    //
-    //     $log.debug("ul_id change to "+$scope.queteur.current.ul_id);
-    //   }
-    //   catch(exception)
-    //   {
-    //
-    //   }
-    // });
+    /**
+     * Function used while performing a manual search for a Queteur
+     * @param queryString the search string (search is performed on first_name, last_name, nivol)
+     * */
+    vm.searchQueteur=function(queryString)
+    {
+      $log.info("Queteur : Manual Search for '"+queryString+"'");
+      return QueteurResource.query({"q":queryString}).$promise.then(function success(response)
+      {
+        return response.map(function success(queteur)
+          {
+            queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
+            return queteur;
+          },
+          function error(reason)
+          {
+            $log.debug("error while searching for queteur with query='"+queryString+"' with reason='"+reason+"'");
+          });
+      });
+    };
 
 
   }

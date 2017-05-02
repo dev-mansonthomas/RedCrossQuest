@@ -7,7 +7,14 @@ class QueteurEntity  extends Entity
   public $email                       ;
   public $first_name                  ;
   public $last_name                   ;
-  public $minor                       ;
+/**
+"1">Action Sociale
+"2">Secours
+"3">Non Bénévole
+"4">Ancien Bénévole, Inactif ou Adhérent
+"5">Commerçant
+"6">Special
+ */
   public $secteur                     ;
   public $nivol                       ;
   public $mobile                      ;
@@ -42,7 +49,6 @@ class QueteurEntity  extends Entity
     $this->getString('email'                       , $data);
     $this->getString('first_name'                  , $data);
     $this->getString('last_name'                   , $data);
-    $this->getString('minor'                       , $data);
     $this->getString('secteur'                     , $data);
     $this->getString('nivol'                       , $data);
     $this->getString('mobile'                      , $data);
