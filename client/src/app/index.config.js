@@ -13,7 +13,6 @@
     //angular-jwt configuration
     jwtOptionsProvider.config({
       unauthenticatedRedirectPath: '/login',
-      whiteListedDomains: ['api.github.com'],
       tokenGetter: ['options', '$localStorage', function(options, $localStorage) {
 
         if(options && options.url.substr(options.url.length - 5) == '.html')

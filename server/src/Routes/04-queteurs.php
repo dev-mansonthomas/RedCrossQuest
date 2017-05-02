@@ -104,6 +104,9 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $input            = $request->getParsedBody();
     $queteurEntity    = new QueteurEntity($input);
+
+    //restore the leading +
+    $queteurEntity->mobile = "+".$queteurEntity->mobile;
     
     $queteurDBService->update($queteurEntity, $ulId);
   }
@@ -130,7 +133,11 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     $input = $request->getParsedBody();
 
     $queteurEntity = new QueteurEntity($input);
+    //restore the leading +
+    $queteurEntity->mobile = "+".$queteurEntity->mobile;
+
     $this->logger->error("queteurs", [$queteurEntity]);
+
     $queteurDBService->insert($queteurEntity, $ulId);
   }
   catch(Exception $e)

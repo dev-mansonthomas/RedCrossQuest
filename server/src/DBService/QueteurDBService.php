@@ -25,7 +25,6 @@ SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
-        q.`minor`,
         q.`secteur`,
         q.`nivol`,
         q.`mobile`,
@@ -91,7 +90,6 @@ SELECT 	q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
-        q.`minor`,
         q.`secteur`,
         q.`nivol`,
         q.`mobile`,
@@ -137,7 +135,6 @@ SELECT 	q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
-        q.`minor`,
         q.`secteur`,
         q.`nivol`,
         q.`mobile`,
@@ -173,7 +170,6 @@ SELECT 	q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
-        q.`minor`,
         q.`secteur`,
         q.`nivol`,
         q.`mobile`,
@@ -245,7 +241,6 @@ SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
-        q.`minor`,
         q.`secteur`,
         q.`nivol`,
         q.`mobile`,
@@ -287,7 +282,6 @@ SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
-        q.`minor`,
         q.`secteur`,
         q.`nivol`,
         q.`mobile`,
@@ -328,16 +322,18 @@ AND    q.active  = 1
     $sql = "
 UPDATE `queteur`
 SET
-  `first_name`  = :first_name,
-  `last_name`   = :last_name,
-  `email`       = :email ,
-  `secteur`     = :secteur,
-  `nivol`       = :nivol,
-  `mobile`      = :mobile,
-  `updated`     = NOW(),
-  `notes`       = :notes,
-  `ul_id`       = :ul_id,
-  `minor`       = :minor
+  `first_name`          = :first_name,
+  `last_name`           = :last_name,
+  `email`               = :email ,
+  `secteur`             = :secteur,
+  `nivol`               = :nivol,
+  `mobile`              = :mobile,
+  `updated`             = NOW(),
+  `notes`               = :notes,
+  `birthdate`           = :birthdate,
+  `man`                 = :man,
+  `active`              = :active,
+  `referent_volunteer`  = :referent_volunteer
 WHERE `id`    = :id
 AND   `ul_id` = :ul_id
 ";
@@ -345,15 +341,19 @@ AND   `ul_id` = :ul_id
     $stmt = $this->db->prepare($sql);
 
     $result = $stmt->execute([
-      "first_name"  => $queteur->first_name,
-      "last_name"   => $queteur->last_name,
-      "email"       => $queteur->email,
-      "secteur"     => $queteur->secteur,
-      "nivol"       => $queteur->nivol,
-      "mobile"      => $queteur->mobile,
-      "notes"       => $queteur->notes,
-      "minor"       => $queteur->minor,
-      "ul_id"       => $ulId
+      "first_name"          => $queteur->first_name,
+      "last_name"           => $queteur->last_name,
+      "email"               => $queteur->email,
+      "secteur"             => $queteur->secteur,
+      "nivol"               => $queteur->nivol,
+      "mobile"              => $queteur->mobile,
+      "notes"               => $queteur->notes,
+      "birthdate"           => $queteur->birthdate,
+      "man"                 => $queteur->man,
+      "active"              => $queteur->active,
+      "referent_volunteer"  => $queteur->referent_volunteer,
+      "id"                  => $queteur->id,
+      "ul_id"               => $ulId
     ]);
 
     $this->logger->warning($stmt->rowCount());
@@ -409,7 +409,7 @@ VALUES
   :birthdate,
   :man,
   :active,
-  :qr_code_printed,
+  false,
   :referent_volunteer
 )
 ";
@@ -429,8 +429,7 @@ VALUES
       "birthdate"          => $queteur->birthdate,
       "man"                => $queteur->man,
       "active"             => $queteur->active,
-      "qr_code_printed"    => $queteur->qr_code_printed,
-      "referent_volunteer" => $queteur->referent_volunteer
+      "referent_volunteer" => $queteur->secteur == 3 ? $queteur->referent_volunteer : 0
     ]);
 
     $stmt->closeCursor();

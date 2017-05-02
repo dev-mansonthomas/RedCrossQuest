@@ -112,14 +112,14 @@
     vm.searchQueteur=function(queryString)
     {
       $log.info("Queteur : Manual Search for '"+queryString+"'");
-      return QueteurResource.query({"q":queryString}).$promise.then(function(response)
+      return QueteurResource.query({"q":queryString}).$promise.then(function success(response)
       {
         return response.map(function(queteur)
         {
           queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
           return queteur;
         },
-        function(reason)
+        function error(reason)
         {
           $log.debug("error while searching for queteur with query='"+queryString+"' with reason='"+reason+"'");
         });
@@ -133,7 +133,7 @@
     vm.searchTronc=function(queryString)
     {
       $log.info("Tronc: Manual Search for '"+queryString+"'");
-      return TroncResource.query({"q":queryString}).$promise.then(function(response)
+      return TroncResource.query({"q":queryString}).$promise.then(function success(response)
       {
         return response.map(function(tronc)
         {
@@ -141,7 +141,7 @@
           return tronc;
         });
       },
-      function(reason)
+      function error(reason)
       {
         $log.debug("error while searching for tronc with query='"+queryString+"' with reason='"+reason+"'");
       });
