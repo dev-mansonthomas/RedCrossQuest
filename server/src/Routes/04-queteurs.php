@@ -7,7 +7,9 @@
  */
 
 use \RedCrossQuest\DBService\QueteurDBService;
+use \RedCrossQuest\DBService\UserDBService;
 use \RedCrossQuest\Entity\QueteurEntity;
+use \RedCrossQuest\Entity\UserEntity;
 
 include_once("../../src/Entity/QueteurEntity.php");
 /********************************* QUETEUR ****************************************/
@@ -70,11 +72,24 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 {
   try
   {
-    $ulId = (int)$args['ul-id'];
+    $ulId   = (int)$args['ul-id'];
+    $roleId = (int)$args['role-id'];
 
     $queteurId        = (int)$args['id'];
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
-    $queteur          = $queteurDBService->getQueteurById($queteurId, $ulId);
+
+    $queteur          = $queteurDBService->getQueteurById($queteurId);
+    $referent         = $queteurDBService->getQueteurById($queteur->referent_volunteer);
+    $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
+
+
+    if($roleId >= 5)
+    {//localAdmin & superAdmin
+      $userDBService = new UserDBService($this->db, $this->logger);
+
+      $user = $userDBService->getUserInfoWithQueteurId($queteurId, $ulId);
+      $queteur->user = $user;
+    }
     
     $response->getBody()->write(json_encode($queteur));
   }
@@ -97,9 +112,10 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 {
   try
   {
+
     $ulId = (int)$args['ul-id'];
 
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
+    $this->logger->addDebug("Updating queteur for UL '".$ulId."''");
 
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $input            = $request->getParsedBody();
@@ -114,10 +130,39 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   {
     $this->logger->addError($e);
   }
+
   return $response;
 });
 
+/**
+ * Upload files for one queteur
+ *
+ * Dispo pour les roles de 2 à 9
+ */
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($request, $response, $args)
+{
+  try
+  {
+    $ulId      = (int)$args['ul-id'];
+    $queteurId = (int)$args['id'];
 
+    $this->logger->addInfo("Uploading file for UL ID='$ulId' and queteurId='$queteurId''");
+
+    $this->logger->addInfo(print_r($request->getParsedBody(), true));
+
+    $queteurDBService = new QueteurDBService($this->db, $this->logger);
+//    $input            = $request->getParsedBody();
+//    $queteurEntity    = new QueteurEntity($input);
+    //restore the leading +
+//    $queteurEntity->mobile = "+".$queteurEntity->mobile;
+//    $queteurDBService->update($queteurEntity, $ulId);
+  }
+  catch(Exception $e)
+  {
+    $this->logger->addError($e);
+  }
+  return $response;
+});
 
 /**
  * Crée un nouveau queteur
@@ -138,7 +183,14 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
 
     $this->logger->error("queteurs", [$queteurEntity]);
 
-    $queteurDBService->insert($queteurEntity, $ulId);
+    $queteurId = $queteurDBService->insert($queteurEntity, $ulId);
+
+    //TODO do this stuff inside getQueteurById()
+    $queteur          = $queteurDBService->getQueteurById($queteurId);
+    $referent         = $queteurDBService->getQueteurById($queteur->referent_volunteer);
+    $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
+
+    $response->getBody()->write(json_encode($queteur));
   }
   catch(Exception $e)
   {

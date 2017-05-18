@@ -21,6 +21,20 @@ class Entity
     }
   }
 
+  protected function getBoolean($key, $data)
+  {
+    if(array_key_exists($key, $data))
+    {
+      $value = $data[$key];
+
+      $this->$key = ($value == "1" || $value == 1|| $value == true);
+    }
+    else
+    {
+      $this->$key = false;
+    }
+  }
+
   protected function getDate($key, $data)
   {
     if(array_key_exists($key, $data))

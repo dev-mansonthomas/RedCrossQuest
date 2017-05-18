@@ -36,6 +36,7 @@ class QueteurEntity  extends Entity
   public $birthdate                   ;
   public $qr_code_printed             ;
   public $referent_volunteer          ;
+  public $referent_volunteer_entity   ;
 
   /**
      * Accept an array of data matching properties of this class
