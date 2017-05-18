@@ -10,8 +10,8 @@
     .controller('QueteurEditController', QueteurEditController);
 
   /** @ngInject */
-  function QueteurEditController($scope, $log, $routeParams, $location, $localStorage,
-                                 QueteurResource, TroncQueteurResource, moment)
+  function QueteurEditController($scope, $log, $routeParams, $location, $localStorage, $timeout,
+                                 QueteurResource, UserResource, TroncQueteurResource, moment, Upload)
   {
     var vm = this;
 
@@ -19,11 +19,35 @@
 
     vm.ulId   = $localStorage.currentUser.ulId;
     vm.ulName = $localStorage.currentUser.ulName;
-
+    vm.currentUserRole=$localStorage.currentUser.roleId;
 
 
     vm.youngestBirthDate=moment().subtract(10 ,'years').toDate();
     vm.oldestBirthDate  =moment().subtract(100,'years').toDate();
+
+    vm.roleList=[
+      {id:1,label:'Lecture Seule'},
+      {id:2,label:'Opérateur'},
+      {id:3,label:'Compteur'},
+      {id:4,label:'Admin Local'},
+      {id:9,label:'Super Admin'}
+    ];
+
+    vm.roleDesc=[];
+    vm.roleDesc[1] = 'Consultation des quêteurs et des graphiques publiques';
+    vm.roleDesc[2] = 'Liste/Ajout/Update des quêteurs, préparation/départ/retour Troncs, graphiques opérationnel';
+    vm.roleDesc[3] = 'Opérateur + Comptage des troncs et tous les graphiques';
+    vm.roleDesc[4] = 'Compteur + administration des utilisateurs et paramétrage de RCQ pour l\'UL';
+    vm.roleDesc[9] = 'Le grand manitou';
+
+    vm.handleDate = function (theDate)
+    {
+      if(theDate ===null)
+        return null;
+
+      var dateAsString = theDate.date;
+      return moment( dateAsString.substring (0, dateAsString.length  - 3 ),"YYYY-MM-DD  HH:mm:ss.SSS");
+    };
 
 
     if (angular.isDefined(queteurId))
@@ -31,6 +55,8 @@
       QueteurResource.get({ 'id': queteurId }).$promise.then(function(queteur)
       {
         vm.current = queteur;
+
+        vm.current.referent_volunteerQueteur = queteur.referent_volunteer_entity.first_name+' '+queteur.referent_volunteer_entity.last_name + ' - '+queteur.referent_volunteer_entity.nivol;
         if(typeof vm.current.mobile === "string")
         {
           if(vm.current.mobile === "N/A")
@@ -59,25 +85,16 @@
         }
 
 
+
         TroncQueteurResource.getTroncsOfQueteur({'queteur_id': queteurId}).$promise.then(
           function success(data)
           {
             var dataLength = data.length;
             for(var i=0;i<dataLength;i++)
             {
-
-              var handleDate = function (theDate)
-              {
-                if(theDate ===null)
-                  return null;
-
-                 var dateAsString = theDate.date;
-                 return moment( dateAsString.substring (0, dateAsString.length  - 3 ),"YYYY-MM-DD  HH:mm:ss.SSS");
-              }
-
-              data[i].depart            = handleDate(data[i].depart);
-              data[i].depart_theorique  = handleDate(data[i].depart_theorique);
-              data[i].retour            = handleDate(data[i].retour);
+              data[i].depart            = vm.handleDate(data[i].depart);
+              data[i].depart_theorique  = vm.handleDate(data[i].depart_theorique);
+              data[i].retour            = vm.handleDate(data[i].retour);
 
               if(data[i].retour !==null && data[i].depart !== null)
               {
@@ -111,21 +128,58 @@
 
     function savedSuccessfully()
     {
-      $location.path('/queteurs');
+      vm.savedSuccessfully=true;
+
+      $timeout(function () { vm.savedSuccessfully=false; }, 5000);
     }
 
+    function errorWhileSaving(error)
+    {
+      vm.errorWhileSaving=true;
+      vm.errorWhileSavingDetails=error;
+    }
+
+    vm.uploadFiles=function()
+    {
+      var queteurId=vm.current.id;
+
+
+      var upload = Upload.upload({
+        url: "/rest/"+ $localStorage.currentUser.roleId+"/ul/"+ $localStorage.currentUser.ulId+"/queteurs/"+queteurId+"/fileUpload",
+        data: {
+          queteurId: queteurId,
+          signedForms:
+            [
+              {queteur1Day        : $scope.queteurForm.temporary_volunteer_form.$$attr.$$element[0]},
+              {parentAuthorization: $scope.queteurForm.parent_authorization_form.$$attr.$$element[0]}
+            ]
+        },
+        method:'PUT'
+      });
+
+      upload.then(function success(response){
+        $log.info('file ' + (response.config.data.file ? response.config.data.file.name:'undefined') + 'is uploaded successfully. Response: ' + response.data);
+      },
+      function error(error){
+        $log.error(error);
+      },
+      function progress(evt){
+        $log.info('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ (evt.config.data.file ? evt.config.data.file.name:'undefined'));
+      });
+
+    }
 
     vm.save = function ()
     {
-      $log.debug("Saved called");
-      $log.debug(vm.current);
+      vm.uploadFiles();
 
       if (angular.isDefined(vm.current.id))
       {
-        vm.current.$update(savedSuccessfully);
-      } else
+        vm.current.$update(savedSuccessfully, errorWhileSaving);
+      }
+      else
       {
-        vm.current.$save(savedSuccessfully);
+        vm.current.$save(savedSuccessfully, errorWhileSaving);
       }
 
     };
@@ -184,6 +238,45 @@
           });
       });
     };
+
+    vm.createUser=function()
+    {
+      vm.current.user = new UserResource();
+      vm.current.user.queteur_id = vm.current.id;
+      vm.current.user.nivol      = vm.current.nivol;
+
+      vm.current.user.$save(userSavedSuccessfully, errorWhileSaving);
+
+    }
+
+    vm.userSave=function()
+    {
+      var user = new UserResource();
+      user.id     = vm.current.user.id;
+      user.active = vm.current.user.active;
+      user.role   = vm.current.user.role;
+
+      user.update(userSavedSuccessfully, errorWhileSaving);
+    }
+
+    vm.reinitPassword=function()
+    {
+      var user = new UserResource();
+      user.id     = vm.current.user.id;
+      user.nivol  = vm.current.user.nivol;
+
+      user.reInitPassword(userSavedSuccessfully, errorWhileSaving);
+    }
+
+
+    function userSavedSuccessfully(user)
+    {
+      vm.current.user=user;
+
+      vm.savedSuccessfully=true;
+
+      $timeout(function () { vm.savedSuccessfully=false; }, 5000);
+    }
 
 
   }

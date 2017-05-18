@@ -12,6 +12,7 @@ return [
         'logger' => [
             'name' => 'slim-app',
             'path' => __DIR__ . '/../logs/app.log',
+            'level'=> Monolog\Logger::INFO     //TODO : fonctionne pas
         ],
 
         'db' => [
@@ -31,12 +32,12 @@ return [
           'resetPwdPath'  => '#!/resetPassword?key='
 
         ],
-        'email' => [
-          'server'    => 'smtp.server.com',
-          'port'      => 465,
-          'from'      => 'user@server.com',
-          'username'  => 'login',
-          'password'  => 'password'
-        ]
+      'email' => [
+        'server'    => 'webmail.croix-rouge.fr',
+        'port'      => 465,
+        'from'      => 'thomas.manson@croix-rouge.fr',
+        'username'  => 'mansont',
+        'password'  => 'Volgograd8542++'
+      ]
     ],
 ];

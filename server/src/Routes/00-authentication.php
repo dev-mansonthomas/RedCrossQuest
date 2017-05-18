@@ -90,7 +90,16 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
         ->getToken     ();                           // Retrieves the generated token
 
       $response->getBody()->write('{"token":"'.$token.'"}');
+
+      $userDBService->registerSuccessfulLogin($user->id);
+
       return $response;
+    }
+    else if($user instanceof UserEntity)
+    {//we found the user, but password is not good
+
+      $this->logger->addError("Authentication failed for user id='".$user->id."'' nivol='".$username."''");
+      $userDBService->registerFailedLogin($user->id);
     }
 
     $response201 = $response->withStatus(201);

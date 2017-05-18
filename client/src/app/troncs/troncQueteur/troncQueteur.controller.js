@@ -38,32 +38,32 @@
 
     vm.setNonFilledBillToZero=function()
     {
-      if(typeof vm.current.tronc_queteur.euro5 == 'undefined' || vm.current.tronc_queteur.euro5 === "" || vm.current.tronc_queteur.euro5.length === 0)
+      if(typeof vm.current.tronc_queteur.euro5 === 'undefined' || vm.current.tronc_queteur.euro5 === "" || vm.current.tronc_queteur.euro5.length === 0)
       {
         vm.current.tronc_queteur.euro5 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro10 ==  'undefined' || vm.current.tronc_queteur.euro10 === "" || vm.current.tronc_queteur.euro10.length === 0)
+      if(typeof vm.current.tronc_queteur.euro10 ===  'undefined' || vm.current.tronc_queteur.euro10 === "" || vm.current.tronc_queteur.euro10.length === 0)
       {
         vm.current.tronc_queteur.euro10 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro20 ==  'undefined' || vm.current.tronc_queteur.euro20 === "" || vm.current.tronc_queteur.euro20.length === 0)
+      if(typeof vm.current.tronc_queteur.euro20 ===  'undefined' || vm.current.tronc_queteur.euro20 === "" || vm.current.tronc_queteur.euro20.length === 0)
       {
         vm.current.tronc_queteur.euro20 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro50 ==  'undefined' || vm.current.tronc_queteur.euro50 === "" || vm.current.tronc_queteur.euro50.length === 0)
+      if(typeof vm.current.tronc_queteur.euro50 ===  'undefined' || vm.current.tronc_queteur.euro50 === "" || vm.current.tronc_queteur.euro50.length === 0)
       {
         vm.current.tronc_queteur.euro50 = 0;
       }
 
-      if(typeof vm.current.tronc_queteur.euro100 == 'undefined'  || vm.current.tronc_queteur.euro100 === "" || vm.current.tronc_queteur.euro100.length === 0)
+      if(typeof vm.current.tronc_queteur.euro100 === 'undefined'  || vm.current.tronc_queteur.euro100 === "" || vm.current.tronc_queteur.euro100.length === 0)
       {
         vm.current.tronc_queteur.euro100 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro200 == 'undefined'  || vm.current.tronc_queteur.euro200 === "" || vm.current.tronc_queteur.euro200.length === 0)
+      if(typeof vm.current.tronc_queteur.euro200 === 'undefined'  || vm.current.tronc_queteur.euro200 === "" || vm.current.tronc_queteur.euro200.length === 0)
       {
         vm.current.tronc_queteur.euro200 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro500 == 'undefined'  || vm.current.tronc_queteur.euro500 === "" || vm.current.tronc_queteur.euro500.length === 0)
+      if(typeof vm.current.tronc_queteur.euro500 === 'undefined'  || vm.current.tronc_queteur.euro500 === "" || vm.current.tronc_queteur.euro500.length === 0)
       {
         vm.current.tronc_queteur.euro500 = 0;
       }

@@ -126,7 +126,7 @@
             <label for="nivol" class="control-label">NIVOL</label>
             <input name="nivol" id="nivol" class="form-control"
                    ng-model="queteur.current.nivol"
-                   ng-required="queteur.current.secteur >= 1 && queteur.current.secteur <= 3"
+                   ng-required="queteur.current.secteur == 1 || queteur.current.secteur == 2 || queteur.current.secteur == 4"
                    ng-pattern="'[1-9][0-9]{3,6}[A-Z]'"
             />
             <span class="help-block" ng-show="queteurForm.nivol.$invalid">NIVOL : Numéro d'Identifiant VOLontaire.<br/> <sub>Mettre 1000A si inconnu<br/> (mais faites un effort quand même pour le trouver)</sub></span>
@@ -153,27 +153,64 @@
               <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
             </div>
 
-
             <span class="help-block" ng-show="queteurForm.referent_volunteer.$invalid">Indiquer le bénévole qui amène ce quêteur d'un jour<br/><sub>Recherche par nom, prénom, NIVOL</sub></span>
 
-            {{queteur.current.referent_volunteer}}
           </div>
 
 
         </div>
       </div>
-      <div class="row">
+      <div class="row" ng-show="queteur.current.secteur >= 3" style="padding-bottom:15px;">
+        <div class="col-md-8 col-md-offset-2">
+          <h3><span class="label label-warning">Attention !</span> Quêteur d'un jour - Formulaire à remplir !</h3>
+          <span class="help-block">Téléchargez le(s) formulaire(s), imprimez le(s), faites le(s) remplir et signer par le quêteur d'un jour (et parents), puis scannez les documents et attachez les à ce formulaire.</span>
+
+          <div class="col-md-4 col-md-offset-2">
+            <a href="/assets/docs/RCQ-QueteurUnJourEtMentionCNIL.pdf" target="_blank"><span class="glyphicon glyphicon-list-alt"   ></span>&nbsp;Formulaire Quêteur d'un Jour</a>
+          </div>
+          <div class="col-md-4 col-md-offset-2" ng-show="queteur.current.age < 18">
+            <a href="/assets/docs/RCQ-AutorisationParentale.pdf"      target="_blank"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;Autorisation Parentale</a>
+          </div>
+        </div>
+      </div>
+      <div class="row" ng-show="queteur.current.secteur >= 3">
         <div class="col-md-4 col-md-offset-2">
-          <div class="form-group" ng-show="queteur.current.secteur >= 3 ">
+          <div class="form-group">
+
             <label for="temporary_volunteer_form" class="control-label">Formulaire du Quêteur occasionel</label>
-            <input type="file" name="temporary_volunteer_form" id="temporary_volunteer_form"/>
+            <input type="file"
+                   name="temporary_volunteer_form"
+                   id="temporary_volunteer_form"
+                   ng-model="temporary_volunteer_form"
+                   ngf-max-size="2MB"
+                   ngf-accept="'image/*', 'application/pdf'"
+                   ngf-model-invalid="errorFile"
+            />
             <span class="help-block">Scanner le formulaire de bénévole occasionnel et ajouter le fichier ici</span>
+            <span class="help-block" ng-show="queteurForm.temporary_volunteer_form.$error.maxSize">Scanner le formulaire de bénévole occasionnel et ajouter le fichier ici</span>
+            <span class="progress" ng-show="queteur.current.temporary_volunteer_form.progress >= 0">
+              <div style="width:{{queteur.current.temporary_volunteer_form.progress}}%"
+                 ng-bind="queteur.current.temporary_volunteer_form.progress + '%'"></div>
+            </span>
+            <span ng-show="queteur.current.temporary_volunteer_form.result">Upload Successful</span>
+            <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group" ng-show="queteur.current.secteur >= 3 && queteur.current.age < 18 ">
-            <label for="parent_authorization" class="control-label">Authorisation Parentale</label>
-            <input type="file" name="parent_authorization" id="parent_authorization"/>
+
+            <label for="parent_authorization_form" class="control-label">Authorisation Parentale</label>
+
+            <input type="file"
+                   name="parent_authorization_form"
+                   id="parent_authorization_form"
+                   ng-model="parent_authorization_form"
+                   ngf-max-size="2MB"
+                   ngf-accept="'image/*', 'application/pdf'"
+                   ngf-model-invalid="errorFile"
+            />
+
+
             <span class="help-block">Scanner l'autorisation parentale et ajouter le fichier ici</span>
           </div>
         </div>
@@ -189,7 +226,6 @@
           </div>
         </div>
       </div>
-
 
       <div class="row">
         <div class="col-md-4 col-md-offset-2">
@@ -208,15 +244,183 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" style="margin-bottom: 15px;">
         <div class="col-md-2 col-md-offset-2">
-          <a ng-href="#/list" class="btn btn-link">Cancel</a>
+          <a ng-href="/#!/queteurs" class="btn btn-link">Cancel</a>
         </div>
         <div class="col-md-2 col-md-offset-5">
           <input type="submit" class="btn btn-primary" value="Save" ng-disabled="queteurForm.$invalid" />
 
         </div>
       </div>
+
+      <div class="row" ng-show="queteur.savedSuccessfully">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+            <strong>Bravo!</strong> Le quêteur a été sauvegardé avec succès!
+          </div>
+        </div>
+      </div>
+
+      <div class="row" ng-show="queteur.errorWhileSaving">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+            <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde du quêteur!
+            <pre style="text-align: left;">{{queteur.errorWhileSavingDetails}}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div ng-show="queteur.current.secteur <= 2 && queteur.currentUserRole >= 4">
+
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2">
+
+            <div class="panel" ng-class="{'panel-warning':!queteur.current.user, 'panel-success':queteur.current.user.id>0}">
+              <div class="panel-heading">
+                <h3 class="panel-title">Application RCQ</h3>
+              </div>
+              <div class="panel-body">
+
+                <span class="help-block" ng-show="!queteur.current.user">Ce bénévole <b>n'</b>est <b>pas</b> un utilisateur de l'application RCQ</span>
+                <span class="help-block" ng-show="queteur.current.user" >Ce bénévole <b>est</b> un utilisateur de l'application RCQ</span>
+
+
+                <div class="row"  ng-show="!queteur.current.user">
+                  <div class="col-md-12 ">
+                    <button class="btn btn-default" type="button" id="createUserButton" ng-click="queteur.createUser()">Faire de ce bénévole un utilisateur de l'application RCQ</button>
+                    <span class="help-block">
+                      En cliquant sur ce bouton :
+                      <ul>
+                        <li>Le bénévole deviendra un utilisateur de l'application et pourra se connecter à l'application RCQ</li>
+                        <li>Il recevera un email avec un lien pour initialiser son mot de passe</li>
+                        <li>Par défaut, il sera actif et aura le role "Viewer"</li>
+                        <li>L'utilisateur ne pourra plus être supprimé, seulement désactivé</li>
+                      </ul>
+                    </span>
+                  </div>
+                </div>
+
+
+                <div ng-show="queteur.current.user">
+
+                  <div class="panel panel-primary">
+                    <div class="panel-heading">Modifications</div>
+                    <div class="panel-body">
+
+
+                      <div class="row">
+                        <div class="col-md-4">
+                          <label for="userActiveRadio1" class="control-label">Actif</label> <br/>
+                          <label class="radio-inline">
+                            <input type="radio" name="userActive" id="userActiveRadio1" ng-model="queteur.current.user.active" value="1" ng-required="queteur.current.user"> Oui
+                          </label>
+                          <label class="radio-inline">
+                            <input type="radio" name="userActive" id="userActiveRadio2" ng-model="queteur.current.user.active" value="0" ng-required="queteur.current.user"> Non
+                          </label>
+                        </div>
+
+                        <div class="form-group col-md-8">
+                          <label for="user.role" class="control-label">Rôle de l'utilisateur</label>
+                          <!-- (r.id+'') otherwise the value of the option tag is value='number:1' -->
+                          <select name="user.role" id="user.role" class="form-control" ng-model="queteur.current.user.role" ng-required="queteur.current.user"
+                                  ng-options="(r.id+'') as r.label
+                      for
+                      r in queteur.roleList">
+                            <option value=""></option>
+                          </select>
+
+                          <span class="help-block" style="height:38px">{{queteur.roleDesc[queteur.current.user.role]}}</span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-6">
+                          <button class="btn btn-default" type="button" id="reInitUserPassword" ng-click="queteur.reinitPassword()">Ré-initialiser le Password</button>
+                          <span class="help-block">Un email sera envoyé à l'utilsateur avec un lien pour réinitialiser son mot de passe</span>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                          <button class="btn btn-default" type="button" id="userSave" ng-click="queteur.userSave()">Sauvegarder</button>
+                          <span class="help-block">L'utilisateur devra se deconnecter/reconnecter pour que la modification soit effective</span>
+                        </div>
+
+                      </div>
+
+
+                    </div>
+                  </div> <!-- fin panel Modification -->
+
+
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Informations</div>
+                    <div class="panel-body">
+
+
+                      <div class="row">
+                        <div class="col-md-12 ">
+
+                          <label for="password_defined" class="control-label">Password Défini?</label>
+                          <input type="checkbox" id="password_defined" name="password_defined" ng-model="queteur.current.user.password_defined" disabled/>
+
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+
+                          <div class="form-group">
+                            <label for="user.created" class="control-label">Créé le</label>
+                            <input name="created" id="user.created" class="form-control" ng-model="queteur.current.user.created.date" readonly/>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+
+                          <div class="form-group">
+                            <label for="user.updated" class="control-label">Mise à jour le</label>
+                            <input name="updated" id="user.updated" class="form-control" ng-model="queteur.current.user.updated.date" readonly/>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+
+                          <div class="form-group">
+                            <label for="last_failure_login_date" class="control-label">Dernière authentification échouée</label>
+                            <input name="last_failure_login_date" id="last_failure_login_date" class="form-control" ng-model="queteur.current.user.last_failure_login_date.date" readonly/>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+
+                          <div class="form-group">
+                            <label for="last_successful_login_date" class="control-label">Dernière authentification réussie</label>
+                            <input name="last_successful_login_date" id="last_successful_login_date" class="form-control" ng-model="queteur.current.user.last_successful_login_date.date" readonly/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12 ">
+
+                          <label for="nb_of_failure" class="control-label">Nombre d'authentification échouée</label>
+                          <input type="text" id="nb_of_failure" class="form-control" name="nb_of_failure" ng-model="queteur.current.user.nb_of_failure" disabled/>
+
+                        </div>
+                      </div>
+
+
+
+                    </div>
+                  </div> <!-- fin panel information -->
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
 
 

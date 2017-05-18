@@ -7,6 +7,7 @@ class UserEntity extends Entity
   public $nivol                       ;
   public $queteur_id                  ;
   public $password                    ;
+  public $password_defined            ; // when we don't need the password, but just to know if it's defined (queteurEdit)
 
   public $role                        ;
 
@@ -18,6 +19,8 @@ class UserEntity extends Entity
   public $nb_of_failure               ;//since last successful login
   public $last_successful_login_date  ;
 
+  public $init_password_date          ;
+
 
   /**
      * Accept an array of data matching properties of this class
@@ -27,17 +30,21 @@ class UserEntity extends Entity
      */
   public function __construct($data)
   {
-    $this->getString('id'                        , $data);
-    $this->getString('nivol'                     , $data);
-    $this->getString('queteur_id'                , $data);
-    $this->getString('password'                  , $data);
-    $this->getString('role'                      , $data);
-    $this->getDate  ('created'                   , $data);
-    $this->getDate  ('updated'                   , $data);
-    $this->getString('active'                    , $data);
-    $this->getDate  ('last_failure_login_date'   , $data);
-    $this->getString('nb_of_failure'             , $data);
-    $this->getDate  ('last_successful_login_date', $data);
+    $this->getString ('id'                        , $data);
+    $this->getString ('nivol'                     , $data);
+    $this->getString ('queteur_id'                , $data);
+    $this->getString ('password'                  , $data);
+    $this->getBoolean('password_defined'          , $data);
+
+
+    $this->getString ('role'                      , $data);
+    $this->getDate   ('created'                   , $data);
+    $this->getDate   ('updated'                   , $data);
+    $this->getString ('active'                    , $data);
+    $this->getDate   ('last_failure_login_date'   , $data);
+    $this->getString ('nb_of_failure'             , $data);
+    $this->getDate   ('last_successful_login_date', $data);
+    $this->getDate   ('init_password_date'        , $data);
   }
 
 

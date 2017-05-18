@@ -12,6 +12,75 @@ use RedCrossQuest\Entity\UserEntity;
 class UserDBService extends DBService
 {
 
+
+  /**
+   * Insert one user for a queteur.
+   *
+   * @param $nivol : Nivol of the user
+   * @param $queteurId : queteurId of the user
+   * @return int the primary key of the new user
+   */
+  public function insert($nivol, $queteurId)
+  {
+    $sql = "
+INSERT INTO `users`
+(
+`nivol`,
+`queteur_id`,
+`password`,
+`role`,
+`created`,
+`updated`,
+`active`,
+`last_failure_login_date`,
+`nb_of_failure`,
+`last_successful_login_date`,
+`init_passwd_uuid`,
+`init_passwd_date`)
+VALUES
+(
+:nivol,
+:queteur_id,
+'',
+1,
+NOW(),
+NOW(),
+1,
+NULL,
+0,
+NULL,
+NULL,
+NULL
+)
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $this->db->beginTransaction();
+    $result = $stmt->execute([
+      "nivol"       => $nivol,
+      "queteur_id"  => $queteurId
+    ]);
+
+    $stmt->closeCursor();
+
+    $stmt = $this->db->query("select last_insert_id()");
+    $row = $stmt->fetch();
+
+    $lastInsertId = $row['last_insert_id()'];
+    $this->logger->info('$lastInsertId:', [$lastInsertId]);
+
+    $stmt->closeCursor();
+    $this->db->commit();
+    return $lastInsertId;
+  }
+
+
+
+
+
+
+
   /***
    * This function is used by the authenticate method, to get the user info from its nivol.
    * Can't be restricted by ULID since the UL is not known.
@@ -41,6 +110,44 @@ LIMIT 1
       return $result;
     }
   }
+
+
+  /***
+   * This function is used by queteurEditForm, where the info from the user is retrieved from the queteurId
+   *
+   * @param $nivol the Nivol passed at login
+   * @return an instance of UserEntity, null if nothing is found
+   */
+  public function getUserInfoWithQueteurId($queteurId, $ulId)
+  {
+    $sql = "
+SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
+       u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
+       u.init_passwd_date, u.active, u.created, u.updated
+FROM   users u, queteur q
+WHERE  u.queteur_id = upper(:queteur_id)
+AND    q.id         = u.queteur_id
+AND    q.ul_id      = :ul_id
+LIMIT 1
+";
+
+    $stmt = $this->db->prepare($sql);
+    $queryResult = $stmt->execute(
+      [
+        "queteur_id"=>$queteurId,
+        "ul_id"     =>$ulId
+      ]);
+
+    $this->logger->addInfo( "queryResult=$queryResult, queteurId=$queteurId, ulId=$ulId, count=".$stmt->rowCount());
+
+    if($queryResult && $stmt->rowCount() == 1)
+    {
+      $result = new UserEntity($stmt->fetch());
+      $stmt->closeCursor();
+      return $result;
+    }
+  }
+
 
 
   /**
@@ -127,4 +234,82 @@ AND    active = 1
     }
     return false;
   }
+
+
+  /**
+   * update last successful login date and reset the count of failed login
+
+   */
+  public function registerSuccessfulLogin($userId)
+  {
+    $sql = "
+UPDATE  `users`
+SET     last_successful_login_date  = NOW(),
+        nb_of_failure               = 0
+WHERE   id = :id
+";
+    $stmt = $this->db->prepare($sql);
+    $queryResult = $stmt->execute(
+      [
+        "id"     => $userId
+      ]
+    );
+
+    if($queryResult && $stmt->rowCount() == 1)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * increment the failed login counter and update the last failed login date
+   */
+  public function registerFailedLogin($userId)
+  {
+    $sql = "
+UPDATE  `users`
+SET     last_failure_login_date  = NOW(),
+        nb_of_failure            = nb_of_failure + 1
+WHERE   id = :id
+";
+    $stmt = $this->db->prepare($sql);
+    $queryResult = $stmt->execute(
+      [
+        "id"     => $userId
+      ]
+    );
+
+    if($queryResult && $stmt->rowCount() == 1)
+    {
+      return true;
+    }
+    return false;
+  }
+
+
+  public function updateActiveAndRole(UserEntity $userEntity)
+  {
+    $sql = "
+UPDATE  `users`
+SET     active  = :active,
+        role    = :role
+WHERE   id      = :id
+";
+    $stmt = $this->db->prepare($sql);
+    $queryResult = $stmt->execute(
+      [
+        "id"     => $userEntity->id,
+        "active" => $userEntity->active,
+        "role" => $userEntity->role
+      ]
+    );
+
+    if($queryResult && $stmt->rowCount() == 1)
+    {
+      return true;
+    }
+    return false;
+  }
+
 }

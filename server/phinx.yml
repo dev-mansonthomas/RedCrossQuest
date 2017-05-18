@@ -8,11 +8,21 @@ environments:
     production:
         adapter: mysql
         host: 127.0.0.1
-        name: rcq
-        user: rcq
+        name: rcq-prod
+        user: rcq-prod
         pass: ''
-        port: 3307
+        port: 3308
         charset: utf8
+
+    testing:
+        adapter: mysql
+        host: 127.0.0.1
+        name: rcq-test
+        user: rcq-test
+        pass: 'sCZnwX8gVVUAE'
+        port: 3308
+        charset: utf8
+
 
     development:
         adapter: mysql
@@ -20,14 +30,5 @@ environments:
         name: RCQ
         user: rcq
         pass: 'rcq'
-        port: 3306
-        charset: utf8
-
-    testing:
-        adapter: mysql
-        host: localhost
-        name: testing_db
-        user: root
-        pass: ''
         port: 3306
         charset: utf8
