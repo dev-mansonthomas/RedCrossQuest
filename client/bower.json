@@ -28,6 +28,7 @@
     "angular-jwt": "^0.1.9",
     "ng-file-upload": "^12.2.13",
     "zxcvbn":"^4.4.2"
+
   },
   "devDependencies": {
     "angular-mocks": "~1.6.4"
