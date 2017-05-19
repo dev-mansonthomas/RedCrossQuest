@@ -110,7 +110,6 @@
 
     }
 
-
     function resetPassword() {
       vm.loading = true;
       AuthenticationService.resetPassword(vm.key, vm.password, function (success, email) {
