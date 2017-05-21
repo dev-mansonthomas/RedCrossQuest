@@ -98,3 +98,4 @@ server/vendor/
 /client/sync.sh
 /.idea/sqldialects.xml
 /.idea/dictionaries/tmanson.xml
+/server/src/settings.php
