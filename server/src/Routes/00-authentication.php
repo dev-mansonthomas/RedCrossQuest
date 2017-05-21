@@ -30,7 +30,7 @@ include_once("../../src/DBService/QueteurDBService.php");
  * Build the JWT Token with id, username, ulId, queteurId, roleId inside it.
  *
  */
-                                                            
+
 $app->post('/authenticate', function ($request, $response, $args) use ($app)
 {
   try
@@ -98,8 +98,12 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
     else if($user instanceof UserEntity)
     {//we found the user, but password is not good
 
-      $this->logger->addError("Authentication failed for user id='".$user->id."'' nivol='".$username."''");
+      $this->logger->addError("Authentication failed, wrong password, for user id='".$user->id."' nivol='".$username."'");
       $userDBService->registerFailedLogin($user->id);
+    }
+    else
+    {
+      $this->logger->addError("Authentication failed, wrong password, for user nivol='".$username."', response is not a UserEntity : ".print_r($user,true));
     }
 
     $response201 = $response->withStatus(201);
