@@ -273,7 +273,7 @@
         </div>
       </div>
 
-      <div ng-show="queteur.current.secteur <= 2 && queteur.currentUserRole >= 4">
+      <div ng-show="queteur.current.id > 0 && queteur.current.active == 1 && queteur.current.secteur <= 2 && queteur.currentUserRole >= 4">
 
         <div class="row">
           <div class="col-md-8 col-md-offset-2">
@@ -427,7 +427,7 @@
       <div class="row" ng-show="queteur.current.id > 0" style="padding-top:20px;">
         <div class="panel panel-default">
           <!-- Default panel contents -->
-          <div class="panel-heading">Listes des troncs ({{::queteur.current.troncs_queteur.length}}) de <b><span ng-bind="::queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span></b></div>
+          <div class="panel-heading">Listes des troncs ({{::queteur.current.troncs_queteur.length}}) de <b><span ng-bind="queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span></b></div>
 
           <table class='table'>
             <thead>
