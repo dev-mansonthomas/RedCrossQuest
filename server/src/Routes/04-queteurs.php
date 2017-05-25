@@ -33,6 +33,15 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $params = $request->getQueryParams();
 
+    if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
+    {
+      $adminUlId = $params['admin_ul_id'];
+
+      $this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId");
+
+      $ulId = $adminUlId;
+    }
+
     if(array_key_exists('q',$params))
     {
       $this->logger->addInfo("Queteur with query string '".$params['q']."''");
@@ -40,7 +49,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     }
     else if(array_key_exists('searchType',$params))
     {
-      $this->logger->addInfo("Queteur by search type '".$params['searchType']."''");
+      $this->logger->addInfo("Queteur by search type '".$params['searchType']."");
       $queteurs = $queteurDBService->getQueteursBySearchType($params['searchType'], $ulId);
     }
     else
@@ -87,7 +96,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     {//localAdmin & superAdmin
       $userDBService = new UserDBService($this->db, $this->logger);
 
-      $user = $userDBService->getUserInfoWithQueteurId($queteurId, $ulId);
+      $user = $userDBService->getUserInfoWithQueteurId($queteurId, $ulId, $roleId);
       $queteur->user = $user;
     }
     
@@ -112,10 +121,14 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 {
   try
   {
+    $ulId   = (int)$args['ul-id'  ];
+    $roleId = (int)$args['role-id'];
 
-    $ulId = (int)$args['ul-id'];
+    $this->logger->addDebug("Updating queteur for UL='$ulId', roleId='$roleId'");
 
-    $this->logger->addDebug("Updating queteur for UL '".$ulId."''");
+    $files = $request->getUploadedFiles();
+    $this->logger->addDebug("file upload : ".print_r($files, true));
+
 
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $input            = $request->getParsedBody();
@@ -124,7 +137,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
     
-    $queteurDBService->update($queteurEntity, $ulId);
+    $queteurDBService->update($queteurEntity, $ulId, $roleId);
   }
   catch(Exception $e)
   {

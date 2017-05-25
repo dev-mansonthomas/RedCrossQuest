@@ -126,6 +126,7 @@ OR
 (
       tq.id IS NULL
   AND pq.id = 0
+  AND  q.ul_id = :ul_id
 )
 ORDER BY q.last_name ASC
 ";
@@ -252,9 +253,11 @@ SELECT  q.`id`,
         q.`man`,
         q.`birthdate`,
         q.`qr_code_printed`,
-        q.`referent_volunteer`
-FROM  `queteur` q
-WHERE  q.id   = :queteur_id
+        q.`referent_volunteer`,
+        u.name as ul_name
+FROM  `queteur` q, ul u
+WHERE  q.id    = :queteur_id
+AND    q.ul_id = u.id
 ";
 
     $stmt = $this->db->prepare($sql);
@@ -317,7 +320,7 @@ AND    q.active  = 1
    * @param QueteurEntity $queteur The queteur to update
    * @param int $ulId  : the ID of the UniteLocal on which the search is limited
    */
-  public function update(QueteurEntity $queteur, $ulId)
+  public function update(QueteurEntity $queteur, $ulId, $roleId)
   {
     $sql = "
 UPDATE `queteur`
@@ -335,26 +338,53 @@ SET
   `active`              = :active,
   `referent_volunteer`  = :referent_volunteer
 WHERE `id`    = :id
-AND   `ul_id` = :ul_id
+
 ";
+    $parameters = null;
+    if($roleId != 9)
+    {
+      $sql .= "
+AND   `ul_id` = :ul_id      
+";
+      $parameters = [
+        "first_name"          => $queteur->first_name,
+        "last_name"           => $queteur->last_name,
+        "email"               => $queteur->email,
+        "secteur"             => $queteur->secteur,
+        "nivol"               => $queteur->nivol,
+        "mobile"              => $queteur->mobile,
+        "notes"               => $queteur->notes,
+        "birthdate"           => $queteur->birthdate,
+        "man"                 => $queteur->man,
+        "active"              => $queteur->active,
+        "referent_volunteer"  => $queteur->referent_volunteer,
+        "id"                  => $queteur->id,
+        "ul_id"               => $ulId
+      ];
+
+    }
+    else
+    {
+      $parameters = [
+        "first_name"          => $queteur->first_name,
+        "last_name"           => $queteur->last_name,
+        "email"               => $queteur->email,
+        "secteur"             => $queteur->secteur,
+        "nivol"               => $queteur->nivol,
+        "mobile"              => $queteur->mobile,
+        "notes"               => $queteur->notes,
+        "birthdate"           => $queteur->birthdate,
+        "man"                 => $queteur->man,
+        "active"              => $queteur->active,
+        "referent_volunteer"  => $queteur->referent_volunteer,
+        "id"                  => $queteur->id
+      ];
+    }
+
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute([
-      "first_name"          => $queteur->first_name,
-      "last_name"           => $queteur->last_name,
-      "email"               => $queteur->email,
-      "secteur"             => $queteur->secteur,
-      "nivol"               => $queteur->nivol,
-      "mobile"              => $queteur->mobile,
-      "notes"               => $queteur->notes,
-      "birthdate"           => $queteur->birthdate,
-      "man"                 => $queteur->man,
-      "active"              => $queteur->active,
-      "referent_volunteer"  => $queteur->referent_volunteer,
-      "id"                  => $queteur->id,
-      "ul_id"               => $ulId
-    ]);
+    $result = $stmt->execute($parameters);
 
     $this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();

@@ -16,9 +16,6 @@
     var vm = this;
 
     var queteurId = $routeParams.id;
-
-    vm.ulId   = $localStorage.currentUser.ulId;
-    vm.ulName = $localStorage.currentUser.ulName;
     vm.currentUserRole=$localStorage.currentUser.roleId;
 
 
@@ -150,8 +147,8 @@
           queteurId: queteurId,
           signedForms:
             [
-              {queteur1Day        : $scope.queteurForm.temporary_volunteer_form.$$attr.$$element[0]},
-              {parentAuthorization: $scope.queteurForm.parent_authorization_form.$$attr.$$element[0]}
+              {queteur1Day        : vm.current.temporary_volunteer_form},
+              {parentAuthorization: vm.current.parent_authorization_form}
             ]
         },
         method:'PUT'
@@ -256,7 +253,7 @@
       user.active = vm.current.user.active;
       user.role   = vm.current.user.role;
 
-      user.update(userSavedSuccessfully, errorWhileSaving);
+      user.$update(userSavedSuccessfully, errorWhileSaving);
     }
 
     vm.reinitPassword=function()
@@ -265,7 +262,7 @@
       user.id     = vm.current.user.id;
       user.nivol  = vm.current.user.nivol;
 
-      user.reInitPassword(userSavedSuccessfully, errorWhileSaving);
+      user.$reInitPassword(userSavedSuccessfully, errorWhileSaving);
     }
 
 

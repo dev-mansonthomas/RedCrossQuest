@@ -31,9 +31,9 @@
           <div class="col-md-5">
 
             <div class="form-group">
-              <label for="searchTypeRadio1" class="control-label">Type de Recherche</label>
+              <label for="searchTypeRadio1" class="control-label">Type de Recherche :</label>
               <label class="radio-inline">
-                <input type="radio" name="searchType" id="searchTypeRadio1" ng-model="q.searchType" value="0" required> Tous
+                <input type="radio" name="searchType" id="searchTypeRadio1" ng-model="q.searchType" value="0" required ng-checked="q.searchType==0"> Tous
               </label>
               <label class="radio-inline">
                 <input type="radio" name="searchType" id="searchTypeRadio2" ng-model="q.searchType" value="1" required> Non Parti
@@ -41,6 +41,27 @@
               <label class="radio-inline">
                 <input type="radio" name="searchType" id="searchTypeRadio3" ng-model="q.searchType" value="2" required> Pas Rentré
               </label>
+            </div>
+            <div class="input-group" ng-show="q.currentUserRole=='9'">
+
+              <select class="form-control" placeholder="ID Unité Locale" data-ng-model="q.admin_ul_id">
+                <option value=''  >None</option>
+                <option value='2'  >UL PARIS 04             </option>
+                <option value='49' >UL AIX EN PROVENCE      </option>
+                <option value='50' >UL ARLES                </option>
+                <option value='51' >UL AUBAGNE              </option>
+                <option value='52' >UL ISTRES               </option>
+                <option value='53' >UL LACIOTAT             </option>
+                <option value='54' >UL MARIGNANE            </option>
+                <option value='55' >UL MARSEILLE            </option>
+                <option value='56' >UL MARTIGUES            </option>
+                <option value='57' >UL CHATEAU RENARD ALPI  </option>
+                <option value='58' >UL SALON DE PROVENCE    </option>
+                <option value='348'>UL PARIS 01/02          </option>
+                <option value='477'>UL LA GARENNE COLOMBES  </option>
+              </select>
+
+
             </div>
           </div>
           <div class="col-md-1">

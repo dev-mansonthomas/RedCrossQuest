@@ -104,7 +104,7 @@
           <div class="form-group">
             <label for="ul_id" class="control-label">Unité Locale</label>
             <select name="ul_id" id="ul_id" class="form-control" ng-model="queteur.current.ul_id" required>
-              <option value="{{queteur.ulId}}" selected>{{::queteur.ulName}}</option>
+              <option value="{{::queteur.current.ul_id}}" selected>{{::queteur.current.ul_name}}</option>
             </select>
           </div>
         </div>
@@ -127,7 +127,7 @@
             <input name="nivol" id="nivol" class="form-control"
                    ng-model="queteur.current.nivol"
                    ng-required="queteur.current.secteur == 1 || queteur.current.secteur == 2 || queteur.current.secteur == 4"
-                   ng-pattern="'[1-9][0-9]{3,6}[A-Z]'"
+                   ng-pattern="'[0-9]{3,11}[A-Z]'"
             />
             <span class="help-block" ng-show="queteurForm.nivol.$invalid">NIVOL : Numéro d'Identifiant VOLontaire.<br/> <sub>Mettre 1000A si inconnu<br/> (mais faites un effort quand même pour le trouver)</sub></span>
           </div>

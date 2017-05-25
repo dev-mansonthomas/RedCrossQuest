@@ -24,6 +24,7 @@ class QueteurEntity  extends Entity
   public $temporary_volunteer_form    ;
   public $notes                       ;
   public $ul_id                       ;
+  public $ul_name                     ;
 
   public $point_quete_id              ;
   public $point_quete_name            ;
@@ -59,6 +60,7 @@ class QueteurEntity  extends Entity
     $this->getString('temporary_volunteer_form'    , $data);
     $this->getString('notes'                       , $data);
     $this->getString('ul_id'                       , $data);
+    $this->getString('ul_name'                     , $data);
 
     $this->getString('point_quete_id'              , $data);
     $this->getString('point_quete_name'            , $data);

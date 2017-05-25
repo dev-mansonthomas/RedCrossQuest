@@ -115,28 +115,43 @@ LIMIT 1
   /***
    * This function is used by queteurEditForm, where the info from the user is retrieved from the queteurId
    *
-   * @param $nivol the Nivol passed at login
+   * @param $queteurId the Id of the queteur from which we want to retrieve the user
+   * @param $ulId the id of the UL from the connected user, to check that he retrieves info from his UL only
+   * @param $roleId the roleId of the connected user, to override UL Limitation for superadmin
    * @return an instance of UserEntity, null if nothing is found
    */
-  public function getUserInfoWithQueteurId($queteurId, $ulId)
+  public function getUserInfoWithQueteurId($queteurId, $ulId, $roleId)
   {
     $sql = "
 SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
        u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
        u.init_passwd_date, u.active, u.created, u.updated
 FROM   users u, queteur q
-WHERE  u.queteur_id = upper(:queteur_id)
+WHERE  u.queteur_id = :queteur_id
 AND    q.id         = u.queteur_id
-AND    q.ul_id      = :ul_id
+".($roleId!=9?"AND    q.ul_id      = :ul_id":"")."
 LIMIT 1
 ";
 
+    $parameters = null;
+    if($roleId!=9)
+    {
+      $parameters =
+        [
+          "queteur_id"=>$queteurId,
+          "ul_id"     =>$ulId
+        ];
+    }
+    else
+    {
+      $parameters =
+        [
+          "queteur_id"=>$queteurId
+        ];
+    }
+
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute(
-      [
-        "queteur_id"=>$queteurId,
-        "ul_id"     =>$ulId
-      ]);
+    $queryResult = $stmt->execute($parameters);
 
     $this->logger->addInfo( "queryResult=$queryResult, queteurId=$queteurId, ulId=$ulId, count=".$stmt->rowCount());
 
@@ -148,6 +163,57 @@ LIMIT 1
     }
   }
 
+
+  /***
+   * This function is used by queteurEditForm, where the info from the user is retrieved from the queteurId
+   *
+   * @param $userId the Id of the user
+   * @param $ulId the id of the UL from the connected user, to check that he retrieves info from his UL only
+   * @param $roleId the roleId of the connected user, to override UL Limitation for superadmin
+   * @return an instance of UserEntity, null if nothing is found
+   */
+  public function getUserInfoWithUserId($userId, $ulId, $roleId)
+  {
+    $sql = "
+SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
+       u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
+       u.init_passwd_date, u.active, u.created, u.updated
+FROM   users u, queteur q
+WHERE  u.id = :id
+AND    q.id = u.queteur_id
+".($roleId!=9?"AND    q.ul_id      = :ul_id":"")."
+LIMIT 1
+";
+
+    $parameters = null;
+    if($roleId!=9)
+    {
+      $parameters =
+        [
+          "id"    => $userId,
+          "ul_id" => $ulId
+        ];
+    }
+    else
+    {
+      $parameters =
+        [
+          "id"    => $userId
+        ];
+    }
+
+    $stmt = $this->db->prepare($sql);
+    $queryResult = $stmt->execute($parameters);
+
+    $this->logger->addInfo( "queryResult=$queryResult, queteurId=$userId, ulId=$ulId, roleId=$roleId, count=".$stmt->rowCount());
+
+    if($queryResult && $stmt->rowCount() == 1)
+    {
+      $result = new UserEntity($stmt->fetch());
+      $stmt->closeCursor();
+      return $result;
+    }
+  }
 
 
   /**
