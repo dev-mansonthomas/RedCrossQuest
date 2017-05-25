@@ -35,6 +35,7 @@ SELECT pq.`id`,
 FROM `point_quete` AS pq
 WHERE pq.id > 0
 AND pq.ul_id = :ul_id
+AND pq.enabled = 1
 ORDER BY code ASC
 ";
 

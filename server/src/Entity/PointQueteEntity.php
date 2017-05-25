@@ -17,6 +17,7 @@ class PointQueteEntity  extends Entity
   public $localization ;
   public $minor_allowed;
   public $created      ;
+  public $enabled      ;
 
   /**
      * Accept an array of data matching properties of this class
@@ -40,5 +41,6 @@ class PointQueteEntity  extends Entity
     $this->getString('localization' , $data);
     $this->getString('minor_allowed', $data);
     $this->getDate  ('created'      , $data);
+    $this->getBoolean('enabled'     , $data);
   }
 }

@@ -27,6 +27,15 @@
     //pointQuete list
     vm.pointsQuete = PointQueteResource.query();
 
+
+    vm.pointsQuete.$promise.then(function success(pointQueteList)
+    {
+      vm.pointsQueteHash = [];
+      pointQueteList.forEach(function(onePointQuete){
+        vm.pointsQueteHash[onePointQuete.id]=onePointQuete;
+      });
+    });
+
     //This watch change on queteur variable to update the queteurId field
     $scope.$watch('pt.current.queteur', function(newValue/*, oldValue*/)
     {
