@@ -90,13 +90,12 @@
         <div class="col-md-4 col-md-offset-2">
           <div class="form-group">
             <label for="secteur" class="control-label">Secteur</label>
-            <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required>
-              <option value="1">Action Sociale</option>
-              <option value="2">Secours</option>
-              <option value="3">Non Bénévole</option>
-              <option value="4">Ancien Bénévole, Inactif ou Adhérent</option>
-              <option value="5">Commerçant</option>
-              <option value="6">Special</option>
+            <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required
+                    ng-options="(r.id+'') as r.label
+                      for
+                      r in queteur.typeBenevoleList"
+
+            >
             </select>
           </div>
         </div>

@@ -11,9 +11,9 @@
 
   /** @ngInject */
   function TroncQueteurController($scope, $log, $location, $routeParams,
-                                 TroncResource, TroncQueteurResource,
-                                 QRDecodeService,
-                                 moment)
+                                  TroncResource, TroncQueteurResource,
+                                  QRDecodeService,
+                                  moment)
   {
     var vm = this;
     vm.current = {};

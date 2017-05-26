@@ -13,6 +13,15 @@ use Carbon\Carbon;
 
 class Entity
 {
+
+  protected function getInteger($key, $data)
+  {
+    if(array_key_exists($key, $data))
+    {
+      $this->$key = (int)$data[$key];
+    }
+  }
+
   protected function getString($key, $data)
   {
     if(array_key_exists($key, $data))

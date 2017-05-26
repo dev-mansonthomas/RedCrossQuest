@@ -3,21 +3,24 @@ namespace RedCrossQuest\Entity;
 
 class PointQueteEntity  extends Entity
 {
-  public $id           ;
-  public $ul_id        ;
-  public $code         ;
-  public $name         ;
-  public $latitude     ;
-  public $longitude    ;
-  public $address      ;
-  public $postal_code  ;
-  public $city         ;
-  public $max_people   ;
-  public $advice       ;
-  public $localization ;
-  public $minor_allowed;
-  public $created      ;
-  public $enabled      ;
+  public $id                ;
+  public $ul_id             ;
+  public $code              ;
+  public $name              ;
+  public $latitude          ;
+  public $longitude         ;
+  public $address           ;
+  public $postal_code       ;
+  public $city              ;
+  public $max_people        ;
+  public $advice            ;
+  public $localization      ;
+  public $minor_allowed     ;
+  public $created           ;
+  public $enabled           ;
+  public $type              ;
+  public $time_to_teach     ;
+  public $transport_to_teach;
 
   /**
      * Accept an array of data matching properties of this class
@@ -42,5 +45,11 @@ class PointQueteEntity  extends Entity
     $this->getString('minor_allowed', $data);
     $this->getDate  ('created'      , $data);
     $this->getBoolean('enabled'     , $data);
+
+
+    $this->getInteger( 'type'               , $data);
+    $this->getInteger( 'time_to_teach'      , $data);
+    $this->getInteger( 'transport_to_teach' , $data);
+
   }
 }

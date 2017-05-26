@@ -31,7 +31,11 @@ SELECT pq.`id`,
     pq.`advice`,
     pq.`localization`,
     pq.`minor_allowed`,
-    pq.`created`
+    pq.`created`,
+    pq.`enabled`,
+    pq.`type`,
+    pq.`time_to_reach`,
+    pq.`transport_to_reach`
 FROM `point_quete` AS pq
 WHERE pq.id > 0
 AND pq.ul_id = :ul_id
@@ -76,7 +80,11 @@ SELECT  pq.`id`,
         pq.`advice`,
         pq.`localization`,
         pq.`minor_allowed`,
-        pq.`created`
+        pq.`created`,
+        pq.`enabled`,
+        pq.`type`,
+        pq.`time_to_reach`,
+        pq.`transport_to_reach`
 FROM `point_quete` AS pq
 WHERE  pq.id    = :point_quete_id
 AND    pq.ul_id = :ul_id";

@@ -129,7 +129,7 @@
               </div>
               <div class="col-md-4">
                 <label for="pqName" class="control-label">Google Maps</label><br/>
-                <a ng-href="https://maps.google.com/loc?q={{pt.pointsQueteHash[pt.current.lieuDeQuete].latitude}},{{pt.pointsQueteHash[pt.current.lieuDeQuete].longitude}}">
+                <a ng-href="https://maps.google.com/loc?q={{pt.pointsQueteHash[pt.current.lieuDeQuete].latitude}},{{pt.pointsQueteHash[pt.current.lieuDeQuete].longitude}}" target="_blank">
                   {{pt.pointsQueteHash[pt.current.lieuDeQuete].address}}, {{pt.pointsQueteHash[pt.current.lieuDeQuete].postal_code}}, {{pt.pointsQueteHash[pt.current.lieuDeQuete].city}}
                 </a>
               </div>
@@ -149,6 +149,20 @@
               </div>
             </div>
             <div class="row">
+              <div class="col-md-2">
+                <label for="pqType" class="control-label">Type</label>
+                <input type="text" id="pqType" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].type}}" class="form-control" readonly/>
+              </div>
+              <div class="col-md-4">
+                <label for="pqTimeToReach" class="control-label">Temps moyen pour atteindre le Point de Quête</label>
+                <input type="text" id="pqTimeToReach" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].time_to_reach}}" class="form-control" readonly/>
+              </div>
+              <div class="col-md-4">
+                <label for="pqTransportToReach" class="control-label">Type de Transport pour atteindre le point de quête</label>
+                <input type="text" id="pqTransportToReach" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].transport_to_reach}}" class="form-control" readonly/>
+              </div>
+            </div>
+            <div class="row">
               <div class="col-md-6">
                 <label for="pqAdvice" class="control-label">Infos/Conseils</label>
                 <textarea id="pqAdvice" class="form-control">{{pt.pointsQueteHash[pt.current.lieuDeQuete].advice}}</textarea>
@@ -160,9 +174,6 @@
             </div>
           </div>
         </div>
-
-
-
       </form>
     </div>
   </div>

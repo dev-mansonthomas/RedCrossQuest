@@ -73,17 +73,45 @@ AND
 
 
   /**
-   * search all queteur according to a query type
+   * search all queteur according to the following criteria
+   * @param String $query search string compared against first_name, last_name, nivol using like '%query%'
    * @param int $searchType
    * 0 : All queteur, whether they did quete one time or not
    * 1 : queteur that are registered for one tronc_quete but who didn't left yet
    * 2 : queteur that are still on the street ( registered for one tronc_quete and have a depart date non null and a retour date null)
-   * @param int    $ulId  : the ID of the UniteLocal on which the search is limited
+   * @param int $secteur : secteur to search (1:Social, 2: Secours, 3:Non Bénévole, 4:Commerçant, 5: Spécial)
+   * @param int $ulId    : the ID of the UniteLocal on which the search is limited
    * @return list of QueteurEntity
    *
    */
-  public function getQueteursBySearchType($searchType, $ulId)
+  public function searchQueteurs($query, $searchType, $secteur, $ulId)
   {
+    $parameters = ["ul_id" => $ulId];
+    $querySQL   = "";
+    $secteurSQL = "";
+
+
+    if($query !== null)
+    {
+      $querySQL = "
+AND  
+(       UPPER(q.`first_name`) like concat('%', UPPER(:query), '%')
+  OR    UPPER(q.`last_name` ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:query), '%')
+)
+";
+      $parameters["query"]=$query;
+    }
+
+    if($secteur !== null)
+    {
+      $secteurSQL = "
+AND q.`secteur` = :secteur
+";
+      $parameters["secteur"]=$secteur;
+    }
+
+
 
     $sqlSearchAll = "
 SELECT 	q.`id`,
@@ -108,25 +136,28 @@ SELECT 	q.`id`,
        tq.`retour` 
 FROM 	queteur AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
 		point_quete AS pq
-WHERE  
+WHERE  q.ul_id = :ul_id
+$querySQL 
+$secteurSQL 
+AND  
 (
-       q.ul_id = :ul_id
-  AND tq.id IS NOT NULL
-  AND tq.point_quete_id = pq.id
-  AND tq.id = 
-  (	
-			SELECT tqq.id 
-			FROM  tronc_queteur tqq
-      WHERE tqq.queteur_id = q.id
-      ORDER BY depart_theorique DESC
-      LIMIT 1
-	)
-)
-OR 
-(
-      tq.id IS NULL
-  AND pq.id = 0
-  AND  q.ul_id = :ul_id
+  (
+        tq.id IS NOT NULL
+    AND tq.point_quete_id = pq.id
+    AND tq.id = 
+    (	
+        SELECT tqq.id 
+        FROM  tronc_queteur tqq
+        WHERE tqq.queteur_id = q.id
+        ORDER BY depart_theorique DESC
+        LIMIT 1
+    )
+  )
+  OR 
+  (
+        tq.id IS NULL
+    AND pq.id = 0
+  )
 )
 ORDER BY q.last_name ASC
 ";
@@ -154,6 +185,8 @@ SELECT 	q.`id`,
 FROM 	     queteur AS q,
 		 tronc_queteur AS tq
 WHERE   q.ul_id = :ul_id
+$querySQL 
+$secteurSQL 
 AND     q.id = tq.queteur_id
 AND    tq.id = (	
 			SELECT tqq.id 
@@ -189,6 +222,8 @@ SELECT 	q.`id`,
 FROM 	     queteur AS q,
 		 tronc_queteur AS tq
 WHERE   q.ul_id = :ul_id
+$querySQL 
+$secteurSQL 
 AND     q.id = tq.queteur_id
 AND    tq.id = (	
 			SELECT tqq.id 
@@ -216,8 +251,10 @@ ORDER BY q.last_name ASC
         $sql = $sqlSearchAll;
     }
 
-    $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute(["ul_id" => $ulId]);
+    $this->logger->addDebug("searching queteurs with following paramters :".print_r($parameters, true)."' and query:".$sql);
+
+    $stmt   = $this->db->prepare($sql);
+    $result = $stmt->execute($parameters);
 
     $results = [];
     $i = 0;

@@ -28,36 +28,22 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     $ulId   = (int)$args['ul-id'];
     $roleId = (int)$args['role-id'];
 
-    $this->logger->addInfo("Queteur list - UL ID '".$ulId."'' role ID : $roleId");
-
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $params = $request->getQueryParams();
 
     if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
     {
       $adminUlId = $params['admin_ul_id'];
-
       $this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId");
-
       $ulId = $adminUlId;
     }
 
-    if(array_key_exists('q',$params))
-    {
-      $this->logger->addInfo("Queteur with query string '".$params['q']."''");
-      $queteurs = $queteurDBService->getQueteurs($params['q'], $ulId);
-    }
-    else if(array_key_exists('searchType',$params))
-    {
-      $this->logger->addInfo("Queteur by search type '".$params['searchType']."");
-      $queteurs = $queteurDBService->getQueteursBySearchType($params['searchType'], $ulId);
-    }
-    else
-    {
-      $this->logger->addInfo("Queteur by search type defaulted to type='0'");
-      $queteurs = $queteurDBService->getQueteursBySearchType(0, $ulId);
-    }
+    $query      = array_key_exists('q'          ,$params)?$params['q'         ]:null;
+    $searchType = array_key_exists('searchType' ,$params)?$params['searchType']:null;
+    $secteur    = array_key_exists('secteur'    ,$params)?$params['secteur'   ]:null;
 
+    $this->logger->addInfo("Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId");
+    $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId);
 
     $response->getBody()->write(json_encode($queteurs));
 

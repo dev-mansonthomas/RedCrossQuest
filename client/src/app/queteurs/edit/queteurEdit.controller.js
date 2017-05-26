@@ -22,6 +22,16 @@
     vm.youngestBirthDate=moment().subtract(10 ,'years').toDate();
     vm.oldestBirthDate  =moment().subtract(100,'years').toDate();
 
+
+    vm.typeBenevoleList=[
+      {id:1,label:'Action Sociale'},
+      {id:2,label:'Secours'},
+      {id:3,label:'Non Bénévole'},
+      {id:4,label:'Ancien Bénévole, Inactif ou Adhérent'},
+      {id:5,label:'Commerçant'},
+      {id:6,label:'Spécial'}
+    ];
+
     vm.roleList=[
       {id:1,label:'Lecture Seule'},
       {id:2,label:'Opérateur'},
