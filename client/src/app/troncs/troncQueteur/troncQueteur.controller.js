@@ -10,10 +10,10 @@
     .controller('TroncQueteurController', TroncQueteurController);
 
   /** @ngInject */
-  function TroncQueteurController($scope, $log, $location, $routeParams,
+  function TroncQueteurController($scope, $log, $routeParams,
                                   TroncResource, TroncQueteurResource,
                                   QRDecodeService,
-                                  DateTimeHandlingService, moment)
+                                  DateTimeHandlingService)
   {
     var vm = this;
     vm.current = {};
