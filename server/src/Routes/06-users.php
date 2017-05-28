@@ -28,10 +28,10 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
     if(array_key_exists('action', $params))
     {
       $action         = $params['action'];
-      $userDBService  = new UserDBService($this->db, $this->logger);
       $input          = $request->getParsedBody();
       $userEntity     = new UserEntity($input);
 
+      $userDBService  = new UserDBService($this->db, $this->logger);
       if ($action =="update")
       {
         $this->logger->addDebug("updating user RoleAndActive ".print_r($userEntity, true));
@@ -39,8 +39,14 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
       }
       else
       {
-        $this->logger->addDebug("sendInit mail to user  ".print_r($userEntity, true));
-        $userDBService->sendInit($userEntity->nivol);
+        $queteurDBService = new QueteurDBService($this->db, $this->logger);
+        $queteur = $queteurDBService->getQueteurById($userEntity->queteur_id);
+
+        $this->logger->addDebug("sendInit mail to user '".$userEntity->id."'' ".print_r($queteur, true));
+
+        $uuid = $userDBService->sendInit($userEntity->nivol);
+        $this->mailer->sendInitEmail($queteur, $uuid);
+
       }
       $userEntity = $userDBService->getUserInfoWithUserId($userEntity->id, $ulId, $roleId);
       $response->getBody()->write(json_encode($userEntity));

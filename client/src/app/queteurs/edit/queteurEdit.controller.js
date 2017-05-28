@@ -279,8 +279,9 @@
     vm.reinitPassword=function()
     {
       var user = new UserResource();
-      user.id     = vm.current.user.id;
-      user.nivol  = vm.current.user.nivol;
+      user.id           = vm.current.user.id;
+      user.queteur_id   = vm.current.id;
+      user.nivol        = vm.current.nivol;
 
       user.$reInitPassword(userSavedSuccessfully, errorWhileSaving);
     }

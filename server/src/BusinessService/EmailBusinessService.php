@@ -26,8 +26,9 @@ class EmailBusinessService
     $url=$this->appSettings['appUrl'].$this->appSettings['resetPwdPath'].$uuid;
 
 
-    $this->mailer->setFrom('thomas.manson@croix-rouge.fr', 'Thomas Manson');
-    $this->mailer->addAddress( $queteur->email, $queteur->first_name.' '.$queteur->last_name);
+    $this->mailer->setFrom    ('thomas.manson@croix-rouge.fr', 'Thomas Manson');
+    $this->mailer->addAddress ( $queteur->email, $queteur->first_name.' '.$queteur->last_name);
+    $this->mailer->addBCC     ('thomas.manson@croix-rouge.fr');
     $this->mailer->Subject = '[RedCrossQuest] Réinitialisation de votre mot de passe';
     $this->mailer->Body = "
 Bonjour ".$queteur->first_name.",<br/>
@@ -58,8 +59,9 @@ Bonjour ".$queteur->first_name.",<br/>
     $url=$this->appSettings['appUrl'];
 
 
-    $this->mailer->setFrom('thomas.manson@croix-rouge.fr', 'Thomas Manson');
-    $this->mailer->addAddress( $queteur->email, $queteur->first_name.' '.$queteur->last_name);
+    $this->mailer->setFrom    ('thomas.manson@croix-rouge.fr', 'Thomas Manson');
+    $this->mailer->addAddress ( $queteur->email, $queteur->first_name.' '.$queteur->last_name);
+    $this->mailer->addBCC     ('thomas.manson@croix-rouge.fr');
     $this->mailer->Subject = '[RedCrossQuest] Votre mot de passe a été changé';
     $this->mailer->Body = "
 Bonjour ".$queteur->first_name.",<br/>

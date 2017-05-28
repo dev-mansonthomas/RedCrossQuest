@@ -24,7 +24,7 @@
     };
 
     // attach async_load as callback to the window load event
-    if (window.attachEvent !== null) {
+    if (window.attachEvent !== null && typeof window.attachEvent !== 'undefined') {
       window.attachEvent('onload', async_load);
     } else {
       window.addEventListener('load', async_load, false);
