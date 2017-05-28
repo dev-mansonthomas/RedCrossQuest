@@ -7,15 +7,15 @@
 
 <div class="container">
 
-  <div class="panel panel-primary">
-    <div class="panel-heading">Retour Tronc
+  <div class="panel panel-primary"  style="background-color: #5bc0de!important;border-color:#5bc0de!important;">
+    <div class="panel-heading" style="background-color: #5bc0de!important;border-color:#5bc0de!important;"><h2>Retour Tronc</h2>
       <span ng-show="rt.current.tronc">
         N° {{rt.current.tronc.id}} -
            {{rt.current.tronc_queteur.queteur.first_name}}
            {{rt.current.tronc_queteur.queteur.last_name}} -
            {{rt.current.tronc_queteur.queteur.nivol}} -
-        parti depuis <b>{{rt.current.tronc_queteur.depart}}</b>
-        au point de quête '<b>{{rt.current.tronc_queteur.point_quete.name}}</b>'</span></div>
+        parti depuis '<b>{{rt.current.tronc_queteur.departStr}}</b>'
+        du point de quête '<b>{{rt.current.tronc_queteur.point_quete.name}}</b>'</span></div>
   </div>
 
 
@@ -75,7 +75,12 @@
 
               <span class="help-block" ng-show="rt.current.fillTronc">
                 La date de retour est <b>déjà</b> enregistrée, vous êtes en train de l'éditer ! <br/>
-                Si vous pensiez faire un premier enregistrement cliquez sur <b>cancel</b></span>
+                Si vous pensiez faire un premier enregistrement cliquez sur <b>cancel</b>
+              </span>
+
+              <span class="help-block" ng-show="retourTroncForm.retour.$invalid">
+                La date de retour doit être postérieur à la date de départ <br/>
+              </span>
             </div>
 
           </div>

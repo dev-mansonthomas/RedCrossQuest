@@ -37,7 +37,7 @@ return [
         'port'      => 465,
         'from'      => 'thomas.manson@croix-rouge.fr',
         'username'  => 'mansont',
-        'password'  => 'Volgograd8542++'
+        'password'  => 'reglouglou8542++'
       ]
     ],
 ];

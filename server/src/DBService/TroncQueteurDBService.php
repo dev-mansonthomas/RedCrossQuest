@@ -79,7 +79,70 @@ LIMIT 1
   }
 
 
+  /**
+   * Get all tronc_queteur for the tronc_id
+   *
+   * @param int $tronc_id The ID of the tronc
+   * @param int $ulId the id of the unite locale  (join with queteur table)
+   * @return TroncQueteurEntity  The tronc
+   * @throws \Exception if tronc not found
+   */
+  public function getTroncsQueteurByTroncId($tronc_id, $ulId)
+  {
+    $sql = "
+SELECT 
+ t.`id`              ,
+ `queteur_id`        ,
+ `point_quete_id`    ,
+ `tronc_id`          ,
+ `depart_theorique`  ,
+ `depart`            ,
+ `retour`            ,
+ `euro500`           ,
+ `euro200`           ,
+ `euro100`           ,
+ `euro50`            ,
+ `euro20`            ,
+ `euro10`            ,
+ `euro5`             ,
+ `euro2`             ,
+ `euro1`             ,
+ `cents50`           ,
+ `cents20`           ,
+ `cents10`           ,
+ `cents5`            ,
+ `cents2`            ,
+ `cent1`             ,
+ `foreign_coins`     ,
+ `foreign_banknote`  ,
+ `notes_depart_theorique`      ,
+ `notes_depart`                ,
+ `notes_retour`                ,
+ `notes_retour_comptage_pieces`,
+ `notes_update`,
+ q.`last_name`,
+ q.`first_name`
+FROM  `tronc_queteur` as t, 
+      `queteur` as q
+WHERE  t.tronc_id   = :tronc_id
+AND    t.queteur_id = q.id
+AND    q.ul_id      = :ul_id
+ORDER BY t.id DESC
 
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $result = $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
+    }
+    return $results;
+  }
 
 
 
@@ -124,7 +187,6 @@ t.`id`                ,
 `notes_retour`                ,
 `notes_retour_comptage_pieces`,
 `notes_update`
-
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.id         = :id

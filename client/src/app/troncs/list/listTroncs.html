@@ -38,7 +38,7 @@
           <div class="contact-card col-sm-2" data-ng-repeat="tronc in t.list | filter:t.search | orderBy:'lastName'">
             <div class="contact-card-inner">
               <h4>
-                <a ng-href="#/troncs/edit/{{tronc.id}}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span></a>
+                <a ng-href="/#!/troncs/edit/{{tronc.id}}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span></a>
                 &nbsp;{{::tronc.id}}
               </h4>
               <div class="contact-address">{{::tronc.enabled}}</div>

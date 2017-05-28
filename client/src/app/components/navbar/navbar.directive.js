@@ -21,10 +21,13 @@
     return directive;
 
     /** @ngInject */
-    function NavbarController(moment, AuthenticationService, $location) {
+    function NavbarController($localStorage,  $location,
+                              moment, AuthenticationService)
+    {
       var vm = this;
       // "vm.creation" is avaible by directive option "bindToController: true"
-      vm.relativeDate = moment(vm.creationDate).fromNow();
+      vm.relativeDate   = moment(vm.creationDate).fromNow();
+      vm.currentUserRole=$localStorage.currentUser.roleId;
 
       vm.logout=function()
       {

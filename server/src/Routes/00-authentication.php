@@ -2,7 +2,7 @@
 /**
  * Created by IntelliJ IDEA.
  * User: tmanson
- * Date: 06/03/2017
+ * Date: 06/03/4017
  * Time: 18:36
  */
 
@@ -43,10 +43,10 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       strlen($username) == 0 || strlen($password) == 0 ||
       strlen($username) > 10 || strlen($password) > 20)
     {
-      $response201 = $response->withStatus(201);
-      $response201->getBody()->write(json_encode("{error:'username or password error. Code 1'}"));
+      $response401 = $response->withStatus(401);
+      $response401->getBody()->write(json_encode("{error:'username or password error. Code 1'}"));
 
-      return $response201;
+      return $response401;
     }
 
 
@@ -106,18 +106,18 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       $this->logger->addError("Authentication failed, wrong password, for user nivol='".$username."', response is not a UserEntity : ".print_r($user,true));
     }
 
-    $response201 = $response->withStatus(201);
-    $response201->getBody()->write(json_encode("{error:'username or password error. Code 2'}"));
+    $response401 = $response->withStatus(401);
+    $response401->getBody()->write(json_encode("{error:'username or password error. Code 2'}"));
 
-    return $response201;
+    return $response401;
   }
   catch(Exception $e)
   {
     $this->logger->addError($e);
 
-    $response201 = $response->withStatus(201);
-    $response201->getBody()->write(json_encode("{error:'username or password error. Code 3.'}"));
-    return $response201;
+    $response401 = $response->withStatus(401);
+    $response401->getBody()->write(json_encode("{error:'username or password error. Code 3.'}"));
+    return $response401;
   }
 });
 
@@ -132,13 +132,14 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
 {
   $username = trim($request->getParsedBodyParam("username"));
   $userDBService = new UserDBService   ($this->db, $this->logger);
+
   $uuid = $userDBService->sendInit($username);
 
   if($uuid != null)
   {
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $queteur = $queteurDBService->getQueteurByNivol($username);
-    $this->logger->debug(print_r($queteur,true));
+    //$this->logger->debug(print_r($queteur,true));
     $this->mailer->sendInitEmail($queteur, $uuid);
 
     $response->getBody()->write('{"success":true,"email":"'.$queteur->email.'"}');

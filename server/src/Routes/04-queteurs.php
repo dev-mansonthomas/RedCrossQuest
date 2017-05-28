@@ -74,6 +74,16 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
 
     $queteur          = $queteurDBService->getQueteurById($queteurId);
+
+
+    if($queteur->ul_id != $ulId && $roleId != 9)
+    {
+      $response401 = $response->withStatus(401);
+      $response401->getBody()->write(json_encode("{error:'permission denied'}"));
+      return $response401;
+    }
+
+
     $referent         = $queteurDBService->getQueteurById($queteur->referent_volunteer);
     $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
 

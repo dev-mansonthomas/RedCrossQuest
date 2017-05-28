@@ -57,7 +57,7 @@
                    ng-max="queteur.youngestBirthDate"
                    ng-change="queteur.computeAge()"/>
           </div>
-
+          <span class="help-block" ng-show="queteurForm.birthdate.$invalid">La date de naissance n'est utilisée que pour savoir si la personne est majeur ou non. La date exacte est importante que pour les mineurs.</span>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label for="ul_id" class="control-label">Unité Locale</label>
-            <select name="ul_id" id="ul_id" class="form-control" ng-model="queteur.current.ul_id" required>
+            <select name="ul_id" id="ul_id" class="form-control" ng-model="queteur.current.ul_id">
               <option value="{{::queteur.current.ul_id}}" selected>{{::queteur.current.ul_name}}</option>
             </select>
           </div>
@@ -245,11 +245,10 @@
 
       <div class="row" style="margin-bottom: 15px;">
         <div class="col-md-2 col-md-offset-2">
-          <a ng-href="/#!/queteurs" class="btn btn-link">Cancel</a>
+          <a  ng-click="queteur.back();" class="btn btn-link">Cancel</a>
         </div>
         <div class="col-md-2 col-md-offset-5">
-          <input type="submit" class="btn btn-primary" value="Save" ng-disabled="queteurForm.$invalid" />
-
+          <input type="submit" class="btn btn-primary" value="Save" ng-disabled="queteurForm.$invalid" ng-show="queteur.currentUserRole>1"/>
         </div>
       </div>
 

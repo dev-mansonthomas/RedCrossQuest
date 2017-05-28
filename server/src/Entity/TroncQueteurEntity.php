@@ -39,6 +39,10 @@ class TroncQueteurEntity extends Entity
   public $foreign_banknote ;
   public $notes            ;
 
+  //only used when getting tronc_queteur for a tronc
+  public $last_name        ;
+  public $first_name       ;
+
   protected $logger;
 
   /**
@@ -81,5 +85,8 @@ class TroncQueteurEntity extends Entity
       $this->getString('notes_retour', $data);
       $this->getString('notes_retour_comptage_pieces', $data);
       $this->getString('notes_update', $data);
+
+      $this->getString('last_name', $data);
+      $this->getString('first_name', $data);
     }
 }

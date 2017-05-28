@@ -7,6 +7,7 @@
  */
 
 use \RedCrossQuest\DBService\TroncDBService;
+use \RedCrossQuest\Entity\TroncEntity;
 
 /********************************* TRONC ****************************************/
 
@@ -66,18 +67,39 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
 
     $troncDBService = new TroncDBService($this->db, $this->logger);
 
-    try
-    {
-      $tronc = $troncDBService->getTroncById($troncId, $ulId);
-      $response->getBody()->write(json_encode($tronc));
-    }
-    catch(Exception $e)
-    {
-      $this->logger->addError($e);
-    }
-
+    $tronc = $troncDBService->getTroncById($troncId, $ulId);
+    $response->getBody()->write(json_encode($tronc));
 
     return $response;
+
+  }
+  catch(Exception $e)
+  {
+    $this->logger->addError($e);
+    throw $e;
+  }
+});
+
+
+
+/*
+ * Update le tronc, seulement pour l'admin
+ *
+ * */
+$app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
+{
+
+  try
+  {
+    $ulId    = (int)$args['ul-id'];
+
+    $troncDBService = new TroncDBService($this->db, $this->logger);
+
+    $input            = $request->getParsedBody();
+    $troncEntity      = new TroncEntity($input);
+
+    $troncDBService->update($troncEntity, $ulId);
+    return ;
 
   }
   catch(Exception $e)

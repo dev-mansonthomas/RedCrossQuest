@@ -59,13 +59,14 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            Nombre de Bénévoles/Quêteur d'un jour: {{q.list.length}}
+            Nombre de Bénévoles/Quêteur d'un jour: <span class="badge">{{q.list.length}}</span>
           </div>
           <div class="col-md-4">
             <div class="input-group" ng-show="q.currentUserRole=='9'">
 
               <select class="form-control" placeholder="ID Unité Locale" data-ng-model="q.admin_ul_id">
                 <option value=''  >None</option>
+                <option value='348'>UL PARIS 01/02          </option>
                 <option value='2'  >UL PARIS 04             </option>
                 <option value='49' >UL AIX EN PROVENCE      </option>
                 <option value='50' >UL ARLES                </option>
@@ -77,7 +78,6 @@
                 <option value='56' >UL MARTIGUES            </option>
                 <option value='57' >UL CHATEAU RENARD ALPI  </option>
                 <option value='58' >UL SALON DE PROVENCE    </option>
-                <option value='348'>UL PARIS 01/02          </option>
                 <option value='477'>UL LA GARENNE COLOMBES  </option>
               </select>
 

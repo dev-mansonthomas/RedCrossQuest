@@ -21,7 +21,8 @@ SELECT `id`,
        `ul_id`,
        `created`,
        `enabled`,
-       `notes`
+       `notes`,
+       `type`
 FROM   `tronc` as t
 WHERE enabled = 1
 AND   t.ul_id = :ul_id
@@ -77,7 +78,8 @@ SELECT 	`id`,
         `ul_id`,
         `created`,
         `enabled`,
-        `notes`
+        `notes`,
+        `type`
 FROM    `tronc` as t
 WHERE  t.ul_id = :ul_id
 ";
@@ -131,7 +133,8 @@ SELECT `id`,
        `ul_id`,
        `created`,
        `enabled`,
-       `notes`
+       `notes`,
+       `type`
 FROM  `tronc` as t
 WHERE  t.id    = :tronc_id
 AND    t.ul_id = :ul_id
@@ -167,7 +170,8 @@ AND    t.ul_id = :ul_id
 UPDATE `tronc`
 SET
   `notes`       = :notes,
-  `enabled`     = :enabled
+  `enabled`     = :enabled,
+  `type`        = :type
 WHERE `id`  = :id
 AND   ul_id = :ul_id
 ";
@@ -177,6 +181,7 @@ AND   ul_id = :ul_id
         "notes"      => $tronc->notes,
         "enabled"    => $tronc->enabled,
         "id"         => $tronc->id,
+        "type"         => $tronc->type,
         "ul_id"      => $ulId
       ]);
 
@@ -205,14 +210,16 @@ INSERT INTO `tronc`
    `ul_id`,
    `created`,
    `enabled`,
-   `notes`
+   `notes`,
+   `type`
 )
 VALUES
 (
   :ul_id,
   NOW(),
   :enabled,
-  :notes
+  :notes,
+  :type
 );
 ";
 
@@ -222,7 +229,8 @@ VALUES
     $result = $stmt->execute([
       "ul_id"    => $ulId,
       "enabled"  => $tronc->enabled,
-      "notes"    => $tronc->notes
+      "notes"    => $tronc->notes,
+      "type"    => $tronc->type
     ]);
 
     $stmt->closeCursor();

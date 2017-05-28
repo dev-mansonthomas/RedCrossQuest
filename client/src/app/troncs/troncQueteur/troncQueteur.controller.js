@@ -13,14 +13,14 @@
   function TroncQueteurController($scope, $log, $location, $routeParams,
                                   TroncResource, TroncQueteurResource,
                                   QRDecodeService,
-                                  moment)
+                                  DateTimeHandlingService, moment)
   {
     var vm = this;
     vm.current = {};
 
     var tronc_queteur_id = $routeParams.id;
 
-    if (angular.isDefined(tronc_queteur_id) &&  tronc_queteur_id != 0)
+    if (angular.isDefined(tronc_queteur_id) &&  tronc_queteur_id !== 0)
     {
       $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
       TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
@@ -32,47 +32,46 @@
     function savedSuccessfully()
     {
       vm.current = {};
-      $location.path('/').replace();
     }
 
 
     vm.setNonFilledBillToZero=function()
     {
-      if(typeof vm.current.tronc_queteur.euro5 === 'undefined' || vm.current.tronc_queteur.euro5 === "" || vm.current.tronc_queteur.euro5.length === 0)
+      if(vm.current.tronc_queteur.euro5   === null || vm.current.tronc_queteur.euro5 === "" || vm.current.tronc_queteur.euro5.length === 0)
       {
         vm.current.tronc_queteur.euro5 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro10 ===  'undefined' || vm.current.tronc_queteur.euro10 === "" || vm.current.tronc_queteur.euro10.length === 0)
+      if(vm.current.tronc_queteur.euro10  === null || vm.current.tronc_queteur.euro10 === "" || vm.current.tronc_queteur.euro10.length === 0)
       {
         vm.current.tronc_queteur.euro10 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro20 ===  'undefined' || vm.current.tronc_queteur.euro20 === "" || vm.current.tronc_queteur.euro20.length === 0)
+      if(vm.current.tronc_queteur.euro20  === null || vm.current.tronc_queteur.euro20 === "" || vm.current.tronc_queteur.euro20.length === 0)
       {
         vm.current.tronc_queteur.euro20 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro50 ===  'undefined' || vm.current.tronc_queteur.euro50 === "" || vm.current.tronc_queteur.euro50.length === 0)
+      if(vm.current.tronc_queteur.euro50  === null || vm.current.tronc_queteur.euro50 === "" || vm.current.tronc_queteur.euro50.length === 0)
       {
         vm.current.tronc_queteur.euro50 = 0;
       }
 
-      if(typeof vm.current.tronc_queteur.euro100 === 'undefined'  || vm.current.tronc_queteur.euro100 === "" || vm.current.tronc_queteur.euro100.length === 0)
+      if(vm.current.tronc_queteur.euro100 === null || vm.current.tronc_queteur.euro100 === "" || vm.current.tronc_queteur.euro100.length === 0)
       {
         vm.current.tronc_queteur.euro100 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro200 === 'undefined'  || vm.current.tronc_queteur.euro200 === "" || vm.current.tronc_queteur.euro200.length === 0)
+      if(vm.current.tronc_queteur.euro200 === null || vm.current.tronc_queteur.euro200 === "" || vm.current.tronc_queteur.euro200.length === 0)
       {
         vm.current.tronc_queteur.euro200 = 0;
       }
-      if(typeof vm.current.tronc_queteur.euro500 === 'undefined'  || vm.current.tronc_queteur.euro500 === "" || vm.current.tronc_queteur.euro500.length === 0)
+      if(vm.current.tronc_queteur.euro500 === null || vm.current.tronc_queteur.euro500 === "" || vm.current.tronc_queteur.euro500.length === 0)
       {
         vm.current.tronc_queteur.euro500 = 0;
       }
-    }
+    };
 
     vm.back=function()
     {
-      window.history.back();
-    }
+      vm.current = {};
+    };
 
     function onSaveError(error)
     {
@@ -82,7 +81,7 @@
     //This watch change on tronc variable to update the rest of the form
     $scope.$watch('tq.current.tronc', function(newValue/*, oldValue*/)
     {
-      if(newValue != null && !angular.isString(newValue))
+      if(newValue !== null && !angular.isString(newValue))
       {
         try
         {
@@ -111,19 +110,17 @@
 
       if(vm.current.tronc_queteur.depart !== null)
       {
-        vm.current.tronc_queteur.depart =  moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+        vm.current.tronc_queteur.depart =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
       }
 
       if(vm.current.tronc_queteur.retour === null)
       {
-        vm.current.tronc_queteur.retour = new Date();
+        vm.current.dateRetourNotFilled=true;
       }
       else
       {
-        //date store in UTC + Timezone offset with Carbon on php side.
-        //this parse the Carbon time without '000' ending in the UTC timezone, and then convert it to Europe/Paris (the value of the tronc_queteur.retour.timezone)
-        var tempRetour = moment.tz( tronc_queteur.retour.date.substring(0, tronc_queteur.retour.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS", 'UTC');
-        vm.current.tronc_queteur.retour = tempRetour.clone().tz(tronc_queteur.retour.timezone)  .toDate();
+        vm.current.tronc_queteur.retour = DateTimeHandlingService.handleServerDate(tronc_queteur.retour).dateInLocalTimeZone;
+
         //if the return date is non null, then it's time to fill the number of coins
         vm.current.fillTronc=true;
       }
@@ -177,7 +174,7 @@
     {
       vm.current.overrideWarning=true;
       vm.save();
-    }
+    };
 
     vm.save = function save()
     {
@@ -186,7 +183,7 @@
 
       if(vm.checkInputValues() && vm.current.overrideWarning !== true)
       {
-         vm.confirmInputValues=true;
+         vm.current.confirmInputValues=true;
       }
       else
       {
@@ -197,87 +194,87 @@
     vm.checkInputValues=function()
     {
       var displayConfirmDialog=false;
-      vm.confirmInputValuesMessage="";
+      vm.current.confirmInputValuesMessage="";
       if(vm.current.tronc_queteur.euro5 > 20)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Billet de 5€</li>";
+        vm.current.confirmInputValuesMessage+="<li>Billet de 5€</li>";
       }
       if(vm.current.tronc_queteur.euro10 > 10)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Billet de 10€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>Billet de 10€ </li>";
       }
       if(vm.current.tronc_queteur.euro20 > 6)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Billet de 20€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>Billet de 20€ </li>";
       }
       if(vm.current.tronc_queteur.euro50 > 1)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Billet de 50€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>Billet de 50€ </li>";
       }
       if(vm.current.tronc_queteur.euro100 > 0)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Billet de 100€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>Billet de 100€ </li>";
       }
       if(vm.current.tronc_queteur.euro200 > 0)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Billet de 200€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>Billet de 200€ </li>";
       }
       if(vm.current.tronc_queteur.euro500 > 0)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Billet de 500€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>Billet de 500€ </li>";
       }
        //pièces
       if(vm.current.tronc_queteur.euro2 > 120)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Pièce de 2€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>Pièce de 2€ </li>";
       }
       if(vm.current.tronc_queteur.euro1 > 120)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Pièce de 1€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>Pièce de 1€ </li>";
       }
 
       if(vm.current.tronc_queteur.cents50 > 120)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Pièce de 50cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>Pièce de 50cts </li>";
       }
       if(vm.current.tronc_queteur.cents20 > 120)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Pièce de 20cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>Pièce de 20cts </li>";
       }
       if(vm.current.tronc_queteur.cents10 > 120)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Pièce de 10cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>Pièce de 10cts </li>";
       }
       if(vm.current.tronc_queteur.cents5 > 120)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Pièce de 5cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>Pièce de 5cts </li>";
       }
       if(vm.current.tronc_queteur.cents2 > 120)
       {
         displayConfirmDialog = true;
-        vm.confirmInputValuesMessage+="<li>Pièce de 2cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>Pièce de 2cts </li>";
       }
       if(vm.current.tronc_queteur.cent1 > 120)
       {
         displayConfirmDialog=true;
-        vm.confirmInputValuesMessage+="<li>Pièce de 1cent</li>";
+        vm.current.confirmInputValuesMessage+="<li>Pièce de 1cent</li>";
       }
 
       return displayConfirmDialog;
-    }
+    };
 
 
     /**
@@ -295,13 +292,13 @@
     {
       $log.debug("Successfully decoded : '"+data+"'");
 
-      if(data != null  && angular.isString(data))
+      if(data !== null  && angular.isString(data))
       {
         $log.debug("data is a String of length :" +data.length);
 
         var checkTroncNotAlreadyDecocededFunction = function()
         {
-          var notAlreadyDecoded = (typeof vm.current.tronc === 'undefined') || vm.current.tronc == 'undefined';
+          var notAlreadyDecoded = (typeof vm.current.tronc === 'undefined') || typeof vm.current.tronc === 'undefined';
           if(!notAlreadyDecoded)
           {
             $log.debug("Tronc is already decoded with value '"+vm.current.tronc.id+"'")

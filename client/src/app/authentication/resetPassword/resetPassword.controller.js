@@ -24,7 +24,7 @@
     };
 
     // attach async_load as callback to the window load event
-    if (window.attachEvent != null) {
+    if (window.attachEvent !== null) {
       window.attachEvent('onload', async_load);
     } else {
       window.addEventListener('load', async_load, false);
@@ -42,23 +42,25 @@
     vm.rate = 0;
     vm.passwordMatch = false;
 
+    AuthenticationService.logout();
+
     vm.checkIfPasswordMatch = function () {
-      vm.passwordMatch = vm.password == vm.passwordRepeat;
-    }
+      vm.passwordMatch = vm.password === vm.passwordRepeat;
+    };
 
     vm.getPasswordCheckText = function () {
-      if (typeof vm.passwordRepeat == 'undefined' || vm.passwordRepeat == '')
+      if (typeof vm.passwordRepeat === 'undefined' || vm.passwordRepeat === '')
         return "";
 
       return vm.passwordMatch === true ? "Bravo! les mots de passe correspondent!" : "Echec : Les deux mots de passe ne correspondent pas";
-    }
+    };
 
     vm.computeStrength = function () {
       if (typeof vm.password === 'undefined' || vm.password === '')
         vm.rate = 0;
       else
         vm.rate = zxcvbn(vm.password).score;
-    }
+    };
 
     vm.getTxtFromRating = function () {
       if (typeof vm.password === 'undefined' || vm.password === '')
@@ -81,7 +83,7 @@
       else if (vm.rate === 4) {
         return "Très bon password ! Bravo !";
       }
-    }
+    };
 
 
     vm.resetPassword = resetPassword;

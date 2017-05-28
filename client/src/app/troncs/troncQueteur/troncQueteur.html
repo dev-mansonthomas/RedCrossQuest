@@ -7,14 +7,14 @@
 
 <div class="container">
 
-  <div class="panel panel-primary">
-      <div class="panel-heading">Comptage de Tronc
+  <div class="panel panel-primary" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important">
+    <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h2>Comptage de Tronc</h2>
       <span ng-show="tq.current.tronc">
         N° {{tq.current.tronc.id}} -
            {{tq.current.tronc_queteur.queteur.first_name}}
            {{tq.current.tronc_queteur.queteur.last_name}} -
            {{tq.current.tronc_queteur.queteur.nivol}} -
-        parti depuis <b>{{tq.current.tronc_queteur.depart}}</b>
+        parti depuis '<b>{{tq.current.tronc_queteur.depart}}</b>'
         au point de quête '<b>{{tq.current.tronc_queteur.point_quete.name}}</b>'</span></div>
   </div>
 
@@ -63,7 +63,7 @@
 
 
 
-            <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.retour.$invalid}" ng-show="tq.current.tronc">
+            <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.retour.$invalid}" ng-show="tq.current.tronc && tq.current.dateRetourNotFilled!=true">
               <label for="retour" class="control-label">Horaire réelle de Retour</label>
               <input name="retour"
                      id="retour"
@@ -74,14 +74,24 @@
                      ng-readonly="tq.current.readOnlyView || tq.current.fillTronc"
                      required/>
               <span class="help-block">Si vous voulez editer l'horaire de retour, aller sur la page 'Retour'</span>
+
             </div>
+            <div class='col-md-8' ng-show="tq.current.dateRetourNotFilled" ng-cloak>
+              <div class="alert alert-danger" role="alert">
+                L'horaire de retour n'est pas renseigné !
+                Avant d'effectuer le comptage, il vous faut renseigner l'horaire de retour sur cette page :
+                <a ng-href="/#!/troncs/retour/{{tq.current.tronc_queteur.id}}">Retour Tronc</a> et n'oubliez pas de cliquer sur le bouton <b>Save</b>
+              </div>
+            </div>
+
+
+
 
           </div>
 
 
 
-
-        <div ng-show="tq.current.fillTronc" >
+        <div ng-show="tq.current.fillTronc" ng-cloak>
           <div class="row" ng-if="!tq.current.readOnlyView">
             <div class="form-group col-md-4">
 
@@ -90,15 +100,17 @@
               </button>
 
             </div>
-            <div class="form-group col-md-8" style="font-size: 25px; color:red;">
-              Saisir le <b>nombre</b> de pièces/billets (<b>pas</b> les montants!)
+
+            <div class="form-group col-md-8 alert alert-warning" role="alert" style="font-size: 20px">
+              Veuillez saisir le <b style="color:red">nombre</b> de pièces/billets (<b style="color:red">pas</b> les montants!)
             </div>
+
           </div>
 
 
 
 
-          <div class="row">
+          <div class="row" style="height:115px;">
 
             <div class="form-group  col-md-2" ng-class="{'has-error':troncQueteurForm.euro5.$invalid}">
               <label for="euro5" class="control-label">Nombre de 5€</label>
@@ -198,7 +210,7 @@
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro500">Montant : {{tq.current.tronc_queteur.euro500*500}} €</span>
             </div>
           </div>
-          <div class="row">
+          <div class="row" style="height:115px;">
             <div class="form-group col-md-8 col-md-offset-4" style="font-size:20px;color:darkblue;">
               Montant Total pour les billets  du Tronc (pour Contrôle) : {{
               (tq.current.tronc_queteur.euro5*5       +
@@ -211,8 +223,7 @@
               ).toFixed(2)}} €
             </div>
           </div>
-
-          <div class="row">
+          <div class="row" style="height:115px;">
             <div class="form-group  col-md-2 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.euro2.$invalid}">
               <label for="euro2" class="control-label">Nombre de 2€</label>
               <input  type="number"
@@ -270,8 +281,7 @@
             </div>
 
           </div>
-
-          <div class="row">
+          <div class="row" style="height:115px;">
 
             <div class="form-group  col-md-2  col-md-offset-2" ng-class="{'has-error':troncQueteurForm.cents05.$invalid}">
               <label for="cents05" class="control-label">Nombre de 5 cents</label>
@@ -380,18 +390,18 @@
 
           </div>
 
-          <div class="row" ng-show="tq.confirmInputValues">
+          <div class="row" ng-show="tq.current.confirmInputValues">
             <div class="form-group col-md-4 col-md-offset-4">
               <span style="color: red;font-weight: bold;font-size:24px;">Saisie anormale détectée</span><br/>
 
               Les champs suivant ont une valeur saisie anormalement elevée.<br/>
               Vérifier la saisie, éventuellement corriger, puis cliquer sur le bouton Confirmer.<br/>
               <br/>
-              <ul ng-bind-html="tq.confirmInputValuesMessage"></ul>
+              <ul ng-bind-html="tq.current.confirmInputValuesMessage"></ul>
 
             </div>
           </div>
-          <div class="row" ng-show="tq.confirmInputValues">
+          <div class="row" ng-show="tq.current.confirmInputValues">
             <div class="form-group col-md-2 col-md-offset-5">
               <button type="button"
                       ng-model="singleModel"

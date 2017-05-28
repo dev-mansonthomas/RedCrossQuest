@@ -29,7 +29,7 @@ angular
   {
     var local = this;
 
-    if(data.length == local.queteurQRCodeLength)
+    if(data.length === local.queteurQRCodeLength)
     {//queteur
       $log.debug("data length is 24 => QUETEUR");
 
@@ -37,7 +37,7 @@ angular
       {
         var queteurRegEx = /^QUETEUR-([0-9]{6})-([0-9]{9})$/g
         var match = queteurRegEx.exec(data);
-        if(match != null)
+        if(match !== null)
         {
           $log.debug("Queteur data match RegEx");
           var ulId       = parseInt(match[1]);
@@ -58,7 +58,7 @@ angular
             },
             function(reason)
             {
-              $log.error("Error while fetching queteur queteurId='"+queteurId+"' ulId='"+ulId+"' in database: '"+reason+"'");
+              $log.error("Error while fetching queteur queteurId='"+queteurId+"' ulId='"+ulId+"' in database: '"+ JSON.stringify(reason)+"'");
               queteurDecodedAndNotFoundInDB(reason, queteurId, ulId);
             }
           );

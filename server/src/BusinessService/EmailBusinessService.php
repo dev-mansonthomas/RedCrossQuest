@@ -28,7 +28,7 @@ class EmailBusinessService
 
     $this->mailer->setFrom('thomas.manson@croix-rouge.fr', 'Thomas Manson');
     $this->mailer->addAddress( $queteur->email, $queteur->first_name.' '.$queteur->last_name);
-    $this->mailer->Subject = 'Réinitialisation de votre mot de passe RedCrossQuest';
+    $this->mailer->Subject = '[RedCrossQuest] Réinitialisation de votre mot de passe';
     $this->mailer->Body = "
 Bonjour ".$queteur->first_name.",<br/>
 <br/>
@@ -60,7 +60,7 @@ Bonjour ".$queteur->first_name.",<br/>
 
     $this->mailer->setFrom('thomas.manson@croix-rouge.fr', 'Thomas Manson');
     $this->mailer->addAddress( $queteur->email, $queteur->first_name.' '.$queteur->last_name);
-    $this->mailer->Subject = 'Votre mot de passe RedCrossQuest a été changé';
+    $this->mailer->Subject = '[RedCrossQuest] Votre mot de passe a été changé';
     $this->mailer->Body = "
 Bonjour ".$queteur->first_name.",<br/>
 <br/>

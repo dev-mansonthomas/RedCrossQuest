@@ -10,7 +10,7 @@
     .controller('PreparationTroncController', PreparationTroncController);
 
   /** @ngInject */
-  function PreparationTroncController($scope, $log, $location, $uibModal,
+  function PreparationTroncController($scope, $log, $uibModal,
                                       QueteurResource, PointQueteResource, TroncResource, TroncQueteurResource,
                                       QRDecodeService )
   {
@@ -39,7 +39,7 @@
     //This watch change on queteur variable to update the queteurId field
     $scope.$watch('pt.current.queteur', function(newValue/*, oldValue*/)
     {
-      if(newValue != null)
+      if(newValue !== null)
       {
         try
         {
@@ -112,7 +112,7 @@
 
       troncQueteur.$save(savedSuccessfully, onSaveError);
       $log.debug("Saved completed");
-    }
+    };
 
     /**
      * Function used while performing a manual search for a Queteur
@@ -173,7 +173,7 @@
     {
       $log.debug("Successfully decoded : '"+data+"'");
 
-      if(data != null  && angular.isString(data) )
+      if(data !== null  && angular.isString(data) )
       {
         $log.debug("data is a String of length :" +data.length);
 
@@ -185,18 +185,20 @@
               $log.debug("Queteur is already decoded with value '"+$scope.pt.current.queteurId+"'")
           }
           return notAlreadyDecoded;
-        }
+        };
         var queteurDecodedAndFoundInDB = function(queteur)
         {
           vm.current.queteur = queteur;
           vm.current.queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
           $scope.pt.current.queteurId = queteur.id;
-        }
+        };
         var queteurDecodedAndNotFoundInDB=function (reason, queteurId, ulId)
         {
           //TODO display a message to the user
-          alert(reason +' ' + queteurId+' '+ulId) ;
-        }
+          alert("Vous n'êtes pas autorisé à effectuer cette action");
+          $log.debug(JSON.stringify(reason) +' ' + queteurId+' '+ulId);
+          //JSON.stringify(reason) +' ' + queteurId+' '+ulId
+        };
 
         var foundSomething = QRDecodeService.decodeQueteur(data, checkQueteurNotAlreadyDecocededFunction, queteurDecodedAndFoundInDB, queteurDecodedAndNotFoundInDB);
 
@@ -222,7 +224,9 @@
 
           var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
           {
-            alert(reason +' ' + troncId+' '+ulId) ;
+            alert("Vous n'êtes pas autorisé à effectuer cette action") ;
+            $log.debug(JSON.stringify(reason) +' ' + troncId+' '+ulId);
+            //reason +' ' + troncId+' '+ulId
           };
           QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
 

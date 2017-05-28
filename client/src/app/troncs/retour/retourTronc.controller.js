@@ -10,10 +10,10 @@
     .controller('RetourTroncController', RetourTroncController);
 
   /** @ngInject */
-  function RetourTroncController($scope, $log, $location, $routeParams,
+  function RetourTroncController($scope, $log, $routeParams,
                                  TroncResource, TroncQueteurResource,
                                  QRDecodeService,
-                                 moment)
+                                 DateTimeHandlingService)
   {
     var vm = this;
     vm.current = {};
@@ -35,8 +35,8 @@
 
     vm.back=function()
     {
-      window.history.back();
-    }
+      vm.current = {};
+    };
 
     function onSaveError(error)
     {
@@ -46,7 +46,7 @@
     //This watch change on tronc variable to update the rest of the form
     $scope.$watch('rt.current.tronc', function(newValue/*, oldValue*/)
     {
-      if(newValue != null && !angular.isString(newValue))
+      if(newValue !== null && !angular.isString(newValue))
       {
         try
         {
@@ -67,15 +67,20 @@
 
       if(angular.isUndefined(vm.current.tronc))
       {
-        //if the tronc is not defined, it means that we've reached this page from the URL http://localhost:3000/#/troncs/retour/820
+        //if the tronc is not defined, it means that we've reached this page from the URL http://localhost:3000/#!/troncs/retour/820
         // (from the queteur page) to visualize the data rather than editing it.
+        // Except if the return date is not defined. In this case, the user is redirected to this page from the "Comptage" page that says retour is undefined
         vm.current.tronc = tronc_queteur.tronc;
-        vm.current.readOnlyView=true;
+        if(tronc_queteur.retour !== null)
+        {
+          vm.current.readOnlyView=true;
+        }
+
       }
 
       if(vm.current.tronc_queteur.depart !== null)
       {
-        vm.current.tronc_queteur.depart =  moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+        vm.current.tronc_queteur.departStr =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
       }
 
       if(vm.current.tronc_queteur.retour === null)
@@ -84,11 +89,8 @@
       }
       else
       {
-        //date store in UTC + Timezone offset with Carbon on php side.
-        //this parse the Carbon time without '000' ending in the UTC timezone, and then convert it to Europe/Paris (the value of the tronc_queteur.retour.timezone)
-        var tempRetour = moment.tz( tronc_queteur.retour.date.substring(0, tronc_queteur.retour.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS", 'UTC');
-        vm.current.tronc_queteur.retour = tempRetour.clone().tz(tronc_queteur.retour.timezone)  .toDate();
-        //if the return date is non null, then it's time to fill the number of coins
+        vm.current.tronc_queteur.retour = DateTimeHandlingService.handleServerDate(tronc_queteur.retour).dateInLocalTimeZone;
+
         vm.current.fillTronc=true;
       }
       $log.debug(tronc_queteur);
@@ -98,7 +100,7 @@
     //function used when scanning QR Code or using autocompletion
     function troncDecodedAndFoundInDB (tronc, doNotReassingTronc)
     {
-      if(vm.current.readOnlyView!=true)
+      if(vm.current.readOnlyView!==true)
       { //if true, it means we're coming from the queteur form just to view the data.
         // So we're not using the QRDecode function to get a tronc_id, and get the last tronc_queteur from it
 
@@ -138,20 +140,8 @@
 
     vm.save = function save()
     {
-      $log.debug("Saved called");
-      $log.debug(vm.current);
-
-      if(vm.current.fillTronc == true)
-      {
-        $log.debug("Saving the number of coins");
-        $log.debug(vm.current.tronc_queteur);
-        vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
-      }
-      else
-      {
-        $log.debug("Saving the return date");
-        vm.current.tronc_queteur.$saveReturnDate(savedSuccessfully, onSaveError);
-      }
+      $log.debug("Saving the return date");
+      vm.current.tronc_queteur.$saveReturnDate(savedSuccessfully, onSaveError);
     };
 
 
@@ -170,13 +160,13 @@
     {
       $log.debug("Successfully decoded : '"+data+"'");
 
-      if(data != null  && angular.isString(data))
+      if(data !== null  && angular.isString(data))
       {
         $log.debug("data is a String of length :" +data.length);
 
         var checkTroncNotAlreadyDecocededFunction = function()
         {
-          var notAlreadyDecoded = (typeof vm.current.tronc === 'undefined') || vm.current.tronc == 'undefined';
+          var notAlreadyDecoded = (typeof vm.current.tronc === 'undefined') || typeof vm.current.tronc === 'undefined';
           if(!notAlreadyDecoded)
           {
             $log.debug("Tronc is already decoded with value '"+vm.current.tronc.id+"'")
@@ -188,7 +178,8 @@
 
         var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
         {
-          alert(reason +' ' + troncId+' '+ulId) ;
+          alert("Vous n'êtes pas autorisé à effectuer cette action") ;
+          $log.debug(JSON.stringify(reason) +' ' + troncId+' '+ulId);
         };
         QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
 

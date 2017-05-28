@@ -8,6 +8,7 @@ class TroncEntity extends Entity
   public $created ;
   public $enabled ;
   public $notes   ;
+  public $type    ;
 
   /**
      * Accept an array of data matching properties of this class
@@ -17,11 +18,11 @@ class TroncEntity extends Entity
      */
     public function __construct($data)
     {
-      $this->getString('id'       , $data);
-      $this->getString('ul_id'    , $data);
-      $this->getString('created'  , $data);
-      $this->getString('created'  , $data);
-      $this->getString('enabled'  , $data);
-      $this->getString('notes'    , $data);
+      $this->getString ('id'       , $data);
+      $this->getString ('ul_id'    , $data);
+      $this->getString ('created'  , $data);
+      $this->getString ('enabled'  , $data);
+      $this->getString ('notes'    , $data);
+      $this->getInteger('type'     , $data);
     }
 }

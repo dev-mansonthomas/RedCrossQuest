@@ -9,18 +9,18 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
       <ul class="nav navbar-nav">
         <li><a ng-href="/#!/queteurs">Quêteurs</a></li>
-        <li><a ng-href="/#!/queteurs/edit">Ajout d'un Quêteurs</a></li>
-        <li><a ng-href="/#!/troncs/prepa">Préparation Tronc</a></li>
-        <li><a ng-href="/#!/troncs/depart">Départ Tronc</a></li>
-        <li><a ng-href="/#!/troncs/retour">Retour Tronc</a></li>
-        <li><a ng-href="/#!/tronc_queteur">Comptage</a></li>
+        <li><a ng-href="/#!/queteurs/edit" ng-show="vm.currentUserRole>1">Ajout d'un Quêteurs</a></li>
+        <li><a ng-href="/#!/troncs/prepa"  ng-show="vm.currentUserRole>1">Préparation Tronc</a></li>
+        <li><a ng-href="/#!/troncs/depart" ng-show="vm.currentUserRole>1">Départ Tronc</a></li>
+        <li><a ng-href="/#!/troncs/retour" ng-show="vm.currentUserRole>1">Retour Tronc</a></li>
+        <li><a ng-href="/#!/tronc_queteur" ng-show="vm.currentUserRole>2">Comptage</a></li>
       </ul>
 
       <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="vm.logout();">
         Logout
       </button>
 
-      <div class="btn-group" uib-dropdown keyboard-nav>
+      <div class="btn-group" uib-dropdown keyboard-nav ng-show="vm.currentUserRole>3">
         <button id="simple-btn-keyboard-nav" type="button" class="btn btn-primary" uib-dropdown-toggle>
           Administration <span class="caret"></span>
         </button>

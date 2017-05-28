@@ -58,7 +58,7 @@ NULL
 
     $this->db->beginTransaction();
     $result = $stmt->execute([
-      "nivol"       => $nivol,
+      "nivol"       => ltrim($nivol, '0'),
       "queteur_id"  => $queteurId
     ]);
 

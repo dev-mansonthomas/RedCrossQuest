@@ -7,8 +7,8 @@
 
 <div class="container">
 
-  <div class="panel panel-primary">
-    <div class="panel-heading">Départ Tronc</div>
+  <div class="panel panel-primary"  style="background-color: #5cb85c!important;border-color:#5cb85c!important;">
+    <div class="panel-heading" style="background-color: #5cb85c!important;border-color:#5cb85c!important;"><h2>Départ Tronc</h2></div>
   </div>
 
 
@@ -34,7 +34,7 @@
               <input
                 id="troncId"
                 type="text"
-                ng-model="departTronc.current.tronc"
+                ng-model="dt.current.tronc"
                 placeholder="Scanner le QRCode du tronc"
                 uib-typeahead="tronc as tronc.stringView for tronc in dt.searchTronc($viewValue)"
                 typeahead-loading="loadingTroncs"
@@ -52,9 +52,10 @@
             </div>
             <div class="form-group">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
-              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="departTronc.current.tronc_queteur.point_quete.id" disabled
-                      ng-options="pointQuete.id as (pointQuete.code - pointQuete.name) for pt in pt.pointsQuete">
-                <option value=""></option>
+              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="dt.current.tronc_queteur.point_quete.id" disabled
+                      ng-options="pq.id as pq.code+' - '+pq.name
+                      for
+                      pq in dt.current.pointsQuete">
               </select>
             </div>
           </div>
@@ -76,12 +77,9 @@
         </div>
         <div class="row" ng-show="departTronc.current.tronc_queteur" style="vertical-align: middle;">
           <div class="col-md-8 col-md-offset-4">
-            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="font-size:40px;color:green;"></span> <b>{{departTronc.current.tronc_queteur.queteur.first_name}} {{departTronc.current.tronc_queteur.queteur.last_name}}</b> est <span ng-show="departTronc.current.tronc_queteur.departAlreadyRegistered">déjà</span> enregistré comme parti le {{departTronc.current.tronc_queteur.depart}}
+            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="font-size:40px;color:green;"></span> <b>{{departTronc.current.tronc_queteur.queteur.first_name}} {{departTronc.current.tronc_queteur.queteur.last_name}}</b> est <span ng-show="departTronc.current.tronc_queteur.departAlreadyRegistered">déjà</span> enregistré comme parti à l'horaire indiqué ci-dessus
           </div>
         </div>
-
-
-
       </form>
     </div>
   </div>

@@ -11,8 +11,9 @@
 
   /** @ngInject */
   function DepartTroncController($scope, $log, $location, $uibModal,
-                                 QueteurResource, PointQueteResource, TroncResource, TroncQueteurResource,
-                                 QRDecodeService, moment )
+                                 PointQueteResource  ,
+                                 TroncResource  , TroncQueteurResource,
+                                 QRDecodeService, DateTimeHandlingService)
   {
     var vm = this;
 
@@ -45,12 +46,12 @@
 
         if(tronc_queteur.depart != null)
         {
-          vm.current.tronc_queteur.depart           = moment( tronc_queteur.depart.date.substring(0, tronc_queteur.depart.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+          vm.current.tronc_queteur.depart           =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
         }
 
         if(tronc_queteur.depart_theorique != null)
         {
-          vm.current.tronc_queteur.depart_theorique = moment( tronc_queteur.depart_theorique.date.substring(0, tronc_queteur.depart_theorique.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS").toDate();
+          vm.current.tronc_queteur.depart_theorique = DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).dateInLocalTimeZone;
         }
 
         $log.debug(tronc_queteur);
@@ -129,26 +130,6 @@
       $log.debug("Saved completed");
     }
 
-    /**
-     * Function used while performing a manual search for a Queteur
-     * @param queryString the search string (search is performed on first_name, last_name, nivol)
-     * */
-    vm.searchQueteur=function(queryString)
-    {
-      $log.info("Queteur : Manual Search for '"+queryString+"'");
-      return QueteurResource.query({"q":queryString}).$promise.then(function(response)
-      {
-        return response.map(function(queteur)
-        {
-          queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
-          return queteur;
-        },
-        function(reason)
-        {
-          $log.debug("error while searching for queteur with query='"+queryString+"' with reason='"+reason+"'");
-        });
-      });
-    };
 
     /**
      * Function used while performing a manual search for a Queteur
@@ -209,7 +190,9 @@
 
         var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
         {
-          alert(reason +' ' + troncId+' '+ulId) ;
+          alert("Vous n'êtes pas autorisé à effectuer cette action") ;
+          $log.debug(JSON.stringify(reason) +' ' + troncId+' '+ulId);
+
         };
         QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
 

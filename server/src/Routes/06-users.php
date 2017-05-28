@@ -86,7 +86,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
       }
       else
       {
-        $this->logger->addInfo("SuperAdmin is creating an user for another UL");
+        $this->logger->addInfo("SuperAdmin is creating an user for another UL ".$queteur->ul_id." NIVOL:'".$userEntity->nivol."' - QueteurId:'".$userEntity->queteur_id."'");
       }
 
     }
@@ -96,7 +96,8 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
 
     $user = $userDBService->getUserInfoWithQueteurId($userEntity->queteur_id, $ulId, $roleId);
     
-    $userDBService->sendInit($userEntity->nivol);
+    $uuid = $userDBService->sendInit($userEntity->nivol);
+    $this->mailer->sendInitEmail($queteur, $uuid);
 
     $response->getBody()->write(json_encode($user));
   }

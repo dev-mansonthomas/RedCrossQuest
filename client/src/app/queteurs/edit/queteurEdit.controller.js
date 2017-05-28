@@ -47,6 +47,9 @@
     vm.roleDesc[4] = 'Compteur + administration des utilisateurs et paramétrage de RCQ pour l\'UL';
     vm.roleDesc[9] = 'Le grand manitou';
 
+
+
+
     vm.handleDate = function (theDate)
     {
       if(theDate ===null)
@@ -131,6 +134,7 @@
     {
       vm.current = new QueteurResource();
       vm.current.ul_id = vm.ulId;
+      vm.current.ul_name = $localStorage.currentUser.ulName;
     }
 
     function savedSuccessfully()
@@ -176,9 +180,15 @@
 
     }
 
+
+    vm.back=function()
+    {
+      window.history.back();
+    }
+
     vm.save = function ()
     {
-      vm.uploadFiles();
+      //vm.uploadFiles();
 
       if (angular.isDefined(vm.current.id))
       {
