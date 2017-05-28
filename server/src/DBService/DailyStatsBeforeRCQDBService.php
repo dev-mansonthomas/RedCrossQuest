@@ -99,7 +99,7 @@ AND     `ul_id`   = :ulId
 
 
     $sql = "
-INSERT INTO `rcq`.`daily_stats_before_rcq`
+INSERT INTO `daily_stats_before_rcq`
 (
   `ul_id`,
   `date`,
