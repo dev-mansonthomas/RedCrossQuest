@@ -99,3 +99,4 @@ server/vendor/
 /.idea/sqldialects.xml
 /.idea/dictionaries/tmanson.xml
 /server/src/settings.php
+docs/
