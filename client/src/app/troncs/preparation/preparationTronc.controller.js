@@ -10,8 +10,9 @@
     .controller('PreparationTroncController', PreparationTroncController);
 
   /** @ngInject */
-  function PreparationTroncController($scope, $log, $uibModal,
-                                      QueteurResource, PointQueteResource, TroncResource, TroncQueteurResource,
+  function PreparationTroncController($scope, $log, $uibModal, $timeout,
+                                      QueteurResource, PointQueteResource,
+                                      TroncResource, TroncQueteurResource,
                                       QRDecodeService )
   {
     var vm = this;
@@ -62,6 +63,10 @@
       vm.current.horaireDepartTheorique.setMinutes(0) ;
       vm.current.horaireDepartTheorique.setSeconds(0) ;
       vm.current.horaireDepartTheorique.setMilliseconds(0) ;
+
+      vm.savedSuccessfully=true;
+
+      $timeout(function () { vm.savedSuccessfully=false; }, 10000);
 
     }
 

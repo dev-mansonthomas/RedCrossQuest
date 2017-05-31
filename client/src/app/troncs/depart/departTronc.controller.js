@@ -10,7 +10,7 @@
     .controller('DepartTroncController', DepartTroncController);
 
   /** @ngInject */
-  function DepartTroncController($scope, $log, $location, $uibModal,
+  function DepartTroncController($scope, $log, $location, $uibModal, $timeout,
                                  PointQueteResource  ,
                                  TroncResource  , TroncQueteurResource,
                                  QRDecodeService, DateTimeHandlingService)
@@ -37,19 +37,20 @@
       $scope.departTronc.current.troncId = tronc.id;
 
 
-      TroncQueteurResource.getTroncQueteurForTroncIdAndSetDepart({'tronc_id':tronc.id},function(tronc_queteur)
+      TroncQueteurResource.getTroncQueteurForTroncIdAndSetDepart({'tronc_id':tronc.id},
+        function(tronc_queteur)
       {
         $log.debug("Tronc Queteur returned");
         $log.debug(tronc_queteur);
 
         vm.current.tronc_queteur =  tronc_queteur;
 
-        if(tronc_queteur.depart != null)
+        if(tronc_queteur.depart !== null)
         {
           vm.current.tronc_queteur.depart           =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
         }
 
-        if(tronc_queteur.depart_theorique != null)
+        if(tronc_queteur.depart_theorique !== null)
         {
           vm.current.tronc_queteur.depart_theorique = DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).dateInLocalTimeZone;
         }
@@ -57,15 +58,19 @@
         $log.debug(tronc_queteur);
         $log.debug("deleting troncId to allow a new scan directly");
         delete $scope.departTronc.current.troncId;
+
+        vm.savedSuccessfully=true;
+        $timeout(function () { vm.savedSuccessfully=false; vm.current={}; }, 20000);
+
       });
     };
 
 
 
     //This watch change on queteur variable to update the queteurId field
-    $scope.$watch('departTronc.current.tronc', function(newValue/*, oldValue*/)
+    $scope.$watch('dt.current.tronc', function(newValue/*, oldValue*/)
     {
-      if(newValue != null)
+      if(newValue !== null)
       {
         try
         {
@@ -169,7 +174,7 @@
     {
       $log.debug("Successfully decoded : '"+data+"'");
 
-      if(data != null  && angular.isString(data) )
+      if(data !== null  && angular.isString(data) )
       {
         $log.debug("data is a String of length :" +data.length);
 

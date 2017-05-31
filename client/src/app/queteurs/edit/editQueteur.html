@@ -437,6 +437,7 @@
                 <th>durée(min)</th>
                 <th>point_quete id</th>
                 <th>Montant</th>
+                <th>Poids</th>
               </tr>
             </thead>
             <tbody>
@@ -452,6 +453,25 @@
                   {{(tq.euro500 * 500 + tq.euro200 * 200 + tq.euro100 * 100 + tq.euro50  * 50  + tq.euro20  * 20  + tq.euro10 * 10   + tq.euro5  * 5    +
                   tq.euro2   * 2   + tq.euro1   * 1   + tq.cents50 * 0.5 + tq.cents20 * 0.2 + tq.cents10 * 0.1 + tq.cents5 * 0.05 + tq.cents2 * 0.02 + tq.cent1 * 0.01).toFixed(2)}}
                   €
+                </td>
+                <td>
+
+                  {{(tq.euro500 * 1.1  +
+                  tq.euro200 * 1.1  +
+                  tq.euro100 * 1    +
+                  tq.euro50  * 0.9  +
+                  tq.euro20  * 0.8  +
+                  tq.euro10  * 0.7  +
+                  tq.euro5   * 0.6  +
+                  tq.euro2   * 8.5  +
+                  tq.euro1   * 7.5  +
+                  tq.cents50 * 7.8  +
+                  tq.cents20 * 5.74 +
+                  tq.cents10 * 4.1  +
+                  tq.cents5  * 3.92 +
+                  tq.cents2  * 3.06 +
+                  tq.cent1   * 2.3  ).toFixed(2)}}
+                  g
                 </td>
               </tr>
             </tbody>

@@ -91,8 +91,17 @@
               <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid" ng-if="!rt.current.readOnlyView" />
               <a  ng-click="rt.back();" class="btn btn-link">Cancel</a>
             </div>
-
           </div>
+
+          <div class="row" ng-show="rt.savedSuccessfully">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rt.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+                <strong>Bravo!</strong> L'horaire de retour a été sauvegardé avec succès!
+              </div>
+            </div>
+          </div>
+
 
 
         </form>

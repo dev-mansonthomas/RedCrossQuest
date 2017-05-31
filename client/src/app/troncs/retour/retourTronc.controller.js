@@ -10,7 +10,7 @@
     .controller('RetourTroncController', RetourTroncController);
 
   /** @ngInject */
-  function RetourTroncController($scope, $log, $routeParams,
+  function RetourTroncController($scope, $log, $routeParams, $timeout,
                                  TroncResource, TroncQueteurResource,
                                  QRDecodeService,
                                  DateTimeHandlingService)
@@ -31,6 +31,8 @@
     function savedSuccessfully()
     {
       vm.current = {};
+      vm.savedSuccessfully=true;
+      $timeout(function () { vm.savedSuccessfully=false; }, 10000);
     }
 
     vm.back=function()

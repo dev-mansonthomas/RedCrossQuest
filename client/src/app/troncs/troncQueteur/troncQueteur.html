@@ -83,25 +83,32 @@
                 <a ng-href="/#!/troncs/retour/{{tq.current.tronc_queteur.id}}">Retour Tronc</a> et n'oubliez pas de cliquer sur le bouton <b>Save</b>
               </div>
             </div>
-
-
-
-
           </div>
 
 
-
-        <div ng-show="tq.current.fillTronc" ng-cloak>
-          <div class="row" ng-if="!tq.current.readOnlyView">
-            <div class="form-group col-md-4">
-
-              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledBillToZero();">
-                Mettre à zéro les champs billets non rempli
-              </button>
-
+          <div class="row" ng-show="tq.savedSuccessfully">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="tq.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+                <strong>Bravo!</strong> Le compte des pièces et billet à bien été sauvegardé!
+              </div>
             </div>
+          </div>
+          <div class="row" ng-show="tq.errorWhileSaving">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="tq.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+                <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde du départ!
+                <pre style="text-align: left;">{{tq.errorWhileSavingDetails}}</pre>
+              </div>
+            </div>
+          </div>
 
-            <div class="form-group col-md-8 alert alert-warning" role="alert" style="font-size: 20px">
+
+          <div ng-show="tq.current.fillTronc" ng-cloak>
+          <div id="anchorForm" class="row anchor" ng-if="!tq.current.readOnlyView">
+
+            <div class="form-group col-md-8 col-md-offset-2 alert alert-warning" role="alert" style="font-size: 20px;text-align:center;">
               Veuillez saisir le <b style="color:red">nombre</b> de pièces/billets (<b style="color:red">pas</b> les montants!)
             </div>
 
@@ -211,7 +218,14 @@
             </div>
           </div>
           <div class="row" style="height:115px;">
-            <div class="form-group col-md-8 col-md-offset-4" style="font-size:20px;color:darkblue;">
+
+            <div class="form-group col-md-4">
+              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledBillToZero();">
+                Mettre à zéro les champs billets non rempli
+              </button>
+            </div>
+
+            <div class="form-group col-md-8" style="font-size:20px;color:darkblue;vertical-align: top;">
               Montant Total pour les billets  du Tronc (pour Contrôle) : {{
               (tq.current.tronc_queteur.euro5*5       +
               tq.current.tronc_queteur.euro10*10     +
@@ -344,7 +358,7 @@
           </div>
 
           <div class="row">
-            <div class="form-group col-md-8 col-md-offset-4" style="font-size:20px;color:darkblue;">
+            <div class="form-group col-md-12" style="font-size:20px;color:darkblue;text-align:center;">
               Montant Total pour les pièces (à Contrôler avec le résultat de la machine) : {{
               (tq.current.tronc_queteur.euro2*2       +
               tq.current.tronc_queteur.euro1*1       +
@@ -360,9 +374,10 @@
 
 
           <div class="row">
-            <div class="form-group col-md-8 col-md-offset-4" style="font-size:20px;color:darkgreen;">
+            <div class="form-group col-md-12" style="font-size:20px;color:darkgreen;text-align:center;">
               Montant Total du Tronc : {{
-              (tq.current.tronc_queteur.euro2*2       +
+              (
+              tq.current.tronc_queteur.euro2*2       +
               tq.current.tronc_queteur.euro1*1       +
               tq.current.tronc_queteur.cents50*0.5   +
               tq.current.tronc_queteur.cents20*0.2   +

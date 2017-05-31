@@ -10,7 +10,7 @@
     .controller('TroncQueteurController', TroncQueteurController);
 
   /** @ngInject */
-  function TroncQueteurController($scope, $log, $routeParams,
+  function TroncQueteurController($scope, $log, $routeParams, $timeout, $anchorScroll, $location,
                                   TroncResource, TroncQueteurResource,
                                   QRDecodeService,
                                   DateTimeHandlingService)
@@ -32,6 +32,8 @@
     function savedSuccessfully()
     {
       vm.current = {};
+      vm.savedSuccessfully=true;
+      $timeout(function () { vm.savedSuccessfully=false; }, 10000);
     }
 
 
@@ -75,7 +77,9 @@
 
     function onSaveError(error)
     {
-      $log.debug(error)
+      $log.debug(error);
+      vm.errorWhileSaving=true;
+      vm.errorWhileSavingDetails=error;
     }
 
     //This watch change on tronc variable to update the rest of the form
@@ -125,6 +129,9 @@
         vm.current.fillTronc=true;
       }
       $log.debug(tronc_queteur);
+
+      $location.hash('anchorForm');
+      $anchorScroll();
     }
 
 

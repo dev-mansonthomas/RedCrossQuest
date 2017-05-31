@@ -109,6 +109,13 @@
         controllerAs: 'qrcQueteurs'
       })
 
+      // ============== Graph Spotfire ==============
+      .when('/graph', {
+        templateUrl: 'app/graph/graph.html',
+        controller: 'GraphController',
+        controllerAs: 'graph'
+      })
+
       // ============== OTHERWISE ==============
       .otherwise({
         redirectTo: '/'

@@ -75,9 +75,20 @@
             </div>
           </div>
         </div>
+
+        <div class="row" ng-show="departTronc.current.tronc_queteur && departTronc.savedSuccessfully">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="departTronc.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+              <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="font-size:40px;color:green;"></span> <b>{{departTronc.current.tronc_queteur.queteur.first_name}} {{departTronc.current.tronc_queteur.queteur.last_name}}</b> est <span ng-show="departTronc.current.tronc_queteur.departAlreadyRegistered">déjà</span> enregistré comme parti à l'horaire indiqué ci-dessus.<br/>
+              Vous pouvez scanner dès maintenant le prochain départ de tronc.
+            </div>
+          </div>
+        </div>
+
         <div class="row" ng-show="departTronc.current.tronc_queteur" style="vertical-align: middle;">
           <div class="col-md-8 col-md-offset-4">
-            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="font-size:40px;color:green;"></span> <b>{{departTronc.current.tronc_queteur.queteur.first_name}} {{departTronc.current.tronc_queteur.queteur.last_name}}</b> est <span ng-show="departTronc.current.tronc_queteur.departAlreadyRegistered">déjà</span> enregistré comme parti à l'horaire indiqué ci-dessus
+
           </div>
         </div>
       </form>
