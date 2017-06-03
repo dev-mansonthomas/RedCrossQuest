@@ -1,20 +1,48 @@
-
-
-
-
-<div class="container" style="height:1024px;">
+<div class="container">
 
   <div>
     <acme-navbar creation-date="main.creationDate"></acme-navbar>
   </div>
 
-   Spotfire
 
+  <div class="container" data-ng-controller="GraphController as g">
+    <div class="row">
+      <div class="col-md-2 col-md-offset-5">
+        <button ng-click="g.grantAccessToGraph();">Grant Access</button>
+      </div>
+    </div>
 
+    <!-- Timer -->
+    <div class="row" ng-show="g.showTimer">
+      <div class="col-md-8 col-md-offset-2">
 
-  <div id="container" >
+      </div>
+    </div>
+
+    <!-- Graph Links -->
+    <div class="container" ng-show="g.showGraphs">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <a ng-href="/graph-display.html?i={{q.i}}&amp;g=SpotfireCloud" target="_blank">Graph</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+        </div>
+      </div>
+
+    </div>
+
 
   </div>
+
 </div>
 
 

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8">
+  <title>Graphique de Suivi de la quête</title>
+  <script type="text/javascript" src="https://spotfire.cloud.tibco.com/spotfire/wp/GetJavaScriptApi.ashx?Version=7.5"></script>
+  <script>
+
+    function parseQuery(qstr) {
+      var query = {};
+      var a = (qstr[0] === '?' ? qstr.substr(1) : qstr).split('&');
+      for (var i = 0; i < a.length; i++) {
+        var b = a[i].split('=');
+        query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+      }
+      return query;
+    }
+
+    var serverUrl    = "https://spotfire.cloud.tibco.com/spotfire/wp/";
+
+
+    window.onload = function()
+    {
+      var query = parseQuery(document.location.search);
+
+      if( typeof query.g ==='undefined' ||
+          typeof query.i ==='undefined' ||
+          query.i.length != 36          ||
+          (query.i.match(new RegExp("-", "g")) || []).length !== 4)
+      {
+        alert("initialization error");
+        return;
+      }
+
+
+      function errorHandler(errorCode, description)
+      {
+        alert(errorCode+' '+description);
+      }
+
+
+
+
+
+      //https://spotfire.cloud.tibco.com/spotfire/wp/OpenAnalysis?file=/users/mansonthomas/Public/SpotfireCloud
+      var analysisPath = "/users/mansonthomas/Public/"+query.g;
+      var parameters   = "ul=2;";
+      //uuid='"+query.i+"';
+
+      var app = new spotfire.webPlayer.Application(serverUrl, null, analysisPath, parameters, false);
+      app.onError(errorHandler);
+      var doc = app.openDocument("container");
+    }
+  </script>
+</head>
+<body style="margin:0px;height:100%;">
+<div style="width:100%;background-color: #222222;">
+  <img src="/assets/images/RedCrossQuestLogo.png" style="top:0px;left:0px;margin:0px;height:73px;"/>
+</div>
+<div id="container" style="height:100%;width:100%;margin:0px;padding:0px;border:1px solid red;"></div>
+</body>
+</html>

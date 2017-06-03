@@ -7,5 +7,6 @@ include_once("../../src/Routes/03-points-quetes.php");
 include_once("../../src/Routes/04-queteurs.php");
 include_once("../../src/Routes/05-dailyStats.php");
 include_once("../../src/Routes/06-users.php");
+include_once("../../src/Routes/07-spotfire-access.php");
 
 ?>

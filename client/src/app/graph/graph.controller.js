@@ -10,16 +10,27 @@
     .controller('GraphController', GraphController);
 
   /** @ngInject */
-  function GraphController($log) {
+  function GraphController($log, GraphResource) {
     var vm = this;
 
-    var serverUrl    = "https://spotfire.cloud.tibco.com/spotfire/wp/";
-    var analysisPath = "/users/mansonthomas/Public/SpotfireCloud";
 
 
-    var parameters = "ul=2;"
-    var app = new spotfire.webPlayer.Application(serverUrl, null, analysisPath, parameters, false);
-    var doc = app.openDocument("container");
+
+
+    vm.grantAccessToGraph=function()
+    {
+
+      GraphResource.$create().$promise.then(
+        function success(creationDate)
+        {
+          alert(creationDate);
+        },
+      function error(error)
+      {
+        $log.error(error);
+      });
+
+    }
 
 
 

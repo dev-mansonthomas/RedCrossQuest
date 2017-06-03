@@ -46,7 +46,7 @@ class AuthorisationMiddleware
    * @return DecodedToken
    * @throws \Exception exception
    */
-  public function authenticate($tokenStr)
+  public function authenticate($tokenStr) : DecodedToken
   {
     //$this->logger->addDebug("Authentication check on :".print_r($tokenStr, true));
     
@@ -197,7 +197,9 @@ class AuthorisationMiddleware
         return $this->denyRequest($response, '0006');
       }
 
-      
+      //add the decoded JWT Token so that it can be used by routes. (ex: spotfire requires userId, roleId, UlID from the user)
+      $request = $request->withAttribute('decodedJWT', $decodedToken);
+
       //token valid
       return $next($request, $response);
     }
