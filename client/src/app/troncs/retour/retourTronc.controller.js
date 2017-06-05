@@ -10,7 +10,7 @@
     .controller('RetourTroncController', RetourTroncController);
 
   /** @ngInject */
-  function RetourTroncController($scope, $log, $routeParams, $timeout,
+    function RetourTroncController($scope, $log, $routeParams, $timeout,
                                  TroncResource, TroncQueteurResource,
                                  QRDecodeService,
                                  DateTimeHandlingService)

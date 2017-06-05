@@ -6,6 +6,7 @@ use Ramsey\Uuid\Uuid;
 
 use DateTime;
 use DateInterval;
+use Carbon\Carbon;
 
 
 class SpotfireAccessDBService extends DBService
@@ -25,7 +26,7 @@ class SpotfireAccessDBService extends DBService
     //clean up previous access
     $deleteSQL="
     DELETE FROM spotfire_access
-    WHERE id = :id
+    WHERE user_id = :user_id
     ";
     $stmt = $this->db->prepare($deleteSQL);
     $stmt->execute(["user_id"=> $userId ]);
@@ -58,14 +59,17 @@ VALUES
       [
         "token"             => $token,
         "token_expiration"  => $tokenExpiryDate->format("Y-m-d"),
-        "ul_id"             => $ulId,
-        "user_id"           => $userId
+        "ul_id"             => (int)$ulId,
+        "user_id"           => (int)$userId
       ]
     );
 
     $stmt->closeCursor();
 
-    return (object)["creationTime"=>new DateTime(), "token"=>$token];
+    $currentDate = new Carbon();
+    $currentDate->setTimezone("Europe/Paris");
+
+    return (object)["creationTime"=>$currentDate, "token"=>$token];
   }
 
 }

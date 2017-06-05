@@ -9,7 +9,7 @@
 use \RedCrossQuest\DBService\SpotfireAccessDBService;
 
 
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/graphs', function ($request, $response, $args)
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -22,11 +22,11 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/graphs', function ($request, $response, 
     $insertDateTimeAndToken = $spotfireDBService->grantAccess($userId, $ulId, 4);
 
     $response->getBody()->write(json_encode($insertDateTimeAndToken));
-
   }
   catch(Exception $e)
   {
     $this->logger->addError($e);
+    throw $e;
   }
   return $response;
 });

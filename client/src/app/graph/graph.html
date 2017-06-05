@@ -1,40 +1,84 @@
+<acme-navbar></acme-navbar>
+
+
 <div class="container">
 
-  <div>
-    <acme-navbar creation-date="main.creationDate"></acme-navbar>
-  </div>
+
 
 
   <div class="container" data-ng-controller="GraphController as g">
     <div class="row">
-      <div class="col-md-2 col-md-offset-5">
-        <button ng-click="g.grantAccessToGraph();">Grant Access</button>
+      <div class="col-md-6 col-md-offset-3">
+        <button class="btn btn-primary" ng-click="g.grantAccessToGraph();" style="width:100%;height:70px;">
+          Cliquez sur ce bouton pour <span ng-show="g.showGraphs">ré-</span>activer l'accès aux graphiques (accès valide 4h)
+        </button>
+      </div>
+    </div>
+
+
+    <div class="row" ng-show="g.showDebug && g.showCountDown">
+      <div class="col-md-8 col-md-offset-2">
+
+      token: {{g.token}}       <br/>
+
+      minutes : '{{g.minutes}}'  <br/>
+      pair : '{{g.pair}}'  <br/>
+
+      original : {{g.orignalDate}} <br/>
+      nextUpdate : {{g.nextUpdate}}  <br/>
+
+      now : {{g.now}}<br/>
+      numberOfSecond : {{g.numberOfSecondsUntilUpdate}}<br/>
+
       </div>
     </div>
 
     <!-- Timer -->
-    <div class="row" ng-show="g.showTimer">
+    <div class="row" ng-show="g.showCountDown">
       <div class="col-md-8 col-md-offset-2">
+
+        Vos graphiques seront disponible dans
+
+        <button class="btn btn-primary" type="button">
+         <span class="badge">{{g.countDown}}</span>  secondes
+        </button>
+
+
 
       </div>
     </div>
 
     <!-- Graph Links -->
     <div class="container" ng-show="g.showGraphs">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <a ng-href="/graph-display.html?i={{q.i}}&amp;g=SpotfireCloud" target="_blank">Graph</a>
+
+
+      <div class="row" ng-show="g.currentUserRole == 1">
+        <div class="col-md-8 col-md-offset-2"  >
+          <a ng-href="/graph-display.html?i={{g.token}}&amp;g=SpotfireCloud" target="_blank">Graphique à afficher dans le local </a>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-
+      <div class="row" ng-show="g.currentUserRole > 1">
+        <div class="col-md-8 col-md-offset-2"  >
+          Pour pouvoir voir le graphique à afficher au local, il faut être connecté avec un compte "viewer".
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
 
+
+      <div class="row" ng-show="g.currentUserRole >= 2">
+        <div class="col-md-8 col-md-offset-2">
+          <a ng-href="/graph-display.html?i={{g.token}}&amp;g=SpotfireCloud" target="_blank">Graphique pour les Opérateurs </a>
+        </div>
+      </div>
+      <div class="row" ng-show="g.currentUserRole >= 3">
+        <div class="col-md-8 col-md-offset-2">
+          <a ng-href="/graph-display.html?i={{g.token}}&amp;g=SpotfireCloud" target="_blank">Graphique pour les Compteurs </a>
+        </div>
+      </div>
+
+      <div class="row" ng-show="vm.currentUserRole >= 4">
+        <div class="col-md-8 col-md-offset-2">
+          <a ng-href="/graph-display.html?i={{g.token}}&amp;g=SpotfireCloud" target="_blank">Graphique pour l'admin de l'UL </a>
         </div>
       </div>
 

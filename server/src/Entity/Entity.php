@@ -50,20 +50,29 @@ class Entity
     {
       if(is_array($data[$key]))
       {
-        //json parsing
-        //{"date":"2016-05-25 07:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"}
+        // json parsed momentjs object : {"date":"2017-06-05 03:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"}
         $array = $data[$key];
-        $this->$key = Carbon::parse($array['date']);
-        $this->$key->timezone = $array['timezone']  ;
+        $this->$key = Carbon::createFromFormat("Y-m-d H:i:s.u", $array['date'], $array['timezone']);
+        $this->$key->setTimezone("UTC");
       }
       else
-      {//from DB
+      {
         $stringValue = $data[$key];
         if($stringValue != null)
         {
-          $this->$key = Carbon::parse($stringValue);
+          if(strpos($stringValue, 'T') !== false)
+          {
+            //json javascript date : "2017-06-04T23:00:00.000Z"
+            $this->$key = Carbon::parse($data[$key]);
+          }
+          else
+          {
+            // from DB Date :"2016-06-09 00:36:43"
+            $this->$key = Carbon::parse($stringValue)->setTimezone("Europe/Paris");
+          }
         }
       }
     }
   }
+
 }

@@ -1,124 +1,117 @@
+<acme-navbar></acme-navbar>
+<div class="container" data-ng-controller="TroncEditController as tronc">
 
-<div class="container">
-
-  <div>
-    <acme-navbar creation-date="main.creationDate"></acme-navbar>
+  <div class="panel panel-primary">
+    <div class="panel-heading">Un Tronc:  <b><span ng-bind="tronc.current.id"></span></b> crée le {{tronc.current.created}}</div>
   </div>
+  <form novalidate ng-submit='tronc.save();' name="troncForm">
 
-  <div class="container" data-ng-controller="TroncEditController as tronc">
+      <div class="well">
+        <div class="row">
+          <div class="col-md-4 col-md-offset-2">
 
-    <div class="panel panel-primary">
-      <div class="panel-heading">Un Tronc:  <b><span ng-bind="tronc.current.id"></span></b> crée le {{tronc.current.created}}</div>
-    </div>
-    <form novalidate ng-submit='tronc.save();' name="troncForm">
-
-        <div class="well">
-          <div class="row">
-            <div class="col-md-4 col-md-offset-2">
-
-              <div class="form-group" ng-class="{'has-error':troncForm.enabled.$invalid}">
-                <label for="activeRadio1" class="control-label">Actif</label> <br/>
-                <label class="radio-inline">
-                  <input type="radio" name="active" id="activeRadio1" ng-model="tronc.current.enabled" value="1" required> Oui
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="active" id="activeRadio2" ng-model="tronc.current.enabled" value="0" required> Non
-                </label>
-              </div>
-            </div>
-
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="type" class="control-label">Type de tronc</label>
-                <select name="type" id="type" class="form-control" ng-model="tronc.current.type" required
-                        ng-options="(r.id) as r.label
-                        for
-                        r in tronc.typeTroncList"
-
-                >
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-
-              <div class="form-group">
-                <label for="notes" class="control-label">Notes</label>
-                <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="tronc.current.notes"></textarea>
-                <span class="help-block">Info sur le troncs, ex: Cassé, perdu, volé, Tronc du local, Tronc chez un commercant</span>
-              </div>
-            </div>
-          </div>
-          <div class="row" style="margin-bottom: 20px;">
-            <div class="col-md-2 col-md-offset-2">
-              <a ng-href="/#!/list" class="btn btn-link">Cancel</a>
-            </div>
-            <div class="col-md-2 col-md-offset-8">
-              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="troncForm.$invalid" />
+            <div class="form-group" ng-class="{'has-error':troncForm.enabled.$invalid}">
+              <label for="activeRadio1" class="control-label">Actif</label> <br/>
+              <label class="radio-inline">
+                <input type="radio" name="active" id="activeRadio1" ng-model="tronc.current.enabled" value="1" required> Oui
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="active" id="activeRadio2" ng-model="tronc.current.enabled" value="0" required> Non
+              </label>
             </div>
           </div>
 
 
-          <div class="row" ng-show="tronc.savedSuccessfully">
-            <div class="col-md-8 col-md-offset-2">
-              <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="tronc.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
-                <strong>Bravo!</strong> Le tronc a été sauvegardé avec succès!
-              </div>
-            </div>
-          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="type" class="control-label">Type de tronc</label>
+              <select name="type" id="type" class="form-control" ng-model="tronc.current.type" required
+                      ng-options="(r.id) as r.label
+                      for
+                      r in tronc.typeTroncList"
 
-          <div class="row" ng-show="tronc.errorWhileSaving">
-            <div class="col-md-8 col-md-offset-2">
-              <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="tronc.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
-                <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde du Tronc!
-                <pre style="text-align: left;">{{tronc.errorWhileSavingDetails}}</pre>
-              </div>
+              >
+              </select>
             </div>
           </div>
         </div>
-    </form>
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2">
 
-    <div class="row" ng-show="tronc.current.id > 0" style="padding-top:20px;">
-      <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading">Listes des troncs ({{::tronc.current.troncs_queteur.length}})</div>
+            <div class="form-group">
+              <label for="notes" class="control-label">Notes</label>
+              <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="tronc.current.notes"></textarea>
+              <span class="help-block">Info sur le troncs, ex: Cassé, perdu, volé, Tronc du local, Tronc chez un commercant</span>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-bottom: 20px;">
+          <div class="col-md-2 col-md-offset-2">
+            <a ng-href="/#!/list" class="btn btn-link">Cancel</a>
+          </div>
+          <div class="col-md-2 col-md-offset-8">
+            <input type="submit" class="btn btn-primary" value="Save" ng-disabled="troncForm.$invalid" />
+          </div>
+        </div>
 
-        <table class='table'>
-          <thead>
-          <tr>
-            <th>ID (click to edit)</th>
-            <th>Queteur (click to see)</th>
-            <th>départ Théorique</th>
-            <th>départ</th>
-            <th>retour</th>
-            <th>durée(min)</th>
-            <th>point_quete id</th>
-            <th>Montant</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr ng-repeat="tq in tronc.current.troncs_queteur">
-            <th><a ng-href="/#!/tronc_queteur/edit/{{::tq.id}}">{{::tq.id}}</a></th>
-            <th><a ng-href="/#!/queteurs/edit/{{::tq.queteur_id}}">{{::tq.first_name}} {{::tq.last_name}}</a></th>
-            <td>{{::tq.depart_theorique.toDate() | date : 'dd/MM/yyyy HH:mm:ss'}} </td>
-            <td>{{::tq.depart.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
-            <td>{{::tq.retour.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
-            <td>{{::tq.duration.toFixed(2)}}</td>
-            <td>{{::tq.point_quete_id}}</td>
-            <td>
 
-              {{(tq.euro500 * 500 + tq.euro200 * 200 + tq.euro100 * 100 + tq.euro50  * 50  + tq.euro20  * 20  + tq.euro10 * 10   + tq.euro5  * 5    +
-              tq.euro2   * 2   + tq.euro1   * 1   + tq.cents50 * 0.5 + tq.cents20 * 0.2 + tq.cents10 * 0.1 + tq.cents5 * 0.05 + tq.cents2 * 0.02 + tq.cent1 * 0.01).toFixed(2)}}
-              €
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="row" ng-show="tronc.savedSuccessfully">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="tronc.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+              <strong>Bravo!</strong> Le tronc a été sauvegardé avec succès!
+            </div>
+          </div>
+        </div>
+
+        <div class="row" ng-show="tronc.errorWhileSaving">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="tronc.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+              <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde du Tronc!
+              <pre style="text-align: left;">{{tronc.errorWhileSavingDetails}}</pre>
+            </div>
+          </div>
+        </div>
       </div>
+  </form>
+
+  <div class="row" ng-show="tronc.current.id > 0" style="padding-top:20px;">
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading">Listes des troncs ({{::tronc.current.troncs_queteur.length}})</div>
+
+      <table class='table'>
+        <thead>
+        <tr>
+          <th>ID (click to edit)</th>
+          <th>Queteur (click to see)</th>
+          <th>départ Théorique</th>
+          <th>départ</th>
+          <th>retour</th>
+          <th>durée(min)</th>
+          <th>point_quete id</th>
+          <th>Montant</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="tq in tronc.current.troncs_queteur">
+          <th><a ng-href="/#!/tronc_queteur/edit/{{::tq.id}}">{{::tq.id}}</a></th>
+          <th><a ng-href="/#!/queteurs/edit/{{::tq.queteur_id}}">{{::tq.first_name}} {{::tq.last_name}}</a></th>
+          <td>{{::tq.depart_theorique.toDate() | date : 'dd/MM/yyyy HH:mm:ss'}} </td>
+          <td>{{::tq.depart.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>{{::tq.retour.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>{{::tq.duration.toFixed(2)}}</td>
+          <td>{{::tq.point_quete_id}}</td>
+          <td>
+
+            {{(tq.euro500 * 500 + tq.euro200 * 200 + tq.euro100 * 100 + tq.euro50  * 50  + tq.euro20  * 20  + tq.euro10 * 10   + tq.euro5  * 5    +
+            tq.euro2   * 2   + tq.euro1   * 1   + tq.cents50 * 0.5 + tq.cents20 * 0.2 + tq.cents10 * 0.1 + tq.cents5 * 0.05 + tq.cents2 * 0.02 + tq.cent1 * 0.01).toFixed(2)}}
+            €
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

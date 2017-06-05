@@ -301,7 +301,8 @@ AND    q.ul_id = u.id
 
     $result = $stmt->execute(["queteur_id" => $queteur_id]);
 
-    if ($result) {
+    if ($result)
+    {
       $queteur = new QueteurEntity($stmt->fetch());
       $stmt->closeCursor();
       return $queteur;

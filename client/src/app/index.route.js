@@ -92,19 +92,19 @@
 
       // ============== Daily Stats ==============
       .when('/dailyStats', {
-        templateUrl: 'app/dailyStats/list/listDailyStats.html',
+        templateUrl: 'app/admin/dailyStats/list/listDailyStats.html',
         controller: 'DailyStatsController',
         controllerAs: 'ds'
       })
       // ============== QRCode Generator ==============
 
       .when('/QRCode/troncs', {
-        templateUrl: 'app/QRCode/troncs/QRCodeTroncs.html',
+        templateUrl: 'app/admin/QRCode/troncs/QRCodeTroncs.html',
         controller: 'QRCodeTroncsController',
         controllerAs: 'qrcTroncs'
       })
       .when('/QRCode/queteurs', {
-        templateUrl: 'app/QRCode/queteurs/QRCodeQueteurs.html',
+        templateUrl: 'app/admin/QRCode/queteurs/QRCodeQueteurs.html',
         controller: 'QRCodeQueteursController',
         controllerAs: 'qrcQueteurs'
       })

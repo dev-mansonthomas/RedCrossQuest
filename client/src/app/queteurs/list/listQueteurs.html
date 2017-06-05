@@ -1,124 +1,116 @@
-<div class="container">
+<acme-navbar></acme-navbar>
 
-  <div>
-    <acme-navbar></acme-navbar>
+<div class="container" data-ng-controller="QueteursController as q">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">Les Quêteurs</div>
   </div>
+  <div class="well">
+    <form class="form-search" name="searchForm" novalidate ng-submit='q.doSearch();'>
+      <div class="row">
 
-
-  <div class="container" data-ng-controller="QueteursController as q">
-
-    <div class="panel panel-primary">
-      <div class="panel-heading">Les Quêteurs</div>
-    </div>
-    <div class="well">
-      <form class="form-search" name="searchForm" novalidate ng-submit='q.doSearch();'>
-        <div class="row">
-
-          <div class="col-md-4">
-            <div class="form-group">
-              <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                <input class="form-control" placeholder="Search" data-ng-model="q.search">
-              </div>
-              <div data-ng-show="q.search">
-                <span data-ng-pluralize
-                      data-count="filteredContacts.length"
-                      data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
-                </span>
-              </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+              <input class="form-control" placeholder="Search" data-ng-model="q.search">
+            </div>
+            <div data-ng-show="q.search">
+              <span data-ng-pluralize
+                    data-count="filteredContacts.length"
+                    data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
+              </span>
             </div>
           </div>
-          <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
 
-            <div class="form-group">
-              <label for="searchTypeRadio1" class="control-label">Type de Recherche :</label><br/>
-              <label class="radio-inline">
-                <input type="radio" name="searchType" id="searchTypeRadio1" ng-model="q.searchType" value="0" required ng-checked="q.searchType==0"> Tous
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="searchType" id="searchTypeRadio2" ng-model="q.searchType" value="1" required> Non Parti
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="searchType" id="searchTypeRadio3" ng-model="q.searchType" value="2" required> Pas Rentré
-              </label>
-            </div>
+          <div class="form-group">
+            <label for="searchTypeRadio1" class="control-label">Type de Recherche :</label><br/>
+            <label class="radio-inline">
+              <input type="radio" name="searchType" id="searchTypeRadio1" ng-model="q.searchType" value="0" required ng-checked="q.searchType==0"> Tous
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="searchType" id="searchTypeRadio2" ng-model="q.searchType" value="1" required> Non Parti
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="searchType" id="searchTypeRadio3" ng-model="q.searchType" value="2" required> Pas Rentré
+            </label>
           </div>
-          <div class="col-md-5">
-            <div class="form-group">
-              <label for="secteur" class="control-label">Secteur</label>
-              <select name="secteur" id="secteur" class="form-control" ng-model="q.secteur" required
-                      ng-options="(r.id+'') as r.label
-                      for
-                      r in q.typeBenevoleList"
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <label for="secteur" class="control-label">Secteur</label>
+            <select name="secteur" id="secteur" class="form-control" ng-model="q.secteur" required
+                    ng-options="(r.id+'') as r.label
+                    for
+                    r in q.typeBenevoleList"
 
-              >
-              </select>
-            </div>
+            >
+            </select>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          Nombre de Bénévoles/Quêteur d'un jour: <span class="badge">{{q.list.length}}</span>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group" ng-show="q.currentUserRole=='9'">
+
+            <select class="form-control" placeholder="ID Unité Locale" data-ng-model="q.admin_ul_id">
+              <option value=''  >None</option>
+              <option value='348'>UL PARIS 01/02          </option>
+              <option value='2'  >UL PARIS 04             </option>
+              <option value='49' >UL AIX EN PROVENCE      </option>
+              <option value='50' >UL ARLES                </option>
+              <option value='51' >UL AUBAGNE              </option>
+              <option value='52' >UL ISTRES               </option>
+              <option value='53' >UL LACIOTAT             </option>
+              <option value='54' >UL MARIGNANE            </option>
+              <option value='55' >UL MARSEILLE            </option>
+              <option value='56' >UL MARTIGUES            </option>
+              <option value='57' >UL CHATEAU RENARD ALPI  </option>
+              <option value='58' >UL SALON DE PROVENCE    </option>
+              <option value='477'>UL LA GARENNE COLOMBES  </option>
+            </select>
+
+
           </div>
 
         </div>
-        <div class="row">
-          <div class="col-md-4">
-            Nombre de Bénévoles/Quêteur d'un jour: <span class="badge">{{q.list.length}}</span>
-          </div>
-          <div class="col-md-4">
-            <div class="input-group" ng-show="q.currentUserRole=='9'">
-
-              <select class="form-control" placeholder="ID Unité Locale" data-ng-model="q.admin_ul_id">
-                <option value=''  >None</option>
-                <option value='348'>UL PARIS 01/02          </option>
-                <option value='2'  >UL PARIS 04             </option>
-                <option value='49' >UL AIX EN PROVENCE      </option>
-                <option value='50' >UL ARLES                </option>
-                <option value='51' >UL AUBAGNE              </option>
-                <option value='52' >UL ISTRES               </option>
-                <option value='53' >UL LACIOTAT             </option>
-                <option value='54' >UL MARIGNANE            </option>
-                <option value='55' >UL MARSEILLE            </option>
-                <option value='56' >UL MARTIGUES            </option>
-                <option value='57' >UL CHATEAU RENARD ALPI  </option>
-                <option value='58' >UL SALON DE PROVENCE    </option>
-                <option value='477'>UL LA GARENNE COLOMBES  </option>
-              </select>
-
-
-            </div>
-
-          </div>
-          <div class="col-md-1">
-            <input type="submit" class="btn btn-primary" value="Search" />
-          </div>
-        </div>
-      </form>
-    </div>
-
-
-      <div class="col-xs-12 col-md-12">
-        <div class="row">
-
-          <div class="contact-card col-xs-12 col-sm-4" style="height:150px;" data-ng-repeat="queteur in q.list">
-            <div class="contact-card-inner">
-              <h4>
-                <a ng-href="/#!/queteurs/edit/{{::queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
-                &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
-              </h4>
-              <div class="contact-address">{{::queteur.email}}</div>
-              <div class="contact-phone">{{::queteur.mobile}} - {{::queteur.nivol}}</div>
-              <div class="contact-phone">{{::queteur.point_quete_name}}</div>
-              <div class="contact-phone">{{::queteur.depart_theorique}}</div>
-              <div class="queteur-status">
-                <abbr title="{{::queteur.depart_theorique}}"><span class="glyphicon glyphicon-stop"    aria-hidden="true" style="color:mediumblue" ng-show="!queteur.retour && !queteur.depart"></span></abbr>
-                <abbr title="{{::queteur.depart          }}"><span class="glyphicon glyphicon-globe"   aria-hidden="true" style="color:#00DD00" ng-show="!queteur.retour &&  queteur.depart"></span></abbr>
-                <abbr title="{{::queteur.retour          }}"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:purple" ng-show=" queteur.retour"></span></abbr>
-              </div>
-            </div>
-          </div>
-
+        <div class="col-md-1">
+          <input type="submit" class="btn btn-primary" value="Search" />
         </div>
       </div>
-
-    </div>
+    </form>
   </div>
 
 
+    <div class="col-xs-12 col-md-12">
+      <div class="row">
+
+        <div class="contact-card col-xs-12 col-sm-4" style="height:150px;" data-ng-repeat="queteur in q.list">
+          <div class="contact-card-inner">
+            <h4>
+              <a ng-href="/#!/queteurs/edit/{{::queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+              &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
+            </h4>
+            <div class="contact-address">{{::queteur.email}}</div>
+            <div class="contact-phone">{{::queteur.mobile}} - {{::queteur.nivol}}</div>
+            <div class="contact-phone">{{::queteur.point_quete_name}}</div>
+            <div class="contact-phone">{{::queteur.depart_theorique}}</div>
+            <div class="queteur-status">
+              <abbr title="{{::queteur.depart_theorique}}"><span class="glyphicon glyphicon-stop"    aria-hidden="true" style="color:mediumblue" ng-show="!queteur.retour && !queteur.depart"></span></abbr>
+              <abbr title="{{::queteur.depart          }}"><span class="glyphicon glyphicon-globe"   aria-hidden="true" style="color:#00DD00" ng-show="!queteur.retour &&  queteur.depart"></span></abbr>
+              <abbr title="{{::queteur.retour          }}"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:purple" ng-show=" queteur.retour"></span></abbr>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>

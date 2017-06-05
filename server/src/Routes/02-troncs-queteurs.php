@@ -61,16 +61,13 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
     if(array_key_exists('action', $params))
     {
       $action = $params['action'];
-      $this->logger->debug("action found with value '".$action."'");
-
       $input  = $request->getParsedBody();
 
-      $this->logger->debug("parsed json input : ",[$input]);
       $tq = new TroncQueteurEntity($input, $this->logger);
 
       if ($action =="saveReturnDate")
       {
-        $this->logger->debug("Saving return date");
+        $this->logger->debug("Saving return date",[$tq]);
         $troncQueteurDBService->updateRetour($tq, $ulId);
       }
       elseif ($action =="saveCoins")
@@ -119,11 +116,9 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
         new TroncDBService     ($this->db, $this->logger)
       );
 
-
       if($action == "getTroncQueteurForTroncIdAndSetDepart")
       {
         $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId );
-
         if($troncQueteur->depart == null)
         {
           $departDate = $troncQueteurDBService->setDepartToNow($troncQueteur->id, $ulId );
@@ -144,9 +139,8 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
     { // préparation du tronc
 
       $input  = $request->getParsedBody();
-
       $tq = new TroncQueteurEntity($input, $this->logger);
-      $this->logger->debug("tronc_queteur", [$tq]);
+
       try
       {
         $troncQueteurDBService->insert($tq, $ulId );
