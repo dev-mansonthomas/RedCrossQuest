@@ -95,7 +95,7 @@
             <div class="form-group">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
               <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required
-                      ng-options="pq.id as pq.code+' - '+pq.name
+                      ng-options="pq.id as pt.getTypeLabel(pq.type)+' - '+ pq.code+' - '+pq.name
                       for
                       pq in pt.pointsQuete">
                 <option value=""></option>

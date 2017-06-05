@@ -28,6 +28,22 @@
     //pointQuete list
     vm.pointsQuete = PointQueteResource.query();
 
+    vm.getTypeLabel=function(id)
+    {
+      if(id===1)
+        return 'Voie Publique';
+      else if(id===2)
+        return 'Pieton';
+      else if(id===3)
+        return 'Boutique';
+      else
+        return 'Base UL';
+
+
+
+
+    };
+
 
     vm.pointsQuete.$promise.then(function success(pointQueteList)
     {
