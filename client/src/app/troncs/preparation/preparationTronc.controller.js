@@ -56,7 +56,7 @@
     //This watch change on queteur variable to update the queteurId field
     $scope.$watch('pt.current.queteur', function(newValue/*, oldValue*/)
     {
-      if(newValue !== null)
+      if(newValue !== null && typeof newValue !==  "string" && typeof newValue !== "undefined")
       {
         try
         {

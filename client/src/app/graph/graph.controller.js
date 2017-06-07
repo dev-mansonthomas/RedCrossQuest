@@ -16,6 +16,7 @@
     var vm = this;
 
     vm.currentUserRole = $localStorage.currentUser.roleId;
+    vm.currentUlId     = $localStorage.currentUser.ulId;
     //show debug info on how the countdown is calculated
     vm.showDebug = false;
 
@@ -57,9 +58,6 @@
             vm.nextUpdate.seconds(0);
           }
 
-
-
-
           vm.now = moment();
           vm.numberOfSecondsUntilUpdate = vm.nextUpdate.diff(vm.now, 'seconds');
 
@@ -72,12 +70,12 @@
             if(vm.countDown === 0)
             {
               $interval.cancel(vm.countDownInterval);
-              vm.showGraphs = true;
-              vm.showTimer  = false;
+              vm.showGraphs     = true;
+              vm.showCountDown  = false;
             }
           };
 
-          vm.showCountDown         = true;
+          vm.showCountDown     = true;
           vm.countDownInterval = $interval(vm.countDownFn, 1000, vm.numberOfSecondsUntilUpdate);
 
         },
@@ -85,13 +83,7 @@
       {
         $log.error(error);
       });
-
     }
-
-
-
-
-
   }
 })();
 

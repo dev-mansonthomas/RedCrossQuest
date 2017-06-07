@@ -20,16 +20,15 @@
         <form novalidate ng-submit='tq.save();' name="troncQueteurForm">
 
           <div class="row">
+            <div class="form-group col-md-4" style="text-align:center;" ng-if="!tq.current.readOnlyView">
 
-            <div class="form-group col-md-4" ng-if="!tq.current.readOnlyView">
               <qr-scanner
                 ng-success="tq.qrCodeScanOnSuccess(data)"
                 ng-error="tq.qrCodeScanOnError(error)"
                 ng-video-error="tq.qrCodeScanOnVideoError(error)"
                 width="320"
-                height="200"/>
-              <br/>
-              <span ng-bind="departTronc.decodedData"></span>
+                height="200"></qr-scanner>
+              <span class="help-block" ng-bind="departTronc.decodedData"></span>
             </div>
 
             <div class="form-group  col-md-4" ng-class="{'has-error':troncQueteurForm.troncId.$invalid}">

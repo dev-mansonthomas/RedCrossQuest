@@ -19,7 +19,7 @@ environments:
         host: 127.0.0.1
         name: rcq-test
         user: rcq-test
-        pass: 'sCZnwX8gVVUAE'
+        pass: ''
         port: 3308
         charset: utf8
 

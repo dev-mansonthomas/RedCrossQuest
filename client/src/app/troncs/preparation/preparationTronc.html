@@ -27,20 +27,20 @@
   </div>
 
 
-  <div class="">
+  <div>
     <div class="well">
       <form novalidate ng-submit='pt.save();' name="prepaTroncForm">
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-4"  style="text-align:center;">
 
             <qr-scanner
               ng-success="pt.qrCodeScanOnSuccess(data)"
                 ng-error="pt.qrCodeScanOnError(error)"
           ng-video-error="pt.qrCodeScanOnVideoError(error)"
                    width="320"
-                  height="200"/>
-            <br/>
-            <span ng-bind="pt.decodedData"></span>
+                  height="200"></qr-scanner>
+
+            <span  class="help-block" ng-bind="pt.decodedData"></span>
           </div>
 
           <div class=" col-md-4">

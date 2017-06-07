@@ -59,9 +59,9 @@ class TroncQueteurEntity extends Entity
       $this->getString('queteur_id', $data);
       $this->getString('point_quete_id', $data);
       $this->getString('tronc_id', $data);
-      $this->getDate('depart_theorique', $data);
-      $this->getDate('depart', $data);
-      $this->getDate('retour', $data);
+      $this->getDate  ('depart_theorique', $data);
+      $this->getDate  ('depart', $data);
+      $this->getDate  ('retour', $data);
       $this->getString('euro500', $data);
       $this->getString('euro200', $data);
       $this->getString('euro100', $data);

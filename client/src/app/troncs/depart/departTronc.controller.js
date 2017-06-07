@@ -10,7 +10,7 @@
     .controller('DepartTroncController', DepartTroncController);
 
   /** @ngInject */
-  function DepartTroncController($scope, $log, $location, $uibModal, $timeout,
+  function DepartTroncController($scope, $log, $timeout,
                                  PointQueteResource  ,
                                  TroncResource  , TroncQueteurResource,
                                  QRDecodeService, DateTimeHandlingService)
@@ -19,22 +19,21 @@
 
     vm.current = {};
     vm.current.ul_id=2;
-    vm.current.horaireDepartTheorique = new Date();
 
-    vm.current.horaireDepartTheorique.setHours(9) ;
-    vm.current.horaireDepartTheorique.setMinutes(0) ;
-    vm.current.horaireDepartTheorique.setSeconds(0) ;
-    vm.current.horaireDepartTheorique.setMilliseconds(0) ;
     //pointQuete list
     vm.current.pointsQuete = PointQueteResource.query();
 
 
     var troncDecodedAndFoundInDB = function(tronc)
     {
+      if(typeof tronc ==="string")
+        return;
+
 
       vm.current.tronc = tronc;
       vm.current.tronc.stringView = tronc.id+" - "+tronc.created;
-      $scope.departTronc.current.troncId = tronc.id;
+
+      vm.current.troncId = tronc.id;
 
 
       TroncQueteurResource.getTroncQueteurForTroncIdAndSetDepart({'tronc_id':tronc.id},
@@ -57,24 +56,27 @@
 
         $log.debug(tronc_queteur);
         $log.debug("deleting troncId to allow a new scan directly");
-        delete $scope.departTronc.current.troncId;
+        delete vm.current.troncId;
 
         vm.savedSuccessfully=true;
-        $timeout(function () { vm.savedSuccessfully=false; vm.current={}; }, 20000);
+        $timeout(function () {
+          vm.savedSuccessfully=false;
+          vm.current={};
+        }, 20000);
 
       });
     };
 
 
 
-    //This watch change on queteur variable to update the queteurId field
+    //This watch changes on dt.current.tronc variable to update the troncId field
     $scope.$watch('dt.current.tronc', function(newValue/*, oldValue*/)
     {
-      if(newValue !== null)
+      if(newValue !== null && typeof newValue !==  "string" && typeof newValue !== "undefined")
       {
         try
         {
-          $scope.departTronc.current.troncId = newValue.id;
+          vm.current.troncId = newValue.id;
           troncDecodedAndFoundInDB(newValue);
         }
         catch(exception)
@@ -84,56 +86,6 @@
       }
     });
 
-
-    function redirectToSlash()
-    {
-      $location.path('/');
-    }
-
-    function onSaveError(errorMessage)
-    {
-
-      $log.error(errorMessage);
-      vm.errorOnSave = errorMessage.data.exception[0].message;
-
-
-      $uibModal.open({
-        animation: true,
-        templateUrl: 'myModalContent.html',
-        controller: 'ModalInstanceController',
-        size: 'lg',
-        resolve: {
-          errorOnSave: function () {
-            return vm.errorOnSave;
-          },
-          troncId:function()
-          {
-            return $scope.departTronc.current.tronc.id;
-          }
-        }
-      });
-    }
-
-
-
-
-    /***
-     * Save a Départ Tronc
-     * */
-    vm.save = function ()
-    {
-      $log.debug("Saved called");
-      $log.debug(vm.current);
-
-      var troncQueteur = new TroncQueteurResource();
-      troncQueteur.queteur_id       = $scope.departTronc.current.queteurId;
-      troncQueteur.tronc_id         = $scope.departTronc.current.troncId;
-      troncQueteur.point_quete_id   = $scope.departTronc.current.lieuDeQuete;
-      troncQueteur.depart_theorique = $scope.departTronc.current.horaireDepartTheorique;
-
-      troncQueteur.$save(redirectToSlash, onSaveError);
-      $log.debug("Saved completed");
-    }
 
 
     /**
@@ -182,11 +134,11 @@
 
         var checkTroncNotAlreadyDecocededFunction = function()
         {
-          var notAlreadyDecoded = (typeof $scope.departTronc.current.troncId === 'undefined');
+          var notAlreadyDecoded = (typeof vm.current.troncId === 'undefined');
 
           if(!notAlreadyDecoded)
           {
-            $log.debug("Tronc is already decoded with value '"+$scope.departTronc.current.troncId+"'")
+            $log.debug("Tronc is already decoded with value '"+vm.current.troncId+"'")
           }
           return notAlreadyDecoded;
         };

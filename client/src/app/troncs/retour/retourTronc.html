@@ -16,21 +16,18 @@
 
   <div class="col-xs-12">
     <div class="well">
-
-
         <form novalidate ng-submit='rt.save();' name="retourTroncForm">
-
           <div class="row">
+            <div class="form-group col-md-4"  style="text-align:center;" ng-if="!rt.current.readOnlyView">
 
-            <div class="form-group col-md-4" ng-if="!rt.current.readOnlyView">
               <qr-scanner
                 ng-success="rt.qrCodeScanOnSuccess(data)"
                 ng-error="rt.qrCodeScanOnError(error)"
                 ng-video-error="rt.qrCodeScanOnVideoError(error)"
                 width="320"
-                height="200"/>
-              <br/>
-              <span ng-bind="departTronc.decodedData"></span>
+                height="200"></qr-scanner>
+
+              <span class="help-block" ng-bind="departTronc.decodedData"></span>
             </div>
 
             <div class="form-group  col-md-4" ng-class="{'has-error':retourTroncForm.troncId.$invalid}">

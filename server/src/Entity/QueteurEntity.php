@@ -64,7 +64,7 @@ class QueteurEntity  extends Entity
 
     $this->getString('point_quete_id'              , $data);
     $this->getString('point_quete_name'            , $data);
-    $this->getString('depart_theorique'            , $data);
+    $this->getDate  ('depart_theorique'            , $data);
     $this->getDate  ('depart'                      , $data);
     $this->getDate  ('retour'                      , $data);
 
