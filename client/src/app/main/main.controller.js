@@ -9,13 +9,14 @@
   function MainController($timeout, toastr, $localStorage) {
     var vm = this;
 
-    vm.awesomeThings = [];
+    vm.awesomeThings  = [];
     vm.classAnimation = '';
-    vm.creationDate = 1456333782311;
-    vm.showToastr = showToastr;
+    vm.creationDate   = 1456333782311;
+    vm.showToastr     = showToastr;
 
-    vm.username=$localStorage.currentUser.username;
-    vm.ulName=$localStorage.currentUser.ulName;
+    vm.username       =$localStorage.currentUser.username;
+    vm.ulName         =$localStorage.currentUser.ulName;
+    vm.deploymentType =$localStorage.currentUser.d;
 
     activate();
 

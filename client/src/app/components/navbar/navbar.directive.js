@@ -29,6 +29,9 @@
       vm.relativeDate   = moment(vm.creationDate).fromNow();
       vm.currentUserRole=$localStorage.currentUser.roleId;
 
+      vm.currentUlMode  =$localStorage.currentUser.ulMode;
+      vm.deploymentType =$localStorage.currentUser.d;
+
       vm.logout=function()
       {
         AuthenticationService.logout();

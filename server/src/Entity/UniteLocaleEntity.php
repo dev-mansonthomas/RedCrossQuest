@@ -16,6 +16,8 @@ class UniteLocaleEntity  extends Entity
   public $id_structure_rattachement;
   public $date_demarrage_activite;
   public $date_demarrage_rcq;
+  public $mode;
+  public $publicDashboard;
 
 
   /**
@@ -39,5 +41,7 @@ class UniteLocaleEntity  extends Entity
     $this->getString('id_structure_rattachement' , $data);
     $this->getDate  ('date_demarrage_activite'   , $data);
     $this->getDate  ('date_demarrage_rcq'        , $data);
+    $this->getString('mode'                      , $data);
+    $this->getString('publicDashboard'           , $data);
   }
 }

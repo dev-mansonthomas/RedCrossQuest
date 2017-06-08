@@ -102,7 +102,9 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
             queteurId : tokenPayload.queteurId,
             ulId      : tokenPayload.ulId     ,
             ulName    : tokenPayload.ulName   ,
-            roleId    : tokenPayload.roleId
+            ulMode    : tokenPayload.ulMode   ,
+            roleId    : tokenPayload.roleId   ,
+            d         : tokenPayload.d
           };
           $localStorage.RCQ_JWT_Token = response.data.token;
 

@@ -230,8 +230,10 @@ class DecodedToken
   private $uid           ;
   private $ulId          ;
   private $ulName        ;
+  private $ulMode        ;
   private $queteurId     ;
   private $roleId        ;
+  private $d             ;
 
 
   public function __construct($authenticated, $errorCode)
@@ -243,7 +245,9 @@ class DecodedToken
   }
 
   public static function withData($authenticated, $errorCode,
-                                  $username, $uid, $ulId, $ulName, $queteurId, $roleId)
+                                  $username, $uid, $ulId,
+                                  $ulName, $ulMode, $queteurId,
+                                  $roleId, $deploymentType)
   {
     $instance = new self($authenticated, $errorCode);
 
@@ -251,8 +255,10 @@ class DecodedToken
     $instance->setUid        (intval($uid)      );
     $instance->setUlId       (intval($ulId)     );
     $instance->setUlName     ($ulName           );
+    $instance->setUlMode     (intval($ulMode   ));
     $instance->setQueteurId  (intVal($queteurId));
     $instance->setRoleId     (intval($roleId)   );
+    $instance->setD          ($deploymentType   );
 
 
     return $instance;
@@ -384,6 +390,38 @@ class DecodedToken
   public function getUsername()
   {
     return $this->username;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getUlMode()
+  {
+    return $this->ulMode;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getD()
+  {
+    return $this->d;
+  }
+
+  /**
+   * @param mixed $ulMode
+   */
+  public function setUlMode($ulMode)
+  {
+    $this->ulMode = $ulMode;
+  }
+
+  /**
+   * @param mixed $d
+   */
+  public function setD($d)
+  {
+    $this->d = $d;
   }
 }
 

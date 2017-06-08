@@ -28,8 +28,9 @@ return [
           'audience' => 'https://rcq.server.com'
         ],
         'appSettings' => [
-          'appUrl'        => 'http://localhost:3000/',
-          'resetPwdPath'  => '#!/resetPassword?key='
+          'appUrl'          => 'http://localhost:3000/',
+          'resetPwdPath'    => '#!/resetPassword?key=' ,
+          'deploymentType'  => 'D'                        //D:Dev, T:Testing, P:Production
 
         ],
       'email' => [

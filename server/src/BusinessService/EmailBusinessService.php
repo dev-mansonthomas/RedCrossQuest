@@ -25,12 +25,25 @@ class EmailBusinessService
 
     $url=$this->appSettings['appUrl'].$this->appSettings['resetPwdPath'].$uuid;
 
+    $deploymentType = $this->appSettings['deploymentType'];
+    $deployment='';
+    if($deploymentType == 'D')
+    {
+      $deployment='[Site de DEV]';
+    }
+    else if($deploymentType == 'T')
+    {
+      $deployment='[Site de TEST]';
+    }
+
+
+
 
     $this->mailer->setFrom    ('thomas.manson@croix-rouge.fr', 'Thomas Manson');
     $this->mailer->addAddress ( $queteur->email, $queteur->first_name.' '.$queteur->last_name);
     $this->mailer->addBCC     ('thomas.manson@croix-rouge.fr');
-    $this->mailer->Subject = '[RedCrossQuest] Réinitialisation de votre mot de passe';
-    $this->mailer->Body = "
+    $this->mailer->Subject = "[RedCrossQuest]".$deployment." Réinitialisation de votre mot de passe";
+    $this->mailer->Body = ($deployment!=''?$deployment.'<br/>':'')."
 Bonjour ".$queteur->first_name.",<br/>
 <br/>
  Cet email fait suite à votre demande de réinitialisation de mot de passe pour l'application RedCrossQuest.<br/>

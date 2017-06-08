@@ -67,9 +67,10 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
 
       $signer = new Sha256();
 
-      $jwtSecret = $this->get('settings')['jwt']['secret'  ];
-      $issuer    = $this->get('settings')['jwt']['issuer'  ];
-      $audience  = $this->get('settings')['jwt']['audience'];
+      $jwtSecret      = $this->get('settings')['jwt'        ]['secret'        ];
+      $issuer         = $this->get('settings')['jwt'        ]['issuer'        ];
+      $audience       = $this->get('settings')['jwt'        ]['audience'      ];
+      $deploymentType = $this->get('settings')['appSettings']['deploymentType'];
 
 
       $token = (new Builder())
@@ -83,8 +84,10 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
         ->set          ('id'       , $user->id      )
         ->set          ('ulId'     , $queteur->ul_id)
         ->set          ('ulName'   , $ul->name      )
+        ->set          ('ulMode'   , $ul->mode      )
         ->set          ('queteurId', $queteur->id   )
         ->set          ('roleId'   , $user->role    )
+        ->set          ('d'        , $deploymentType)
 
         ->sign         ($signer    , $jwtSecret     ) // Sign the token
         ->getToken     ();                           // Retrieves the generated token

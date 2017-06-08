@@ -28,7 +28,9 @@ SELECT  `ul`.`id`,
         `ul`.`email`,
         `ul`.`id_structure_rattachement`,
         `ul`.`date_demarrage_activite`,
-        `ul`.`date_demarrage_rcq`
+        `ul`.`date_demarrage_rcq`,
+        `ul`.`mode`,
+        `ul`.`publicDashboard`
 FROM    `ul`
 WHERE   `ul`.id    = :ul_id
 ";

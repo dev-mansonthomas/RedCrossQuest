@@ -304,7 +304,7 @@ WHERE  `id`    = :id
     }
     $this->logger->info("Depart Tronc $tronc_queteur_id='".$tronc_queteur_id."' with date : '".$currentDate->format('Y-m-d H:i:s')."'', numRows updated : ".$stmt->rowCount());
 
-    return $currentDate;
+    return $currentDate->setTimezone("Europe/Paris");
 
   }
 
