@@ -19,7 +19,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/graph', function ($request, $response, $
 
     $spotfireDBService  = new SpotfireAccessDBService($this->db, $this->logger);
 
-    $insertDateTimeAndToken = $spotfireDBService->grantAccess($userId, $ulId, 4);
+    $insertDateTimeAndToken = $spotfireDBService->grantAccess($userId, $ulId, 8);
 
     $response->getBody()->write(json_encode($insertDateTimeAndToken));
   }

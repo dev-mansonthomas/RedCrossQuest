@@ -58,7 +58,7 @@ VALUES
     $stmt->execute(
       [
         "token"             => $token,
-        "token_expiration"  => $tokenExpiryDate->format("Y-m-d"),
+        "token_expiration"  => $tokenExpiryDate->format("Y-m-d H:i:s"),
         "ul_id"             => (int)$ulId,
         "user_id"           => (int)$userId
       ]

@@ -89,7 +89,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
 
 
-    if($roleId >= 5)
+    if($roleId >= 4)
     {//localAdmin & superAdmin
       $userDBService = new UserDBService($this->db, $this->logger);
 
