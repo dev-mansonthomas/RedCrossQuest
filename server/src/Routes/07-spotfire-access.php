@@ -9,13 +9,15 @@
 use \RedCrossQuest\DBService\SpotfireAccessDBService;
 
 
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
+$app->post('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  $this->logger->addDebug("generating spotfire access for ");
   try
   {
     $ulId   = (int)$decodedToken->getUlId();
     $userId = (int)$decodedToken->getUid ();
+
 
     $spotfireDBService  = new SpotfireAccessDBService($this->db, $this->logger);
 
