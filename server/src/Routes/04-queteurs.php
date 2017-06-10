@@ -41,9 +41,10 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     $query      = array_key_exists('q'          ,$params)?$params['q'         ]:null;
     $searchType = array_key_exists('searchType' ,$params)?$params['searchType']:null;
     $secteur    = array_key_exists('secteur'    ,$params)?$params['secteur'   ]:null;
+    $active     = array_key_exists('active'     ,$params)?$params['active'    ]:1;
 
     $this->logger->addInfo("Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId");
-    $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId);
+    $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active);
 
     $response->getBody()->write(json_encode($queteurs));
 
@@ -190,15 +191,24 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
-    $this->logger->error("queteurs", [$queteurEntity]);
+    $this->logger->debug("queteur ", [$queteurEntity]);
 
     $queteurId = $queteurDBService->insert($queteurEntity, $ulId);
 
     //TODO do this stuff inside getQueteurById()
     $queteur          = $queteurDBService->getQueteurById($queteurId);
-    $referent         = $queteurDBService->getQueteurById($queteur->referent_volunteer);
-    $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
 
+    //so that that the object is correctly displayed after save
+    if($queteur->referent_volunteer > 0)
+    {
+      $referent         = $queteurDBService->getQueteurById($queteur->referent_volunteer);
+      $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
+      $queteur->referent_volunteerQueteur= $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
+    }
+    $queteur->mobile    = intval(substr($queteur->mobile, 1));
+    $queteur->birthdate = $queteur->birthdate->toW3cString();
+
+    
     $response->getBody()->write(json_encode($queteur));
   }
   catch(Exception $e)

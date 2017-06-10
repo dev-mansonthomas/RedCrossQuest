@@ -13,13 +13,14 @@
   function TroncEditController($log, $routeParams, $timeout,
                                TroncResource, moment, TroncQueteurResource)
   {
-    var vm = this;
+    var vm      = this;
     var troncId = $routeParams.id;
 
     vm.typeTroncList=[
       {id:1,label:'Tronc'},
       {id:2,label:'Urne chez un commerçant'},
-      {id:3,label:'Autre'}
+      {id:3,label:'Autre'},
+      {id:3,label:'Terminal Carte Bleue'}
     ];
 
     vm.handleDate = function (theDate)

@@ -35,6 +35,9 @@ class TroncQueteurEntity extends Entity
   public $cents5           ;
   public $cents2           ;
   public $cent1            ;
+  public $don_cheque       ;
+  public $don_creditcard   ;
+
   public $foreign_coins    ;
   public $foreign_banknote ;
   public $notes            ;
@@ -55,38 +58,43 @@ class TroncQueteurEntity extends Entity
     {
       $this->logger = $logger;
 
-      $this->getString('id', $data);
-      $this->getString('queteur_id', $data);
-      $this->getString('point_quete_id', $data);
-      $this->getString('tronc_id', $data);
-      $this->getDate  ('depart_theorique', $data);
-      $this->getDate  ('depart', $data);
-      $this->getDate  ('retour', $data);
-      $this->getString('euro500', $data);
-      $this->getString('euro200', $data);
-      $this->getString('euro100', $data);
-      $this->getString('euro50', $data);
-      $this->getString('euro20', $data);
-      $this->getString('euro10', $data);
-      $this->getString('euro5', $data);
-      $this->getString('euro2', $data);
-      $this->getString('euro1', $data);
-      $this->getString('cents50', $data);
-      $this->getString('cents20', $data);
-      $this->getString('cents10', $data);
-      $this->getString('cents5', $data);
-      $this->getString('cents2', $data);
-      $this->getString('cent1', $data);
-      $this->getString('foreign_coins', $data);
-      $this->getString('foreign_banknote', $data);
+      $this->getString('id'               , $data);
+      $this->getString('queteur_id'       , $data);
+      $this->getString('point_quete_id'   , $data);
+      $this->getString('tronc_id'         , $data);
+      $this->getDate  ('depart_theorique' , $data);
+      $this->getDate  ('depart'           , $data);
+      $this->getDate  ('retour'           , $data);
+      $this->getString('euro500'          , $data);
+      $this->getString('euro200'          , $data);
+      $this->getString('euro100'          , $data);
+      $this->getString('euro50'           , $data);
+      $this->getString('euro20'           , $data);
+      $this->getString('euro10'           , $data);
+      $this->getString('euro5'            , $data);
+      $this->getString('euro2'            , $data);
+      $this->getString('euro1'            , $data);
+      $this->getString('cents50'          , $data);
+      $this->getString('cents20'          , $data);
+      $this->getString('cents10'          , $data);
+      $this->getString('cents5'           , $data);
+      $this->getString('cents2'           , $data);
+      $this->getString('cent1'            , $data);
 
-      $this->getString('notes_depart_theorique', $data);
-      $this->getString('notes_depart', $data);
-      $this->getString('notes_retour', $data);
+      $this->getString('don_cheque'       , $data);
+      $this->getString('don_creditcard'   , $data);
+      
+
+      $this->getString('foreign_coins'    , $data);
+      $this->getString('foreign_banknote' , $data);
+
+      $this->getString('notes_depart_theorique' , $data);
+      $this->getString('notes_depart'           , $data);
+      $this->getString('notes_retour'           , $data);
       $this->getString('notes_retour_comptage_pieces', $data);
-      $this->getString('notes_update', $data);
+      $this->getString('notes_update'           , $data);
 
-      $this->getString('last_name', $data);
-      $this->getString('first_name', $data);
+      $this->getString('last_name'  , $data);
+      $this->getString('first_name' , $data);
     }
 }

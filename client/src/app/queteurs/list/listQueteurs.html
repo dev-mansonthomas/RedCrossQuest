@@ -58,7 +58,7 @@
         </div>
         <div class="col-md-4">
           <div class="input-group" ng-show="q.currentUserRole=='9'">
-
+            <label for="activeRadio1" class="control-label">Unité Locale </label>
             <select class="form-control" placeholder="ID Unité Locale" data-ng-model="q.admin_ul_id">
               <option value=''  >None</option>
               <option value='348'>UL PARIS 01/02          </option>
@@ -80,6 +80,19 @@
           </div>
 
         </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="activeRadio1" class="control-label">Actif:</label><br/>
+            <label class="radio-inline">
+              <input type="radio" name="active" id="activeRadio1" ng-model="q.active" value="1" required ng-checked="q.active==1 || q.active == null"> Actif
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="active" id="activeRadio2" ng-model="q.active" value="0" required> Inactif
+            </label>
+          </div>
+        </div>
+
+
         <div class="col-md-1">
           <input type="submit" class="btn btn-primary" value="Search" />
         </div>

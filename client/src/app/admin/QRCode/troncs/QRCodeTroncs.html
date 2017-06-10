@@ -23,6 +23,7 @@
     font-weight: bold;
     vertical-align: middle;
     text-align: center;
+    padding:5px;
   }
   .thickborder
   {
@@ -64,13 +65,15 @@
   <div class="container" style="text-align: left">
 
     <div class="panel panel-primary no-print">
-      <div class="panel-heading">QR Code des Troncs</div>
+      <div class="panel-heading">QR Code des Troncs ACTIF</div>
     </div>
 
     <div class="row no-print">
       Size: {{qrcTroncs.size}}
       <input type="range" id="size" class="range ng-valid ng-dirty ng-touched" ng-model="qrcTroncs.size" min="100" max="500">
     </div>
+
+
 
     <table class="QRCodeTable" ng-repeat="table in qrcTroncs.tables">
       <tbody>

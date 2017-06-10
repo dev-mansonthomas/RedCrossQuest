@@ -47,7 +47,13 @@
     vm.roleDesc[4] = 'Compteur + administration des utilisateurs et paramétrage de RCQ pour l\'UL';
     vm.roleDesc[9] = 'Le grand manitou';
 
+    vm.createNewUser=function()
+    {
+      vm.current           = new QueteurResource();
+      vm.current.ul_id    = vm.ulId;
+      vm.current.ul_name  = $localStorage.currentUser.ulName;
 
+    };
 
 
     vm.handleDate = function (theDate)
@@ -132,9 +138,7 @@
     }
     else
     {
-      vm.current = new QueteurResource();
-      vm.current.ul_id = vm.ulId;
-      vm.current.ul_name = $localStorage.currentUser.ulName;
+      vm.createNewUser();
     }
 
     function savedSuccessfully()
@@ -178,13 +182,13 @@
         $log.info('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ (evt.config.data.file ? evt.config.data.file.name:'undefined'));
       });
 
-    }
+    };
 
 
     vm.back=function()
     {
       window.history.back();
-    }
+    };
 
     vm.save = function ()
     {
@@ -204,17 +208,8 @@
     vm.computeAge=function()
     {
       vm.current.age       = moment().diff(vm.current.birthdate, 'years');
-    }
+    };
 
-    vm.capitalize = function($event)
-    {
-      $event.currentTarget.value = $event.currentTarget.value.replace(/\w\S*/g,
-        function(txt)
-        {
-          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        }
-      );
-    }
 
     /**
      * Set the queteur.id of the selected queteur in the model
@@ -264,7 +259,7 @@
 
       vm.current.user.$save(userSavedSuccessfully, errorWhileSaving);
 
-    }
+    };
 
     vm.userSave=function()
     {
@@ -274,7 +269,7 @@
       user.role   = vm.current.user.role;
 
       user.$update(userSavedSuccessfully, errorWhileSaving);
-    }
+    };
 
     vm.reinitPassword=function()
     {
@@ -284,7 +279,7 @@
       user.nivol        = vm.current.nivol;
 
       user.$reInitPassword(userSavedSuccessfully, errorWhileSaving);
-    }
+    };
 
 
     function userSavedSuccessfully(user)

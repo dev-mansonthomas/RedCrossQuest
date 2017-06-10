@@ -59,6 +59,8 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
 
     $user = $userDBService->getUserInfoWithNivol($username);
 
+    $this->logger->addError("User Entity for user id='".$user->id."' nivol='".$username."'".print_r($user, true));
+
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
@@ -78,7 +80,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
         ->setAudience  ($audience     ) // Configures the audience (aud claim)
         ->setIssuedAt  (time()        ) // Configures the time that the token was issue (iat claim)
         ->setNotBefore (time()        ) // Configures the time that the token can be used (nbf claim)
-        ->setExpiration(time() + 3600 ) // Configures the expiration time of the token (nbf claim)
+        ->setExpiration(time() + 4*3600 ) // Configures the expiration time of the token (nbf claim)
         //Business Payload
         ->set          ('username' , $username      )
         ->set          ('id'       , $user->id      )

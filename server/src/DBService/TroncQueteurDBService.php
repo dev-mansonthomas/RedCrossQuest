@@ -52,7 +52,9 @@ SELECT
  `notes_depart`                ,
  `notes_retour`                ,
  `notes_retour_comptage_pieces`,
- `notes_update`
+ `notes_update`                ,
+ `don_cheque`                  ,
+ `don_creditcard`
 FROM  `tronc_queteur` as t, 
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
@@ -119,9 +121,11 @@ SELECT
  `notes_depart`                ,
  `notes_retour`                ,
  `notes_retour_comptage_pieces`,
- `notes_update`,
- q.`last_name`,
- q.`first_name`
+ `notes_update`                ,
+ q.`last_name`                 ,
+ q.`first_name`                ,
+ `don_cheque`                  ,
+ `don_creditcard`
 FROM  `tronc_queteur` as t, 
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
@@ -186,7 +190,9 @@ t.`id`                ,
 `notes_depart`                ,
 `notes_retour`                ,
 `notes_retour_comptage_pieces`,
-`notes_update`
+`notes_update`                ,
+`don_cheque`                  ,
+`don_creditcard`
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.id         = :id
@@ -246,7 +252,9 @@ t.`id`                ,
 `cents2`            ,
 `cent1`             ,
 `foreign_coins`     ,
-`foreign_banknote`  
+`foreign_banknote`  ,
+`don_cheque`        ,
+`don_creditcard`  
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.queteur_id = :queteur_id
@@ -344,7 +352,7 @@ SET    `retour` = :retour
    *
    * @param TroncQueteurEntity $tronc The tronc to update
    */
-    public function updateCoinsCount(TroncQueteurEntity $tq)
+    public function updateCoinsCount(TroncQueteurEntity $tq, $ulId)
     {
 
       $this->logger->debug("Saving coins ", [$tq]);
@@ -368,7 +376,8 @@ SET
  `cent1`             = :cent1  ,           
  `foreign_coins`     = :foreign_coins,     
  `foreign_banknote`  = :foreign_banknote,  
- `notes_retour_comptage_pieces` = :notes             
+ `notes_retour_comptage_pieces` = :notes,
+ `don_cheque`        = :don_cheque            
  WHERE `id` = :id;
 ";
 
@@ -392,6 +401,7 @@ SET
         "foreign_coins"     => $tq->foreign_coins,
         "foreign_banknote"  => $tq->foreign_banknote,
         "notes"             => $tq->notes,
+        "don_cheque"        => $tq->don_cheque,
         "id"                => $tq->id
       ]);
 
@@ -402,6 +412,39 @@ SET
           throw new Exception("could not save record");
       }
     }
+
+  /**
+   * Update one tronc
+   *
+   * @param TroncQueteurEntity $tronc The tronc to update
+   */
+  public function updateCreditCardCount(TroncQueteurEntity $tq, $ulId )
+  {
+
+    $this->logger->debug("Saving coins ", [$tq]);
+    $sql = "
+UPDATE `tronc_queteur`
+SET
+ `don_creditcard`               = :don_creditcard,  
+ `notes_retour_comptage_pieces` = :notes
+             
+ WHERE `id` = :id;
+";
+
+    $stmt = $this->db->prepare($sql);
+    $result = $stmt->execute([
+      "notes"             => $tq->notes,
+      "don_creditcard"    => $tq->don_creditcard,
+      "id"                => $tq->id
+    ]);
+
+    $this->logger->warning($stmt->rowCount());
+    $stmt->closeCursor();
+
+    if(!$result) {
+      throw new Exception("could not save record");
+    }
+  }
 
 
 

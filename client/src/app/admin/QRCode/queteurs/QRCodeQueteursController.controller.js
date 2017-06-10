@@ -15,7 +15,7 @@
   {
     var vm = this;
 
-    vm.size=113;
+    vm.size=184;
 
     QueteurResource.query({'searchType':0}).$promise.then(function(response)
     {

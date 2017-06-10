@@ -17,6 +17,8 @@
   {
     var vm = this;
     vm.current = {};
+    vm.onlyNumbers = /^[0-9]{1,3}$/;
+    vm.cbFormat    = /^[0-9]+(\.[0-9]{1,2})?$/;
 
     var tronc_queteur_id = $routeParams.id;
 
@@ -27,7 +29,7 @@
     }
 
 
-    vm.onlyNumbers =/^[0-9]{1,3}$/;
+
 
     function savedSuccessfully()
     {
@@ -36,38 +38,29 @@
       $timeout(function () { vm.savedSuccessfully=false; }, 10000);
     }
 
+    vm.isEmpty=function(value)
+    {
+      if(typeof value === "undefined" || value === null || value === "" || value === 0)
+      {
+        return 0;
+      }
+      else
+      {
+        return value;
+      }
+
+    };
 
     vm.setNonFilledBillToZero=function()
     {
-      if(vm.current.tronc_queteur.euro5   === null || vm.current.tronc_queteur.euro5 === "" || vm.current.tronc_queteur.euro5.length === 0)
-      {
-        vm.current.tronc_queteur.euro5 = 0;
-      }
-      if(vm.current.tronc_queteur.euro10  === null || vm.current.tronc_queteur.euro10 === "" || vm.current.tronc_queteur.euro10.length === 0)
-      {
-        vm.current.tronc_queteur.euro10 = 0;
-      }
-      if(vm.current.tronc_queteur.euro20  === null || vm.current.tronc_queteur.euro20 === "" || vm.current.tronc_queteur.euro20.length === 0)
-      {
-        vm.current.tronc_queteur.euro20 = 0;
-      }
-      if(vm.current.tronc_queteur.euro50  === null || vm.current.tronc_queteur.euro50 === "" || vm.current.tronc_queteur.euro50.length === 0)
-      {
-        vm.current.tronc_queteur.euro50 = 0;
-      }
 
-      if(vm.current.tronc_queteur.euro100 === null || vm.current.tronc_queteur.euro100 === "" || vm.current.tronc_queteur.euro100.length === 0)
-      {
-        vm.current.tronc_queteur.euro100 = 0;
-      }
-      if(vm.current.tronc_queteur.euro200 === null || vm.current.tronc_queteur.euro200 === "" || vm.current.tronc_queteur.euro200.length === 0)
-      {
-        vm.current.tronc_queteur.euro200 = 0;
-      }
-      if(vm.current.tronc_queteur.euro500 === null || vm.current.tronc_queteur.euro500 === "" || vm.current.tronc_queteur.euro500.length === 0)
-      {
-        vm.current.tronc_queteur.euro500 = 0;
-      }
+      vm.current.tronc_queteur.euro5   = vm.isEmpty(vm.current.tronc_queteur.euro5  );
+      vm.current.tronc_queteur.euro10  = vm.isEmpty(vm.current.tronc_queteur.euro10 );
+      vm.current.tronc_queteur.euro20  = vm.isEmpty(vm.current.tronc_queteur.euro20 );
+      vm.current.tronc_queteur.euro50  = vm.isEmpty(vm.current.tronc_queteur.euro50 );
+      vm.current.tronc_queteur.euro100 = vm.isEmpty(vm.current.tronc_queteur.euro100);
+      vm.current.tronc_queteur.euro200 = vm.isEmpty(vm.current.tronc_queteur.euro200);
+      vm.current.tronc_queteur.euro500 = vm.isEmpty(vm.current.tronc_queteur.euro500);
     };
 
     vm.back=function()
@@ -130,8 +123,10 @@
       }
       $log.debug(tronc_queteur);
 
-      $location.hash('anchorForm');
-      $anchorScroll();
+      //this code is supposed to scroll the page to the form to set the coins
+      //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again
+      //$location.hash('anchorForm');
+      //$anchorScroll();
     }
 
 
@@ -194,7 +189,15 @@
       }
       else
       {
-        vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
+        if(vm.current.tronc.type == 4)
+        {
+          vm.current.tronc_queteur.$saveCreditCard(savedSuccessfully, onSaveError);
+        }
+        else
+        {
+          vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
+        }
+
       }
     };
 

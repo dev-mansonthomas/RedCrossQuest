@@ -15,7 +15,7 @@
   {
     var vm = this;
 
-    vm.size=113;
+    vm.size=184;
 
     TroncResource.query().$promise.then(function(response)
     {

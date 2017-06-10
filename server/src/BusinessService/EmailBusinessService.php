@@ -47,6 +47,7 @@ class EmailBusinessService
 Bonjour ".$queteur->first_name.",<br/>
 <br/>
  Cet email fait suite à votre demande de réinitialisation de mot de passe pour l'application RedCrossQuest.<br/>
+ Votre login est votre NIVOL : <b>'".$queteur->nivol."'</b><br/>
  Si vous n'êtes pas à l'origine de cette demande, ignorer cet email.<br/>
 <br/> 
  Pour réinitialiser votre mot de passe, cliquez sur le lien suivant :<br/>
@@ -80,6 +81,7 @@ Bonjour ".$queteur->first_name.",<br/>
 Bonjour ".$queteur->first_name.",<br/>
 <br/>
  Cet email confirme le changement de votre mot de passe pour l'application RedCrossQuest.<br/>
+ Votre login est votre NIVOL : '".$queteur->nivol."'
  Si vous n'êtes pas à l'origine de cette demande, contactez votre cadre local ou départementale.<br/>
 <br/> 
  Vous pouvez maintenant vous connecter à RedCrossQuest avec votre nouveau mot de passe :<br/>

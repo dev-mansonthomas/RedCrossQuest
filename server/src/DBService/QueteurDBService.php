@@ -81,10 +81,11 @@ AND
    * 2 : queteur that are still on the street ( registered for one tronc_quete and have a depart date non null and a retour date null)
    * @param int $secteur : secteur to search (1:Social, 2: Secours, 3:Non Bénévole, 4:Commerçant, 5: Spécial)
    * @param int $ulId    : the ID of the UniteLocal on which the search is limited
+   * @param boolean $active : search only active or inactive queteurs
    * @return list of QueteurEntity
    *
    */
-  public function searchQueteurs($query, $searchType, $secteur, $ulId)
+  public function searchQueteurs($query, $searchType, $secteur, $ulId, $active)
   {
     $parameters = ["ul_id" => $ulId];
     $querySQL   = "";
@@ -137,6 +138,7 @@ SELECT 	q.`id`,
 FROM 	queteur AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
 		point_quete AS pq
 WHERE  q.ul_id = :ul_id
+AND    q.active= :active
 $querySQL 
 $secteurSQL 
 AND  
@@ -185,6 +187,7 @@ SELECT 	q.`id`,
 FROM 	     queteur AS q,
 		 tronc_queteur AS tq
 WHERE   q.ul_id = :ul_id
+AND    q.active= :active
 $querySQL 
 $secteurSQL 
 AND     q.id = tq.queteur_id
@@ -222,6 +225,7 @@ SELECT 	q.`id`,
 FROM 	     queteur AS q,
 		 tronc_queteur AS tq
 WHERE   q.ul_id = :ul_id
+AND    q.active= :active
 $querySQL 
 $secteurSQL 
 AND     q.id = tq.queteur_id
@@ -251,9 +255,12 @@ ORDER BY q.last_name ASC
         $sql = $sqlSearchAll;
     }
 
-    $this->logger->addDebug("searching queteurs with following paramters :".print_r($parameters, true)."' and query:".$sql);
+
 
     $stmt   = $this->db->prepare($sql);
+    $parameters["active"] = $active;
+
+    $this->logger->addDebug("searching queteurs with following paramters :".print_r($parameters, true)."' and query:".$sql);
     $result = $stmt->execute($parameters);
 
     $results = [];
@@ -261,7 +268,7 @@ ORDER BY q.last_name ASC
     while ($row = $stmt->fetch()) {
       $results[$i++] = new QueteurEntity($row);
     }
-
+    $this->logger->addDebug("retrieved $i queteurs, searchType:'$searchType', secteur='$secteur', query='$query' ".print_r($parameters, true));
     $stmt->closeCursor();
     return $results;
   }

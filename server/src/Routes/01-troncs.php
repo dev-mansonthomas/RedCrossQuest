@@ -25,11 +25,13 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
     $troncDBService = new TroncDBService($this->db, $this->logger);
     $params = $request->getQueryParams();
 
+    $active     = array_key_exists('active'     ,$params)?$params['active'    ]:1;
+    
 
     if(array_key_exists('q',$params))
     {
       $this->logger->addInfo("Tronc by search type '".$params['q']."''");
-      $troncs = $troncDBService->getTroncs($params['q'], $ulId);
+      $troncs = $troncDBService->getTroncs($params['q'], $ulId, $active );
     }
     else if(array_key_exists('searchType',$params))
     {
@@ -38,7 +40,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
     }
     else
     {
-      $troncs = $troncDBService->getTroncs(null,$ulId);
+      $troncs = $troncDBService->getTroncs(null,$ulId, $active );
     }
 
     $response->getBody()->write(json_encode($troncs));

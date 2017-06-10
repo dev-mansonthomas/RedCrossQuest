@@ -52,6 +52,12 @@ angular.module('client').factory('TroncQueteurResource', function ($resource, $l
           action: 'saveCoins'
         }
       },
+      saveCreditCard: {
+        method: 'POST',
+        params: {
+          action: 'saveCreditCard'
+        }
+      },
       getTroncsOfQueteur: {
         method: 'GET',
         isArray: true,

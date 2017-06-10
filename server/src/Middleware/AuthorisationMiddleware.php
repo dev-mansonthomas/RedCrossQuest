@@ -96,8 +96,10 @@ class AuthorisationMiddleware
         $token->getClaim("id"       ),
         $token->getClaim("ulId"     ),
         $token->getClaim("ulName"   ),
+        $token->getClaim("ulMode"   ),
         $token->getClaim("queteurId"),
-        $token->getClaim("roleId"   )
+        $token->getClaim("roleId"   ),
+        $token->getClaim("d"        )
       );
 
     }

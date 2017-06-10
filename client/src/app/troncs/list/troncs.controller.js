@@ -15,6 +15,11 @@
 
     vm.list = TroncResource.query();
 
+    vm.searchSubmit = function()
+    {
+      vm.list = TroncResource.query({'active':vm.active});
+    }
+
 
   }
 })();

@@ -8,20 +8,20 @@
    </div>
 
   <div class="well">
-    <form novalidate ng-submit='queteur.save(queteur.current);' name="queteurForm">
+    <form novalidate name="queteurForm">
 
 
       <div class="row">
         <div class="col-md-4 col-md-offset-2">
           <div class="form-group" ng-class="{'has-error':queteurForm.first_name.$invalid}">
             <label for="first_name" class="control-label">First name</label>
-            <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required ng-blur="queteur.capitalize($event)"/>
+            <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group" ng-class="{'has-error':queteurForm.last_name.$invalid}">
             <label for="last_name" class="control-label">Last name</label>
-            <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required ng-blur="queteur.capitalize($event)"/>
+            <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required />
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@
               <span class="input-group-addon glyphicon glyphicon-phone-alt" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;+</span>
               <input name="mobile" id="mobile" class="form-control"  type="number" ng-model="queteur.current.mobile" required ng-pattern="'33[6-7][0-9]{8,8}'" />
             </div>
-            <span class="help-block" ng-show="queteurForm.mobile.$invalid">Format : +33601020304 <br/><sub>(seul les numéros français sont autorisés)</sub><br/>Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain.</span>
+            <span class="help-block" ng-show="queteurForm.mobile.$invalid">Format : +33601020304 <br/><sub>(Ne <b>pas</b> mettre le +). seul les numéros français sont autorisés)</sub><br/>Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain.</span>
           </div>
         </div>
         <div class="col-md-4">
@@ -242,11 +242,15 @@
         <div class="col-md-2 col-md-offset-2">
           <a  ng-click="queteur.back();" class="btn btn-link">Cancel</a>
         </div>
-        <div class="col-md-2 col-md-offset-5">
-          <input type="submit" class="btn btn-primary" value="Save" ng-disabled="queteurForm.$invalid" ng-show="queteur.currentUserRole>1"/>
+
+        <div class="col-md-2 col-md-offset-2">
+          <input type="button" class="btn btn-primary" value="Créer un nouvel utilisateur" ng-show="queteur.current.id > 0 " ng-click="queteur.createNewUser()"/>
+        </div>
+        <div class="col-md-2 col-md-offset-1">
+          <input type="button" class="btn btn-primary" value="Save" ng-disabled="queteurForm.$invalid" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
         </div>
       </div>
-
+      <!-- Successful Save -->
       <div class="row" ng-show="queteur.savedSuccessfully">
         <div class="col-md-8 col-md-offset-2">
           <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
@@ -255,7 +259,7 @@
           </div>
         </div>
       </div>
-
+      <!-- Error while saving -->
       <div class="row" ng-show="queteur.errorWhileSaving">
         <div class="col-md-8 col-md-offset-2">
           <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
@@ -265,6 +269,9 @@
           </div>
         </div>
       </div>
+
+
+      <!-- RCQ USER -->
 
       <div ng-show="queteur.current.id > 0 && queteur.current.active == 1 && queteur.current.secteur <= 2 && queteur.currentUserRole >= 4">
 
@@ -445,8 +452,25 @@
                 <td>{{::tq.point_quete_id}}</td>
                 <td>
 
-                  {{(tq.euro500 * 500 + tq.euro200 * 200 + tq.euro100 * 100 + tq.euro50  * 50  + tq.euro20  * 20  + tq.euro10 * 10   + tq.euro5  * 5    +
-                  tq.euro2   * 2   + tq.euro1   * 1   + tq.cents50 * 0.5 + tq.cents20 * 0.2 + tq.cents10 * 0.1 + tq.cents5 * 0.05 + tq.cents2 * 0.02 + tq.cent1 * 0.01).toFixed(2)}}
+                  {{(
+                  tq.euro500 * 500 +
+                  tq.euro200 * 200 +
+                  tq.euro100 * 100 +
+                  tq.euro50  * 50  +
+                  tq.euro20  * 20  +
+                  tq.euro10  * 10  +
+                  tq.euro5   * 5   +
+                  tq.euro2   * 2   +
+                  tq.euro1   * 1   +
+                  tq.cents50 * 0.5 +
+                  tq.cents20 * 0.2 +
+                  tq.cents10 * 0.1 +
+                  tq.cents5  * 0.05+
+                  tq.cents2  * 0.02+
+                  tq.cent1   * 0.01+
+                  tq.don_cheque    +
+                  tq.don_creditcard
+                  ).toFixed(2)}}
                   €
                 </td>
                 <td>

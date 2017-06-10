@@ -75,6 +75,11 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
         $this->logger->debug("Saving Coins");
         $troncQueteurDBService->updateCoinsCount($tq, $ulId);
       }
+      elseif ($action =="saveCreditCard")
+      {
+        $this->logger->debug("Saving CreditCard");
+        $troncQueteurDBService->updateCreditCardCount($tq, $ulId);
+      }
     }
   }
   catch(Exception $e)

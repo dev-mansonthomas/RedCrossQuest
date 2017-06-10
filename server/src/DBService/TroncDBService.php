@@ -10,11 +10,12 @@ class TroncDBService extends DBService
   /**
    * search all tronc, that are enabled, if query is specified, search on the ID
    * @param int $query
+   * @param boolean $active : search active or incative troncs
    * @param int    $ulId  : the ID of the UniteLocal on which the search is limited
    * @return list of QueteurEntity
    *
    */
-    public function getTroncs($query=null, $ulId)
+    public function getTroncs($query=null, $ulId, $active )
     {
       $sql = "
 SELECT `id`,
@@ -24,7 +25,7 @@ SELECT `id`,
        `notes`,
        `type`
 FROM   `tronc` as t
-WHERE enabled = 1
+WHERE enabled = :enabled
 AND   t.ul_id = :ul_id
 ";
       if($query != null)
@@ -41,11 +42,11 @@ AND CONVERT(id, CHAR) like concat(:query,'%')
       $stmt = $this->db->prepare($sql);
       if($query != null)
       {
-        $result = $stmt->execute([ "query" => $query, "ul_id" => $ulId]);
+        $result = $stmt->execute([ "query" => $query, "ul_id" => $ulId, 'enabled'=>$active ]);
       }
       else
       {
-        $result = $stmt->execute(["ul_id" => $ulId]);
+        $result = $stmt->execute(["ul_id" => $ulId, 'enabled'=>$active ]);
       }
 
 

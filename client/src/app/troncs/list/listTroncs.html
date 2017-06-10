@@ -10,16 +10,35 @@
     <div class="col-xs-12 col-md-12">
       <div class="well">
         <form class="form-search">
-          <div class="form-group">
-            <div class="input-group">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-              <input class="form-control" placeholder="Search" data-ng-model="t.search">
+          <div class="row">
+            <div class="form-group col-md-6">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                <input class="form-control" placeholder="Search" data-ng-model="t.search">
+              </div>
+              <div data-ng-show="q.search">
+                <span data-ng-pluralize
+                      data-count="filteredContacts.length"
+                      data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
+                </span>
+              </div>
             </div>
-            <div data-ng-show="q.search">
-              <span data-ng-pluralize
-                    data-count="filteredContacts.length"
-                    data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
-              </span>
+
+            <div class="col-md-2 col-md-offset-2">
+              <div class="form-group">
+                <label for="activeRadio1" class="control-label">Actif:</label><br/>
+                <label class="radio-inline">
+                  <input type="radio" name="active" id="activeRadio1" ng-model="t.active" value="1" required ng-checked="tronc.active==1 || tronc.active == null"> Actif
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="active" id="activeRadio2" ng-model="t.active" value="0" required> Inactif
+                </label>
+              </div>
+            </div>
+
+
+            <div class="col-md-1">
+              <input type="submit" class="btn btn-primary" value="Search" ng-click="t.searchSubmit()" />
             </div>
           </div>
         </form>

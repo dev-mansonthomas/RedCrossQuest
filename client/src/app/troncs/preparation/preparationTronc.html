@@ -112,6 +112,14 @@
           </div>
         </div>
 
+        <div class="row" ng-show="pt.current.tronc.type == 4">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-warning" role="alert" style="text-align: center;">
+              <strong>Attention!</strong> Il s'agit d'un <b>Terminal Carte Bleue</b>!
+            </div>
+          </div>
+        </div>
+
         <div class="panel panel-info" ng-show="pt.current.lieuDeQuete">
           <div class="panel-heading">Informations sur le Point de Quête</div>
           <div class="panel-body">
@@ -180,6 +188,9 @@
             </div>
           </div>
         </div>
+
+
+
 
       </form>
     </div>
