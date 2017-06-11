@@ -10,8 +10,8 @@
     .controller('TroncQueteurController', TroncQueteurController);
 
   /** @ngInject */
-  function TroncQueteurController($scope, $log, $routeParams, $timeout, $anchorScroll, $location,
-                                  TroncResource, TroncQueteurResource,
+  function TroncQueteurController($scope, $log, $routeParams, $timeout, $localStorage, // $anchorScroll, $location,
+                                  TroncResource, TroncQueteurResource, PointQueteResource,
                                   QRDecodeService,
                                   DateTimeHandlingService)
   {
@@ -19,6 +19,18 @@
     vm.current = {};
     vm.onlyNumbers = /^[0-9]{1,3}$/;
     vm.cbFormat    = /^[0-9]+(\.[0-9]{1,2})?$/;
+
+    vm.currentUserRole=$localStorage.currentUser.roleId;
+    vm.currentUlMode  =$localStorage.currentUser.ulMode;
+
+    vm.current.readOnlyView  = false;
+    vm.current.adminEditMode = false;
+    vm.activateAdminEditMode = function()
+    {
+      vm.current.adminEditMode=true;
+    };
+
+
 
     var tronc_queteur_id = $routeParams.id;
 
@@ -29,14 +41,29 @@
     }
 
 
-
-
-    function savedSuccessfully()
+    vm.getTypeLabel=function(id)
     {
-      vm.current = {};
-      vm.savedSuccessfully=true;
-      $timeout(function () { vm.savedSuccessfully=false; }, 10000);
-    }
+      if(id===1)
+        return 'Voie Publique';
+      else if(id===2)
+        return 'Pieton';
+      else if(id===3)
+        return 'Boutique';
+      else
+        return 'Base UL';
+    };
+
+    //pointQuete list
+    vm.pointsQuete = PointQueteResource.query();
+    vm.pointsQuete.$promise.then(function success(pointQueteList)
+    {
+      vm.pointsQueteHash = [];
+      pointQueteList.forEach(function(onePointQuete){
+        vm.pointsQueteHash[onePointQuete.id]=onePointQuete;
+      });
+    });
+
+
 
     vm.isEmpty=function(value)
     {
@@ -63,9 +90,66 @@
       vm.current.tronc_queteur.euro500 = vm.isEmpty(vm.current.tronc_queteur.euro500);
     };
 
-    vm.back=function()
+
+    vm.fillForDeletion = function()
     {
-      vm.current = {};
+
+      if(typeof vm.current.tronc_queteur.retour ==='undefined' || vm.current.tronc_queteur.retour === null)
+      {
+        vm.current.tronc_queteur.retour = new Date();
+      }
+      if(typeof vm.current.tronc_queteur.depart ==='undefined' || vm.current.tronc_queteur.depart === null)
+      {
+        vm.current.tronc_queteur.depart = new Date();
+      }
+
+      vm.current.tronc_queteur.euro5   = vm.isEmpty(vm.current.tronc_queteur.euro5  );
+      vm.current.tronc_queteur.euro10  = vm.isEmpty(vm.current.tronc_queteur.euro10 );
+      vm.current.tronc_queteur.euro20  = vm.isEmpty(vm.current.tronc_queteur.euro20 );
+      vm.current.tronc_queteur.euro50  = vm.isEmpty(vm.current.tronc_queteur.euro50 );
+      vm.current.tronc_queteur.euro100 = vm.isEmpty(vm.current.tronc_queteur.euro100);
+      vm.current.tronc_queteur.euro200 = vm.isEmpty(vm.current.tronc_queteur.euro200);
+      vm.current.tronc_queteur.euro500 = vm.isEmpty(vm.current.tronc_queteur.euro500);
+
+      vm.current.tronc_queteur.euro2   = vm.isEmpty(vm.current.tronc_queteur.euro2  );
+      vm.current.tronc_queteur.euro1   = vm.isEmpty(vm.current.tronc_queteur.euro1  );
+      vm.current.tronc_queteur.cents50 = vm.isEmpty(vm.current.tronc_queteur.cents50);
+      vm.current.tronc_queteur.cents20 = vm.isEmpty(vm.current.tronc_queteur.cents20);
+      vm.current.tronc_queteur.cents10 = vm.isEmpty(vm.current.tronc_queteur.cents10);
+      vm.current.tronc_queteur.cents5  = vm.isEmpty(vm.current.tronc_queteur.cents5 );
+      vm.current.tronc_queteur.cents2  = vm.isEmpty(vm.current.tronc_queteur.cents2 );
+      vm.current.tronc_queteur.cent1   = vm.isEmpty(vm.current.tronc_queteur.cent1  );
+
+    };
+
+    vm.confirmSave = function ()
+    {
+      vm.current.overrideWarning=true;
+      vm.save();
+    };
+
+    vm.save = function save()
+    {
+      $log.debug("Saving the number of coins");
+      $log.debug(vm.current.tronc_queteur);
+
+      if(vm.checkInputValues() && vm.current.overrideWarning !== true)
+      {
+        vm.current.confirmInputValues=true;
+      }
+      else
+      {
+
+        //savedSuccessfully function handle the save of data in adminMode
+        if(vm.current.tronc.type == 4)
+        {
+          vm.current.tronc_queteur.$saveCreditCard(savedSuccessfully, onSaveError);
+        }
+        else
+        {
+          vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
+        }
+      }
     };
 
     function onSaveError(error)
@@ -74,6 +158,33 @@
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=error;
     }
+    function savedSuccessfully()
+    {
+      if(vm.current.adminEditMode && vm.currentUserRole >= 4)
+      {
+        vm.current.tronc_queteur.$saveAsAdmin(savedSuccessfullyActions, onSaveError) ;
+      }
+      else
+      {
+        savedSuccessfullyActions();
+      }
+    }
+
+    function savedSuccessfullyActions()
+    {
+      vm.current = {};
+      vm.savedSuccessfully=true;
+      $timeout(function () { vm.savedSuccessfully=false; }, 10000);
+    }
+
+
+
+    vm.back=function()
+    {
+      vm.current = {};
+    };
+
+
 
     //This watch change on tronc variable to update the rest of the form
     $scope.$watch('tq.current.tronc', function(newValue/*, oldValue*/)
@@ -100,6 +211,7 @@
       if(angular.isUndefined(vm.current.tronc))
       {
         //if the tronc is not defined, it means that we've reached this page from the URL http://localhost:3000/#/troncs/retour/820
+        //tronc is initialized when QRCode scan or autocompletion
         // (from the queteur page) to visualize the data rather than editing it.
         vm.current.tronc = tronc_queteur.tronc;
         vm.current.readOnlyView=true;
@@ -107,8 +219,17 @@
 
       if(vm.current.tronc_queteur.depart !== null)
       {
-        vm.current.tronc_queteur.depart =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
+        vm.current.tronc_queteur.departStr =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
+        vm.current.tronc_queteur.depart    =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
       }
+
+      if(vm.current.tronc_queteur.depart_theorique !== null)
+      {
+        vm.current.tronc_queteur.depart_theoriqueStr =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).stringVersion;
+        vm.current.tronc_queteur.depart_theorique    =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).dateInLocalTimeZone;
+      }
+
+
 
       if(vm.current.tronc_queteur.retour === null)
       {
@@ -172,34 +293,7 @@
     };
 
 
-    vm.confirmSave = function ()
-    {
-      vm.current.overrideWarning=true;
-      vm.save();
-    };
 
-    vm.save = function save()
-    {
-      $log.debug("Saving the number of coins");
-      $log.debug(vm.current.tronc_queteur);
-
-      if(vm.checkInputValues() && vm.current.overrideWarning !== true)
-      {
-         vm.current.confirmInputValues=true;
-      }
-      else
-      {
-        if(vm.current.tronc.type == 4)
-        {
-          vm.current.tronc_queteur.$saveCreditCard(savedSuccessfully, onSaveError);
-        }
-        else
-        {
-          vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
-        }
-
-      }
-    };
 
     vm.checkInputValues=function()
     {

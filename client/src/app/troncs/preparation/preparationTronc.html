@@ -64,9 +64,15 @@
               </div>
               <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
             </div>
-            <div class="form-group" ng-class="{'has-error':prepaTroncForm.horaireDepartTheorique.$invalid}">
+            <div class="form-group" ng-class="{'has-error':prepaTroncForm.horaireDepartTheorique.$invalid}" ng-show="pt.current.queteur.id>0 && pt.current.tronc.id > 0">
               <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
-              <input name="horaireDepartTheorique" id="horaireDepartTheorique" type="datetime-local" class="form-control" ng-model="pt.current.horaireDepartTheorique" required/>
+              <input name="horaireDepartTheorique"
+                     id="horaireDepartTheorique"
+                     type="datetime-local"
+                     class="form-control"
+                     ng-min="pt.current.horaireDepartTheoriqueNotBefore"
+                     ng-model="pt.current.horaireDepartTheorique"
+                     required/>
               <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Required</span>
             </div>
           </div>
@@ -92,7 +98,7 @@
 
               <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
             </div>
-            <div class="form-group">
+            <div class="form-group"  ng-show="pt.current.queteur.id>0  && pt.current.tronc.id > 0">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
               <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required
                       ng-options="pq.id as pt.getTypeLabel(pq.type)+' - '+ pq.code+' - '+pq.name
@@ -100,6 +106,15 @@
                       pq in pt.pointsQuete">
                 <option value=""></option>
               </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" ng-show="pt.current.queteur.secteur == 3">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-info" role="alert" style="text-align: center;vertical-align: middle;">
+              <span class="glyphicon glyphicon-info-sign" aria-hidden="true" style="font-size:40px;color:green;"></span>
+              Quêteur d'un jour ! Pensez au Briefing avant le départ !
             </div>
           </div>
         </div>
@@ -134,7 +149,11 @@
               </div>
               <div class="col-md-4">
                 <label for="pqName" class="control-label">Google Maps</label><br/>
-                <a ng-href="http://maps.google.com/maps?q=loc:{{pt.pointsQueteHash[pt.current.lieuDeQuete].latitude}},{{pt.pointsQueteHash[pt.current.lieuDeQuete].longitude}}" target="_blank">
+
+
+
+
+                <a ng-href="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin={{pt.current.queteur.ul_latitude}},{{pt.current.queteur.ul_longitude}}&destination={{pt.pointsQueteHash[pt.current.lieuDeQuete].latitude}},{{pt.pointsQueteHash[pt.current.lieuDeQuete].longitude}}" target="_blank">
                   {{pt.pointsQueteHash[pt.current.lieuDeQuete].address}}, {{pt.pointsQueteHash[pt.current.lieuDeQuete].postal_code}}, {{pt.pointsQueteHash[pt.current.lieuDeQuete].city}}
                 </a>
               </div>

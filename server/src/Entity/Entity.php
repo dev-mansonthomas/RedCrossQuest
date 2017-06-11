@@ -36,7 +36,10 @@ class Entity
     {
       $value = $data[$key];
 
-      $this->$key = ($value == "1" || $value == 1|| $value == true);
+      if($value."" === "1" || $value."" === "true")
+        $this->$key = true;
+      else
+        $this->$key = false;
     }
     else
     {
@@ -74,5 +77,4 @@ class Entity
       }
     }
   }
-
 }

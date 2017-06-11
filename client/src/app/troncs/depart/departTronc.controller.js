@@ -17,8 +17,12 @@
   {
     var vm = this;
 
-    vm.current = {};
-    vm.current.ul_id=2;
+    vm.initForm=function()
+    {
+      vm.current = {};
+      vm.current.ul_id=2;
+    };
+    vm.initForm();
 
     //pointQuete list
     vm.current.pointsQuete = PointQueteResource.query();
@@ -32,7 +36,6 @@
 
       vm.current.tronc = tronc;
       vm.current.tronc.stringView = tronc.id+" - "+tronc.created;
-
       vm.current.troncId = tronc.id;
 
 
@@ -59,9 +62,11 @@
         delete vm.current.troncId;
 
         vm.savedSuccessfully=true;
-        $timeout(function () {
+
+        $timeout(function ()
+        {
           vm.savedSuccessfully=false;
-          vm.current={};
+          vm.initForm();
         }, 20000);
 
       });

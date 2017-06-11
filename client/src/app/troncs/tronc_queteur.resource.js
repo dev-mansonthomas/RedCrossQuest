@@ -58,6 +58,12 @@ angular.module('client').factory('TroncQueteurResource', function ($resource, $l
           action: 'saveCreditCard'
         }
       },
+      saveAsAdmin: {
+        method: 'POST',
+        params: {
+          action: 'saveAsAdmin'
+        }
+      },
       getTroncsOfQueteur: {
         method: 'GET',
         isArray: true,

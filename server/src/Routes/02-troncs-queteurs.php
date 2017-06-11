@@ -80,6 +80,11 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
         $this->logger->debug("Saving CreditCard");
         $troncQueteurDBService->updateCreditCardCount($tq, $ulId);
       }
+      elseif ($action =="saveAsAdmin")
+      {
+        $this->logger->debug("Saving As Admin", [ $input ]);
+        $troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId);
+      }
     }
   }
   catch(Exception $e)

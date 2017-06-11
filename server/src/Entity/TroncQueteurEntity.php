@@ -94,7 +94,9 @@ class TroncQueteurEntity extends Entity
       $this->getString('notes_retour_comptage_pieces', $data);
       $this->getString('notes_update'           , $data);
 
-      $this->getString('last_name'  , $data);
-      $this->getString('first_name' , $data);
+      $this->getString('last_name'              , $data);
+      $this->getString('first_name'             , $data);
+
+      $this->getBoolean('deleted'               , $data);
     }
 }

@@ -8,16 +8,23 @@
            {{tq.current.tronc_queteur.queteur.first_name}}
            {{tq.current.tronc_queteur.queteur.last_name}} -
            {{tq.current.tronc_queteur.queteur.nivol}} -
-        parti depuis '<b>{{tq.current.tronc_queteur.depart}}</b>'
+        parti depuis '<b>{{tq.current.tronc_queteur.departStr}}</b>'
         au point de quête '<b>{{tq.current.tronc_queteur.point_quete.name}}</b>'</span></div>
   </div>
 
 
-  <div class="col-xs-12">
+  <div class="col-md-12">
+
+    <div class="row jumbotron" style="background-color: orangered" ng-show="tq.current.tronc_queteur.deleted">
+      <H2>Attention : Ce tronc est marqué comme supprimé !<br/> <br/>Il n'est pas pris en compte dans les graphiques/statistics</H2>
+    </div>
+
     <div class="well">
 
 
-        <form novalidate ng-submit='tq.save();' name="troncQueteurForm">
+        <form novalidate name="troncQueteurForm">
+
+
 
           <div class="row">
             <div class="form-group col-md-4" style="text-align:center;" ng-if="!tq.current.readOnlyView">
@@ -57,25 +64,88 @@
 
 
             <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.retour.$invalid}"
-                 ng-show="tq.current.tronc_queteur.id && tq.current.dateRetourNotFilled!=true">
-              <label for="retour" class="control-label">Horaire réelle de Retour</label>
+                 ng-show="tq.current.tronc_queteur.id && (tq.current.dateRetourNotFilled!=true || tq.current.adminEditMode)">
+              <label for="retour" class="control-label">Horaire Retour Réel</label>
               <input name="retour"
                      id="retour"
                      type="datetime-local"
                      class="form-control"
                      ng-model="tq.current.tronc_queteur.retour"
                      ng-min="tq.current.tronc_queteur.depart"
-                     ng-readonly="tq.current.readOnlyView || tq.current.fillTronc"
+                     ng-readonly="(tq.current.readOnlyView || tq.current.fillTronc) && tq.current.adminEditMode == false"
                      required/>
               <span class="help-block">Si vous voulez editer l'horaire de retour, aller sur la page 'Retour'</span>
 
             </div>
+
+
+            <!-- ADMIN MODE -->
+            <div ng-show="tq.current.tronc_queteur.tronc_id > 0 && tq.current.readOnlyView && tq.currentUserRole >= 4" class="form-group col-md-4">
+
+              <button class="btn btn-warning"
+                      ng-show="tq.current.adminEditMode == false"
+                      ng-click="tq.activateAdminEditMode();"
+                      style="width:100%;height:70px;">
+                Mode Edition Admin
+              </button>
+
+
+              <div class="form-group" ng-show="tq.current.adminEditMode == true">
+                <label for="deletedRadio1" class="control-label">Est ce que le tronc marqué comme supprimé ?</label><br/>
+                <label class="radio-inline">
+                  <input type="radio" name="deleted" id="deletedRadio1" ng-model="tq.current.tronc_queteur.deleted" value="true" ng-required="tq.current.adminEditMode" ng-checked="tq.current.tronc_queteur.deleted===true" ng-click="tq.fillForDeletion()"> Supprimé
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="deleted" id="deletedRadio2" ng-model="tq.current.tronc_queteur.deleted" value="false" ng-required="tq.current.adminEditMode"  ng-checked="tq.current.tronc_queteur.deleted===false"> <b>NON</b> Supprimé (Valeur normale)
+                </label>
+              </div>
+
+
+
+
+              <span class="help-block" ng-show="tq.current.adminEditMode == false">Permet de modifier toutes les données du tronc du queteur</span>
+              <span class="help-block" ng-show="tq.current.adminEditMode == true">Marquer le tronc comme supprimé, ne supprime pas réellement le tronc, on peut donc revenir en arrière.
+              Cela permet d'exclure le tronc des statistiques</span>
+
+            </div>
+
+            <!-- FIN ADMIN MODE -->
+
             <div class='col-md-8' ng-show="tq.current.dateRetourNotFilled" ng-cloak>
               <div class="alert alert-danger" role="alert">
                 L'horaire de retour n'est pas renseigné !
                 Avant d'effectuer le comptage, il vous faut renseigner l'horaire de retour sur cette page :
                 <a ng-href="/#!/troncs/retour/{{tq.current.tronc_queteur.id}}">Retour Tronc</a> et n'oubliez pas de cliquer sur le bouton <b>Save</b>
               </div>
+            </div>
+          </div>
+
+          <div class="row" ng-show="tq.current.tronc_queteur.tronc_id > 0">
+
+
+            <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.horaireDepartTheorique.$invalid}">
+              <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
+              <input name="horaireDepartTheorique" id="horaireDepartTheorique" type="datetime-local" class="form-control"
+                     ng-model="tq.current.tronc_queteur.depart_theorique" required
+                     ng-readonly="tq.current.adminEditMode == false"/>
+              <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Required</span>
+            </div>
+
+            <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.horaireDepart.$invalid}">
+              <label for="horaireDepart" class="control-label">Horaire Départ Réel</label>
+              <input name="horaireDepart" id="horaireDepart" type="datetime-local" class="form-control"
+                     ng-model="tq.current.tronc_queteur.depart" required  ng-readonly="tq.current.adminEditMode == false"/>
+              <span class="help-block" ng-show="prepaTroncForm.horaireDepart.$error.required">Required</span>
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="point_quete_id" class="control-label">Lieu de Quête</label>
+              <select name="point_quete_id" id="point_quete_id" class="form-control" ng-model="tq.current.tronc_queteur.point_quete_id" required
+                      ng-options="pq.id as tq.getTypeLabel(pq.type)+' - '+ pq.code+' - '+pq.name
+                      for
+                      pq in tq.pointsQuete" ng-disabled="tq.current.adminEditMode == false">
+                <option value=""></option>
+              </select>
             </div>
           </div>
 
@@ -111,7 +181,7 @@
                         id="don_creditcard"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.don_creditcard"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required="tq.current.fillTronc && tq.current.tronc.type==4"/>
                 <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;</span>
               </div>
@@ -120,8 +190,8 @@
           </div>
           <!-- FIN TERMINAL CB -->
 
-          <div ng-show="tq.current.fillTronc && tq.current.tronc.type!=4" ng-cloak>
-            <div id="anchorForm" class="row anchor" ng-if="!tq.current.readOnlyView">
+          <div ng-show="(tq.current.fillTronc || tq.current.adminEditMode) && tq.current.tronc.type!=4" ng-cloak>
+            <div id="anchorForm" class="row anchor" ng-if="!tq.current.readOnlyView  && tq.current.adminEditMode == false">
 
               <div class="form-group col-md-8 col-md-offset-2 alert alert-warning" role="alert" style="font-size: 20px;text-align:center;">
                 Veuillez saisir le <b style="color:red">nombre</b> de pièces/billets (<b style="color:red">pas</b> les montants!)
@@ -143,7 +213,7 @@
                         id="euro5"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro5"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro5">Montant : {{tq.current.tronc_queteur.euro5*5}} €</span>
               </div>
@@ -157,7 +227,7 @@
                         id="euro10"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro10"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro10">Montant : {{tq.current.tronc_queteur.euro10*10}} €</span>
               </div>
@@ -171,7 +241,7 @@
                         id="euro20"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro20"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro20">Montant : {{tq.current.tronc_queteur.euro20*20}} €</span>
               </div>
@@ -185,7 +255,7 @@
                         id="euro50"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro50"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro50">Montant : {{tq.current.tronc_queteur.euro50*50}} €</span>
               </div>
@@ -199,7 +269,7 @@
                         id="euro100"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro100"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro100">Montant : {{tq.current.tronc_queteur.euro100*100}} €</span>
               </div>
@@ -213,7 +283,7 @@
                         id="euro200"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro200"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro200">Montant : {{tq.current.tronc_queteur.euro200*200}} €</span>
               </div>
@@ -227,7 +297,7 @@
                         id="euro500"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro500"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro500">Montant : {{tq.current.tronc_queteur.euro500*500}} €</span>
               </div>
@@ -263,7 +333,7 @@
                         id="euro2"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro2"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro2">Montant : {{tq.current.tronc_queteur.euro2*2}} €</span>
               </div>
@@ -277,7 +347,7 @@
                         id="cents50"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.cents50"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents50">Montant : {{(tq.current.tronc_queteur.cents50*0.5).toFixed(2)}} €</span>
               </div>
@@ -291,7 +361,7 @@
                         id="euro1"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.euro1"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro1">Montant : {{tq.current.tronc_queteur.euro1*1}} €</span>
               </div>
@@ -305,7 +375,7 @@
                         id="cents20"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.cents20"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents20">Montant : {{(tq.current.tronc_queteur.cents20*0.2).toFixed(2)}} €</span>
               </div>
@@ -322,7 +392,7 @@
                         id="cents05"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.cents5"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents5">Montant : {{(tq.current.tronc_queteur.cents5*0.05).toFixed(2)}} €</span>
               </div>
@@ -336,7 +406,7 @@
                         id="cents10"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.cents10"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents10">Montant : {{(tq.current.tronc_queteur.cents10*0.1).toFixed(2)}} €</span>
               </div>
@@ -351,7 +421,7 @@
                         id="cents02"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.cents2"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents2">Montant : {{(tq.current.tronc_queteur.cents2*0.02).toFixed(2)}} €</span>
               </div>
@@ -365,7 +435,7 @@
                         id="cents01"
                         class="form-control"
                         ng-model="tq.current.tronc_queteur.cent1"
-                        ng-readonly="tq.current.readOnlyView"
+                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"
                 />
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cent1">Montant : {{(tq.current.tronc_queteur.cent1*0.01).toFixed(2)}} €</span>
@@ -401,7 +471,7 @@
                           id="don_cheque"
                           class="form-control"
                           ng-model="tq.current.tronc_queteur.don_cheque"
-                          ng-readonly="tq.current.readOnlyView"
+                          ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                           ng-required="tq.current.fillTronc && tq.current.tronc.type!=4"/>
                   <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"  style="top:0px;">&nbsp;</span>
                 </div>
@@ -438,7 +508,13 @@
 
           <div class="row" >
             <div class="form-group col-md-2 col-md-offset-10">
-              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="troncQueteurForm.$invalid" ng-if="!tq.current.readOnlyView" />
+              <input type="submit"
+                     class="btn btn-primary"
+                     value="Save"
+                     ng-disabled="troncQueteurForm.$invalid"
+                     ng-click="tq.save()"
+                     ng-if="tq.current.tronc_queteur.tronc_id > 0 && !tq.current.readOnlyView  || tq.current.adminEditMode == true"
+              />
               <a  ng-click="tq.back();" class="btn btn-link">Cancel</a>
             </div>
 

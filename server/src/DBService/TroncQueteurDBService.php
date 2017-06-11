@@ -54,7 +54,8 @@ SELECT
  `notes_retour_comptage_pieces`,
  `notes_update`                ,
  `don_cheque`                  ,
- `don_creditcard`
+ `don_creditcard`              ,
+ `deleted`
 FROM  `tronc_queteur` as t, 
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
@@ -125,7 +126,8 @@ SELECT
  q.`last_name`                 ,
  q.`first_name`                ,
  `don_cheque`                  ,
- `don_creditcard`
+ `don_creditcard`              ,
+ `deleted`
 FROM  `tronc_queteur` as t, 
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
@@ -192,7 +194,8 @@ t.`id`                ,
 `notes_retour_comptage_pieces`,
 `notes_update`                ,
 `don_cheque`                  ,
-`don_creditcard`
+`don_creditcard`              ,
+`deleted`
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.id         = :id
@@ -350,7 +353,7 @@ SET    `retour` = :retour
   /**
    * Update one tronc
    *
-   * @param TroncQueteurEntity $tronc The tronc to update
+   * @param TroncQueteurEntity $tq The tronc to update
    */
     public function updateCoinsCount(TroncQueteurEntity $tq, $ulId)
     {
@@ -416,12 +419,12 @@ SET
   /**
    * Update one tronc
    *
-   * @param TroncQueteurEntity $tronc The tronc to update
+   * @param TroncQueteurEntity $tq The tronc to update
    */
   public function updateCreditCardCount(TroncQueteurEntity $tq, $ulId )
   {
 
-    $this->logger->debug("Saving coins ", [$tq]);
+    $this->logger->debug("Saving Credit Card ", [$tq]);
     $sql = "
 UPDATE `tronc_queteur`
 SET
@@ -435,6 +438,45 @@ SET
     $result = $stmt->execute([
       "notes"             => $tq->notes,
       "don_creditcard"    => $tq->don_creditcard,
+      "id"                => $tq->id
+    ]);
+
+    $this->logger->warning($stmt->rowCount());
+    $stmt->closeCursor();
+
+    if(!$result) {
+      throw new Exception("could not save record");
+    }
+  }
+
+
+  /**
+   * Update one tronc as Admin for data like dates, and point_quete
+   *
+   * @param TroncQueteurEntity $tq The tronc to update
+   */
+  public function updateTroncQueteurAsAdmin(TroncQueteurEntity $tq, $ulId )
+  {
+
+    $this->logger->debug("Admin Updates dates, point_quete_id or deleted ", [$tq]);
+    $sql = "
+UPDATE `tronc_queteur`
+SET
+  `depart_theorique`= :depart_theorique,
+  `depart`          = :depart,
+  `retour`          = :retour,
+  `point_quete_id`  = :point_quete_id,
+  `deleted`         = :deleted
+ WHERE `id` = :id;
+";
+
+    $stmt = $this->db->prepare($sql);
+    $result = $stmt->execute([
+      "depart_theorique"  => $tq->depart_theorique,
+      "depart"            => $tq->depart,
+      "retour"            => $tq->retour,
+      "point_quete_id"    => $tq->point_quete_id,
+      "deleted"           => $tq->deleted?1:0,
       "id"                => $tq->id
     ]);
 
@@ -520,7 +562,8 @@ SELECT 	tq.id, tq.queteur_id, tq.depart_theorique, tq.depart, q.first_name, q.la
 FROM 	tronc_queteur tq,
       queteur q
 WHERE 	q.ul_id       = :ul_id
-AND     tq.tronc_id   =:tronc_id
+AND     tq.deleted    = 0
+AND     tq.tronc_id   = :tronc_id
 AND     tq.queteur_id = q.id
 AND    (tq.depart     is null OR 
         tq.retour     is null)

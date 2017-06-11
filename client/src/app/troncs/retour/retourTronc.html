@@ -29,62 +29,67 @@
 
               <span class="help-block" ng-bind="departTronc.decodedData"></span>
             </div>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="form-group  col-md-6" ng-class="{'has-error':retourTroncForm.troncId.$invalid}">
+                  <label for="troncId" class="control-label">Id Tronc</label>
+                  <input
+                    id="troncId"
+                    type="text"
+                    ng-model="rt.current.tronc"
+                    placeholder="Scanner le QRCode du tronc"
+                    uib-typeahead="tronc as tronc.id for tronc in rt.searchTronc($viewValue)"
+                    typeahead-loading="loadingTroncs"
+                    typeahead-no-results="noTroncsResults"
+                    typeahead-wait-ms="20"
+                    class="form-control"
+                    ng-required
+                    ng-disabled="rt.current.readOnlyView"
+                    autocomplete="off">
+                  <i   ng-show="loadingTroncs" class="glyphicon glyphicon-refresh"></i>
+                  <div ng-show="noTroncResults">
+                    <i class="glyphicon glyphicon-remove"></i> Aucun Tronc trouvé
+                  </div>
 
-            <div class="form-group  col-md-4" ng-class="{'has-error':retourTroncForm.troncId.$invalid}">
-              <label for="troncId" class="control-label">Id Tronc</label>
-              <input
-                id="troncId"
-                type="text"
-                ng-model="rt.current.tronc"
-                placeholder="Scanner le QRCode du tronc"
-                uib-typeahead="tronc as tronc.id for tronc in rt.searchTronc($viewValue)"
-                typeahead-loading="loadingTroncs"
-                typeahead-no-results="noTroncsResults"
-                typeahead-wait-ms="20"
-                class="form-control"
-                ng-required
-                ng-disabled="rt.current.readOnlyView"
-                autocomplete="off">
-              <i   ng-show="loadingTroncs" class="glyphicon glyphicon-refresh"></i>
-              <div ng-show="noTroncResults">
-                <i class="glyphicon glyphicon-remove"></i> Aucun Tronc trouvé
+                  <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+                </div>
+
+
+
+                <div class="form-group col-md-6" ng-class="{'has-error':retourTroncForm.retour.$invalid}" ng-show="rt.current.tronc_queteur.id>0">
+                  <label for="retour" class="control-label">Horaire réelle de Retour</label>
+                  <input name="retour"
+                         id="retour"
+                         type="datetime-local"
+                         class="form-control"
+                         ng-model="rt.current.tronc_queteur.retour"
+                         ng-min="rt.current.tronc_queteur.depart"
+                         ng-max="rt.current.tronc_queteur.retourMax"
+                         required/>
+
+                  <span class="help-block" ng-show="rt.current.fillTronc">
+                    La date de retour est <b>déjà</b> enregistrée, vous êtes en train de l'éditer ! <br/>
+                    Si vous pensiez faire un premier enregistrement cliquez sur <b>cancel</b>
+                  </span>
+
+                  <span class="help-block" ng-show="retourTroncForm.retour.$invalid">
+                    La date de retour doit être postérieur à la date de départ <br/>
+                    Et avant la date actuelle.
+                  </span>
+                </div>
               </div>
-
-              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+              <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                  <div class="alert alert-info" role="alert" style="text-align: center;vertical-align: middle;">
+                    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" style="font-size:40px;color:green;"></span>
+                    N'oubliez pas de cliquer sur le bouton <b>"Save"</b>
+                  </div>
+                </div>
+              </div>
             </div>
-
-
-
-            <div class="form-group col-md-4" ng-class="{'has-error':retourTroncForm.retour.$invalid}" ng-show="rt.current.tronc">
-              <label for="retour" class="control-label">Horaire réelle de Retour</label>
-              <input name="retour"
-                     id="retour"
-                     type="datetime-local"
-                     class="form-control"
-                     ng-model="rt.current.tronc_queteur.retour"
-                     ng-min="rt.current.tronc_queteur.depart"
-                     required/>
-
-              <span class="help-block" ng-show="rt.current.fillTronc">
-                La date de retour est <b>déjà</b> enregistrée, vous êtes en train de l'éditer ! <br/>
-                Si vous pensiez faire un premier enregistrement cliquez sur <b>cancel</b>
-              </span>
-
-              <span class="help-block" ng-show="retourTroncForm.retour.$invalid">
-                La date de retour doit être postérieur à la date de départ <br/>
-              </span>
-            </div>
-
           </div>
 
-          <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-              <div class="alert alert-info" role="alert" style="text-align: center;vertical-align: middle;">
-                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" style="font-size:40px;color:green;"></span>
-                N'oubliez pas de cliquer sur le bouton <b>"Save"</b>
-              </div>
-            </div>
-          </div>
+
 
           <div class="row" >
             <div class="form-group col-md-2 col-md-offset-10">

@@ -30,20 +30,20 @@ class PointQueteEntity  extends Entity
      */
   public function __construct($data)
   {
-    $this->getString('id'           , $data);
-    $this->getString('ul_id'        , $data);
-    $this->getString('code'         , $data);
-    $this->getString('name'         , $data);
-    $this->getString('latitude'     , $data);
-    $this->getString('longitude'    , $data);
-    $this->getString('address'      , $data);
-    $this->getString('postal_code'  , $data);
-    $this->getString('city'         , $data);
-    $this->getString('max_people'   , $data);
-    $this->getString('advice'       , $data);
-    $this->getString('localization' , $data);
-    $this->getString('minor_allowed', $data);
-    $this->getDate  ('created'      , $data);
+    $this->getInteger('id'           , $data);
+    $this->getString ('ul_id'        , $data);
+    $this->getString ('code'         , $data);
+    $this->getString ('name'         , $data);
+    $this->getString ('latitude'     , $data);
+    $this->getString ('longitude'    , $data);
+    $this->getString ('address'      , $data);
+    $this->getString ('postal_code'  , $data);
+    $this->getString ('city'         , $data);
+    $this->getString ('max_people'   , $data);
+    $this->getString ('advice'       , $data);
+    $this->getString ('localization' , $data);
+    $this->getString ('minor_allowed', $data);
+    $this->getDate   ('created'      , $data);
     $this->getBoolean('enabled'     , $data);
 
 

@@ -16,6 +16,8 @@
                                  DateTimeHandlingService)
   {
     var vm = this;
+    vm.onlyNumbers = /^\d+$/;
+
     vm.current = {};
 
     var tronc_queteur_id = $routeParams.id;
@@ -26,7 +28,7 @@
       TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
     }
 
-    vm.onlyNumbers = /^\d+$/;
+
 
     function savedSuccessfully()
     {
@@ -82,12 +84,14 @@
 
       if(vm.current.tronc_queteur.depart !== null)
       {
-        vm.current.tronc_queteur.departStr =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
+        vm.current.tronc_queteur.departStr = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
+        vm.current.tronc_queteur.depart    = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
       }
 
       if(vm.current.tronc_queteur.retour === null)
       {
         vm.current.tronc_queteur.retour = new Date();
+        vm.current.tronc_queteur.retourMax = vm.current.tronc_queteur.retour;
       }
       else
       {

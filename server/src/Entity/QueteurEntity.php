@@ -25,6 +25,8 @@ class QueteurEntity  extends Entity
   public $notes                       ;
   public $ul_id                       ;
   public $ul_name                     ;
+  public $ul_longitude                ;
+  public $ul_latitude                 ;
 
   public $point_quete_id              ;
   public $point_quete_name            ;
@@ -61,6 +63,8 @@ class QueteurEntity  extends Entity
     $this->getString('notes'                       , $data);
     $this->getString('ul_id'                       , $data);
     $this->getString('ul_name'                     , $data);
+    $this->getString('ul_latitude'                 , $data);
+    $this->getString('ul_longitude'                , $data);
 
     $this->getString('point_quete_id'              , $data);
     $this->getString('point_quete_name'            , $data);

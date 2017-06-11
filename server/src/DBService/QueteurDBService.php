@@ -134,10 +134,15 @@ SELECT 	q.`id`,
        pq.name AS 'point_quete_name',
        tq.`depart_theorique`,       
        tq.`depart`, 
-       tq.`retour` 
-FROM 	queteur AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
-		point_quete AS pq
+       tq.`retour`,
+       u.name       as 'ul_name',
+       u.latitude   as 'ul_latitude',
+       u.longitude  as 'ul_longitude'
+FROM 	queteur     AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
+		  point_quete AS pq, 
+		           ul AS u
 WHERE  q.ul_id = :ul_id
+AND    q.ul_id = u.id
 AND    q.active= :active
 $querySQL 
 $secteurSQL 
@@ -183,10 +188,15 @@ SELECT 	q.`id`,
        tq.`point_quete_id`, 
        tq.`depart_theorique`, 
        tq.`depart`, 
-       tq.`retour` 
+       tq.`retour`,
+        u.name       as 'ul_name',
+        u.latitude   as 'ul_latitude',
+        u.longitude  as 'ul_longitude' 
 FROM 	     queteur AS q,
-		 tronc_queteur AS tq
-WHERE   q.ul_id = :ul_id
+		 tronc_queteur AS tq, 
+		            ul AS u
+WHERE  q.ul_id = :ul_id
+AND    q.ul_id = u.id
 AND    q.active= :active
 $querySQL 
 $secteurSQL 
@@ -221,10 +231,15 @@ SELECT 	q.`id`,
        tq.`point_quete_id`, 
        tq.`depart_theorique`, 
        tq.`depart`, 
-       tq.`retour` 
+       tq.`retour`,
+        u.name       as 'ul_name',
+        u.latitude   as 'ul_latitude',
+        u.longitude  as 'ul_longitude' 
 FROM 	     queteur AS q,
-		 tronc_queteur AS tq
-WHERE   q.ul_id = :ul_id
+		 tronc_queteur AS tq, 
+		            ul AS u
+WHERE  q.ul_id = :ul_id
+AND    q.ul_id = u.id
 AND    q.active= :active
 $querySQL 
 $secteurSQL 
@@ -298,8 +313,11 @@ SELECT  q.`id`,
         q.`birthdate`,
         q.`qr_code_printed`,
         q.`referent_volunteer`,
-        u.name as ul_name
-FROM  `queteur` q, ul u
+        u.`name`       as 'ul_name',
+        u.`latitude`   as 'ul_latitude',
+        u.`longitude`  as 'ul_longitude'
+FROM  `queteur` AS q, 
+          `ul`  AS u
 WHERE  q.id    = :queteur_id
 AND    q.ul_id = u.id
 ";
@@ -341,10 +359,15 @@ SELECT  q.`id`,
         q.`man`,
         q.`birthdate`,
         q.`qr_code_printed`,
-        q.`referent_volunteer`
-FROM  `queteur` q
+        q.`referent_volunteer`,
+        u.`name`       as 'ul_name',
+        u.`latitude`   as 'ul_latitude',
+        u.`longitude`  as 'ul_longitude'
+FROM  `queteur` AS q, 
+          `ul`  AS u
 WHERE  UPPER(q.nivol)   = UPPER(:nivol)
 AND    q.active  = 1
+AND    q.ul_id   = u.id
 ";
 
     $stmt = $this->db->prepare($sql);

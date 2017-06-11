@@ -17,16 +17,22 @@
   {
     var vm = this;
 
-    vm.current = {};
-    vm.current.ul_id=2;
-    vm.current.horaireDepartTheorique = new Date();
+    vm.initData = function()
+    {
+      vm.current = {};
+      vm.current.ul_id=2;
 
-    //on laisse l'heure courante.
-    vm.current.horaireDepartTheorique.setMinutes(0) ;
-    vm.current.horaireDepartTheorique.setSeconds(0) ;
-    vm.current.horaireDepartTheorique.setMilliseconds(0) ;
-    //pointQuete list
-    vm.pointsQuete = PointQueteResource.query();
+      vm.current.horaireDepartTheorique = new Date();
+
+      //on laisse l'heure courante.
+      vm.current.horaireDepartTheorique.setMinutes(0) ;
+      vm.current.horaireDepartTheorique.setSeconds(0) ;
+      vm.current.horaireDepartTheorique.setMilliseconds(0) ;
+      vm.current.horaireDepartTheoriqueNotBefore = vm.current.horaireDepartTheorique;
+    };
+
+    vm.initData();
+
 
     vm.getTypeLabel=function(id)
     {
@@ -38,13 +44,10 @@
         return 'Boutique';
       else
         return 'Base UL';
-
-
-
-
     };
 
-
+    //pointQuete list
+    vm.pointsQuete = PointQueteResource.query();
     vm.pointsQuete.$promise.then(function success(pointQueteList)
     {
       vm.pointsQueteHash = [];
@@ -72,13 +75,7 @@
 
     function savedSuccessfully()
     {
-      vm.current = {};
-      vm.current.horaireDepartTheorique = new Date();
-
-      //on laisse l'heure courante.
-      vm.current.horaireDepartTheorique.setMinutes(0) ;
-      vm.current.horaireDepartTheorique.setSeconds(0) ;
-      vm.current.horaireDepartTheorique.setMilliseconds(0) ;
+      vm.initData();
 
       vm.savedSuccessfully=true;
 
