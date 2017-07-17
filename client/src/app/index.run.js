@@ -15,7 +15,8 @@
 
       var token = $localStorage.RCQ_JWT_Token;
 
-      if (!token || jwtHelper.isTokenExpired(token)) {
+      if (!token || jwtHelper.isTokenExpired(token))
+      {
         $location.path('/login').replace();
       }
     });
