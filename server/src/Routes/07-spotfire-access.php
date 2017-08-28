@@ -34,6 +34,34 @@ $app->post('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $
 });
 
 
+
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
+{
+    $decodedToken = $request->getAttribute('decodedJWT');
+    $this->logger->addDebug("generating spotfire access for ");
+    try
+    {
+        $ulId   = (int)$decodedToken->getUlId();
+        $userId = (int)$decodedToken->getUid ();
+
+
+        $spotfireDBService  = new SpotfireAccessDBService($this->db, $this->logger);
+
+        $validToken = $spotfireDBService->getValidToken($userId, $ulId, 8);
+
+        $response->getBody()->write(json_encode($validToken));
+    }
+    catch(Exception $e)
+    {
+        $this->logger->addError($e);
+        throw $e;
+    }
+    return $response;
+});
+
+
+
+
 /*
  Documentation :
 

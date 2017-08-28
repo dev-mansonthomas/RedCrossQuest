@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 use DateTime;
 use DateInterval;
 use Carbon\Carbon;
+use RedCrossQuest\Entity\SpotfireAccessEntity;
 
 
 class SpotfireAccessDBService extends DBService
@@ -71,5 +72,44 @@ VALUES
 
     return (object)["creationTime"=>$currentDate, "token"=>$token];
   }
+
+
+
+    /**
+     * Try to get an existing valid token
+     *
+     * @param int $userId The ID of the connected user (should be taken from DecodedJWT)
+     * @param int $ulId The ID of the Unite Locale of the connected user (should be taken from DecodedJWT)
+     * @param int $tokenTTL TimeToLive in Hours of the Token
+     * @return
+     */
+    public function getValidToken(int $userId, int $ulId)
+    {
+        $sql = "
+        SELECT  token, token_expiration
+        FROM    spotfire_access
+        WHERE   ul_id   = :ulId
+        AND     user_id = :userId
+        ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $result = $stmt->execute(
+            [
+                "userId" => $userId,
+                "ulId"   => $ulId
+            ]);
+
+        if ($result)
+        {
+
+            $data =$stmt->fetch();
+            $this->logger->addDebug("returned data ", $data);
+            $spotfireAccess = new SpotfireAccessEntity($data);
+            $stmt->closeCursor();
+            return $spotfireAccess;
+        }
+    }
+
 
 }

@@ -16,8 +16,13 @@
     </div>
 
 
-    <div class="row" ng-show="g.showDebug && g.showCountDown">
+    <div class="row" ng-show="g.showDebug ">
       <div class="col-md-8 col-md-offset-2">
+
+        {{g.tokenAndExpirationDate}}
+        tokenAndExpirationDate.token: {{g.tokenAndExpirationDate.token}}<br/>
+        tokenAndExpirationDate.tokenExpiration: {{g.tokenAndExpirationDate.token_expiration_local}}<br/>
+
 
       token: {{g.token}}       <br/>
 
@@ -50,6 +55,8 @@
 
     <!-- Graph Links -->
     <div class="container" ng-show="g.showGraphs">
+
+      L'accès au graphiques sont valide jusqu'à <b>{{g.tokenAndExpirationDate.token_expiration_local}}</b><br/><br/>
 
 
       <div class="row" ng-show="g.currentUserRole == 1"  style="margin-bottom: 20px;">

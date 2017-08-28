@@ -20,6 +20,15 @@
     //show debug info on how the countdown is calculated
     vm.showDebug = false;
 
+    vm.tokenAndExpirationDate = GraphResource.get();
+    vm.tokenAndExpirationDate.$promise.then(function success(data){
+      vm.showGraphs     = true;
+      vm.tokenAndExpirationDate.token_expiration_local = DateTimeHandlingService.handleServerDate(data.token_expiration).stringVersion;
+      vm.token = data.token;
+    });
+
+
+
     vm.grantAccessToGraph=function()
     {
       var graphResource = new GraphResource();
