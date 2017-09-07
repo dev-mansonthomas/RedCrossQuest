@@ -38,13 +38,16 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
       $ulId = $adminUlId;
     }
 
-    $query      = array_key_exists('q'          ,$params)?$params['q'         ]:null;
-    $searchType = array_key_exists('searchType' ,$params)?$params['searchType']:null;
-    $secteur    = array_key_exists('secteur'    ,$params)?$params['secteur'   ]:null;
-    $active     = array_key_exists('active'     ,$params)?$params['active'    ]:1;
+    $query        = array_key_exists('q'             ,$params)?$params['q'            ]:null;
+    $searchType   = array_key_exists('searchType'    ,$params)?$params['searchType'   ]:null;
+    $secteur      = array_key_exists('secteur'       ,$params)?$params['secteur'      ]:null;
+    $active       = array_key_exists('active'        ,$params)?$params['active'       ]:1;
+    $benevoleOnly = array_key_exists('$benevoleOnly' ,$params)?$params['$benevoleOnly']:0;
+
+
 
     $this->logger->addInfo("Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId");
-    $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active);
+    $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly);
 
     $response->getBody()->write(json_encode($queteurs));
 

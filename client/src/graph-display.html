@@ -38,7 +38,7 @@
 
     function reload()
     {
-      if(reloadEnabled == true)
+      if(reloadEnabled === true)
       {
         location.reload(true);
         console.log("reloading...");
@@ -81,7 +81,7 @@
       var doc = app.openDocument("container");
 
       myTimeoutId = setTimeout(reload,6*60*1000);
-    }
+    };
 
     function enable()
     {

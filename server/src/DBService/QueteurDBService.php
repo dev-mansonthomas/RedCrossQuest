@@ -82,14 +82,16 @@ AND
    * @param int $secteur : secteur to search (1:Social, 2: Secours, 3:Non Bénévole, 4:Commerçant, 5: Spécial)
    * @param int $ulId    : the ID of the UniteLocal on which the search is limited
    * @param boolean $active : search only active or inactive queteurs
+   * @param benevoleOnly : Retourne que les bénévoles et anciens bénévoles (usecase: recherche de référent pour le queteur d'un jour)
    * @return list of QueteurEntity
    *
    */
-  public function searchQueteurs($query, $searchType, $secteur, $ulId, $active)
+  public function searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly)
   {
-    $parameters = ["ul_id" => $ulId];
-    $querySQL   = "";
-    $secteurSQL = "";
+    $parameters      = ["ul_id" => $ulId];
+    $querySQL        = "";
+    $secteurSQL      = "";
+    $benevoleOnlySQL = "";
 
 
     if($query !== null)
@@ -110,6 +112,13 @@ AND
 AND q.`secteur` = :secteur
 ";
       $parameters["secteur"]=$secteur;
+    }
+
+    if($benevoleOnly == 1)
+    {// only secours/social/ former volunteer
+      $benevoleOnlySQL="
+AND q.`secteur` IN (1,2,4)
+";
     }
 
 
@@ -146,6 +155,7 @@ AND    q.ul_id = u.id
 AND    q.active= :active
 $querySQL 
 $secteurSQL 
+$benevoleOnlySQL
 AND  
 (
   (

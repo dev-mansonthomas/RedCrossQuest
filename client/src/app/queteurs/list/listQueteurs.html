@@ -13,7 +13,7 @@
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-              <input class="form-control" placeholder="Search" data-ng-model="q.search">
+              <input class="form-control" placeholder="Recherche" data-ng-model="q.search">
             </div>
             <div data-ng-show="q.search">
               <span data-ng-pluralize
@@ -60,7 +60,7 @@
           <div class="input-group" ng-show="q.currentUserRole=='9'">
             <label for="activeRadio1" class="control-label">Unité Locale </label>
             <select class="form-control" placeholder="ID Unité Locale" data-ng-model="q.admin_ul_id">
-              <option value=''  >None</option>
+              <option value=''   >N/A                     </option>
               <option value='348'>UL PARIS 01/02          </option>
               <option value='2'  >UL PARIS 04             </option>
               <option value='49' >UL AIX EN PROVENCE      </option>
@@ -94,7 +94,7 @@
 
 
         <div class="col-md-1">
-          <input type="submit" class="btn btn-primary" value="Search" />
+          <input type="submit" class="btn btn-primary" value="Rechercher" />
         </div>
       </div>
     </form>

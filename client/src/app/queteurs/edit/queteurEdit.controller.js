@@ -236,8 +236,8 @@
      * */
     vm.searchQueteur=function(queryString)
     {
-      $log.info("Queteur : Manual Search for '"+queryString+"'");
-      return QueteurResource.query({"q":queryString}).$promise.then(function success(response)
+      $log.info("Queteur : Manual Search for '"+queryString+"', active and benevoleOnly");
+      return QueteurResource.query({"q":queryString, "active":1, "benevoleOnly":1}).$promise.then(function success(response)
       {
         return response.map(function success(queteur)
           {
