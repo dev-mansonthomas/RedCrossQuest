@@ -13,19 +13,20 @@
   function DepartTroncController($scope, $log, $timeout,
                                  PointQueteResource  ,
                                  TroncResource  , TroncQueteurResource,
-                                 QRDecodeService, DateTimeHandlingService)
+                                 QRDecodeService, DateTimeHandlingService,
+                                 $localStorage)
   {
     var vm = this;
 
     vm.initForm=function()
     {
       vm.current = {};
-      vm.current.ul_id=2;
+      vm.current.ul_id=$localStorage.currentUser.ulId;
     };
     vm.initForm();
 
     //pointQuete list
-    vm.current.pointsQuete = PointQueteResource.query();
+    vm.pointsQuete = PointQueteResource.query();
 
 
     var troncDecodedAndFoundInDB = function(tronc)
@@ -46,10 +47,11 @@
         $log.debug(tronc_queteur);
 
         vm.current.tronc_queteur =  tronc_queteur;
-
         if(tronc_queteur.depart !== null)
         {
-          vm.current.tronc_queteur.depart           =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
+          var tempDate = DateTimeHandlingService.handleServerDate(tronc_queteur.depart);
+          vm.current.tronc_queteur.depart    = tempDate.dateInLocalTimeZone;
+          vm.current.tronc_queteur.departStr = tempDate.stringVersion;
         }
 
         if(tronc_queteur.depart_theorique !== null)
@@ -57,17 +59,24 @@
           vm.current.tronc_queteur.depart_theorique = DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).dateInLocalTimeZone;
         }
 
-        $log.debug(tronc_queteur);
+
+        if(tronc_queteur.troncQueteurIsInAnIncorrectState !== true)
+        {
+          vm.savedSuccessfully=true;
+
+          $timeout(function ()
+          {
+            vm.savedSuccessfully=false;
+            vm.initForm();
+          }, 20000);
+        }
+        else
+        {
+          vm.current.tronc_queteur.retourStr = DateTimeHandlingService.handleServerDate(tronc_queteur.retour).stringVersion;
+        }
         $log.debug("deleting troncId to allow a new scan directly");
         delete vm.current.troncId;
 
-        vm.savedSuccessfully=true;
-
-        $timeout(function ()
-        {
-          vm.savedSuccessfully=false;
-          vm.initForm();
-        }, 20000);
 
       });
     };

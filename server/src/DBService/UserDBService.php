@@ -262,7 +262,7 @@ WHERE   nivol             = :nivol
     $queryResult = $stmt->execute(
       [
         "nivol" => $username,
-        "uuid" => $uuid
+        "uuid"  => $uuid
       ]
     );
 

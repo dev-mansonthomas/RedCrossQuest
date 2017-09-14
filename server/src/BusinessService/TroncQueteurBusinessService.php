@@ -37,7 +37,7 @@ class TroncQueteurBusinessService
   {
     $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId );
     $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById              ($troncQueteur->queteur_id     , $ulId );
-    $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById           ($troncQueteur->point_quete_id   , $ulId );
+    $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById           ($troncQueteur->point_quete_id , $ulId );
 
     return  $troncQueteur;
   }

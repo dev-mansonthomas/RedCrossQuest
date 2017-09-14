@@ -69,7 +69,9 @@
 
                   <span class="help-block" ng-show="rt.current.fillTronc">
                     La date de retour est <b>déjà</b> enregistrée, vous êtes en train de l'éditer ! <br/>
-                    Si vous pensiez faire un premier enregistrement cliquez sur <b>cancel</b>
+                    <strong>ATTENTION</strong><br/>
+                    Si vous pensiez faire un premier enregistrement de la date de retour, c'est que la préparation et le départ ont été raté!<br/>
+                    Cliquez sur <b>cancel</b>, et faites une préparation tronc, départ, puis enregistrez le retour!
                   </span>
 
                   <span class="help-block" ng-show="retourTroncForm.retour.$invalid">
@@ -93,7 +95,7 @@
 
           <div class="row" >
             <div class="form-group col-md-2 col-md-offset-10">
-              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid" ng-if="!rt.current.readOnlyView" />
+              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid || rt.current.tronc_queteur.dateDepartIsMissing === true" />
               <a  ng-click="rt.back();" class="btn btn-link">Cancel</a>
             </div>
           </div>
@@ -103,6 +105,35 @@
               <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rt.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
                 <strong>Bravo!</strong> L'horaire de retour a été sauvegardé avec succès!
+              </div>
+            </div>
+          </div>
+
+          <div class="row" ng-show="rt.current.tronc_queteur.dateDepartIsMissing === true">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: left;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rt.initForm();"><span aria-hidden="true">&times;</span></button>
+                <span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:40px;color:red;"></span>
+                Le tronc N°<strong>{{rt.current.tronc.id}}</strong> de
+                <strong>{{rt.current.tronc_queteur.queteur.first_name}}
+                  {{rt.current.tronc_queteur.queteur.last_name}}</strong> n'a pas de date de départ saisie !<br/>
+                <br/>
+                <strong><u>A FAIRE IMMEDIATEMENT</u></strong>
+                <ul>
+                  <li>Demandez au quêteur à quelle heure il est parti pour ce créneau</li>
+                  <li>Notez sur un papier (ou fichier google docs)
+                    <ul>
+                      <li>tronc_queteur_id : {{rt.current.tronc_queteur.id}}</li>
+                      <li>tronc_id : {{rt.current.tronc.id}}</li>
+                      <li>nom / prénom : {{rt.current.tronc_queteur.queteur.last_name}} / {{rt.current.tronc_queteur.queteur.first_name}}</li>
+                      <li>la date de départ réelle</li>
+                    </ul>
+                  </li>
+                  <li>Scanner le tronc sur la page départ pour enregistrer une date de départ (fausse)</li>
+                  <li>Enregistrer la date de retour</li>
+                  <li>Demander à l'administrateur local de corriger la date de départ</li>
+                </ul>
+
               </div>
             </div>
           </div>

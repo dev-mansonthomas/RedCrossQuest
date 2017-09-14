@@ -30,7 +30,16 @@
       vm.current.adminEditMode=true;
     };
 
-
+    // TODO : put this in a directive
+    $('.input-fix-mousewheel').on('focus', function (e) {
+      $(this).on('mousewheel.disableScroll', function (e) {
+        e.preventDefault();
+        var scrollTo = (e.originalEvent.wheelDelta*-1) + $(document.documentElement).scrollTop();
+        $(document.documentElement).scrollTop(scrollTo);
+      })
+    }).on('blur', function (e) {
+      $(this).off('mousewheel.disableScroll')
+    });
 
     var tronc_queteur_id = $routeParams.id;
 
@@ -210,7 +219,7 @@
 
       if(angular.isUndefined(vm.current.tronc))
       {
-        //if the tronc is not defined, it means that we've reached this page from the URL http://localhost:3000/#/troncs/retour/820
+        //if the tronc is not defined, it means that we've reached this page from the URL http://localhost:3000/#/troncs_queteur/id
         //tronc is initialized when QRCode scan or autocompletion
         // (from the queteur page) to visualize the data rather than editing it.
         vm.current.tronc = tronc_queteur.tronc;

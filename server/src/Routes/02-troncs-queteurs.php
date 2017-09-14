@@ -129,17 +129,26 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
       if($action == "getTroncQueteurForTroncIdAndSetDepart")
       {
         $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId );
-        if($troncQueteur->depart == null)
+
+        // check if the tronc_queteur is in the correct state
+        // Sometime the preparation is not done, so we fetch a previous tronc_queteur fully filled (return date, coins & bills data)
+        if($troncQueteur->retour !== null)
         {
-          $departDate = $troncQueteurDBService->setDepartToNow($troncQueteur->id, $ulId );
-          $troncQueteur->depart = $departDate;
+          $troncQueteur->troncQueteurIsInAnIncorrectState=true;
         }
         else
         {
-          $troncQueteur->departAlreadyRegistered=true;
-          $this->logger->warn("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it");
+          if($troncQueteur->depart == null)
+          {
+            $departDate = $troncQueteurDBService->setDepartToNow($troncQueteur->id, $ulId );
+            $troncQueteur->depart = $departDate;
+          }
+          else
+          {
+            $troncQueteur->departAlreadyRegistered=true;
+            $this->logger->warn("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it");
+          }
         }
-
         $response->getBody()->write(json_encode($troncQueteur));
         return $response;
       }

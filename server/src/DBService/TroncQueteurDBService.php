@@ -279,9 +279,6 @@ ORDER BY t.id desc
     return $results;
   }
 
-
-
-
   /**
    * Update one tronc with Date Depart set to current time
    *

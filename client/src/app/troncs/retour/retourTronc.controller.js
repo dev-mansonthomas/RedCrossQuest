@@ -18,7 +18,11 @@
     var vm = this;
     vm.onlyNumbers = /^\d+$/;
 
-    vm.current = {};
+    vm.initForm = function()
+    {
+      vm.current = {};
+    };
+    vm.initForm();
 
     var tronc_queteur_id = $routeParams.id;
 
@@ -32,19 +36,19 @@
 
     function savedSuccessfully()
     {
-      vm.current = {};
+      vm.initForm();
       vm.savedSuccessfully=true;
       $timeout(function () { vm.savedSuccessfully=false; }, 10000);
     }
 
     vm.back=function()
     {
-      vm.current = {};
+      vm.initForm();
     };
 
     function onSaveError(error)
     {
-      $log.error(error)
+      $log.error(error);
     }
 
     //This watch change on tronc variable to update the rest of the form
@@ -72,20 +76,20 @@
       if(angular.isUndefined(vm.current.tronc))
       {
         //if the tronc is not defined, it means that we've reached this page from the URL http://localhost:3000/#!/troncs/retour/820
-        // (from the queteur page) to visualize the data rather than editing it.
-        // Except if the return date is not defined. In this case, the user is redirected to this page from the "Comptage" page that says retour is undefined
+        // (from the tronc_queteur page) to edit the return date (empty or undefined)
+        // then the TroncID should be readOnly and the webcam disabled.
         vm.current.tronc = tronc_queteur.tronc;
-        if(tronc_queteur.retour !== null)
-        {
-          vm.current.readOnlyView=true;
-        }
-
+        vm.current.readOnlyView=true;
       }
 
       if(vm.current.tronc_queteur.depart !== null)
       {
         vm.current.tronc_queteur.departStr = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
         vm.current.tronc_queteur.depart    = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
+      }
+      else
+      {
+        vm.current.tronc_queteur.dateDepartIsMissing=true;
       }
 
       if(vm.current.tronc_queteur.retour === null)

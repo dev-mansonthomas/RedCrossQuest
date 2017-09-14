@@ -74,7 +74,7 @@
                      ng-min="tq.current.tronc_queteur.depart"
                      ng-readonly="(tq.current.readOnlyView || tq.current.fillTronc) && tq.current.adminEditMode == false"
                      required/>
-              <span class="help-block">Si vous voulez editer l'horaire de retour, aller sur la page 'Retour'</span>
+              <span class="help-block">Si vous voulez editer l'horaire de retour, aller sur la page <a ng-href="/#!/troncs/retour/{{tq.current.tronc_queteur.id}}">Retour Tronc</a> et n'oubliez pas de cliquer sur le bouton <b>Save</b></span>
 
             </div>
 
@@ -211,7 +211,7 @@
                         min="0"
                         name="euro5"
                         id="euro5"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro5"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -225,7 +225,7 @@
                         min="0"
                         name="euro10"
                         id="euro10"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro10"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -239,7 +239,7 @@
                         min="0"
                         name="euro20"
                         id="euro20"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro20"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -253,7 +253,7 @@
                         min="0"
                         name="euro50"
                         id="euro50"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro50"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -267,7 +267,7 @@
                         min="0"
                         name="euro100"
                         id="euro100"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro100"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -281,7 +281,7 @@
                         min="0"
                         name="euro200"
                         id="euro200"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro200"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -295,7 +295,7 @@
                         min="0"
                         name="euro500"
                         id="euro500"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro500"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -331,7 +331,7 @@
                         min="0"
                         name="euro2"
                         id="euro2"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro2"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -345,7 +345,7 @@
                         min="0"
                         name="cents50"
                         id="cents50"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.cents50"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -359,7 +359,7 @@
                         min="0"
                         name="euro1"
                         id="euro1"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.euro1"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -373,7 +373,7 @@
                         min="0"
                         name="cents20"
                         id="cents20"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.cents20"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -390,7 +390,7 @@
                         min="0"
                         name="cents05"
                         id="cents05"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.cents5"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -404,7 +404,7 @@
                         min="0"
                         name="cents10"
                         id="cents10"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.cents10"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -419,7 +419,7 @@
                         min="0"
                         name="cents02"
                         id="cents02"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.cents2"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
@@ -433,7 +433,7 @@
                         min="0"
                         name="cents01"
                         id="cents01"
-                        class="form-control"
+                        class="form-control input-fix-mousewheel"
                         ng-model="tq.current.tronc_queteur.cent1"
                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                         ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"
@@ -469,7 +469,7 @@
                           min="0"
                           name="don_cheque"
                           id="don_cheque"
-                          class="form-control"
+                          class="form-control input-fix-mousewheel"
                           ng-model="tq.current.tronc_queteur.don_cheque"
                           ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                           ng-required="tq.current.fillTronc && tq.current.tronc.type!=4"/>

@@ -10,17 +10,18 @@
     .controller('PreparationTroncController', PreparationTroncController);
 
   /** @ngInject */
-  function PreparationTroncController($scope, $log, $uibModal, $timeout,
-                                      QueteurResource, PointQueteResource,
-                                      TroncResource, TroncQueteurResource,
-                                      QRDecodeService )
+  function PreparationTroncController($scope         , $log                 ,
+                                      $uibModal      , $timeout             ,
+                                      QueteurResource, PointQueteResource   ,
+                                      TroncResource  , TroncQueteurResource ,
+                                      QRDecodeService, $localStorage        )
   {
     var vm = this;
 
     vm.initData = function()
     {
       vm.current = {};
-      vm.current.ul_id=2;
+      vm.current.ul_id=$localStorage.currentUser.ulId;
 
       vm.current.horaireDepartTheorique = new Date();
 
