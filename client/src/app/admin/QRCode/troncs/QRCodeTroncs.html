@@ -36,6 +36,7 @@
 </style><style type="text/css" media="print">
   @page {
     size: A4 portrait;
+    margin: 3mm 3mm 3mm 3mm;
   }
   .no-print
   {
@@ -77,7 +78,7 @@
 
     <table class="QRCodeTable" ng-repeat="table in qrcTroncs.tables">
       <tbody>
-        <tr ng-repeat="table_tr in table" ng-class="{thickborder:($index+1)%4==0 && ($index+1)%8!=0, mediumthickborder:($index+1)%6==0 }">
+        <tr ng-repeat="table_tr in table">
           <td ng-repeat="table_td in table_tr"><qr text="table_td.qr_code" size="qrcTroncs.size"></qr><br/>{{table_td.qr_code}}</td>
         </tr>
       </tbody>

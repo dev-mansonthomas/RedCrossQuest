@@ -15,7 +15,7 @@
   {
     var vm = this;
 
-    vm.size=184;
+    vm.size=200;
 
     TroncResource.query().$promise.then(function(response)
     {
@@ -31,7 +31,7 @@
 
       $log.debug("There is "+vm.list.length+" troncs, "+Math.ceil(vm.list.length/32)+" tableaux") ;
 
-      var numberOfTable= Math.ceil(vm.list.length/32);
+      var numberOfTable= Math.ceil(vm.list.length/40);
       vm.tables = [];
       var global_i=0;
 
@@ -42,7 +42,7 @@
         {
           vm.tables[table_i][table_tr_i]=[];
 
-          for(var table_td_i=0;table_td_i<4;table_td_i++)
+          for(var table_td_i=0;table_td_i<5;table_td_i++)
           {
             var element = vm.list[global_i++];
             if(element != null)

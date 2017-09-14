@@ -11,15 +11,17 @@
 
   /** @ngInject */
   function QRCodeQueteursController($log,
-                                    QueteurResource)
+                                    QueteurResource,
+                                    $localStorage)
   {
     var vm = this;
 
-    vm.size=184;
+    vm.size=200;
 
     QueteurResource.query({'searchType':0}).$promise.then(function(response)
     {
-      vm.list = response.map(function(queteur)
+      vm.ulName = $localStorage.currentUser.ulName;
+      vm.list   = response.map(function(queteur)
         {
           //the Q of Queteur is put in the HTML page, with a font size of 11px to exactly match the same template as TRONC, so that it print exactly on the stickers
           queteur.qr_code="QUETEUR-"+("000000"+queteur.ul_id).slice(-6)+"-"+("00000000"+queteur.id).slice(-9);
@@ -32,7 +34,7 @@
 
       $log.debug("There is "+vm.list.length+" queteur, "+Math.ceil(vm.list.length/32)+" tableaux") ;
 
-      var numberOfTable= Math.ceil(vm.list.length/32);
+      var numberOfTable= Math.ceil(vm.list.length/40);
       vm.tables = [];
       var global_i=0;
 
@@ -43,7 +45,7 @@
         {
           vm.tables[table_i][table_tr_i]=[];
 
-          for(var table_td_i=0;table_td_i<4;table_td_i++)
+          for(var table_td_i=0;table_td_i<5;table_td_i++)
           {
             var element = vm.list[global_i++];
             if(element != null)

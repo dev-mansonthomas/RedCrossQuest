@@ -25,18 +25,33 @@
     text-align: center;
     padding:5px;
   }
-  .thickborder
+  .InfoTable
   {
-    border-bottom: 5mm solid silver;
+    border:0px;
+    margin-bottom:5px;
   }
-  .mediumthickborder
+  .InfoTable tr
   {
-    border-bottom: 6mm solid silver;
+    height:12px;
+    margin:0px;
+    padding:0px;
   }
+  .InfoTable td
+  {
+    border:none;
+    margin:0px;
+    padding:0px;
+    text-align: left;
+    font-size:10px;
+    font-weight: normal;
+  }
+
 </style><style type="text/css" media="print">
 
   @page {
     size: A4 portrait;
+    margin: 3mm 3mm 3mm 3mm;
+
   }
   .no-print
   {
@@ -45,7 +60,7 @@
 
   .QRCodeTable
   {
-    page-break-after:always;
+
     margin:0;
     left:0 !important;
   }
@@ -75,8 +90,29 @@
 
     <table class="QRCodeTable" ng-repeat="table in qrcQueteurs.tables">
       <tbody>
-        <tr ng-repeat="table_tr in table" ng-class="{thickborder:($index+1)%4==0 && ($index+1)%8!=0, mediumthickborder:($index+1)%6==0 }">
-          <td ng-repeat="table_td in table_tr"><qr text="::table_td.qr_code" size="qrcQueteurs.size"></qr><br/><span style="font-size:11px;">I</span>{{::table_td.qr_code}}-{{::table_td.first_name}}-{{::table_td.last_name}}</td>
+        <tr ng-repeat="table_tr in table">
+          <td ng-repeat="table_td in table_tr" style='font-size:8px;'>
+
+            <table class="InfoTable">
+              <tr>
+                <td style="width:80px!important;"><b>Prénom</b></td>
+                <td>{{::table_td.first_name}}</td>
+              </tr>
+              <tr>
+                <td style="width:80px!important;"><b>Nom</b></td>
+                <td>{{::table_td.last_name}}</td>
+              </tr>
+              <tr>
+                <td style="width:80px!important;"><b>Unité Locale</b></td>
+                <td>{{::qrcQueteurs.ulName}}</td>
+              </tr>
+            </table>
+
+
+
+
+            <qr text="::table_td.qr_code" size="qrcQueteurs.size"></qr>
+            <br/><span style="">{{::table_td.qr_code}}</span></td>
         </tr>
       </tbody>
     </table>
