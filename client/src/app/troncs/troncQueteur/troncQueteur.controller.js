@@ -11,7 +11,7 @@
 
   /** @ngInject */
   function TroncQueteurController($scope, $log, $routeParams, $timeout, $localStorage, // $anchorScroll, $location,
-                                  TroncResource, TroncQueteurResource, PointQueteResource,
+                                  TroncResource, TroncQueteurResource, TroncQueteurHistoryResource, PointQueteResource,
                                   QRDecodeService,
                                   DateTimeHandlingService)
   {
@@ -30,7 +30,7 @@
       vm.current.adminEditMode=true;
     };
 
-    // TODO : put this in a directive
+    // TODO : put this in a direct
     $('.input-fix-mousewheel').on('focus', function (e) {
       $(this).on('mousewheel.disableScroll', function (e) {
         e.preventDefault();
@@ -40,6 +40,7 @@
     }).on('blur', function (e) {
       $(this).off('mousewheel.disableScroll')
     });
+    // TODO : FIN
 
     var tronc_queteur_id = $routeParams.id;
 
@@ -47,6 +48,7 @@
     {
       $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
       TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
+      TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur_id}).$promise.then(handleTroncQueteurHistory);
     }
 
 
@@ -148,15 +150,29 @@
       }
       else
       {
-
         //savedSuccessfully function handle the save of data in adminMode
         if(vm.current.tronc.type == 4)
         {
-          vm.current.tronc_queteur.$saveCreditCard(savedSuccessfully, onSaveError);
+          if(vm.current.adminEditMode && vm.currentUserRole >= 4)
+          {
+            vm.current.tronc_queteur.$saveCreditCardAsAdmin(savedSuccessfully, onSaveError);
+          }
+          else
+          {
+            vm.current.tronc_queteur.$saveCreditCard(savedSuccessfully, onSaveError);
+          }
         }
         else
         {
-          vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
+          if(vm.current.adminEditMode && vm.currentUserRole >= 4)
+          {
+            vm.current.tronc_queteur.$saveCoinsAsAdmin(savedSuccessfully, onSaveError);
+          }
+          else
+          {
+            vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
+          }
+
         }
       }
     };
@@ -238,8 +254,6 @@
         vm.current.tronc_queteur.depart_theorique    =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).dateInLocalTimeZone;
       }
 
-
-
       if(vm.current.tronc_queteur.retour === null)
       {
         vm.current.dateRetourNotFilled=true;
@@ -260,6 +274,25 @@
     }
 
 
+
+    function handleTroncQueteurHistory(tronc_queteur_array)
+    {
+      var counti = tronc_queteur_array.length;
+      var i=0;
+      for(i=0;i<counti;i++)
+      {
+        tronc_queteur_array[i].insert_date      = DateTimeHandlingService.handleServerDate(tronc_queteur_array[i].insert_date     ).stringVersion;
+        tronc_queteur_array[i].depart_theorique = DateTimeHandlingService.handleServerDate(tronc_queteur_array[i].depart_theorique).stringVersion;
+        tronc_queteur_array[i].depart           = DateTimeHandlingService.handleServerDate(tronc_queteur_array[i].depart          ).stringVersion;
+        tronc_queteur_array[i].retour           = DateTimeHandlingService.handleServerDate(tronc_queteur_array[i].retour          ).stringVersion;
+        tronc_queteur_array[i].comptage         = DateTimeHandlingService.handleServerDate(tronc_queteur_array[i].comptage        ).stringVersion;
+        tronc_queteur_array[i].last_update      = DateTimeHandlingService.handleServerDate(tronc_queteur_array[i].last_update     ).stringVersion;
+      }
+
+      vm.current.tronc_queteur_history = tronc_queteur_array;
+    }
+
+
     //function used when scanning QR Code or using autocompletion
     function troncDecodedAndFoundInDB (tronc, doNotReassingTronc)
     {
@@ -274,7 +307,7 @@
 
         vm.current.tronc.stringView = tronc.id;
 
-        TroncQueteurResource.getTroncQueteurForTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
+        TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
       }
     }
 

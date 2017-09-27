@@ -24,32 +24,34 @@ class TroncQueteurDBService extends DBService
   {
     $sql = "
 SELECT 
- t.`id`                ,
- `queteur_id`        ,
- `point_quete_id`    ,
- `tronc_id`          ,
- `depart_theorique`  ,
- `depart`            ,
- `retour`            ,
- `euro500`           ,
- `euro200`           ,
- `euro100`           ,
- `euro50`            ,
- `euro20`            ,
- `euro10`            ,
- `euro5`             ,
- `euro2`             ,
- `euro1`             ,
- `cents50`           ,
- `cents20`           ,
- `cents10`           ,
- `cents5`            ,
- `cents2`            ,
- `cent1`             ,
- `foreign_coins`     ,
- `foreign_banknote`  ,
+ t.`id`               ,
+ `queteur_id`         ,
+ `point_quete_id`     ,
+ `tronc_id`           ,
+ `depart_theorique`   ,
+ `depart`             ,
+ `retour`             ,
+ `comptage`           ,
+ `last_update`        ,
+ `last_update_user_id`,
+ `euro500`            ,
+ `euro200`            ,
+ `euro100`            ,
+ `euro50`             ,
+ `euro20`             ,
+ `euro10`             ,
+ `euro5`              ,
+ `euro2`              ,
+ `euro1`              ,
+ `cents50`            ,
+ `cents20`            ,
+ `cents10`            ,
+ `cents5`             ,
+ `cents2`             ,
+ `cent1`              ,
+ `foreign_coins`      ,
+ `foreign_banknote`   ,
  `notes_depart_theorique`      ,
- `notes_depart`                ,
  `notes_retour`                ,
  `notes_retour_comptage_pieces`,
  `notes_update`                ,
@@ -101,6 +103,9 @@ SELECT
  `depart_theorique`  ,
  `depart`            ,
  `retour`            ,
+ `comptage`           ,
+ `last_update`        ,
+ `last_update_user_id`,
  `euro500`           ,
  `euro200`           ,
  `euro100`           ,
@@ -119,7 +124,6 @@ SELECT
  `foreign_coins`     ,
  `foreign_banknote`  ,
  `notes_depart_theorique`      ,
- `notes_depart`                ,
  `notes_retour`                ,
  `notes_retour_comptage_pieces`,
  `notes_update`                ,
@@ -139,7 +143,7 @@ ORDER BY t.id DESC
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
+    $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
 
     $results = [];
     $i=0;
@@ -171,6 +175,9 @@ t.`id`                ,
 `depart_theorique`  ,
 `depart`            ,
 `retour`            ,
+`comptage`           ,
+`last_update`        ,
+`last_update_user_id`,
 `euro500`           ,
 `euro200`           ,
 `euro100`           ,
@@ -189,7 +196,6 @@ t.`id`                ,
 `foreign_coins`     ,
 `foreign_banknote`  ,
 `notes_depart_theorique`      ,
-`notes_depart`                ,
 `notes_retour`                ,
 `notes_retour_comptage_pieces`,
 `notes_update`                ,
@@ -239,6 +245,9 @@ t.`id`                ,
 `depart_theorique`  ,
 `depart`            ,
 `retour`            ,
+ `comptage`           ,
+ `last_update`        ,
+ `last_update_user_id`,
 `euro500`           ,
 `euro200`           ,
 `euro100`           ,
@@ -284,17 +293,20 @@ ORDER BY t.id desc
    *
    * @param  $tronc_queteur_id The id of tronc_queteur table to update
    * @param  $ulId the Id of the Unite Local
+   * @param  $userId id of the user performing the operation
    * @return the Date that has been set to tronc_queteur.dateDepart
    * @throws \Exception if update fails
    */
-  public function setDepartToNow($tronc_queteur_id, $ulId)
+  public function setDepartToNow($tronc_queteur_id, $ulId, $userId)
   {
 
 //TODO limit the query by UL_ID
     $sql = "
 UPDATE `tronc_queteur`
-SET    `depart`= :depart            
-WHERE  `id`    = :id
+SET    `depart`             = :depart,
+       `last_update`        = NOW(),
+       `last_update_user_id`= :userId            
+WHERE  `id`                 = :id
 ";
     $currentDate = new Carbon();
     $currentDate->tz='UTC';
@@ -302,6 +314,7 @@ WHERE  `id`    = :id
     $stmt        = $this->db->prepare($sql);
     $result      = $stmt->execute([
       "depart"            => $currentDate->format('Y-m-d H:i:s'),
+      "userId"            => $userId,
       "id"                => $tronc_queteur_id
     ]);
 
@@ -321,18 +334,23 @@ WHERE  `id`    = :id
    * Update one tronc
    *
    * @param TroncQueteurEntity $tronc The tronc to update
+   * @param $ulId the Id of the unite locale
+   * @param  $userId id of the user performing the operation
    */
-  public function updateRetour(TroncQueteurEntity $tq)
+  public function updateRetour(TroncQueteurEntity $tq, $ulId, $userId)
   {
     $sql = "
 UPDATE `tronc_queteur`
-SET    `retour` = :retour            
- WHERE `id`     = :id;
+SET    `retour`               = :retour,
+       `last_update`          = NOW(),
+       `last_update_user_id`  = :userId            
+WHERE  `id`                   = :id
 ";
     $currentDate = new Carbon();
     $stmt        = $this->db->prepare($sql);
     $result      = $stmt->execute([
       "retour"            => $tq->retour->format('Y-m-d H:i:s'),
+      "userId"            => $userId,
       "id"                => $tq->id
     ]);
 
@@ -351,33 +369,43 @@ SET    `retour` = :retour
    * Update one tronc
    *
    * @param TroncQueteurEntity $tq The tronc to update
+   * @param $ulId the Id of the unite locale
+   * @param  $userId id of the user performing the operation
    */
-    public function updateCoinsCount(TroncQueteurEntity $tq, $ulId)
+    public function updateCoinsCount(TroncQueteurEntity $tq, $adminMode, $ulId, $userId)
     {
 
-      $this->logger->debug("Saving coins ", [$tq]);
+      if($adminMode != true)
+      {// do not overwrite the comptage date in admin mode
+        $comptage = " `comptage`                     = NOW(),";
+      }
+
+      $this->logger->debug("Saving coins adminMode='$adminMode' $comptage", [$tq]);
       $sql = "
 UPDATE `tronc_queteur`
 SET
- `euro500`           = :euro500,           
- `euro200`           = :euro200,           
- `euro100`           = :euro100,           
- `euro50`            = :euro50 ,           
- `euro20`            = :euro20 ,           
- `euro10`            = :euro10 ,           
- `euro5`             = :euro5  ,           
- `euro2`             = :euro2  ,           
- `euro1`             = :euro1  ,           
- `cents50`           = :cents50,           
- `cents20`           = :cents20,           
- `cents10`           = :cents10,           
- `cents5`            = :cents5 ,           
- `cents2`            = :cents2 ,           
- `cent1`             = :cent1  ,           
- `foreign_coins`     = :foreign_coins,     
- `foreign_banknote`  = :foreign_banknote,  
+ `euro500`                      = :euro500,           
+ `euro200`                      = :euro200,           
+ `euro100`                      = :euro100,           
+ `euro50`                       = :euro50 ,           
+ `euro20`                       = :euro20 ,           
+ `euro10`                       = :euro10 ,           
+ `euro5`                        = :euro5  ,           
+ `euro2`                        = :euro2  ,           
+ `euro1`                        = :euro1  ,           
+ `cents50`                      = :cents50,           
+ `cents20`                      = :cents20,           
+ `cents10`                      = :cents10,           
+ `cents5`                       = :cents5 ,           
+ `cents2`                       = :cents2 ,           
+ `cent1`                        = :cent1  ,           
+ `foreign_coins`                = :foreign_coins,     
+ `foreign_banknote`             = :foreign_banknote,  
  `notes_retour_comptage_pieces` = :notes,
- `don_cheque`        = :don_cheque            
+ `don_cheque`                   = :don_cheque,
+$comptage
+ `last_update`                  = NOW(),
+ `last_update_user_id`          = :userId            
  WHERE `id` = :id;
 ";
 
@@ -402,6 +430,7 @@ SET
         "foreign_banknote"  => $tq->foreign_banknote,
         "notes"             => $tq->notes,
         "don_cheque"        => $tq->don_cheque,
+        "userId"            => $userId,
         "id"                => $tq->id
       ]);
 
@@ -417,24 +446,35 @@ SET
    * Update one tronc
    *
    * @param TroncQueteurEntity $tq The tronc to update
+   * @param $ulId the Id of the unite locale
+   * @param  $userId id of the user performing the operation
    */
-  public function updateCreditCardCount(TroncQueteurEntity $tq, $ulId )
+  public function updateCreditCardCount(TroncQueteurEntity $tq, $adminMode , $ulId, $userId)
   {
 
-    $this->logger->debug("Saving Credit Card ", [$tq]);
+
+    if($adminMode != true)
+    {
+      $comptage = " `comptage`                     = NOW(),";
+    }
+
+    $this->logger->debug("Saving Credit Card adminMode='$adminMode'", [$tq]);
     $sql = "
 UPDATE `tronc_queteur`
 SET
  `don_creditcard`               = :don_creditcard,  
- `notes_retour_comptage_pieces` = :notes
-             
+ `notes_retour_comptage_pieces` = :notes,
+$comptage
+ `last_update`         = NOW(),
+ `last_update_user_id` = :userId 
  WHERE `id` = :id;
 ";
 
     $stmt = $this->db->prepare($sql);
     $result = $stmt->execute([
-      "notes"             => $tq->notes,
       "don_creditcard"    => $tq->don_creditcard,
+      "notes"             => $tq->notes,
+      "userId"            => $userId,
       "id"                => $tq->id
     ]);
 
@@ -451,19 +491,23 @@ SET
    * Update one tronc as Admin for data like dates, and point_quete
    *
    * @param TroncQueteurEntity $tq The tronc to update
+   * @param $ulId the Id of the unite locale
+   * @param  $userId id of the user performing the operation
    */
-  public function updateTroncQueteurAsAdmin(TroncQueteurEntity $tq, $ulId )
+  public function updateTroncQueteurAsAdmin(TroncQueteurEntity $tq, $ulId, $userId)
   {
 
     $this->logger->debug("Admin Updates dates, point_quete_id or deleted ", [$tq]);
     $sql = "
 UPDATE `tronc_queteur`
 SET
-  `depart_theorique`= :depart_theorique,
-  `depart`          = :depart,
-  `retour`          = :retour,
-  `point_quete_id`  = :point_quete_id,
-  `deleted`         = :deleted
+  `depart_theorique`   = :depart_theorique,
+  `depart`             = :depart,
+  `retour`             = :retour,
+  `point_quete_id`     = :point_quete_id,
+  `deleted`            = :deleted,
+  `last_update`        = NOW(),
+  `last_update_user_id`= :userId 
  WHERE `id` = :id;
 ";
 
@@ -474,6 +518,7 @@ SET
       "retour"            => $tq->retour,
       "point_quete_id"    => $tq->point_quete_id,
       "deleted"           => $tq->deleted?1:0,
+      "userId"            => $userId,
       "id"                => $tq->id
     ]);
 
@@ -491,9 +536,11 @@ SET
    * Insert one TroncQueteur
    *
    * @param TroncQueteurEntity $tronc The tronc to update
+   * @param $ulId the Id of the unite locale
+   * @param  $userId id of the user performing the operation
    * @return int the primary key of the new tronc
    */
-  public function insert(TroncQueteurEntity $tq, $ulId)
+  public function insert(TroncQueteurEntity $tq, $ulId, $userId)
   {
 
 
@@ -510,14 +557,18 @@ INSERT INTO `tronc_queteur`
    `queteur_id`, 
    `point_quete_id`, 
    `tronc_id`, 
-   `depart_theorique` 
+   `depart_theorique`,
+   `last_update`,
+   `last_update_user_id`       
 )
 VALUES
 (
   :queteur_id,
   :point_quete_id, 
   :tronc_id, 
-  :depart_theorique
+  :depart_theorique,
+  NOW(),
+  :userId
 )
 ";
 
@@ -528,7 +579,8 @@ VALUES
       "queteur_id"        => $tq->queteur_id,
       "point_quete_id"    => $tq->point_quete_id,
       "tronc_id"          => $tq->tronc_id,
-      "depart_theorique"  => $tq->depart_theorique->format('Y-m-d H:i:s')
+      "depart_theorique"  => $tq->depart_theorique->format('Y-m-d H:i:s'),
+      "userId"            => $userId
     ]);
 
     $stmt->closeCursor();
@@ -555,7 +607,16 @@ VALUES
   public function checkTroncNotAlreadyInUse($troncId, $ulId)
   {
     $sql = "
-SELECT 	tq.id, tq.queteur_id, tq.depart_theorique, tq.depart, q.first_name, q.last_name, q.email, q.mobile, q.nivol
+SELECT 	
+tq.id, 
+tq.queteur_id, 
+tq.depart_theorique, 
+tq.depart, 
+q.first_name, 
+q.last_name, 
+q.email, 
+q.mobile, 
+q.nivol
 FROM 	tronc_queteur tq,
       queteur q
 WHERE 	q.ul_id       = :ul_id
@@ -638,7 +699,7 @@ AND    (tq.depart     is null OR
     *
     *
     */
-  public function deleteNonReturnedTroncQueteur($troncId, $ulId)
+  public function deleteNonReturnedTroncQueteur($troncId, $ulId, $userId)
   {
 
     //TODO : limit the deletion to ulId
@@ -661,5 +722,77 @@ AND         (depart IS NULL OR
 
 
   }
+
+
+
+  /**
+   * Get all previous version of a tronc_queteur by its id
+   *
+   * @param int $tronc_queteur_id The ID of the tronc_quete row
+   * @param int $ulId the Id of the Unite Local
+   * @return TroncQueteurEntity[]  list of tronc_queteur entity
+   * @throws \Exception if tronc_queteur not found
+   */
+  public function getTroncQueteurHistoryById($id, $ulId)
+  {
+    $sql = "
+SELECT 
+t.`id`                        ,
+`insert_date`                 ,
+`tronc_queteur_id`            ,
+`queteur_id`                  ,
+`point_quete_id`              ,
+`tronc_id`                    ,
+`depart_theorique`            ,
+`depart`                      ,
+`retour`                      ,
+`comptage`                    ,
+`last_update`                 ,
+`last_update_user_id`         ,
+`euro500`                     ,
+`euro200`                     ,
+`euro100`                     ,
+`euro50`                      ,
+`euro20`                      ,
+`euro10`                      ,
+`euro5`                       ,
+`euro2`                       ,
+`euro1`                       ,
+`cents50`                     ,
+`cents20`                     ,
+`cents10`                     ,
+`cents5`                      ,
+`cents2`                      ,
+`cent1`                       ,
+`foreign_coins`               ,
+`foreign_banknote`            ,
+`notes_depart_theorique`      ,
+`notes_retour`                ,
+`notes_retour_comptage_pieces`,
+`notes_update`                ,
+`don_cheque`                  ,
+`don_creditcard`              ,
+`deleted`
+FROM  `tronc_queteur_historique`  as t, 
+      `queteur`                   as q
+WHERE  t.tronc_queteur_id = :tronc_queteur_id
+AND    t.queteur_id       = q.id
+AND    q.ul_id            = :ul_id
+ORDER BY t.id DESC
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute(["tronc_queteur_id" => $id, "ul_id" => $ulId]);
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
+    }
+    return $results;
+  }
+
 
 }

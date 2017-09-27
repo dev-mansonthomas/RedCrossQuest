@@ -67,7 +67,7 @@ $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
     $ulId = (int)$args['ul-id'];
 
     $dailyStatsBeforeRCQDBService = new DailyStatsBeforeRCQDBService($this->db, $this->logger);
-    $input            = $request->getParsedBody();
+    $input                        = $request->getParsedBody();
     $dailyStatsBeforeRCQEntity    = new DailyStatsBeforeRCQEntity($input);
     
     $dailyStatsBeforeRCQDBService->update($dailyStatsBeforeRCQEntity, $ulId);

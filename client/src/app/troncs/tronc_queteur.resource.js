@@ -17,10 +17,10 @@ angular.module('client').factory('TroncQueteurResource', function ($resource, $l
         params: {id: '@id'}
       },
       //get the last tronc_queteur
-      getTroncQueteurForTroncId: {
+      getLastTroncQueteurFromTroncId: {
         method: 'GET',
         params: {
-          action: 'getTroncQueteurForTroncId',
+          action: 'getLastTroncQueteurFromTroncId',
           tronc_id: '@tronc_id'
         }
       },
@@ -52,10 +52,24 @@ angular.module('client').factory('TroncQueteurResource', function ($resource, $l
           action: 'saveCoins'
         }
       },
+      saveCoinsAsAdmin: {
+        method: 'POST',
+        params: {
+          action: 'saveCoins',
+          adminMode: true
+        }
+      },
       saveCreditCard: {
         method: 'POST',
         params: {
           action: 'saveCreditCard'
+        }
+      },
+      saveCreditCardAsAdmin: {
+        method: 'POST',
+        params: {
+          action: 'saveCreditCard',
+          adminMode: true
         }
       },
       saveAsAdmin: {

@@ -28,7 +28,7 @@ environments:
         adapter: mysql
         host: 127.0.0.1
         name: RCQ
-        user: rcq
-        pass: 'rcq'
+        user: root
+        pass: 'CRFCRF'
         port: 3306
         charset: utf8

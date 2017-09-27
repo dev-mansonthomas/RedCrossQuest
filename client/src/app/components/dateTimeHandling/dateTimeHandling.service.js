@@ -16,20 +16,29 @@ angular
      * */
     instance.handleServerDate=function(serverDate)
     {
+      if(serverDate == null)
+      {
+        return {
+          dateInLocalTimeZone       : "",
+          dateInLocalTimeZoneMoment : "",
+          stringVersion             : ""
+        };
+      }
+
       //date store in UTC + Timezone offset with Carbon on php side.
       //Carbon date is updated to Paris Timezone, so no need of further manipulation
       //this parse the Carbon time without '000' ending in the UTC timezone, and then convert it to Europe/Paris (the value of the tronc_queteur.retour.timezone)
 
       //Convert it to local TimeZone            .substring(0,serverDate.date.length -3 ),"YYYY-MM-DD HH:mm:ss.SSS"
       var finalDateMoment = moment(serverDate.date.substring(0,serverDate.date.length -3 ), "YYYY-MM-DD HH:mm:ss.SSS");
-      var finalDate= finalDateMoment.toDate();
+      var finalDate       = finalDateMoment.toDate();
       // don't understand why, but I've to add the offset to get the local timezone date as a string
-      var stringVersion = finalDateMoment.format("YYYY-MM-DD HH:mm:ss");
+      var stringVersion   = finalDateMoment.format("YYYY-MM-DD HH:mm:ss");
 
       return {
-        dateInLocalTimeZone: finalDate,
-        dateInLocalTimeZoneMoment:finalDateMoment,
-        stringVersion: stringVersion
+        dateInLocalTimeZone       : finalDate,
+        dateInLocalTimeZoneMoment : finalDateMoment,
+        stringVersion             : stringVersion
       };
 
     };

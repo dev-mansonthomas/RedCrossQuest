@@ -35,6 +35,17 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
   background-color: #f7e741;
 }
 
+
+.histo tbody td
+{
+  white-space: pre;
+}
+
+.histo thead th
+{
+  vertical-align: top !important;
+}
+
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject
  *  all your sass files automatically

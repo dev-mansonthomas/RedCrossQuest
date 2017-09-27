@@ -66,7 +66,7 @@ class Entity
           if(strpos($stringValue, 'T') !== false)
           {
             //json javascript date : "2017-06-04T23:00:00.000Z"
-            $this->$key = Carbon::parse($data[$key]);
+            $this->$key = Carbon::parse($stringValue);
           }
           else
           {

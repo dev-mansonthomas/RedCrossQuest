@@ -3,6 +3,12 @@ namespace RedCrossQuest\Entity;
 
 class TroncQueteurEntity extends Entity
 {
+  /***
+   * ID of the tronc_queteur
+   * or
+   * ID of the row of the tronc_queteur_historique when fetching the history of the tronc_queteur.
+   * The ID of tronc_queteur is stored in tronc_queteur_id column
+   */
   public $id               ;
   public $queteur_id       ;
   /**
@@ -20,6 +26,10 @@ class TroncQueteurEntity extends Entity
   public $depart_theorique ;
   public $depart           ;
   public $retour           ;
+  public $comptage         ;
+  public $last_update      ;
+  public $last_update_user_id;
+
   public $euro500          ;
   public $euro200          ;
   public $euro100          ;
@@ -46,6 +56,11 @@ class TroncQueteurEntity extends Entity
   public $last_name        ;
   public $first_name       ;
 
+
+  //when this object is used to retrieve data from tronc_queteur_historique
+  public $tronc_queteur_id;
+  public $insert_date;
+
   protected $logger;
 
   /**
@@ -65,6 +80,10 @@ class TroncQueteurEntity extends Entity
       $this->getDate  ('depart_theorique' , $data);
       $this->getDate  ('depart'           , $data);
       $this->getDate  ('retour'           , $data);
+      $this->getDate  ('comptage'         , $data);
+      $this->getDate  ('last_update'      , $data);
+      $this->getInteger('last_update_user_id', $data);
+
       $this->getString('euro500'          , $data);
       $this->getString('euro200'          , $data);
       $this->getString('euro100'          , $data);
@@ -89,7 +108,6 @@ class TroncQueteurEntity extends Entity
       $this->getString('foreign_banknote' , $data);
 
       $this->getString('notes_depart_theorique' , $data);
-      $this->getString('notes_depart'           , $data);
       $this->getString('notes_retour'           , $data);
       $this->getString('notes_retour_comptage_pieces', $data);
       $this->getString('notes_update'           , $data);
@@ -98,5 +116,10 @@ class TroncQueteurEntity extends Entity
       $this->getString('first_name'             , $data);
 
       $this->getBoolean('deleted'               , $data);
+
+      $this->getString('tronc_queteur_id'       , $data);
+      $this->getDate  ('insert_date'            , $data);
+
+
     }
 }

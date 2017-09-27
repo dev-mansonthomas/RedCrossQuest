@@ -121,7 +121,7 @@
 
         vm.current.tronc.stringView = tronc.id;
 
-        TroncQueteurResource.getTroncQueteurForTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
+        TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
       }
     }
 

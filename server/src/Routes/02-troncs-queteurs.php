@@ -53,10 +53,21 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
 {
   try
   {
-    $ulId = (int)$args['ul-id'];
-    $params = $request->getQueryParams();
+    $ulId         = (int)$args['ul-id'];
+    $params       = $request->getQueryParams();
+    $decodedToken = $request->getAttribute('decodedJWT');
+    $userId       = (int)$decodedToken->getUid ();
 
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
+
+    $adminMode = false;
+    if(array_key_exists('adminMode', $params))
+    {//in order to not overwrite the comptage date in the DB
+      $adminMode = $params['adminMode'];
+      $this->logger->addDebug("adminMode parameter exist");
+    }
+    $this->logger->addDebug("params",[$params]);
+    $this->logger->addDebug("adminMode:".$adminMode);
 
     if(array_key_exists('action', $params))
     {
@@ -68,22 +79,22 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       if ($action =="saveReturnDate")
       {
         $this->logger->debug("Saving return date",[$tq]);
-        $troncQueteurDBService->updateRetour($tq, $ulId);
+        $troncQueteurDBService->updateRetour($tq, $ulId, $userId);
       }
       elseif ($action =="saveCoins")
       {
         $this->logger->debug("Saving Coins");
-        $troncQueteurDBService->updateCoinsCount($tq, $ulId);
+        $troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
       }
       elseif ($action =="saveCreditCard")
       {
         $this->logger->debug("Saving CreditCard");
-        $troncQueteurDBService->updateCreditCardCount($tq, $ulId);
+        $troncQueteurDBService->updateCreditCardCount($tq, $adminMode, $ulId, $userId);
       }
       elseif ($action =="saveAsAdmin")
       {
         $this->logger->debug("Saving As Admin", [ $input ]);
-        $troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId);
+        $troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
       }
     }
   }
@@ -110,8 +121,12 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
 {
   try
   {
-    $ulId = (int)$args['ul-id'];
-    $params = $request->getQueryParams();
+    $ulId         = (int)$args['ul-id'];
+    $params       = $request->getQueryParams();
+
+    $decodedToken = $request->getAttribute('decodedJWT');
+    $userId       = (int)$decodedToken->getUid ();
+
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
 
     if(array_key_exists('action', $params))
@@ -128,7 +143,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
 
       if($action == "getTroncQueteurForTroncIdAndSetDepart")
       {
-        $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId );
+        $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId);
 
         // check if the tronc_queteur is in the correct state
         // Sometime the preparation is not done, so we fetch a previous tronc_queteur fully filled (return date, coins & bills data)
@@ -140,7 +155,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
         {
           if($troncQueteur->depart == null)
           {
-            $departDate = $troncQueteurDBService->setDepartToNow($troncQueteur->id, $ulId );
+            $departDate = $troncQueteurDBService->setDepartToNow($troncQueteur->id, $ulId, $userId);
             $troncQueteur->depart = $departDate;
           }
           else
@@ -162,7 +177,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
 
       try
       {
-        $troncQueteurDBService->insert($tq, $ulId );
+        $troncQueteurDBService->insert($tq, $ulId, $userId);
       }
       catch(Exception $e)
       {
@@ -196,15 +211,17 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
     {
       $action   = $params['action'  ];
       $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
-      $troncQueteurBusinessService = new TroncQueteurBusinessService($this->logger,
+      $troncQueteurBusinessService = new TroncQueteurBusinessService(
+        $this->logger,
         $troncQueteurDBService,
         new QueteurDBService     ($this->db, $this->logger),
         new PointQueteDBService  ($this->db, $this->logger),
-        new TroncDBService       ($this->db, $this->logger));
+        new TroncDBService       ($this->db, $this->logger)
+      );
 
-      if($action == "getTroncQueteurForTroncId")
+      if($action == "getLastTroncQueteurFromTroncId")
       {
-        $this->logger->debug("action='getTroncQueteurForTroncId'");
+        $this->logger->debug("action='getLastTroncQueteurFromTroncId'");
         $tronc_id     = $params['tronc_id'];
         $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId);
         $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
@@ -272,6 +289,9 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
     $this->logger->addError($e);
     throw $e;
   }
-
-
 });
+
+
+
+
+
