@@ -2,7 +2,7 @@
 namespace RedCrossQuest\DBService;
 
 use \RedCrossQuest\Entity\TroncEntity;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use PDOException;
 
 class TroncDBService extends DBService
 {
@@ -13,6 +13,7 @@ class TroncDBService extends DBService
    * @param boolean $active   search active or incative troncs
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return TroncEntity[] list of troncs
+   * @throws PDOException if the query fails to execute on the server
    *
    */
     public function getTroncs(string $query=null, int $ulId, boolean $active )
@@ -42,11 +43,11 @@ AND CONVERT(id, CHAR) like concat(:query,'%')
       $stmt = $this->db->prepare($sql);
       if($query != null)
       {
-        $result = $stmt->execute([ "query" => $query, "ul_id" => $ulId, 'enabled'=>$active ]);
+        $stmt->execute([ "query" => $query, "ul_id" => $ulId, 'enabled'=>$active ]);
       }
       else
       {
-        $result = $stmt->execute(["ul_id" => $ulId, 'enabled'=>$active ]);
+        $stmt->execute(["ul_id" => $ulId, 'enabled'=>$active ]);
       }
 
 
@@ -73,6 +74,7 @@ AND CONVERT(id, CHAR) like concat(:query,'%')
  * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
  *
  * @return TroncEntity[] array of troncs
+ * @throws PDOException if the query fails to execute on the server
  */
   public function getTroncsBySearchType(int $searchType, int $ulId)
   {
@@ -107,7 +109,7 @@ ORDER BY id ASC
     ";
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["ul_id" => $ulId]);
+    $stmt->execute(["ul_id" => $ulId]);
 
     $results = [];
     $i=0;
@@ -129,6 +131,7 @@ ORDER BY id ASC
      * @param int $ulId the ID of the UniteLocal
      * @return TroncEntity  The tronc
      * @throws \Exception if the tronc is not found
+     * @throws PDOException if the query fails to execute on the server
      */
     public function getTroncById(int $tronc_id, int $ulId)
     {
@@ -145,10 +148,9 @@ AND    t.ul_id = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
+      $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
 
-      $result = $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
-
-      if($result && $stmt->rowCount() == 1 )
+      if($stmt->rowCount() == 1 )
       {
         $tronc = new TroncEntity($stmt->fetch());
         $stmt->closeCursor();
@@ -156,6 +158,7 @@ AND    t.ul_id = :ul_id
       }
       else
       {
+        $stmt->closeCursor();
         throw new \Exception("Tronc with ID:'".$tronc_id . "' for ul with id: $ulId not found");
       }
     }
@@ -166,7 +169,7 @@ AND    t.ul_id = :ul_id
    *
    * @param TroncEntity $tronc The tronc to update
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @return TroncEntity  The tronc
+   * @throws PDOException if the query fails to execute on the server
    */
     public function update(TroncEntity $tronc, int $ulId)
     {
@@ -181,7 +184,7 @@ AND   `ul_id`       = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
-      $result = $stmt->execute([
+      $stmt->execute([
         "notes"      => $tronc->notes,
         "enabled"    => $tronc->enabled,
         "id"         => $tronc->id,
@@ -191,18 +194,7 @@ AND   `ul_id`       = :ul_id
 
       //$this->logger->warning($stmt->rowCount());
       $stmt->closeCursor();
-
-      if(!$result)
-      {
-          throw new Exception("could not save record");
-      }
-      else
-      {
-        return null;
-      }
     }
-
-
 
   /**
    * Insert one Tronc
@@ -210,6 +202,7 @@ AND   `ul_id`       = :ul_id
    * @param TroncEntity $tronc The tronc to update
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the primary key of the new tronc
+   * @throws PDOException if the query fails to execute on the server
    */
   public function insert(TroncEntity $tronc, int $ulId)
   {
@@ -235,7 +228,7 @@ VALUES
     $stmt = $this->db->prepare($sql);
 
     $this->db->beginTransaction();
-    $result = $stmt->execute([
+    $stmt->execute([
       "ul_id"    => $ulId,
       "enabled"  => $tronc->enabled,
       "notes"    => $tronc->notes,

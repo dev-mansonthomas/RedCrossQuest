@@ -5,6 +5,7 @@ namespace RedCrossQuest\DBService;
 use \RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
 use DateTime;
 use DateInterval;
+use PDOException;
 
 class DailyStatsBeforeRCQDBService extends DBService
 {
@@ -34,6 +35,7 @@ class DailyStatsBeforeRCQDBService extends DBService
    * @param int     $ulId The ID of the Unite Locale
    * @param string  $year The year for which we wants the daily stats
    * @return array of PointQueteEntity  The PointQuete
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getDailyStats(int $ulId, string $year)
   {
@@ -51,11 +53,12 @@ ORDER BY d.date DESC
 
 
     $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute(["ul_id" => $ulId, "year" => $year."%"]);
+    $stmt->execute(["ul_id" => $ulId, "year" => $year."%"]);
 
     $results = [];
     $i = 0;
-    while ($row = $stmt->fetch()) {
+    while ($row = $stmt->fetch())
+    {
       $results[$i++] = new DailyStatsBeforeRCQEntity($row);
     }
 
@@ -67,6 +70,7 @@ ORDER BY d.date DESC
    * update a daily stat (ie a particular day of a particular year)
    * @param DailyStatsBeforeRCQEntity $dailyStatsBeforeRCQEntity info about the dailyStats
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @throws PDOException if the query fails to execute on the server
    */
   public function update(DailyStatsBeforeRCQEntity $dailyStatsBeforeRCQEntity, int $ulId)
   {
@@ -95,6 +99,7 @@ AND     `ul_id`   = :ulId
    *
    * @param int    $ulId  Id of the UL for which we create the data
    * @param string $year  year to create
+   * @throws PDOException if the query fails to execute on the server
    */
   public function createYear(int $ulId, string $year)
   {
@@ -114,15 +119,11 @@ VALUES
 ";
     $yearDefinition = DailyStatsBeforeRCQDBService::$queteDates[$year];
 
-
-
     $startDate    = $yearDefinition[0];
     $numberOfDays = $yearDefinition[1];
-    $oneDate = DateTime::createFromFormat("Y-m-d", $startDate);
-
+    $oneDate      = DateTime::createFromFormat("Y-m-d", $startDate);
 
     $stmt         = $this->db->prepare($sql);
-
 
     for($i=0;$i<=$numberOfDays;$i++)
     {
@@ -137,8 +138,6 @@ VALUES
     }
 
     $stmt->closeCursor();
-
-
   }
 
 }

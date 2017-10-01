@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 include_once("../../src/DBService/DBService.php");
 
 use RedCrossQuest\Entity\UserEntity;
+use PDOException;
 
 class UserDBService extends DBService
 {
@@ -18,6 +19,7 @@ class UserDBService extends DBService
    * @param string $nivol : Nivol of the user
    * @param int    $queteurId : queteurId of the user
    * @return int the primary key of the new user
+   * @throws PDOException if the query fails to execute on the server
    */
   public function insert(string $nivol, int $queteurId)
   {
@@ -86,6 +88,8 @@ NULL
    *
    * @param string $nivol string The Nivol passed at login
    * @return UserEntity An instance of UserEntity, null if nothing is found
+   * @throws \Exception in case of incorrect number of rows updated
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithNivol(string $nivol)
   {
@@ -98,11 +102,13 @@ LIMIT 1
 ";
 
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute([$nivol]);
+    $stmt->execute([$nivol]);
 
     //$this->logger->addInfo( "queryResult=$queryResult, $nivol, ".$stmt->rowCount());
-    
-    if($queryResult && $stmt->rowCount() == 1)
+
+    $count = $stmt->rowCount();
+
+    if($count == 1)
     {
       $result = new UserEntity($stmt->fetch());
       $stmt->closeCursor();
@@ -111,7 +117,7 @@ LIMIT 1
     else
     {
       $stmt->closeCursor();
-      return null;
+      throw new \Exception ("Update didn't update the correct number of rows($count) for nivol: $nivol");
     }
   }
 
@@ -123,6 +129,8 @@ LIMIT 1
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
    * @return UserEntity an instance of UserEntity, null if nothing is found
+   * @throws \Exception in case of incorrect number of rows updated
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithQueteurId(int $queteurId, int $ulId, int $roleId)
   {
@@ -161,11 +169,13 @@ LIMIT 1
     }
 
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute($parameters);
+    $stmt->execute($parameters);
 
     //$this->logger->addInfo( "queryResult=$queryResult, queteurId=$queteurId, ulId=$ulId, count=".$stmt->rowCount());
 
-    if($queryResult && $stmt->rowCount() == 1)
+    $count = $stmt->rowCount();
+
+    if($count == 1)
     {
       $result = new UserEntity($stmt->fetch());
       $stmt->closeCursor();
@@ -174,7 +184,7 @@ LIMIT 1
     else
     {
       $stmt->closeCursor();
-      return null;
+      throw new \Exception ("Update didn't update the correct number of rows($count) for queteurId: $queteurId, ulId: $ulId, roleId: $roleId");
     }
 
   }
@@ -187,6 +197,8 @@ LIMIT 1
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
    * @return UserEntity an instance of UserEntity, null if nothing is found
+   * @throws \Exception in case of incorrect number of rows updated
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithUserId(int $userId, int $ulId, int $roleId)
   {
@@ -225,11 +237,13 @@ LIMIT 1
     }
 
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute($parameters);
+    $stmt->execute($parameters);
 
     //$this->logger->addInfo( "queryResult=$queryResult, queteurId=$userId, ulId=$ulId, roleId=$roleId, count=".$stmt->rowCount());
 
-    if($queryResult && $stmt->rowCount() == 1)
+    $count = $stmt->rowCount();
+
+    if($count == 1)
     {
       $result = new UserEntity($stmt->fetch());
       $stmt->closeCursor();
@@ -238,7 +252,7 @@ LIMIT 1
     else
     {
       $stmt->closeCursor();
-      return null;
+      throw new \Exception ("Update didn't update the correct number of rows($count) for userId: $userId, ulId: $ulId, roleId: $roleId");
     }
 
   }
@@ -249,6 +263,8 @@ LIMIT 1
    * get user info for UUID if the init_passwd_date is after current time.
    * @param string $uuid the UUID to retrieve the user info
    * @return USerEntity the info of the user
+   * @throws \Exception in case of incorrect number of rows updated
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithUUID(string $uuid)
   {
@@ -262,11 +278,13 @@ LIMIT 1
 ";
 
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute(["uuid" => $uuid]);
+    $stmt->execute(["uuid" => $uuid]);
 
     //$this->logger->addInfo( "queryResult=$queryResult, $uuid, ".$stmt->rowCount());
 
-    if($queryResult && $stmt->rowCount() == 1)
+    $count = $stmt->rowCount();
+
+    if($count == 1)
     {
       $result = new UserEntity($stmt->fetch());
       $stmt->closeCursor();
@@ -275,7 +293,7 @@ LIMIT 1
     else
     {
       $stmt->closeCursor();
-      return null;
+      throw new \Exception ("Update didn't update the correct number of rows($count) for $uuid");
     }
 
   }
@@ -286,6 +304,8 @@ LIMIT 1
    *
    * @param string $username the nivol of the user who want to init its password
    * @return string the generated uuid
+   * @throws \Exception in case of incorrect number of rows updated
+   * @throws PDOException if the query fails to execute on the server
    */
   public function sendInit(string $username)
   {
@@ -299,23 +319,23 @@ WHERE   nivol             = :nivol
 ";
 
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute(
+    $stmt->execute(
       [
         "nivol" => $username,
         "uuid"  => $uuid
       ]
     );
 
+    $count = $stmt->rowCount();
+    $stmt->closeCursor();
 
-    if($queryResult && $stmt->rowCount() == 1)
+    if($count == 1)
     {
-      $stmt->closeCursor();
       return $uuid;
     }
     else
     {
-      $stmt->closeCursor();
-      return null;
+      throw new \Exception ("Update didn't update the correct number of rows($count) for $username");
     }
 
   }
@@ -325,6 +345,7 @@ WHERE   nivol             = :nivol
    * @param string $uuid the uuid that identifiy the user that update his password
    * @param string $password the new password( clear text), stores it as a hash
    * @return boolean true if the query is successfull, false otherwise
+   * @throws PDOException if the query fails to execute on the server
    */
   public function resetPassword(string $uuid, string $password)
   {
@@ -339,15 +360,14 @@ AND    active = 1
 ";
 
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute(
+    $stmt->execute(
       [
         "uuid"     => $uuid,
         "password" => password_hash($password, PASSWORD_DEFAULT)
       ]
     );
 
-
-    if($queryResult && $stmt->rowCount() == 1)
+    if($stmt->rowCount() == 1)
     {
       $stmt->closeCursor();
       return true;
@@ -361,6 +381,7 @@ AND    active = 1
    * update last successful login date and reset the count of failed login
    * @param int $userId the id of the user that is connecting
    * @return boolean true if query successful, false otherwise
+   * @throws PDOException if the query fails to execute on the server
    */
   public function registerSuccessfulLogin(int $userId)
   {
@@ -371,13 +392,13 @@ SET     last_successful_login_date  = NOW(),
 WHERE   id = :id
 ";
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute(
+    $stmt->execute(
       [
         "id"     => $userId
       ]
     );
 
-    if($queryResult && $stmt->rowCount() == 1)
+    if($stmt->rowCount() == 1)
     {
       return true;
     }
@@ -388,6 +409,7 @@ WHERE   id = :id
    * increment the failed login counter and update the last failed login date
    * @param int $userId the id of the user that is connecting
    * @return boolean true if query successful, false otherwise
+   * @throws PDOException if the query fails to execute on the server
    */
   public function registerFailedLogin(int $userId)
   {
@@ -398,13 +420,13 @@ SET     last_failure_login_date  = NOW(),
 WHERE   id = :id
 ";
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute(
+    $stmt->execute(
       [
         "id"     => $userId
       ]
     );
 
-    if($queryResult && $stmt->rowCount() == 1)
+    if($stmt->rowCount() == 1)
     {
       return true;
     }
@@ -416,7 +438,7 @@ WHERE   id = :id
    * this method update the 'active' and 'role' column of the user
    * @param UserEntity $userEntity the user info
    * @return boolean true if query is successful, false otherwise
-   *
+   * @throws PDOException if the query fails to execute on the server
    */
   public function updateActiveAndRole(UserEntity $userEntity)
   {
@@ -427,7 +449,7 @@ SET     active  = :active,
 WHERE   id      = :id
 ";
     $stmt = $this->db->prepare($sql);
-    $queryResult = $stmt->execute(
+    $stmt->execute(
       [
         "id"     => $userEntity->id,
         "active" => $userEntity->active,
@@ -435,7 +457,7 @@ WHERE   id      = :id
       ]
     );
 
-    if($queryResult && $stmt->rowCount() == 1)
+    if($stmt->rowCount() == 1)
     {
       return true;
     }

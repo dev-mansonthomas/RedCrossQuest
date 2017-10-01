@@ -40,7 +40,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($reques
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("Error while fetching the error history of a tronc_queteur($troncQueteurId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 });

@@ -3,6 +3,7 @@
 namespace RedCrossQuest\DBService;
 
 use RedCrossQuest\Entity\QueteurEntity;
+use PDOException;
 
 
 class QueteurDBService extends DBService
@@ -16,6 +17,7 @@ class QueteurDBService extends DBService
    * @param string $query : the criteria to search queteur on first_name, last_name, nivol
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return QueteurEntity[]  the list of Queteurs
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getQueteurs(string $query, int $ulId)
   {
@@ -52,7 +54,7 @@ AND
     $stmt = $this->db->prepare($sql);
     if ($query !== null)
     {
-      $result = $stmt->execute([
+      $stmt->execute([
         "first_name" => $query,
         "last_name" => $query,
         "nivol" => $query,
@@ -61,7 +63,7 @@ AND
     }
     else
     {
-      $result = $stmt->execute(["ul_id" => $ulId]);
+      $stmt->execute(["ul_id" => $ulId]);
     }
 
     $results = [];
@@ -89,6 +91,7 @@ AND
    * @param boolean $active       search only active or inactive queteurs
    * @param boolean $benevoleOnly Retourne que les bénévoles et anciens bénévoles (usecase: recherche de référent pour le queteur d'un jour)
    * @return QueteurEntity[] list of Queteurs
+   * @throws PDOException if the query fails to execute on the server
    *
    */
   public function searchQueteurs(string $query, int $searchType, int $secteur, int $ulId, boolean $active, boolean $benevoleOnly)
@@ -285,17 +288,15 @@ ORDER BY q.last_name ASC
         $sql = $sqlSearchAll;
     }
 
-
-
     $stmt   = $this->db->prepare($sql);
     $parameters["active"] = $active;
 
-
-    $result = $stmt->execute($parameters);
+    $stmt->execute($parameters);
 
     $results = [];
     $i = 0;
-    while ($row = $stmt->fetch()) {
+    while ($row = $stmt->fetch())
+    {
       $results[$i++] = new QueteurEntity($row);
     }
     //$this->logger->addDebug("retrieved $i queteurs, searchType:'$searchType', secteur='$secteur', query='$query' ".print_r($parameters, true));
@@ -308,6 +309,7 @@ ORDER BY q.last_name ASC
    * No UL_ID passed, as this method is used by the login process, which don't know yet the UL_ID
    * @param int $queteur_id The ID of the queteur
    * @return QueteurEntity  The queteur
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getQueteurById(int $queteur_id)
   {
@@ -339,19 +341,20 @@ AND    q.ul_id = u.id
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["queteur_id" => $queteur_id]);
+    $stmt->execute(["queteur_id" => $queteur_id]);
 
-    if ($result)
+    $queteur = new QueteurEntity($stmt->fetch());
+    $stmt->closeCursor();
+
+    if($queteur->referent_volunteer > 0)
     {
-      $queteur = new QueteurEntity($stmt->fetch());
-      $stmt->closeCursor();
-      return $queteur;
+      $referent         = $this->getQueteurById($queteur->referent_volunteer);
+      $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
+      $queteur->referent_volunteerQueteur = $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
     }
-    else
-    {
-      $stmt->closeCursor();
-      return null;
-    }
+
+    return $queteur;
+
   }
 
 
@@ -360,6 +363,7 @@ AND    q.ul_id = u.id
    * No UL_ID passed, as this method is used by the login process, which don't know yet the UL_ID
    * @param string $nivol The NIVOL of the queteur
    * @return QueteurEntity  The queteur
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getQueteurByNivol(string $nivol)
   {
@@ -392,19 +396,11 @@ AND    q.ul_id   = u.id
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["nivol" => $nivol]);
+    $stmt->execute(["nivol" => $nivol]);
 
-    if ($result)
-    {
-      $queteur = new QueteurEntity($stmt->fetch());
-      $stmt->closeCursor();
-      return $queteur;
-    }
-    else
-    {
-      $stmt->closeCursor();
-      return null;
-    }
+    $queteur = new QueteurEntity($stmt->fetch());
+    $stmt->closeCursor();
+    return $queteur;
   }
 
 
@@ -414,7 +410,7 @@ AND    q.ul_id   = u.id
    * @param QueteurEntity $queteur The queteur to update
    * @param int           $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int           $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
-   * @throws \Exception   if the update has some issues
+   * @throws PDOException if the query fails to execute on the server
    */
   public function update(QueteurEntity $queteur, int $ulId, int $roleId)
   {
@@ -479,16 +475,9 @@ AND   `ul_id` = :ul_id
 
 
     $stmt = $this->db->prepare($sql);
-
-    $result = $stmt->execute($parameters);
-
+    $stmt->execute($parameters);
 
     $stmt->closeCursor();
-
-    if (!$result)
-    {
-      throw new \Exception("could not save record ".print_r($queteur, true));
-    }
   }
 
 
@@ -498,6 +487,7 @@ AND   `ul_id` = :ul_id
    * @param QueteurEntity $queteur  The queteur to update
    * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the primary key of the new queteur
+   * @throws PDOException if the query fails to execute on the server
    */
   public function insert(QueteurEntity $queteur, int $ulId)
   {
@@ -543,7 +533,7 @@ VALUES
     $stmt = $this->db->prepare($sql);
 
     $this->db->beginTransaction();
-    $result = $stmt->execute([
+    $stmt->execute([
       "first_name"         => $queteur->first_name,
       "last_name"          => $queteur->last_name,
       "email"              => $queteur->email,

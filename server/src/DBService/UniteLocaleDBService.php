@@ -3,6 +3,7 @@
 namespace RedCrossQuest\DBService;
 
 use \RedCrossQuest\Entity\UniteLocaleEntity;
+use PDOException;
 
 class UniteLocaleDBService extends DBService
 {
@@ -12,6 +13,7 @@ class UniteLocaleDBService extends DBService
    *
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return UniteLocaleEntity  The Unite Locale
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getPointQueteById(int $ulId)
   {
@@ -37,18 +39,11 @@ WHERE   `ul`.id    = :ul_id
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["ul_id" => $ulId]);
+    $stmt->execute(["ul_id" => $ulId]);
 
-    if ($result)
-    {
-      $ul = new UniteLocaleEntity($stmt->fetch());
-      $stmt->closeCursor();
-      return $ul;
-    }
-    else
-    {
-      $stmt->closeCursor();
-      return null;
-    }
+    $ul = new UniteLocaleEntity($stmt->fetch());
+    $stmt->closeCursor();
+
+    return $ul;
   }
 }

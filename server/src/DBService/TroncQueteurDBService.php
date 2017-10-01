@@ -5,7 +5,7 @@ namespace RedCrossQuest\DBService;
 use Carbon\Carbon;
 
 use \RedCrossQuest\Entity\TroncQueteurEntity;
-
+use PDOException;
 
 
 class TroncQueteurDBService extends DBService
@@ -18,6 +18,7 @@ class TroncQueteurDBService extends DBService
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return TroncQueteurEntity  The tronc
    * @throws \Exception if tronc not found
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId)
   {
@@ -68,9 +69,9 @@ LIMIT 1
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
+    $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
 
-    if($result && $stmt->rowCount() == 1 )
+    if($stmt->rowCount() == 1 )
     {
       $tronc = new TroncQueteurEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
@@ -78,6 +79,7 @@ LIMIT 1
     }
     else
     {
+      $stmt->closeCursor();
       throw new \Exception("Tronc Queteur with ID:'".$tronc_id . "' not found");
     }
   }
@@ -90,6 +92,7 @@ LIMIT 1
    * @param int $ulId the id of the unite locale  (join with queteur table)
    * @return TroncQueteurEntity[]  The tronc
    * @throws \Exception if tronc not found
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getTroncsQueteurByTroncId(int $tronc_id, int $ulId)
   {
@@ -162,6 +165,7 @@ ORDER BY t.id DESC
    * @param int $ulId the Id of the Unite Local
    * @return TroncQueteurEntity  The tronc
    * @throws \Exception if tronc_queteur not found
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getTroncQueteurById(int $id, int $ulId)
   {
@@ -211,9 +215,9 @@ AND    q.ul_id      = :ul_id
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["id" => $id, "ul_id" => $ulId]);
+    $stmt->execute(["id" => $id, "ul_id" => $ulId]);
 
-    if($result && $stmt->rowCount() == 1 )
+    if($stmt->rowCount() == 1 )
     {
       $tronc = new TroncQueteurEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
@@ -221,6 +225,7 @@ AND    q.ul_id      = :ul_id
     }
     else
     {
+      $stmt->closeCursor();
       throw new \Exception("Tronc Queteur with ID:'".$id . "' not found");
     }
   }
@@ -231,6 +236,7 @@ AND    q.ul_id      = :ul_id
    * @param int $queteur_id The ID of the queteur
    * @param int $ulId the Id of the Unite Local
    * @return TroncQueteurEntity[] list of Tronc of the queteur
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getTroncsQueteur(int $queteur_id, int $ulId)
   {
@@ -293,7 +299,7 @@ ORDER BY t.id desc
    * @param  int $ulId the Id of the Unite Local
    * @param  int $userId id of the user performing the operation
    * @return Carbon the date that has been set to tronc_queteur.dateDepart
-   * @throws \Exception if update fails
+   * @throws PDOException if the query fails to execute on the server
    */
   public function setDepartToNow(int $tronc_queteur_id, int $ulId, int $userId)
   {
@@ -310,8 +316,8 @@ AND   q.ul_id               = :ul_id
     $currentDate = new Carbon();
     $currentDate->tz='UTC';
 
-    $stmt        = $this->db->prepare($sql);
-    $result      = $stmt->execute([
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
       "depart"            => $currentDate->format('Y-m-d H:i:s'),
       "userId"            => $userId,
       "id"                => $tronc_queteur_id,
@@ -320,9 +326,6 @@ AND   q.ul_id               = :ul_id
 
     $stmt->closeCursor();
 
-    if(!$result) {
-      throw new \Exception("could not save record");
-    }
     //$this->logger->info("Depart Tronc $tronc_queteur_id='".$tronc_queteur_id."' with date : '".$currentDate->format('Y-m-d H:i:s')."'', numRows updated : ".$stmt->rowCount());
 
     return $currentDate->setTimezone("Europe/Paris");
@@ -338,6 +341,7 @@ AND   q.ul_id               = :ul_id
    * @param int $userId id of the user performing the operation
    * @return Carbon the date of the udpate
    * @throws \Exception if query fails
+   * @throws PDOException if the query fails to execute on the server
    */
   public function updateRetour(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
@@ -353,17 +357,13 @@ AND   q.ul_id                 = :ul_id
 ";
     $currentDate = new Carbon();
     $stmt        = $this->db->prepare($sql);
-    $result      = $stmt->execute([
+    $stmt->execute([
       "retour"            => $tq->retour->format('Y-m-d H:i:s'),
       "userId"            => $userId,
       "id"                => $tq->id,
       "ul_id"             => $ulId
     ]);
 
-    if(!$result)
-    {
-      throw new \Exception("could not save record");
-    }
 
     //$this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
@@ -380,6 +380,7 @@ AND   q.ul_id                 = :ul_id
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
    * @throws \Exception if the query fails
+   * @throws PDOException if the query fails to execute on the server
    */
     public function updateCoinsCount(TroncQueteurEntity $tq, boolean $adminMode, int $ulId, int $userId)
     {
@@ -422,7 +423,7 @@ AND   q.ul_id                 = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
-      $result = $stmt->execute([
+      $stmt->execute([
         "euro500"           => $tq->euro500,
         "euro200"           => $tq->euro200,
         "euro100"           => $tq->euro100,
@@ -449,11 +450,6 @@ AND   q.ul_id                 = :ul_id
 
       //$this->logger->warning($stmt->rowCount());
       $stmt->closeCursor();
-
-      if(!$result)
-      {
-        throw new \Exception("could not save record");
-      }
     }
 
   /**
@@ -464,6 +460,7 @@ AND   q.ul_id                 = :ul_id
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
    * @throws \Exception if the query fails
+   * @throws PDOException if the query fails to execute on the server
    */
   public function updateCreditCardCount(TroncQueteurEntity $tq, boolean $adminMode , int $ulId, int $userId)
   {
@@ -489,7 +486,7 @@ AND   q.ul_id                 = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute([
+    $stmt->execute([
       "don_creditcard"    => $tq->don_creditcard,
       "notes"             => $tq->notes,
       "userId"            => $userId,
@@ -500,9 +497,6 @@ AND   q.ul_id                 = :ul_id
     //$this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
 
-    if(!$result) {
-      throw new \Exception("could not save record");
-    }
   }
 
 
@@ -513,6 +507,7 @@ AND   q.ul_id                 = :ul_id
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
    * @throws \Exception if the query fails
+   * @throws PDOException if the query fails to execute on the server
    */
   public function updateTroncQueteurAsAdmin(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
@@ -535,7 +530,7 @@ AND   q.ul_id = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute([
+    $stmt->execute([
       "depart_theorique"  => $tq->depart_theorique,
       "depart"            => $tq->depart,
       "retour"            => $tq->retour,
@@ -549,9 +544,6 @@ AND   q.ul_id = :ul_id
     //$this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
 
-    if(!$result) {
-      throw new \Exception("could not save record");
-    }
   }
 
 
@@ -564,6 +556,7 @@ AND   q.ul_id = :ul_id
    * @param int                 $userId     id of the user performing the operation
    * @throws \Exception if the query fails
    * @return int the primary key of the new tronc
+   * @throws PDOException if the query fails to execute on the server
    */
   public function insert(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
@@ -600,7 +593,7 @@ VALUES
     $stmt = $this->db->prepare($sql);
 
     $this->db->beginTransaction();
-    $result = $stmt->execute([
+    $stmt->execute([
       "queteur_id"        => $tq->queteur_id,
       "point_quete_id"    => $tq->point_quete_id,
       "tronc_id"          => $tq->tronc_id,
@@ -628,6 +621,7 @@ VALUES
    * @param int $troncId the Id of the tronc that we want to check
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return string an html table to be displayed in case the tronc is already in use
+   * @throws PDOException if the query fails to execute on the server
    */
   public function checkTroncNotAlreadyInUse(int $troncId, int $ulId)
   {
@@ -653,7 +647,7 @@ AND    (tq.depart     is null OR
 ";
 
     $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute([
+    $stmt->execute([
       "tronc_id"        => $troncId,
       "ul_id"           => $ulId
     ]);
@@ -724,6 +718,7 @@ AND    (tq.depart     is null OR
     * @param int $troncId the Id of the tronc to be deleted
     * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
     * @param int $userId the ID of the user performing the action
+    * @throws PDOException if the query fails to execute on the server
     *
     */
   public function deleteNonReturnedTroncQueteur(int $troncId, int $ulId, int $userId)
@@ -743,7 +738,7 @@ AND  (tq.depart IS NULL OR
 ";
 
     $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute([
+    $stmt->execute([
       "tronc_id"        => $troncId,
       "ul_id"           => $ulId   ,
       "user_id"         => $userId
@@ -763,6 +758,7 @@ AND  (tq.depart IS NULL OR
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return TroncQueteurEntity[]  list of tronc_queteur entity (history mode)
    * @throws \Exception if tronc_queteur not found
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getTroncQueteurHistoryById(int $id, int $ulId)
   {

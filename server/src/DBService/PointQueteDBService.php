@@ -3,6 +3,7 @@
 namespace RedCrossQuest\DBService;
 
 use \RedCrossQuest\Entity\PointQueteEntity;
+use PDOException;
 
 class PointQueteDBService extends DBService
 {
@@ -13,6 +14,7 @@ class PointQueteDBService extends DBService
    *
    * @param int $ulId The ID of the Unite Locale
    * @return PointQueteEntity[]  The list of PointQuete
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getPointQuetes(int $ulId)
   {
@@ -45,11 +47,12 @@ ORDER BY type ASC, name ASC
 
 
     $stmt = $this->db->prepare($sql);
-    $result = $stmt->execute(["ul_id" => $ulId]);
+    $stmt->execute(["ul_id" => $ulId]);
 
     $results = [];
     $i = 0;
-    while ($row = $stmt->fetch()) {
+    while ($row = $stmt->fetch())
+    {
       $results[$i++] = new PointQueteEntity($row);
     }
 
@@ -64,6 +67,7 @@ ORDER BY type ASC, name ASC
    * @param int $point_quete_id The ID of the point_quete
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return PointQueteEntity  The point quete info
+   * @throws PDOException if the query fails to execute on the server
    */
   public function getPointQueteById(int $point_quete_id, int $ulId)
   {
@@ -92,18 +96,10 @@ AND    pq.ul_id = :ul_id";
 
     $stmt = $this->db->prepare($sql);
 
-    $result = $stmt->execute(["point_quete_id" => $point_quete_id, "ul_id" => $ulId]);
+    $stmt->execute(["point_quete_id" => $point_quete_id, "ul_id" => $ulId]);
 
-    if ($result)
-    {
-      $point_quete = new PointQueteEntity($stmt->fetch());
-      $stmt->closeCursor();
-      return $point_quete;
-    }
-    else
-    {
-      $stmt->closeCursor();
-      return null;
-    }
+    $point_quete = new PointQueteEntity($stmt->fetch());
+    $stmt->closeCursor();
+    return $point_quete;
   }
 }
