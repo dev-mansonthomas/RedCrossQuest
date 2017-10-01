@@ -66,7 +66,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
   try
   {
     $ulId    = (int)$args['ul-id'];
-    $troncId = (int)$args['id'];
+    $troncId = (int)$args['id'   ];
 
     $troncDBService = new TroncDBService($this->db, $this->logger);
 
@@ -85,7 +85,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
 
 
 
-/*
+/**
  * Update le tronc, seulement pour l'admin
  *
  * */

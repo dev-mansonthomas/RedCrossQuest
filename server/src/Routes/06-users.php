@@ -15,7 +15,11 @@ include_once("../../src/Entity/QueteurEntity.php");
 /********************************* QUETEUR ****************************************/
 
 
-
+/**
+ * Update Role or active/inactive
+ * or
+ * send email for Password reset
+ */
 $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
@@ -55,14 +59,14 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("Error while updating ActiveAndRole or sending init password email", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
   }
   return $response;
 });
 
 
 /**
- * Crée un nouveau user
+ * create a new user
  */
 $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $args)
 {
@@ -75,10 +79,9 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
     $userDBService    = new UserDBService   ($this->db, $this->logger);
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
 
-    $input = $request->getParsedBody();
+    $input      = $request->getParsedBody();
     $userEntity = new UserEntity($input);
-
-    $queteur = $queteurDBService->getQueteurById($userEntity->queteur_id);
+    $queteur    = $queteurDBService->getQueteurById($userEntity->queteur_id);
 
     //check NIVOL has not been changed
     if($userEntity->nivol != $queteur->nivol)
@@ -111,7 +114,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("error while creating a new user", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
   }
   return $response;
 });

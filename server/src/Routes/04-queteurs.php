@@ -24,6 +24,12 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
 {
   $decodedToken = $request->getAttribute('decodedJWT');
 
+  $query        = "";
+  $searchType   = "";
+  $secteur      = "";
+  $active       = "";
+  $benevoleOnly = "";
+
   try
   {
     $ulId   = (int)$args['ul-id'];
@@ -57,7 +63,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("error while fetching queteur with the following parameters query=$query, searchType=$searchType, secteur=$secteur, ulId=$ulId, active=$active, benevoleOnly=$benevoleOnly", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 
@@ -82,18 +88,12 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 
     $queteur          = $queteurDBService->getQueteurById($queteurId);
 
-
     if($queteur->ul_id != $ulId && $roleId != 9)
     {
       $response401 = $response->withStatus(401);
       $response401->getBody()->write(json_encode("{error:'permission denied'}"));
       return $response401;
     }
-
-
-    $referent         = $queteurDBService->getQueteurById($queteur->referent_volunteer);
-    $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
-
 
     if($roleId >= 4)
     {//localAdmin & superAdmin
@@ -107,7 +107,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("Error while fetching queteur $queteurId ", array('decodedToken'=>$decodedToken, "Exception"=>$e));
   }
 
 
@@ -145,7 +145,8 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("Error while updating queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
+    throw $e;
   }
 
   return $response;
@@ -177,7 +178,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("Error while uploading files", array('decodedToken'=>$decodedToken, "Exception"=>$e));
   }
   return $response;
 });
@@ -200,28 +201,16 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
-
-    $queteurId = $queteurDBService->insert($queteurEntity, $ulId);
-
-    //TODO do this stuff inside getQueteurById()
-    $queteur          = $queteurDBService->getQueteurById($queteurId);
-
-    //so that the object is correctly displayed after save
-    if($queteur->referent_volunteer > 0)
-    {
-      $referent         = $queteurDBService->getQueteurById($queteur->referent_volunteer);
-      $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
-      $queteur->referent_volunteerQueteur= $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
-    }
+    $queteurId          = $queteurDBService->insert($queteurEntity, $ulId);
+    $queteur            = $queteurDBService->getQueteurById($queteurId);
     $queteur->mobile    = intval(substr($queteur->mobile, 1));
     $queteur->birthdate = $queteur->birthdate->toW3cString();
-
     
     $response->getBody()->write(json_encode($queteur));
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("Error while creating a new Queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
   }
   return $response;
 });

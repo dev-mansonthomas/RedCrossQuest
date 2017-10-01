@@ -14,7 +14,7 @@ include_once("../../src/Entity/DailyStatsBeforeRCQEntity.php");
 
 
 /**
- * récupère les données de quête pour une année donnée
+ * Fetch the daily stats of an UL
  *
  * Dispo pour le role admin local
  */
@@ -46,7 +46,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("fetch the dailyStats for a year($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 
@@ -56,7 +56,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
 
 /**
  *
- * Mise à jour du montant d'une entrée DailyStats
+ * Update amount of money collected for one day of one year of the current Unite Locale
  *
  */
 $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $response, $args)
@@ -74,7 +74,7 @@ $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("Update one day stats ", array('decodedToken'=>$decodedToken, "Exception"=>$e, "dailyStatsBeforeRCQEntity"=>$dailyStatsBeforeRCQEntity));
   }
   return $response;
 });
@@ -82,7 +82,7 @@ $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
 
 
 /**
- * Crée un nouveau queteur
+ * Creation of all days for a year for an UL)
  */
 $app->post('/{role-id:[5-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
 {
@@ -97,7 +97,7 @@ $app->post('/{role-id:[5-9]}/ul/{ul-id}/dailyStats', function ($request, $respon
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("error while creating year (".$input['year'].")", array('decodedToken'=>$decodedToken, "Exception"=>$e));
   }
   return $response;
 });

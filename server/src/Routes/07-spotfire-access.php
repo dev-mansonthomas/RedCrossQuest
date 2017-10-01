@@ -8,7 +8,10 @@
 
 use \RedCrossQuest\DBService\SpotfireAccessDBService;
 
-
+/**
+ * grant access to spotfire graph to user.
+ * (access rights are determined by its role, stored in the users table)
+ */
 $app->post('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
@@ -26,14 +29,16 @@ $app->post('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    $this->logger->addError("Error while granting access to spotfire graphs to user($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
   return $response;
 });
 
 
-
+/**
+ * fetch an existing token for the user
+ */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
 {
     $decodedToken = $request->getAttribute('decodedJWT');
@@ -51,7 +56,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $a
     }
     catch(Exception $e)
     {
-        $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+        $this->logger->addError("Error while getting current Token for user ($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
         throw $e;
     }
     return $response;

@@ -49,17 +49,15 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       return $response401;
     }
 
-
     $this->logger->addInfo("attempting to login with username='$username' and password size='".strlen($password)."'");
 
     $userDBService        = new UserDBService       ($this->db, $this->logger);
     $queteurDBService     = new QueteurDBService    ($this->db, $this->logger);
     $uniteLocaleDBService = new UniteLocaleDBService($this->db, $this->logger);
 
-
     $user = $userDBService->getUserInfoWithNivol($username);
 
-    //$this->logger->addError("User Entity for user id='".$user->id."' nivol='".$username."'".print_r($user, true));
+    // $this->logger->addDebug("User Entity for user id='".$user->id."' nivol='".$username."'".print_r($user, true));
 
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
@@ -120,7 +118,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError("unexpected exception during authentication", array("Exception"=>$e));
 
     $response401 = $response->withStatus(401);
     $response401->getBody()->write(json_encode("{error:'username or password error. Code 3.'}"));
@@ -137,27 +135,38 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
 
 $app->post('/sendInit', function ($request, $response, $args) use ($app)
 {
-  $username = trim($request->getParsedBodyParam("username"));
-  $userDBService = new UserDBService   ($this->db, $this->logger);
-
-  $uuid = $userDBService->sendInit($username);
-
-  if($uuid != null)
+  try
   {
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
-    $queteur = $queteurDBService->getQueteurByNivol($username);
-    //$this->logger->debug(print_r($queteur,true));
-    $this->mailer->sendInitEmail($queteur, $uuid);
+    $username      = trim($request->getParsedBodyParam("username"));
+    $userDBService = new UserDBService   ($this->db, $this->logger);
 
-    $response->getBody()->write('{"success":true,"email":"'.$queteur->email.'"}');
-    return $response;
+    $uuid = $userDBService->sendInit($username);
 
+    if($uuid != null)
+    {
+      $queteurDBService = new QueteurDBService($this->db, $this->logger);
+      $queteur = $queteurDBService->getQueteurByNivol($username);
+      //$this->logger->debug(print_r($queteur,true));
+      $this->mailer->sendInitEmail($queteur, $uuid);
+
+      $response->getBody()->write('{"success":true,"email":"'.$queteur->email.'"}');
+      return $response;
+
+    }
+    else
+    {//the user do not have an account
+      $response->getBody()->write('{"success":false}');
+      return $response;
+    }
   }
-  else
-  {//the user do not have an account
+  catch(\Exception $e)
+  {
+    $this->logger->addError("unexpected exception during sendInit", array("username"=>$username, "Exception"=>$e));
+
     $response->getBody()->write('{"success":false}');
     return $response;
   }
+
 });
 
 
@@ -169,59 +178,81 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
  */
 $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
 {
-  $uuid = trim($request->getParam("uuid"));
-  if(strlen($uuid) != 36)
+  try
   {
-    $response->getBody()->write('{"success":false}');
-    return $response;
+    $uuid = trim($request->getParam("uuid"));
+
+    if (strlen($uuid) != 36)
+    {
+      $response->getBody()->write('{"success":false}');
+      return $response;
+    }
+    $userDBService = new UserDBService   ($this->db, $this->logger);
+    $user = $userDBService->getUserInfoWithUUID($uuid);
+
+
+    if ($uuid != null)
+    {
+      $queteurDBService = new QueteurDBService($this->db, $this->logger);
+      $queteur = $queteurDBService->getQueteurById($user->queteur_id);
+
+      $response->getBody()->write('{"success":true,"first_name":"' . $queteur->first_name . '","last_name":"' . $queteur->last_name . '","email":"' . $queteur->email . '","mobile":"' . $queteur->mobile . '","nivol":"' . $queteur->nivol . '"}');
+      return $response;
+
+    }
+    else
+    {//the user do not have an account
+      $response->getBody()->write('{"success":false}');
+      return $response;
+    }
   }
-  $userDBService = new UserDBService   ($this->db, $this->logger);
-  $user = $userDBService->getUserInfoWithUUID($uuid);
-
-
-  if($uuid != null)
+  catch(\Exception $e)
   {
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
-    $queteur = $queteurDBService->getQueteurById($user->queteur_id);
+    $this->logger->addError("unexpected exception during getInfoFromUUID", array("uuid"=>$uuid, "Exception"=>$e));
 
-    $response->getBody()->write('{"success":true,"first_name":"'.$queteur->first_name.'","last_name":"'.$queteur->last_name.'","email":"'.$queteur->email.'","mobile":"'.$queteur->mobile.'","nivol":"'.$queteur->nivol.'"}');
-    return $response;
-
-  }
-  else
-  {//the user do not have an account
     $response->getBody()->write('{"success":false}');
     return $response;
   }
 });
 
-
+/**
+ * save new password of user
+ */
 $app->post('/resetPassword', function ($request, $response, $args) use ($app)
 {
-  $uuid     = trim($request->getParsedBodyParam("uuid"));
-  $password = trim($request->getParsedBodyParam("password"));
-
-  $userDBService = new UserDBService   ($this->db, $this->logger);
-  $user = $userDBService->getUserInfoWithUUID($uuid);
-
-  if($user instanceof UserEntity)
+  try
   {
-    $success = $userDBService->resetPassword($uuid, $password);
+    $uuid     = trim($request->getParsedBodyParam("uuid"    ));
+    $password = trim($request->getParsedBodyParam("password"));
 
-    if($success)
+    $userDBService = new UserDBService($this->db, $this->logger);
+    $user          = $userDBService->getUserInfoWithUUID($uuid);
+
+    if($user instanceof UserEntity)
     {
-      $queteurDBService = new QueteurDBService($this->db, $this->logger);
-      $queteur = $queteurDBService->getQueteurById($user->queteur_id);
+      $success = $userDBService->resetPassword($uuid, $password);
 
-      $this->mailer->sendResetPasswordEmailConfirmation($queteur);
+      if($success)
+      {
+        $queteurDBService = new QueteurDBService($this->db, $this->logger);
+        $queteur          = $queteurDBService->getQueteurById($user->queteur_id);
 
-      $response->getBody()->write('{"success":true,"email":"'.$queteur->email.'"}');
-      return $response;
+        $this->mailer->sendResetPasswordEmailConfirmation($queteur);
+
+        $response->getBody()->write('{"success":true,"email":"'.$queteur->email.'"}');
+        return $response;
+      }
     }
+
+    //the user do not have an account
+    $response->getBody()->write('{"success":false}');
+    return $response;
+
   }
-
-  //the user do not have an account
-  $response->getBody()->write('{"success":false}');
-  return $response;
-
+  catch(\Exception $e)
+  {
+    $this->logger->addError("unexpected exception during getInfoFromUUID", array("uuid"=>$uuid, "Exception"=>$e));
+    $response->getBody()->write('{"success":false}');
+    return $response;
+  }
 });
