@@ -33,7 +33,7 @@ class TroncQueteurBusinessService
     $this->troncDBService        = $troncDBService;
   }
   
-  public function getLastTroncQueteurFromTroncId($tronc_id, $ulId)
+  public function getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId)
   {
     $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId );
     $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById              ($troncQueteur->queteur_id     , $ulId );
@@ -43,7 +43,7 @@ class TroncQueteurBusinessService
   }
 
 
-  public function getTroncQueteurFromTroncQueteurId($tronc_queteur_id, $ulId )
+  public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId )
   {
     $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId );
     $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $ulId );

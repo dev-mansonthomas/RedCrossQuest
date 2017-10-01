@@ -10,9 +10,10 @@ return [
 
         // Monolog settings
         'logger' => [
-            'name' => 'slim-app',
+            'name' => 'RCQ',
             'path' => __DIR__ . '/../logs/app.log',
-            'level'=> Monolog\Logger::INFO     //TODO : fonctionne pas
+            'level'=> 'info',
+            'max_files' => 10
         ],
 
         'db' => [

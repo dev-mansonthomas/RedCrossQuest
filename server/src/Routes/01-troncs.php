@@ -17,6 +17,7 @@ use \RedCrossQuest\Entity\TroncEntity;
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId = (int)$args['ul-id'];
@@ -30,12 +31,12 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
 
     if(array_key_exists('q',$params))
     {
-      $this->logger->addInfo("Tronc by search type '".$params['q']."''");
+      //$this->logger->addDebug("Tronc by search type '".$params['q']."''", array('decodedToken'=>$decodedToken));
       $troncs = $troncDBService->getTroncs($params['q'], $ulId, $active );
     }
     else if(array_key_exists('searchType',$params))
     {
-      $this->logger->addInfo("Tronc by search type '".$params['searchType']."''");
+      //$this->logger->addDebug("Tronc by search type '".$params['searchType']."''", array('decodedToken'=>$decodedToken));
       $troncs = $troncDBService->getTroncsBySearchType($params['searchType'], $ulId);
     }
     else
@@ -50,7 +51,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 });
@@ -61,7 +62,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
  * */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
 {
-
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId    = (int)$args['ul-id'];
@@ -77,7 +78,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 });
@@ -90,7 +91,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
  * */
 $app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
 {
-
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId    = (int)$args['ul-id'];
@@ -106,7 +107,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 });

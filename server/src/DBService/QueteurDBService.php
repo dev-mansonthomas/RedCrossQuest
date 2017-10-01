@@ -13,11 +13,11 @@ class QueteurDBService extends DBService
    *
    * if $query is not null, then it will search the "$query" string is inside first_name, last_name, nivol columns
    *
-   * @param String $query : the criteria to search queteur on first_name, last_name, nivol
-   * @param int    $ulId  : the ID of the UniteLocal on which the search is limited
-   * @return PointQueteEntity  The PointQuete
+   * @param string $query : the criteria to search queteur on first_name, last_name, nivol
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return QueteurEntity[]  the list of Queteurs
    */
-  public function getQueteurs($query, $ulId)
+  public function getQueteurs(string $query, int $ulId)
   {
 
     $sql = "
@@ -50,20 +50,24 @@ AND
     }
 
     $stmt = $this->db->prepare($sql);
-    if ($query !== null) {
+    if ($query !== null)
+    {
       $result = $stmt->execute([
         "first_name" => $query,
         "last_name" => $query,
         "nivol" => $query,
         "ul_id" => $ulId
       ]);
-    } else {
+    }
+    else
+    {
       $result = $stmt->execute(["ul_id" => $ulId]);
     }
 
     $results = [];
     $i = 0;
-    while ($row = $stmt->fetch()) {
+    while ($row = $stmt->fetch())
+    {
       $results[$i++] = new QueteurEntity($row);
     }
 
@@ -74,19 +78,20 @@ AND
 
   /**
    * search all queteur according to the following criteria
-   * @param String $query search string compared against first_name, last_name, nivol using like '%query%'
-   * @param int $searchType
-   * 0 : All queteur, whether they did quete one time or not
-   * 1 : queteur that are registered for one tronc_quete but who didn't left yet
-   * 2 : queteur that are still on the street ( registered for one tronc_quete and have a depart date non null and a retour date null)
-   * @param int $secteur : secteur to search (1:Social, 2: Secours, 3:Non Bénévole, 4:Commerçant, 5: Spécial)
-   * @param int $ulId    : the ID of the UniteLocal on which the search is limited
-   * @param boolean $active : search only active or inactive queteurs
-   * @param benevoleOnly : Retourne que les bénévoles et anciens bénévoles (usecase: recherche de référent pour le queteur d'un jour)
-   * @return list of QueteurEntity
+   *
+   * @param string  $query search string compared against first_name, last_name, nivol using like '%query%'
+   * @param int     $searchType
+   *                             0 : All queteur, whether they did quete one time or not
+   *                             1 : queteur that are registered for one tronc_quete but who didn't left yet
+   *                             2 : queteur that are still on the street ( registered for one tronc_quete and have a depart date non null and a retour date null)
+   * @param int     $secteur      secteur to search (1:Social, 2: Secours, 3:Non Bénévole, 4:Commerçant, 5: Spécial)
+   * @param int     $ulId         Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param boolean $active       search only active or inactive queteurs
+   * @param boolean $benevoleOnly Retourne que les bénévoles et anciens bénévoles (usecase: recherche de référent pour le queteur d'un jour)
+   * @return QueteurEntity[] list of Queteurs
    *
    */
-  public function searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly)
+  public function searchQueteurs(string $query, int $searchType, int $secteur, int $ulId, boolean $active, boolean $benevoleOnly)
   {
     $parameters      = ["ul_id" => $ulId];
     $querySQL        = "";
@@ -285,7 +290,7 @@ ORDER BY q.last_name ASC
     $stmt   = $this->db->prepare($sql);
     $parameters["active"] = $active;
 
-    $this->logger->addDebug("searching queteurs with following paramters :".print_r($parameters, true)."' and query:".$sql);
+
     $result = $stmt->execute($parameters);
 
     $results = [];
@@ -293,7 +298,7 @@ ORDER BY q.last_name ASC
     while ($row = $stmt->fetch()) {
       $results[$i++] = new QueteurEntity($row);
     }
-    $this->logger->addDebug("retrieved $i queteurs, searchType:'$searchType', secteur='$secteur', query='$query' ".print_r($parameters, true));
+    //$this->logger->addDebug("retrieved $i queteurs, searchType:'$searchType', secteur='$secteur', query='$query' ".print_r($parameters, true));
     $stmt->closeCursor();
     return $results;
   }
@@ -304,7 +309,7 @@ ORDER BY q.last_name ASC
    * @param int $queteur_id The ID of the queteur
    * @return QueteurEntity  The queteur
    */
-  public function getQueteurById($queteur_id)
+  public function getQueteurById(int $queteur_id)
   {
     $sql = "
 SELECT  q.`id`,
@@ -342,16 +347,21 @@ AND    q.ul_id = u.id
       $stmt->closeCursor();
       return $queteur;
     }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
+    }
   }
 
 
   /**
    * Get one queteur by its NIVOL
    * No UL_ID passed, as this method is used by the login process, which don't know yet the UL_ID
-   * @param int $queteur_id The ID of the queteur
+   * @param string $nivol The NIVOL of the queteur
    * @return QueteurEntity  The queteur
    */
-  public function getQueteurByNivol($nivol)
+  public function getQueteurByNivol(string $nivol)
   {
     $sql = "
 SELECT  q.`id`,
@@ -384,10 +394,16 @@ AND    q.ul_id   = u.id
 
     $result = $stmt->execute(["nivol" => $nivol]);
 
-    if ($result) {
+    if ($result)
+    {
       $queteur = new QueteurEntity($stmt->fetch());
       $stmt->closeCursor();
       return $queteur;
+    }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
     }
   }
 
@@ -396,9 +412,11 @@ AND    q.ul_id   = u.id
    * Update one queteur
    *
    * @param QueteurEntity $queteur The queteur to update
-   * @param int $ulId  : the ID of the UniteLocal on which the search is limited
+   * @param int           $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int           $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
+   * @throws \Exception   if the update has some issues
    */
-  public function update(QueteurEntity $queteur, $ulId, $roleId)
+  public function update(QueteurEntity $queteur, int $ulId, int $roleId)
   {
     $sql = "
 UPDATE `queteur`
@@ -464,12 +482,12 @@ AND   `ul_id` = :ul_id
 
     $result = $stmt->execute($parameters);
 
-    $this->logger->warning($stmt->rowCount());
+
     $stmt->closeCursor();
 
     if (!$result)
     {
-      throw new Exception("could not save record ".print_r($queteur, true));
+      throw new \Exception("could not save record ".print_r($queteur, true));
     }
   }
 
@@ -477,11 +495,11 @@ AND   `ul_id` = :ul_id
   /**
    * Insert one queteur
    *
-   * @param QueteurEntity $queteur The queteur to update
-   * @param int $ulId  : the ID of the UniteLocal on which the search is limited
+   * @param QueteurEntity $queteur  The queteur to update
+   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the primary key of the new queteur
    */
-  public function insert(QueteurEntity $queteur, $ulId)
+  public function insert(QueteurEntity $queteur, int $ulId)
   {
     $sql = "
 INSERT INTO `queteur`
@@ -546,7 +564,6 @@ VALUES
     $row = $stmt->fetch();
 
     $lastInsertId = $row['last_insert_id()'];
-    $this->logger->info('$lastInsertId:', [$lastInsertId]);
 
     $stmt->closeCursor();
     $this->db->commit();

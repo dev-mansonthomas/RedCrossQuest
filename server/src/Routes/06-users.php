@@ -8,7 +8,7 @@
 
 use \RedCrossQuest\DBService\QueteurDBService;
 use \RedCrossQuest\DBService\UserDBService;
-use \RedCrossQuest\Entity\QueteurEntity;
+
 use \RedCrossQuest\Entity\UserEntity;
 
 include_once("../../src/Entity/QueteurEntity.php");
@@ -18,6 +18,7 @@ include_once("../../src/Entity/QueteurEntity.php");
 
 $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId   = (int)$args['ul-id'  ];
@@ -34,15 +35,15 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
       $userDBService  = new UserDBService($this->db, $this->logger);
       if ($action =="update")
       {
-        $this->logger->addDebug("updating user RoleAndActive ".print_r($userEntity, true));
+        //$this->logger->addDebug("updating user RoleAndActive ".print_r($userEntity, true));
         $userDBService->updateActiveAndRole($userEntity);
       }
       else
-      {
+      {//send init mail to user
         $queteurDBService = new QueteurDBService($this->db, $this->logger);
         $queteur = $queteurDBService->getQueteurById($userEntity->queteur_id);
 
-        $this->logger->addDebug("sendInit mail to user '".$userEntity->id."'' ".print_r($queteur, true));
+        //$this->logger->addDebug("sendInit mail to user '".$userEntity->id."'' ".print_r($queteur, true));
 
         $uuid = $userDBService->sendInit($userEntity->nivol);
         $this->mailer->sendInitEmail($queteur, $uuid);
@@ -54,7 +55,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
   }
   return $response;
 });
@@ -65,6 +66,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
  */
 $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId   = (int)$args['ul-id'  ];
@@ -109,7 +111,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
   }
   return $response;
 });

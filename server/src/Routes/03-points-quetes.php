@@ -12,6 +12,7 @@ use \RedCrossQuest\DBService\PointQueteDBService;
 
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId = (int)$args['ul-id'];
@@ -19,7 +20,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
     $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
 
 
-    $this->logger->addInfo("PointQuetes query for ul: $ulId");
+    //$this->logger->addInfo("PointQuetes query for ul: $ulId");
     $pointQuetes = $pointQueteDBService->getPointQuetes($ulId);
 
 
@@ -30,7 +31,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 

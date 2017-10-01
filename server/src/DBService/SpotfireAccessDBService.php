@@ -18,7 +18,7 @@ class SpotfireAccessDBService extends DBService
    * @param int $userId The ID of the connected user (should be taken from DecodedJWT)
    * @param int $ulId The ID of the Unite Locale of the connected user (should be taken from DecodedJWT)
    * @param int $tokenTTL TimeToLive in Hours of the Token
-   * @return DateTime the date right after insertion, so that the frontend can know how long to wait for the next update of Spotfire.
+   * @return Object the date right after insertion, so that the frontend can know how long to wait for the next update of Spotfire.
    */
   public function grantAccess(int $userId, int $ulId, int $tokenTTL)
   {
@@ -79,36 +79,38 @@ VALUES
      * Try to get an existing valid token
      *
      * @param int $userId The ID of the connected user (should be taken from DecodedJWT)
-     * @param int $ulId The ID of the Unite Locale of the connected user (should be taken from DecodedJWT)
-     * @param int $tokenTTL TimeToLive in Hours of the Token
-     * @return
+     * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+     * @return SpotfireAccessEntity the info of the spotfire token
      */
     public function getValidToken(int $userId, int $ulId)
     {
-        $sql = "
-        SELECT  token, token_expiration
-        FROM    spotfire_access
-        WHERE   ul_id   = :ulId
-        AND     user_id = :userId
-        ";
+      $sql = "
+      SELECT  token, token_expiration
+      FROM    spotfire_access
+      WHERE   ul_id   = :ulId
+      AND     user_id = :userId
+      ";
 
-        $stmt = $this->db->prepare($sql);
+      $stmt = $this->db->prepare($sql);
 
-        $result = $stmt->execute(
-            [
-                "userId" => $userId,
-                "ulId"   => $ulId
-            ]);
+      $result = $stmt->execute(
+        [
+            "userId" => $userId,
+            "ulId"   => $ulId
+        ]);
 
-        if ($result)
-        {
-
-            $data =$stmt->fetch();
-            $this->logger->addDebug("returned data ", $data);
-            $spotfireAccess = new SpotfireAccessEntity($data);
-            $stmt->closeCursor();
-            return $spotfireAccess;
-        }
+      if ($result)
+      {
+        $data =$stmt->fetch();
+        $spotfireAccess = new SpotfireAccessEntity($data);
+        $stmt->closeCursor();
+        return $spotfireAccess;
+      }
+      else
+      {
+        $stmt->closeCursor();
+        return null;
+      }
     }
 
 

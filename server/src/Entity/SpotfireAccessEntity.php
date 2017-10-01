@@ -17,7 +17,7 @@ class SpotfireAccessEntity extends Entity
      *
      * @param array $data The data to use to create
      */
-  public function __construct($data)
+  public function __construct(array $data)
   {
     $this->getInteger('id'                        , $data);
     $this->getString ('token'                     , $data);

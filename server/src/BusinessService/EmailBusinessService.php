@@ -19,6 +19,12 @@ class EmailBusinessService
   }
 
 
+  /**
+   * Send an email to allow the user to reset its password (or create the password for the first connexion)
+   * @param QueteurEntity $queteur  The information of the user
+   * @param string        $uuid     The uuid to be inserted in the email
+   * @throws \Exception   if the email fails to be sent
+   */
   public function sendInitEmail(QueteurEntity $queteur, $uuid)
   {
 
@@ -66,6 +72,16 @@ Bonjour ".$queteur->first_name.",<br/>
     }
   }
 
+
+  /**
+   *
+   * Send a confirmation email to the user after password changed successfully
+   *
+   * @param QueteurEntity $queteur information about the user
+   *
+   * @throws \Exception if the mail fails to be sent
+   *
+   */
   public function sendResetPasswordEmailConfirmation(QueteurEntity $queteur)
   {
 

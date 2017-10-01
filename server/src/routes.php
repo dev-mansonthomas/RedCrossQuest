@@ -10,4 +10,3 @@ include_once("../../src/Routes/06-users.php");
 include_once("../../src/Routes/07-spotfire-access.php");
 include_once("../../src/Routes/08-troncs-queteurs-history.php");
 
-?>

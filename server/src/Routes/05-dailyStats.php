@@ -20,11 +20,10 @@ include_once("../../src/Entity/DailyStatsBeforeRCQEntity.php");
  */
 $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
 {
-
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId   = (int)$args['ul-id'];
-    $roleId = (int)$args['role-id'];
 
     $params = $request->getQueryParams();
 
@@ -38,7 +37,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
     }
 
     $dailyStatsBeforeRCQDBService = new DailyStatsBeforeRCQDBService($this->db, $this->logger);
-    $this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
+    //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
     $dailyStats = $dailyStatsBeforeRCQDBService->getDailyStats($ulId, $year);
 
     $response->getBody()->write(json_encode($dailyStats));
@@ -47,7 +46,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 
@@ -62,6 +61,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
  */
 $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId = (int)$args['ul-id'];
@@ -74,7 +74,7 @@ $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
   }
   return $response;
 });
@@ -86,6 +86,7 @@ $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
  */
 $app->post('/{role-id:[5-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId = (int)$args['ul-id'];
@@ -96,7 +97,7 @@ $app->post('/{role-id:[5-9]}/ul/{ul-id}/dailyStats', function ($request, $respon
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
   }
   return $response;
 });

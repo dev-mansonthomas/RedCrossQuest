@@ -31,11 +31,11 @@ class DailyStatsBeforeRCQDBService extends DBService
   /**
    * Get all stats for UL $ulId and a particular year
    *
-   * @param int $ulId The ID of the Unite Locale
-   * @param
-   * @return Array of PointQueteEntity  The PointQuete
+   * @param int     $ulId The ID of the Unite Locale
+   * @param string  $year The year for which we wants the daily stats
+   * @return array of PointQueteEntity  The PointQuete
    */
-  public function getDailyStats($ulId, $year)
+  public function getDailyStats(int $ulId, string $year)
   {
 
     $sql = "
@@ -63,8 +63,12 @@ ORDER BY d.date DESC
     return $results;
   }
 
-
-  public function update($dailyStatsBeforeRCQEntity, $ulId)
+  /**
+   * update a daily stat (ie a particular day of a particular year)
+   * @param DailyStatsBeforeRCQEntity $dailyStatsBeforeRCQEntity info about the dailyStats
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   */
+  public function update(DailyStatsBeforeRCQEntity $dailyStatsBeforeRCQEntity, int $ulId)
   {
     
     $sql ="
@@ -78,26 +82,22 @@ AND     `ul_id`   = :ulId
     $stmt->execute([
       "amount"        => $dailyStatsBeforeRCQEntity->amount,
       "id"            => intVal($dailyStatsBeforeRCQEntity->id),
-      "ulId"         => $ulId
+      "ulId"          => $ulId
 
     ]);
 
     $stmt->closeCursor();
-
 
   }
 
   /**
    * Create a year of daily data
    *
-   * @param $ulId : Id of the UL for which we create the data
-   * @param $year : year to create
+   * @param int    $ulId  Id of the UL for which we create the data
+   * @param string $year  year to create
    */
-  public function createYear($ulId, $year)
+  public function createYear(int $ulId, string $year)
   {
-    $this->logger->info('$year:', [$year]);
-
-
     $sql = "
 INSERT INTO `daily_stats_before_rcq`
 (
@@ -120,8 +120,7 @@ VALUES
     $numberOfDays = $yearDefinition[1];
     $oneDate = DateTime::createFromFormat("Y-m-d", $startDate);
 
-    $this->logger->info('$startDate:', [print_r($startDate,true)]);
-    $this->logger->info('$oneDate:'  , [print_r($oneDate  ,true)]);
+
     $stmt         = $this->db->prepare($sql);
 
 

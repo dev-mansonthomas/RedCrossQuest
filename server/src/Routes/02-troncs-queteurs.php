@@ -27,14 +27,16 @@ include_once("../../src/BusinessService/TroncQueteurBusinessService.php");
  */
 $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId    = (int)$args['ul-id'];
     //c'est bien le troncId qu'on passe ici, on va supprimer tout les tronc_queteur qui ont ce tronc_id et départ ou retour à nulle
     $troncId = (int)$args['id'];
+    $userId  = (int)$decodedToken->getUid ();
 
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
-    $troncQueteurDBService->deleteNonReturnedTroncQueteur($troncId, $ulId);
+    $troncQueteurDBService->deleteNonReturnedTroncQueteur($troncId, $ulId, $userId);
   }
   catch(Exception $e)
   {
@@ -51,11 +53,11 @@ $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($reques
  */
 $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId         = (int)$args['ul-id'];
     $params       = $request->getQueryParams();
-    $decodedToken = $request->getAttribute('decodedJWT');
     $userId       = (int)$decodedToken->getUid ();
 
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
@@ -64,10 +66,8 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
     if(array_key_exists('adminMode', $params))
     {//in order to not overwrite the comptage date in the DB
       $adminMode = $params['adminMode'];
-      $this->logger->addDebug("adminMode parameter exist");
+      $this->logger->addDebug("adminMode parameter exist", array('decodedToken'=>$decodedToken));
     }
-    $this->logger->addDebug("params",[$params]);
-    $this->logger->addDebug("adminMode:".$adminMode);
 
     if(array_key_exists('action', $params))
     {
@@ -78,29 +78,29 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
 
       if ($action =="saveReturnDate")
       {
-        $this->logger->debug("Saving return date",[$tq]);
+        //$this->logger->debug("Saving return date", array('tronc_queteur'=>$tq, 'adminMode'=>$adminMode,'decodedToken'=>$decodedToken));
         $troncQueteurDBService->updateRetour($tq, $ulId, $userId);
       }
       elseif ($action =="saveCoins")
       {
-        $this->logger->debug("Saving Coins");
+        //$this->logger->debug("Saving Coins", array('tronc_queteur'=>$tq, 'adminMode'=>$adminMode,'decodedToken'=>$decodedToken));
         $troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
       }
       elseif ($action =="saveCreditCard")
       {
-        $this->logger->debug("Saving CreditCard");
+        //$this->logger->debug("Saving CreditCard", array('tronc_queteur'=>$tq, 'adminMode'=>$adminMode,'decodedToken'=>$decodedToken));
         $troncQueteurDBService->updateCreditCardCount($tq, $adminMode, $ulId, $userId);
       }
       elseif ($action =="saveAsAdmin")
       {
-        $this->logger->debug("Saving As Admin", [ $input ]);
+        //$this->logger->debug("Saving As Admin", array('tronc_queteur'=>$tq, 'adminMode'=>$adminMode,'decodedToken'=>$decodedToken));
         $troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
       }
     }
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 
@@ -119,12 +119,11 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
  */
 $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId         = (int)$args['ul-id'];
     $params       = $request->getQueryParams();
-
-    $decodedToken = $request->getAttribute('decodedJWT');
     $userId       = (int)$decodedToken->getUid ();
 
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
@@ -161,11 +160,15 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
           else
           {
             $troncQueteur->departAlreadyRegistered=true;
-            $this->logger->warn("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it");
+            //$this->logger->warn("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it", array('decodedToken'=>$decodedToken));
           }
         }
         $response->getBody()->write(json_encode($troncQueteur));
         return $response;
+      }
+      else
+      {
+        throw new Exception("Unknown action" );
       }
 
     }
@@ -175,22 +178,15 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
       $input  = $request->getParsedBody();
       $tq = new TroncQueteurEntity($input, $this->logger);
 
-      try
-      {
-        $troncQueteurDBService->insert($tq, $ulId, $userId);
-      }
-      catch(Exception $e)
-      {
-        $this->logger->addError($e);
-        throw $e;
-      }
+      $troncQueteurDBService->insert($tq, $ulId, $userId);
+
       return $response;
     }
 
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 
@@ -201,6 +197,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId = (int)$args['ul-id'];
@@ -212,8 +209,8 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
       $action   = $params['action'  ];
       $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
       $troncQueteurBusinessService = new TroncQueteurBusinessService(
-        $this->logger,
-        $troncQueteurDBService,
+        $this->logger                                      ,
+        $troncQueteurDBService                             ,
         new QueteurDBService     ($this->db, $this->logger),
         new PointQueteDBService  ($this->db, $this->logger),
         new TroncDBService       ($this->db, $this->logger)
@@ -221,7 +218,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
 
       if($action == "getLastTroncQueteurFromTroncId")
       {
-        $this->logger->debug("action='getLastTroncQueteurFromTroncId'");
+        //$this->logger->debug("action='getLastTroncQueteurFromTroncId'", array('decodedToken'=>$decodedToken));
         $tronc_id     = $params['tronc_id'];
         $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId);
         $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
@@ -229,7 +226,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
       }
       else if($action == "getTroncsQueteurForTroncId")
       {
-        $this->logger->debug("action='getTroncsQueteurForTroncId'");
+        //$this->logger->debug("action='getTroncsQueteurForTroncId'", array('decodedToken'=>$decodedToken));
         $tronc_id     = $params['tronc_id'];
         $troncQueteur = $troncQueteurDBService->getTroncsQueteurByTroncId($tronc_id, $ulId);
         $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
@@ -237,7 +234,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
       }
       else if($action == "getTroncsOfQueteur")
       {
-        $this->logger->debug("action='getTroncsOfQueteur'");
+        //$this->logger->debug("action='getTroncsOfQueteur'", array('decodedToken'=>$decodedToken));
         $queteur_id             = $params['queteur_id'];
         $troncQueteurDBService  = new TroncQueteurDBService($this->db, $this->logger);
         $troncsQueteur          = $troncQueteurDBService->getTroncsQueteur($queteur_id, $ulId);
@@ -251,7 +248,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 
@@ -266,11 +263,12 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId           = (int)$args['ul-id'];
     $troncQueteurId = (int)$args['id'];
-    $this->logger->debug("Getting tronc_queteur with id '".$troncQueteurId."'");
+    //$this->logger->debug("Getting tronc_queteur with id '".$troncQueteurId."'", array('decodedToken'=>$decodedToken));
 
     $troncQueteurAction = new TroncQueteurBusinessService($this->logger,
       new TroncQueteurDBService($this->db, $this->logger),
@@ -286,7 +284,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 });

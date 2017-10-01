@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\Entity;
 
+use Monolog\Logger;
+
 class TroncQueteurEntity extends Entity
 {
   /***
@@ -56,6 +58,7 @@ class TroncQueteurEntity extends Entity
   public $last_name        ;
   public $first_name       ;
 
+  public $deleted          ;
 
   //when this object is used to retrieve data from tronc_queteur_historique
   public $tronc_queteur_id;
@@ -63,13 +66,14 @@ class TroncQueteurEntity extends Entity
 
   protected $logger;
 
-  /**
+   /**
      * Accept an array of data matching properties of this class
      * and create the class
      *
      * @param array $data The data to use to create
+     * @param Logger $logger
      */
-    public function __construct($data, $logger)
+    public function __construct(array $data, Logger $logger)
     {
       $this->logger = $logger;
 

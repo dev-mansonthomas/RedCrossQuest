@@ -12,9 +12,9 @@ class PointQueteDBService extends DBService
    * Get all pointQuete for UL $ulId
    *
    * @param int $ulId The ID of the Unite Locale
-   * @return Array of PointQueteEntity  The PointQuete
+   * @return PointQueteEntity[]  The list of PointQuete
    */
-  public function getPointQuetes($ulId)
+  public function getPointQuetes(int $ulId)
   {
 
     $sql = "
@@ -62,9 +62,10 @@ ORDER BY type ASC, name ASC
    * Get one pointQuete by its ID
    *
    * @param int $point_quete_id The ID of the point_quete
-   * @return PointQueteEntity  The PointQuete
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return PointQueteEntity  The point quete info
    */
-  public function getPointQueteById($point_quete_id, $ulId)
+  public function getPointQueteById(int $point_quete_id, int $ulId)
   {
     $sql = "
 SELECT  pq.`id`,
@@ -93,10 +94,16 @@ AND    pq.ul_id = :ul_id";
 
     $result = $stmt->execute(["point_quete_id" => $point_quete_id, "ul_id" => $ulId]);
 
-    if ($result) {
+    if ($result)
+    {
       $point_quete = new PointQueteEntity($stmt->fetch());
       $stmt->closeCursor();
       return $point_quete;
+    }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
     }
   }
 }

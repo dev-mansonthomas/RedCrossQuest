@@ -20,6 +20,7 @@ include_once("../../src/DBService/TroncQueteurDBService.php");
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId           = (int)$args['ul-id'];
@@ -27,7 +28,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($reques
     $params         = $request->getQueryParams();
     $troncQueteurId = (int)$params['tronc_queteur_id'];;
 
-    $this->logger->debug("Getting history of tronc_queteur with id '".$troncQueteurId."'");
+   // $this->logger->debug("Getting history of tronc_queteur with id '".$troncQueteurId."'");
 
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
 
@@ -39,7 +40,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($reques
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 });

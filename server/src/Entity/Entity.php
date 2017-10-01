@@ -14,7 +14,12 @@ use Carbon\Carbon;
 class Entity
 {
 
-  protected function getInteger($key, $data)
+  /**
+   * set on this object the property named $this->$key,  $data[$key] as an integer value
+   * @param string $key the key of the data to be returned
+   * @param array  $data the associative array
+   */
+  protected function getInteger(string $key, array $data)
   {
     if(array_key_exists($key, $data))
     {
@@ -22,15 +27,24 @@ class Entity
     }
   }
 
-  protected function getString($key, $data)
+  /**
+   * set on this object the property named $this->$key,  $data[$key] as an string value
+   * @param string $key the key of the data to be returned
+   * @param array  $data the associative array
+   */
+  protected function getString(string $key, array $data)
   {
     if(array_key_exists($key, $data))
     {
       $this->$key = $data[$key];
     }
   }
-
-  protected function getBoolean($key, $data)
+  /**
+   * set on this object the property named $this->$key,  $data[$key] as an boolean value
+   * @param string $key the key of the data to be returned
+   * @param array  $data the associative array
+   */
+  protected function getBoolean(string $key, array $data)
   {
     if(array_key_exists($key, $data))
     {
@@ -46,8 +60,12 @@ class Entity
       $this->$key = false;
     }
   }
-
-  protected function getDate($key, $data)
+  /**
+   * set on this object the property named $this->$key,  $data[$key] as a date value
+   * @param string $key the key of the data to be returned
+   * @param array  $data the associative array
+   */
+  protected function getDate(string $key, array $data)
   {
     if(array_key_exists($key, $data))
     {

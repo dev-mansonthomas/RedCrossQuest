@@ -9,6 +9,18 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\ValidationData;
 
 
+use \Psr\Http\Message\ServerRequestInterface;
+use \Psr\Http\Message\ResponseInterface;
+
+use \Slim\App;
+
+
+/**
+ * @property array whiteList
+ * @property mixed logger
+ * @property string bearer
+ * @property int bearerStrLen
+ */
 class AuthorisationMiddleware
 {
   private static $errorMessage = [
@@ -24,13 +36,20 @@ class AuthorisationMiddleware
     '0010' => "JWT Validation fails: %s",
     '0011' => "Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode. %s"
   ];
-  public function __construct($app)
+
+  private $jwtSettings;
+
+  /**
+   * init of the constructor
+   * @param App $app the Slim Application instance
+   */
+  public function __construct(App $app)
   {
     //Define the urls that you want to exclude from Authentication, aka public urls
     $this->whiteList = array('\/authenticate');
-    $this->logger = $app->getContainer()->get('logger');
+    $this->logger    = $app->getContainer()->get('logger');
 
-    $this->bearer = "Bearer ";
+    $this->bearer      = "Bearer ";
     $this->bearerStrLen=strlen($this->bearer);
 
     $this->jwtSettings =  $app->getContainer()->get('settings')['jwt'];
@@ -46,14 +65,14 @@ class AuthorisationMiddleware
    * @return DecodedToken
    * @throws \Exception exception
    */
-  public function authenticate($tokenStr) : DecodedToken
+  public function authenticate(string $tokenStr) : DecodedToken
   {
     //$this->logger->addDebug("Authentication check on :".print_r($tokenStr, true));
     
     if(substr_count($tokenStr, ".") !=  2)
     {
-      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0008'],$tokenStr));
-      return new DecodedToken(false, '0008');
+      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0008'],print_r($tokenStr, true)));
+      return new DecodedToken( '0008');
     }
 
     $token = (new Parser())->parse((string) $tokenStr);
@@ -66,27 +85,27 @@ class AuthorisationMiddleware
 
     if(!$token->verify($signer, $jwtSecret))
     {
-      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0009'],$tokenStr));
-      return new DecodedToken(false, '0009');
+      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
+      return new DecodedToken( '0009');
     }
     //$this->logger->addDebug("JWT Token not altered:".print_r($tokenStr, true));
 
-    $data = new ValidationData(); // It will use the current time to validate (iat, nbf and exp)
+    $data = new ValidationData (); // It will use the current time to validate (iat, nbf and exp)
     $data->setIssuer  ($issuer  );
     $data->setAudience($audience);
 
     $validation = $token->validate($data);
-    $errorCode = '';
+    $errorCode  = '';
 
     if(!$validation)
     {
       $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
       $errorCode = '0010';
     }
-    else
+    /*else
     {
       //$this->logger->addInfo("JWT Validation OK:".print_r($tokenStr, true));
-    }
+    }*/
     try
     {
       $decodedToken = DecodedToken::withData(
@@ -103,7 +122,7 @@ class AuthorisationMiddleware
       );
 
     }
-    catch(Exception $error)
+    catch(\Exception $error)
     { //getClaim can raise exception if the claim is not here
       $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0011'], print_r($error, true)));
       throw $error;
@@ -123,8 +142,10 @@ class AuthorisationMiddleware
    *
    * @return \Psr\Http\Message\ResponseInterface
    */
-  public function __invoke($request, $response, $next)
+  public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
   {
+    $path  = "";
+    $start =  0;
     try
     {
       $path   = $request->getUri()->getPath   ();
@@ -164,9 +185,7 @@ class AuthorisationMiddleware
       }
       
       //check if the roleId in the URL match the one in the JWT Token (user might have changed the URL)
-
-      $path = $request->getUri()->getPath();
-
+      $path         = $request->getUri()->getPath();
       $explodedPath = explode("/", $path,2);
 
       if(count($explodedPath) == 2) //explode with limit 2 will return one element + the rest of the string, so array size is 2.
@@ -203,17 +222,26 @@ class AuthorisationMiddleware
       $request = $request->withAttribute('decodedJWT', $decodedToken);
 
       //token valid
-      return $next($request, $response);
+      $start    = microtime(true);
+      $response = $next($request, $response);
+      //log execution time in milliseconds; error(true/false);request path
+      $this->logger->addDebug("[PERF];".(microtime(true)-$start).";false;".$path);
+
+      return $response;
     }
-    catch(Exception $error)
+    catch(\Exception $error)
     {
+      $this->logger->addDebug("[PERF];".(microtime(true)-$start).";true;".$path);
       $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0007'], print_r($error, true)));
       return $this->denyRequest($response, '0007');
     }
 
   }
-
-
+  /**
+   * @param string $errorCode the error code to send back to the frontend
+   * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
+   * @return \Psr\Http\Message\ResponseInterface      the modified response
+   */
   private function denyRequest($response, $errorCode)
   {
     $response401 = $response->withStatus(401);
@@ -238,29 +266,46 @@ class DecodedToken
   private $d             ;
 
 
-  public function __construct($authenticated, $errorCode)
+  /**
+   * Init teh DecodedToken as an authentication failure (this->authenticated=false) with an error code
+   * @param string $errorCode  the error code associated with the failed authentication request
+   */
+  public function __construct( $errorCode)
   {
-    $this->authenticated = $authenticated;
+    $this->authenticated = false;
     $this->errorCode     = $errorCode;
-
-
   }
 
-  public static function withData($authenticated, $errorCode,
-                                  $username, $uid, $ulId,
-                                  $ulName, $ulMode, $queteurId,
-                                  $roleId, $deploymentType)
+  /**
+   * init the DecodedToken with data decoded from the token... ;)
+   * @param boolean $authenticated  true if the token is considered as valid, false otherwise
+   * @param string  $errorCode      the string representing the error code '0004' for ex.
+   * @param string  $username       the nivol of the user
+   * @param string  $uid            the id of the user
+   * @param string  $ulId           the id of the unite local to which the user belong to
+   * @param string  $ulName         the name of the unite locale to which the user belong to
+   * @param string  $queteurId      the id in the queteur table of the user
+   * @param string  $roleId         the role id of the user (what can he do in the application)
+   * @param string  $ulMode         How the UniteLocal manage the quete (like Paris, like Marseille, like small city)
+   * @param string  $deploymentType How the application is currently deployed: test/uat/production
+   * @return DecodedToken an instance
+   */
+  public static function withData(boolean $authenticated, string $errorCode,
+                                  string  $username     , string $uid      , string $ulId     ,
+                                  string  $ulName       , string $ulMode   , string $queteurId,
+                                  string  $roleId       , string $deploymentType)
   {
-    $instance = new self($authenticated, $errorCode);
+    $instance = new self($errorCode);
 
-    $instance->setUsername   ($username         );
-    $instance->setUid        (intval($uid)      );
-    $instance->setUlId       (intval($ulId)     );
-    $instance->setUlName     ($ulName           );
-    $instance->setUlMode     (intval($ulMode   ));
-    $instance->setQueteurId  (intVal($queteurId));
-    $instance->setRoleId     (intval($roleId)   );
-    $instance->setD          ($deploymentType   );
+    $instance->setAuthenticated ($authenticated    );
+    $instance->setUsername      ($username         );
+    $instance->setUid           (intval($uid)      );
+    $instance->setUlId          (intval($ulId)     );
+    $instance->setUlName        ($ulName           );
+    $instance->setUlMode        (intval($ulMode   ));
+    $instance->setQueteurId     (intVal($queteurId));
+    $instance->setRoleId        (intval($roleId)   );
+    $instance->setD             ($deploymentType   );
 
 
     return $instance;

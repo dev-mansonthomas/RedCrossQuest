@@ -26,7 +26,7 @@ class UniteLocaleEntity  extends Entity
    *
    * @param array $data The data to use to create
    */
-  public function __construct($data)
+  public function __construct(array $data)
   {
     $this->getString('id'                        , $data);
     $this->getString('name'                      , $data);

@@ -10,10 +10,10 @@ class UniteLocaleDBService extends DBService
   /**
    * Get one UniteLocale by its ID
    *
-   * @param int $ulId The ID of the uniteLocale
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return UniteLocaleEntity  The Unite Locale
    */
-  public function getPointQueteById($ulId)
+  public function getPointQueteById(int $ulId)
   {
     $sql = "
 SELECT  `ul`.`id`,
@@ -39,10 +39,16 @@ WHERE   `ul`.id    = :ul_id
 
     $result = $stmt->execute(["ul_id" => $ulId]);
 
-    if ($result) {
+    if ($result)
+    {
       $ul = new UniteLocaleEntity($stmt->fetch());
       $stmt->closeCursor();
       return $ul;
+    }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
     }
   }
 }

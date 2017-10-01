@@ -9,13 +9,13 @@ class TroncDBService extends DBService
 
   /**
    * search all tronc, that are enabled, if query is specified, search on the ID
-   * @param int $query
-   * @param boolean $active : search active or incative troncs
-   * @param int    $ulId  : the ID of the UniteLocal on which the search is limited
-   * @return list of QueteurEntity
+   * @param string  $query    search query
+   * @param boolean $active   search active or incative troncs
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return TroncEntity[] list of troncs
    *
    */
-    public function getTroncs($query=null, $ulId, $active )
+    public function getTroncs(string $query=null, int $ulId, boolean $active )
     {
       $sql = "
 SELECT `id`,
@@ -38,7 +38,7 @@ AND CONVERT(id, CHAR) like concat(:query,'%')
       $sql .="
       ORDER BY id ASC
 ";
-      $this->logger->debug($sql);
+      //$this->logger->debug($sql);
       $stmt = $this->db->prepare($sql);
       if($query != null)
       {
@@ -64,14 +64,17 @@ AND CONVERT(id, CHAR) like concat(:query,'%')
 
 /**
  * search all tronc according to a query type
+ *
  * @param int $searchType
  * 0 : All troncs
  * 1 : enabled troncs
  * 2 : disabled troncs
- *@param $ulId
- * @return list of tronc
+ *
+ * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+ *
+ * @return TroncEntity[] array of troncs
  */
-  public function getTroncsBySearchType($searchType, $ulId)
+  public function getTroncsBySearchType(int $searchType, int $ulId)
   {
 
     $sql = "
@@ -127,7 +130,7 @@ ORDER BY id ASC
      * @return TroncEntity  The tronc
      * @throws \Exception if the tronc is not found
      */
-    public function getTroncById($tronc_id, $ulId)
+    public function getTroncById(int $tronc_id, int $ulId)
     {
       $sql = "
 SELECT `id`,
@@ -162,19 +165,19 @@ AND    t.ul_id = :ul_id
    * Update one tronc
    *
    * @param TroncEntity $tronc The tronc to update
-   * @param int $ulId the ID of the UniteLocal
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return TroncEntity  The tronc
    */
-    public function update(TroncEntity $tronc, $ulId)
+    public function update(TroncEntity $tronc, int $ulId)
     {
       $sql = "
 UPDATE `tronc`
 SET
-  `notes`       = :notes,
-  `enabled`     = :enabled,
-  `type`        = :type
-WHERE `id`  = :id
-AND   ul_id = :ul_id
+      `notes`       = :notes,
+      `enabled`     = :enabled,
+      `type`        = :type
+WHERE `id`          = :id
+AND   `ul_id`       = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
@@ -186,11 +189,16 @@ AND   ul_id = :ul_id
         "ul_id"      => $ulId
       ]);
 
-      $this->logger->warning($stmt->rowCount());
+      //$this->logger->warning($stmt->rowCount());
       $stmt->closeCursor();
 
-      if(!$result) {
+      if(!$result)
+      {
           throw new Exception("could not save record");
+      }
+      else
+      {
+        return null;
       }
     }
 
@@ -200,10 +208,10 @@ AND   ul_id = :ul_id
    * Insert one Tronc
    *
    * @param TroncEntity $tronc The tronc to update
-   * @param int $ulId the ID of the UniteLocal
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the primary key of the new tronc
    */
-  public function insert(TroncEntity $tronc, $ulId)
+  public function insert(TroncEntity $tronc, int $ulId)
   {
     $sql = "
 INSERT INTO `tronc`
@@ -240,7 +248,7 @@ VALUES
     $row  = $stmt->fetch();
 
     $lastInsertId = $row['last_insert_id()'];
-    $this->logger->info('$lastInsertId:', [$lastInsertId]) ;
+    //$this->logger->info('$lastInsertId:', [$lastInsertId]) ;
 
     $stmt->closeCursor();
     $this->db->commit();

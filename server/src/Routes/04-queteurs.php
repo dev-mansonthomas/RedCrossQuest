@@ -9,7 +9,7 @@
 use \RedCrossQuest\DBService\QueteurDBService;
 use \RedCrossQuest\DBService\UserDBService;
 use \RedCrossQuest\Entity\QueteurEntity;
-use \RedCrossQuest\Entity\UserEntity;
+
 
 include_once("../../src/Entity/QueteurEntity.php");
 /********************************* QUETEUR ****************************************/
@@ -22,6 +22,7 @@ include_once("../../src/Entity/QueteurEntity.php");
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
 
   try
   {
@@ -34,7 +35,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
     {
       $adminUlId = $params['admin_ul_id'];
-      $this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId");
+      //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
       $ulId = $adminUlId;
     }
 
@@ -45,8 +46,9 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     $benevoleOnly = array_key_exists('$benevoleOnly' ,$params)?$params['$benevoleOnly']:0;
 
 
+    //$this->logger->addInfo( "Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId", array('decodedToken'=>$decodedToken));
 
-    $this->logger->addInfo("Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId");
+
     $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly);
 
     $response->getBody()->write(json_encode($queteurs));
@@ -55,7 +57,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
     throw $e;
   }
 
@@ -69,6 +71,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId   = (int)$args['ul-id'];
@@ -104,7 +107,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
   }
 
 
@@ -119,15 +122,16 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
  */
 $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId   = (int)$args['ul-id'  ];
     $roleId = (int)$args['role-id'];
 
-    $this->logger->addDebug("Updating queteur for UL='$ulId', roleId='$roleId'");
+    //$this->logger->addDebug("Updating queteur for UL='$ulId', roleId='$roleId'", array('decodedToken'=>$decodedToken));
 
     $files = $request->getUploadedFiles();
-    $this->logger->addDebug("file upload : ".print_r($files, true));
+    //$this->logger->addDebug("file upload : ".print_r($files, true));
 
 
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
@@ -141,7 +145,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
   }
 
   return $response;
@@ -154,14 +158,15 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
  */
 $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
+
   try
   {
     $ulId      = (int)$args['ul-id'];
     $queteurId = (int)$args['id'];
 
-    $this->logger->addInfo("Uploading file for UL ID='$ulId' and queteurId='$queteurId''");
+    //$this->logger->addInfo("Uploading file for UL ID='$ulId' and queteurId='$queteurId''", array('decodedToken'=>$decodedToken));
 
-    $this->logger->addInfo(print_r($request->getParsedBody(), true));
 
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
 //    $input            = $request->getParsedBody();
@@ -172,7 +177,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
   }
   return $response;
 });
@@ -182,11 +187,12 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
  */
 $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
     $ulId = (int)$args['ul-id'];
 
-    $this->logger->addInfo("Request UL ID '".$ulId."''");
+    //$this->logger->addInfo("Request UL ID '".$ulId."''", array('decodedToken'=>$decodedToken));
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $input = $request->getParsedBody();
 
@@ -194,14 +200,13 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
-    $this->logger->debug("queteur ", [$queteurEntity]);
 
     $queteurId = $queteurDBService->insert($queteurEntity, $ulId);
 
     //TODO do this stuff inside getQueteurById()
     $queteur          = $queteurDBService->getQueteurById($queteurId);
 
-    //so that that the object is correctly displayed after save
+    //so that the object is correctly displayed after save
     if($queteur->referent_volunteer > 0)
     {
       $referent         = $queteurDBService->getQueteurById($queteur->referent_volunteer);
@@ -216,7 +221,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
   }
   catch(Exception $e)
   {
-    $this->logger->addError($e);
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
   }
   return $response;
 });

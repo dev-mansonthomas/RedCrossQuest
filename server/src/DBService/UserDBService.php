@@ -2,7 +2,6 @@
 namespace RedCrossQuest\DBService;
 
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
 
 include_once("../../src/DBService/DBService.php");
@@ -16,11 +15,11 @@ class UserDBService extends DBService
   /**
    * Insert one user for a queteur.
    *
-   * @param $nivol : Nivol of the user
-   * @param $queteurId : queteurId of the user
+   * @param string $nivol : Nivol of the user
+   * @param int    $queteurId : queteurId of the user
    * @return int the primary key of the new user
    */
-  public function insert($nivol, $queteurId)
+  public function insert(string $nivol, int $queteurId)
   {
     $sql = "
 INSERT INTO `users`
@@ -68,7 +67,7 @@ NULL
     $row = $stmt->fetch();
 
     $lastInsertId = $row['last_insert_id()'];
-    $this->logger->info('$lastInsertId:', [$lastInsertId]);
+    //$this->logger->info('$lastInsertId:', [$lastInsertId]);
 
     $stmt->closeCursor();
     $this->db->commit();
@@ -85,10 +84,10 @@ NULL
    * This function is used by the authenticate method, to get the user info from its nivol.
    * Can't be restricted by ULID since the UL is not known.
    *
-   * @param $nivol the Nivol passed at login
-   * @return an instance of UserEntity, null if nothing is found
+   * @param string $nivol string The Nivol passed at login
+   * @return UserEntity An instance of UserEntity, null if nothing is found
    */
-  public function getUserInfoWithNivol($nivol)
+  public function getUserInfoWithNivol(string $nivol)
   {
     $sql = "
 SELECT id, queteur_id, password, role, nb_of_failure, last_failure_login_date, last_successful_login_date 
@@ -101,7 +100,7 @@ LIMIT 1
     $stmt = $this->db->prepare($sql);
     $queryResult = $stmt->execute([$nivol]);
 
-    $this->logger->addInfo( "queryResult=$queryResult, $nivol, ".$stmt->rowCount());
+    //$this->logger->addInfo( "queryResult=$queryResult, $nivol, ".$stmt->rowCount());
     
     if($queryResult && $stmt->rowCount() == 1)
     {
@@ -109,19 +108,30 @@ LIMIT 1
       $stmt->closeCursor();
       return $result;
     }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
+    }
   }
 
 
   /***
    * This function is used by queteurEditForm, where the info from the user is retrieved from the queteurId
    *
-   * @param $queteurId the Id of the queteur from which we want to retrieve the user
-   * @param $ulId the id of the UL from the connected user, to check that he retrieves info from his UL only
-   * @param $roleId the roleId of the connected user, to override UL Limitation for superadmin
-   * @return an instance of UserEntity, null if nothing is found
+   * @param int $queteurId the Id of the queteur from which we want to retrieve the user
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
+   * @return UserEntity an instance of UserEntity, null if nothing is found
    */
-  public function getUserInfoWithQueteurId($queteurId, $ulId, $roleId)
+  public function getUserInfoWithQueteurId(int $queteurId, int $ulId, int $roleId)
   {
+    $limitQueryToUl="";
+    if($roleId!=9)
+    {
+      $limitQueryToUl="AND    q.ul_id      = :ul_id";
+    }
+
     $sql = "
 SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
        u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
@@ -129,7 +139,7 @@ SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role,
 FROM   users u, queteur q
 WHERE  u.queteur_id = :queteur_id
 AND    q.id         = u.queteur_id
-".($roleId!=9?"AND    q.ul_id      = :ul_id":"")."
+$limitQueryToUl
 LIMIT 1
 ";
 
@@ -153,7 +163,7 @@ LIMIT 1
     $stmt = $this->db->prepare($sql);
     $queryResult = $stmt->execute($parameters);
 
-    $this->logger->addInfo( "queryResult=$queryResult, queteurId=$queteurId, ulId=$ulId, count=".$stmt->rowCount());
+    //$this->logger->addInfo( "queryResult=$queryResult, queteurId=$queteurId, ulId=$ulId, count=".$stmt->rowCount());
 
     if($queryResult && $stmt->rowCount() == 1)
     {
@@ -161,19 +171,31 @@ LIMIT 1
       $stmt->closeCursor();
       return $result;
     }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
+    }
+
   }
 
 
   /***
    * This function is used by queteurEditForm, where the info from the user is retrieved from the queteurId
    *
-   * @param $userId the Id of the user
-   * @param $ulId the id of the UL from the connected user, to check that he retrieves info from his UL only
-   * @param $roleId the roleId of the connected user, to override UL Limitation for superadmin
-   * @return an instance of UserEntity, null if nothing is found
+   * @param int $userId the Id of the user
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
+   * @return UserEntity an instance of UserEntity, null if nothing is found
    */
-  public function getUserInfoWithUserId($userId, $ulId, $roleId)
+  public function getUserInfoWithUserId(int $userId, int $ulId, int $roleId)
   {
+    $limitQueryToUl="";
+    if($roleId!=9)
+    {
+      $limitQueryToUl="AND    q.ul_id      = :ul_id";
+    }
+
     $sql = "
 SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
        u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
@@ -181,7 +203,7 @@ SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role,
 FROM   users u, queteur q
 WHERE  u.id = :id
 AND    q.id = u.queteur_id
-".($roleId!=9?"AND    q.ul_id      = :ul_id":"")."
+$limitQueryToUl
 LIMIT 1
 ";
 
@@ -205,7 +227,7 @@ LIMIT 1
     $stmt = $this->db->prepare($sql);
     $queryResult = $stmt->execute($parameters);
 
-    $this->logger->addInfo( "queryResult=$queryResult, queteurId=$userId, ulId=$ulId, roleId=$roleId, count=".$stmt->rowCount());
+    //$this->logger->addInfo( "queryResult=$queryResult, queteurId=$userId, ulId=$ulId, roleId=$roleId, count=".$stmt->rowCount());
 
     if($queryResult && $stmt->rowCount() == 1)
     {
@@ -213,15 +235,22 @@ LIMIT 1
       $stmt->closeCursor();
       return $result;
     }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
+    }
+
   }
 
 
   /**
    * used in Password reset process
    * get user info for UUID if the init_passwd_date is after current time.
-   *
+   * @param string $uuid the UUID to retrieve the user info
+   * @return USerEntity the info of the user
    */
-  public function getUserInfoWithUUID($uuid)
+  public function getUserInfoWithUUID(string $uuid)
   {
     $sql = "
 SELECT id, queteur_id, password, role, nb_of_failure, last_failure_login_date, last_successful_login_date 
@@ -235,7 +264,7 @@ LIMIT 1
     $stmt = $this->db->prepare($sql);
     $queryResult = $stmt->execute(["uuid" => $uuid]);
 
-    $this->logger->addInfo( "queryResult=$queryResult, $uuid, ".$stmt->rowCount());
+    //$this->logger->addInfo( "queryResult=$queryResult, $uuid, ".$stmt->rowCount());
 
     if($queryResult && $stmt->rowCount() == 1)
     {
@@ -243,11 +272,22 @@ LIMIT 1
       $stmt->closeCursor();
       return $result;
     }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
+    }
+
   }
 
 
-
-  public function sendInit($username)
+  /**
+   * update the user with the init uuid (generated buy this method) and the time until the uuid is valid (now+one hour)
+   *
+   * @param string $username the nivol of the user who want to init its password
+   * @return string the generated uuid
+   */
+  public function sendInit(string $username)
   {
     $uuid = Uuid::uuid4();
 
@@ -269,11 +309,24 @@ WHERE   nivol             = :nivol
 
     if($queryResult && $stmt->rowCount() == 1)
     {
+      $stmt->closeCursor();
       return $uuid;
     }
+    else
+    {
+      $stmt->closeCursor();
+      return null;
+    }
+
   }
 
-  public function resetPassword($uuid, $password)
+  /**
+   * Save the new password for a user, from the UUID
+   * @param string $uuid the uuid that identifiy the user that update his password
+   * @param string $password the new password( clear text), stores it as a hash
+   * @return boolean true if the query is successfull, false otherwise
+   */
+  public function resetPassword(string $uuid, string $password)
   {
     $sql = "
 UPDATE  `users`
@@ -296,17 +349,20 @@ AND    active = 1
 
     if($queryResult && $stmt->rowCount() == 1)
     {
+      $stmt->closeCursor();
       return true;
     }
+    $stmt->closeCursor();
     return false;
   }
 
 
   /**
    * update last successful login date and reset the count of failed login
-
+   * @param int $userId the id of the user that is connecting
+   * @return boolean true if query successful, false otherwise
    */
-  public function registerSuccessfulLogin($userId)
+  public function registerSuccessfulLogin(int $userId)
   {
     $sql = "
 UPDATE  `users`
@@ -330,8 +386,10 @@ WHERE   id = :id
 
   /**
    * increment the failed login counter and update the last failed login date
+   * @param int $userId the id of the user that is connecting
+   * @return boolean true if query successful, false otherwise
    */
-  public function registerFailedLogin($userId)
+  public function registerFailedLogin(int $userId)
   {
     $sql = "
 UPDATE  `users`
@@ -354,6 +412,12 @@ WHERE   id = :id
   }
 
 
+  /**
+   * this method update the 'active' and 'role' column of the user
+   * @param UserEntity $userEntity the user info
+   * @return boolean true if query is successful, false otherwise
+   *
+   */
   public function updateActiveAndRole(UserEntity $userEntity)
   {
     $sql = "
@@ -367,7 +431,7 @@ WHERE   id      = :id
       [
         "id"     => $userEntity->id,
         "active" => $userEntity->active,
-        "role" => $userEntity->role
+        "role"   => $userEntity->role
       ]
     );
 
