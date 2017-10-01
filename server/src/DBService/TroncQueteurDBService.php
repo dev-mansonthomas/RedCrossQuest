@@ -297,14 +297,15 @@ ORDER BY t.id desc
    */
   public function setDepartToNow(int $tronc_queteur_id, int $ulId, int $userId)
   {
-
-//TODO limit the query by UL_ID
     $sql = "
-UPDATE `tronc_queteur`
+UPDATE `tronc_queteur`           tq
+      INNER JOIN  queteur         q
+      ON          tq.queteur_id = q.id
 SET    `depart`             = :depart,
        `last_update`        = NOW(),
        `last_update_user_id`= :userId            
 WHERE  `id`                 = :id
+AND   q.ul_id               = :ul_id
 ";
     $currentDate = new Carbon();
     $currentDate->tz='UTC';
@@ -313,7 +314,8 @@ WHERE  `id`                 = :id
     $result      = $stmt->execute([
       "depart"            => $currentDate->format('Y-m-d H:i:s'),
       "userId"            => $userId,
-      "id"                => $tronc_queteur_id
+      "id"                => $tronc_queteur_id,
+      "ul_id"             => $ulId
     ]);
 
     $stmt->closeCursor();
@@ -340,18 +342,22 @@ WHERE  `id`                 = :id
   public function updateRetour(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
     $sql = "
-UPDATE `tronc_queteur`
+UPDATE `tronc_queteur`            tq
+      INNER JOIN  queteur         q
+      ON          tq.queteur_id = q.id
 SET    `retour`               = :retour,
        `last_update`          = NOW(),
        `last_update_user_id`  = :userId            
 WHERE  `id`                   = :id
+AND   q.ul_id                 = :ul_id
 ";
     $currentDate = new Carbon();
     $stmt        = $this->db->prepare($sql);
     $result      = $stmt->execute([
       "retour"            => $tq->retour->format('Y-m-d H:i:s'),
       "userId"            => $userId,
-      "id"                => $tq->id
+      "id"                => $tq->id,
+      "ul_id"             => $ulId
     ]);
 
     if(!$result)
@@ -385,7 +391,9 @@ WHERE  `id`                   = :id
 
       //$this->logger->debug("Saving coins adminMode='$adminMode' $comptage", [$tq]);
       $sql = "
-UPDATE `tronc_queteur`
+UPDATE `tronc_queteur`            tq
+      INNER JOIN  queteur         q
+      ON          tq.queteur_id = q.id
 SET
  `euro500`                      = :euro500,           
  `euro200`                      = :euro200,           
@@ -409,7 +417,8 @@ SET
 $comptage
  `last_update`                  = NOW(),
  `last_update_user_id`          = :userId            
- WHERE `id` = :id;
+WHERE `id` = :id
+AND   q.ul_id                 = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
@@ -434,7 +443,8 @@ $comptage
         "notes"             => $tq->notes,
         "don_cheque"        => $tq->don_cheque,
         "userId"            => $userId,
-        "id"                => $tq->id
+        "id"                => $tq->id,
+        "ul_id"             => $ulId
       ]);
 
       //$this->logger->warning($stmt->rowCount());
@@ -465,14 +475,17 @@ $comptage
 
     //$this->logger->debug("Saving Credit Card adminMode='$adminMode'", [$tq]);
     $sql = "
-UPDATE `tronc_queteur`
+UPDATE `tronc_queteur`            tq
+      INNER JOIN  queteur         q
+      ON          tq.queteur_id = q.id
 SET
  `don_creditcard`               = :don_creditcard,  
  `notes_retour_comptage_pieces` = :notes,
 $comptage
  `last_update`         = NOW(),
  `last_update_user_id` = :userId 
- WHERE `id` = :id;
+WHERE `id` = :id
+AND   q.ul_id                 = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);
@@ -480,7 +493,8 @@ $comptage
       "don_creditcard"    => $tq->don_creditcard,
       "notes"             => $tq->notes,
       "userId"            => $userId,
-      "id"                => $tq->id
+      "id"                => $tq->id,
+      "ul_id"             => $ulId
     ]);
 
     //$this->logger->warning($stmt->rowCount());
@@ -505,7 +519,9 @@ $comptage
 
     //$this->logger->debug("Admin Updates dates, point_quete_id or deleted ", [$tq]);
     $sql = "
-UPDATE `tronc_queteur`
+UPDATE `tronc_queteur`            tq
+      INNER JOIN  queteur         q
+      ON          tq.queteur_id = q.id
 SET
   `depart_theorique`   = :depart_theorique,
   `depart`             = :depart,
@@ -514,7 +530,8 @@ SET
   `deleted`            = :deleted,
   `last_update`        = NOW(),
   `last_update_user_id`= :userId 
- WHERE `id` = :id;
+WHERE `id`    = :id
+AND   q.ul_id = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);
@@ -525,7 +542,8 @@ SET
       "point_quete_id"    => $tq->point_quete_id,
       "deleted"           => $tq->deleted?1:0,
       "userId"            => $userId,
-      "id"                => $tq->id
+      "id"                => $tq->id,
+      "ul_id"             => $ulId
     ]);
 
     //$this->logger->warning($stmt->rowCount());
@@ -713,13 +731,13 @@ AND    (tq.depart     is null OR
 
     //update the tronc to deleted=1, limiting the update to the rows of the UL and set who is deleting the row
     $sql ="
-update            tronc_queteur tq
-      inner join  queteur       q
-      on          tq.queteur_id = q.id
-set   deleted             = 0,
+UPDATE            tronc_queteur tq
+      INNER JOIN  queteur       q
+      ON          tq.queteur_id = q.id
+SET   deleted             = 0,
       last_update_user_id = :user_id
-where tq.tronc_id = :tronc_id
-and    q.ul_id    = :ul_id
+WHERE tq.tronc_id = :tronc_id
+AND    q.ul_id    = :ul_id
 AND  (tq.depart IS NULL OR 
       tq.retour IS NULL)
 ";
