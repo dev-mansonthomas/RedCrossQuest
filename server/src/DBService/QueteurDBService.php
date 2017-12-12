@@ -94,7 +94,7 @@ AND
    * @throws PDOException if the query fails to execute on the server
    *
    */
-  public function searchQueteurs(string $query, int $searchType, int $secteur, int $ulId, boolean $active, boolean $benevoleOnly)
+  public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId, bool $active, bool $benevoleOnly)
   {
     $parameters      = ["ul_id" => $ulId];
     $querySQL        = "";
@@ -275,13 +275,13 @@ ORDER BY q.last_name ASC
 ";
     $sql = null;
     switch ($searchType) {
-      case "0":
+      case 0:
         $sql = $sqlSearchAll;
         break;
-      case "1":
+      case 1:
         $sql = $sqlSearchNotLeft;
         break;
-      case "2":
+      case 2:
         $sql = $sqlSearchNotReturned;
         break;
       default:
@@ -429,14 +429,13 @@ SET
   `man`                 = :man,
   `active`              = :active,
   `referent_volunteer`  = :referent_volunteer
-WHERE `id`    = :id
-
+WHERE `id`              = :id
 ";
     $parameters = null;
     if($roleId != 9)
     {
       $sql .= "
-AND   `ul_id` = :ul_id      
+AND   `ul_id`           = :ul_id      
 ";
       $parameters = [
         "first_name"          => $queteur->first_name,

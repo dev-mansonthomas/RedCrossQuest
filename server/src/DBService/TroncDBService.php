@@ -16,7 +16,7 @@ class TroncDBService extends DBService
    * @throws PDOException if the query fails to execute on the server
    *
    */
-    public function getTroncs(string $query=null, int $ulId, boolean $active )
+    public function getTroncs(string $query=null, int $ulId, bool $active )
     {
       $sql = "
 SELECT `id`,

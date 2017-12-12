@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('client')
+  .module('redCrossQuestClient')
   .factory('AuthenticationService', AuthenticationService);
 
 function AuthenticationService ($http, $localStorage, jwtHelper, $log)

@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .config(routeConfig);
 
   function routeConfig($routeProvider) {
@@ -116,6 +116,22 @@
         controllerAs: 'graph'
       })
 
+      // ============== Points Quetes ==============
+      .when('/pointsQuetes', {
+        templateUrl: 'app/admin/pointQuete/list/listPointQuete.html',
+        controller: 'ListPointQueteController',
+        controllerAs: 'pq'
+      })
+      .when('/pointsQuetes/edit', {
+      templateUrl: 'app/admin/pointQuete/edit/editPointQuete.html',
+      controller: 'EditPointQueteController',
+      controllerAs: 'pqe'
+    })
+      .when('/pointsQuetes/edit/:id', {
+        templateUrl: 'app/admin/pointQuete/edit/editPointQuete.html',
+        controller: 'EditPointQueteController',
+        controllerAs: 'pqe'
+      })
       // ============== OTHERWISE ==============
       .otherwise({
         redirectTo: '/'

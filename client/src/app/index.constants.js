@@ -3,8 +3,8 @@
   'use strict';
 
   angular
-    .module('client')
+    .module  ('redCrossQuestClient'  )
     .constant('malarkey', malarkey)
-    .constant('moment', moment);
+    .constant('moment'  , moment  );
 
 })();

@@ -1,0 +1,73 @@
+<acme-navbar></acme-navbar>
+<div class="container" data-ng-controller="EditPointQueteController as pqe">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">Édition du Point de Quête '{{pqe.current.name}}' </div>
+  </div>
+
+
+  <div class="panel panel-info">
+    <div class="panel-heading">Informations sur le Point de Quête</div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-2">
+          <label for="pqCode" class="control-label">Code</label>
+          <input type="text" id="pqCode" value="{{pqe.current.code}}" class="form-control" readonly/>
+        </div>
+        <div class="col-md-4">
+          <label for="pqName" class="control-label">Nom</label>
+          <input type="text" id="pqName" value="{{pqe.current.name}}" class="form-control" readonly/>
+        </div>
+        <div class="col-md-4">
+          <label for="pqName" class="control-label">Google Maps</label><br/>
+
+
+
+
+          <a ng-href="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin={{pt.current.queteur.ul_latitude}},{{pt.current.queteur.ul_longitude}}&destination={{pqe.current.latitude}},{{pqe.current.longitude}}" target="_blank">
+            {{pqe.current.address}}, {{pqe.current.postal_code}}, {{pqe.current.city}}
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          <label for="pqMaxPeople" class="control-label">Nb de quêteur Max</label>
+          <input type="text" id="pqMaxPeople" value="{{pqe.current.max_people}}" class="form-control" readonly/>
+        </div>
+        <div class="col-md-4">
+          <label for="pqMinorAllowed" class="control-label">Mineur ?</label>
+          <input type="text" id="pqMinorAllowed" value="{{pqe.current.minor_allowed=='1'?'Autorisé':'NON Autorisé'}}" class="form-control" readonly/>
+        </div>
+        <div class="col-md-4">
+          <label for="pqCreated" class="control-label">Date Création du Point de Quête</label>
+          <input type="text" id="pqCreated" value="{{pqe.current.created}}" class="form-control" readonly/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          <label for="pqType" class="control-label">Type</label>
+          <input type="text" id="pqType" value="{{pqe.current.type}}" class="form-control" readonly/>
+        </div>
+        <div class="col-md-4">
+          <label for="pqTimeToReach" class="control-label">Temps moyen pour atteindre le Point de Quête</label>
+          <input type="text" id="pqTimeToReach" value="{{pqe.current.time_to_reach}}" class="form-control" readonly/>
+        </div>
+        <div class="col-md-4">
+          <label for="pqTransportToReach" class="control-label">Type de Transport pour atteindre le point de quête</label>
+          <input type="text" id="pqTransportToReach" value="{{pqe.current.transport_to_reach}}" class="form-control" readonly/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="pqAdvice" class="control-label">Infos/Conseils</label>
+          <textarea id="pqAdvice" class="form-control" ng-disabled="true">{{pqe.current.advice}}</textarea>
+        </div>
+        <div class="col-md-6">
+          <label for="pqLocalization" class="control-label">Aide à la localisation</label>
+          <textarea id="pqLocalization" class="form-control" ng-disabled="true">{{pqe.current.localization}}</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

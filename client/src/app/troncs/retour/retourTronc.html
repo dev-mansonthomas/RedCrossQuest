@@ -20,12 +20,12 @@
           <div class="row">
             <div class="form-group col-md-4"  style="text-align:center;" ng-if="!rt.current.readOnlyView">
 
-              <qr-scanner
+              <qr-scanner-u
                 ng-success="rt.qrCodeScanOnSuccess(data)"
                 ng-error="rt.qrCodeScanOnError(error)"
                 ng-video-error="rt.qrCodeScanOnVideoError(error)"
                 width="320"
-                height="200"></qr-scanner>
+                height="200"></qr-scanner-u>
 
               <span class="help-block" ng-bind="departTronc.decodedData"></span>
             </div>

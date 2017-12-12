@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .directive('acmeNavbar', acmeNavbar);
 
   /** @ngInject */

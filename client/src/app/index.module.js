@@ -2,10 +2,11 @@
   'use strict';
 
   angular
-    .module('client',
-      [ 'ngAnimate' , 'ngCookies'   , 'ngTouch',
-        'ngSanitize', 'ngMessages'  , 'ngAria' , 'ngResource',
-        'ngRoute'   , 'ui.bootstrap', 'toastr' , 'qrScanner' , 'ui.bootstrap', 'ngAudio', 'ja.qr',
-        'ngStorage' , 'angular-jwt' , 'ngFileUpload']);
+    .module('redCrossQuestClient',
+      [ 'ngAnimate'   , 'ngCookies'   , 'ngTouch',
+        'ngSanitize'  , 'ngMessages'  , 'ngAria' , 'ngResource',
+        'ngRoute'     , 'ui.bootstrap', 'toastr' , 'qrScannerU',
+        'ui.bootstrap', 'ngAudio'     , 'ja.qr'  ,
+        'ngStorage'   , 'angular-jwt' , 'ngFileUpload']);
 
 })();

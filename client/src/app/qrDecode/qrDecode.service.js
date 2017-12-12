@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('client')
+  .module('redCrossQuestClient')
   .factory('QRDecodeService', function ($resource, $log, QueteurResource, TroncResource, ngAudio) {
 
   var instance = {};

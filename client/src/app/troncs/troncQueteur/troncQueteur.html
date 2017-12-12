@@ -28,12 +28,12 @@
         <div class="row">
           <div class="form-group col-md-4" style="text-align:center;" ng-if="!tq.current.readOnlyView">
 
-            <qr-scanner
+            <qr-scanner-u
               ng-success="tq.qrCodeScanOnSuccess(data)"
               ng-error="tq.qrCodeScanOnError(error)"
               ng-video-error="tq.qrCodeScanOnVideoError(error)"
               width="320"
-              height="200"></qr-scanner>
+              height="200"></qr-scanner-u>
             <span class="help-block" ng-bind="departTronc.decodedData"></span>
           </div>
 
@@ -302,20 +302,20 @@
           <div class="row" style="height:115px;">
 
             <div class="form-group col-md-4">
-              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledBillToZero();">
+              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledBillToZero();" ng-if="!tq.current.readOnlyView">
                 Mettre à zéro les champs billets non rempli
               </button>
             </div>
 
             <div class="form-group col-md-8" style="font-size:20px;color:darkblue;vertical-align: top;">
               Montant Total pour les billets du Tronc (pour Contrôle) : {{
-              (tq.current.tronc_queteur.euro5*5 +
-              tq.current.tronc_queteur.euro10*10 +
-              tq.current.tronc_queteur.euro20*20 +
-              tq.current.tronc_queteur.euro50*50 +
-              tq.current.tronc_queteur.euro100*100 +
-              tq.current.tronc_queteur.euro200*200 +
-              tq.current.tronc_queteur.euro500*500
+              (tq.current.tronc_queteur.euro5*5     +
+               tq.current.tronc_queteur.euro10*10   +
+               tq.current.tronc_queteur.euro20*20   +
+               tq.current.tronc_queteur.euro50*50   +
+               tq.current.tronc_queteur.euro100*100 +
+               tq.current.tronc_queteur.euro200*200 +
+               tq.current.tronc_queteur.euro500*500
               ).toFixed(2)}} €
             </div>
           </div>
@@ -557,7 +557,7 @@
     </div>
 
     <div class="well" style="overflow: auto">
-      <table class="table table-bordered table-hover table-condensed histo">
+      <table class="table table-hover table-condensed histo">
         <thead>
           <tr>
             <th>N° ligne                   </th>
@@ -604,8 +604,8 @@
         <tbody>
           <tr ng-repeat="tqh in tq.current.tronc_queteur_history">
             <td>{{$index}}</td>
-            <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].id                          != tqh.id                         }">{{::tqh.id                         }}</td>
-            <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].insert_date                 != tqh.insert_date                }">{{::tqh.insert_date                }}</td>
+            <td>{{::tqh.id                         }}</td>
+            <td>{{::tqh.insert_date                }}</td>
             <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].tronc_queteur_id            != tqh.tronc_queteur_id           }">{{::tqh.tronc_queteur_id           }}</td>
             <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].queteur_id                  != tqh.queteur_id                 }">{{::tqh.queteur_id                 }}</td>
             <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].point_quete_id              != tqh.point_quete_id             }">{{::tqh.point_quete_id             }}</td>

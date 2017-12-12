@@ -12,12 +12,12 @@
         <div class="row">
           <div class="col-md-4" style="text-align:center;">
 
-            <qr-scanner
+            <qr-scanner-u
               ng-success="dt.qrCodeScanOnSuccess(data)"
                 ng-error="dt.qrCodeScanOnError(error)"
           ng-video-error="dt.qrCodeScanOnVideoError(error)"
                    width="320"
-                  height="200"></qr-scanner>
+                  height="200"></qr-scanner-u>
 
             <span class="help-block" ng-bind="dt.decodedData"></span>
           </div>

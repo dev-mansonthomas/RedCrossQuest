@@ -30,11 +30,11 @@ class AuthorisationMiddleware
     '0004' => "Rejecting request, failed to parse roleId from roleIdStr (%s') in Path: '%s' decoded token:%s",
     '0005' => "Rejecting request, retrieving the roleId : explode function fails to return 2 elements array as expected for Path: '%s', explodedPath: %s DecodedToken: %s",
     '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: '%s', DecodedToken: %s",
-    '0007' => "General Error while authenticating the request : %s",
+    '0007' => "General Error while authenticating the request",
     '0008' => "wrong format for a jwt token (should have exactly 2 '.')  '%s'",
     '0009' => "rejecting token, signature verification fails. Token : '%s'",
     '0010' => "JWT Validation fails: %s",
-    '0011' => "Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode. %s"
+    '0011' => "Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode."
   ];
 
   private $jwtSettings;
@@ -124,7 +124,7 @@ class AuthorisationMiddleware
     }
     catch(\Exception $error)
     { //getClaim can raise exception if the claim is not here
-      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0011'], print_r($error, true)));
+      $this->logger->addError(AuthorisationMiddleware::$errorMessage['0011'], array("exception"=>$error));
       throw $error;
     }
 
@@ -232,7 +232,7 @@ class AuthorisationMiddleware
     catch(\Exception $error)
     {
       $this->logger->addDebug("[PERF];".(microtime(true)-$start).";true;".$path);
-      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0007'], print_r($error, true)));
+      $this->logger->addError(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$error));
       return $this->denyRequest($response, '0007');
     }
 
@@ -290,7 +290,7 @@ class DecodedToken
    * @param string  $deploymentType How the application is currently deployed: test/uat/production
    * @return DecodedToken an instance
    */
-  public static function withData(boolean $authenticated, string $errorCode,
+  public static function withData(bool    $authenticated, string $errorCode,
                                   string  $username     , string $uid      , string $ulId     ,
                                   string  $ulName       , string $ulMode   , string $queteurId,
                                   string  $roleId       , string $deploymentType)

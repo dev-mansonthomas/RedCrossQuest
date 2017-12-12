@@ -2,7 +2,7 @@
  * Created by tmanson on 03/05/2016.
  */
 
-angular.module('client').factory('TroncQueteurResource', function ($resource, $localStorage) {
+angular.module('redCrossQuestClient').factory('TroncQueteurResource', function ($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:ulId/tronc_queteur/:id',
     {
       roleId: $localStorage.currentUser.roleId,

@@ -6,7 +6,7 @@
   'use strict';
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .controller('QueteursController', QueteursController);
 
   /** @ngInject */
@@ -34,7 +34,7 @@
     {
       $log.debug("search with type:'"+vm.searchType+"' "+vm.admin_ul_id);
 
-      var searchParams = {'q':vm.search, 'searchType':vm.searchType, 'secteur':vm.secteur, 'active':vm.active};
+      var searchParams = {'q':vm.search, 'searchType':vm.searchType,  'active':vm.active};
 
 
       if(vm.currentUserRole === '9' && vm.admin_ul_id !== null)

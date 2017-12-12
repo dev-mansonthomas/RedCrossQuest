@@ -33,12 +33,12 @@
         <div class="row">
           <div class="col-md-4"  style="text-align:center;">
 
-            <qr-scanner
+            <qr-scanner-u
               ng-success="pt.qrCodeScanOnSuccess(data)"
                 ng-error="pt.qrCodeScanOnError(error)"
           ng-video-error="pt.qrCodeScanOnVideoError(error)"
                    width="320"
-                  height="200"></qr-scanner>
+                  height="200"></qr-scanner-u>
 
             <span  class="help-block" ng-bind="pt.decodedData"></span>
           </div>
@@ -121,8 +121,8 @@
         <div class="row">
           <div class="pull-right">
             <div class="form-group">
-              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="prepaTroncForm.$invalid" />
-              <a ng-href="#/list" class="btn btn-link">Cancel</a>
+              <input type="submit" class="btn btn-primary" value="Sauvegarder" ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed()" />
+              <a ng-href="#/list" class="btn btn-link">Annuler</a>
             </div>
           </div>
         </div>
@@ -131,6 +131,14 @@
           <div class="col-md-8 col-md-offset-2">
             <div class="alert alert-warning" role="alert" style="text-align: center;">
               <strong>Attention!</strong> Il s'agit d'un <b>Terminal Carte Bleue</b>!
+            </div>
+          </div>
+        </div>
+
+        <div class="row" ng-show="!prepaTroncForm.$invalid && !pt.isQueteurAllowed()">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-danger" role="alert" style="text-align: center;">
+              <strong>Attention!</strong> le quêteur est mineur et le point de quête n'autorise pas les mineurs.
             </div>
           </div>
         </div>
@@ -164,8 +172,8 @@
                 <input type="text" id="pqMaxPeople" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].max_people}}" class="form-control" readonly/>
               </div>
               <div class="col-md-4">
-                <label for="pqMinorAllowed" class="control-label">Mineur Authorisé</label>
-                <input type="text" id="pqMinorAllowed" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].minor_allowed}}" class="form-control" readonly/>
+                <label for="pqMinorAllowed" class="control-label">Mineur ?</label>
+                <input type="text" id="pqMinorAllowed" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].minor_allowed=='1'?'Autorisé':'NON Autorisé'}}" class="form-control" readonly/>
               </div>
               <div class="col-md-4">
                 <label for="pqCreated" class="control-label">Date Création du Point de Quête</label>
@@ -189,11 +197,11 @@
             <div class="row">
               <div class="col-md-6">
                 <label for="pqAdvice" class="control-label">Infos/Conseils</label>
-                <textarea id="pqAdvice" class="form-control">{{pt.pointsQueteHash[pt.current.lieuDeQuete].advice}}</textarea>
+                <textarea id="pqAdvice" class="form-control" ng-disabled="true">{{pt.pointsQueteHash[pt.current.lieuDeQuete].advice}}</textarea>
               </div>
               <div class="col-md-6">
                 <label for="pqLocalization" class="control-label">Aide à la localisation</label>
-                <textarea id="pqLocalization" class="form-control">{{pt.pointsQueteHash[pt.current.lieuDeQuete].localization}}</textarea>
+                <textarea id="pqLocalization" class="form-control" ng-disabled="true">{{pt.pointsQueteHash[pt.current.lieuDeQuete].localization}}</textarea>
               </div>
             </div>
           </div>

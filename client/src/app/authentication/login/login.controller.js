@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .controller('LoginController', LoginController);
 
   /** @ngInject */

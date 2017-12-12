@@ -6,7 +6,7 @@
   'use strict';
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .controller('QueteurEditController', QueteurEditController);
 
   /** @ngInject */
@@ -49,7 +49,7 @@
 
     vm.createNewUser=function()
     {
-      vm.current           = new QueteurResource();
+      vm.current          = new QueteurResource();
       vm.current.ul_id    = vm.ulId;
       vm.current.ul_name  = $localStorage.currentUser.ulName;
 
@@ -72,7 +72,11 @@
       {
         vm.current = queteur;
 
-        vm.current.referent_volunteerQueteur = queteur.referent_volunteer_entity.first_name+' '+queteur.referent_volunteer_entity.last_name + ' - '+queteur.referent_volunteer_entity.nivol;
+        if(queteur.referent_volunteer_entity != null)
+        {
+          vm.current.referent_volunteerQueteur = queteur.referent_volunteer_entity.first_name+' '+queteur.referent_volunteer_entity.last_name + ' - '+queteur.referent_volunteer_entity.nivol;
+        }
+
         if(typeof vm.current.mobile === "string")
         {
           if(vm.current.mobile === "N/A")
@@ -93,11 +97,14 @@
         /*lack of data with previous model (minor instead of birthdate), only for ULParisIV, minor and major where set fixed birthdate
         * if editing one of these ==> set birthdate to null to force user to update the data*/
 
-        var birthdate = vm.current.birthdate.date.toLocaleString().substr(0,10);
-
-        if(birthdate === '1902-02-02' || birthdate === '2007-07-07')
+        if(angular.isDefined(vm.current.birthdate))
         {
-          vm.current.birthdate = null;
+          var birthdate = vm.current.birthdate.date.toLocaleString().substr(0,10);
+
+          if(birthdate === '1902-02-02' || birthdate === '2007-07-07')
+          {
+            vm.current.birthdate = null;
+          }
         }
 
 
@@ -127,7 +134,7 @@
 
         );
 
-        if(vm.current.birthdate !== null)
+        if(angular.isDefined(vm.current.birthdate))
         {
           vm.current.birthdate = moment( queteur.birthdate.date.substring(0, queteur.birthdate.date.length -16 ),"YYYY-MM-DD").toDate();
           vm.computeAge();

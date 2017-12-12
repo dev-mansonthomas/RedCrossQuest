@@ -54,6 +54,11 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
 
     //$this->logger->addInfo( "Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId", array('decodedToken'=>$decodedToken));
 
+    if($ulId == null || $ulId == '')
+    {
+      $ulId = (int)$decodedToken->getUlId();
+    }
+
 
     $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly);
 
@@ -107,7 +112,8 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   }
   catch(Exception $e)
   {
-    $this->logger->addError("Error while fetching queteur $queteurId ", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->addError("Error while fetching queteur $queteurId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
+    throw $e;
   }
 
 

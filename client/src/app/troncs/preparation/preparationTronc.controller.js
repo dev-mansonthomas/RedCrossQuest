@@ -6,7 +6,7 @@
   'use strict';
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .controller('PreparationTroncController', PreparationTroncController);
 
   /** @ngInject */
@@ -14,7 +14,8 @@
                                       $uibModal      , $timeout             ,
                                       QueteurResource, PointQueteResource   ,
                                       TroncResource  , TroncQueteurResource ,
-                                      QRDecodeService, $localStorage        )
+                                      QRDecodeService, $localStorage        ,
+                                      moment)
   {
     var vm = this;
 
@@ -92,11 +93,11 @@
 
 
       $uibModal.open({
-        animation: true,
+        animation  : true,
         templateUrl: 'myModalContent.html',
-        controller: 'ModalInstanceController',
-        size: 'lg',
-        resolve: {
+        controller : 'ModalInstanceController',
+        size       : 'lg',
+        resolve    : {
           errorOnSave: function () {
             return vm.errorOnSave;
           },
@@ -175,6 +176,13 @@
       });
     };
 
+    vm.isQueteurAllowed=function()
+    {
+      if(moment().diff(vm.current.queteur.birthdate.date, 'years')>=18)
+        return true;
+
+      return vm.pointsQueteHash[vm.current.lieuDeQuete].minor_allowed === '1';
+    };
 
     /**
      * called when qr-scanner is able to decode something successfully from the webcam
@@ -278,7 +286,7 @@
 
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .controller('ModalInstanceController',
       function ($scope, $uibModalInstance, $log,
                 TroncQueteurResource, errorOnSave, troncId, saveFunction)

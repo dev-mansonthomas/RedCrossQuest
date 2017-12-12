@@ -181,11 +181,7 @@ LIMIT 1
       $stmt->closeCursor();
       return $result;
     }
-    else
-    {
-      $stmt->closeCursor();
-      throw new \Exception ("Update didn't update the correct number of rows($count) for queteurId: $queteurId, ulId: $ulId, roleId: $roleId");
-    }
+    return null;
 
   }
 
@@ -249,11 +245,8 @@ LIMIT 1
       $stmt->closeCursor();
       return $result;
     }
-    else
-    {
-      $stmt->closeCursor();
-      throw new \Exception ("Update didn't update the correct number of rows($count) for userId: $userId, ulId: $ulId, roleId: $roleId");
-    }
+
+    return null;
 
   }
 

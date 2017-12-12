@@ -310,8 +310,8 @@ UPDATE `tronc_queteur`           tq
 SET    `depart`             = :depart,
        `last_update`        = NOW(),
        `last_update_user_id`= :userId            
-WHERE  `id`                 = :id
-AND   q.ul_id               = :ul_id
+WHERE tq.`id`               = :id
+AND    q.ul_id              = :ul_id
 ";
     $currentDate = new Carbon();
     $currentDate->tz='UTC';
@@ -352,8 +352,8 @@ UPDATE `tronc_queteur`            tq
 SET    `retour`               = :retour,
        `last_update`          = NOW(),
        `last_update_user_id`  = :userId            
-WHERE  `id`                   = :id
-AND   q.ul_id                 = :ul_id
+WHERE tq.`id`                 = :id
+AND    q.ul_id                = :ul_id
 ";
     $currentDate = new Carbon();
     $stmt        = $this->db->prepare($sql);
@@ -382,7 +382,7 @@ AND   q.ul_id                 = :ul_id
    * @throws \Exception if the query fails
    * @throws PDOException if the query fails to execute on the server
    */
-    public function updateCoinsCount(TroncQueteurEntity $tq, boolean $adminMode, int $ulId, int $userId)
+    public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId)
     {
       $comptage = "";
       if($adminMode != true)
@@ -418,8 +418,8 @@ SET
 $comptage
  `last_update`                  = NOW(),
  `last_update_user_id`          = :userId            
-WHERE `id` = :id
-AND   q.ul_id                 = :ul_id
+WHERE tq.`id`                   = :id
+AND    q.ul_id                  = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
@@ -462,7 +462,7 @@ AND   q.ul_id                 = :ul_id
    * @throws \Exception if the query fails
    * @throws PDOException if the query fails to execute on the server
    */
-  public function updateCreditCardCount(TroncQueteurEntity $tq, boolean $adminMode , int $ulId, int $userId)
+  public function updateCreditCardCount(TroncQueteurEntity $tq, bool $adminMode , int $ulId, int $userId)
   {
     $comptage = "";
     if($adminMode != true)
@@ -481,8 +481,8 @@ SET
 $comptage
  `last_update`         = NOW(),
  `last_update_user_id` = :userId 
-WHERE `id` = :id
-AND   q.ul_id                 = :ul_id
+WHERE tq.`id`          = :id
+AND    q.ul_id         = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);
@@ -525,8 +525,8 @@ SET
   `deleted`            = :deleted,
   `last_update`        = NOW(),
   `last_update_user_id`= :userId 
-WHERE `id`    = :id
-AND   q.ul_id = :ul_id
+WHERE tq.`id`          = :id
+AND    q.ul_id         = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);

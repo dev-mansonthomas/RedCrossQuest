@@ -2,7 +2,7 @@
  * Created by tmanson on 03/05/2016.
  */
 
-angular.module('client').factory('DailyStatsResource', function ($resource, $localStorage) {
+angular.module('redCrossQuestClient').factory('DailyStatsResource', function ($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:ulId/dailyStats/:id',
     {
       roleId: $localStorage.currentUser.roleId,

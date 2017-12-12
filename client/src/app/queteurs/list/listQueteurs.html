@@ -107,8 +107,9 @@
         <div class="contact-card col-xs-12 col-sm-4" style="height:150px;" data-ng-repeat="queteur in q.list">
           <div class="contact-card-inner">
             <h4>
-              <a ng-href="/#!/queteurs/edit/{{::queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
-              &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
+              <a ng-href="/#!/queteurs/edit/{{::queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
+              </a>
             </h4>
             <div class="contact-address">{{::queteur.email}}</div>
             <div class="contact-phone">{{::queteur.mobile}} - {{::queteur.nivol}}</div>

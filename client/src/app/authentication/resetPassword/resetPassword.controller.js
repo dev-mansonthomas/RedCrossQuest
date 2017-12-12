@@ -132,7 +132,7 @@
   }
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .factory('zxcvbn', function () {
       return window.zxcvbn; // zxcvbn ext charge par le bout de code 'ZXCVBN_SRC'
     })

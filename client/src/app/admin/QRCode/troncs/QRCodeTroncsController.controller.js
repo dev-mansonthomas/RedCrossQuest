@@ -6,7 +6,7 @@
   'use strict';
 
   angular
-    .module('client')
+    .module('redCrossQuestClient')
     .controller('QRCodeTroncsController', QRCodeTroncsController);
 
   /** @ngInject */

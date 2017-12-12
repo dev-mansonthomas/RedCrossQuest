@@ -3,7 +3,7 @@
  */
 
 angular
-  .module('client')
+  .module('redCrossQuestClient')
   .factory('DateTimeHandlingService', function($log, moment){
 
     var instance = {};
