@@ -11,9 +11,10 @@
 
         <div class="col-md-4">
           <div class="form-group">
+            <label for="recherche" class="control-label">Recherche </label>
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-              <input class="form-control" placeholder="Recherche" data-ng-model="q.search">
+              <input class="form-control" placeholder="Recherche" id="recherche" data-ng-model="q.search">
             </div>
             <div data-ng-show="q.search">
               <span data-ng-pluralize
@@ -54,6 +55,7 @@
       </div>
       <div class="row">
         <div class="col-md-4">
+          <br/><br/>
           Nombre de Bénévoles/Quêteur d'un jour: <span class="badge">{{q.list.length}}</span>
         </div>
         <div class="col-md-4">
@@ -94,6 +96,7 @@
 
 
         <div class="col-md-1">
+          <br/>
           <input type="submit" class="btn btn-primary" value="Rechercher" />
         </div>
       </div>

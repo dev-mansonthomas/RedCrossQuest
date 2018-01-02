@@ -192,4 +192,180 @@ AND    pq.ul_id = :ul_id";
     $stmt->closeCursor();
     return $point_quete;
   }
+
+
+  /**
+   * Update one point de quete
+   *
+   * @param PointQueteEntity $pointQuete The pointQuete to update
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
+   */
+  public function update(PointQueteEntity $pointQuete, int $ulId, int $roleId)
+  {
+    $sql = "
+UPDATE `point_quete`
+SET
+`code`              =  :code                 ,
+`name`              =  :name                 ,
+`latitude`          =  :latitude             ,
+`longitude`         =  :longitude            ,
+`address`           =  :address              ,
+`postal_code`       =  :postal_code          ,
+`city`              =  :city                 ,
+`max_people`        =  :max_people           ,
+`advice`            =  :advice               ,
+`localization`      =  :localization         ,
+`minor_allowed`     =  :minor_allowed        ,
+`enabled`           =  :enabled              ,
+`type`              =  :type                 ,
+`time_to_reach`     =  :time_to_reach        ,
+`transport_to_reach`=  :transport_to_reach    
+WHERE `id`              = :id
+";
+    $parameters = null;
+    if($roleId != 9)
+    {
+      $sql .= "
+AND   `ul_id`           = :ul_id      
+";
+      $parameters = [
+        "code"               => $pointQuete->code               ,
+        "name"               => $pointQuete->name               ,
+        "latitude"           => $pointQuete->latitude           ,
+        "longitude"          => $pointQuete->longitude          ,
+        "address"            => $pointQuete->address            ,
+        "postal_code"        => $pointQuete->postal_code        ,
+        "city"               => $pointQuete->city               ,
+        "max_people"         => $pointQuete->max_people         ,
+        "advice"             => $pointQuete->advice             ,
+        "localization"       => $pointQuete->localization       ,
+        "minor_allowed"      => $pointQuete->minor_allowed      ,
+        "enabled"            => $pointQuete->enabled            ,
+        "type"               => $pointQuete->type               ,
+        "time_to_reach"      => $pointQuete->time_to_reach      ,
+        "transport_to_reach" => $pointQuete->transport_to_reach ,
+        "id"                 => $pointQuete->id                 ,
+        "ul_id"              => $ulId
+      ];
+
+    }
+    else
+    {
+      $parameters = [
+        "code"               => $pointQuete->code               ,
+        "name"               => $pointQuete->name               ,
+        "latitude"           => $pointQuete->latitude           ,
+        "longitude"          => $pointQuete->longitude          ,
+        "address"            => $pointQuete->address            ,
+        "postal_code"        => $pointQuete->postal_code        ,
+        "city"               => $pointQuete->city               ,
+        "max_people"         => $pointQuete->max_people         ,
+        "advice"             => $pointQuete->advice             ,
+        "localization"       => $pointQuete->localization       ,
+        "minor_allowed"      => $pointQuete->minor_allowed      ,
+        "enabled"            => $pointQuete->enabled            ,
+        "type"               => $pointQuete->type               ,
+        "time_to_reach"      => $pointQuete->time_to_reach      ,
+        "transport_to_reach" => $pointQuete->transport_to_reach ,
+        "id"                 => $pointQuete->id
+      ];
+    }
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+
+    $stmt->closeCursor();
+  }
+
+
+
+  /**
+   * Insert one pointQuete
+   *
+   * @param PointQueteEntity $pointQuete The pointQuete to update
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return int the primary key of the new pointQuete
+   */
+  public function insert(PointQueteEntity $pointQuete, int $ulId)
+  {
+    $sql = "
+  INSERT INTO `point_quete`
+  (
+  `code`              ,
+  `name`              ,
+  `latitude`          ,
+  `longitude`         ,
+  `address`           ,
+  `postal_code`       ,
+  `city`              ,
+  `max_people`        ,
+  `advice`            ,
+  `localization`      ,
+  `minor_allowed`     ,
+  `enabled`           ,
+  `type`              ,
+  `time_to_reach`     ,
+  `transport_to_reach`,
+  `ul_id`             ,
+  `created`
+  )
+  VALUES
+  (
+    :code                 , 
+    :name                 , 
+    :latitude             , 
+    :longitude            , 
+    :address              , 
+    :postal_code          , 
+    :city                 , 
+    :max_people           , 
+    :advice               , 
+    :localization         , 
+    :minor_allowed        , 
+    :enabled              , 
+    :type                 , 
+    :time_to_reach        , 
+    :transport_to_reach   ,
+    :ul_id                ,
+    NOW()     
+  
+  )
+  ";
+
+    $stmt = $this->db->prepare($sql);
+
+    $this->db->beginTransaction();
+    $stmt->execute([
+      "code"               => $pointQuete->code               ,
+      "name"               => $pointQuete->name               ,
+      "latitude"           => $pointQuete->latitude           ,
+      "longitude"          => $pointQuete->longitude          ,
+      "address"            => $pointQuete->address            ,
+      "postal_code"        => $pointQuete->postal_code        ,
+      "city"               => $pointQuete->city               ,
+      "max_people"         => $pointQuete->max_people         ,
+      "advice"             => $pointQuete->advice             ,
+      "localization"       => $pointQuete->localization       ,
+      "minor_allowed"      => $pointQuete->minor_allowed      ,
+      "enabled"            => $pointQuete->enabled            ,
+      "type"               => $pointQuete->type               ,
+      "time_to_reach"      => $pointQuete->time_to_reach      ,
+      "transport_to_reach" => $pointQuete->transport_to_reach ,
+      "ul_id"              => $pointQuete->ul_id
+    ]);
+
+    $stmt->closeCursor();
+
+    $stmt = $this->db->query("select last_insert_id()");
+    $row  = $stmt->fetch();
+
+    $lastInsertId = $row['last_insert_id()'];
+
+    $stmt->closeCursor();
+    $this->db->commit ();
+
+    return $lastInsertId;
+  }
 }

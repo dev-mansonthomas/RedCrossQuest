@@ -442,14 +442,14 @@
           <div class="row">
             <div class="form-group col-md-12" style="font-size:20px;color:darkblue;text-align:center;">
               Montant Total pour les pièces (à Contrôler avec le résultat de la machine) : {{
-              (tq.current.tronc_queteur.euro2*2 +
-              tq.current.tronc_queteur.euro1*1 +
-              tq.current.tronc_queteur.cents50*0.5 +
-              tq.current.tronc_queteur.cents20*0.2 +
-              tq.current.tronc_queteur.cents10*0.1 +
-              tq.current.tronc_queteur.cents5*0.05 +
-              tq.current.tronc_queteur.cents2*0.02 +
-              tq.current.tronc_queteur.cent1*0.01
+              (tq.current.tronc_queteur.euro2  * 2    +
+              tq.current.tronc_queteur.euro1   * 1    +
+              tq.current.tronc_queteur.cents50 * 0.5  +
+              tq.current.tronc_queteur.cents20 * 0.2  +
+              tq.current.tronc_queteur.cents10 * 0.1  +
+              tq.current.tronc_queteur.cents5  * 0.05 +
+              tq.current.tronc_queteur.cents2  * 0.02 +
+              tq.current.tronc_queteur.cent1   * 0.01
               ).toFixed(2)}} €
             </div>
           </div>
@@ -481,21 +481,21 @@
             <div class="form-group col-md-12" style="font-size:20px;color:darkgreen;text-align:center;">
               Montant Total du Tronc : {{
               (
-              tq.current.tronc_queteur.euro2*2 +
-              tq.current.tronc_queteur.euro1*1 +
-              tq.current.tronc_queteur.cents50*0.5 +
-              tq.current.tronc_queteur.cents20*0.2 +
-              tq.current.tronc_queteur.cents10*0.1 +
-              tq.current.tronc_queteur.cents5*0.05 +
-              tq.current.tronc_queteur.cents2*0.02 +
-              tq.current.tronc_queteur.cent1*0.01 +
-              tq.current.tronc_queteur.euro5*5 +
-              tq.current.tronc_queteur.euro10*10 +
-              tq.current.tronc_queteur.euro20*20 +
-              tq.current.tronc_queteur.euro50*50 +
-              tq.current.tronc_queteur.euro100*100 +
-              tq.current.tronc_queteur.euro200*200 +
-              tq.current.tronc_queteur.euro500*500 +
+              tq.current.tronc_queteur.euro2   * 2    +
+              tq.current.tronc_queteur.euro1   * 1    +
+              tq.current.tronc_queteur.cents50 * 0.5  +
+              tq.current.tronc_queteur.cents20 * 0.2  +
+              tq.current.tronc_queteur.cents10 * 0.1  +
+              tq.current.tronc_queteur.cents5  * 0.05 +
+              tq.current.tronc_queteur.cents2  * 0.02 +
+              tq.current.tronc_queteur.cent1   * 0.01 +
+              tq.current.tronc_queteur.euro5   * 5    +
+              tq.current.tronc_queteur.euro10  * 10   +
+              tq.current.tronc_queteur.euro20  * 20   +
+              tq.current.tronc_queteur.euro50  * 50   +
+              tq.current.tronc_queteur.euro100 * 100  +
+              tq.current.tronc_queteur.euro200 * 200  +
+              tq.current.tronc_queteur.euro500 * 500  +
               tq.current.tronc_queteur.don_cheque
               ).toFixed(2)}} €
             </div>

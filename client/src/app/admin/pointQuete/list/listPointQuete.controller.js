@@ -10,7 +10,7 @@
     .controller('ListPointQueteController', ListPointQueteController);
 
   /** @ngInject */
-  function ListPointQueteController($log, $localStorage,
+  function ListPointQueteController($log, $localStorage, $location,
                                     PointQueteResource, DateTimeHandlingService)
   {
     var vm = this;
@@ -32,6 +32,11 @@
       vm.pointsQuete = PointQueteResource.query(searchParams).$promise.then(handleResult);
 
     };
+
+    vm.createNewPointQuete=function()
+    {
+      $location.path("/pointsQuetes/edit").replace();
+    }
 
 
 

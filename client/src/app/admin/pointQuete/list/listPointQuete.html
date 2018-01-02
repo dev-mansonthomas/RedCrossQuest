@@ -11,9 +11,10 @@
 
         <div class="col-md-4">
           <div class="form-group">
+            <label for="recherche" class="control-label">Recherche </label>
             <div class="input-group">
               <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-              <input class="form-control" placeholder="Recherche" data-ng-model="pq.search">
+              <input class="form-control" placeholder="Recherche" id="recherche" data-ng-model="pq.search">
             </div>
             <div data-ng-show="pq.search">
               <span data-ng-pluralize
@@ -35,12 +36,14 @@
           </select>
 
         </div>
-        <div class="col-md-5">
+        <div class="col-md-3 col-md-offset-2"><br/>
+          <input type="button" class="btn btn-primary" value="Créer un nouveau point de quête"  ng-click="pq.createNewPointQuete()"/>
         </div>
 
       </div>
       <div class="row">
         <div class="col-md-4">
+          <br/><br/>
           Nombre de points de Quête: <span class="badge">{{pq.pointsQuete.length}}</span>
         </div>
         <div class="col-md-4">
@@ -81,6 +84,7 @@
 
 
         <div class="col-md-1">
+          <br/>
           <input type="submit" class="btn btn-primary" value="Rechercher" />
         </div>
       </div>
@@ -93,7 +97,6 @@
     <table class="table table-hover table-condensed histo">
       <thead>
       <tr>
-        <th>N°                </th>
         <th>id                </th>
         <th>ul_id             </th>
         <th>code              </th>
@@ -109,7 +112,6 @@
 
       <tbody>
       <tr ng-repeat="p in pq.pointsQuete">
-        <td>{{$index              }}</td>
         <td><a ng-href="/#!/pointsQuetes/edit/{{::p.id}}">{{::p.id                }}</a></td>
         <td>{{::p.ul_id             }}</td>
         <td><a ng-href="/#!/pointsQuetes/edit/{{::p.id}}">{{::p.code              }}</a></td>
@@ -118,9 +120,9 @@
 
         <td>{{::p.max_people        }}</td>
 
-        <td>{{::p.minor_allowed     }}</td>
+        <td><span ng-show="p.minor_allowed==1" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-show="p.minor_allowed==0" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></td>
         <td>{{::p.created           }}</td>
-        <td>{{::p.enabled           }}</td>
+        <td><span ng-show="p.enabled" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-show="!p.enabled" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></td>
         <td>{{::p.type              }}</td>
       </tr>
       </tbody>

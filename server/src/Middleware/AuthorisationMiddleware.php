@@ -223,7 +223,19 @@ class AuthorisationMiddleware
 
       //token valid
       $start    = microtime(true);
-      $response = $next($request, $response);
+      try
+      {
+        $response = $next($request, $response);
+      }
+      catch(\Exception $applicationError)
+      {
+        $this->logger->addError(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError, "request" => $request));
+        //TODO : ne semble pas marcher, code 200 vue du navigateur
+        $response->withStatus(500);
+        $response->getBody()->write(json_encode(array("exception"=>$applicationError, "error" => "application error")));
+        return $response;
+
+      }
       //log execution time in milliseconds; error(true/false);request path
       $this->logger->addDebug("[PERF];".(microtime(true)-$start).";false;".$path);
 

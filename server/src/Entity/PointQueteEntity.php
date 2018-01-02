@@ -19,8 +19,8 @@ class PointQueteEntity  extends Entity
   public $created           ;
   public $enabled           ;
   public $type              ;
-  public $time_to_teach     ;
-  public $transport_to_teach;
+  public $time_to_reach     ;
+  public $transport_to_reach;
 
   /**
      * Accept an array of data matching properties of this class
@@ -44,12 +44,12 @@ class PointQueteEntity  extends Entity
     $this->getString ('localization' , $data);
     $this->getString ('minor_allowed', $data);
     $this->getDate   ('created'      , $data);
-    $this->getBoolean('enabled'     , $data);
+    $this->getString ('enabled'      , $data);
 
 
     $this->getInteger( 'type'               , $data);
-    $this->getInteger( 'time_to_teach'      , $data);
-    $this->getInteger( 'transport_to_teach' , $data);
+    $this->getInteger( 'time_to_reach'      , $data);
+    $this->getInteger( 'transport_to_reach' , $data);
 
   }
 }
