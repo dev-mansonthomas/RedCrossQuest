@@ -151,22 +151,13 @@ $limitQueryToUl
 LIMIT 1
 ";
 
-    $parameters = null;
+    $parameters = ["queteur_id"=>$queteurId];
+
     if($roleId!=9)
     {
-      $parameters =
-        [
-          "queteur_id"=>$queteurId,
-          "ul_id"     =>$ulId
-        ];
+      $parameters["ul_id"]=$ulId;
     }
-    else
-    {
-      $parameters =
-        [
-          "queteur_id"=>$queteurId
-        ];
-    }
+
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);
@@ -215,21 +206,11 @@ $limitQueryToUl
 LIMIT 1
 ";
 
-    $parameters = null;
+    $parameters = ["id"    => $userId];
+
     if($roleId!=9)
     {
-      $parameters =
-        [
-          "id"    => $userId,
-          "ul_id" => $ulId
-        ];
-    }
-    else
-    {
-      $parameters =
-        [
-          "id"    => $userId
-        ];
+      $parameters["ul_id"]= $ulId;
     }
 
     $stmt = $this->db->prepare($sql);

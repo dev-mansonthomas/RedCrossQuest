@@ -7,6 +7,7 @@
  */
 
 use \RedCrossQuest\DBService\PointQueteDBService;
+use \RedCrossQuest\Entity\PointQueteEntity;
 
 /********************************* POINT_QUETE ****************************************/
 
@@ -97,3 +98,61 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
 
 });
 
+
+/**
+ * update un point quete
+ *
+ * Dispo pour les roles de 2 à 9
+ */
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args)
+{
+  $decodedToken = $request->getAttribute('decodedJWT');
+  try
+  {
+    $ulId   = (int)$args['ul-id'  ];
+    $roleId = (int)$args['role-id'];
+
+    $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
+    $input               = $request->getParsedBody();
+    $pointQueteEntity    = new PointQueteEntity($input);
+
+
+    $pointQueteDBService->update($pointQueteEntity, $ulId, $roleId);
+  }
+  catch(Exception $e)
+  {
+    $this->logger->addError("Error while updating point quete", array('decodedToken'=>$decodedToken, "Exception"=>$e, "pointQueteEntity"=>$pointQueteEntity));
+    throw $e;
+  }
+
+  return $response;
+});
+
+
+/**
+ * Crée un nouveau queteur
+ */
+$app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
+{
+  $decodedToken = $request->getAttribute('decodedJWT');
+  try
+  {
+    $ulId = (int)$args['ul-id'];
+
+
+    $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
+    $input               = $request->getParsedBody();
+    $pointQueteEntity    = new PointQueteEntity($input);
+
+    $pointQueteId = $pointQueteDBService->insert            ($pointQueteEntity, $ulId);
+    $pointQuete   = $pointQueteDBService->getPointQueteById ($pointQueteId    , $ulId);
+
+    $response->getBody()->write(json_encode($pointQuete));
+  }
+  catch(Exception $e)
+  {
+    $this->logger->addError("Error while creating a new PointQuete", array('decodedToken'=>$decodedToken, "Exception"=>$e, "pointQueteEntity"=>$pointQueteEntity));
+    throw $e;
+  }
+  return $response;
+});

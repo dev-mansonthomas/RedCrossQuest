@@ -431,47 +431,28 @@ SET
   `referent_volunteer`  = :referent_volunteer
 WHERE `id`              = :id
 ";
-    $parameters = null;
+    $parameters = [
+      "first_name"          => $queteur->first_name,
+      "last_name"           => $queteur->last_name,
+      "email"               => $queteur->email,
+      "secteur"             => $queteur->secteur,
+      "nivol"               => ltrim($queteur->nivol, '0'),
+      "mobile"              => $queteur->mobile,
+      "notes"               => $queteur->notes,
+      "birthdate"           => $queteur->birthdate,
+      "man"                 => $queteur->man,
+      "active"              => $queteur->active,
+      "referent_volunteer"  => $queteur->referent_volunteer,
+      "id"                  => $queteur->id
+    ];
+
     if($roleId != 9)
     {
       $sql .= "
 AND   `ul_id`           = :ul_id      
 ";
-      $parameters = [
-        "first_name"          => $queteur->first_name,
-        "last_name"           => $queteur->last_name,
-        "email"               => $queteur->email,
-        "secteur"             => $queteur->secteur,
-        "nivol"               => ltrim($queteur->nivol, '0'),
-        "mobile"              => $queteur->mobile,
-        "notes"               => $queteur->notes,
-        "birthdate"           => $queteur->birthdate,
-        "man"                 => $queteur->man,
-        "active"              => $queteur->active,
-        "referent_volunteer"  => $queteur->referent_volunteer,
-        "id"                  => $queteur->id,
-        "ul_id"               => $ulId
-      ];
-
+      $parameters["ul_id"] = $ulId;
     }
-    else
-    {
-      $parameters = [
-        "first_name"          => $queteur->first_name,
-        "last_name"           => $queteur->last_name,
-        "email"               => $queteur->email,
-        "secteur"             => $queteur->secteur,
-        "nivol"               => ltrim($queteur->nivol, '0'),
-        "mobile"              => $queteur->mobile,
-        "notes"               => $queteur->notes,
-        "birthdate"           => $queteur->birthdate,
-        "man"                 => $queteur->man,
-        "active"              => $queteur->active,
-        "referent_volunteer"  => $queteur->referent_volunteer,
-        "id"                  => $queteur->id
-      ];
-    }
-
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);

@@ -7,9 +7,9 @@
   <div class="jumbotron text-center" ng-style="{'background-color':main.deploymentType=='P'?'':(main.deploymentType=='D'?'#b9def0':'blue')}">
     <h1>'Allo, 'Allo !</h1>
 
-    <span ng-show="main.deploymentType=='P'" class="label label-danger">Site de Production</span>
+    <span ng-show="main.deploymentType=='P'" class="label label-danger" >Site de Production</span>
     <span ng-show="main.deploymentType=='D'" class="label label-primary">Site de Developpement</span>
-    <span ng-show="main.deploymentType=='T'" class="label label-info">Site de TEST</span>
+    <span ng-show="main.deploymentType=='T'" class="label label-info"   >Site de TEST</span>
 
 
     <h3>{{::main.username}} - {{::main.ulName}}</h3>
@@ -21,7 +21,5 @@
       With ♥ thanks to the contributions of<acme-malarkey extra-values="['Yeoman', 'Gulp', 'Angular']"></acme-malarkey>
     </p>
   </div>
-
-
 
 </div>

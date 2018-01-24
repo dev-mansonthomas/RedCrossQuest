@@ -30,17 +30,6 @@
       vm.current.adminEditMode=true;
     };
 
-    // TODO : put this in a direct
-    $('.input-fix-mousewheel').on('focus', function (e) {
-      $(this).on('mousewheel.disableScroll', function (e) {
-        e.preventDefault();
-        var scrollTo = (e.originalEvent.wheelDelta*-1) + $(document.documentElement).scrollTop();
-        $(document.documentElement).scrollTop(scrollTo);
-      })
-    }).on('blur', function (e) {
-      $(this).off('mousewheel.disableScroll')
-    });
-    // TODO : FIN
 
     var tronc_queteur_id = $routeParams.id;
 

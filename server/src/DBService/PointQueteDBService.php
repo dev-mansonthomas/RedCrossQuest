@@ -223,55 +223,32 @@ SET
 `transport_to_reach`=  :transport_to_reach    
 WHERE `id`              = :id
 ";
-    $parameters = null;
+    $parameters = [
+      "code"               => $pointQuete->code               ,
+      "name"               => $pointQuete->name               ,
+      "latitude"           => $pointQuete->latitude           ,
+      "longitude"          => $pointQuete->longitude          ,
+      "address"            => $pointQuete->address            ,
+      "postal_code"        => $pointQuete->postal_code        ,
+      "city"               => $pointQuete->city               ,
+      "max_people"         => $pointQuete->max_people         ,
+      "advice"             => $pointQuete->advice             ,
+      "localization"       => $pointQuete->localization       ,
+      "minor_allowed"      => $pointQuete->minor_allowed      ,
+      "enabled"            => $pointQuete->enabled            ,
+      "type"               => $pointQuete->type               ,
+      "time_to_reach"      => $pointQuete->time_to_reach      ,
+      "transport_to_reach" => $pointQuete->transport_to_reach ,
+      "id"                 => $pointQuete->id
+    ];
+
     if($roleId != 9)
     {
       $sql .= "
 AND   `ul_id`           = :ul_id      
 ";
-      $parameters = [
-        "code"               => $pointQuete->code               ,
-        "name"               => $pointQuete->name               ,
-        "latitude"           => $pointQuete->latitude           ,
-        "longitude"          => $pointQuete->longitude          ,
-        "address"            => $pointQuete->address            ,
-        "postal_code"        => $pointQuete->postal_code        ,
-        "city"               => $pointQuete->city               ,
-        "max_people"         => $pointQuete->max_people         ,
-        "advice"             => $pointQuete->advice             ,
-        "localization"       => $pointQuete->localization       ,
-        "minor_allowed"      => $pointQuete->minor_allowed      ,
-        "enabled"            => $pointQuete->enabled            ,
-        "type"               => $pointQuete->type               ,
-        "time_to_reach"      => $pointQuete->time_to_reach      ,
-        "transport_to_reach" => $pointQuete->transport_to_reach ,
-        "id"                 => $pointQuete->id                 ,
-        "ul_id"              => $ulId
-      ];
-
+      $parameters["ul_id"] = $ulId;
     }
-    else
-    {
-      $parameters = [
-        "code"               => $pointQuete->code               ,
-        "name"               => $pointQuete->name               ,
-        "latitude"           => $pointQuete->latitude           ,
-        "longitude"          => $pointQuete->longitude          ,
-        "address"            => $pointQuete->address            ,
-        "postal_code"        => $pointQuete->postal_code        ,
-        "city"               => $pointQuete->city               ,
-        "max_people"         => $pointQuete->max_people         ,
-        "advice"             => $pointQuete->advice             ,
-        "localization"       => $pointQuete->localization       ,
-        "minor_allowed"      => $pointQuete->minor_allowed      ,
-        "enabled"            => $pointQuete->enabled            ,
-        "type"               => $pointQuete->type               ,
-        "time_to_reach"      => $pointQuete->time_to_reach      ,
-        "transport_to_reach" => $pointQuete->transport_to_reach ,
-        "id"                 => $pointQuete->id
-      ];
-    }
-
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);

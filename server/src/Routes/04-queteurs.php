@@ -185,6 +185,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
   catch(Exception $e)
   {
     $this->logger->addError("Error while uploading files", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    throw $e;
   }
   return $response;
 });
@@ -217,6 +218,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
   catch(Exception $e)
   {
     $this->logger->addError("Error while creating a new Queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
+    throw $e;
   }
   return $response;
 });

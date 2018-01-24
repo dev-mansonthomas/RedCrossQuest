@@ -1,0 +1,133 @@
+<acme-navbar></acme-navbar>
+<div class="container" data-ng-controller="ListPointQueteController as pq">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">Les Points de Quêtes</div>
+  </div>
+
+  <div class="well">
+    <form class="form-search" name="searchForm" novalidate ng-submit='pq.doSearch();'>
+      <div class="row">
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="recherche" class="control-label">Recherche </label>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+              <input class="form-control" placeholder="Recherche" id="recherche" data-ng-model="pq.search">
+            </div>
+            <div data-ng-show="pq.search">
+              <span data-ng-pluralize
+                    data-count="filteredContacts.length"
+                    data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="typePointQuete" class="control-label">Type de Point de Quete </label>
+          <select id="typePointQuete" class="form-control" placeholder="Type de point de quête" data-ng-model="pq.point_quete_type">
+            <option value='0' >Tous      </option>
+            <option value='1' >Piétons   </option>
+            <option value='2' >Voitures  </option>
+            <option value='3' >Commerçant</option>
+            <option value='4' >Base      </option>
+            <option value='5' >Autre     </option>
+          </select>
+
+        </div>
+        <div class="col-md-3 col-md-offset-2"><br/>
+          <input type="button" class="btn btn-primary" value="Créer un nouveau point de quête"  ng-click="pq.createNewPointQuete()"/>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <br/><br/>
+          Nombre de points de Quête: <span class="badge">{{pq.pointsQuete.length}}</span>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group" ng-show="pq.currentUserRole=='9'">
+            <label for="admin_ul_id" class="control-label">Unité Locale </label>
+            <select id="admin_ul_id" class="form-control" placeholder="ID Unité Locale" data-ng-model="pq.admin_ul_id">
+              <option value=''   >N/A                     </option>
+              <option value='348'>UL PARIS 01/02          </option>
+              <option value='2'  >UL PARIS 04             </option>
+              <option value='49' >UL AIX EN PROVENCE      </option>
+              <option value='50' >UL ARLES                </option>
+              <option value='51' >UL AUBAGNE              </option>
+              <option value='52' >UL ISTRES               </option>
+              <option value='53' >UL LACIOTAT             </option>
+              <option value='54' >UL MARIGNANE            </option>
+              <option value='55' >UL MARSEILLE            </option>
+              <option value='56' >UL MARTIGUES            </option>
+              <option value='57' >UL CHATEAU RENARD ALPI  </option>
+              <option value='58' >UL SALON DE PROVENCE    </option>
+              <option value='477'>UL LA GARENNE COLOMBES  </option>
+            </select>
+
+
+          </div>
+
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="activeRadio1" class="control-label">Actif:</label><br/>
+            <label class="radio-inline">
+              <input type="radio" name="active" id="activeRadio1" ng-model="pq.active" value="1" required ng-checked="pq.active==1 || pq.active == null"> Actif
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="active" id="activeRadio2" ng-model="pq.active" value="0" required> Inactif
+            </label>
+          </div>
+        </div>
+
+
+        <div class="col-md-1">
+          <br/>
+          <input type="submit" class="btn btn-primary" value="Rechercher" />
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+  <div clas="row">
+
+    <table class="table table-hover table-condensed histo">
+      <thead>
+      <tr>
+        <th>id                </th>
+        <th>ul_id             </th>
+        <th>code              </th>
+        <th>name              </th>
+        <th>Adresse           </th>
+        <th>Nb pers.          </th>
+        <th>Mineur?           </th>
+        <th>created           </th>
+        <th>Actif ?           </th>
+        <th>type              </th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr ng-repeat="p in pq.pointsQuete">
+        <td><a ng-href="/#!/pointsQuetes/edit/{{::p.id}}">{{::p.id                }}</a></td>
+        <td>{{::p.ul_id             }}</td>
+        <td><a ng-href="/#!/pointsQuetes/edit/{{::p.id}}">{{::p.code              }}</a></td>
+        <td><a ng-href="/#!/pointsQuetes/edit/{{::p.id}}">{{::p.name              }}</a></td>
+        <td><a ng-href="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin=&destination={{::p.latitude}},{{::p.longitude}}" target="_blank">{{::p.address}}, {{::p.postal_code}}, {{::p.city}}</a></td>
+
+        <td>{{::p.max_people        }}</td>
+
+        <td><span ng-show="p.minor_allowed==1" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-show="p.minor_allowed==0" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></td>
+        <td>{{::p.created           }}</td>
+        <td><span ng-show="p.enabled" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-show="!p.enabled" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></td>
+        <td>{{::p.type              }}</td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>
