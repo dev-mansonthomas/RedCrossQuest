@@ -183,7 +183,15 @@
             <div class="row">
               <div class="col-md-2">
                 <label for="pqType" class="control-label">Type</label>
-                <input type="text" id="pqType" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].type}}" class="form-control" readonly/>
+                <select name="pqType" id="pqType" class="form-control" ng-model="pt.pointsQueteHash[pt.current.lieuDeQuete].type" disabled
+                        ng-options="(t.id) as t.label
+                      for
+                      t in pt.typePointQueteList"
+
+                >
+                </select>
+
+
               </div>
               <div class="col-md-4">
                 <label for="pqTimeToReach" class="control-label">Temps moyen pour atteindre le Point de Quête</label>
@@ -191,7 +199,13 @@
               </div>
               <div class="col-md-4">
                 <label for="pqTransportToReach" class="control-label">Type de Transport pour atteindre le point de quête</label>
-                <input type="text" id="pqTransportToReach" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].transport_to_reach}}" class="form-control" readonly/>
+                <select name="pqTransportToReach" id="pqTransportToReach" class="form-control" ng-model="pt.pointsQueteHash[pt.current.lieuDeQuete].transport_to_reach" disabled
+                        ng-options="(t.id) as t.label
+                      for
+                      t in pt.transportPointQueteList"
+
+                >
+                </select>
               </div>
             </div>
             <div class="row">

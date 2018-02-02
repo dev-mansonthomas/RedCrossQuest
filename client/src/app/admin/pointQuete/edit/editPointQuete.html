@@ -1,4 +1,4 @@
-<acme-navbar></acme-navbar>
+<acme-navbar xmlns="http://www.w3.org/1999/html"></acme-navbar>
 <div class="container" data-ng-controller="EditPointQueteController as pqe">
 
   <div class="panel panel-primary">
@@ -50,9 +50,9 @@
               <input type="text" id="pqAddress" name="pqAddress" ng-model="pqe.current.address" class="form-control" required/>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-1">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqPostalCode.$invalid}">
-              <label for="pqPostalCode" class="control-label">Code Postal</label>
+              <label for="pqPostalCode" class="control-label" style="font-size: 11px;">Code Postal</label>
               <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="pqe.current.postal_code" class="form-control" required/>
             </div>
           </div>
@@ -62,21 +62,64 @@
               <input type="text" id="pqCity" name="pqCity" ng-model="pqe.current.city" class="form-control" required/>
             </div>
           </div>
+          <div class="col-md-2">
+            <br/>
+            <button type="button" class="btn btn-primary" ng-click="pqe.geoCodeAddress();"><span class="glyphicon glyphicon-arrow-down"></span> Géo Coder</button>
+          </div>
         </div>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqLatitude.$invalid}">
               <label for="pqLatitude" class="control-label">Latitude</label>
-              <input type="text" id="pqLatitude" name="pqLatitude" ng-model="pqe.current.latitude" class="form-control"    ng-maxlength="11" required/>
+              <input type="text" id="pqLatitude" name="pqLatitude" ng-model="pqe.current.latitude" class="form-control"    ng-maxlength="18" required/>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqLongitude.$invalid}">
               <label for="pqLongitude" class="control-label">Longitude</label>
-              <input type="text" id="pqLongitude" name="pqLongitude" ng-model="pqe.current.longitude" class="form-control" ng-maxlength="11" required/>
+              <input type="text" id="pqLongitude" name="pqLongitude" ng-model="pqe.current.longitude" class="form-control" ng-maxlength="18" required/>
             </div>
           </div>
+          <div class="col-md-8">
+            <div ng-show="pqe.geocoded.display_prompt">
+              <label class="control-label">Suggestion Google Maps pour le nouvel emplacement :</label>
+              <button type="button" class="btn btn-primary" ng-click="pqe.copyGoogleMapsSuggestion();"><span class="glyphicon glyphicon-arrow-up"></span> Recopier l'adresse suggérée : {{pqe.geocoded.formatted_address}}</button>
+            </div>
+            <div ng-show="pqe.current.currentUserLocationNotAvailable == 2" class="alert alert-warning" role="alert">
+              <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="font-size: 20px;"></span> Votre navigateur ne supporte pas la fonction de géolocalisation.
+              Veuillez remplir l'adresse et cliquer sur GéoCoder, puis déplacer le marqueur à l'emplacement voulu pour le point de quête.
+            </div>
+            <div ng-show="pqe.current.currentUserLocationNotAvailable == 1" class="alert alert-warning" role="alert">
+              <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="font-size: 20px;"></span> Une erreur est survenue en tentant de vous géolocaliser.
+              Veuillez remplir l'adresse et cliquer sur GéoCoder, puis déplacer le marqueur à l'emplacement voulu pour le point de quête.
+            </div>
 
+            <div ng-show="pqe.current.errorWhileReverseGeoCoding" class="alert alert-danger" role="alert">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 20px;"></span> Une erreur est survenue en tentant de trouver la nouvelle adresse du marqueur.
+              Veuillez essayer de déplacer le marqueur à un autre endroit.
+            </div>
+
+            <div ng-show="pqe.current.errorWhileGeoCoding" class="alert alert-danger" role="alert">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 20px;"></span> Une erreur est survenue en tentant de trouver les coordonnées GPS de l'adresse.
+              Veuillez vérifier l'adresse, la corriger, ou essayer une autre addresse proche de la cible.
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div map-lazy-load="https://maps.google.com/maps/api/js"
+               map-lazy-load-params="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjN4hmnGQI3nbZR6qATUL19HX-XWxXSIE"> <!--{{pqe.settings.mapKey}}-->
+            <ng-map id="map"
+                    center="{{pqe.current.latitude}},{{pqe.current.longitude}}"
+                    zoom="15">
+              <marker   position="{{pqe.current.latitude}},{{pqe.current.longitude}}"
+                           title="{{pqe.current.name}}"
+                      on-dragend="pqe.updateCoordinatesAndAddress($event)"
+                       animation="Animation.BOUNCE"
+                       animation="DROP"
+                       draggable="true"></marker>
+            </ng-map>
+          </div>
         </div>
         <div class="row">
           <div class="col-md-2">
@@ -109,7 +152,13 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqType.$invalid}">
               <label for="pqType" class="control-label">Type</label>
-              <input type="text" id="pqType" name="pqType" ng-model="pqe.current.type" class="form-control" required/>
+              <select name="pqType" id="pqType" class="form-control" ng-model="pqe.current.type" required
+                      ng-options="(t.id) as t.label
+                      for
+                      t in pqe.typePointQueteList"
+
+              >
+              </select>
             </div>
           </div>
           <div class="col-md-4">
@@ -121,7 +170,14 @@
           <div class="col-md-4">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqTransportToReach.$invalid}">
               <label for="pqTransportToReach" class="control-label">Type de Transport pour atteindre le point de quête</label>
-              <input type="text" id="pqTransportToReach" name="pqTransportToReach" ng-model="pqe.current.transport_to_reach" class="form-control"/>
+              <select name="pqTransportToReach" id="pqTransportToReach" class="form-control" ng-model="pqe.current.transport_to_reach" required
+                      ng-options="(t.id) as t.label
+                      for
+                      t in pqe.transportPointQueteList"
+
+              >
+              </select>
+
             </div>
           </div>
         </div>

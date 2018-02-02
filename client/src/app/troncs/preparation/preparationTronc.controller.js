@@ -19,6 +19,23 @@
   {
     var vm = this;
 
+    vm.typePointQueteList=[
+      {id:1,label:'Voix Publique'},
+      {id:2,label:'Piéton'},
+      {id:3,label:'Boutique'},
+      {id:4,label:'Base UL'},
+      {id:5,label:'Autre'}
+    ];
+
+    vm.transportPointQueteList=[
+      {id:1,label:'A Pied'},
+      {id:2,label:'Voiture'},
+      {id:3,label:'Vélo'},
+      {id:4,label:'Train/Tram'},
+      {id:5,label:'Autre'}
+    ];
+
+
     vm.initData = function()
     {
       vm.current = {};

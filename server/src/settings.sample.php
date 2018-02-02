@@ -31,8 +31,8 @@ return [
         'appSettings' => [
           'appUrl'          => 'http://localhost:3000/',
           'resetPwdPath'    => '#!/resetPassword?key=' ,
-          'deploymentType'  => 'D'                        //D:Dev, T:Testing, P:Production
-
+          'deploymentType'  => 'D'                     ,   //D:Dev, T:Testing, P:Production,
+          'gmapAPIKey'      => 'google maps api key'
         ],
       'email' => [
         'server'    => 'smtp.server.com',

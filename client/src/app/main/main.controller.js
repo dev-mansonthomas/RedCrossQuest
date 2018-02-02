@@ -6,7 +6,8 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($timeout, toastr, $localStorage) {
+  function MainController($timeout, toastr, $localStorage)
+  {
     var vm = this;
 
     vm.awesomeThings  = [];
@@ -14,9 +15,9 @@
     vm.creationDate   = 1456333782311;
     vm.showToastr     = showToastr;
 
-    vm.username       =$localStorage.currentUser.username;
-    vm.ulName         =$localStorage.currentUser.ulName;
-    vm.deploymentType =$localStorage.currentUser.d;
+    vm.username       = $localStorage.currentUser.username;
+    vm.ulName         = $localStorage.currentUser.ulName;
+    vm.deploymentType = $localStorage.currentUser.d;
 
     activate();
 

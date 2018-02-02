@@ -6,10 +6,8 @@
     .config(config);
 
   /** @ngInject */
-  function config($logProvider,
-                  $httpProvider,
-                  toastrConfig,
-                  jwtOptionsProvider)
+  function config($logProvider, $httpProvider,
+                  toastrConfig, jwtOptionsProvider)
   {
     //angular-jwt configuration
     jwtOptionsProvider.config({

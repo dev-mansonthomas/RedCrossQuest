@@ -1,36 +1,37 @@
 {
-  "name": "client",
-  "version": "0.0.0",
+  "name": "redcrossquest",
+  "version": "2.0.0",
   "dependencies": {
-    "angular-animate": "~1.6.6",
-    "angular-cookies": "~1.6.6",
-    "angular-touch": "~1.6.6",
-    "angular-sanitize": "~1.6.6",
-    "angular-messages": "~1.6.6",
-    "angular-aria": "~1.6.6",
+    "angular-animate": "~1.6.8",
+    "angular-cookies": "~1.6.8",
+    "angular-touch": "~1.6.8",
+    "angular-sanitize": "~1.6.8",
+    "angular-messages": "~1.6.8",
+    "angular-aria": "~1.6.8",
     "jquery": "~2.2.3",
-    "angular-resource": "~1.6.6",
-    "angular-route": "~1.6.6",
+    "angular-resource": "~1.6.8",
+    "angular-route": "~1.6.8",
     "bootstrap-sass": "~3.3.7",
     "angular-bootstrap": "^1.3.2",
     "malarkey": "yuanqing/malarkey#~1.3.3",
     "angular-toastr": "~1.7.0",
     "moment": "~2.18.1",
     "animate.css": "~3.5.1",
-    "angular": "~1.6.6",
+    "angular": "~1.6.8",
     "angular-qr-scanner-updated": "^1.0.2",
     "angular-qr-updated": "^1.0.0",
-    "angular-i18n": "^1.6.6",
+    "angular-i18n": "^1.6.8",
     "angular-audio": "^1.7.2",
     "moment-timezone": "^0.5.4",
     "angular-local-storage": "^0.5.2",
     "ngstorage": "^0.3.11",
     "angular-jwt": "^0.1.9",
     "ng-file-upload": "^12.2.13",
-    "zxcvbn":"^4.4.2"
+    "zxcvbn": "^4.4.2",
+    "ngmap": "^1.18.4"
   },
   "devDependencies": {
-    "angular-mocks": "~1.6.6"
+    "angular-mocks": "~1.6.8"
   },
   "overrides": {
     "bootstrap-sass": {
@@ -46,6 +47,6 @@
   },
   "resolutions": {
     "jquery": "~2.2.4",
-    "angular": "~1.6.6"
+    "angular": "~1.6.8"
   }
 }

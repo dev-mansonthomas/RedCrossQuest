@@ -2,7 +2,7 @@
  * Created by tmanson on 03/05/2016.
  */
 
-angular.module('redCrossQuestClient').factory('ParametrageULResource', function ($resource, $localStorage) {
+angular.module('redCrossQuestClient').factory('SettingsResource', function ($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:ulId/settings/:id',
     {
       roleId: $localStorage.currentUser.roleId,
