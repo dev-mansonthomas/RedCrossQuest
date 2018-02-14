@@ -4,6 +4,186 @@
 <div class="container">
 
 
+
+  <div class="row" ng-show="main.currentUserRole >= 4">
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading">Infos sur l'UL</div>
+      <table class='table'>
+        <thead>
+        <tr>
+          <th>Nombre de Quêteurs</th>
+          <td class="{{main.setupStatus.queteurIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfQueteur}}</b></td>
+          <th>Nombre d'utilisateurs</th>
+          <td class="{{main.setupStatus.userIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfUser}}</b></td>
+          <th>Nombre de points de quête</th>
+          <td class="{{main.setupStatus.pointQueteIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfPointQuete}}</b></td>
+          <th>Nombre de Stats sur les années avant RCQ</th>
+          <td class="{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfDailyStats}}</b></td>
+          <th>Nombre de troncs</th>
+          <td class="{{main.setupStatus.troncsIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfTroncs}}</b></td>
+        </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+
+
+  <div class="panel panel-primary" ng-show="main.currentUserRole >= 4">
+    <div class="panel-heading">
+      <h3 class="panel-title">Bienvenue dans RedCrossQuest ! Avant de commencer l'aventure, un peu de préparation !</h3>
+    </div>
+    <div class="panel-body">
+      Cher Administrateur/Administratrice,<br/>
+      <br/>
+
+      Avant de pouvoir utiliser
+      <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="Red Cross Quest : Quête Croix Rouge en anglais, ou quête fait référence à la quête du héros d'une aventure plus qu'à la collecte d'argent.">
+        <span class="glyphicon glyphicon-plus" style="color:#E3001B;"></span> RedCrossQuest (RCQ)
+      </button>, il faut configurer l'application pour que votre Unité Locale puisse l'utiliser.<br/>
+
+      Ci-desssous, vous trouverez comment effectuer la configuration de l'application pour votre UL, cliquez sur le titre pour afficher/masquer les instructions.<br/>
+      Il est conséillé d'effectuer la configuration dans l'ordre présenté ci-dessous, mais ce n'est pas obligatoire.
+      <br/>
+      <br/>
+
+
+      <uib-accordion close-others="false">
+
+        <div uib-accordion-group class="panel-{{main.setupStatus.userIncomplete?'warning':'default'}}"  heading="Créez les utilisateurs de l'application RCQ">
+          <ul>
+            <li><b>Pourquoi :</b> En créant plusieurs utilisateurs de l'application RCQ pour vos cadres quêtes, cela vous permet de finir plus rapidement le paramétrage initial de RCQ, et vous permet de distribuer les tâches (gérer préparation/départ/retour, comptage, suivi des chiffres). Note que pour afficher les graphiques "publique", vous ne pouvez le faire qu'avec un compte qui a le rôle "lecture seule".</li>
+            <li><b>Comment : Ajoutez un Quêteur</b>
+              <ol>
+                <li>Les utilisateurs de l'application RCQ sont vos cadres de quête qui vont faire les départs/retour des troncs, comptez les pièces etc...</li>
+                <li>Un utilisateur de l'application RCQ est d'abord un quêteur, il faut donc d'abord créé le quêteur via "Ajouter un Quêteur"</li>
+                <li>Une fois le quêteur créé, vous pourez cliquer sur "Faire de ce bénévole un utilisateur de l'application RCQ". Il recevera un email pour initialiser son mot de passe RCQ (le liens est valable une heure). Son login étant son NIVOL.</li>
+                <li>Par défaut, son niveau d'accès est lecture seule. Voici les accès de chaque rôles :
+                  <ol>
+                    <li>Lecture Seule: Liste des quêteurs et graphiques publiques</li>
+                    <li>Opérateur: rôle 'lecture seule' + Ajout/Mise à jour des quêteurs, préparation, départ, retour des troncs. Graphique Opérateurs.</li>
+                    <li>Compteur: rôle 'Opérateur' + Comptage des troncs et Graphiques Compteur</li>
+                    <li>Administrateur: rôle 'Opérateur' + Menu d'administration et graphique Administrateur</li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+
+        <div uib-accordion-group class="panel-{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}}" heading="Définissez vos Résultats Journalier des années précédentes">
+          <ul>
+            <li><b>Pourquoi :</b> Ces données vous permettront de comparer les chiffres journalier de cette année avec les précédentes années et ainsi de vous situer par rapport à votre objectif</li>
+            <li><b>Comment :</b> Menu Administration->Résultats Journaliers (Avant RCQ)
+              <ol>
+                <li>Choisissez l'année, puis cliquer sur Rechercher, un bouton apparait <b>"Créez l'année XXXX"</b></li>
+                <li>Pour chaque jour, créé le montant quêté ce jour la, puis cliquez sur <b>"Sauvegarder"</b></li>
+                <li>Répétez l'opération pour au moins les 3 dernières années (plus vous avez de données, mieux c'est)</li>
+                <li>Si le détails par jour n'est pas retrouvable, prenez votre montant de l'année et répartissez le de façon linéaire grace à l'outils en bas de page</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+
+
+        <div uib-accordion-group class="panel-{{main.setupStatus.troncsIncomplete?'warning':'default'}}" heading="Créez les troncs dans RCQ">
+          <ul>
+            <li><b>Pourquoi :</b> A chaque tronc sera attribué un identifiant représenté sous la forme d'un QRCode <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span>, ce qui permet de fiabiliser les opérations de distrubtion des troncs et de comptages des pièces et billets</li>
+            <li><b>Comment : </b> Menu Administration->Liste des Troncs
+              <ol>
+                <li>Comptez vos troncs (boite métallique de collecte de pièces) que vous avez au local</li>
+                <li>Indiquez ce chiffre dans le formulaire et cliquer sur "Créer de nouveau Troncs" (à Faire)</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+
+        <div uib-accordion-group class="panel-{{main.setupStatus.pointQueteIncomplete?'warning':'default'}}" heading="Définition des points de quête">
+          <ul>
+            <li><b>Pourquoi :</b> La défnition des points de quête permet de déterminer où vos quêteurs vont quêter et dans quelle condition (pieton, feux, magasin, à combien).<br/>
+            Vous pourrez visualiser sur une carte vos points de quête, lesquels donnent le plus, depuis combien de temps vos quêteurs sont sur le terrain.
+            </li>
+            <li><b>Comment :</b> Menu Administration->Point de Quête
+              <ol>
+                <li>Nous avons automatiquement créé votre premier point de quête qui correspond à votre Local.</li>
+                <li>L'adresse a été récupérée d'un référentiel Croix Rouge en 2016 et les coordonnées GPS calculé automatiquement à partir de l'adresse, aussi vérifiez l'exactitude de l'emplacement</li>
+                <li>Vous pouvez déplacer le marqueur la carte pour afiner l'emplacement du point de quête. L'application vous proposera une nouvelle adresse que vous pouvez utiliser ou non.</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+
+        <div uib-accordion-group class="panel-{{main.setupStatus.queteurIncomplete?'warning':'default'}}" heading="Créez les quêteurs de votre unité locale">
+          <ul>
+            <li><b>Pourquoi :</b> Chaque quêteur doit être identifié dans l'application, et ce afin de pouvoir lui envoyer des emails, de s'assurer qu'un mineur ne quête pas sur un point de quête non prévue pour les mineurs</li>
+            <li><b>Comment : Ajoutez un Quêteur</b>
+              <ol>
+                <li>Soit vous ajouter à la main tous vos quêteurs</li>
+                <li>Vous construisez vous un fichier excel avec le format suivant</li>
+                <ol>
+                  <li>Nivol</li>
+                  <li>Sexe: 0: femme, 1: homme</li>
+                  <li>Nom</li>
+                  <li>Prénom</li>
+                  <li>Date de naissance	au format AAAA-MM-DD: Obligatoire pour les bénévoles mineurs, si inconnus pour les adultes, mettre 1922-12-22.</li>
+                  <li>Telephone mobile : au format +33XXXXXXXXX (pour vous permettre d'appeler le bénévole rapidement en cas de souci, l'application RCQ pourrait envoyer des SMS prochainement)</li>
+                  <li>Email (l'application RCQ envoie des emails) </li>
+                  <li>Secteur: 1: Action Sociale, 2: Secours, 4:Ancien Bénévole, inactif ou adhérent</li>
+                </ol>
+                </li>
+                <li>Et vous envoyez ce fichier à <a href="mailto:thomas.manson@croix-rouge.fr">thomas.manson@croix-rouge.fr</a> en précisant votre unité locale et votre mobile (en cas de souci). Je m'occuperais de charger vos quêteurs d'un coup.</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+
+
+
+        <div uib-accordion-group class="panel-default" heading="Achat de matériel">
+          <ul>
+            <li><b>Pourquoi :</b> </li>
+            <li><b>Comment :</b>
+              <ol>
+                <li><a href="https://www.ctms.fr/fraude-monetique/trieuse-valorisatrice/53-tdp-50.html" target="_new">Trieuse de pièces CMTS TDP 50</a> : Pour compter de manière fiable et rapide les pièces</li>
+                <li><a href="https://www.amazon.fr/gp/product/B0096M4QOY/ref=oh_aui_detailpage_o07_s00?ie=UTF8&psc=1" target="_new">WebCam</a> : Même si l'application est prévu pour pouvoir s'en passer, elle fait gagner du temps et fiabilise les données saisies (par exemple, cela évite les fautes de frappes qui feraient choisir une personne à la place d'une autre ou un tronc à la place d'un autre)</li>
+                <li><a href="https://www.amazon.fr/dp/B000KJOPB6/ref=wl_it_dp_o_pC_S_ttl?_encoding=UTF8&colid=1KCTGF7CH2M0J&coliid=I79UXJI8L7C57" target="_new">Film autocollant pour coller les QRCodes</a> : Au moins sur les troncs, cela permet de protéger le QRCode de la pluie.</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+
+        <div uib-accordion-group class="panel-default" heading="Les QR Codes !">
+          <ul>
+            <li><b>Pourquoi :</b> En utilisant les QRCode et en les scannant avec la webcam, vous gagnez en rapidité et en fiabilité en évitant les fautes de frappes.</li>
+            <li><b>Comment :</b>
+              <ol>
+                <li>Aller sur les deux pages suviante et cliquer sur le bouton "Imprimer"</li>
+                <li><b>Menu->Troncs - Impression des QRCodes</b></li>
+                <li><b>Menu->Quêteurs - Impression des QRCodes</b></li>
+                <li>Par défault la taille des QRCode est fixée à 200, il est recommandé de ne pas changer cette valeur</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+
+        <div uib-accordion-group class="panel-default" heading="Test de bon fonctionnement du PC qui servira pour la quête">
+          <ul>
+            <li><b>Pourquoi :</b> Pour s'assurer que le jour J tout fonctionnera correctement</li>
+            <li><b>Comment :</b> <u>Depuis l'ordinateur qui sera utilisé pendant la quête</u>
+              <ol>
+                <li>Effectuez une préparation de Tronc</li>
+                <li>Naviguez sur la page "Graphiques" et ouvrez un graphique</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+      </uib-accordion>
+    </div>
+  </div>
+
+
+
+
   <div class="jumbotron text-center" ng-style="{'background-color':main.deploymentType=='P'?'':(main.deploymentType=='D'?'#b9def0':'blue')}">
     <h1>'Allo, 'Allo ! </h1>
 

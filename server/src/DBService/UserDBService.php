@@ -438,4 +438,28 @@ WHERE   id      = :id
     return false;
   }
 
+
+
+  /**
+   * Get the current number of Users for the Unite Local
+   *
+   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return int the number of users
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getNumberOfUser(int $ulId)
+  {
+    $sql="
+    SELECT count(1) as cnt
+    FROM   users u, queteur q
+    WHERE  q.ul_id = :ul_id
+    AND    q.id    = u.queteur_id 
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(["ul_id" => $ulId]);
+    $row = $stmt->fetch();
+    return $row['cnt'];
+  }
+
 }

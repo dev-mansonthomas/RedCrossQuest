@@ -32,8 +32,8 @@
       </form>
     </div>
 
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2" ng-show="ds.list.length>0">
+    <div class="row" ng-show="ds.list.length>0">
+      <div class="col-md-8 col-md-offset-2" >
 
         <table class="table .table-striped .table-hover .table-condensed">
           <thead>
@@ -46,11 +46,35 @@
             <tr>
               <td>{{::dailyStats.id}}</td>
               <td style="width:70px;"><input name="tobedone" id="horaireDepartTheorique" type="date" class="form-control" ng-model="dailyStats.date" ng-readonly="true"/></td>
-              <td><input name="amount" id="amount" type="number" class="form-control" ng-model="dailyStats.amount" required/></td>
+              <td>
+                <div class="input-group">
+                  <input name="amount" id="amount" type="number" class="form-control" ng-model="dailyStats.amount" required/><span class="input-group-addon">€</span>
+                </div>
+              </td>
               <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="ds.save(dailyStats.id, dailyStats.amount);">Sauvegarder</button></td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    <div ng-show="ds.list.length>0" class="row">
+      <div class="col-md-9 col-md-offset-1">
+        <b>Vous ne connaissez pas le détail par année, mais vous avez le montant total de la quête de l'année {{ds.selectedYear}} ?</b><br/>
+        Indiquez le montant de l'année {{ds.selectedYear}} ci-dessous et cliquez sur le bouton pour répartir automatiquement le montant et <b>sauvegarder</b><br/>
+
+        <br/><br/>
+
+
+      </div>
+    </div>
+    <div ng-show="ds.list.length>0" class="row">
+      <div  class="col-md-2 col-md-offset-4">
+        <div class="input-group">
+          <input name="totalAmount" id="totalAmount" type="number" class="form-control" ng-model="ds.totalAmount"/><span class="input-group-addon">€</span>
+        </div>
+      </div>
+      <div  class="col-md-2">
+        <button  type="button" class="btn btn-primary" ng-click="ds.repartition();">Répartir le montant annuel</button>
       </div>
     </div>
 

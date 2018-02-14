@@ -247,4 +247,25 @@ VALUES
     $this->db->commit();
     return $lastInsertId;
   }
+
+  /**
+   * Get the current number of Troncs for the Unite Local
+   *
+   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return int the number of troncs
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getNumberOfTroncs(int $ulId)
+  {
+    $sql="
+    SELECT count(1) as cnt
+    FROM   tronc
+    WHERE  ul_id = :ul_id
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(["ul_id" => $ulId]);
+    $row = $stmt->fetch();
+    return $row['cnt'];
+  }
 }

@@ -32,10 +32,14 @@
     ];
 
     vm.currentUserRole = $localStorage.currentUser.roleId;
-    //vm.settings        = $localStorage.guiSettings;
+    vm.settings        = $localStorage.guiSettings;
     var pointQueteId   = $routeParams.id;
 
 
+
+    //documentation
+    //https://rawgit.com/allenhwkim/angularjs-google-maps/master/build/docs/index.html
+    //https://github.com/allenhwkim/angularjs-google-maps/blob/master/services/geo-coder.js
     vm.updateCoordinatesAndAddress = function(event)
     {
       vm.current.latitude  = event.latLng.lat();

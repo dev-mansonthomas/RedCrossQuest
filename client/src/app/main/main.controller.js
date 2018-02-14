@@ -6,7 +6,8 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($timeout, toastr, $localStorage)
+  function MainController($timeout, $localStorage,
+                          toastr, SettingsResource)
   {
     var vm = this;
 
@@ -18,6 +19,27 @@
     vm.username       = $localStorage.currentUser.username;
     vm.ulName         = $localStorage.currentUser.ulName;
     vm.deploymentType = $localStorage.currentUser.d;
+
+    vm.currentUserRole=$localStorage.currentUser.roleId;
+
+//TODO : find a way to load once, before any page. (a refresh a point quete, should query this first to get the google maps API key)
+    SettingsResource.get().$promise.then(function(settings)
+    {
+      $localStorage.guiSettings = settings;
+    });
+
+    if(vm.currentUserRole >=4)
+    {
+      SettingsResource.getSetupStatus().$promise.then(function(result)
+      {
+        vm.setupStatus = result;
+      });
+
+    }
+
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+    });
 
     activate();
 

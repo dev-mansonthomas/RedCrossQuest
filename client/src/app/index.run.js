@@ -10,14 +10,7 @@
                     jwtHelper/*, SettingsResource*/)
   {
 
-/*
 
-    SettingsResource.get().$promise.then(function(settings)
-    {
-      $localStorage.guiSettings = settings;
-    });
-
-  */
 
     //check if there's a token and it's not expired. Otherwise, redirect the page to the login page.
     $rootScope.$on('$routeChangeStart', function(event, next /*, current*/)

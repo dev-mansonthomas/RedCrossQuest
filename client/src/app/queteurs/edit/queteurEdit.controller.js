@@ -36,7 +36,7 @@
       {id:1,label:'Lecture Seule'},
       {id:2,label:'Opérateur'},
       {id:3,label:'Compteur'},
-      {id:4,label:'Admin Local'},
+      {id:4,label:'Administrateur'},
       {id:9,label:'Super Admin'}
     ];
 

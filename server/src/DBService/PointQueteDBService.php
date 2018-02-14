@@ -345,4 +345,49 @@ AND   `ul_id`           = :ul_id
 
     return $lastInsertId;
   }
+
+  /**
+   * Get the current number of point_quete for the Unite Local
+   *
+   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return int the number of point_quete
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getNumberOfPointQuete(int $ulId)
+  {
+    $sql="
+    SELECT count(1) as cnt
+    FROM   point_quete
+    WHERE  ul_id = :ul_id
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(["ul_id" => $ulId]);
+    $row = $stmt->fetch();
+    return $row['cnt'];
+  }
+
+
+
+  public function initBasePointQuete(int $ulId)
+  {
+    $sql="
+    INSERT INTO point_quete
+    (ul_id, code, name, latitude, longitude, address, postal_code, city, max_people, advice, localization, minor_allowed, created, enabled, type, time_to_reach, transport_to_reach)
+    SELECT id, '', concat('Base ', replace(u.name, 'UL ', '')), u.latitude, u.longitude, u.address, u.postal_code, u.city, 2, '', '', 1, NOW(), 1, 4, 0, 1
+    FROM  ul u
+    WHERE id = :id
+    ";
+
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute([
+      "id"              => $ulId
+    ]);
+
+    $stmt->closeCursor();
+
+
+  }
 }

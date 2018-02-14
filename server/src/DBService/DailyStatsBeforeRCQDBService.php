@@ -140,4 +140,26 @@ VALUES
     $stmt->closeCursor();
   }
 
+
+  /**
+   * Get the current number of DailyStats recorded for the Unite Local
+   *
+   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return int the number of dailyStats
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getNumberOfDailyStats(int $ulId)
+  {
+    $sql="
+    SELECT count(1) as cnt
+    FROM   daily_stats_before_rcq
+    WHERE  ul_id = :ul_id
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(["ul_id" => $ulId]);
+    $row = $stmt->fetch();
+    return $row['cnt'];
+  }
+
 }
