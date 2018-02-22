@@ -198,7 +198,8 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId = (int)$args['ul-id'];
+    $ulId   = (int)$args['ul-id'  ];
+    $roleId = (int)$args['role-id'];
 
     //$this->logger->addInfo("Request UL ID '".$ulId."''", array('decodedToken'=>$decodedToken));
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
@@ -208,7 +209,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
-    $queteurId          = $queteurDBService->insert($queteurEntity, $ulId);
+    $queteurId          = $queteurDBService->insert($queteurEntity, $ulId, $roleId);
     $queteur            = $queteurDBService->getQueteurById($queteurId);
     $queteur->mobile    = intval(substr($queteur->mobile, 1));
     $queteur->birthdate = $queteur->birthdate->toW3cString();

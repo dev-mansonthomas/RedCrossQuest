@@ -62,8 +62,8 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
-      $queteur = $queteurDBService    ->getQueteurById   ($user   ->queteur_id);
-      $ul      = $uniteLocaleDBService->getPointQueteById($queteur->ul_id     );
+      $queteur = $queteurDBService    ->getQueteurById    ($user   ->queteur_id);
+      $ul      = $uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
 
       $signer = new Sha256();
 
