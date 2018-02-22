@@ -11,7 +11,8 @@
 
   /** @ngInject */
   function QueteurEditController($scope, $log, $routeParams, $location, $localStorage, $timeout,
-                                 QueteurResource, UserResource, TroncQueteurResource, moment, Upload)
+                                 QueteurResource, UserResource, TroncQueteurResource, UniteLocaleResource,
+                                 moment, Upload)
   {
     var vm = this;
 
@@ -218,6 +219,9 @@
     };
 
 
+
+    /* SEARCH REFERENT */
+
     /**
      * Set the queteur.id of the selected queteur in the model
      * */
@@ -257,6 +261,47 @@
           });
       });
     };
+    /* END  SEARCH REFERENT */
+
+    /* SEARCH UNITE LOCALE */
+    /**
+     * Function used while performing a manual search for an Unité Locale
+     * @param queryString the search string (search is performed on name, postal code, city)
+     * */
+    vm.searchUL=function(queryString)
+    {
+      $log.info("UL : Manual Search for '"+queryString+"'");
+      return UniteLocaleResource.query({"q":queryString}).$promise.then(function success(response)
+      {
+        return response.map(function(ul)
+          {
+            ul.full_name=  ul.id + ' - ' + ul.name+' - '+ul.postal_code+' - '+ul.city;
+            return ul;
+          },
+          function error(reason)
+          {
+            $log.debug("error while searching for ul with query='"+queryString+"' with reason='"+reason+"'");
+          });
+      });
+    };
+
+    //This watch change on queteur variable to update the queteurId field
+    $scope.$watch('queteur.current.ul_name', function(newValue/*, oldValue*/)
+    {
+      if(newValue !== null && typeof newValue !==  "string" && typeof newValue !== "undefined")
+      {
+        try
+        {
+          $scope.queteur.current.ul_id = newValue.id;
+        }
+        catch(exception)
+        {
+          $log.debug(exception);
+        }
+      }
+    });
+
+    /* END SEARCH UNITE LOCALE */
 
     vm.createUser=function()
     {

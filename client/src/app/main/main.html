@@ -8,20 +8,20 @@
   <div class="row" ng-show="main.currentUserRole >= 4">
     <div class="panel panel-default">
       <!-- Default panel contents -->
-      <div class="panel-heading">Infos sur l'UL</div>
+      <div class="panel-heading"><b>Informations sur l'Unité Locale</b></div>
       <table class='table'>
         <thead>
         <tr>
           <th>Nombre de Quêteurs</th>
-          <td class="{{main.setupStatus.queteurIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfQueteur}}</b></td>
+          <td class="{{main.setupStatus.queteurIncomplete?'warning':'default'}}">{{main.setupStatus.numberOfQueteur}}</td>
           <th>Nombre d'utilisateurs</th>
-          <td class="{{main.setupStatus.userIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfUser}}</b></td>
+          <td class="{{main.setupStatus.userIncomplete?'warning':'default'}}">{{main.setupStatus.numberOfUser}}</td>
           <th>Nombre de points de quête</th>
-          <td class="{{main.setupStatus.pointQueteIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfPointQuete}}</b></td>
+          <td class="{{main.setupStatus.pointQueteIncomplete?'warning':'default'}}">{{main.setupStatus.numberOfPointQuete}}</td>
           <th>Nombre de Stats sur les années avant RCQ</th>
-          <td class="{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfDailyStats}}</b></td>
+          <td class="{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}}">{{main.setupStatus.numberOfDailyStats}}</td>
           <th>Nombre de troncs</th>
-          <td class="{{main.setupStatus.troncsIncomplete?'warning':'default'}}"><b>{{main.setupStatus.numberOfTroncs}}</b></td>
+          <td class="{{main.setupStatus.troncsIncomplete?'warning':'default'}}">{{main.setupStatus.numberOfTroncs}}</td>
         </tr>
         </thead>
       </table>
@@ -53,6 +53,7 @@
         <div uib-accordion-group class="panel-{{main.setupStatus.userIncomplete?'warning':'default'}}"  heading="Créez les utilisateurs de l'application RCQ">
           <ul>
             <li><b>Pourquoi :</b> En créant plusieurs utilisateurs de l'application RCQ pour vos cadres quêtes, cela vous permet de finir plus rapidement le paramétrage initial de RCQ, et vous permet de distribuer les tâches (gérer préparation/départ/retour, comptage, suivi des chiffres). Note que pour afficher les graphiques "publique", vous ne pouvez le faire qu'avec un compte qui a le rôle "lecture seule".</li>
+            <li><b>Durée :</b> Environ 2 min / utilisateur</li>
             <li><b>Comment : Ajoutez un Quêteur</b>
               <ol>
                 <li>Les utilisateurs de l'application RCQ sont vos cadres de quête qui vont faire les départs/retour des troncs, comptez les pièces etc...</li>
@@ -74,6 +75,7 @@
         <div uib-accordion-group class="panel-{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}}" heading="Définissez vos Résultats Journalier des années précédentes">
           <ul>
             <li><b>Pourquoi :</b> Ces données vous permettront de comparer les chiffres journalier de cette année avec les précédentes années et ainsi de vous situer par rapport à votre objectif</li>
+            <li><b>Durée :</b> Une fois que vous avez retrouver les données, 2 minutes par année</li>
             <li><b>Comment :</b> Menu Administration->Résultats Journaliers (Avant RCQ)
               <ol>
                 <li>Choisissez l'année, puis cliquer sur Rechercher, un bouton apparait <b>"Créez l'année XXXX"</b></li>
@@ -88,10 +90,20 @@
 
         <div uib-accordion-group class="panel-{{main.setupStatus.troncsIncomplete?'warning':'default'}}" heading="Créez les troncs dans RCQ">
           <ul>
-            <li><b>Pourquoi :</b> A chaque tronc sera attribué un identifiant représenté sous la forme d'un QRCode <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span>, ce qui permet de fiabiliser les opérations de distrubtion des troncs et de comptages des pièces et billets</li>
-            <li><b>Comment : </b> Menu Administration->Liste des Troncs
+            <li><b>Pourquoi :</b> A chaque tronc sera attribué un identifiant représenté sous la forme d'un QRCode <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> qui est à coller sous le tronc, ce qui permet de fiabiliser les opérations de distrubtion des troncs et de comptages des pièces et billets</li>
+            <li><b>Durée :</b> 1 minutes</li>
+            <li><b>Comment : </b> Menu Administration->Liste des Troncs -> bouton 'Créer des troncs'
               <ol>
                 <li>Comptez vos troncs (boite métallique de collecte de pièces) que vous avez au local</li>
+                <li>Choisissez 'actif' à oui</li>
+                <li>Choisissez le type de tronc
+                  <ul>
+                    <li><b>Tronc                    :</b> le tronc des quêteurs</li>
+                    <li><b>Urne chez un commerçant  :</b> un tronc que vous laissez pendant la semaine de quête chez les commerçants de quartier. Cela peut être le même tronc que celui des quêteur ou sous une forme différente.</li>
+                    <li><b>Autre                    :</b> par exemple, un tronc laissé au local.</li>
+                    <li><b>Terminal Carte Bleue     :</b> Si vous avez un terminal CB en teste dans votre Unité Locale. Pour les troncs de type CB, un seul champ de saisie sera disponible: le montant total des dons CB</li>
+                  </ul>
+                </li>
                 <li>Indiquez ce chiffre dans le formulaire et cliquer sur "Créer de nouveau Troncs" (à Faire)</li>
               </ol>
             </li>
@@ -103,6 +115,7 @@
             <li><b>Pourquoi :</b> La défnition des points de quête permet de déterminer où vos quêteurs vont quêter et dans quelle condition (pieton, feux, magasin, à combien).<br/>
             Vous pourrez visualiser sur une carte vos points de quête, lesquels donnent le plus, depuis combien de temps vos quêteurs sont sur le terrain.
             </li>
+            <li><b>Durée :</b>2 minutes par point de quête</li>
             <li><b>Comment :</b> Menu Administration->Point de Quête
               <ol>
                 <li>Nous avons automatiquement créé votre premier point de quête qui correspond à votre Local.</li>
@@ -116,10 +129,12 @@
         <div uib-accordion-group class="panel-{{main.setupStatus.queteurIncomplete?'warning':'default'}}" heading="Créez les quêteurs de votre unité locale">
           <ul>
             <li><b>Pourquoi :</b> Chaque quêteur doit être identifié dans l'application, et ce afin de pouvoir lui envoyer des emails, de s'assurer qu'un mineur ne quête pas sur un point de quête non prévue pour les mineurs</li>
+            <li><b>Durée via Export Gaia :</b> environ 5 minutes + le temps d'éventuellement corriger les données (Variable).</li>
+            <li><b>Durée en ajoutant quêteur par quêteur : </b> environ 2 minutes par quêteur.</li>
             <li><b>Comment : Ajoutez un Quêteur</b>
               <ol>
-                <li>Soit vous ajouter à la main tous vos quêteurs</li>
-                <li>Vous construisez vous un fichier excel avec le format suivant</li>
+                <li>Soit vous ajouter à la main tous vos quêteurs (non recommandé si vous avez plus d'une 20ene de bénévole)</li>
+                <li>Soit vous faîtes un export Gaia des bénévoles de votre Unité Locale et vous l'adaptez au format suivant:</li>
                 <ol>
                   <li>Nivol</li>
                   <li>Sexe: 0: femme, 1: homme</li>
@@ -131,7 +146,9 @@
                   <li>Secteur: 1: Action Sociale, 2: Secours, 4:Ancien Bénévole, inactif ou adhérent</li>
                 </ol>
                 </li>
-                <li>Et vous envoyez ce fichier à <a href="mailto:thomas.manson@croix-rouge.fr">thomas.manson@croix-rouge.fr</a> en précisant votre unité locale et votre mobile (en cas de souci). Je m'occuperais de charger vos quêteurs d'un coup.</li>
+                <li>Et vous envoyez ce fichier à <a href="mailto:thomas.manson@croix-rouge.fr?subject=[Export Queteur][UL={{::main.ulId}}] {{::main.ulName}}">thomas.manson@croix-rouge.fr</a>
+                  avec pour sujet "[Export Queteur][UL={{::main.ulId}}] {{::main.ulName}}" en précisant votre mobile dans le corp du mail (en cas de souci).
+                  Je m'occuperais de charger vos quêteurs d'un coup.</li>
               </ol>
             </li>
           </ul>
@@ -144,23 +161,26 @@
             <li><b>Pourquoi :</b> </li>
             <li><b>Comment :</b>
               <ol>
-                <li><a href="https://www.ctms.fr/fraude-monetique/trieuse-valorisatrice/53-tdp-50.html" target="_new">Trieuse de pièces CMTS TDP 50</a> : Pour compter de manière fiable et rapide les pièces</li>
-                <li><a href="https://www.amazon.fr/gp/product/B0096M4QOY/ref=oh_aui_detailpage_o07_s00?ie=UTF8&psc=1" target="_new">WebCam</a> : Même si l'application est prévu pour pouvoir s'en passer, elle fait gagner du temps et fiabilise les données saisies (par exemple, cela évite les fautes de frappes qui feraient choisir une personne à la place d'une autre ou un tronc à la place d'un autre)</li>
-                <li><a href="https://www.amazon.fr/dp/B000KJOPB6/ref=wl_it_dp_o_pC_S_ttl?_encoding=UTF8&colid=1KCTGF7CH2M0J&coliid=I79UXJI8L7C57" target="_new">Film autocollant pour coller les QRCodes</a> : Au moins sur les troncs, cela permet de protéger le QRCode de la pluie.</li>
+                <li><a href="https://www.ctms.fr/fraude-monetique/trieuse-valorisatrice/53-tdp-50.html" target="_blank">Trieuse de pièces CMTS TDP 50</a> : Pour compter de manière fiable et rapide les pièces</li>
+                <li><a href="https://www.amazon.fr/gp/product/B0096M4QOY/ref=oh_aui_detailpage_o07_s00?ie=UTF8&psc=1" target="_blank">WebCam</a> : Même si l'application est prévu pour pouvoir s'en passer, elle fait gagner du temps et fiabilise les données saisies (par exemple, cela évite les fautes de frappes qui feraient choisir une personne à la place d'une autre ou un tronc à la place d'un autre)</li>
+                <li><a href="https://www.amazon.fr/dp/B000KJOPB6/ref=wl_it_dp_o_pC_S_ttl?_encoding=UTF8&colid=1KCTGF7CH2M0J&coliid=I79UXJI8L7C57" target="_blank">Film autocollant pour coller les QRCodes</a> : Au moins sur les troncs, cela permet de protéger le QRCode de la pluie.</li>
+                <li><a href="http://www.officedepot.fr/catalog/catalogSku.do?id=5621850&XREF1=IAFRH10999GOOPS" target="_blank">Massicot pour couper les QR Codes</a></li>
               </ol>
             </li>
           </ul>
         </div>
 
-        <div uib-accordion-group class="panel-default" heading="Les QR Codes !">
+        <div uib-accordion-group class="panel-default" heading="Impression des QR Codes !">
           <ul>
             <li><b>Pourquoi :</b> En utilisant les QRCode et en les scannant avec la webcam, vous gagnez en rapidité et en fiabilité en évitant les fautes de frappes.</li>
+            <li><b>Durée : </b>2 minutes</li>
             <li><b>Comment :</b>
               <ol>
                 <li>Aller sur les deux pages suviante et cliquer sur le bouton "Imprimer"</li>
                 <li><b>Menu->Troncs - Impression des QRCodes</b></li>
                 <li><b>Menu->Quêteurs - Impression des QRCodes</b></li>
                 <li>Par défault la taille des QRCode est fixée à 200, il est recommandé de ne pas changer cette valeur</li>
+                <li>Une fois imprimé, il faut découper chaque QRCode. Le plus simple est d'utiliser un Massicot</li>
               </ol>
             </li>
           </ul>
@@ -169,6 +189,7 @@
         <div uib-accordion-group class="panel-default" heading="Test de bon fonctionnement du PC qui servira pour la quête">
           <ul>
             <li><b>Pourquoi :</b> Pour s'assurer que le jour J tout fonctionnera correctement</li>
+            <li><b>Durée : </b>5 minutes</li>
             <li><b>Comment :</b> <u>Depuis l'ordinateur qui sera utilisé pendant la quête</u>
               <ol>
                 <li>Effectuez une préparation de Tronc</li>

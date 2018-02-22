@@ -2,13 +2,14 @@
 <div class="container" data-ng-controller="TroncEditController as tronc">
 
   <div class="panel panel-primary">
-    <div class="panel-heading">Un Tronc:  <b><span ng-bind="tronc.current.id"></span></b> crée le {{tronc.current.created}}</div>
+    <div class="panel-heading" ng-show="tronc.current.id" ng-cloak>Un Tronc:  <b><span ng-bind="tronc.current.id"></span></b> crée le {{tronc.current.created}}</div>
+    <div class="panel-heading" ng-show="!tronc.current.id" ng-cloak>Création de troncs</div>
   </div>
   <form novalidate ng-submit='tronc.save();' name="troncForm">
 
       <div class="well">
         <div class="row">
-          <div class="col-md-4 col-md-offset-2">
+          <div class="col-md-2 col-md-offset-2">
 
             <div class="form-group" ng-class="{'has-error':troncForm.enabled.$invalid}">
               <label for="activeRadio1" class="control-label">Actif</label> <br/>
@@ -22,8 +23,8 @@
           </div>
 
 
-          <div class="col-md-4">
-            <div class="form-group">
+          <div class="col-md-3">
+            <div class="form-group" ng-class="{'has-error':troncForm.type.$invalid}">
               <label for="type" class="control-label">Type de tronc</label>
               <select name="type" id="type" class="form-control" ng-model="tronc.current.type" required
                       ng-options="(r.id) as r.label
@@ -34,23 +35,38 @@
               </select>
             </div>
           </div>
+          <div class="col-md-3" ng-show="!tronc.current.id && tronc.currentUserRole >=4" ng-cloak>
+            <div class="form-group" ng-class="{'has-error':troncForm.nombreTronc.$invalid}">
+              <label for="nombreTronc" class="control-label">Nombre de troncs à créer</label>
+              <input type="number"
+                       id="nombreTronc"
+                     name="nombreTronc"
+                     class="form-control"
+                     min="1"
+                     max="50"
+                     ng-model="tronc.current.nombreTronc"
+                     ng-required="!tronc.current.id"/>
+
+              <span class="help-block" ng-show="troncForm.nombreTronc.$invalid">Le nombre de tronc doit être entre 1 et 50</span>
+            </div>
+          </div>
         </div>
         <div class="row">
           <div class="col-md-8 col-md-offset-2">
 
             <div class="form-group">
               <label for="notes" class="control-label">Notes</label>
-              <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="tronc.current.notes"></textarea>
+              <textarea rows="3" name="notes" id="notes" class="form-control" ng-model="tronc.current.notes"></textarea>
               <span class="help-block">Info sur le troncs, ex: Cassé, perdu, volé, Tronc du local, Tronc chez un commercant</span>
             </div>
           </div>
         </div>
         <div class="row" style="margin-bottom: 20px;">
           <div class="col-md-2 col-md-offset-2">
-            <a ng-href="/#!/list" class="btn btn-link">Cancel</a>
+            <a ng-href="/#!/troncs" class="btn btn-link">Annuler</a>
           </div>
           <div class="col-md-2 col-md-offset-8">
-            <input type="submit" class="btn btn-primary" value="Save" ng-disabled="troncForm.$invalid" />
+            <input type="submit" class="btn btn-primary" value="Sauvegarder" ng-disabled="troncForm.$invalid" />
           </div>
         </div>
 
@@ -59,7 +75,10 @@
           <div class="col-md-8 col-md-offset-2">
             <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="tronc.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
-              <strong>Bravo!</strong> Le tronc a été sauvegardé avec succès!
+              <strong>Bravo!</strong>
+
+              <span ng-show="tronc.current.id" ng-cloak>Le tronc a été sauvegardé avec succès!</span>
+              <span ng-show="!tronc.current.id" ng-cloak>Les {{tronc.current.nombreTronc}} troncs ont été sauvegardés avec succès!</span>
             </div>
           </div>
         </div>

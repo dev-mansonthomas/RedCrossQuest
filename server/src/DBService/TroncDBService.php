@@ -216,36 +216,23 @@ INSERT INTO `tronc`
    `type`
 )
 VALUES
-(
-  :ul_id,
-  NOW(),
-  :enabled,
-  :notes,
-  :type
-);
 ";
+    for($i=0;$i<$tronc->nombreTronc;$i++)
+    {
+      $sql .="(:ul_id, NOW(), :enabled, :notes, :type)".($i<$tronc->nombreTronc-1?",":"");
+    }
 
     $stmt = $this->db->prepare($sql);
 
-    $this->db->beginTransaction();
     $stmt->execute([
       "ul_id"    => $ulId,
       "enabled"  => $tronc->enabled,
       "notes"    => $tronc->notes,
-      "type"    => $tronc->type
+      "type"     => $tronc->type
     ]);
 
     $stmt->closeCursor();
 
-    $stmt = $this->db->query("select last_insert_id()");
-    $row  = $stmt->fetch();
-
-    $lastInsertId = $row['last_insert_id()'];
-    //$this->logger->info('$lastInsertId:', [$lastInsertId]) ;
-
-    $stmt->closeCursor();
-    $this->db->commit();
-    return $lastInsertId;
   }
 
   /**

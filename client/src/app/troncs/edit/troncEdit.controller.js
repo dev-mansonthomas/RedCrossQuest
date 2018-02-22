@@ -10,11 +10,13 @@
     .controller('TroncEditController', TroncEditController);
 
   /** @ngInject */
-  function TroncEditController($log, $routeParams, $timeout,
+  function TroncEditController($log, $routeParams, $timeout,$localStorage,
                                TroncResource, moment, TroncQueteurResource)
   {
     var vm      = this;
     var troncId = $routeParams.id;
+
+    vm.currentUserRole=$localStorage.currentUser.roleId;
 
     vm.typeTroncList=[
       {id:1,label:'Tronc'},
@@ -69,8 +71,15 @@
 
     function save()
     {
-      vm.current.$update(savedSuccessfully, errorWhileSaving);
-      $log.debug("Saved called");
+      if (angular.isDefined(troncId))
+      {
+        vm.current.$update(savedSuccessfully, errorWhileSaving);
+        $log.debug("Saved called");
+      }
+      else
+      {
+        vm.current.$save(savedSuccessfully, errorWhileSaving);
+      }
     }
 
 

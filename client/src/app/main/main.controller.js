@@ -18,6 +18,7 @@
 
     vm.username       = $localStorage.currentUser.username;
     vm.ulName         = $localStorage.currentUser.ulName;
+    vm.ulId           = $localStorage.currentUser.ulId;
     vm.deploymentType = $localStorage.currentUser.d;
 
     vm.currentUserRole=$localStorage.currentUser.roleId;

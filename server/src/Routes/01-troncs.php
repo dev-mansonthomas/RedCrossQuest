@@ -114,3 +114,31 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
 
 
 
+/**
+ * Update le tronc, seulement pour l'admin
+ *
+ * */
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/troncs', function ($request, $response, $args)
+{
+  $decodedToken = $request->getAttribute('decodedJWT');
+  try
+  {
+    $ulId    = (int)$args['ul-id'];
+
+    $troncDBService = new TroncDBService($this->db, $this->logger);
+
+    $input            = $request->getParsedBody();
+    $troncEntity      = new TroncEntity($input);
+
+    $troncDBService->insert($troncEntity, $ulId);
+    return ;
+
+  }
+  catch(Exception $e)
+  {
+    $this->logger->addError($e, array('decodedToken'=>$decodedToken));
+    throw $e;
+  }
+});
+
+

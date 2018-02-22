@@ -11,7 +11,7 @@
       <div class="well">
         <form class="form-search">
           <div class="row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-3">
               <div class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
                 <input class="form-control" placeholder="Search" data-ng-model="t.search">
@@ -24,7 +24,7 @@
               </div>
             </div>
 
-            <div class="col-md-2 col-md-offset-2">
+            <div class="col-md-2 col-md-offset-1">
               <div class="form-group">
                 <label for="activeRadio1" class="control-label">Actif:</label><br/>
                 <label class="radio-inline">
@@ -37,13 +37,19 @@
             </div>
 
 
-            <div class="col-md-1">
-              <input type="submit" class="btn btn-primary" value="Search" ng-click="t.searchSubmit()" />
+            <div class="col-md-1 col-md-offset-1">
+              <input type="submit" class="btn btn-primary" value="Rechercher" ng-click="t.searchSubmit()" />
+            </div>
+            <div class="col-md-1 col-md-offset-1" >
+              <a href="/#!/troncs/edit" class="btn btn-primary">
+                Créer de nouveaux troncs
+              </a>
             </div>
           </div>
         </form>
       </div>
     </div>
+
 
     <div class="col-xs-12 col-md-12">
       <div class="row">
@@ -51,8 +57,8 @@
         <div class="contact-card col-sm-2" data-ng-repeat="tronc in t.list | filter:t.search | orderBy:'lastName'">
           <div class="contact-card-inner">
             <h4>
-              <a ng-href="/#!/troncs/edit/{{tronc.id}}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span></a>
-              &nbsp;{{::tronc.id}}
+              <a ng-href="/#!/troncs/edit/{{tronc.id}}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span> &nbsp;{{::tronc.id}}</a>
+
             </h4>
             <div class="contact-address">{{::tronc.enabled}}</div>
             <div class="contact-phone">{{::tronc.notes}}</div>

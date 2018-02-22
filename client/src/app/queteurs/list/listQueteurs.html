@@ -59,28 +59,27 @@
           Nombre de Bénévoles/Quêteur d'un jour: <span class="badge">{{q.list.length}}</span>
         </div>
         <div class="col-md-4">
-          <div class="input-group" ng-show="q.currentUserRole=='9'">
-            <label for="activeRadio1" class="control-label">Unité Locale </label>
-            <select class="form-control" placeholder="ID Unité Locale" data-ng-model="q.admin_ul_id">
-              <option value=''   >N/A                     </option>
-              <option value='348'>UL PARIS 01/02          </option>
-              <option value='2'  >UL PARIS 04             </option>
-              <option value='49' >UL AIX EN PROVENCE      </option>
-              <option value='50' >UL ARLES                </option>
-              <option value='51' >UL AUBAGNE              </option>
-              <option value='52' >UL ISTRES               </option>
-              <option value='53' >UL LACIOTAT             </option>
-              <option value='54' >UL MARIGNANE            </option>
-              <option value='55' >UL MARSEILLE            </option>
-              <option value='56' >UL MARTIGUES            </option>
-              <option value='57' >UL CHATEAU RENARD ALPI  </option>
-              <option value='58' >UL SALON DE PROVENCE    </option>
-              <option value='477'>UL LA GARENNE COLOMBES  </option>
-            </select>
 
-
+          <div class="form-group" ng-show="q.currentUserRole=='9'">
+            <label for="ulId" class="control-label">Unité Locale</label>
+            <input
+              id="ulId"
+              type="text"
+              ng-model="q.admin_ul"
+              placeholder="Tappez votre recherche"
+              uib-typeahead="queteur as queteur.full_name for queteur in q.searchUL($viewValue)"
+              typeahead-loading="loadingULs"
+              typeahead-no-results="noResults"
+              typeahead-wait-ms="20"
+              class="form-control"
+              ng-required
+              autocomplete="off">
+            <i   ng-show="loadingULs" class="glyphicon glyphicon-refresh"></i>
+            <div ng-show="noResults">
+              <i class="glyphicon glyphicon-remove"></i> Aucune Unité Locale trouvée
+            </div>
+            <span class="help-block">Recherche par nom, code postal, ville</span>
           </div>
-
         </div>
         <div class="col-md-2">
           <div class="form-group">

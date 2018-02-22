@@ -447,7 +447,7 @@ WHERE `id`              = :id
     ];
 
     if($roleId != 9)
-    {
+    {//allow super admin to update any UL queteurs, but he cannot change the UL
       $sql .= "
 AND   `ul_id`           = :ul_id      
 ";
@@ -466,10 +466,11 @@ AND   `ul_id`           = :ul_id
    *
    * @param QueteurEntity $queteur  The queteur to update
    * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int           $roleId   role id of the user of RCQ that creates the queteur. If roleId is 9, superAdmin, then it allows the queteur to be created in any Unite Local of the super Admin choice
    * @return int the primary key of the new queteur
    * @throws PDOException if the query fails to execute on the server
    */
-  public function insert(QueteurEntity $queteur, int $ulId)
+  public function insert(QueteurEntity $queteur, int $ulId, int $roleId)
   {
     $sql = "
 INSERT INTO `queteur`
@@ -521,7 +522,7 @@ VALUES
       "nivol"              => ltrim($queteur->nivol, '0'),
       "mobile"             => $queteur->mobile,
       "notes"              => $queteur->notes,
-      "ul_id"              => $ulId,  //this ulId is safer, checked with JWT Token
+      "ul_id"              => $roleId == 9? $queteur->ul_id : $ulId,  //this ulId is safer, checked with JWT Token. if superAdmin, we take the ul_id value of queteur, than can be different from the ulId of the superAdmin
       "birthdate"          => $queteur->birthdate,
       "man"                => $queteur->man,
       "active"             => $queteur->active,
