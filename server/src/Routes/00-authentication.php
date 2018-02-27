@@ -116,7 +116,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
 
     return $response401;
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("unexpected exception during authentication", array("Exception"=>$e));
 

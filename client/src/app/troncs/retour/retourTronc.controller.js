@@ -18,6 +18,7 @@
     var vm = this;
     vm.onlyNumbers = /^\d+$/;
 
+
     vm.initForm = function()
     {
       vm.current = {};
@@ -82,16 +83,6 @@
         vm.current.readOnlyView=true;
       }
 
-      if(vm.current.tronc_queteur.depart !== null)
-      {
-        vm.current.tronc_queteur.departStr = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
-        vm.current.tronc_queteur.depart    = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
-      }
-      else
-      {
-        vm.current.tronc_queteur.dateDepartIsMissing=true;
-      }
-
       if(vm.current.tronc_queteur.retour === null)
       {
         vm.current.tronc_queteur.retour = new Date();
@@ -100,9 +91,31 @@
       else
       {
         vm.current.tronc_queteur.retour = DateTimeHandlingService.handleServerDate(tronc_queteur.retour).dateInLocalTimeZone;
-
         vm.current.fillTronc=true;
       }
+
+      if(vm.current.tronc_queteur.depart !== null)
+      {
+        vm.current.tronc_queteur.dateDepartIsMissing=false;
+        vm.current.tronc_queteur.departStr = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
+        vm.current.tronc_queteur.depart    = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
+      }
+      else
+      {
+        vm.current.tronc_queteur.dateDepartIsMissing=true;
+
+
+        var newDepartDate = new Date( vm.current.tronc_queteur.retour.getTime());
+
+        newDepartDate.setHours        (0);
+        newDepartDate.setMinutes      (0);
+        newDepartDate.setSeconds      (0);
+        newDepartDate.setMilliseconds (0);
+
+        vm.current.tronc_queteur.depart    = newDepartDate;
+      }
+
+
       $log.debug(tronc_queteur);
     }
 
@@ -151,7 +164,7 @@
     vm.save = function save()
     {
       $log.debug("Saving the return date");
-      vm.current.tronc_queteur.$saveReturnDate(savedSuccessfully, onSaveError);
+      vm.current.tronc_queteur.$saveReturnDate({dateDepartIsMissing:vm.current.tronc_queteur.dateDepartIsMissing}, savedSuccessfully, onSaveError);
     };
 
 

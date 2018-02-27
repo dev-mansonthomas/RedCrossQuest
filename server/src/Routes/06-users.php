@@ -57,9 +57,10 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
       $response->getBody()->write(json_encode($userEntity));
     }
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while updating ActiveAndRole or sending init password email", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
+    throw $e;
   }
   return $response;
 });
@@ -86,14 +87,14 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
     //check NIVOL has not been changed
     if($userEntity->nivol != $queteur->nivol)
     {
-      throw new Exception("UserEntity NIVOL (from web form) & Queteur NIVOL (from DB) do not match ('".$userEntity->nivol."'!='".$queteur->nivol."')");
+      throw new \Exception("UserEntity NIVOL (from web form) & Queteur NIVOL (from DB) do not match ('".$userEntity->nivol."'!='".$queteur->nivol."')");
     }
 
     if($queteur->ul_id != $ulId )
     {
       if($roleId != 9)
       {
-        throw new Exception("current user is trying to create an RCQ user for another UL and is not super Admin");
+        throw new \Exception("current user is trying to create an RCQ user for another UL and is not super Admin");
       }
       else
       {
@@ -112,9 +113,10 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
 
     $response->getBody()->write(json_encode($user));
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("error while creating a new user", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
+    throw $e;
   }
   return $response;
 });

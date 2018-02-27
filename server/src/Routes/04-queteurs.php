@@ -28,6 +28,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
   $searchType   = "";
   $secteur      = "";
   $active       = "";
+  $rcqUser      = "";
   $benevoleOnly = "";
 
   try
@@ -49,6 +50,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     $searchType   = array_key_exists('searchType'    ,$params)?$params['searchType'   ]:null;
     $secteur      = array_key_exists('secteur'       ,$params)?$params['secteur'      ]:null;
     $active       = array_key_exists('active'        ,$params)?$params['active'       ]:1;
+    $rcqUser      = array_key_exists('rcqUser'       ,$params)?$params['rcqUser'      ]:1;
     $benevoleOnly = array_key_exists('$benevoleOnly' ,$params)?$params['$benevoleOnly']:0;
 
 
@@ -60,13 +62,13 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     }
 
 
-    $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly);
+    $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser);
 
     $response->getBody()->write(json_encode($queteurs));
 
     return $response;
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("error while fetching queteur with the following parameters query=$query, searchType=$searchType, secteur=$secteur, ulId=$ulId, active=$active, benevoleOnly=$benevoleOnly", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
@@ -110,7 +112,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     
     $response->getBody()->write(json_encode($queteur));
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while fetching queteur $queteurId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
     throw $e;
@@ -149,7 +151,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     
     $queteurDBService->update($queteurEntity, $ulId, $roleId);
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while updating queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
     throw $e;
@@ -182,7 +184,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
 //    $queteurEntity->mobile = "+".$queteurEntity->mobile;
 //    $queteurDBService->update($queteurEntity, $ulId);
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while uploading files", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
@@ -216,7 +218,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     
     $response->getBody()->write(json_encode($queteur));
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while creating a new Queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
     throw $e;

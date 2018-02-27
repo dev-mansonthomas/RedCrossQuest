@@ -333,6 +333,42 @@ AND    q.ul_id              = :ul_id
   }
 
 
+
+  /**
+   * Update one tronc with Date Depart set to custom time. For the use case : préparation=>forget depart => retour
+   *
+   * @param TroncQueteurEntity $tq The tronc to update
+   * @param  int $ulId the Id of the Unite Local
+   * @param  int $userId id of the user performing the operation
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function setDepartToCustomDate(TroncQueteurEntity $tq, int $ulId, int $userId)
+  {
+    $sql = "
+UPDATE `tronc_queteur`           tq
+      INNER JOIN  queteur         q
+      ON          tq.queteur_id = q.id
+SET    `depart`             = :depart,
+       `last_update`        = NOW(),
+       `last_update_user_id`= :userId            
+WHERE tq.`id`               = :id
+AND    q.ul_id              = :ul_id
+";
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+      "depart"            => $tq->depart->format('Y-m-d H:i:s'),
+      "userId"            => $userId,
+      "id"                => $tq->id,
+      "ul_id"             => $ulId
+    ]);
+
+    $stmt->closeCursor();
+
+  }
+
+
   /**
    * Update one tronc
    *
@@ -385,7 +421,7 @@ AND    q.ul_id                = :ul_id
     public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId)
     {
       $comptage = "";
-      if($adminMode != true)
+      if(!$adminMode)
       {// do not overwrite the comptage date in admin mode
         $comptage = " `comptage`                     = NOW(),";
       }
@@ -465,7 +501,7 @@ AND    q.ul_id                  = :ul_id
   public function updateCreditCardCount(TroncQueteurEntity $tq, bool $adminMode , int $ulId, int $userId)
   {
     $comptage = "";
-    if($adminMode != true)
+    if(!$adminMode)
     {
       $comptage = " `comptage`                     = NOW(),";
     }
@@ -557,6 +593,7 @@ AND    q.ul_id         = :ul_id
    * @throws \Exception if the query fails
    * @return int the primary key of the new tronc
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception if the tronc is already in use
    */
   public function insert(TroncQueteurEntity $tq, int $ulId, int $userId)
   {

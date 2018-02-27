@@ -51,9 +51,14 @@ class Entity
       $value = $data[$key];
 
       if($value."" === "1" || $value."" === "true")
+      {
         $this->$key = true;
+      }
       else
+      {
         $this->$key = false;
+      }
+
     }
     else
     {
@@ -89,7 +94,10 @@ class Entity
           else
           {
             // from DB Date :"2016-06-09 00:36:43"
-            $this->$key = Carbon::parse($stringValue)->setTimezone("Europe/Paris");
+            //  The parsing is done with UTC timezone, as dates are stored with this timezone in DB
+            //  Then we switch the date to Paris Timezone to reflect the Timezone of the client
+            $this->$key = Carbon::parse($stringValue, 'UTC')->setTimezone("Europe/Paris");
+
           }
         }
       }

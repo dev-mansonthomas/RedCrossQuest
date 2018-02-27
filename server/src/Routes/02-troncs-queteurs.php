@@ -38,7 +38,7 @@ $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($reques
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
     $troncQueteurDBService->deleteNonReturnedTroncQueteur($troncId, $ulId, $userId);
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("unexpected exception during deletion of tronc $troncId, ul: $ulId, user: $userId", array("Exception"=>$e));
     throw $e;
@@ -78,7 +78,13 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
 
       if ($action =="saveReturnDate")
       {
-        //$this->logger->debug("Saving return date", array('tronc_queteur'=>$tq, 'adminMode'=>$adminMode,'decodedToken'=>$decodedToken));
+        // if the depart Date was missing, we make mandatory for the user to fill one.
+        if(array_key_exists('dateDepartIsMissing', $params) && $params['dateDepartIsMissing'] == true)
+        {
+          $this->logger->addInfo("Setting date depart that was missing for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart));
+          $troncQueteurDBService->setDepartToCustomDate($tq, $ulId, $userId);
+        }
+
         $troncQueteurDBService->updateRetour($tq, $ulId, $userId);
       }
       elseif ($action =="saveCoins")
@@ -98,7 +104,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       }
     }
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while updating tronc_queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $tq));
     throw $e;
@@ -168,7 +174,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
       }
       else
       {
-        throw new Exception("Unknown action" );
+        throw new \Exception("Unknown action" );
       }
 
     }
@@ -184,7 +190,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
     }
 
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while creating tronc_queteur or updating departure date", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $tq));
     throw $e;
@@ -246,7 +252,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
     }
 
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while searching for tronc_queteur of tronc_id=$tronc_id or queteur_id=$queteur_id", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $troncQueteur));
     throw $e;
@@ -282,7 +288,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
 
     return $response;
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("error while fetching tronc_queteur with id $troncQueteurId", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;

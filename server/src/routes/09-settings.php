@@ -54,9 +54,9 @@ $app->get('/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response,
 
 
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
-    $this->logger->addError("Error while getting google maps API Key ", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->addError("Error while getting settings", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 });

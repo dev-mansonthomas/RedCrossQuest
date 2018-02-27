@@ -27,7 +27,7 @@ $app->post('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $
 
     $response->getBody()->write(json_encode($insertDateTimeAndToken));
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while granting access to spotfire graphs to user($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
@@ -54,7 +54,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $a
 
         $response->getBody()->write(json_encode($validToken));
     }
-    catch(Exception $e)
+    catch(\Exception $e)
     {
         $this->logger->addError("Error while getting current Token for user ($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
         throw $e;

@@ -101,7 +101,7 @@
             <div class="form-group"  ng-show="pt.current.queteur.id>0  && pt.current.tronc.id > 0">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
               <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required
-                      ng-options="pq.id as pt.getTypeLabel(pq.type)+' - '+ pq.code+' - '+pq.name
+                      ng-options="pq.id as pt.getTypeLabel(pq.type)+' - '+ (pq.code!= '' ? pq.code+' - ': '')+pq.name
                       for
                       pq in pt.pointsQuete">
                 <option value=""></option>

@@ -44,7 +44,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
 
     return $response;
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("fetch the dailyStats for a year($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
@@ -72,9 +72,10 @@ $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
     
     $dailyStatsBeforeRCQDBService->update($dailyStatsBeforeRCQEntity, $ulId);
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Update one day stats ", array('decodedToken'=>$decodedToken, "Exception"=>$e, "dailyStatsBeforeRCQEntity"=>$dailyStatsBeforeRCQEntity));
+    throw $e;
   }
   return $response;
 });
@@ -95,9 +96,10 @@ $app->post('/{role-id:[5-9]}/ul/{ul-id}/dailyStats', function ($request, $respon
     $input                        = $request->getParsedBody();
     $dailyStatsBeforeRCQDBService->createYear($ulId, $input['year']);
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("error while creating year (".$input['year'].")", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    throw $e;
   }
   return $response;
 });

@@ -91,6 +91,15 @@
               <input type="radio" name="active" id="activeRadio2" ng-model="q.active" value="0" required> Inactif
             </label>
           </div>
+          <div class="form-group" ng-cloak ng-show="q.currentUserRole>=4">
+            <label for="rcqUserRadio1" class="control-label">Utilisateur RCQ ?</label><br/>
+            <label class="radio-inline">
+              <input type="radio" name="active" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="active" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==null"> Non
+            </label>
+          </div>
         </div>
 
 

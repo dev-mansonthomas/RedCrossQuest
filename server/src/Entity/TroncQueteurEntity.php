@@ -82,6 +82,9 @@ class TroncQueteurEntity extends Entity
       $this->getString('point_quete_id'   , $data);
       $this->getString('tronc_id'         , $data);
       $this->getDate  ('depart_theorique' , $data);
+
+      $this->logger->addInfo("Date before/after",array("before"=>$data['depart_theorique'],"after"=>$this->depart_theorique));
+
       $this->getDate  ('depart'           , $data);
       $this->getDate  ('retour'           , $data);
       $this->getDate  ('comptage'         , $data);

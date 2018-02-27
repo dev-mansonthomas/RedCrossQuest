@@ -95,7 +95,7 @@
 
           <div class="row" >
             <div class="form-group col-md-2 col-md-offset-10">
-              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid || rt.current.tronc_queteur.dateDepartIsMissing === true" />
+              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid || rt.current.tronc_queteur.dateDepartIsMissing === true && rt.current.tronc_queteur.depart.getHours() == 0 && rt.current.tronc_queteur.depart.getMinutes() == 0" />
               <a  ng-click="rt.back();" class="btn btn-link">Cancel</a>
             </div>
           </div>
@@ -118,21 +118,23 @@
                 <strong>{{rt.current.tronc_queteur.queteur.first_name}}
                   {{rt.current.tronc_queteur.queteur.last_name}}</strong> n'a pas de date de départ saisie !<br/>
                 <br/>
-                <strong><u>A FAIRE IMMEDIATEMENT</u></strong>
+                <strong><u>Veuillez saisir la date de départ du tronc</u></strong>
                 <ul>
                   <li>Demandez au quêteur à quelle heure il est parti pour ce créneau</li>
-                  <li>Notez sur un papier (ou fichier google docs)
-                    <ul>
-                      <li>tronc_queteur_id : {{rt.current.tronc_queteur.id}}</li>
-                      <li>tronc_id : {{rt.current.tronc.id}}</li>
-                      <li>nom / prénom : {{rt.current.tronc_queteur.queteur.last_name}} / {{rt.current.tronc_queteur.queteur.first_name}}</li>
-                      <li>la date de départ réelle</li>
-                    </ul>
-                  </li>
-                  <li>Scanner le tronc sur la page départ pour enregistrer une date de départ (fausse)</li>
-                  <li>Enregistrer la date de retour</li>
-                  <li>Demander à l'administrateur local de corriger la date de départ</li>
+                  <li>Et renseigner la date ci-dessous (elle ne peut être postérièure à la date de retour et égale à 00h00min</li>
                 </ul>
+
+                <div class="form-group" ng-class="{'has-error':retourTroncForm.depart.$invalid}">
+                  <label for="depart" class="control-label">Horaire Départ Réele</label>
+                  <input name="depart"
+                         id="depart"
+                         type="datetime-local"
+                         class="form-control"
+                         ng-model="rt.current.tronc_queteur.depart"
+                           ng-max="rt.current.tronc_queteur.retour"
+                         required/>
+                  <span class="help-block" ng-show="retourTroncForm.depart.$error.required">Required</span>
+                </div>
 
               </div>
             </div>

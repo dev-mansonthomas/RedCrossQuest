@@ -90,7 +90,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
     return $response;
 
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("error while getting point_quete of ul with id $ulId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
     throw $e;
@@ -119,7 +119,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
 
     $pointQueteDBService->update($pointQueteEntity, $ulId, $roleId);
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while updating point quete", array('decodedToken'=>$decodedToken, "Exception"=>$e, "pointQueteEntity"=>$pointQueteEntity));
     throw $e;
@@ -149,7 +149,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $respo
 
     $response->getBody()->write(json_encode($pointQuete));
   }
-  catch(Exception $e)
+  catch(\Exception $e)
   {
     $this->logger->addError("Error while creating a new PointQuete", array('decodedToken'=>$decodedToken, "Exception"=>$e, "pointQueteEntity"=>$pointQueteEntity));
     throw $e;

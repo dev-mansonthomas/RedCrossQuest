@@ -35,7 +35,7 @@
     {
       $log.debug("search with type:'"+vm.searchType+"' "+vm.admin_ul_id);
 
-      var searchParams = {'q':vm.search, 'searchType':vm.searchType,  'active':vm.active};
+      var searchParams = {'q':vm.search, 'searchType':vm.searchType,  'active':vm.active,  'rcqUser':vm.rcqUser};
 
 
       if(vm.currentUserRole === '9' && vm.admin_ul_id !== null)

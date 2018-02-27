@@ -90,16 +90,18 @@ AND
    * @param int     $ulId         Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param boolean $active       search only active or inactive queteurs
    * @param boolean $benevoleOnly Retourne que les bénévoles et anciens bénévoles (usecase: recherche de référent pour le queteur d'un jour)
+   * @param boolean $rcqUser      return only RCQ users
    * @return QueteurEntity[] list of Queteurs
    * @throws PDOException if the query fails to execute on the server
    *
    */
-  public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId, bool $active, bool $benevoleOnly)
+  public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId, bool $active, bool $benevoleOnly, bool $rcqUser)
   {
     $parameters      = ["ul_id" => $ulId];
     $querySQL        = "";
     $secteurSQL      = "";
     $benevoleOnlySQL = "";
+    $rcqUserSQL      = "";
 
 
     if($query !== null)
@@ -126,6 +128,13 @@ AND q.`secteur` = :secteur
     {// only secours/social/ former volunteer
       $benevoleOnlySQL="
 AND q.`secteur` IN (1,2,4)
+";
+    }
+
+    if($rcqUser == 1)
+    {
+      $rcqUserSQL="
+AND EXISTS (SELECT queteur_id from users where queteur_id = q.id)      
 ";
     }
 
@@ -164,6 +173,7 @@ AND    q.active= :active
 $querySQL 
 $secteurSQL 
 $benevoleOnlySQL
+$rcqUserSQL
 AND  
 (
   (
@@ -218,6 +228,7 @@ AND    q.ul_id = u.id
 AND    q.active= :active
 $querySQL 
 $secteurSQL 
+$rcqUserSQL
 AND     q.id = tq.queteur_id
 AND    tq.id = (	
 			SELECT tqq.id 
@@ -261,6 +272,7 @@ AND    q.ul_id = u.id
 AND    q.active= :active
 $querySQL 
 $secteurSQL 
+$rcqUserSQL
 AND     q.id = tq.queteur_id
 AND    tq.id = (	
 			SELECT tqq.id 
@@ -288,6 +300,8 @@ ORDER BY q.last_name ASC
         $sql = $sqlSearchAll;
     }
 
+
+    //$this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql));
     $stmt   = $this->db->prepare($sql);
     $parameters["active"] = $active;
 
