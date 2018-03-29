@@ -50,7 +50,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     $searchType   = array_key_exists('searchType'    ,$params)?$params['searchType'   ]:null;
     $secteur      = array_key_exists('secteur'       ,$params)?$params['secteur'      ]:null;
     $active       = array_key_exists('active'        ,$params)?$params['active'       ]:1;
-    $rcqUser      = array_key_exists('rcqUser'       ,$params)?$params['rcqUser'      ]:1;
+    $rcqUser      = array_key_exists('rcqUser'       ,$params)?$params['rcqUser'      ]:0;
     $benevoleOnly = array_key_exists('$benevoleOnly' ,$params)?$params['$benevoleOnly']:0;
 
 

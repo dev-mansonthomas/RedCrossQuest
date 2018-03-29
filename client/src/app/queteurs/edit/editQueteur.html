@@ -211,7 +211,7 @@
           <div class="form-group">
             <label for="notes" class="control-label">Notes</label>
             <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="queteur.current.notes"></textarea>
-            <span class="help-block">Info importantes sur le quêteurs, ex: Allergie, Diabétique, Asmathique, Contraintes horaires etc...</span>
+            <span class="help-block">Info importantes sur le quêteurs, ex: Contraintes horaires etc...</span>
           </div>
         </div>
       </div>
@@ -396,11 +396,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="tq in queteur.current.troncs_queteur">
-                <th><a ng-href="/#!/tronc_queteur/edit/{{::tq.id}}">{{::tq.id}}</a></th>
-                <td>{{::tq.depart_theorique.toDate() | date : 'dd/MM/yyyy HH:mm:ss'}} </td>
-                <td>{{::tq.depart.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
-                <td>{{::tq.retour.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+              <tr ng-repeat="tq in queteur.current.troncs_queteur"">
+                <th><a ng-href="/#!/tronc_queteur/edit/{{::tq.id}}">{{::tq.id}}</a>&nbsp;<span class="glyphicon glyphicon-bin" aria-hidden="true" style="color:grey;" ng-show="tq.deleted"></span></th>
+                <td>{{::tq.depart_theorique}} </td>
+                <td>{{::tq.depart}}</td>
+                <td>{{::tq.retour}}</td>
                 <td>{{::tq.duration.toFixed(2)}}</td>
                 <td>{{::tq.point_quete_id}}</td>
                 <td>

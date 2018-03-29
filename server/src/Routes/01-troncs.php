@@ -21,13 +21,11 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
   try
   {
     $ulId = (int)$args['ul-id'];
-    $this->logger->addInfo("Troncs list, UL ID '".$ulId."''");
 
     $troncDBService = new TroncDBService($this->db, $this->logger);
     $params = $request->getQueryParams();
 
     $active     = array_key_exists('active'     ,$params)?$params['active'    ]:1;
-    
 
     if(array_key_exists('q',$params))
     {

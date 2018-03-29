@@ -4,7 +4,8 @@
   <div class="panel panel-primary" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important">
     <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h2>Comptage de Tronc</h2>
       <span ng-show="tq.current.tronc_queteur.id">
-        N° {{tq.current.tronc.id}} -
+        ID {{tq.current.tronc_queteur.id}} -
+        Tronc N° {{tq.current.tronc.id}} -
            {{tq.current.tronc_queteur.queteur.first_name}}
            {{tq.current.tronc_queteur.queteur.last_name}} -
            {{tq.current.tronc_queteur.queteur.nivol}} -
@@ -15,8 +16,19 @@
 
   <div class="col-md-12" style="padding-left:0px;padding-right:0px; background-color:white;">
 
-    <div class="row jumbotron" style="background-color: orangered" ng-show="tq.current.tronc_queteur.deleted">
+    <div class="row jumbotron" style="background-color: orangered" ng-show="tq.current.tronc_queteur.deleted=='true' || tq.current.tronc_queteur.deleted == true">
       <H2>Attention : Ce tronc est marqué comme supprimé !<br/> <br/>Il n'est pas pris en compte dans les graphiques/statistics</H2>
+    </div>
+
+    <div class="row jumbotron" style="background-color: yellow" ng-show="tq.current.not_same_year == true">
+      <H2>Ce tronc est d'une année <u>ANTÉRIEURE ({{tq.current.year_tronc_queteur}}) !</u><br/> <br/>Vous ne pouvez donc pas le modifier !</H2>
+
+      <span class="help-block">
+        <ul>
+          <li>Si vous vouliez vraiment compter ce tronc, les préparation/départ/retour ont du échoués (ca fait beaucoup d'échec quand même...)</li>
+          <li>Si vous voulez vraiment éditer ce tronc de l'année dernière, <a ng-href="/#!/tronc_queteur/edit/{{tq.current.tronc_queteur.id}}"> cliquez ici </a>, cliquez sur le bouton "Mode Edition Admin" et sauvegarder</li>
+        </ul>
+      </span>
     </div>
 
     <div class="well">
@@ -30,10 +42,10 @@
 
             <qr-scanner-u
               ng-success="tq.qrCodeScanOnSuccess(data)"
-              ng-error="tq.qrCodeScanOnError(error)"
-              ng-video-error="tq.qrCodeScanOnVideoError(error)"
-              width="320"
-              height="200"></qr-scanner-u>
+                ng-error="tq.qrCodeScanOnError(error)"
+          ng-video-error="tq.qrCodeScanOnVideoError(error)"
+                   width="320"
+                  height="200"></qr-scanner-u>
             <span class="help-block" ng-bind="departTronc.decodedData"></span>
           </div>
 
@@ -60,21 +72,16 @@
             <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
           </div>
 
-
-          <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.retour.$invalid}"
-               ng-show="tq.current.tronc_queteur.id && (tq.current.dateRetourNotFilled!=true || tq.current.adminEditMode)">
-            <label for="retour" class="control-label">Horaire Retour Réel</label>
-            <input name="retour"
-                   id="retour"
-                   type="datetime-local"
-                   class="form-control"
-                   ng-model="tq.current.tronc_queteur.retour"
-                   ng-min="tq.current.tronc_queteur.depart"
-                   ng-readonly="(tq.current.readOnlyView || tq.current.fillTronc) && tq.current.adminEditMode == false"
-                   required/>
-            <span class="help-block">Si vous voulez editer l'horaire de retour, aller sur la page <a ng-href="/#!/troncs/retour/{{tq.current.tronc_queteur.id}}">Retour Tronc</a> et n'oubliez pas de cliquer sur le bouton <b>Save</b></span>
-
+          <div class="form-group col-md-4">
+            <label for="point_quete_id" class="control-label">Lieu de Quête</label>
+            <select name="point_quete_id" id="point_quete_id" class="form-control" ng-model="tq.current.tronc_queteur.point_quete_id" required
+                    ng-options="pq.id as tq.getTypeLabel(pq.type)+' - '+ (pq.code!= '' ? pq.code+' - ': '')+pq.name
+                    for
+                    pq in tq.pointsQuete" ng-disabled="tq.current.adminEditMode === false">
+              <option value=""></option>
+            </select>
           </div>
+
 
 
           <!-- ADMIN MODE -->
@@ -88,7 +95,7 @@
             </button>
 
 
-            <div class="form-group" ng-show="tq.current.adminEditMode == true">
+            <div class="form-group" ng-show="tq.current.adminEditMode == true" ng-cloak="">
               <label for="deletedRadio1" class="control-label">Est ce que le tronc marqué comme supprimé ?</label><br/>
               <label class="radio-inline">
                 <input type="radio" name="deleted" id="deletedRadio1" ng-model="tq.current.tronc_queteur.deleted" value="true" ng-required="tq.current.adminEditMode" ng-checked="tq.current.tronc_queteur.deleted===true"
@@ -109,7 +116,7 @@
 
           <!-- FIN ADMIN MODE -->
 
-          <div class='col-md-8' ng-show="tq.current.dateRetourNotFilled" ng-cloak>
+          <div class='col-md-8' ng-show="tq.current.dateRetourNotFilled && tq.current.adminEditMode == false" ng-cloak>
             <div class="alert alert-danger" role="alert">
               L'horaire de retour n'est pas renseigné !
               Avant d'effectuer le comptage, il vous faut renseigner l'horaire de retour sur cette page :
@@ -131,21 +138,89 @@
 
           <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.horaireDepart.$invalid}">
             <label for="horaireDepart" class="control-label">Horaire Départ Réel</label>
-            <input name="horaireDepart" id="horaireDepart" type="datetime-local" class="form-control"
-                   ng-model="tq.current.tronc_queteur.depart" required ng-readonly="tq.current.adminEditMode == false"/>
+            <input name="horaireDepart"
+                   id="horaireDepart"
+                   type="datetime-local"
+                   class="form-control"
+                   ng-model="tq.current.tronc_queteur.depart"
+                   ng-required="tq.current.adminEditMode != true"
+                   ng-readonly="tq.current.adminEditMode == false"/>
             <span class="help-block" ng-show="prepaTroncForm.horaireDepart.$error.required">Required</span>
           </div>
 
-          <div class="form-group col-md-4">
-            <label for="point_quete_id" class="control-label">Lieu de Quête</label>
-            <select name="point_quete_id" id="point_quete_id" class="form-control" ng-model="tq.current.tronc_queteur.point_quete_id" required
-                    ng-options="pq.id as tq.getTypeLabel(pq.type)+' - '+ pq.code+' - '+pq.name
-                    for
-                    pq in tq.pointsQuete" ng-disabled="tq.current.adminEditMode == false">
-              <option value=""></option>
-            </select>
+          <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.retour.$invalid}"
+               ng-show="tq.current.tronc_queteur.id && (tq.current.dateRetourNotFilled!=true || tq.current.adminEditMode)">
+            <label for="retour" class="control-label">Horaire Retour Réel</label>
+            <input name="retour"
+                   id="retour"
+                   type="datetime-local"
+                   class="form-control"
+                   ng-model="tq.current.tronc_queteur.retour"
+                   ng-min="tq.current.tronc_queteur.depart"
+                   ng-readonly="(tq.current.readOnlyView || tq.current.fillTronc) && tq.current.adminEditMode == false"
+                   ng-required="!tq.current.adminEditMode"/>
+            <span class="help-block" ng-show="tq.current.adminEditMode == false">Si vous voulez editer l'horaire de retour, aller sur la page <a ng-href="/#!/troncs/retour/{{tq.current.tronc_queteur.id}}">Retour Tronc</a> et n'oubliez pas de cliquer sur le bouton <b>Save</b></span>
+
           </div>
         </div>
+
+        <div class="row" ng-show="tq.current.adminEditMode == true" ng-cloak="">
+          <div class="form-group col-md-4 col-md-offset-4">
+            <button class="btn btn-danger"
+                       ng-show="tq.current.tronc_queteur.depart!=null && tq.current.tronc_queteur.retour==null"
+                      ng-click="tq.cancelDepart();"
+                    style="width:100%;height:70px;">
+              Annuler le Départ
+            </button>
+            <span class="help-block" ng-show="tq.current.tronc_queteur.depart != null && tq.current.tronc_queteur.retour==null">Cliquez sur ce bouton si le départ a été enregistré par erreur.</span>
+            <span class="help-block" ng-show="tq.current.tronc_queteur.retour!=null">Vous ne pouvez annuler le départ que si le retour n'a pas été enregistré</span>
+          </div>
+          <div class="form-group col-md-4">
+            <button class="btn btn-danger"
+                    ng-show="tq.current.tronc_queteur.retour!=null && tq.current.tronc_queteur.comptage==null"
+                    ng-click="tq.cancelRetour();"
+                    style="width:100%;height:70px;">
+              Annuler le retour
+            </button>
+            <span class="help-block" ng-show="tq.current.tronc_queteur.retour!=null && tq.current.tronc_queteur.comptage==null">Cliquez sur ce bouton si le retour a été enregistré par erreur.</span>
+            <span class="help-block" ng-show="tq.current.tronc_queteur.comptage!=null">Vous ne pouvez annuler le retour si le comptage  a été enregistré (ce qui est le cas ici)</span>
+          </div>
+        </div>
+
+        <div class="row" ng-show="tq.current.adminEditMode == true && tq.current.confirmCancelDepart == true" ng-cloak="">
+          <div class="form-group col-md-4 col-md-offset-4">
+            <button class="btn btn-warning"
+                    ng-click="tq.doCancelDepart();"
+                    style="width:100%;height:70px;">
+              Confirmer l'annulation du départ
+            </button>
+          </div>
+          <div class="form-group col-md-4">
+          <button class="btn btn-info"
+                    ng-click="tq.closeConfirmCancelDepart();"
+                    style="width:100%;height:70px;">
+              Ooups, je me suis trompé
+            </button>
+          </div>
+        </div>
+
+        <div class="row" ng-show="tq.current.adminEditMode == true && tq.current.confirmCancelRetour == true" ng-cloak="">
+          <div class="form-group col-md-4 col-md-offset-2">
+            <button class="btn btn-warning"
+                    ng-click="tq.doCancelRetour();"
+                    style="width:100%;height:70px;">
+              Confirmer l'annulation du retour
+            </button>
+          </div>
+          <div class="form-group col-md-4">
+            <button class="btn btn-info"
+                    ng-click="tq.closeConfirmCancelRetour();"
+                    style="width:100%;height:70px;">
+              Ooups, je me suis trompé
+            </button>
+          </div>
+        </div>
+
 
 
         <div class="row" ng-show="tq.savedSuccessfully">
@@ -502,6 +577,70 @@
           </div>
         </div>
 
+
+        <div class="row" ng-show="tq.current.tronc_queteur.id">
+          <div class="col-md-8 col-md-offset-2">
+            <label for="notesPreparation" class="control-label">Notes à la préparation</label>
+            <textarea
+              id="notesPreparation"
+              name="notesPreparation"
+              ng-model="tq.current.tronc_queteur.notes_depart_theorique"
+              class="form-control"
+              disabled
+            ></textarea>
+            <br/>
+          </div>
+        </div>
+
+        <div class="row" ng-show="tq.current.tronc_queteur.id">
+          <div class="col-md-8 col-md-offset-2">
+            <label for="notesRetour" class="control-label">Notes au retour</label>
+            <textarea
+              id="notesRetour"
+              name="notesRetour"
+              ng-model="tq.current.tronc_queteur.notes_retour"
+              class="form-control"
+              disabled
+            ></textarea>
+            <br/>
+          </div>
+        </div>
+
+
+        <div class="row" ng-show="tq.current.tronc_queteur.id">
+          <div class="col-md-8 col-md-offset-2">
+            <label for="notesComptage" class="control-label">Notes au comptage</label>
+            <textarea
+              id="notesComptage"
+              name="notesComptage"
+              ng-model="tq.current.tronc_queteur.notes_retour_comptage_pieces"
+              class="form-control"
+              ng-maxlength="500"
+              ng-trim="true"
+              ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+            ></textarea>
+            <br/>
+          </div>
+        </div>
+
+
+        <div class="row" ng-show="tq.current.tronc_queteur.id && tq.current.readOnlyView">
+          <div class="col-md-8 col-md-offset-2">
+            <label for="notesUpdate" class="control-label">Notes de mise à jour par l'admin</label>
+            <textarea
+              id="notesUpdate"
+              name="notesUpdate"
+              ng-model="tq.current.tronc_queteur.notes_update"
+              class="form-control"
+              ng-maxlength="500"
+              ng-trim="true"
+              ng-readonly="tq.current.readOnlyView  && !tq.current.adminEditMode"
+            ></textarea>
+            <br/>
+          </div>
+        </div>
+
+
         <div class="row">
           <div class="form-group col-md-2 col-md-offset-10">
             <input type="submit"
@@ -509,7 +648,7 @@
                    value="Save"
                    ng-disabled="troncQueteurForm.$invalid"
                    ng-click="tq.save()"
-                   ng-if="tq.current.tronc_queteur.tronc_id > 0 && !tq.current.readOnlyView  || tq.current.adminEditMode == true"
+                   ng-if="tq.current.tronc_queteur.tronc_id > 0 && !tq.current.readOnlyView && tq.current.not_same_year!=true  || tq.current.adminEditMode == true"
             />
             <a ng-click="tq.back();" class="btn btn-link">Cancel</a>
           </div>
@@ -527,6 +666,7 @@
 
           </div>
         </div>
+
         <div class="row" ng-show="tq.current.confirmInputValues">
           <div class="form-group col-md-2 col-md-offset-5">
             <button type="button"

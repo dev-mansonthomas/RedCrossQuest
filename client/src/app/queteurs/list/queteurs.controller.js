@@ -11,12 +11,12 @@
 
   /** @ngInject */
   function QueteursController($scope, $log, $localStorage,
-                              QueteurResource, UniteLocaleResource)
+                              QueteurResource, UniteLocaleResource, DateTimeHandlingService)
   {
     var vm = this;
-    vm.searchType = 0;
-
-    vm.currentUserRole=$localStorage.currentUser.roleId;
+    vm.searchType       = 0;
+    vm.rcqUser          = 0;
+    vm.currentUserRole  = $localStorage.currentUser.roleId;
 
     vm.typeBenevoleList=[
       {id:1,label:'Action Sociale'},
@@ -27,9 +27,26 @@
       {id:6,label:'Spécial'}
     ];
 
+    vm.handleDate = function (theDate)
+    {
+      return DateTimeHandlingService.handleServerDate(theDate).stringVersion;
+    };
+
+    function handleSearchResults(results)
+    {
+      vm.list = results;
+      var dataLength = vm.list.length;
+
+      for(var i=0;i<dataLength;i++)
+      {
+        vm.list[i].depart            = vm.handleDate(vm.list[i].depart);
+        vm.list[i].depart_theorique  = vm.handleDate(vm.list[i].depart_theorique);
+        vm.list[i].retour            = vm.handleDate(vm.list[i].retour);
+      }
+    }
 
     //initial search with type 0 (all queteur)
-    vm.list = QueteurResource.query({'searchType':0});
+    QueteurResource.query({'searchType':0}).$promise.then(handleSearchResults);
 
     vm.doSearch=function()
     {
@@ -43,8 +60,9 @@
         searchParams['admin_ul_id']=vm.admin_ul_id;
       }
 
-      vm.list = QueteurResource.query(searchParams);
+      QueteurResource.query(searchParams).$promise.then(handleSearchResults);
     };
+
 
 
     /**

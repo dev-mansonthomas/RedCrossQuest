@@ -4,6 +4,7 @@ namespace RedCrossQuest\DBService;
 
 use Carbon\Carbon;
 
+use RedCrossQuest\Entity\TroncInUseEntity;
 use \RedCrossQuest\Entity\TroncQueteurEntity;
 use PDOException;
 
@@ -270,7 +271,8 @@ t.`id`                ,
  `foreign_coins`      ,
  `foreign_banknote`   ,
  `don_cheque`         ,
- `don_creditcard`  
+ `don_creditcard`     ,
+ `deleted`
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.queteur_id = :queteur_id
@@ -370,6 +372,84 @@ AND    q.ul_id              = :ul_id
 
 
   /**
+   * Cancel tronc departure.
+   * Update one tronc and set 'depart' to null if retour is null as well
+   *
+   * @param TroncQueteurEntity $tq The tronc to update
+   * @param  int $ulId the Id of the Unite Local
+   * @param  int $userId id of the user performing the operation
+   * @return int the number of row updated
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function cancelDepart(TroncQueteurEntity $tq, int $ulId, int $userId)
+  {
+    $sql = "
+UPDATE `tronc_queteur`           tq
+      INNER JOIN  queteur         q
+      ON          tq.`queteur_id` = q.id
+SET    `depart`             = null,
+       `last_update`        = NOW(),
+       `last_update_user_id`= :userId            
+WHERE tq.`id`               = :id
+AND   tq.`retour`           is null
+AND    q.`ul_id`            = :ul_id
+";
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+      "userId"            => $userId,
+      "id"                => $tq->id,
+      "ul_id"             => $ulId
+    ]);
+
+    $numberOfUpdateRows = $stmt->rowCount();
+
+    $stmt->closeCursor();
+
+    return $numberOfUpdateRows;
+  }
+
+  /**
+   * Cancel tronc retour.
+   * Update one tronc and set 'retour' to null if comptage is null as well
+   *
+   * @param TroncQueteurEntity $tq The tronc to update
+   * @param  int $ulId the Id of the Unite Local
+   * @param  int $userId id of the user performing the operation
+   * @return int the number of row updated
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function cancelRetour(TroncQueteurEntity $tq, int $ulId, int $userId)
+  {
+    $sql = "
+UPDATE `tronc_queteur`           tq
+      INNER JOIN  queteur         q
+      ON          tq.`queteur_id` = q.id
+SET    `retour`             = null,
+       `last_update`        = NOW(),
+       `last_update_user_id`= :userId            
+WHERE tq.`id`               = :id
+AND   tq.`comptage`         is null
+AND    q.`ul_id`            = :ul_id
+";
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+      "userId"            => $userId,
+      "id"                => $tq->id,
+      "ul_id"             => $ulId
+    ]);
+
+    $numberOfUpdateRows = $stmt->rowCount();
+
+    $stmt->closeCursor();
+
+    return $numberOfUpdateRows;
+  }
+
+  /**
    * Update one tronc
    *
    * @param TroncQueteurEntity $tq The tronc to update
@@ -387,7 +467,8 @@ UPDATE `tronc_queteur`            tq
       ON          tq.queteur_id = q.id
 SET    `retour`               = :retour,
        `last_update`          = NOW(),
-       `last_update_user_id`  = :userId            
+       `last_update_user_id`  = :userId,
+       `notes_retour`         = :notes_retour            
 WHERE tq.`id`                 = :id
 AND    q.ul_id                = :ul_id
 ";
@@ -397,7 +478,8 @@ AND    q.ul_id                = :ul_id
       "retour"            => $tq->retour->format('Y-m-d H:i:s'),
       "userId"            => $userId,
       "id"                => $tq->id,
-      "ul_id"             => $ulId
+      "ul_id"             => $ulId,
+      "notes_retour"      => $tq->notes_retour
     ]);
 
 
@@ -420,13 +502,33 @@ AND    q.ul_id                = :ul_id
    */
     public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId)
     {
+
+      if(!$tq->isMoneyFilled())
+      {// si pas de données sur l'argent, on ne fait pas l'update
+        return;
+      }
+
       $comptage = "";
       if(!$adminMode)
       {// do not overwrite the comptage date in admin mode
         $comptage = " `comptage`                     = NOW(),";
       }
+      else
+      {// admin mode
+        if($tq->isMoneyFilled())
+        {
+          //coalesce: si comptage est null, alors prends now()
+          // cela permet de Si les données argent sont rempli
+          //  qu'il n'y a pas de date de comptage de rempli, alors on met a jour la date de comptage.
+          //  S'il y avait déjà une date, on ne la met pas à jour (il y a last_update et la table d'historisation)
+          //
+          $comptage = " `comptage`                     = COALESCE(comptage, NOW()),";
+        }
+      }
 
-      //$this->logger->debug("Saving coins adminMode='$adminMode' $comptage", [$tq]);
+      $this->logger->warning($tq->notes_retour_comptage_pieces);
+
+
       $sql = "
 UPDATE `tronc_queteur`            tq
       INNER JOIN  queteur         q
@@ -449,11 +551,11 @@ SET
  `cent1`                        = :cent1  ,           
  `foreign_coins`                = :foreign_coins,     
  `foreign_banknote`             = :foreign_banknote,  
- `notes_retour_comptage_pieces` = :notes,
  `don_cheque`                   = :don_cheque,
 $comptage
  `last_update`                  = NOW(),
- `last_update_user_id`          = :userId            
+ `last_update_user_id`          = :userId,
+ `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces            
 WHERE tq.`id`                   = :id
 AND    q.ul_id                  = :ul_id
 ";
@@ -477,14 +579,13 @@ AND    q.ul_id                  = :ul_id
         "cent1"             => $tq->cent1  ,
         "foreign_coins"     => $tq->foreign_coins,
         "foreign_banknote"  => $tq->foreign_banknote,
-        "notes"             => $tq->notes,
         "don_cheque"        => $tq->don_cheque,
         "userId"            => $userId,
         "id"                => $tq->id,
-        "ul_id"             => $ulId
+        "ul_id"             => $ulId,
+        "notes_retour_comptage_pieces" => $tq->notes_retour_comptage_pieces
       ]);
 
-      //$this->logger->warning($stmt->rowCount());
       $stmt->closeCursor();
     }
 
@@ -506,7 +607,6 @@ AND    q.ul_id                  = :ul_id
       $comptage = " `comptage`                     = NOW(),";
     }
 
-    //$this->logger->debug("Saving Credit Card adminMode='$adminMode'", [$tq]);
     $sql = "
 UPDATE `tronc_queteur`            tq
       INNER JOIN  queteur         q
@@ -516,7 +616,8 @@ SET
  `notes_retour_comptage_pieces` = :notes,
 $comptage
  `last_update`         = NOW(),
- `last_update_user_id` = :userId 
+ `last_update_user_id` = :userId,
+ `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces
 WHERE tq.`id`          = :id
 AND    q.ul_id         = :ul_id
 ";
@@ -527,10 +628,10 @@ AND    q.ul_id         = :ul_id
       "notes"             => $tq->notes,
       "userId"            => $userId,
       "id"                => $tq->id,
-      "ul_id"             => $ulId
+      "ul_id"             => $ulId,
+      "notes_retour_comptage_pieces" => $tq->notes_retour_comptage_pieces
     ]);
 
-    //$this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
 
   }
@@ -550,9 +651,9 @@ AND    q.ul_id         = :ul_id
 
     //$this->logger->debug("Admin Updates dates, point_quete_id or deleted ", [$tq]);
     $sql = "
-UPDATE `tronc_queteur`            tq
-      INNER JOIN  queteur         q
-      ON          tq.queteur_id = q.id
+UPDATE `tronc_queteur`             tq
+      INNER JOIN  `queteur`         q
+      ON          tq.`queteur_id` = q.`id`
 SET
   `depart_theorique`   = :depart_theorique,
   `depart`             = :depart,
@@ -560,7 +661,8 @@ SET
   `point_quete_id`     = :point_quete_id,
   `deleted`            = :deleted,
   `last_update`        = NOW(),
-  `last_update_user_id`= :userId 
+  `last_update_user_id`= :userId,
+  `notes_update`       = :notes_update
 WHERE tq.`id`          = :id
 AND    q.ul_id         = :ul_id
 ";
@@ -574,7 +676,8 @@ AND    q.ul_id         = :ul_id
       "deleted"           => $tq->deleted?1:0,
       "userId"            => $userId,
       "id"                => $tq->id,
-      "ul_id"             => $ulId
+      "ul_id"             => $ulId,
+      "notes_update"      => $tq->notes_update
     ]);
 
     //$this->logger->warning($stmt->rowCount());
@@ -591,22 +694,21 @@ AND    q.ul_id         = :ul_id
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
    * @throws \Exception if the query fails
-   * @return int the primary key of the new tronc
+   * @return object check the code ;)
    * @throws PDOException if the query fails to execute on the server
    * @throws \Exception if the tronc is already in use
    */
   public function insert(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
-
-
     $checkTroncResult = $this->checkTroncNotAlreadyInUse($tq->tronc_id, $ulId);
+    $returnInfo = (object) [
+      'troncInUse'     => $checkTroncResult!= null,
+      'troncInUseInfo' => $checkTroncResult
+      ];
 
-    if($checkTroncResult != null)
+    if($checkTroncResult == null)
     {
-      throw new \Exception($checkTroncResult);
-    }
-
-    $sql = "
+      $sql = "
 INSERT INTO `tronc_queteur`
 ( 
    `queteur_id`, 
@@ -614,7 +716,8 @@ INSERT INTO `tronc_queteur`
    `tronc_id`, 
    `depart_theorique`,
    `last_update`,
-   `last_update_user_id`       
+   `last_update_user_id`,
+   `notes_depart_theorique`
 )
 VALUES
 (
@@ -623,32 +726,37 @@ VALUES
   :tronc_id, 
   :depart_theorique,
   NOW(),
-  :userId
+  :userId,
+  :notes_depart_theorique
 )
 ";
 
-    $stmt = $this->db->prepare($sql);
+      $stmt = $this->db->prepare($sql);
 
-    $this->db->beginTransaction();
-    $stmt->execute([
-      "queteur_id"        => $tq->queteur_id,
-      "point_quete_id"    => $tq->point_quete_id,
-      "tronc_id"          => $tq->tronc_id,
-      "depart_theorique"  => $tq->depart_theorique->format('Y-m-d H:i:s'),
-      "userId"            => $userId
-    ]);
+      $this->db->beginTransaction();
+      $stmt->execute([
+        "queteur_id"            => $tq->queteur_id,
+        "point_quete_id"        => $tq->point_quete_id,
+        "tronc_id"              => $tq->tronc_id,
+        "depart_theorique"      => $tq->depart_theorique->format('Y-m-d H:i:s'),
+        "userId"                => $userId,
+        "notes_depart_theorique"=> $tq->notes_depart_theorique
+      ]);
 
-    $stmt->closeCursor();
+      $stmt->closeCursor();
 
-    $stmt = $this->db->query("select last_insert_id()");
-    $row  = $stmt->fetch();
+      $stmt = $this->db->query("select last_insert_id()");
+      $row  = $stmt->fetch();
 
-    $lastInsertId = $row['last_insert_id()'];
-    //$this->logger->info('$lastInsertId:', [$lastInsertId]) ;
+      $lastInsertId = $row['last_insert_id()'];
 
-    $stmt->closeCursor();
-    $this->db->commit();
-    return $lastInsertId;
+      $stmt->closeCursor();
+      $this->db->commit();
+      $returnInfo->lastInsertId=$lastInsertId;
+    }
+
+
+    return $returnInfo;
   }
 
 
@@ -657,7 +765,7 @@ VALUES
    * with a tronc_queteur row for which the dateDepart or dateRetour is null (which means it should be in use)
    * @param int $troncId the Id of the tronc that we want to check
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @return string an html table to be displayed in case the tronc is already in use
+   * @return array Array of TroncInUseEntity that contains informations of the existing use of the tronc
    * @throws PDOException if the query fails to execute on the server
    */
   public function checkTroncNotAlreadyInUse(int $troncId, int $ulId)
@@ -665,7 +773,8 @@ VALUES
     $sql = "
 SELECT 	
 tq.id, 
-tq.queteur_id, 
+tq.queteur_id,
+tq.tronc_id,  
 tq.depart_theorique, 
 tq.depart, 
 q.first_name, 
@@ -674,8 +783,8 @@ q.email,
 q.mobile, 
 q.nivol
 FROM 	tronc_queteur tq,
-      queteur q
-WHERE 	q.ul_id       = :ul_id
+      queteur        q
+WHERE 	 q.ul_id      = :ul_id
 AND     tq.deleted    = 0
 AND     tq.tronc_id   = :tronc_id
 AND     tq.queteur_id = q.id
@@ -694,56 +803,18 @@ AND    (tq.depart     is null OR
 
     if( $rowCount > 0)
     {
-      $results = "
-<div class=\"panel panel-default\">
-<!-- Default panel contents -->
-  <div class=\"panel-heading\">Ce tronc est comptabilisé comme étant en cours d'utilisation <b>".$rowCount."</b> fois</div>
-
-  <table class='table'>
-  <thead>
-    <tr>
-      <th>tronc_queteur ID</th>
-      <th>départ Théorique</th>
-      <th>départ</th>
-      <th>queteur id</th>
-      <th>Prénom</th>
-      <th>Nom</th>
-      <th>email</th>
-      <th>mobile</th>
-      <th>nivol</th>
-    </tr>
-   </thead>
-   <tbody>
-    ";
-
+      $existingUseOfTronc = [];
+      $i=0;
       while($row = $stmt->fetch())
       {
-
-        $departTheorique = new Carbon($row['depart_theorique'], 'UTC');
-        $departTheorique->setTimezone('Europe/Paris');
-
-        $results .=  "
-      <tr>
-        <th>".$row['id']."</th>
-        <td>".$departTheorique."</td>
-        <td>".($row['depart']!=null ? (new Carbon($row['depart'], 'UTC'))->setTimezone('Europe/Paris'):null)."</td>
-        <td>".$row['queteur_id']."</td>
-        <td>".$row['first_name']."</td>
-        <td>".$row['last_name']."</td>
-        <td>".$row['email']."</td>
-        <td>".$row['mobile']."</td>
-        <td>".$row['nivol']."</td>
-      </tr>";
+        $existingUseOfTronc[$i++]=new TroncInUseEntity($row);
+      }
+      $stmt->closeCursor();
+      return $existingUseOfTronc;
     }
-      $results .= "
-    </tbody>
-  </table>
-</div>
-";
 
-    }
     $stmt->closeCursor();
-    return $results;
+    return null;// it's ok, no use of tronc
   }
 
 
@@ -766,7 +837,7 @@ AND    (tq.depart     is null OR
 UPDATE            tronc_queteur tq
       INNER JOIN  queteur       q
       ON          tq.queteur_id = q.id
-SET   deleted             = 0,
+SET   deleted             = 1,
       last_update_user_id = :user_id
 WHERE tq.tronc_id = :tronc_id
 AND    q.ul_id    = :ul_id

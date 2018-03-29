@@ -92,14 +92,40 @@
     });
 
 
-    function savedSuccessfully()
+    function savedSuccessfully(returnData)
     {
-      vm.initData();
+      if(returnData.troncInUse == true)
+      {//Tronc is in use
+        vm.current.troncAlreadyInUse=true;
+        vm.current.troncAlreadyInUseInfo=returnData.troncInUseInfo;
 
-      vm.savedSuccessfully=true;
-
-      $timeout(function () { vm.savedSuccessfully=false; }, 10000);
-
+        $uibModal.open({
+          animation  : true,
+          templateUrl: 'myModalContent.html',
+          controller : 'ModalInstanceController',
+          windowClass: 'troncInUse-modal-dialog',
+          resolve    : {
+            errorOnSave: function ()
+            {
+              return vm.current.troncAlreadyInUseInfo;
+            },
+            troncId:function()
+            {
+              return $scope.pt.current.tronc.id;
+            },
+            saveFunction : function()
+            {
+              return vm.save;
+            }
+          }
+        });
+      }
+      else
+      {
+        vm.initData();
+        vm.savedSuccessfully=true;
+        $timeout(function () { vm.savedSuccessfully=false; }, 10000);
+      }
     }
 
     function onSaveError(errorMessage)
@@ -107,30 +133,6 @@
 
       $log.error(errorMessage);
       vm.errorOnSave = errorMessage.data.exception[0].message;
-
-
-      $uibModal.open({
-        animation  : true,
-        templateUrl: 'myModalContent.html',
-        controller : 'ModalInstanceController',
-        size       : 'lg',
-        resolve    : {
-          errorOnSave: function () {
-            return vm.errorOnSave;
-          },
-          troncId:function()
-          {
-            return $scope.pt.current.tronc.id;
-          },
-          saveFunction : function(){
-            return vm.save;
-          }
-        }
-      });
-
-
-
-
 
     }
     /***
@@ -142,10 +144,11 @@
       $log.debug(vm.current);
 
       var troncQueteur = new TroncQueteurResource();
-      troncQueteur.queteur_id       = $scope.pt.current.queteur.id;
-      troncQueteur.tronc_id         = $scope.pt.current.tronc.id;
-      troncQueteur.point_quete_id   = $scope.pt.current.lieuDeQuete;
-      troncQueteur.depart_theorique = $scope.pt.current.horaireDepartTheorique;
+      troncQueteur.queteur_id             = $scope.pt.current.queteur.id;
+      troncQueteur.tronc_id               = $scope.pt.current.tronc.id;
+      troncQueteur.point_quete_id         = $scope.pt.current.lieuDeQuete;
+      troncQueteur.depart_theorique       = $scope.pt.current.horaireDepartTheorique;
+      troncQueteur.notes_depart_theorique = $scope.pt.current.notes_depart_theorique;
 
       troncQueteur.$save(savedSuccessfully, onSaveError);
       $log.debug("Saved completed");
@@ -306,9 +309,16 @@
     .module('redCrossQuestClient')
     .controller('ModalInstanceController',
       function ($scope, $uibModalInstance, $log,
-                TroncQueteurResource, errorOnSave, troncId, saveFunction)
+                TroncQueteurResource, errorOnSave, troncId, saveFunction, DateTimeHandlingService)
   {
-    $scope.message=errorOnSave;
+
+    for(var i=0, counti=errorOnSave.length;i<counti;i++)
+    {
+      errorOnSave[i].depart           = DateTimeHandlingService.handleServerDate(errorOnSave[i].depart          ).stringVersion;
+      errorOnSave[i].depart_theorique = DateTimeHandlingService.handleServerDate(errorOnSave[i].depart_theorique).stringVersion;
+    }
+
+    $scope.troncInfos=errorOnSave;
 
 
     $scope.deleteNonReturnedTronc = function ()
@@ -317,7 +327,9 @@
       {
         saveFunction();
         $uibModalInstance.close();
-      }, function(reason){
+      },
+        function(reason)
+      {
         alert(reason);
       });
     };

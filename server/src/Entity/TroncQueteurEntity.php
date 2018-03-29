@@ -52,7 +52,11 @@ class TroncQueteurEntity extends Entity
 
   public $foreign_coins    ;
   public $foreign_banknote ;
-  public $notes            ;
+
+  public $notes_depart_theorique      ;
+  public $notes_retour                ;
+  public $notes_retour_comptage_pieces;
+  public $notes_update                ;
 
   //only used when getting tronc_queteur for a tronc
   public $last_name        ;
@@ -83,7 +87,7 @@ class TroncQueteurEntity extends Entity
       $this->getString('tronc_id'         , $data);
       $this->getDate  ('depart_theorique' , $data);
 
-      $this->logger->addInfo("Date before/after",array("before"=>$data['depart_theorique'],"after"=>$this->depart_theorique));
+      //$this->logger->addInfo("Date before/after",array("before"=>$data['depart_theorique'],"after"=>$this->depart_theorique));
 
       $this->getDate  ('depart'           , $data);
       $this->getDate  ('retour'           , $data);
@@ -114,10 +118,10 @@ class TroncQueteurEntity extends Entity
       $this->getString('foreign_coins'    , $data);
       $this->getString('foreign_banknote' , $data);
 
-      $this->getString('notes_depart_theorique' , $data);
-      $this->getString('notes_retour'           , $data);
-      $this->getString('notes_retour_comptage_pieces', $data);
-      $this->getString('notes_update'           , $data);
+      $this->getString('notes_depart_theorique'       , $data);
+      $this->getString('notes_retour'                 , $data);
+      $this->getString('notes_retour_comptage_pieces' , $data);
+      $this->getString('notes_update'                 , $data);
 
       $this->getString('last_name'              , $data);
       $this->getString('first_name'             , $data);
@@ -126,7 +130,42 @@ class TroncQueteurEntity extends Entity
 
       $this->getString('tronc_queteur_id'       , $data);
       $this->getDate  ('insert_date'            , $data);
+    }
 
+  /***
+   * check if some money information has been filled
+   * @return bool true if at least one bill or one coin or don_cheque or don_cb is > 0
+   */
+    function isMoneyFilled()
+    {
+      return
+        $this->checkPositive($this->euro500       ) ||
+        $this->checkPositive($this->euro200       ) ||
+        $this->checkPositive($this->euro100       ) ||
+        $this->checkPositive($this->euro50        ) ||
+        $this->checkPositive($this->euro20        ) ||
+        $this->checkPositive($this->euro10        ) ||
+        $this->checkPositive($this->euro5         ) ||
+        $this->checkPositive($this->euro2         ) ||
+        $this->checkPositive($this->euro1         ) ||
+        $this->checkPositive($this->cents50       ) ||
+        $this->checkPositive($this->cents20       ) ||
+        $this->checkPositive($this->cents10       ) ||
+        $this->checkPositive($this->cents5        ) ||
+        $this->checkPositive($this->cents2        ) ||
+        $this->checkPositive($this->cent1         ) ||
+        $this->checkPositive($this->don_cheque    ) ||
+        $this->checkPositive($this->don_creditcard) ||
+        $this->checkPositive($this->foreign_coins ) ||
+        $this->checkPositive($this->foreign_banknote );
+    }
 
+  /***
+   * @param $value float the value to check
+   * @return bool true if the value is > 0
+   */
+    function checkPositive($value)
+    {
+      return $value != null && $value > 0;
     }
 }

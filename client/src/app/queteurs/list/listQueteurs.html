@@ -94,10 +94,10 @@
           <div class="form-group" ng-cloak ng-show="q.currentUserRole>=4">
             <label for="rcqUserRadio1" class="control-label">Utilisateur RCQ ?</label><br/>
             <label class="radio-inline">
-              <input type="radio" name="active" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
+              <input type="radio" name="rcqUserRadio" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
             </label>
             <label class="radio-inline">
-              <input type="radio" name="active" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==null"> Non
+              <input type="radio" name="rcqUserRadio" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==0"> Non
             </label>
           </div>
         </div>
@@ -127,10 +127,10 @@
             <div class="contact-phone">{{::queteur.point_quete_name}}</div>
 
             <div class="queteur-status">
-              <abbr title="Pas parti, départ théorique à {{:: queteur.depart_theorique.date}}"><span class="glyphicon glyphicon-home"       aria-hidden="true" style="color:mediumblue" ng-show="queteur.depart_theorique && !queteur.retour && !queteur.depart"></span></abbr>
-              <abbr title="En train de quêter, départ à {{::  queteur.depart.date          }}"><span class="glyphicon glyphicon-globe"      aria-hidden="true" style="color:#00DD00"    ng-show="!queteur.retour &&  queteur.depart"></span></abbr>
-              <abbr title="Rentré de quête à {{::             queteur.retour.date          }}"><span class="glyphicon glyphicon-ok-sign"    aria-hidden="true" style="color:purple"     ng-show="queteur.depart_theorique && queteur.retour && queteur.depart"></span></abbr>
-              <abbr title="Non Actif"                                                         ><span class="glyphicon glyphicon-minus-sign" aria-hidden="true" style="color:black"      ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart"></span></abbr>
+              <div ng-show=" queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-home"        aria-hidden="true" style="color:darkblue" ></span> Pas encore parti, départ théorique à {{:: queteur.depart_theorique}}</div>
+              <div ng-show="!queteur.retour           &&  queteur.depart"                   ><span class="glyphicon glyphicon-coins"       aria-hidden="true" style="color:gold"       ></span> En train de quêter, départ à {{::  queteur.depart          }}</div>
+              <div ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart"><span class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="color:purple"     ></span> Rentré de quête à {{::queteur.retour }}</div>
+              <div ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:grey"       ></span> Non Actif</div>
 
 
 

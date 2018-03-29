@@ -94,11 +94,19 @@
         vm.current.fillTronc=true;
       }
 
+      if(vm.current.tronc_queteur.depart_theorique !== null)
+      {
+        var dt=DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique);
+        vm.current.tronc_queteur.depart_theoriqueStr = dt.stringVersion;
+        vm.current.tronc_queteur.depart_theorique    = dt.dateInLocalTimeZone;
+      }
+
       if(vm.current.tronc_queteur.depart !== null)
       {
         vm.current.tronc_queteur.dateDepartIsMissing=false;
-        vm.current.tronc_queteur.departStr = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
-        vm.current.tronc_queteur.depart    = DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
+        var depart = DateTimeHandlingService.handleServerDate(tronc_queteur.depart);
+        vm.current.tronc_queteur.departStr = depart.stringVersion;
+        vm.current.tronc_queteur.depart    = depart.dateInLocalTimeZone;
       }
       else
       {

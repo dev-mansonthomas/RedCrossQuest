@@ -12,34 +12,39 @@
   /** @ngInject */
   function TroncQueteurController($scope, $log, $routeParams, $timeout, $localStorage, // $anchorScroll, $location,
                                   TroncResource, TroncQueteurResource, TroncQueteurHistoryResource, PointQueteResource,
-                                  QRDecodeService,
+                                  QRDecodeService, moment,
                                   DateTimeHandlingService)
   {
     var vm = this;
-    vm.current = {};
+
     vm.onlyNumbers = /^[0-9]{1,3}$/;
     vm.cbFormat    = /^[0-9]+(\.[0-9]{1,2})?$/;
 
     vm.currentUserRole=$localStorage.currentUser.roleId;
     vm.currentUlMode  =$localStorage.currentUser.ulMode;
 
-    vm.current.readOnlyView  = false;
-    vm.current.adminEditMode = false;
+    var tronc_queteur_id = $routeParams.id;
+
+    vm.loadData=function()
+    {
+      vm.current = {};
+      vm.current.readOnlyView  = false;
+      vm.current.adminEditMode = false;
+
+      if (angular.isDefined(tronc_queteur_id) &&  tronc_queteur_id !== 0)
+      {
+        $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
+        TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
+        TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur_id}).$promise.then(handleTroncQueteurHistory);
+      }
+    };
+    vm.loadData();
+
+
     vm.activateAdminEditMode = function()
     {
       vm.current.adminEditMode=true;
     };
-
-
-    var tronc_queteur_id = $routeParams.id;
-
-    if (angular.isDefined(tronc_queteur_id) &&  tronc_queteur_id !== 0)
-    {
-      $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
-      TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
-      TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur_id}).$promise.then(handleTroncQueteurHistory);
-    }
-
 
     vm.getTypeLabel=function(id)
     {
@@ -122,6 +127,39 @@
 
     };
 
+
+    vm.cancelDepart=function()
+    {
+      vm.current.confirmCancelDepart=true;
+    };
+
+    vm.closeConfirmCancelDepart=function()
+    {
+      vm.current.confirmCancelDepart=false;
+    };
+
+
+    vm.doCancelDepart=function()
+    {
+      vm.current.tronc_queteur.$cancelDepart(vm.loadData, onSaveError);
+    };
+    vm.doCancelRetour=function()
+    {
+      vm.current.tronc_queteur.$cancelRetour(vm.loadData, onSaveError);
+    };
+
+    vm.cancelRetour=function()
+    {
+      vm.current.confirmCancelRetour=true;
+    };
+
+    vm.closeConfirmCancelRetour=function()
+    {
+      vm.current.confirmCancelRetour=false;
+    };
+
+
+
     vm.confirmSave = function ()
     {
       vm.current.overrideWarning=true;
@@ -130,8 +168,6 @@
 
     vm.save = function save()
     {
-      $log.debug("Saving the number of coins");
-      $log.debug(vm.current.tronc_queteur);
 
       if(vm.checkInputValues() && vm.current.overrideWarning !== true)
       {
@@ -170,8 +206,9 @@
     {
       $log.debug(error);
       vm.errorWhileSaving=true;
-      vm.errorWhileSavingDetails=error;
+      vm.errorWhileSavingDetails=JSON.stringify(error);
     }
+
     function savedSuccessfully()
     {
       if(vm.current.adminEditMode && vm.currentUserRole >= 4)
@@ -186,9 +223,16 @@
 
     function savedSuccessfullyActions()
     {
-      vm.current = {};
-      vm.savedSuccessfully=true;
-      $timeout(function () { vm.savedSuccessfully=false; }, 10000);
+      if(vm.current.adminEditMode == true)
+      {
+        vm.loadData();
+      }
+      else
+      {
+        vm.current = {};
+        vm.savedSuccessfully=true;
+        $timeout(function () { vm.savedSuccessfully=false; }, 10000);
+      }
     }
 
 
@@ -239,8 +283,19 @@
 
       if(vm.current.tronc_queteur.depart_theorique !== null)
       {
-        vm.current.tronc_queteur.depart_theoriqueStr =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).stringVersion;
-        vm.current.tronc_queteur.depart_theorique    =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).dateInLocalTimeZone;
+        var dateDepartTheorique =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique);
+        vm.current.tronc_queteur.depart_theoriqueStr =  dateDepartTheorique.stringVersion;
+        vm.current.tronc_queteur.depart_theorique    =  dateDepartTheorique.dateInLocalTimeZone;
+
+
+        var currentYear      = moment().format('YYYY');
+        var troncQueteurYear = dateDepartTheorique.dateInLocalTimeZoneMoment.format('YYYY');
+
+        if(currentYear !== troncQueteurYear)
+        {
+          vm.current.not_same_year = true;
+          vm.current.year_tronc_queteur=troncQueteurYear;
+        }
       }
 
       if(vm.current.tronc_queteur.retour === null)
@@ -254,7 +309,7 @@
         //if the return date is non null, then it's time to fill the number of coins
         vm.current.fillTronc=true;
       }
-      $log.debug(tronc_queteur);
+      //$log.debug(tronc_queteur);
 
       //this code is supposed to scroll the page to the form to set the coins
       //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again
@@ -266,9 +321,7 @@
 
     function handleTroncQueteurHistory(tronc_queteur_array)
     {
-      var counti = tronc_queteur_array.length;
-      var i=0;
-      for(i=0;i<counti;i++)
+      for(var i=0, counti = tronc_queteur_array.length;i<counti;i++)
       {
         tronc_queteur_array[i].insert_date      = DateTimeHandlingService.handleServerDate(tronc_queteur_array[i].insert_date     ).stringVersion;
         tronc_queteur_array[i].depart_theorique = DateTimeHandlingService.handleServerDate(tronc_queteur_array[i].depart_theorique).stringVersion;
@@ -330,6 +383,13 @@
     {
       var displayConfirmDialog=false;
       vm.current.confirmInputValuesMessage="";
+
+      if(vm.current.tronc_queteur.don_cheque>0)
+      {
+        displayConfirmDialog=true;
+        vm.current.confirmInputValuesMessage+="<li>Un chèque a été saisie</li>";
+      }
+
       if(vm.current.tronc_queteur.euro5 > 20)
       {
         displayConfirmDialog=true;

@@ -12,7 +12,7 @@
   /** @ngInject */
   function QueteurEditController($scope, $log, $routeParams, $location, $localStorage, $timeout,
                                  QueteurResource, UserResource, TroncQueteurResource, UniteLocaleResource,
-                                 moment, Upload)
+                                 moment, Upload, DateTimeHandlingService)
   {
     var vm = this;
 
@@ -59,11 +59,7 @@
 
     vm.handleDate = function (theDate)
     {
-      if(theDate ===null)
-        return null;
-
-      var dateAsString = theDate.date;
-      return moment( dateAsString.substring (0, dateAsString.length  - 3 ),"YYYY-MM-DD  HH:mm:ss.SSS");
+      return DateTimeHandlingService.handleServerDate(theDate).stringVersion;
     };
 
 
@@ -122,7 +118,7 @@
 
               if(data[i].retour !==null && data[i].depart !== null)
               {
-                data[i].duration = moment.duration(data[i].retour.diff(data[i].depart)).asMinutes();
+                data[i].duration = moment.duration(moment(data[i].retour).diff(moment(data[i].depart))).asMinutes();
               }
             }
 

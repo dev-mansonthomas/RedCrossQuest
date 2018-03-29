@@ -1,6 +1,7 @@
 <acme-navbar></acme-navbar>
 <div class="container"  data-ng-controller="PreparationTroncController as pt">
 
+  <style>.troncInUse-modal-dialog .modal-dialog {width: 90%;} </style>
 
 <!-- Modal window in case of error -->
   <script type="text/ng-template" id="myModalContent.html">
@@ -8,14 +9,49 @@
       <h3 class="modal-title">Erreur lors de la sauvegarde de la préparation du tronc!</h3>
     </div>
     <div class="modal-body">
-      <ng-bind-html  ng-bind-html="message"></ng-bind-html>
 
-      {{troncId}}
+      <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Ce tronc est comptabilisé comme étant en cours d'utilisation <b>{{troncInfos.length}}</b> fois</div>
+
+        <table class='table'>
+          <thead>
+          <tr>
+            <th>tronc_queteur ID</th>
+            <th>départ Théorique</th>
+            <th>départ</th>
+            <th>tronc id</th>
+            <th>queteur id</th>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>email</th>
+            <th>mobile</th>
+            <th>nivol</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="info in troncInfos">
+            <th>{{info.id}}</th>
+            <td>{{info.depart_theorique}}</td>
+            <td>{{info.depart}}</td>
+            <td>{{info.tronc_id}}</td>
+            <td>{{info.queteur_id}}</td>
+            <td>{{info.first_name}}</td>
+            <td>{{info.last_name}}</td>
+            <td>{{info.email}}</td>
+            <td>{{info.mobile}}</td>
+            <td>{{info.nivol}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+
 
     </div>
     <div class="modal-footer">
       <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()">Supprimer les Anciens Troncs et sauver la préparation du tronc courant</button>
-      <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le tronc au bon quêteur (ou contacter Thomas)</button>
+      <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le tronc au bon quêteur</button>
     </div>
   </script>
 
@@ -118,6 +154,21 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-8 col-md-offset-4">
+            <label for="notesPreparation" class="control-label">Notes à la préparation</label>
+            <textarea
+                 id="notesPreparation"
+               name="notesPreparation"
+           ng-model="pt.current.notes_depart_theorique"
+              class="form-control"
+       ng-maxlength="500"
+            ng-trim="true"
+            ></textarea>
+            <br/>
+          </div>
+        </div>
+
         <div class="row">
           <div class="pull-right">
             <div class="form-group">

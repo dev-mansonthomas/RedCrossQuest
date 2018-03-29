@@ -30,10 +30,13 @@ $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($reques
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
+
     $ulId    = (int)$args['ul-id'];
     //c'est bien le troncId qu'on passe ici, on va supprimer tout les tronc_queteur qui ont ce tronc_id et départ ou retour à nulle
     $troncId = (int)$args['id'];
     $userId  = (int)$decodedToken->getUid ();
+
+    $this->logger->addError("user $userId of UL $ulId is deleting tronc id=$troncId");
 
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
     $troncQueteurDBService->deleteNonReturnedTroncQueteur($troncId, $ulId, $userId);
@@ -89,18 +92,36 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       }
       elseif ($action =="saveCoins")
       {
-        //$this->logger->debug("Saving Coins", array('tronc_queteur'=>$tq, 'adminMode'=>$adminMode,'decodedToken'=>$decodedToken));
         $troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
       }
       elseif ($action =="saveCreditCard")
       {
-        //$this->logger->debug("Saving CreditCard", array('tronc_queteur'=>$tq, 'adminMode'=>$adminMode,'decodedToken'=>$decodedToken));
         $troncQueteurDBService->updateCreditCardCount($tq, $adminMode, $ulId, $userId);
       }
       elseif ($action =="saveAsAdmin")
       {
-        //$this->logger->debug("Saving As Admin", array('tronc_queteur'=>$tq, 'adminMode'=>$adminMode,'decodedToken'=>$decodedToken));
         $troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
+      }
+      elseif ($action =="cancelDepart")
+      {
+        $numberOfRowUpdated = $troncQueteurDBService->cancelDepart($tq, $ulId, $userId);
+        if($numberOfRowUpdated != 0 )
+        {
+          throw new \Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null");
+        }
+      }
+      elseif ($action =="cancelRetour")
+      {
+        $numberOfRowUpdated = $troncQueteurDBService->cancelRetour($tq, $ulId, $userId);
+        if($numberOfRowUpdated != 0 )
+        {
+          throw new \Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that comptage is not null");
+        }
+
+      }
+      else
+      {
+        throw new \Exception("Unkown action '$action'");
       }
     }
   }
@@ -181,10 +202,10 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
     else
     { // préparation du tronc
 
-      $input  = $request->getParsedBody();
-      $tq = new TroncQueteurEntity($input, $this->logger);
+      $input = $request->getParsedBody();
+      $tq    = new TroncQueteurEntity($input, $this->logger);
 
-      $troncQueteurDBService->insert($tq, $ulId, $userId);
+      $response->getBody()->write(json_encode($troncQueteurDBService->insert($tq, $ulId, $userId)));
 
       return $response;
     }

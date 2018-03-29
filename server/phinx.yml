@@ -32,3 +32,12 @@ environments:
         pass: 'CRFCRF'
         port: 3306
         charset: utf8
+
+    local-testing:
+        adapter: mysql
+        host: 127.0.0.1
+        name: rcq-test
+        user: root
+        pass: 'CRFCRF'
+        port: 3306
+        charset: utf8

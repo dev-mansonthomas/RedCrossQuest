@@ -104,8 +104,6 @@ LIMIT 1
     $stmt = $this->db->prepare($sql);
     $stmt->execute([$nivol]);
 
-    //$this->logger->addInfo( "queryResult=$queryResult, $nivol, ".$stmt->rowCount());
-
     $count = $stmt->rowCount();
 
     if($count == 1)
@@ -161,8 +159,6 @@ LIMIT 1
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);
-
-    //$this->logger->addInfo( "queryResult=$queryResult, queteurId=$queteurId, ulId=$ulId, count=".$stmt->rowCount());
 
     $count = $stmt->rowCount();
 

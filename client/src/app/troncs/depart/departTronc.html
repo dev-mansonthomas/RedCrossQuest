@@ -47,7 +47,7 @@
             <div class="form-group" ng-show="dt.current.tronc_queteur.id>0">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
               <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="dt.current.tronc_queteur.point_quete.id" disabled
-                      ng-options="pq.id as pq.code+' - '+pq.name
+                      ng-options="pq.id as dt.getTypeLabel(pq.type)+' - '+ (pq.code!= '' ? pq.code+' - ': '')+pq.name
                       for
                       pq in dt.pointsQuete">
               </select>

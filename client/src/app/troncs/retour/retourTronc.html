@@ -4,8 +4,9 @@
 
   <div class="panel panel-primary"  style="background-color: #5bc0de!important;border-color:#5bc0de!important;">
     <div class="panel-heading" style="background-color: #5bc0de!important;border-color:#5bc0de!important;"><h2>Retour Tronc</h2>
-      <span ng-show="rt.current.tronc">
-        N° {{rt.current.tronc.id}} -
+      <span ng-show="rt.current.tronc_queteur.id">
+        ID {{rt.current.tronc_queteur.id}} -
+  Tronc N° {{rt.current.tronc.id}} -
            {{rt.current.tronc_queteur.queteur.first_name}}
            {{rt.current.tronc_queteur.queteur.last_name}} -
            {{rt.current.tronc_queteur.queteur.nivol}} -
@@ -81,7 +82,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-8 col-md-offset-4">
                   <div class="alert alert-info" role="alert" style="text-align: center;vertical-align: middle;">
                     <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" style="font-size:40px;color:green;"></span>
                     N'oubliez pas de cliquer sur le bouton <b>"Save"</b>
@@ -91,14 +92,6 @@
             </div>
           </div>
 
-
-
-          <div class="row" >
-            <div class="form-group col-md-2 col-md-offset-10">
-              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid || rt.current.tronc_queteur.dateDepartIsMissing === true && rt.current.tronc_queteur.depart.getHours() == 0 && rt.current.tronc_queteur.depart.getMinutes() == 0" />
-              <a  ng-click="rt.back();" class="btn btn-link">Cancel</a>
-            </div>
-          </div>
 
           <div class="row" ng-show="rt.savedSuccessfully">
             <div class="col-md-8 col-md-offset-2">
@@ -125,22 +118,61 @@
                 </ul>
 
                 <div class="form-group" ng-class="{'has-error':retourTroncForm.depart.$invalid}">
-                  <label for="depart" class="control-label">Horaire Départ Réele</label>
+                  <label for="depart" class="control-label">Horaire Départ Réelle</label>
                   <input name="depart"
-                         id="depart"
+                           id="depart"
                          type="datetime-local"
-                         class="form-control"
-                         ng-model="rt.current.tronc_queteur.depart"
-                           ng-max="rt.current.tronc_queteur.retour"
-                         required/>
+                        class="form-control"
+                     ng-model="rt.current.tronc_queteur.depart"
+                       ng-min="rt.current.tronc_queteur.depart_theorique"
+                       ng-max="rt.current.tronc_queteur.retour"
+                  ng-required="rt.current.tronc_queteur.dateDepartIsMissing === true"/>
+
                   <span class="help-block" ng-show="retourTroncForm.depart.$error.required">Required</span>
+
+                  <span class="help-block">Le départ doit être après l'heure de départ théorique : {{rt.current.tronc_queteur.depart_theoriqueStr}}<br/>
+                  Le départ théorique peut être modifié par l'administrateur local (quêteur->recherche du quêteur (nivol:{{rt.current.tronc_queteur.queteur.nivol}})->selection du tronc (id:{{rt.current.tronc_queteur.id}})->mode admin</span>
                 </div>
 
               </div>
             </div>
           </div>
 
+          <div class="row" ng-show="rt.current.tronc_queteur.id">
+            <div class="col-md-8 col-md-offset-2">
+              <label for="notesPreparation" class="control-label">Notes à la préparation</label>
+              <textarea
+                id="notesPreparation"
+                name="notesPreparation"
+                ng-model="rt.current.tronc_queteur.notes_depart_theorique"
+                class="form-control"
+                disabled
+              ></textarea>
+              <br/>
+            </div>
+          </div>
 
+          <div class="row" ng-show="rt.current.tronc_queteur.id">
+            <div class="col-md-8 col-md-offset-2">
+              <label for="notesRetour" class="control-label">Notes au retour</label>
+              <textarea
+                id="notesRetour"
+                name="notesRetour"
+                ng-model="rt.current.tronc_queteur.notes_retour"
+                class="form-control"
+                ng-maxlength="500"
+                ng-trim="true"
+              ></textarea>
+              <br/>
+            </div>
+          </div>
+
+          <div class="row" >
+            <div class="form-group col-md-2 col-md-offset-10">
+              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid || rt.current.tronc_queteur.dateDepartIsMissing === true && rt.current.tronc_queteur.depart.getHours() == 0 && rt.current.tronc_queteur.depart.getMinutes() == 0" />
+              <a  ng-click="rt.back();" class="btn btn-link">Cancel</a>
+            </div>
+          </div>
 
         </form>
       </div>

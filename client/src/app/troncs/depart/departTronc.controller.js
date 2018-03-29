@@ -82,6 +82,18 @@
     };
 
 
+    vm.getTypeLabel=function(id)
+    {
+      if(id===1)
+        return 'Voie Publique';
+      else if(id===2)
+        return 'Pieton';
+      else if(id===3)
+        return 'Boutique';
+      else
+        return 'Base UL';
+    };
+
 
     //This watch changes on dt.current.tronc variable to update the troncId field
     $scope.$watch('dt.current.tronc', function(newValue/*, oldValue*/)

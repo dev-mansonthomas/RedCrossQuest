@@ -78,6 +78,18 @@ angular.module('redCrossQuestClient').factory('TroncQueteurResource', function (
           action: 'saveAsAdmin'
         }
       },
+      cancelRetour: {
+        method: 'POST',
+        params: {
+          action: 'cancelRetour'
+        }
+      },
+      cancelDepart: {
+        method: 'POST',
+        params: {
+          action: 'cancelDepart'
+        }
+      },
       getTroncsOfQueteur: {
         method: 'GET',
         isArray: true,
