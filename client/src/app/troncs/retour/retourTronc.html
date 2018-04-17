@@ -102,6 +102,29 @@
             </div>
           </div>
 
+          <div class="row" ng-hide="rt.checkDeltaDepartRetourIsCorrect()">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: left;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rt.initForm();"><span aria-hidden="true">&times;</span></button>
+                <span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:40px;color:red;"></span>
+                La date de retour et la date de départ sont séparrées <b>de plus de 24 heures</b><br/>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="row" ng-show="rt.current.tronc_queteur.troncFromPreviousYear">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: left;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rt.initForm();"><span aria-hidden="true">&times;</span></button>
+                <span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:40px;color:red;"></span>
+                Le tronc N°<strong>{{rt.current.tronc.id}}</strong> de
+                <strong>{{rt.current.tronc_queteur.queteur.first_name}}
+                  {{rt.current.tronc_queteur.queteur.last_name}}</strong> est un tronc de l'année {{rt.current.tronc_queteur.troncFromPreviousYearYEAR}}!<br/>
+              </div>
+            </div>
+          </div>
           <div class="row" ng-show="rt.current.tronc_queteur.dateDepartIsMissing === true">
             <div class="col-md-8 col-md-offset-2">
               <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: left;">
@@ -167,9 +190,16 @@
             </div>
           </div>
 
+
           <div class="row" >
             <div class="form-group col-md-2 col-md-offset-10">
-              <input type="submit" class="btn btn-primary" value="Save" ng-disabled="retourTroncForm.$invalid || rt.current.tronc_queteur.dateDepartIsMissing === true && rt.current.tronc_queteur.depart.getHours() == 0 && rt.current.tronc_queteur.depart.getMinutes() == 0" />
+              <input type="submit"
+                     class="btn btn-primary"
+                     value="Save"
+                     ng-disabled="retourTroncForm.$invalid ||
+                     rt.current.tronc_queteur.dateDepartIsMissing === true && rt.current.tronc_queteur.depart.getHours() == 0 && rt.current.tronc_queteur.depart.getMinutes() == 0 ||
+                     rt.current.tronc_queteur.troncFromPreviousYear ||
+                     !rt.checkDeltaDepartRetourIsCorrect()" />
               <a  ng-click="rt.back();" class="btn btn-link">Cancel</a>
             </div>
           </div>

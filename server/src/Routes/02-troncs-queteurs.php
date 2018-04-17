@@ -6,6 +6,9 @@
  * Time: 18:35
  */
 
+
+use Carbon\Carbon;
+
 use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 use \RedCrossQuest\DBService\TroncQueteurDBService;
 use \RedCrossQuest\DBService\QueteurDBService     ;
@@ -146,6 +149,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
  */
 $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
 {
+  $this->logger->warn("TroncQueteur POST");
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
@@ -159,6 +163,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
     {
       $action   = $params['action'  ];
       $tronc_id = $params['tronc_id'];
+      $roleId   = (int)$args['role-id'];
 
       $troncQueteurBusinessService = new TroncQueteurBusinessService( $this->logger,
         $troncQueteurDBService,
@@ -168,26 +173,34 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
       );
 
       if($action == "getTroncQueteurForTroncIdAndSetDepart")
-      {
-        $tq = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId);
+      {// départ du tronc
+        $this->logger->warn("TroncQueteur POST DEPART");
+        $tq = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
 
-        // check if the tronc_queteur is in the correct state
-        // Sometime the preparation is not done, so we fetch a previous tronc_queteur fully filled (return date, coins & bills data)
-        if($tq->retour !== null)
+        if($tq->depart_theorique->year != (new Carbon())->year)
         {
-          $tq->troncQueteurIsInAnIncorrectState=true;
+          $tq->troncFromPreviousYear=true;
         }
         else
         {
-          if($tq->depart == null)
+          // check if the tronc_queteur is in the correct state
+          // Sometime the preparation is not done, so we fetch a previous tronc_queteur fully filled (return date, coins & bills data)
+          if($tq->retour !== null)
           {
-            $departDate = $troncQueteurDBService->setDepartToNow($tq->id, $ulId, $userId);
-            $tq->depart = $departDate;
+            $tq->troncQueteurIsInAnIncorrectState=true;
           }
           else
           {
-            $tq->departAlreadyRegistered=true;
-            //$this->logger->warn("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it", array('decodedToken'=>$decodedToken));
+            if($tq->depart == null)
+            {
+              $departDate = $troncQueteurDBService->setDepartToNow($tq->id, $ulId, $userId);
+              $tq->depart = $departDate;
+            }
+            else
+            {
+              $tq->departAlreadyRegistered=true;
+              //$this->logger->warn("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it", array('decodedToken'=>$decodedToken));
+            }
           }
         }
         $response->getBody()->write(json_encode($tq));
@@ -201,11 +214,28 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
     }
     else
     { // préparation du tronc
-
+      $this->logger->warn("TroncQueteur POST PREPARATION");
       $input = $request->getParsedBody();
       $tq    = new TroncQueteurEntity($input, $this->logger);
 
-      $response->getBody()->write(json_encode($troncQueteurDBService->insert($tq, $ulId, $userId)));
+      $insertResponse = $troncQueteurDBService->insert($tq, $ulId, $userId);
+
+      if($insertResponse->troncInUse != true)
+      {//if the tronc is not already in use, the we can save the preparation
+
+        if($tq->preparationAndDepart == true)
+        {//if the user click to Save And perform the depart, we proceed and save the depart
+          $this->logger->warn("TroncQueteur POST PREPARATION DEPART NOW");
+          $troncQueteurDBService->setDepartToNow($insertResponse->lastInsertId, $ulId, $userId);
+        }
+      }
+      else
+      {
+        $this->logger->warn("TroncQueteur POST PREPARATION - TRONC IN USE");
+      }
+
+      //in any case, we return the insert response
+      $response->getBody()->write(json_encode($insertResponse));
 
       return $response;
     }
@@ -227,7 +257,8 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId = (int)$args['ul-id'];
+    $ulId     = (int)$args['ul-id'];
+    $roleId   = (int)$args['role-id'];
 
     $params = $request->getQueryParams();
 
@@ -247,7 +278,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
       {
         //$this->logger->debug("action='getLastTroncQueteurFromTroncId'", array('decodedToken'=>$decodedToken));
         $tronc_id     = $params['tronc_id'];
-        $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId);
+        $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
         $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
         return $response;
       }
@@ -295,6 +326,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
   {
     $ulId           = (int)$args['ul-id'];
     $troncQueteurId = (int)$args['id'];
+    $roleId         = (int)$args['role-id'];
     //$this->logger->debug("Getting tronc_queteur with id '".$troncQueteurId."'", array('decodedToken'=>$decodedToken));
 
     $troncQueteurAction = new TroncQueteurBusinessService($this->logger,
@@ -303,7 +335,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
       new PointQueteDBService  ($this->db, $this->logger),
       new TroncDBService       ($this->db, $this->logger));
 
-    $troncQueteur = $troncQueteurAction->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId);
+    $troncQueteur = $troncQueteurAction->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId, $roleId);
 
     $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
 

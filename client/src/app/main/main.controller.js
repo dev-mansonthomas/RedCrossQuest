@@ -23,6 +23,8 @@
 
     vm.currentUserRole=$localStorage.currentUser.roleId;
 
+    vm.displayInstructions=false;
+
 //TODO : find a way to load once, before any page. (a refresh a point quete, should query this first to get the google maps API key)
     SettingsResource.get().$promise.then(function(settings)
     {

@@ -12,11 +12,13 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use \RedCrossQuest\DBService\UserDBService;
 use \RedCrossQuest\DBService\QueteurDBService;
 use \RedCrossQuest\DBService\UniteLocaleDBService;
+use \RedCrossQuest\DBService\SpotfireAccessDBService;
 
 use \RedCrossQuest\Entity\UserEntity;
 
 include_once("../../src/DBService/UserDBService.php");
 include_once("../../src/DBService/QueteurDBService.php");
+include_once("../../src/DBService/SpotfireAccessDBService.php");
 
 
 /********************************* Authentication ****************************************/
@@ -39,7 +41,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
     $password = trim($request->getParsedBodyParam("password"));
 
     //refusing null, empty, big
-    if($username == null || $password == null ||
+    if($username == null     || $password == null      ||
       strlen($username) == 0 || strlen($password) == 0 ||
       strlen($username) > 10 || strlen($password) > 20)
     {
@@ -52,8 +54,6 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
     $this->logger->addInfo("attempting to login with username='$username' and password size='".strlen($password)."'");
 
     $userDBService        = new UserDBService       ($this->db, $this->logger);
-    $queteurDBService     = new QueteurDBService    ($this->db, $this->logger);
-    $uniteLocaleDBService = new UniteLocaleDBService($this->db, $this->logger);
 
     $user = $userDBService->getUserInfoWithNivol($username);
 
@@ -62,6 +62,11 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
+
+      $spotfireDBService    = new \RedCrossQuest\DBService\SpotfireAccessDBService($this->db, $this->logger);
+      $queteurDBService     = new QueteurDBService    ($this->db, $this->logger);
+      $uniteLocaleDBService = new UniteLocaleDBService($this->db, $this->logger);
+
       $queteur = $queteurDBService    ->getQueteurById    ($user   ->queteur_id);
       $ul      = $uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
 
@@ -73,14 +78,14 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       $issuer         = $settings['jwt'        ]['issuer'        ];
       $audience       = $settings['jwt'        ]['audience'      ];
       $deploymentType = $settings['appSettings']['deploymentType'];
-
+      $sessionLength  = $settings['appSettings']['sessionLength' ];
 
       $token = (new Builder())
         ->setIssuer    ($issuer       ) // Configures the issuer (iss claim)
         ->setAudience  ($audience     ) // Configures the audience (aud claim)
         ->setIssuedAt  (time()        ) // Configures the time that the token was issue (iat claim)
         ->setNotBefore (time()        ) // Configures the time that the token can be used (nbf claim)
-        ->setExpiration(time() + 6*3600 ) // Configures the expiration time of the token (nbf claim)
+        ->setExpiration(time() + $sessionLength * 3600 ) // Configures the expiration time of the token (nbf claim)
         //Business Payload
         ->set          ('username' , $username      )
         ->set          ('id'       , $user->id      )
@@ -97,6 +102,10 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       $response->getBody()->write('{"token":"'.$token.'"}');
 
       $userDBService->registerSuccessfulLogin($user->id);
+
+      //generate a spotfire token at the same time
+      $spotfireDBService->grantAccess($user->id , $queteur->ul_id,   $sessionLength);
+
 
       return $response;
     }

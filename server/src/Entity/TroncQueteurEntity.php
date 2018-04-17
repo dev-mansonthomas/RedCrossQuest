@@ -68,6 +68,8 @@ class TroncQueteurEntity extends Entity
   public $tronc_queteur_id;
   public $insert_date;
 
+  public $preparationAndDepart;
+
   protected $logger;
 
    /**
@@ -130,6 +132,9 @@ class TroncQueteurEntity extends Entity
 
       $this->getString('tronc_queteur_id'       , $data);
       $this->getDate  ('insert_date'            , $data);
+
+      $this->getBoolean('preparationAndDepart'               , $data);
+
     }
 
   /***

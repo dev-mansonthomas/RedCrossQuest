@@ -1,22 +1,120 @@
 <acme-navbar></acme-navbar>
 <div class="container" data-ng-controller="QueteurEditController as queteur">
   <div class="panel panel-primary">
-    <div class="panel-heading">Un Quêteur:  <b><span ng-bind="queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span></b></div>
+    <div class="panel-heading">Un Quêteur:  <b><span ng-bind="queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span> <span ng-bind="queteur.current.nivol"></span></b></div>
   </div>
   <div class="well">
     <form novalidate name="queteurForm">
       <div class="row">
         <div class="col-md-4 col-md-offset-2">
+          <div class="form-group">
+            <label for="secteur" class="control-label">Secteur</label>
+            <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required
+                    ng-options="(r.id+'') as r.label
+                      for
+                      r in queteur.typeBenevoleList"
+
+            >
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group" ng-class="{'has-error':queteurForm.nivol.$invalid}" ng-show="queteur.current.secteur == 1 || queteur.current.secteur == 2 || queteur.current.secteur == 4">
+            <label for="nivol" class="control-label">NIVOL</label>
+            <input     name="nivol"
+                       id="nivol"
+                       class="form-control"
+                       ng-model="queteur.current.nivol"
+                       ng-required="queteur.current.secteur == 1 || queteur.current.secteur == 2 || queteur.current.secteur == 4"
+                       ng-pattern="'[0-9]{3,11}[A-Z]'"
+                       ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+                       ng-change="queteur.searchSimilar();"
+            />
+            <span class="help-block" ng-show="queteurForm.nivol.$invalid">NIVOL : Numéro d'Identifiant VOLontaire.<br/> <sub>Mettre 1000A si inconnu<br/> (mais faites un effort quand même pour le trouver)</sub></span>
+          </div>
+          <div class="form-group" ng-class="{'has-error':queteurForm.referent_volunteer.$invalid}" ng-show="queteur.current.secteur == 3"> <!-- Non Bénévole -->
+            <label for="referent_volunteer" class="control-label">Bénévole Référent</label>
+            <input
+              id="referent_volunteer"
+              name="referent_volunteer"
+              type="text"
+              ng-model="queteur.current.referent_volunteerQueteur"
+              placeholder="Scanner le QRCode de la carte du quêteur"
+              uib-typeahead="queteur as queteur.full_name for queteur in queteur.searchQueteur($viewValue)"
+              typeahead-loading="loadingQueteurs"
+              typeahead-no-results="noResults"
+              typeahead-wait-ms="20"
+              class="form-control"
+              ng-required="queteur.current.secteur == 3"
+              autocomplete="off"
+            />
+            <i   ng-show="loadingQueteurs" class="glyphicon glyphicon-refresh"></i>
+            <div ng-show="noResults">
+              <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
+            </div>
+            <span class="help-block" ng-show="queteurForm.referent_volunteer.$invalid">Indiquer le bénévole qui amène ce quêteur d'un jour<br/><sub>Recherche par nom, prénom, NIVOL</sub> S'il n'y en a pas, mettre le président de l'UL.</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-md-offset-2">
           <div class="form-group" ng-class="{'has-error':queteurForm.first_name.$invalid}">
             <label for="first_name" class="control-label">First name</label>
-            <input name="first_name" id="first_name" class="form-control" ng-model="queteur.current.first_name" required autocomplete="given-name"/>
+            <input
+                name="first_name"
+                id="first_name"
+                class="form-control"
+                ng-model="queteur.current.first_name"
+                required
+                autocomplete="given-name"
+                ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+                ng-change="queteur.searchSimilar();"
+            />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group" ng-class="{'has-error':queteurForm.last_name.$invalid}">
             <label for="last_name" class="control-label">Last name</label>
-            <input name="last_name" id="last_name" class="form-control" ng-model="queteur.current.last_name" required autocomplete="name"/>
+            <input name="last_name"
+                   id="last_name"
+                   class="form-control"
+                   ng-model="queteur.current.last_name"
+                   required
+                   autocomplete="name"
+                   ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
+                   ng-change="queteur.searchSimilar();"
+
+            />
           </div>
+        </div>
+      </div>
+      <div class="row" ng-show="queteur.current.similarQueteurs.length > 0">
+        <div class="panel panel-warning">
+          <div class="panel-heading"><b>Attention aux doublons !</b> Voici les quêteur <u>déjà</u> en base de données et similaire à la saisie, s'il existe déjà ne pas ré-créer un doublon!</div>
+          <table class="table">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Nivol</th>
+              <th>Mobile</th>
+              <th>Email</th>
+              <th>Actif ?</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="sim in queteur.current.similarQueteurs" ng-click="queteur.goToQueteur(sim.id);">
+                <th scope="row">{{sim.id}}</th>
+                <td>{{sim.first_name}}</td>
+                <td>{{sim.last_name}}</td>
+                <td>{{sim.nivol}}</td>
+                <td>{{sim.mobile}}</td>
+                <td>{{sim.email}}</td>
+                <td>{{sim.active == 1 ? 'Oui':'Non'}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div class="row">
@@ -71,15 +169,13 @@
       </div>
       <div class="row">
         <div class="col-md-4 col-md-offset-2">
-          <div class="form-group">
-            <label for="secteur" class="control-label">Secteur</label>
-            <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required
-                    ng-options="(r.id+'') as r.label
-                      for
-                      r in queteur.typeBenevoleList"
-
-            >
-            </select>
+          <div class="form-group" ng-class="{'has-error':queteurForm.mobile.$invalid}">
+            <label for="mobile" class="control-label">Téléphone</label>
+            <div class="input-group">
+              <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;+</span>
+              <input name="mobile" id="mobile" class="form-control"  type="number" ng-model="queteur.current.mobile" required ng-pattern="queteur.current.secteur >= 5? '33[16-79][0-9]{8,8}':'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+            </div>
+            <span class="help-block" ng-show="queteurForm.mobile.$invalid">Format : {{queteur.current.secteur >= 5?'+33[1 ou 6 ou 7 ou 9]01020304':'+33601020304 ou +33701020304'}} <br/><sub>(Ne <b>pas</b> mettre le +). seul les numéros français sont autorisés)</sub><br/>Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain.</span>
           </div>
         </div>
         <div class="col-md-4">
@@ -111,50 +207,6 @@
             <span class="help-block">Recherche par nom, code postal, ville</span>
           </div>
 
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 col-md-offset-2">
-          <div class="form-group" ng-class="{'has-error':queteurForm.mobile.$invalid}">
-            <label for="mobile" class="control-label">Téléphone</label>
-            <div class="input-group">
-              <span class="input-group-addon glyphicon glyphicon-phone-alt" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;+</span>
-              <input name="mobile" id="mobile" class="form-control"  type="number" ng-model="queteur.current.mobile" required ng-pattern="'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
-            </div>
-            <span class="help-block" ng-show="queteurForm.mobile.$invalid">Format : +33601020304 <br/><sub>(Ne <b>pas</b> mettre le +). seul les numéros français sont autorisés)</sub><br/>Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain.</span>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group" ng-class="{'has-error':queteurForm.nivol.$invalid}" ng-show="queteur.current.secteur == 1 || queteur.current.secteur == 2 || queteur.current.secteur == 4">
-            <label for="nivol" class="control-label">NIVOL</label>
-            <input name="nivol" id="nivol" class="form-control"
-                   ng-model="queteur.current.nivol"
-                   ng-required="queteur.current.secteur == 1 || queteur.current.secteur == 2 || queteur.current.secteur == 4"
-                   ng-pattern="'[0-9]{3,11}[A-Z]'"
-            />
-            <span class="help-block" ng-show="queteurForm.nivol.$invalid">NIVOL : Numéro d'Identifiant VOLontaire.<br/> <sub>Mettre 1000A si inconnu<br/> (mais faites un effort quand même pour le trouver)</sub></span>
-          </div>
-          <div class="form-group" ng-class="{'has-error':queteurForm.referent_volunteer.$invalid}" ng-show="queteur.current.secteur == 3"> <!-- Non Bénévole -->
-            <label for="referent_volunteer" class="control-label">Bénévole Référent</label>
-            <input
-              id="referent_volunteer"
-              name="referent_volunteer"
-              type="text"
-              ng-model="queteur.current.referent_volunteerQueteur"
-              placeholder="Scanner le QRCode de la carte du quêteur"
-              uib-typeahead="queteur as queteur.full_name for queteur in queteur.searchQueteur($viewValue)"
-              typeahead-loading="loadingQueteurs"
-              typeahead-no-results="noResults"
-              typeahead-wait-ms="20"
-              class="form-control"
-              ng-required="queteur.current.secteur == 3"
-              autocomplete="off"/>
-            <i   ng-show="loadingQueteurs" class="glyphicon glyphicon-refresh"></i>
-            <div ng-show="noResults">
-              <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
-            </div>
-            <span class="help-block" ng-show="queteurForm.referent_volunteer.$invalid">Indiquer le bénévole qui amène ce quêteur d'un jour<br/><sub>Recherche par nom, prénom, NIVOL</sub> S'il n'y en a pas, mettre le président de l'UL.</span>
-          </div>
         </div>
       </div>
       <div class="row" ng-show="queteur.current.secteur >= 3" style="padding-bottom:15px;">
@@ -206,7 +258,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" ng-show="false">
         <div class="col-md-8 col-md-offset-2">
           <div class="form-group">
             <label for="notes" class="control-label">Notes</label>

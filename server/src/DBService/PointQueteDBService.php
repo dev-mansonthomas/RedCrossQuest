@@ -159,8 +159,18 @@ ORDER by name ASC
    * @return PointQueteEntity  The point quete info
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getPointQueteById(int $point_quete_id, int $ulId)
+  public function getPointQueteById(int $point_quete_id, int $ulId, int $roleId)
   {
+    $parameters = ["point_quete_id" => $point_quete_id];
+    $ulRestriction="";
+    if($roleId < 9)
+    {
+      $ulRestriction = "AND    pq.ul_id = :ul_id";
+
+      $parameters["ul_id"]=$ulId;
+    }
+
+
     $sql = "
 SELECT  pq.`id`,
         pq.`ul_id`,
@@ -181,12 +191,13 @@ SELECT  pq.`id`,
         pq.`time_to_reach`,
         pq.`transport_to_reach`
 FROM `point_quete` AS pq
-WHERE  pq.id    = :point_quete_id
-AND    pq.ul_id = :ul_id";
+WHERE  pq.id    = :point_quete_id 
+$ulRestriction
+";
 
     $stmt = $this->db->prepare($sql);
 
-    $stmt->execute(["point_quete_id" => $point_quete_id, "ul_id" => $ulId]);
+    $stmt->execute($parameters);
 
     $point_quete = new PointQueteEntity($stmt->fetch());
     $stmt->closeCursor();

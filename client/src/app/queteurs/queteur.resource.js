@@ -11,6 +11,14 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function($resou
     }, {
     update: {
       method: 'PUT' // this method issues a PUT request
+    },
+    searchSimilarQueteurs: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        action: 'searchSimilarQueteurs',
+        tronc_id: '@tronc_id'
+      }
     }
   });
 });

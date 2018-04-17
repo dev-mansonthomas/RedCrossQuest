@@ -33,22 +33,22 @@ class TroncQueteurBusinessService
     $this->troncDBService        = $troncDBService;
   }
   
-  public function getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId)
+  public function getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId)
   {
-    $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId );
-    $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById              ($troncQueteur->queteur_id     , $ulId );
-    $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById           ($troncQueteur->point_quete_id , $ulId );
+    $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId, $roleId);
+    $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById              ($troncQueteur->queteur_id     , $ulId, $roleId);
+    $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById           ($troncQueteur->point_quete_id , $ulId, $roleId);
 
     return  $troncQueteur;
   }
 
 
-  public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId )
+  public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId, int $roleId)
   {
-    $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId );
-    $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $ulId );
-    $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById  ($troncQueteur->point_quete_id, $ulId );
-    $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId );
+    $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId, $roleId);
+    $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $ulId, $roleId);
+    $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById  ($troncQueteur->point_quete_id, $ulId, $roleId);
+    $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId, $roleId);
 
     return  $troncQueteur;
   }

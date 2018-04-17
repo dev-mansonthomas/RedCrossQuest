@@ -72,7 +72,7 @@
             <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
           </div>
 
-          <div class="form-group col-md-4">
+          <div class="form-group col-md-4" ng-show="tq.current.tronc_queteur.id > 0">
             <label for="point_quete_id" class="control-label">Lieu de Quête</label>
             <select name="point_quete_id" id="point_quete_id" class="form-control" ng-model="tq.current.tronc_queteur.point_quete_id" required
                     ng-options="pq.id as tq.getTypeLabel(pq.type)+' - '+ (pq.code!= '' ? pq.code+' - ': '')+pq.name

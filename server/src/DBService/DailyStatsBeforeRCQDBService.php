@@ -25,6 +25,7 @@ class DailyStatsBeforeRCQDBService extends DBService
     "2015"=>["2015-05-16", 8], //fin le 24
     "2016"=>["2016-05-28", 8], //fin le 05/06
     "2017"=>["2017-06-10", 8], //fin le 18/06
+    "2018"=>["2018-06-09", 8], //fin le 17/06
 
   ];
 

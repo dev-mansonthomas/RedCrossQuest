@@ -576,4 +576,95 @@ VALUES
     $row = $stmt->fetch();
     return $row['cnt'];
   }
+
+
+  /***
+   * Search for similar queteur as the user is currently typing while creating a new queteur
+   * @param int $ulId id of the unite locale of the connected user
+   * @param string $firstName what's beeing typed in first_name field
+   * @param string $lastName what's beeing typed in last_name field
+   * @param string $nivol what's beeing typed in nivol field
+   * @throws PDOException if the query fails to execute on the server
+   * @return QueteurEntity[]  the list of Queteurs matching the query
+   */
+  public function searchSimilarQueteur(int $ulId, ?string $firstName, ?string $lastName, ?string $nivol)
+  {
+
+
+    $parameters      = ["ul_id" => $ulId];
+    $searchFirstName = "";
+    $searchLastName  = "";
+    $searchNivol     = "";
+    $AND             = "";
+    $numberOfParameters = 0;
+
+    if($firstName != null)
+    {
+      $searchFirstName = "
+q.`first_name` like :first_name
+";
+      $parameters["first_name"] = "%".$firstName."%";
+      $numberOfParameters++;
+    }
+
+    if($lastName != null)
+    {
+      if($numberOfParameters>0)
+      {
+        $AND="OR";
+      }
+
+      $searchLastName = "
+$AND q.`last_name` like :last_name
+";
+      $parameters["last_name"] = "%".$lastName."%";
+      $numberOfParameters++;
+      $AND="";
+    }
+
+    if($nivol != null)
+    {
+      if($numberOfParameters>0)
+      {
+        $AND="OR";
+      }
+
+      $searchNivol = "
+$AND q.`nivol` like :nivol
+";
+      $parameters["nivol"] = "%".$nivol."%";
+    }
+
+    $sql="    
+SELECT  q.`id`,
+        q.`first_name`,
+        q.`last_name`,
+        q.`email`,
+        q.`mobile`,
+        q.`nivol`,
+        q.active
+FROM  `queteur` AS q
+WHERE  q.ul_id    = :ul_id
+AND (
+$searchFirstName
+$searchLastName
+$searchNivol
+)
+";
+
+    $stmt   = $this->db->prepare($sql);
+    $this->logger->addInfo($sql);
+    $this->logger->addInfo(print_r($parameters, true));
+    $stmt->execute($parameters);
+
+    $results = [];
+    $i = 0;
+    while ($row = $stmt->fetch())
+    {
+      $results[$i++] = new QueteurEntity($row);
+    }
+
+    $stmt->closeCursor();
+    return $results;
+  }
 }

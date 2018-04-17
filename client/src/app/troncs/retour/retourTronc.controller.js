@@ -35,7 +35,7 @@
 
 
 
-    function savedSuccessfully()
+    function savedSuccessfullyFunction()
     {
       vm.initForm();
       vm.savedSuccessfully=true;
@@ -99,6 +99,14 @@
         var dt=DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique);
         vm.current.tronc_queteur.depart_theoriqueStr = dt.stringVersion;
         vm.current.tronc_queteur.depart_theorique    = dt.dateInLocalTimeZone;
+
+        if(dt.dateInLocalTimeZoneMoment.year()!== moment().year())
+        {
+          vm.current.tronc_queteur.troncFromPreviousYear=true;
+          vm.current.tronc_queteur.troncFromPreviousYearYEAR=dt.dateInLocalTimeZoneMoment.year();
+        }
+
+
       }
 
       if(vm.current.tronc_queteur.depart !== null)
@@ -123,10 +131,18 @@
         vm.current.tronc_queteur.depart    = newDepartDate;
       }
 
-
-      $log.debug(tronc_queteur);
     }
 
+    vm.checkDeltaDepartRetourIsCorrect=function()
+    {
+      if(vm.current.tronc_queteur && vm.current.tronc_queteur.retour != null)
+      {
+        var retourMoment = moment(vm.current.tronc_queteur.retour);
+        var departMoment = moment(vm.current.tronc_queteur.depart);
+        return moment.duration(retourMoment.diff(departMoment)).as('hours') <= 24;
+      }
+      return true;
+    };
 
     //function used when scanning QR Code or using autocompletion
     function troncDecodedAndFoundInDB (tronc, doNotReassingTronc)
@@ -172,7 +188,7 @@
     vm.save = function save()
     {
       $log.debug("Saving the return date");
-      vm.current.tronc_queteur.$saveReturnDate({dateDepartIsMissing:vm.current.tronc_queteur.dateDepartIsMissing}, savedSuccessfully, onSaveError);
+      vm.current.tronc_queteur.$saveReturnDate({dateDepartIsMissing:vm.current.tronc_queteur.dateDepartIsMissing}, savedSuccessfullyFunction, onSaveError);
     };
 
 

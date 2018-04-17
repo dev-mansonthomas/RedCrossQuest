@@ -18,12 +18,13 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
   $decodedToken = $request->getAttribute('decodedJWT');
   $ulId   = (int)$args['ul-id'];
   $id     = (int)$args['id'   ];
+  $roleId = (int)$args['role-id'];
 
   try
   {
     $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
 
-    $pointQuete = $pointQueteDBService->getPointQueteById($id, $ulId);
+    $pointQuete = $pointQueteDBService->getPointQueteById($id, $ulId, $roleId);
 
     $response->getBody()->write(json_encode($pointQuete));
 

@@ -328,8 +328,6 @@ AND    q.ul_id              = :ul_id
 
     $stmt->closeCursor();
 
-    //$this->logger->info("Depart Tronc $tronc_queteur_id='".$tronc_queteur_id."' with date : '".$currentDate->format('Y-m-d H:i:s')."'', numRows updated : ".$stmt->rowCount());
-
     return $currentDate->setTimezone("Europe/Paris");
 
   }
@@ -708,6 +706,28 @@ AND    q.ul_id         = :ul_id
 
     if($checkTroncResult == null)
     {
+      $queryData =
+      [
+        "queteur_id"            => $tq->queteur_id,
+        "point_quete_id"        => $tq->point_quete_id,
+        "tronc_id"              => $tq->tronc_id,
+        "userId"                => $userId,
+        "notes_depart_theorique"=> $tq->notes_depart_theorique
+      ];
+
+      $departTheoriqueQuery = "";
+
+      if($tq->preparationAndDepart == true)
+      {//if the user click on "Prepart And Depart", then depart_theorique is override by current date
+        $departTheoriqueQuery ="  NOW(),";
+      }
+      else
+      {
+        $departTheoriqueQuery ="  :depart_theorique,";
+        $queryData["depart_theorique"] = $tq->depart_theorique->format('Y-m-d H:i:s');
+      }
+
+
       $sql = "
 INSERT INTO `tronc_queteur`
 ( 
@@ -724,7 +744,7 @@ VALUES
   :queteur_id,
   :point_quete_id, 
   :tronc_id, 
-  :depart_theorique,
+$departTheoriqueQuery
   NOW(),
   :userId,
   :notes_depart_theorique
@@ -734,14 +754,7 @@ VALUES
       $stmt = $this->db->prepare($sql);
 
       $this->db->beginTransaction();
-      $stmt->execute([
-        "queteur_id"            => $tq->queteur_id,
-        "point_quete_id"        => $tq->point_quete_id,
-        "tronc_id"              => $tq->tronc_id,
-        "depart_theorique"      => $tq->depart_theorique->format('Y-m-d H:i:s'),
-        "userId"                => $userId,
-        "notes_depart_theorique"=> $tq->notes_depart_theorique
-      ]);
+      $stmt->execute($queryData);
 
       $stmt->closeCursor();
 

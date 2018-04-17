@@ -28,8 +28,16 @@
     </div>
   </div>
 
+  <div class="row"
+       style="margin-bottom: 10px;"
+       ng-show="main.currentUserRole >= 4 && !(main.setupStatus.queteurIncomplete || main.setupStatus.userIncomplete || main.setupStatus.pointQueteIncomplete || main.setupStatus.dailyStatsIncomplete || main.setupStatus.troncsIncomplete) && !main.displayInstructions">
+    <div class="col-md-2 col-md-offset-4">
+      <button class="btn btn-info" ng-click="main.displayInstructions=true">Afficher les instructions de paramétrage de RCQ</button>
+    </div>
+  </div>
 
-  <div class="panel panel-primary" ng-show="main.currentUserRole >= 4">
+
+  <div class="panel panel-primary" ng-show="main.currentUserRole >= 4 && ((main.setupStatus.queteurIncomplete || main.setupStatus.userIncomplete || main.setupStatus.pointQueteIncomplete || main.setupStatus.dailyStatsIncomplete || main.setupStatus.troncsIncomplete) || main.displayInstructions)">
     <div class="panel-heading">
       <h3 class="panel-title">Bienvenue dans RedCrossQuest ! Avant de commencer l'aventure, un peu de préparation !</h3>
     </div>

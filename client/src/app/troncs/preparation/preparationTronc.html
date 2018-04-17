@@ -65,7 +65,7 @@
 
   <div>
     <div class="well">
-      <form novalidate ng-submit='pt.save();' name="prepaTroncForm">
+      <form novalidate name="prepaTroncForm">
         <div class="row">
           <div class="col-md-4"  style="text-align:center;">
 
@@ -154,7 +154,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" ng-show="pt.current.queteur.id>0  && pt.current.tronc.id > 0">
           <div class="col-md-8 col-md-offset-4">
             <label for="notesPreparation" class="control-label">Notes à la préparation</label>
             <textarea
@@ -170,11 +170,21 @@
         </div>
 
         <div class="row">
-          <div class="pull-right">
-            <div class="form-group">
-              <input type="submit" class="btn btn-primary" value="Sauvegarder" ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed()" />
-              <a ng-href="#/list" class="btn btn-link">Annuler</a>
-            </div>
+          <div class="col-md-3 col-md-offset-5 form-group">
+            <button type="submit"
+                    class="btn btn-warning"
+                    ng-click="pt.save(true);"
+                    ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed()">Préparer et Départ</button>
+            <span class="help-block">C'est l'action exceptionnelle que vous devez utiliser si le tronc n'a pas eu être préparé.</span>
+          </div>
+          <div class="col-md-1">
+          </div>
+          <div class="col-md-3 form-group">
+            <button type="submit"
+                    class="btn btn-warning"
+                    ng-click="pt.save(false);"
+                    ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed()">Sauvegarder la préparation du tronc</button>
+            <span class="help-block">C'est l'action normal que vous devez utiliser 99% du temps</span>
           </div>
         </div>
 

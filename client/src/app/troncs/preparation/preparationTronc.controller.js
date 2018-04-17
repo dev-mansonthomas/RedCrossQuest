@@ -137,8 +137,9 @@
     }
     /***
      * Save a Départ Tronc
+     * if preparationAndDepart is set to true, then it saves the preparation and immediately save the Depart
      * */
-    vm.save = function ()
+    vm.save = function (preparationAndDepart)
     {
       $log.debug("Saved called");
       $log.debug(vm.current);
@@ -149,6 +150,8 @@
       troncQueteur.point_quete_id         = $scope.pt.current.lieuDeQuete;
       troncQueteur.depart_theorique       = $scope.pt.current.horaireDepartTheorique;
       troncQueteur.notes_depart_theorique = $scope.pt.current.notes_depart_theorique;
+
+      troncQueteur.preparationAndDepart   = preparationAndDepart;
 
       troncQueteur.$save(savedSuccessfully, onSaveError);
       $log.debug("Saved completed");

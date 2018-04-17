@@ -299,14 +299,20 @@
 
     /* END SEARCH UNITE LOCALE */
 
+    vm.userSavedSuccessfully=function(user)
+    {
+      vm.current.user=user;
+      vm.savedSuccessfully=true;
+      $timeout(function () { vm.savedSuccessfully=false; }, 5000);
+    };
+
     vm.createUser=function()
     {
       vm.current.user = new UserResource();
       vm.current.user.queteur_id = vm.current.id;
       vm.current.user.nivol      = vm.current.nivol;
 
-      vm.current.user.$save(userSavedSuccessfully, errorWhileSaving);
-
+      vm.current.user.$save(vm.userSavedSuccessfully, errorWhileSaving);
     };
 
     vm.userSave=function()
@@ -316,7 +322,7 @@
       user.active = vm.current.user.active;
       user.role   = vm.current.user.role;
 
-      user.$update(userSavedSuccessfully, errorWhileSaving);
+      user.$update(vm.userSavedSuccessfully, errorWhileSaving);
     };
 
     vm.reinitPassword=function()
@@ -326,19 +332,27 @@
       user.queteur_id   = vm.current.id;
       user.nivol        = vm.current.nivol;
 
-      user.$reInitPassword(userSavedSuccessfully, errorWhileSaving);
+      user.$reInitPassword(vm.userSavedSuccessfully, errorWhileSaving);
     };
 
 
-    function userSavedSuccessfully(user)
+
+
+    vm.searchSimilar=function()
     {
-      vm.current.user=user;
+      if(!vm.current.id)
+      {
+        QueteurResource.searchSimilarQueteurs({ 'first_name': vm.current.first_name,'last_name': vm.current.last_name,'nivol': vm.current.nivol }).$promise.then(function(queteurs)
+        {
+          vm.current.similarQueteurs = queteurs;
+        });
+      }
+    };
 
-      vm.savedSuccessfully=true;
-
-      $timeout(function () { vm.savedSuccessfully=false; }, 5000);
-    }
-
+    vm.goToQueteur=function(queteurId)
+    {
+      $location.path('/queteurs/edit/' + queteurId).replace();
+    };
 
   }
 })();

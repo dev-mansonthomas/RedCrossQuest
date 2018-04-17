@@ -80,7 +80,19 @@
           </div>
         </div>
 
-        <div class="row" ng-show="dt.current.tronc_queteur && dt.savedSuccessfully">
+        <div class="row" ng-show="dt.current.tronc_queteur.troncFromPreviousYear">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-danger">
+              <div class="panel-heading"><b>ATTENTION : </b>Ce tronc a été préparé l'année dernière</div>
+              <div style="margin:25px;">
+                Ce tronc a été préparé pour l'année 2017 !<br/>
+                Veuillez effectuer la préparation de ce tronc et non le départ !
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" ng-show="dt.current.tronc_queteur && dt.savedSuccessfully && !dt.current.tronc_queteur.troncFromPreviousYear">
           <div class="col-md-8 col-md-offset-2">
             <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="dt.initForm();"><span aria-hidden="true">&times;</span></button>

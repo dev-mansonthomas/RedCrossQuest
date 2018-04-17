@@ -24,11 +24,12 @@ return [
 
         ],
         'jwt' => [
-          'secret'   => 'secret-rcq',
-          'issuer'   => 'https://rcq.server.com',
-          'audience' => 'https://rcq.server.com'
+          'secret'        => 'secret-rcq',
+          'issuer'        => 'https://rcq.server.com',
+          'audience'      => 'https://rcq.server.com'
         ],
         'appSettings' => [
+          'sessionLength'   => 6                       ,  // hours
           'appUrl'          => 'http://localhost:3000/',
           'resetPwdPath'    => '#!/resetPassword?key=' ,
           'deploymentType'  => 'D'                     ,   //D:Dev, T:Testing, P:Production,

@@ -24,55 +24,73 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
 {
   $decodedToken = $request->getAttribute('decodedJWT');
 
-  $query        = "";
-  $searchType   = "";
-  $secteur      = "";
-  $active       = "";
-  $rcqUser      = "";
-  $benevoleOnly = "";
+  $params       = $request->getQueryParams();
+  $ulId         = (int)$args['ul-id'];
+  $roleId       = (int)$args['role-id'];
 
-  try
+  $queteurDBService = new QueteurDBService($this->db, $this->logger);
+
+
+  if(array_key_exists('action', $params) && $params['action'] == "searchSimilarQueteurs")
   {
-    $ulId   = (int)$args['ul-id'];
-    $roleId = (int)$args['role-id'];
 
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
-    $params = $request->getQueryParams();
-
-    if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
-    {
-      $adminUlId = $params['admin_ul_id'];
-      //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
-      $ulId = $adminUlId;
-    }
-
-    $query        = array_key_exists('q'             ,$params)?$params['q'            ]:null;
-    $searchType   = array_key_exists('searchType'    ,$params)?$params['searchType'   ]:null;
-    $secteur      = array_key_exists('secteur'       ,$params)?$params['secteur'      ]:null;
-    $active       = array_key_exists('active'        ,$params)?$params['active'       ]:1;
-    $rcqUser      = array_key_exists('rcqUser'       ,$params)?$params['rcqUser'      ]:0;
-    $benevoleOnly = array_key_exists('$benevoleOnly' ,$params)?$params['$benevoleOnly']:0;
+    $firstName  = array_key_exists('first_name', $params)?$params['first_name' ]:null;
+    $lastName   = array_key_exists('last_name' , $params)?$params['last_name'  ]:null;
+    $nivol      = array_key_exists('nivol'     , $params)?$params['nivol'      ]:null;
 
 
-    //$this->logger->addInfo( "Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId", array('decodedToken'=>$decodedToken));
-
-    if($ulId == null || $ulId == '')
-    {
-      $ulId = (int)$decodedToken->getUlId();
-    }
-
-
-    $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser);
-
+    $queteurs = $queteurDBService->searchSimilarQueteur($ulId, $firstName, $lastName, $nivol);
     $response->getBody()->write(json_encode($queteurs));
-
-    return $response;
   }
-  catch(\Exception $e)
+  else
   {
-    $this->logger->addError("error while fetching queteur with the following parameters query=$query, searchType=$searchType, secteur=$secteur, ulId=$ulId, active=$active, benevoleOnly=$benevoleOnly", array('decodedToken'=>$decodedToken, "Exception"=>$e));
-    throw $e;
+    $query        = "";
+    $searchType   = "";
+    $secteur      = "";
+    $active       = "";
+    $rcqUser      = "";
+    $benevoleOnly = "";
+
+    try
+    {
+
+      if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
+      {
+        $adminUlId = $params['admin_ul_id'];
+        //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
+        $ulId = $adminUlId;
+      }
+
+      $query        = array_key_exists('q'             ,$params)?$params['q'            ]:null;
+      $searchType   = array_key_exists('searchType'    ,$params)?$params['searchType'   ]:null;
+      $secteur      = array_key_exists('secteur'       ,$params)?$params['secteur'      ]:null;
+      $active       = array_key_exists('active'        ,$params)?$params['active'       ]:1;
+      $rcqUser      = array_key_exists('rcqUser'       ,$params)?$params['rcqUser'      ]:0;
+      $benevoleOnly = array_key_exists('$benevoleOnly' ,$params)?$params['$benevoleOnly']:0;
+
+
+      //$this->logger->addInfo( "Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId", array('decodedToken'=>$decodedToken));
+
+      if($ulId == null || $ulId == '')
+      {
+        $ulId = (int)$decodedToken->getUlId();
+      }
+
+
+      $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser);
+
+      $response->getBody()->write(json_encode($queteurs));
+
+      return $response;
+    }
+    catch(\Exception $e)
+    {
+      $this->logger->addError("error while fetching queteur with the following parameters query=$query, searchType=$searchType, secteur=$secteur, ulId=$ulId, active=$active, benevoleOnly=$benevoleOnly", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+      throw $e;
+    }
   }
+
+
 
 });
 

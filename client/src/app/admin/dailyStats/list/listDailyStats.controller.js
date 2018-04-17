@@ -67,9 +67,19 @@
       $timeout(function() {
         vm.doSearch();
       }, 500);
-
-
     };
+
+    vm.computeTotal=function()
+    {
+      if(angular.isUndefined(vm.list))
+        return "";
+      var total = 0;
+      for(var i=0; i < vm.list.length; i++)
+      {
+        total +=vm.list[i].amount;
+      }
+      return total;
+    }
 
   }
 })();
