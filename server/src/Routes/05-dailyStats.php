@@ -59,7 +59,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
  * Update amount of money collected for one day of one year of the current Unite Locale
  *
  */
-$app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $response, $args)
+$app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -85,7 +85,7 @@ $app->put('/{role-id:[5-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
 /**
  * Creation of all days for a year for an UL)
  */
-$app->post('/{role-id:[5-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
