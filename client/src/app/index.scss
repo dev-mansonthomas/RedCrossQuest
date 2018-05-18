@@ -56,6 +56,96 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
 {
   font-size:20px;
 }
+
+.goal_partial_amount
+{
+  margin-left:8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
+.tronc-queteur-print
+{
+  display:none;
+}
+
+@media print
+{
+ .tronc-queteur
+ {
+   display:none;
+ }
+
+ .tronc-queteur-print
+ {
+   display:block;
+   margin:20px;
+   text-align: right;
+
+ }
+
+  .tronc-queteur-print table
+  {
+    width:490px;
+    border:2px solid silver;
+  }
+
+
+  .tronc-queteur-print table thead tr:nth-child(1)
+  {
+    font-size: larger;
+    font-weight:bolder;
+    border:2px solid silver;
+  }
+  .tronc-queteur-print table thead tr:nth-child(2)
+  {
+    border:2px solid silver;
+  }
+
+  .tronc-queteur-print table thead tr:nth-child(1) th, .tronc-queteur-print table thead tr:nth-child(2) td
+  {
+    padding:6px;
+  }
+
+  .tronc-queteur-print table tbody tr:nth-child(1)
+  {
+    font-weight:bold;
+    border:2px solid silver;
+  }
+
+  .tronc-queteur-print table tbody td:nth-child(1)
+  {
+    width:160px;
+  }
+  .tronc-queteur-print table tbody td:nth-child(2)
+  {
+    width:160px;
+  }
+
+  .tronc-queteur-print table tbody tr
+  {
+    border:1px solid silver;
+  }
+
+  .tronc-queteur-print table th, .tronc-queteur-print table td
+  {
+    margin:4px;
+  }
+  .tronc-queteur-print td:nth-child(even), .tronc-queteur-coins td:nth-child(even)
+  {
+    padding:4px;
+  }
+
+  .tronc-queteur-print td:nth-child(odd), .tronc-queteur-coins td:nth-child(odd)
+  {
+    padding:4px;
+  }
+  @page {
+    margin: 0.1cm;
+  }
+}
+
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject
  *  all your sass files automatically

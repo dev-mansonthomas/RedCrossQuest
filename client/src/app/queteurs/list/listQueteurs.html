@@ -24,7 +24,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
 
           <div class="form-group">
             <label for="searchTypeRadio1" class="control-label">Type de Recherche :</label><br/>
@@ -35,11 +35,11 @@
               <input type="radio" name="searchType" id="searchTypeRadio2" ng-model="q.searchType" value="1" required> Non Parti
             </label>
             <label class="radio-inline">
-              <input type="radio" name="searchType" id="searchTypeRadio3" ng-model="q.searchType" value="2" required> Pas Rentré
+              <input type="radio" name="searchType" id="searchTypeRadio3" ng-model="q.searchType" value="2" required> En train de quêter
             </label>
           </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
           <div class="form-group">
             <label for="secteur" class="control-label">Secteur</label>
             <select name="secteur" id="secteur" class="form-control" ng-model="q.secteur" required
@@ -60,7 +60,64 @@
         </div>
         <div class="col-md-4">
 
-          <div class="form-group" ng-show="q.currentUserRole=='9'">
+
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="activeRadio1" class="control-label">Actif:</label><br/>
+            <label class="radio-inline">
+              <input type="radio" name="active" id="activeRadio1" ng-model="q.active" value="1" required ng-checked="q.active==1 || q.active == null"> Actif
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="active" id="activeRadio2" ng-model="q.active" value="0" required> Inactif
+            </label>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <br/>
+          <input type="submit" class="btn btn-primary" value="Rechercher" />
+        </div>
+      </div>
+      <div class="row" ng-show="q.currentUserRole>=4" ng-cloak style="padding-top:10px;margin-top: 10px;border-top:solid 1px silver">
+        <div class="col-md-2">
+          <strong>Section Admin</strong>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="rcqUserRadio1" class="control-label">Utilisateur RCQ ?</label><br/>
+            <label class="radio-inline">
+              <input type="radio" name="rcqUserRadio" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="rcqUserRadio" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==0"> Non
+            </label>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label for="anonymization_token" class="control-label">Jeton d'Anonymisation</label>
+            <input
+              name="anonymization_token"
+              id="anonymization_token"
+              class="form-control"
+              ng-model="q.anonymization_token"
+              placeholder="Lors d'une recherche par token, les autres champs sont ignorés"
+            />
+            <span class="help-block">
+              Lorsqu'une fiche d'un quêteur est anonymisée, il recoit un email avec un jeton <small>(ex: '0c0d1d14-5416-4a15-b011-1ad53213ccdb')</small>
+              Vous pouvez retrouver cette fiche anonymisée, et la revaloriser avec les données du quêteur <strong>(sur sa demande)</strong> pour qu'il puisse
+              retrouver ses statistiques des années précédentes
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" ng-show="q.currentUserRole=='9'">
+        <div class="col-md-2">
+          <strong>Section Super Admin</strong>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
             <label for="ulId" class="control-label">Unité Locale</label>
             <input
               id="ulId"
@@ -80,32 +137,6 @@
             </div>
             <span class="help-block">Recherche par nom, code postal, ville</span>
           </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-group">
-            <label for="activeRadio1" class="control-label">Actif:</label><br/>
-            <label class="radio-inline">
-              <input type="radio" name="active" id="activeRadio1" ng-model="q.active" value="1" required ng-checked="q.active==1 || q.active == null"> Actif
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="active" id="activeRadio2" ng-model="q.active" value="0" required> Inactif
-            </label>
-          </div>
-          <div class="form-group" ng-cloak ng-show="q.currentUserRole>=4">
-            <label for="rcqUserRadio1" class="control-label">Utilisateur RCQ ?</label><br/>
-            <label class="radio-inline">
-              <input type="radio" name="rcqUserRadio" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="rcqUserRadio" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==0"> Non
-            </label>
-          </div>
-        </div>
-
-
-        <div class="col-md-1">
-          <br/>
-          <input type="submit" class="btn btn-primary" value="Rechercher" />
         </div>
       </div>
     </form>
@@ -131,10 +162,6 @@
               <div ng-show="!queteur.retour           &&  queteur.depart"                   ><span class="glyphicon glyphicon-coins"       aria-hidden="true" style="color:gold"       ></span> En train de quêter, départ à {{::  queteur.depart          }}</div>
               <div ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart"><span class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="color:purple"     ></span> Rentré de quête à {{::queteur.retour }}</div>
               <div ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:grey"       ></span> Non Actif</div>
-
-
-
-
             </div>
           </div>
         </div>

@@ -25,7 +25,7 @@ class EmailBusinessService
    * @param string        $uuid     The uuid to be inserted in the email
    * @throws \Exception   if the email fails to be sent
    */
-  public function sendInitEmail(QueteurEntity $queteur, $uuid)
+  public function sendInitEmail(QueteurEntity $queteur, string $uuid)
   {
 
 
@@ -114,4 +114,91 @@ Bonjour ".$queteur->first_name.",<br/>
       throw new \Exception("Error while sending email to ".$queteur->email." for ". $queteur->nivol." ".$this->mailer->ErrorInfo);
     }
   }
+
+
+
+
+
+
+  /**
+   * Send an email that inform the queteur its data has been anonymised
+   * @param QueteurEntity $queteur  The information of the user
+   * @param string        $token     The uuid to be inserted in the email
+   * @throws \Exception   if the email fails to be sent
+   */
+  public function sendAnonymizationEmail(QueteurEntity $queteur, string $token)
+  {
+
+
+    $deploymentType = $this->appSettings['deploymentType'];
+    $deployment='';
+    if($deploymentType == 'D')
+    {
+      $deployment='[Site de DEV]';
+    }
+    else if($deploymentType == 'T')
+    {
+      $deployment='[Site de TEST]';
+    }
+
+
+
+
+    $this->mailer->setFrom    ('thomas.manson@croix-rouge.fr', 'Thomas Manson');
+    $this->mailer->addAddress ( $queteur->email, $queteur->first_name.' '.$queteur->last_name);
+    $this->mailer->addBCC     ('thomas.manson@croix-rouge.fr');
+    $this->mailer->Subject = "[RedCrossQuest]".$deployment." Suite à votre demande, vos données viennent d'être anonymisées";
+    $this->mailer->Body = ($deployment!=''?$deployment.'<br/>':'')."
+<p>Bonjour ".$queteur->first_name.",</p>
+
+<p>
+ Cet email fait suite à votre demande d'anonymisation de vos données personnelles de l'application RedCrossQuest, 
+ l'outil de gestion opérationel de la quête de la Croix Rouge française.
+</p>
+
+<p>Tout d'abord, la Croix Rouge française tient à vous remercier pour votre contribution à la quête de la Croix Rouge.<br/>
+Votre contribution a participé au financement des activités de premiers secours et d'actions sociales de l'unité locale de '".$queteur->ul_name."'<br/>
+Nous espèrons vous revoir bientôt à la quête ou en tant que bénévole!
+</p>
+
+<p>Conformément à votre demande, vos données personnelles ont été remplacées par les valeurs indiquées ci-après:
+  <ul>
+   <li>Nom: 'Quêteur' </li>
+   <li>Prénom: 'Anonimisé'</li>
+   <li>Email: ''</li>
+   <li>Secteur: 0</li>
+   <li>NIVOL: ''</li>
+   <li>Mobile: ''</li>
+   <li>Date de Naissance: 22/12/1922</li>
+   <li>Homme: 0</li> 
+   <li>Active: 0</li>
+  </ul>
+ </p>
+
+<p> 
+La date d'anonymisation ".date('d/m/Y H:i:s', time())." et ce token sont conservé dans notre base de données :
+</p>
+</p>TOKEN : '$token'</p>
+ 
+<p>
+  Si vous revenez preter main forte à l'unité locale de '".$queteur->ul_name."', vous pouvez communiquer ce Token. 
+  Il permettra de retrouver votre fiche anonymisée et de revaloriser votre fiche.
+  Vous retrouver ainsi vos statistiques des années passées.
+</p>
+<p>
+ Si vous n'êtes pas à l'origine de cette demande, contactez l'unité locale de '".$queteur->ul_name."' et donner leur ce token ainsi que les informations listées plus haut dans cet email pour recréer votre fiche.
+</p>
+ 
+<br/> 
+ Cordialement,<br/>
+ RedCrossQuest<br/>
+";
+
+    if (!$this->mailer->send())
+    {
+      throw new \Exception("Error while sending anonymisation email to ".$queteur->email." for ". $queteur->nivol." ".$this->mailer->ErrorInfo);
+    }
+  }
+
+
 }

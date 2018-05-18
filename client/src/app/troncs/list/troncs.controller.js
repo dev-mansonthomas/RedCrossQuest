@@ -10,9 +10,10 @@
     .controller('TroncsController', TroncsController);
 
   /** @ngInject */
-  function TroncsController($log, TroncResource) {
+  function TroncsController($rootScope, $log, TroncResource) {
     var vm = this;
 
+    $rootScope.$emit('title-updated', 'Liste des Troncs');
     vm.typeTroncList=[
       {id:1,label:'Tronc'},
       {id:2,label:'Urne chez un commerçant'},

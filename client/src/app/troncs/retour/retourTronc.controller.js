@@ -10,14 +10,15 @@
     .controller('RetourTroncController', RetourTroncController);
 
   /** @ngInject */
-    function RetourTroncController($scope, $log, $routeParams, $timeout,
-                                 TroncResource, TroncQueteurResource,
-                                 QRDecodeService,
-                                 DateTimeHandlingService)
+    function RetourTroncController($rootScope, $scope, $log, $routeParams, $timeout,
+                                   TroncResource, TroncQueteurResource,
+                                   QRDecodeService, moment,
+                                   DateTimeHandlingService)
   {
     var vm = this;
     vm.onlyNumbers = /^\d+$/;
 
+    $rootScope.$emit('title-updated', 'Retour d\'un Tronc');
 
     vm.initForm = function()
     {

@@ -141,7 +141,7 @@ LIMIT 1
     $sql = "
 SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
        u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
-       u.init_passwd_date, u.active, u.created, u.updated
+       u.init_passwd_date, u.active, u.created, u.updated, q.first_name, q.last_name
 FROM   users u, queteur q
 WHERE  u.queteur_id = :queteur_id
 AND    q.id         = u.queteur_id
@@ -194,7 +194,7 @@ LIMIT 1
     $sql = "
 SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
        u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
-       u.init_passwd_date, u.active, u.created, u.updated
+       u.init_passwd_date, u.active, u.created, u.updated, q.first_name, q.last_name
 FROM   users u, queteur q
 WHERE  u.id = :id
 AND    q.id = u.queteur_id
@@ -325,8 +325,8 @@ SET     init_passwd_uuid  = null,
         init_passwd_date  = null,
         password          = :password
 WHERE   upper(init_passwd_uuid) = upper(:uuid)
-AND    init_passwd_date > NOW()
-AND    active = 1
+AND     init_passwd_date > NOW()
+AND     active = 1
 ";
 
     $stmt = $this->db->prepare($sql);

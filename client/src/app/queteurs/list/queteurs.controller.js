@@ -10,7 +10,7 @@
     .controller('QueteursController', QueteursController);
 
   /** @ngInject */
-  function QueteursController($scope, $log, $localStorage,
+  function QueteursController($rootScope, $scope, $log, $localStorage,
                               QueteurResource, UniteLocaleResource, DateTimeHandlingService)
   {
     var vm = this;
@@ -18,7 +18,10 @@
     vm.rcqUser          = 0;
     vm.currentUserRole  = $localStorage.currentUser.roleId;
 
+    $rootScope.$emit('title-updated', 'Liste des quêtêurs');
+
     vm.typeBenevoleList=[
+      {id:'',label:''},
       {id:1,label:'Action Sociale'},
       {id:2,label:'Secours'},
       {id:3,label:'Non Bénévole'},
@@ -50,9 +53,15 @@
 
     vm.doSearch=function()
     {
-      $log.debug("search with type:'"+vm.searchType+"' "+vm.admin_ul_id);
+      $log.debug("search with searchType:'"+vm.searchType+"' admin_ul_id:"+vm.admin_ul_id);
 
-      var searchParams = {'q':vm.search, 'searchType':vm.searchType,  'active':vm.active,  'rcqUser':vm.rcqUser};
+      var searchParams = {
+        'q'                   : vm.search     ,
+        'searchType'          : vm.searchType ,
+        'secteur'             : vm.secteur    ,
+        'active'              : vm.active     ,
+        'rcqUser'             : vm.rcqUser    ,
+        'anonymization_token' : vm.anonymization_token};
 
 
       if(vm.currentUserRole === '9' && vm.admin_ul_id !== null)

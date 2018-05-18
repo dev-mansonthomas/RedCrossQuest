@@ -1,7 +1,7 @@
 #! /bin/sh -ex
-
+rm -rf ./dist/*
 npm install
 bower install
-./node_modules/.bin/gulp build
+gulp build
 
 echo "done"

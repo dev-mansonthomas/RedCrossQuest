@@ -10,7 +10,7 @@
     .controller('EditPointQueteController', EditPointQueteController);
 
   /** @ngInject */
-  function EditPointQueteController($log, $localStorage, $routeParams, $timeout,
+  function EditPointQueteController($rootScope, $log, $localStorage, $routeParams, $timeout,
                                     PointQueteResource, DateTimeHandlingService,  GeoCoder)
   {
     var vm = this;
@@ -147,6 +147,7 @@
       {
         vm.current = pointQuete;
         vm.current.created      = DateTimeHandlingService.handleServerDate(vm.current.created).stringVersion;
+        $rootScope.$emit('title-updated', 'Point de quête - '+vm.current.name);
       });
     }
     else

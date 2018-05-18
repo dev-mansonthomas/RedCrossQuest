@@ -54,12 +54,26 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     try
     {
 
-      if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
+      if($roleId >= 4)
       {
-        $adminUlId = $params['admin_ul_id'];
-        //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
-        $ulId = $adminUlId;
+        if(array_key_exists('anonymization_token',$params))
+        {// If the token is given, then other search criteria are ignored
+          $queteurs = $queteurDBService->getQueteurByAnonymizationToken($params['anonymization_token'],  $ulId, $roleId);
+          $response->getBody()->write(json_encode($queteurs));
+          return $response;
+        }
+
+
+        if(array_key_exists('admin_ul_id',$params))
+        {
+          $adminUlId = $params['admin_ul_id'];
+          //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
+          $ulId = $adminUlId;
+        }
+
       }
+
+
 
       $query        = array_key_exists('q'             ,$params)?$params['q'            ]:null;
       $searchType   = array_key_exists('searchType'    ,$params)?$params['searchType'   ]:null;
@@ -153,21 +167,32 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   {
     $ulId   = (int)$args['ul-id'  ];
     $roleId = (int)$args['role-id'];
-
-    //$this->logger->addDebug("Updating queteur for UL='$ulId', roleId='$roleId'", array('decodedToken'=>$decodedToken));
-
-    $files = $request->getUploadedFiles();
-    //$this->logger->addDebug("file upload : ".print_r($files, true));
-
+    $params = $request->getQueryParams();
 
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $input            = $request->getParsedBody();
     $queteurEntity    = new QueteurEntity($input);
 
-    //restore the leading +
-    $queteurEntity->mobile = "+".$queteurEntity->mobile;
-    
-    $queteurDBService->update($queteurEntity, $ulId, $roleId);
+
+    if(array_key_exists('action', $params) && $params['action'] == "anonymize")
+    {
+      $queteurOriginalData = $queteurDBService->getQueteurById($queteurEntity->id);
+      $token               = $queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId);
+      $this->mailer->sendAnonymizationEmail($queteurOriginalData, $token);
+      $queteurAnonymizedData = $queteurDBService->getQueteurById($queteurEntity->id);
+
+      $response->getBody()->write(json_encode($queteurAnonymizedData));
+    }
+    else
+    {//regular Update
+
+      //restore the leading +
+      $queteurEntity->mobile = "+".$queteurEntity->mobile;
+
+      $queteurDBService->update($queteurEntity, $ulId, $roleId);
+
+    }
+
   }
   catch(\Exception $e)
   {

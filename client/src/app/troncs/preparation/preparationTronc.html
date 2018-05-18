@@ -169,13 +169,34 @@
           </div>
         </div>
 
+        <div class="row" ng-show="pt.savedSuccessfully">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="pt.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+              <strong>Bravo!</strong> La préparation a été sauvegardée avec succès!
+            </div>
+          </div>
+        </div>
+
+        <!-- Error while saving -->
+        <div class="row" ng-show="pt.errorWhileSaving">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="pt.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+              <strong>Oouupps!</strong> Une erreur est survenue lors de la préparation!
+              <pre style="text-align: left;">{{pt.errorWhileSavingDetails}}</pre>
+            </div>
+          </div>
+        </div>
+
+
         <div class="row">
           <div class="col-md-3 col-md-offset-5 form-group">
             <button type="submit"
                     class="btn btn-warning"
                     ng-click="pt.save(true);"
                     ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed()">Préparer et Départ</button>
-            <span class="help-block">C'est l'action exceptionnelle que vous devez utiliser si le tronc n'a pas eu être préparé.</span>
+            <span class="help-block">C'est l'action exceptionnelle que vous devez utiliser si le tronc n'a pas pu être préparé.</span>
           </div>
           <div class="col-md-1">
           </div>
@@ -184,7 +205,7 @@
                     class="btn btn-warning"
                     ng-click="pt.save(false);"
                     ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed()">Sauvegarder la préparation du tronc</button>
-            <span class="help-block">C'est l'action normal que vous devez utiliser 99% du temps</span>
+            <span class="help-block">C'est l'action normale que vous devez utiliser 90% du temps</span>
           </div>
         </div>
 
@@ -282,14 +303,7 @@
           </div>
         </div>
 
-        <div class="row" ng-show="pt.savedSuccessfully">
-          <div class="col-md-8 col-md-offset-2">
-            <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="pt.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
-              <strong>Bravo!</strong> La préparation a été sauvegardée avec succès!
-            </div>
-          </div>
-        </div>
+
 
 
 

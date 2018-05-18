@@ -10,17 +10,19 @@
     .controller('QRCodeQueteursController', QRCodeQueteursController);
 
   /** @ngInject */
-  function QRCodeQueteursController($log,
-                                    QueteurResource,
-                                    $localStorage)
+  function QRCodeQueteursController($rootScope, $log,$localStorage,
+                                    QueteurResource)
   {
     var vm = this;
 
     vm.size=200;
+    vm.ulName = $localStorage.currentUser.ulName;
+
+    $rootScope.$emit('title-updated', 'Impression des QRCode Quêteurs');
 
     QueteurResource.query({'searchType':0}).$promise.then(function(response)
     {
-      vm.ulName = $localStorage.currentUser.ulName;
+
       vm.list   = response.map(function(queteur)
         {
           //the Q of Queteur is put in the HTML page, with a font size of 11px to exactly match the same template as TRONC, so that it print exactly on the stickers
@@ -32,7 +34,7 @@
           $log.debug("error while loading for queteur with reason='"+reason+"'");
         });
 
-      $log.debug("There is "+vm.list.length+" queteur, "+Math.ceil(vm.list.length/32)+" tableaux") ;
+    //  $log.debug("There is "+vm.list.length+" queteur, "+Math.ceil(vm.list.length/32)+" tableaux") ;
 
       var numberOfTable= Math.ceil(vm.list.length/40);
       vm.tables = [];
@@ -60,12 +62,7 @@
           }
         }
       }
-
-
-
-
     });
-
   }
 })();
 

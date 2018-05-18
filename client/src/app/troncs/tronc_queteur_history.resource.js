@@ -5,8 +5,8 @@
 angular.module('redCrossQuestClient').factory('TroncQueteurHistoryResource', function ($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:ulId/tronc_queteur_history/:id',
     {//supposed to return one row of the historic, not implemented yet
-      roleId: $localStorage.currentUser.roleId,
-      ulId  : $localStorage.currentUser.ulId,
+      roleId: function () { return $localStorage.currentUser.roleId},
+      ulId  : function () { return $localStorage.currentUser.ulId  },
       id    : '@id'
     },
     {

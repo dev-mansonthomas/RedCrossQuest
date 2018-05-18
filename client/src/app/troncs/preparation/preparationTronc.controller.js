@@ -10,14 +10,15 @@
     .controller('PreparationTroncController', PreparationTroncController);
 
   /** @ngInject */
-  function PreparationTroncController($scope         , $log                 ,
-                                      $uibModal      , $timeout             ,
+  function PreparationTroncController($rootScope, $scope, $log,$uibModal, $timeout,
                                       QueteurResource, PointQueteResource   ,
                                       TroncResource  , TroncQueteurResource ,
                                       QRDecodeService, $localStorage        ,
                                       moment)
   {
     var vm = this;
+
+    $rootScope.$emit('title-updated', 'Préparation d\'un Tronc');
 
     vm.typePointQueteList=[
       {id:1,label:'Voix Publique'},
@@ -132,7 +133,11 @@
     {
 
       $log.error(errorMessage);
-      vm.errorOnSave = errorMessage.data.exception[0].message;
+      vm.errorWhileSaving = true;
+
+      errorMessage.data.exception.xdebug_message=null;
+
+      vm.errorWhileSavingDetails = JSON.stringify(errorMessage.data.exception);
 
     }
     /***

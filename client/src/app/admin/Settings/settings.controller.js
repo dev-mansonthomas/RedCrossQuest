@@ -7,18 +7,18 @@
 
   angular
     .module('redCrossQuestClient')
-    .controller('ULSettingsController', ULSettingsController);
+    .controller('SettingsController', SettingsController);
 
   /** @ngInject */
-  function ULSettingsController($log, $localStorage, $location,
-                                ULSettingsResource, DateTimeHandlingService)
+  function SettingsController($rootScope, $log, $localStorage, $location,
+                                SettingsResource, DateTimeHandlingService)
   {
     var vm = this;
     vm.currentUserRole=$localStorage.currentUser.roleId;
+    $rootScope.$emit('title-updated', 'Paramètres');
 
 
-
-    vm.settings = ULSettingsResource.query().$promise.then(handleResult);
+    vm.settings = SettingsResource.query().$promise.then(handleResult);
 
 
     function handleResult (settings)

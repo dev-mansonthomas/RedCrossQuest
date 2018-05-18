@@ -66,9 +66,13 @@ class TroncQueteurEntity extends Entity
 
   //when this object is used to retrieve data from tronc_queteur_historique
   public $tronc_queteur_id;
-  public $insert_date;
+  public $insert_date     ;
 
   public $preparationAndDepart;
+
+  public $coins_money_bag_id;
+  public $bills_money_bag_id;
+
 
   protected $logger;
 
@@ -134,6 +138,12 @@ class TroncQueteurEntity extends Entity
       $this->getDate  ('insert_date'            , $data);
 
       $this->getBoolean('preparationAndDepart'               , $data);
+
+      $this->getString('coins_money_bag_id'       , $data);
+      $this->getString('bills_money_bag_id'       , $data);
+
+      $this->getInteger('rowCount'       , $data);
+
 
     }
 

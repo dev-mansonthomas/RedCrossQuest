@@ -45,6 +45,9 @@ class QueteurEntity  extends Entity
   public $referent_volunteer          ;
   public $referent_volunteer_entity   ;
 
+  public $anonymization_token         ;
+  public $anonymization_date          ;
+
   /**
      * Accept an array of data matching properties of this class
      * and create the class
@@ -82,6 +85,10 @@ class QueteurEntity  extends Entity
 
     $this->getString('qr_code_printed'             , $data);
     $this->getString('referent_volunteer'          , $data);
+
+    $this->getString('anonymization_token'         , $data);
+    $this->getDate  ('anonymization_date'          , $data);
+
 
   }
 }

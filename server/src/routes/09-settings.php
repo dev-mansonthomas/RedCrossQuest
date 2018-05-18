@@ -4,6 +4,7 @@
 
 use \RedCrossQuest\BusinessService\SettingsBusinessService;
 use \RedCrossQuest\DBService\UserDBService;
+use \RedCrossQuest\DBService\UniteLocaleDBService;
 use \RedCrossQuest\DBService\QueteurDBService;
 use \RedCrossQuest\DBService\PointQueteDBService;
 use \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
@@ -19,6 +20,7 @@ $app->get('/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response,
   try
   {
     $params = $request->getQueryParams();
+    $roleId = (int)$args['role-id'];
 
     if(array_key_exists('action', $params))
     {
@@ -44,7 +46,16 @@ $app->get('/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response,
     {
       $phpSettings = $this->get('settings');
 
+      $ulDBservice   = new UniteLocaleDBService($this->db, $this->logger);
+      $userDBservice = new UserDBService       ($this->db, $this->logger);
+
       $guiSettings['mapKey'] = $phpSettings['appSettings']['gmapAPIKey'];
+
+      $ul       = $ulDBservice  ->getUniteLocaleById   ($decodedToken->getUlId());
+      $userInfo = $userDBservice->getUserInfoWithUserId($decodedToken->getUid(), $decodedToken->getUlId(), $roleId);
+
+      $guiSettings['ul'  ] = $ul;
+      $guiSettings['user'] = $userInfo;
 
       $response->getBody()->write(json_encode($guiSettings));
       return $response;

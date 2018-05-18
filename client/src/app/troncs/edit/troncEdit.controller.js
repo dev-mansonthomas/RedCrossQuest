@@ -10,7 +10,7 @@
     .controller('TroncEditController', TroncEditController);
 
   /** @ngInject */
-  function TroncEditController($log, $routeParams, $timeout,$localStorage,
+  function TroncEditController($rootScope, $log, $routeParams, $timeout,$localStorage,
                                TroncResource, moment, TroncQueteurResource)
   {
     var vm      = this;
@@ -36,6 +36,7 @@
 
     if (angular.isDefined(troncId))
     {
+      $rootScope.$emit('title-updated', 'Edition du tronc - '+troncId);
       vm.current = TroncResource.get({ 'id': troncId });
 
       TroncQueteurResource.getTroncsQueteurForTroncId({'tronc_id': troncId}).$promise.then(
@@ -65,6 +66,7 @@
     else
     {
       vm.current = new TroncResource();
+      $rootScope.$emit('title-updated', 'Création d\'un nouveau Tronc');
     }
 
     vm.save = save;

@@ -78,7 +78,12 @@
     <table class="QRCodeTable" ng-repeat="table in qrcTroncs.tables">
       <tbody>
         <tr ng-repeat="table_tr in table">
-          <td ng-repeat="table_td in table_tr"><qr text="table_td.qr_code" size="qrcTroncs.size"></qr><br/>{{table_td.qr_code}}</td>
+          <td ng-repeat="table_td in table_tr">
+
+            <span style="font-size:10px;font-weight: normal;">Merci de le retourner à <b>{{qrcTroncs.ulName}}</b><br/>
+              {{qrcTroncs.ulAddress}}</span>
+            <qr text="table_td.qr_code" size="qrcTroncs.size"></qr>
+            <br/>{{table_td.qr_code}}</td>
         </tr>
       </tbody>
     </table>

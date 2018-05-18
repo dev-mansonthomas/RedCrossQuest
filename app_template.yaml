@@ -1,0 +1,31 @@
+api_version: 1
+
+runtime: php
+env: flex
+
+runtime_config:
+  document_root: server/public_html
+
+
+beta_settings:
+    cloud_sql_instances: "instance_name"
+
+env_variables:
+    # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
+    # values obtained when configuring your Cloud SQL instance.
+    MYSQL_USER: user
+    MYSQL_PASSWORD: password
+    MYSQL_DSN: mysql:dbname=dbname;unix_socket=/cloudsql/instance_name;charset=utf8
+    SENDGRID_API_KEY: API_KEY
+    SENDGRID_SENDER: sender@domain.com
+
+# This sample incurs costs to run on the App Engine flexible environment.
+# The settings below are to reduce costs during testing and are not appropriate
+# for production use. For more information, see:
+# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
+manual_scaling:
+  instances: 1
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10

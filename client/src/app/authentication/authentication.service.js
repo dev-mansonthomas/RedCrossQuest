@@ -85,7 +85,7 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
   }
 
 
-  function login(username, password, callback)
+  function login(username, password, callback, errorCallback)
   {
     $http.post('/rest/authenticate', { username: username, password: password })
       .then(function successCallback(response) {
@@ -119,6 +119,7 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
       },
       function errorCallBack(error){
         $log.error(error);
+        errorCallback(error);
       });
   }
 
@@ -126,6 +127,7 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
     // remove user from local storage and clear http auth header
     //console.log("loging out "+$localStorage.currentUser)
     delete $localStorage.currentUser;
+    delete $localStorage.guiSettings;
     delete $localStorage.RCQ_JWT_Token;
     $http.defaults.headers.common.Authorization = '';
   }

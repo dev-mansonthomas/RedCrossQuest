@@ -5,8 +5,8 @@
 angular.module('redCrossQuestClient').factory('UserResource', function($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:ulId/users/:id',
     {
-      roleId: $localStorage.currentUser.roleId,
-      ulId  : $localStorage.currentUser.ulId,
+      roleId: function () { return $localStorage.currentUser.roleId},
+      ulId  : function () { return $localStorage.currentUser.ulId  },
       id    : '@id'
     }, {
     update: {

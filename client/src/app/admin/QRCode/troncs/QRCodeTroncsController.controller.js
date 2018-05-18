@@ -10,12 +10,20 @@
     .controller('QRCodeTroncsController', QRCodeTroncsController);
 
   /** @ngInject */
-  function QRCodeTroncsController($log,
+  function QRCodeTroncsController($rootScope, $log,$localStorage,
                                   TroncResource)
   {
     var vm = this;
 
     vm.size=200;
+    var ulInfo = $localStorage.guiSettings.ul;
+
+    $rootScope.$emit('title-updated', 'Impression des QRCode Tronc');
+
+    //"UL STPIERRELEMOUTIER";
+    vm.ulName    = $localStorage.currentUser.ulName;
+    //"Maison des solidarités Parc d''activités du Bois Vert  rue Barthélémy Thimonier  , 56800,  PLOERMEL";
+    vm.ulAddress = ulInfo.address+", "+ulInfo.postal_code+", "+ulInfo.city;
 
     TroncResource.query().$promise.then(function(response)
     {

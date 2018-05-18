@@ -36,11 +36,14 @@
   /* [Nicolas - 18 may] Peut-etre pas necessaire ce @ngInject vu que j'ai defini l'injection , @ngInject
 
    */
-  function ResetPasswordController($location, zxcvbn, AuthenticationService) {
+  function ResetPasswordController($rootScope, $location,
+                                   zxcvbn, AuthenticationService) {
     var vm = this;
     vm.key = null;
     vm.rate = 0;
     vm.passwordMatch = false;
+
+    $rootScope.$emit('title-updated', 'Ré-initialisation de votre mot de passe');
 
     AuthenticationService.logout();
 
@@ -136,5 +139,5 @@
     .factory('zxcvbn', function () {
       return window.zxcvbn; // zxcvbn ext charge par le bout de code 'ZXCVBN_SRC'
     })
-    .controller('ResetPasswordController', ['$location', 'zxcvbn', 'AuthenticationService', ResetPasswordController]);
+    .controller('ResetPasswordController', ['$rootScope','$location', 'zxcvbn', 'AuthenticationService', ResetPasswordController]);
 })();

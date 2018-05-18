@@ -7,9 +7,12 @@
 
   /** @ngInject */
   function runBlock($rootScope, $http, $location, $localStorage, $log,
-                    jwtHelper/*, SettingsResource*/)
+                    jwtHelper)
   {
-
+    // any controller can change the page title using $rootScope.$emit('title-updated', 'my new title');
+    $rootScope.$on('title-updated', function(event, newTitle) {
+      $rootScope.pageTitle = 'RedCrossQuest - ' + newTitle;
+    });
 
 
     //check if there's a token and it's not expired. Otherwise, redirect the page to the login page.

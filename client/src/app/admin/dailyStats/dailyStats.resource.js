@@ -5,8 +5,8 @@
 angular.module('redCrossQuestClient').factory('DailyStatsResource', function ($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:ulId/dailyStats/:id',
     {
-      roleId: $localStorage.currentUser.roleId,
-      ulId: $localStorage.currentUser.ulId,
+      roleId: function () { return $localStorage.currentUser.roleId},
+      ulId  : function () { return $localStorage.currentUser.ulId  },
       id: '@id'
     }, {
       update: {

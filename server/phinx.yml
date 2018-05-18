@@ -6,34 +6,24 @@ environments:
     default_migration_table: phinxlog
     default_database: development
 
-#Requires cloud_sql_proxy -instances=redcrossquest:europe-west1:fr-rcq-prod=tcp:3307
-    fr-rcq-prod:
+#Requires cloud_sql_proxy on port 3308
+    rcq-fr-prod:
         adapter: mysql
         host: 127.0.0.1
-        name: fr-rcq-prod
+        name: rcq_fr_prod_db
+        user: root
+        pass: ''
+        port: 3308
+        charset: utf8
+
+#Requires cloud_sql_proxy on port 3307
+    rcq-fr-test:
+        adapter: mysql
+        host: 127.0.0.1
+        name: rcq_fr_test_db
         user: root
         pass: ''
         port: 3307
-        charset: utf8
-
-#Requires cloud_sql_proxy -instances=redcrossquest:europe-west1:fr-rcq-test=tcp:3308
-    fr-rcq-test:
-        adapter: mysql
-        host: 127.0.0.1
-        name: fr-rcq-test
-        user: fr-rcq-test
-        pass: ''
-        port: 3307
-        charset: utf8
-
-
-    development:
-        adapter: mysql
-        host: 127.0.0.1
-        name: RCQ
-        user: root
-        pass: 'CRFCRF'
-        port: 3306
         charset: utf8
 
     local-testing:

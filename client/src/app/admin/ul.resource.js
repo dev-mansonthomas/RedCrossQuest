@@ -5,7 +5,7 @@
 angular.module('redCrossQuestClient').factory('UniteLocaleResource', function($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:id',
     {
-      roleId: $localStorage.currentUser.roleId,
+      roleId: function () { return $localStorage.currentUser.roleId},
       id    : '@id'
     }, {
     update: {

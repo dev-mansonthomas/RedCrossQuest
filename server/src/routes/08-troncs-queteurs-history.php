@@ -26,7 +26,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($reques
     $ulId           = (int)$args['ul-id'];
 
     $params         = $request->getQueryParams();
-    $troncQueteurId = (int)$params['tronc_queteur_id'];;
+    $troncQueteurId = (int)$params['tronc_queteur_id'];
 
     $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
 

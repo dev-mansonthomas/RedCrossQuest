@@ -37,14 +37,15 @@
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
           <li role="menuitem"><a ng-href="/#!/troncs"          ng-show="vm.currentUlMode >= 2">Liste des Troncs</a></li>
-          <li role="menuitem"><a ng-href="/#!/dailyStats"      ng-show="vm.currentUlMode >= 1">Résultats Journalier (avant RCQ)</a></li>
           <li role="menuitem"><a ng-href="/#!/pointsQuetes"    ng-show="vm.currentUlMode >= 2">Points de Quêtes</a></li>
 
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
           <li role="menuitem"><a ng-href="/#!/QRCode/troncs"   ng-show="vm.currentUlMode >= 2">Troncs - Impression des QRCode</a></li>
           <li role="menuitem"><a ng-href="/#!/QRCode/queteurs" ng-show="vm.currentUlMode >= 2">Queteurs - Impression des QRCode</a></li>
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
-          <li role="menuitem"><a ng-href="/#!/ulSettings"      ng-show="vm.currentUlMode >= 2">Paramétrage de l'UL</a></li>
+          <li role="menuitem"><a ng-href="/#!/dailyStats"      ng-show="vm.currentUlMode >= 1">Résultats Journalier (avant RCQ)</a></li>
+          <li role="menuitem"><a ng-href="/#!/yearlyGoals"     ng-show="vm.currentUlMode >= 2">Objectifs de quête</a></li>
+          <li role="menuitem"><a ng-href="/#!/settings"      ng-show="vm.currentUlMode >= 2">Paramétrage de l'UL</a></li>
         </ul>
       </div>
 

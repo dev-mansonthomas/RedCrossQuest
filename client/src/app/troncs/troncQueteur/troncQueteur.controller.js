@@ -10,22 +10,31 @@
     .controller('TroncQueteurController', TroncQueteurController);
 
   /** @ngInject */
-  function TroncQueteurController($scope, $log, $routeParams, $timeout, $localStorage, // $anchorScroll, $location,
+  function TroncQueteurController($rootScope, $scope, $log, $routeParams, $timeout, $localStorage, // $anchorScroll, $location,
                                   TroncResource, TroncQueteurResource, TroncQueteurHistoryResource, PointQueteResource,
                                   QRDecodeService, moment,
                                   DateTimeHandlingService)
   {
     var vm = this;
 
+    $rootScope.$emit('title-updated', 'Comptage d\'un Tronc');
+
     vm.onlyNumbers = /^[0-9]{1,3}$/;
     vm.cbFormat    = /^[0-9]+(\.[0-9]{1,2})?$/;
 
-    vm.currentUserRole=$localStorage.currentUser.roleId;
-    vm.currentUlMode  =$localStorage.currentUser.ulMode;
+    vm.currentUserRole= $localStorage.currentUser.roleId;
+    vm.currentUlMode  = $localStorage.currentUser.ulMode;
+    vm.ulName         = $localStorage.currentUser.ulName;
+
+    vm.first_name       = $localStorage.guiSettings.user.first_name;
+    vm.last_name        = $localStorage.guiSettings.user.last_name;
+
+    vm.currentDate = new Date();
 
     var tronc_queteur_id = $routeParams.id;
 
-    vm.loadData=function()
+
+    vm.loadData=function(tronc_queteur_id)
     {
       vm.current = {};
       vm.current.readOnlyView  = false;
@@ -35,10 +44,9 @@
       {
         $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
         TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
-        TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur_id}).$promise.then(handleTroncQueteurHistory);
       }
     };
-    vm.loadData();
+    vm.loadData(tronc_queteur_id);
 
 
     vm.activateAdminEditMode = function()
@@ -251,7 +259,7 @@
       {
         try
         {
-          $log.debug("new value for tronc");
+          $log.debug("new value for tronc "+newValue);
           troncDecodedAndFoundInDB (newValue, true);
         }
         catch(exception)
@@ -265,6 +273,18 @@
     function handleTroncQueteur(tronc_queteur)
     {
       vm.current.tronc_queteur =  tronc_queteur;
+      vm.current.dateRetourNotFilled = false;
+      vm.current.fillTronc  = false;
+
+      if(vm.current.tronc_queteur.id == null  && tronc_queteur.rowCount == 0)
+      {
+        vm.current.troncQueteurNotFound = true;
+        return;
+      }
+      else
+      {
+        vm.current.troncQueteurNotFound = false;
+      }
 
       if(angular.isUndefined(vm.current.tronc))
       {
@@ -277,8 +297,9 @@
 
       if(vm.current.tronc_queteur.depart !== null)
       {
-        vm.current.tronc_queteur.departStr =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).stringVersion;
-        vm.current.tronc_queteur.depart    =  DateTimeHandlingService.handleServerDate(tronc_queteur.depart).dateInLocalTimeZone;
+        var depart = DateTimeHandlingService.handleServerDate(tronc_queteur.depart);
+        vm.current.tronc_queteur.departStr =  depart.stringVersion;
+        vm.current.tronc_queteur.depart    =  depart.dateInLocalTimeZone;
       }
 
       if(vm.current.tronc_queteur.depart_theorique !== null)
@@ -304,7 +325,9 @@
       }
       else
       {
-        vm.current.tronc_queteur.retour = DateTimeHandlingService.handleServerDate(tronc_queteur.retour).dateInLocalTimeZone;
+        var retour = DateTimeHandlingService.handleServerDate(tronc_queteur.retour);
+        vm.current.tronc_queteur.retour    = retour.dateInLocalTimeZone;
+        vm.current.tronc_queteur.retourStr = retour.stringVersion;
 
         //if the return date is non null, then it's time to fill the number of coins
         vm.current.fillTronc=true;
@@ -315,6 +338,14 @@
       //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again
       //$location.hash('anchorForm');
       //$anchorScroll();
+
+      $rootScope.$emit('title-updated', moment().format('YYYY-MM-DD') + ' - Tronc '+vm.current.tronc_queteur.id+' - ' +
+                                                 vm.current.tronc_queteur.point_quete.name + ' - '+
+                                                 vm.current.tronc_queteur.queteur.first_name +' '+vm.current.tronc_queteur.queteur.last_name);
+
+
+
+      TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur.id}).$promise.then(handleTroncQueteurHistory);
     }
 
 
@@ -346,9 +377,7 @@
         {//vm.current.tronc is watch, in some case we must not modify it to not enter in an endless loop.
           vm.current.tronc = tronc;
         }
-
         vm.current.tronc.stringView = tronc.id;
-
         TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
       }
     }
@@ -393,79 +422,79 @@
       if(vm.current.tronc_queteur.euro5 > 20)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Billet de 5€</li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 20 billets de 5€</li>";
       }
       if(vm.current.tronc_queteur.euro10 > 10)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Billet de 10€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 10 billets de 10€ </li>";
       }
       if(vm.current.tronc_queteur.euro20 > 6)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Billet de 20€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 6 billets de 20€ </li>";
       }
       if(vm.current.tronc_queteur.euro50 > 1)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Billet de 50€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 1 billet de 50€ </li>";
       }
       if(vm.current.tronc_queteur.euro100 > 0)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Billet de 100€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 1 billet de 100€ </li>";
       }
       if(vm.current.tronc_queteur.euro200 > 0)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Billet de 200€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 1 billet de 200€ </li>";
       }
       if(vm.current.tronc_queteur.euro500 > 0)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Billet de 500€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 1 billet de 500€ </li>";
       }
        //pièces
       if(vm.current.tronc_queteur.euro2 > 120)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Pièce de 2€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 2€ </li>";
       }
       if(vm.current.tronc_queteur.euro1 > 120)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Pièce de 1€ </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 1€ </li>";
       }
 
       if(vm.current.tronc_queteur.cents50 > 120)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Pièce de 50cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 50cts </li>";
       }
       if(vm.current.tronc_queteur.cents20 > 120)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Pièce de 20cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 20cts </li>";
       }
       if(vm.current.tronc_queteur.cents10 > 120)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Pièce de 10cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 10cts </li>";
       }
       if(vm.current.tronc_queteur.cents5 > 120)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Pièce de 5cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 5cts </li>";
       }
       if(vm.current.tronc_queteur.cents2 > 120)
       {
         displayConfirmDialog = true;
-        vm.current.confirmInputValuesMessage+="<li>Pièce de 2cts </li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 2cts </li>";
       }
       if(vm.current.tronc_queteur.cent1 > 120)
       {
         displayConfirmDialog=true;
-        vm.current.confirmInputValuesMessage+="<li>Pièce de 1cent</li>";
+        vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 1cent</li>";
       }
 
       return displayConfirmDialog;
@@ -525,6 +554,34 @@
     vm.qrCodeScanOnVideoError = function(error)
     {
       $log.debug(error);
+    };
+
+
+
+    vm.searchCoinMoneyBagId=function(searchedString)
+    {
+      return vm.searchMoneyBagId(searchedString, 'coin');
+    };
+
+    vm.searchBillMoneyBagId=function(searchedString)
+    {
+      return vm.searchMoneyBagId(searchedString, 'bill');
+    };
+
+    vm.searchMoneyBagId=function(searchedString, type)
+    {
+      return TroncQueteurResource.searchMoneyBagId({'q':searchedString, 'type':type}).$promise.then(function success(response)
+      {
+        return response.map(function(oneResponse)
+          {
+
+            return oneResponse;
+          },
+          function error(reason)
+          {
+            $log.debug("error while searching for moneybagId query='"+searchedString+"' with reason='"+reason+"'");
+          });
+      });
     };
 
   }

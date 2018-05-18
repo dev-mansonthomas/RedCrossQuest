@@ -4,6 +4,7 @@ namespace RedCrossQuest\DBService;
 
 use RedCrossQuest\Entity\QueteurEntity;
 use PDOException;
+use Ramsey\Uuid\Uuid;
 
 
 class QueteurDBService extends DBService
@@ -344,6 +345,8 @@ SELECT  q.`id`,
         q.`birthdate`,
         q.`qr_code_printed`,
         q.`referent_volunteer`,
+        q.`anonymization_token`,
+        q.`anonymization_date`,
         u.`name`       as 'ul_name',
         u.`latitude`   as 'ul_latitude',
         u.`longitude`  as 'ul_longitude'
@@ -442,7 +445,10 @@ SET
   `birthdate`           = :birthdate,
   `man`                 = :man,
   `active`              = :active,
-  `referent_volunteer`  = :referent_volunteer
+  `referent_volunteer`  = :referent_volunteer,
+  `anonymization_token` = null,
+  `anonymization_date`  = null
+  
 WHERE `id`              = :id
 ";
     $parameters = [
@@ -666,5 +672,127 @@ $searchNivol
 
     $stmt->closeCursor();
     return $results;
+  }
+
+
+
+
+
+
+  /**
+   * Anonymize the data of a queteur
+   *
+   * @param int $queteurId The queteur to update
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
+   * @return string token associated with the queteur
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function anonymize(int $queteurId, int $ulId, int $roleId)
+  {
+    $token = Uuid::uuid4();
+
+    $sql = "
+UPDATE `queteur`
+SET
+  `first_name`          = 'Anonimisé',
+  `last_name`           = 'Quêteur',
+  `email`               = '' ,
+  `secteur`             = 0,
+  `nivol`               = '',
+  `mobile`              = '',
+  `updated`             = NOW(),
+  `notes`               = '',
+  `birthdate`           = '1922-12-22',
+  `man`                 = 0,
+  `active`              = 0,
+  `anonymization_token` = :token,
+  `anonymization_date`  = NOW()
+WHERE `id`              = :id
+";
+    $parameters = [
+      "id"    => $queteurId,
+      "token" => $token
+    ];
+
+    if($roleId != 9)
+    {//allow super admin to update any UL queteurs, but he cannot change the UL
+      $sql .= "
+AND   `ul_id`           = :ul_id      
+";
+      $parameters["ul_id"] = $ulId;
+    }
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+    $stmt->closeCursor();
+
+    return $token;
+  }
+
+
+  /**
+   * Get one queteur by anonymization_token, used from the queteur_list page
+   * @param string $anonymization_token The anonymisation token
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
+   * @return QueteurEntity[]  One Queteur or 0, in an array for compatibilty with the search feature
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getQueteurByAnonymizationToken(string $anonymization_token, int $ulId, int $roleId)
+  {
+    $parameters = ["anonymization_token" => $anonymization_token];
+
+    $sql = "
+SELECT  q.`id`,
+        q.`email`,
+        q.`first_name`,
+        q.`last_name`,
+        q.`secteur`,
+        q.`nivol`,
+        q.`mobile`,
+        q.`created`,
+        q.`updated`,
+        q.`notes`,
+        q.`ul_id`,
+        q.`active`,
+        q.`man`,
+        q.`birthdate`,
+        q.`qr_code_printed`,
+        q.`referent_volunteer`,
+        u.`name`       as 'ul_name',
+        u.`latitude`   as 'ul_latitude',
+        u.`longitude`  as 'ul_longitude'
+FROM  `queteur` AS q, 
+          `ul`  AS u
+WHERE  UPPER(q.`anonymization_token`)   = UPPER(:anonymization_token)
+AND    q.`ul_id`   = u.id
+";
+
+
+    if($roleId != 9)
+    {//allow super admin to update any UL queteurs, but he cannot change the UL
+      $sql .= "
+AND    q.ul_id   = :ul_id      
+";
+      $parameters["ul_id"] = $ulId;
+    }
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute($parameters);
+
+    $queteur = null;
+    $row = $stmt->fetch();
+    if($row)
+    {
+      $queteur = new QueteurEntity($row);
+      $stmt->closeCursor();
+      return [$queteur];
+    }
+    else
+    {
+      return [];
+    }
+
   }
 }

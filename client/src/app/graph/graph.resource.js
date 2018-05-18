@@ -5,8 +5,8 @@
 angular.module('redCrossQuestClient').factory('GraphResource', function($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:ulId/graph',
     {
-      roleId: $localStorage.currentUser.roleId,
-      ulId  : $localStorage.currentUser.ulId
+      roleId: function () { return $localStorage.currentUser.roleId},
+      ulId  : function () { return $localStorage.currentUser.ulId  }
     }, {
     create: {
       method: 'POST'

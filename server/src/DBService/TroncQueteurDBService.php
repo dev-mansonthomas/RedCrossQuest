@@ -21,7 +21,7 @@ class TroncQueteurDBService extends DBService
    * @throws \Exception if tronc not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId)
+  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId, $roleId)
   {
     $sql = "
 SELECT 
@@ -58,7 +58,9 @@ SELECT
  `notes_update`                ,
  `don_cheque`                  ,
  `don_creditcard`              ,
- `deleted`
+ `deleted`                     ,
+ `coins_money_bag_id`          ,
+ `bills_money_bag_id`
 FROM  `tronc_queteur` as t, 
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
@@ -75,14 +77,13 @@ LIMIT 1
     if($stmt->rowCount() == 1 )
     {
       $tronc = new TroncQueteurEntity($stmt->fetch(), $this->logger);
-      $stmt->closeCursor();
-      return $tronc;
     }
     else
     {
-      $stmt->closeCursor();
-      throw new \Exception("Tronc Queteur with ID:'".$tronc_id . "' not found");
+      $tronc = new TroncQueteurEntity(["tronc_id"=>$tronc_id, "rowCount"=>$stmt->rowCount()], $this->logger);
     }
+    $stmt->closeCursor();
+    return $tronc;
   }
 
 
@@ -134,7 +135,9 @@ SELECT
  q.`first_name`                ,
  `don_cheque`                  ,
  `don_creditcard`              ,
- `deleted`
+ `deleted`                     ,
+ `coins_money_bag_id`          ,
+ `bills_money_bag_id`
 FROM  `tronc_queteur` as t, 
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
@@ -205,7 +208,9 @@ t.`id`                ,
  `notes_update`                ,
  `don_cheque`                  ,
  `don_creditcard`              ,
- `deleted`
+ `deleted`                     ,
+ `coins_money_bag_id`          ,
+ `bills_money_bag_id`
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.id         = :id
@@ -272,7 +277,9 @@ t.`id`                ,
  `foreign_banknote`   ,
  `don_cheque`         ,
  `don_creditcard`     ,
- `deleted`
+ `deleted`            ,
+ `coins_money_bag_id` ,
+ `bills_money_bag_id`
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.queteur_id = :queteur_id
@@ -553,7 +560,9 @@ SET
 $comptage
  `last_update`                  = NOW(),
  `last_update_user_id`          = :userId,
- `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces            
+ `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces, 
+ `coins_money_bag_id`           = :coins_money_bag_id,
+ `bills_money_bag_id`           = :bills_money_bag_id
 WHERE tq.`id`                   = :id
 AND    q.ul_id                  = :ul_id
 ";
@@ -581,7 +590,9 @@ AND    q.ul_id                  = :ul_id
         "userId"            => $userId,
         "id"                => $tq->id,
         "ul_id"             => $ulId,
-        "notes_retour_comptage_pieces" => $tq->notes_retour_comptage_pieces
+        "notes_retour_comptage_pieces" => $tq->notes_retour_comptage_pieces,
+        "coins_money_bag_id"=> $tq->coins_money_bag_id,
+        "bills_money_bag_id"=> $tq->bills_money_bag_id
       ]);
 
       $stmt->closeCursor();
@@ -920,7 +931,9 @@ t.`id`                        ,
 `notes_update`                ,
 `don_cheque`                  ,
 `don_creditcard`              ,
-`deleted`
+`deleted`                     ,
+`coins_money_bag_id`          ,
+`bills_money_bag_id`
 FROM  `tronc_queteur_historique`  as t, 
       `queteur`                   as q
 WHERE  t.tronc_queteur_id = :tronc_queteur_id
@@ -941,6 +954,51 @@ ORDER BY t.id DESC
     }
     return $results;
   }
+
+
+
+
+  /**
+   * Search existing money_bag id from the current year and the current UniteLocale
+   *
+   * @param string $query the searched string
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param string $type "bill" or "coin" depending the kind of bag the user search
+   * @return string[]  list of money_bag_id that match the search
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function searchMoneyBagId(string $query, string $type, int $ulId)
+  {
+    $column = "coins_money_bag_id";
+    if($type == "bill")
+    {
+      $column = "bills_money_bag_id";
+    }
+
+    $sql = "
+SELECT DISTINCT(tq.$column) as money_bag_id
+FROM   tronc_queteur tq, 
+       queteur        q
+WHERE  tq.$column  like :query
+AND YEAR(tq.depart) =  YEAR(NOW())
+AND tq.queteur_id   = q.id
+AND q.ul_id         = :ul_id
+ORDER BY tq.$column ASC
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute(["query" => "%".$query."%", "ul_id" => $ulId]);
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  $row['money_bag_id'];
+    }
+    return $results;
+  }
+
 
 
 }

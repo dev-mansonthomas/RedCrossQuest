@@ -1,4 +1,22 @@
 <?php
+
+$mysqlUser    = getenv('MYSQL_USER'     );
+$mysqlP       = getenv('MYSQL_PASSWORD' );
+$mysqlDsn     = getenv('MYSQL_DSN'      );
+
+if($mysqlUser == "")
+{
+  $mysqlUser = 'rcq';
+}
+if($mysqlP == "")
+{
+  $mysqlP = 'rcq';
+}
+if($mysqlDsn == "")
+{
+  $mysqlDsn = 'mysql:host=127.0.0.1;port=3306;dbname=RCQ;charset=utf8;';
+}
+
 return [
     'settings' => [
         'displayErrorDetails' => true, // set to false in production
@@ -17,10 +35,9 @@ return [
         ],
 
         'db' => [
-            'host'  => '127.0.0.1',
-            'user'  => 'rcq',
-            'pwd'   => 'rcq',
-            'dbname'=> 'RCQ',
+          'dsn'      => $mysqlDsn ,
+          'user'     => $mysqlUser,
+          'pwd'      => $mysqlP
 
         ],
         'jwt' => [

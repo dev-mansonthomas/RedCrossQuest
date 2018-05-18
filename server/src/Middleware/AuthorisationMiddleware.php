@@ -230,10 +230,11 @@ class AuthorisationMiddleware
       catch(\Exception $applicationError)
       {
         $this->logger->addError(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError, "request" => $request));
-        //TODO : ne semble pas marcher, code 200 vue du navigateur
-        $response->withStatus(500);
-        $response->getBody()->write(json_encode(array("exception"=>$applicationError, "error" => "application error")));
-        return $response;
+
+        $response500 = $response->withStatus(500);
+        $response500->getBody()->write(json_encode(array("exception"=>$applicationError, "error" => "application error")));
+
+        return $response500;
 
       }
       //log execution time in milliseconds; error(true/false);request path

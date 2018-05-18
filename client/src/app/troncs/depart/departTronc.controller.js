@@ -10,13 +10,13 @@
     .controller('DepartTroncController', DepartTroncController);
 
   /** @ngInject */
-  function DepartTroncController($scope, $log, $timeout,
+  function DepartTroncController($rootScope, $scope, $log, $timeout, $localStorage,
                                  PointQueteResource  ,
                                  TroncResource  , TroncQueteurResource,
-                                 QRDecodeService, DateTimeHandlingService,
-                                 $localStorage)
+                                 QRDecodeService, DateTimeHandlingService)
   {
     var vm = this;
+    $rootScope.$emit('title-updated', 'Départ de Tronc');
 
     vm.initForm=function()
     {

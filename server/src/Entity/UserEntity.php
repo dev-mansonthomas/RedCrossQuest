@@ -21,6 +21,9 @@ class UserEntity extends Entity
 
   public $init_password_date          ;
 
+  public $first_name                  ;
+  public $last_name                   ;
+
 
   /**
      * Accept an array of data matching properties of this class
@@ -45,6 +48,9 @@ class UserEntity extends Entity
     $this->getString ('nb_of_failure'             , $data);
     $this->getDate   ('last_successful_login_date', $data);
     $this->getDate   ('init_password_date'        , $data);
+
+    $this->getString ('first_name'                , $data);
+    $this->getString ('last_name'                 , $data);
   }
 
 

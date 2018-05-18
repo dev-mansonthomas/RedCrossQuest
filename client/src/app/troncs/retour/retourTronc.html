@@ -82,10 +82,10 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-8 col-md-offset-4">
+                <div class="col-md-12">
                   <div class="alert alert-info" role="alert" style="text-align: center;vertical-align: middle;">
                     <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" style="font-size:40px;color:green;"></span>
-                    N'oubliez pas de cliquer sur le bouton <b>"Save"</b>
+                    N'oubliez pas de cliquer sur le bouton <b>"Sauvegarder"</b>
                   </div>
                 </div>
               </div>
@@ -192,15 +192,17 @@
 
 
           <div class="row" >
-            <div class="form-group col-md-2 col-md-offset-10">
+            <div class="col-md-2 col-md-offset-4">
+              <a  ng-click="rt.back();" class="btn btn-link">Annuler</a>
+            </div>
+            <div class="form-group col-md-2 col-md-offset-4">
               <input type="submit"
                      class="btn btn-primary"
-                     value="Save"
+                     value="Sauvegarder"
                      ng-disabled="retourTroncForm.$invalid ||
                      rt.current.tronc_queteur.dateDepartIsMissing === true && rt.current.tronc_queteur.depart.getHours() == 0 && rt.current.tronc_queteur.depart.getMinutes() == 0 ||
                      rt.current.tronc_queteur.troncFromPreviousYear ||
                      !rt.checkDeltaDepartRetourIsCorrect()" />
-              <a  ng-click="rt.back();" class="btn btn-link">Cancel</a>
             </div>
           </div>
 

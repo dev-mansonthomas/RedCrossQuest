@@ -5,8 +5,8 @@
 angular.module('redCrossQuestClient').factory('SettingsResource', function ($resource, $localStorage) {
   return $resource('/rest/:roleId/settings/ul/:ulId/',
     {
-      roleId: $localStorage.currentUser.roleId,
-      ulId  : $localStorage.currentUser.ulId,
+      roleId: function () { return $localStorage.currentUser.roleId},
+      ulId  : function () { return $localStorage.currentUser.ulId  },
       id    : '@id'
     }, {
       //get setup info to determine if the administator has do to something

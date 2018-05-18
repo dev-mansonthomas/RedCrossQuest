@@ -10,10 +10,12 @@
     .controller('GraphController', GraphController);
 
   /** @ngInject */
-  function GraphController($log, $interval, $localStorage,
+  function GraphController($rootScope, $log, $interval, $localStorage,
                            GraphResource, DateTimeHandlingService, moment)
   {
     var vm = this;
+
+    $rootScope.$emit('title-updated', 'Accès aux graphiques');
 
     vm.currentUserRole = $localStorage.currentUser.roleId;
     vm.currentUlId     = $localStorage.currentUser.ulId;

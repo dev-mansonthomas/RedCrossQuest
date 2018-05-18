@@ -49,7 +49,7 @@ SELECT  d.`id`,
 FROM `daily_stats_before_rcq` AS d
 WHERE d.ul_id = :ul_id
 AND   d.date  LIKE :year
-ORDER BY d.date DESC
+ORDER BY d.date ASC
 ";
 
 

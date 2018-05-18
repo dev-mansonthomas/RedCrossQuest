@@ -25,12 +25,10 @@
                               moment, AuthenticationService)
     {
       var vm = this;
-      // "vm.creation" is avaible by directive option "bindToController: true"
       vm.relativeDate   = moment(vm.creationDate).fromNow();
-      vm.currentUserRole=$localStorage.currentUser.roleId;
-//TODO setup userRole
-      vm.currentUlMode  =  3;//$localStorage.currentUser.ulMode;
-      vm.deploymentType =$localStorage.currentUser.d;
+      vm.currentUserRole= $localStorage.currentUser.roleId;
+      vm.currentUlMode  = $localStorage.currentUser.ulMode;
+      vm.deploymentType = $localStorage.currentUser.d;
 
       vm.logout=function()
       {

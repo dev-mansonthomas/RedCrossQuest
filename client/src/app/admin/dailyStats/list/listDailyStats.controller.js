@@ -10,7 +10,7 @@
     .controller('DailyStatsController', DailyStatsController);
 
   /** @ngInject */
-  function DailyStatsController($log, $timeout,
+  function DailyStatsController($rootScope, $log, $timeout,
                                 DailyStatsResource, moment)
   {
     var vm = this;
@@ -38,6 +38,8 @@
         }
 
         vm.searchedYear = vm.selectedYear;
+
+        $rootScope.$emit('title-updated', 'Stats Avant RCQ - Année '+vm.selectedYear);
       });
     };
 
@@ -56,11 +58,41 @@
       dailyStatsResource.$update();
     };
 
+
+    vm.repartitionPercentagesFor9=[30,15,6,4,6,6,8,15,10];
+    vm.repartitionPercentagesFor8=[31,15,6,6,6,6,10,20];
+    vm.repartitionPercentagesFor7=[35,18,8,8,8,8,15];
+    vm.repartitionPercentagesFor2=[60,40];
+
     vm.repartition=function()
     {
-      for(var i=0; i < vm.list.length; i++)
+      var length = vm.list.length;
+      var repartition = null;
+
+      if(length == 9)
       {
-        vm.list[i].amount=vm.totalAmount/vm.list.length;
+        repartition = vm.repartitionPercentagesFor9;
+      }
+      else if(length == 8)
+      {
+        repartition = vm.repartitionPercentagesFor8;
+      }
+      else if(length == 7)
+      {
+        repartition = vm.repartitionPercentagesFor7;
+      }
+      else if(length == 2)
+      {
+        repartition = vm.repartitionPercentagesFor2;
+      }
+      else
+      {
+        alert('length:'+length);
+      }
+
+      for(var i=0; i < length; i++)
+      {
+        vm.list[i].amount=(vm.totalAmount*repartition[i]/100).toFixed(2);
         vm.save(vm.list[i].id,vm.list[i].amount);
       }
 

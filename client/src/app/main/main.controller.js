@@ -6,7 +6,7 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($timeout, $localStorage,
+  function MainController($timeout, $localStorage, $scope, $rootScope,
                           toastr, SettingsResource)
   {
     var vm = this;
@@ -20,15 +20,20 @@
     vm.ulName         = $localStorage.currentUser.ulName;
     vm.ulId           = $localStorage.currentUser.ulId;
     vm.deploymentType = $localStorage.currentUser.d;
+    vm.currentUserRole= $localStorage.currentUser.roleId;
 
-    vm.currentUserRole=$localStorage.currentUser.roleId;
+
+
+
+
 
     vm.displayInstructions=false;
 
-//TODO : find a way to load once, before any page. (a refresh a point quete, should query this first to get the google maps API key)
     SettingsResource.get().$promise.then(function(settings)
     {
       $localStorage.guiSettings = settings;
+      vm.first_name = $localStorage.guiSettings.user.first_name;
+      $rootScope.$emit('title-updated', 'Bienvenue '+vm.first_name);
     });
 
     if(vm.currentUserRole >=4)

@@ -6,11 +6,14 @@
     .controller('LoginController', LoginController);
 
   /** @ngInject */
-  function LoginController($location, AuthenticationService) {
+  function LoginController($rootScope, $location, $timeout,
+                           AuthenticationService) {
     var vm = this;
 
-    vm.login    = login   ;
-    vm.sendInit = sendInit;
+    $rootScope.$emit('title-updated', 'Login');
+
+
+    vm.timeout=false;
 
     initController();
 
@@ -20,11 +23,13 @@
       AuthenticationService.logout();
     }
 
-    function login()
+    vm.login=function()
     {
       vm.loading = true;
+      $timeout(function () {vm.loading=false;vm.timeout=true; }, 10000);
+
       AuthenticationService.login(vm.username, vm.password,
-        function (result)
+        function success(result)
         {
           if (result === true)
           {
@@ -35,10 +40,23 @@
             vm.error = 'Login ou mot de passe incorrect';
             vm.loading = false;
           }
+        },
+        function error(message)
+        {
+          vm.error = 'Service Indisponible - '+message.data;
+          vm.loading = false;
+
         }
-        );
-    }
-    function sendInit()
+      );
+
+
+
+
+
+
+
+    };
+    vm.sendInit = function()
     {
       var regexp = /[0-9]{4,7}[A-Z]{1,1}/;
 
@@ -64,6 +82,6 @@
           vm.loading=false;
         }
       });
-    }
+    };
   }
 })();

@@ -10,12 +10,13 @@
     .controller('ListPointQueteController', ListPointQueteController);
 
   /** @ngInject */
-  function ListPointQueteController($log, $localStorage, $location,
+  function ListPointQueteController($rootScope, $log, $localStorage, $location,
                                     PointQueteResource, DateTimeHandlingService)
   {
     var vm = this;
     vm.currentUserRole=$localStorage.currentUser.roleId;
 
+    $rootScope.$emit('title-updated', 'Liste des points de quête');
 
 
     vm.pointsQuete = PointQueteResource.query().$promise.then(handleResult);

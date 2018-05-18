@@ -5,8 +5,8 @@
 angular.module('redCrossQuestClient').factory('TroncQueteurResource', function ($resource, $localStorage) {
   return $resource('/rest/:roleId/ul/:ulId/tronc_queteur/:id',
     {
-      roleId: $localStorage.currentUser.roleId,
-      ulId: $localStorage.currentUser.ulId,
+      roleId: function () { return $localStorage.currentUser.roleId},
+      ulId  : function () { return $localStorage.currentUser.ulId  },
       id: '@id'
     }, {
       update: {
@@ -15,6 +15,13 @@ angular.module('redCrossQuestClient').factory('TroncQueteurResource', function (
       deleteNonReturnedTroncQueteur: {
         method: 'DELETE',
         params: {id: '@id'}
+      },
+      searchMoneyBagId:{
+        method: 'GET',
+        isArray: true,
+        params: {
+          action: 'searchMoneyBagId'
+        }
       },
       //get the last tronc_queteur
       getLastTroncQueteurFromTroncId: {

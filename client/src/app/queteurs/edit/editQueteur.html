@@ -1,7 +1,42 @@
 <acme-navbar></acme-navbar>
 <div class="container" data-ng-controller="QueteurEditController as queteur">
   <div class="panel panel-primary">
-    <div class="panel-heading">Un Quêteur:  <b><span ng-bind="queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span> <span ng-bind="queteur.current.nivol"></span></b></div>
+    <div class="panel-heading">
+      Un Quêteur: <span ng-bind="queteur.current.id"></span>
+      <span ng-show="queteur.current.first_name"> - </span>
+      <b>
+        <span ng-bind="queteur.current.first_name"></span>
+        <span ng-bind="queteur.current.last_name"></span>
+        <span ng-show="queteur.current.nivol"> - </span>
+        <span ng-bind="queteur.current.nivol"></span>
+      </b>
+    </div>
+  </div>
+  <div class="alert alert-success" role="alert">
+    <div class="row">
+      <div  class="col-md-6">
+        <strong>FLASH INFO - Données Personnelles - </strong>
+        <p>
+          Vous visualisez / éditez des données à caractère personnel :
+        <ul>
+          <li>Ne modifiez pas les informations de la personne sans son accord explicite</li>
+          <li>N'utilisez ces informations que pour un besoin opérationel de la quête</li>
+          <li>Ne partagez pas ces données avec un tiers</li>
+          <li>Pensez à vous déconnecter de RedCrossQuest quand vous quittez l'ordinateur</li>
+          <li>Ne partagez pas vos login/password avec un tiers</li>
+        </ul>
+        <p>
+          ci-contre, une vidéo de sensibilisation ! A voir ! <small>(Blague Monsieur/Madame ont un enfant)</small>
+        </p>
+      </div>
+      <div  class="col-md-6">
+        <video width="480" height="180" poster="http://mansonthomas.com/CRF/RedCrossQuest/preview.png" controls>
+          <source src="http://mansonthomas.com/CRF/RedCrossQuest/protection_donnees_perso.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas les vidéos.
+        </video><br/>
+        <small>Source: <a href="//www.dailymotion.com/video/x2eppuf">Dailymotion - Tulipe & Cie pour ADP</a></small>
+      </div>
+    </div>
   </div>
   <div class="well">
     <form novalidate name="queteurForm">
@@ -59,7 +94,7 @@
       <div class="row">
         <div class="col-md-4 col-md-offset-2">
           <div class="form-group" ng-class="{'has-error':queteurForm.first_name.$invalid}">
-            <label for="first_name" class="control-label">First name</label>
+            <label for="first_name" class="control-label">Prénom</label>
             <input
                 name="first_name"
                 id="first_name"
@@ -74,7 +109,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group" ng-class="{'has-error':queteurForm.last_name.$invalid}">
-            <label for="last_name" class="control-label">Last name</label>
+            <label for="last_name" class="control-label">Nom</label>
             <input name="last_name"
                    id="last_name"
                    class="form-control"
@@ -90,13 +125,13 @@
       </div>
       <div class="row" ng-show="queteur.current.similarQueteurs.length > 0">
         <div class="panel panel-warning">
-          <div class="panel-heading"><b>Attention aux doublons !</b> Voici les quêteur <u>déjà</u> en base de données et similaire à la saisie, s'il existe déjà ne pas ré-créer un doublon!</div>
+          <div class="panel-heading"><b>Attention aux doublons !</b> Voici les quêteurs <u>déjà</u> en base de données et similaire à la saisie, s'il existe déjà ne pas le recréer, ça ferait un doublon!</div>
           <table class="table">
             <thead>
             <tr>
               <th>#</th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Prénom</th>
+              <th>Nom</th>
               <th>Nivol</th>
               <th>Mobile</th>
               <th>Email</th>
@@ -142,7 +177,7 @@
                    ng-max="queteur.youngestBirthDate"
                    ng-change="queteur.computeAge()"/>
           </div>
-          <span class="help-block" ng-show="queteurForm.birthdate.$invalid">La date de naissance n'est utilisée que pour savoir si la personne est majeur ou non. La date exacte est importante que pour les mineurs.</span>
+          <span class="help-block" ng-show="queteurForm.birthdate.$invalid">La date de naissance n'est utilisée que pour savoir si la personne est majeure ou non. La date exacte n'est importante que pour les mineurs.</span>
         </div>
       </div>
       <div class="row">
@@ -175,7 +210,7 @@
               <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;+</span>
               <input name="mobile" id="mobile" class="form-control"  type="number" ng-model="queteur.current.mobile" required ng-pattern="queteur.current.secteur >= 5? '33[16-79][0-9]{8,8}':'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
             </div>
-            <span class="help-block" ng-show="queteurForm.mobile.$invalid">Format : {{queteur.current.secteur >= 5?'+33[1 ou 6 ou 7 ou 9]01020304':'+33601020304 ou +33701020304'}} <br/><sub>(Ne <b>pas</b> mettre le +). seul les numéros français sont autorisés)</sub><br/>Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain.</span>
+            <span class="help-block" ng-show="queteurForm.mobile.$invalid">Format : {{queteur.current.secteur >= 5?'+33[1 ou 6 ou 7 ou 9]01020304':'+33601020304 ou +33701020304'}} <br/><sub>(Ne <b>pas</b> mettre le +). Seul les numéros français sont autorisés</sub><br/>Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain.</span>
           </div>
         </div>
         <div class="col-md-4">
@@ -221,7 +256,7 @@
           </div>
         </div>
       </div>
-      <div class="row" ng-show="queteur.current.secteur >= 3">
+      <div class="row" ng-show="queteur.current.secteur >= 3 && false">
         <div class="col-md-4 col-md-offset-2">
           <div class="form-group">
             <label for="temporary_volunteer_form" class="control-label">Formulaire du Quêteur occasionel</label>
@@ -281,17 +316,6 @@
           </div>
         </div>
       </div>
-      <div class="row" style="margin-bottom: 15px;">
-        <div class="col-md-2 col-md-offset-2">
-          <a  ng-click="queteur.back();" class="btn btn-link">Cancel</a>
-        </div>
-        <div class="col-md-2 col-md-offset-2">
-          <input type="button" class="btn btn-primary" value="Créer un nouveau quêteur" ng-show="queteur.current.id > 0 " ng-click="queteur.createNewUser()"/>
-        </div>
-        <div class="col-md-2 col-md-offset-1">
-          <input type="button" class="btn btn-primary" value="Save" ng-disabled="queteurForm.$invalid" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
-        </div>
-      </div>
       <!-- Successful Save -->
       <div class="row" ng-show="queteur.savedSuccessfully">
         <div class="col-md-8 col-md-offset-2">
@@ -311,9 +335,22 @@
           </div>
         </div>
       </div>
+      <div class="row" style="margin-bottom: 15px;">
+        <div class="col-md-2 col-md-offset-2">
+          <a  ng-click="queteur.back();" class="btn btn-link">Annuler</a>
+        </div>
+        <div class="col-md-2 col-md-offset-2">
+          <input type="button" class="btn btn-primary" value="Créer un nouveau quêteur" ng-show="queteur.current.id > 0 " ng-click="queteur.createNewUser()"/>
+        </div>
+        <div class="col-md-2 col-md-offset-1">
+          <input type="button" class="btn btn-primary" value="Sauvegarder" ng-disabled="queteurForm.$invalid" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
+        </div>
+      </div>
+
       <!-- RCQ USER -->
       <div ng-show="queteur.current.id       > 0 &&
                     queteur.current.active  == 1 &&
+                    !queteur.current.anonymization_token &&
                     queteur.current.secteur <= 2 &&
                     queteur.currentUserRole >= 4">
         <div class="row">
@@ -339,7 +376,7 @@
                     </span>
                   </div>
                 </div>
-                <div ng-show="queteur.current.user">
+                <div ng-show="queteur.current.user.id">
                   <div class="panel panel-primary">
                     <div class="panel-heading">Modifications</div>
                     <div class="panel-body">
@@ -368,7 +405,7 @@
                       </div>
                       <div class="row">
                         <div class="form-group col-md-6">
-                          <button class="btn btn-default" type="button" id="reInitUserPassword" ng-click="queteur.reinitPassword()">Ré-initialiser le Password</button>
+                          <button class="btn btn-default" type="button" id="reInitUserPassword" ng-click="queteur.reinitPassword()">Réinitialiser le Password</button>
                           <span class="help-block">Un email sera envoyé à l'utilsateur avec un lien pour réinitialiser son mot de passe</span>
                         </div>
                         <div class="form-group col-md-6">
@@ -430,6 +467,94 @@
           </div>
         </div>
       </div>
+
+      <!-- CNIL GDPR -->
+      <div class="row" ng-show="queteur.currentUserRole >= 4 &&
+                               !queteur.current.anonymization_token" style="padding-top:20px;">
+        <div class="col-md-offset-2 col-md-8">
+          <button class="btn btn-warning"
+                  ng-click="queteur.anonymize();"
+                  style="width:100%;height:70px;">
+            CNIL/GDPR : Anonymiser les données du Quêteur
+          </button>
+          <span class="help-block">
+            <p>Cliquez sur ce bouton si le quêteur vous demande la suppression de ses données dans RedCrossQuest.</p>
+            <p>Après confirmation, les données de cet écran sont effacées et un jeton unique est attaché à la fiche du quêteur et envoyé par email au quêteur.</p>
+            <p>L'année suivante (ou immédiatement, si l'action a été faite par erreur), le quêteur peut vous transmettre ce jeton pour retrouver la fiche anonymisée et la revaloriser pour une nouvelle année de quête. Il retrouvera tous ses troncs</p>
+            <p>Les troncs ne sont pas supprimés/modifiés par cette action, le bilan comptable n'est pas impacté.</p>
+          </span>
+        </div>
+      </div>
+      <div class="row" ng-show="queteur.currentUserRole >= 4        &&
+                               !queteur.current.anonymization_token &&
+                                queteur.current.anonymizeAskConfirmation" >
+        <div class="col-md-offset-2 col-md-4">
+          <button class="btn btn-danger"
+                  ng-click="queteur.doAnonymize();"
+                  ng-hide="queteur.current.doAnonymizeButtonDisabled"
+                  style="width:100%;height:70px;">
+            J'anonymise les <br/>données du quêteur
+          </button>
+          <div ng-show="queteur.current.doAnonymizeButtonDisabled">
+          <img src="assets/images/loading.gif" alt="Chargement en cours, veuillez patienter" />
+          </div>
+          <span class="help-block">
+            <p>En cliquant sur ce bouton, les données de cet écran sont effacées et un jeton unique est envoyé par email au quêteur.</p>
+          </span>
+        </div>
+
+        <div class="col-md-4">
+          <button class="btn btn-default"
+                  ng-click="queteur.current.anonymizeAskConfirmation=false;"
+                  style="width:100%;height:70px;">
+            Ouuppss.... <br/>Je me suis trompé !
+          </button>
+          <span class="help-block">
+            <p>En cliquant sur ce bouton, vous revenez un cran en arrière, aucune modification n'aura été effectuée</p>
+          </span>
+        </div>
+      </div>
+      <div class="row" ng-show="queteur.currentUserRole >= 4 && queteur.current.anonymization_token" style="padding-top:20px;">
+        <div class="col-md-offset-2 col-md-4">
+          <label for="anonymization_token" class="control-label">Token d'Anonymisation</label>
+          <input name="anonymization_token" id="anonymization_token" class="form-control" ng-model="queteur.current.anonymization_token" readonly/>
+        </div>
+        <div class="col-md-4">
+          <label for="anonymization_date" class="control-label">Date d'anonymisation</label>
+          <input name="anonymization_date" id="anonymization_date" class="form-control" ng-model="queteur.current.anonymization_date" readonly/>
+        </div>
+      </div>
+      <div class="row" ng-show="queteur.currentUserRole >= 4        &&
+                                queteur.current.anonymization_token &&
+                                queteur.current.unanonymizeAskConfirmation"
+      style="margin-top:20px;">
+        <div class="col-md-offset-2 col-md-4">
+          <button class="btn btn-danger"
+                  ng-click="queteur.confirmUnAnonymize();"
+                  style="width:100%;height:70px;">
+            Je revalorise la fiche du quêteur sur demande<br/>
+            explicite de la personne concernée
+          </button>
+          <span class="help-block">
+            <p>En cliquant sur ce bouton, vous revalorisez la fiche quêteur d'une personne qui a explicitement demandé à ce que ses données soient anonymisées.</p>
+            <p>Vous ne devez faire cela, que sur demande expresse de la personne, qui vous aura transmis le jeton d'anonymisation.</p>
+          </span>
+        </div>
+
+        <div class="col-md-4">
+          <button class="btn btn-default"
+                  ng-click="queteur.current.unanonymizeAskConfirmation=false;"
+                  style="width:100%;height:70px;">
+            Ouuppss.... <br/>Je me suis trompé !
+          </button>
+          <span class="help-block">
+            <p>En cliquant sur ce bouton, vous revenez un cran en arrière, aucune modification n'aura été effectuée</p>
+          </span>
+        </div>
+      </div>
+
+
+      <!-- liste des troncs -->
       <div class="row" ng-show="queteur.current.id > 0" style="padding-top:20px;">
         <div class="panel panel-default">
           <!-- Default panel contents -->
@@ -438,17 +563,17 @@
             <thead>
               <tr>
                 <th>ID (click to edit)</th>
-                <th>départ Théorique</th>
-                <th>départ</th>
-                <th>retour</th>
-                <th>durée(min)</th>
-                <th>point_quete id</th>
+                <th>Départ théorique</th>
+                <th>Départ</th>
+                <th>Retour</th>
+                <th>Durée(min)</th>
+                <th>Point_quete id</th>
                 <th>Montant</th>
                 <th>Poids</th>
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="tq in queteur.current.troncs_queteur"">
+              <tr ng-repeat="tq in queteur.current.troncs_queteur">
                 <th><a ng-href="/#!/tronc_queteur/edit/{{::tq.id}}">{{::tq.id}}</a>&nbsp;<span class="glyphicon glyphicon-bin" aria-hidden="true" style="color:grey;" ng-show="tq.deleted"></span></th>
                 <td>{{::tq.depart_theorique}} </td>
                 <td>{{::tq.depart}}</td>

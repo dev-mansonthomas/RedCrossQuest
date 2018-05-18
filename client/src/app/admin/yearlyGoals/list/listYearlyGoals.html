@@ -1,0 +1,288 @@
+<acme-navbar></acme-navbar>
+
+
+<div class="container" data-ng-controller="YearlyGoalsController as yg">
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">Objectifs Annuel de quête</div>
+    </div>
+    <div class="well" >
+      <form class="form-search form-inline" name="searchForm" novalidate ng-submit='yg.doSearch();'>
+        <div class="row">
+
+          <div class="form-group col-md-4 col-md-offset-3">
+            <label for="selectedYear" class="control-label">Année de Quête</label>
+
+
+
+            <select name="selectedYear"
+                    id="selectedYear"
+                    class="form-control"
+                    ng-model="yg.selectedYear"
+                    required
+                    ng-change="yg.clearScreen()"
+                    ng-options="i as i
+                     for
+                     i in yg.years">
+              <option> </option>
+            </select>
+
+
+          </div>
+          <div class="col-md-4">
+            <input type="submit" class="btn btn-primary" value="Rechercher" ng-click="yg.doSearch()"/>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div ng-show="yg.yearlyGoal['id']">
+      <div class="row"  style="margin-bottom: 20px;">
+        <div class="col-md-2 col-md-offset-4">
+          Objectif de l'année {{yg.selectedYear}}
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="amount" id="amount" type="number" class="form-control" ng-model="yg.yearlyGoal.amount" required format="currency"/><span class="input-group-addon">€</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <p class="text-muted">Répartissez votre objectif par jour de quête ci-dessous en pourcentage. Une répartition par jour de quête est proposée et correspond à ce qui a été observé en moyenne sur le terrain</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_1_percentage" class="control-label">Jour 1</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_1_percentage" id="day_1_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_1_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_1_percentage}}%;">
+              {{yg.yearlyGoal.day_1_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_1_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_2_percentage" class="control-label">Jour 2</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_2_percentage" id="day_2_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_2_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_2_percentage}}%;">
+              {{yg.yearlyGoal.day_2_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_2_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_3_percentage" class="control-label">Jour 3</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_3_percentage" id="day_3_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_3_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_3_percentage}}%;">
+              {{yg.yearlyGoal.day_3_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_3_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_4_percentage" class="control-label">Jour 4</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_4_percentage" id="day_4_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_4_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_4_percentage}}%;">
+              {{yg.yearlyGoal.day_4_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_4_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_5_percentage" class="control-label">Jour 5</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_5_percentage" id="day_5_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_5_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_5_percentage}}%;">
+              {{yg.yearlyGoal.day_5_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_5_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_6_percentage" class="control-label">Jour 6</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_6_percentage" id="day_6_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_6_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_6_percentage}}%;">
+              {{yg.yearlyGoal.day_6_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_6_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_7_percentage" class="control-label">Jour 7</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_7_percentage" id="day_7_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_7_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_7_percentage}}%;">
+              {{yg.yearlyGoal.day_7_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_7_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_8_percentage" class="control-label">Jour 8</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_8_percentage" id="day_8_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_8_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_8_percentage}}%;">
+              {{yg.yearlyGoal.day_8_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_8_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <label for="day_9_percentage" class="control-label">Jour 9</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="day_9_percentage" id="day_9_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.day_9_percentage" required/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.day_9_percentage}}%;">
+              {{yg.yearlyGoal.day_9_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.day_9_percentage*yg.yearlyGoal.amount/100 | currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- small hack to compute remaining percentage whenever an input changes--> {{yg.computeRemainingPercentage()}}
+
+      <div class="row" style="border-top:1px solid grey; padding-top:12px;margin-bottom: 20px;">
+        <div class="col-md-1">
+          <label for="remaining_percentage" class="control-label">% restant</label>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <input name="remaining_percentage" id="remaining_percentage" type="number" class="form-control" ng-model="yg.yearlyGoal.remaining_percentage" readonly/><span class="input-group-addon">%</span>
+          </div>
+        </div>
+        <div class="col-md-9" style="padding-top: 8px;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: {{yg.yearlyGoal.remaining_percentage}}%; background-color:{{yg.yearlyGoal.remaining_percentage!=0?'red':'green'}} !important">
+              {{yg.yearlyGoal.remaining_percentage}}%
+            </div>
+            <span class="goal_partial_amount">{{yg.yearlyGoal.remaining_percentage*yg.yearlyGoal.amount/100| currency}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Successful Save -->
+      <div class="row" ng-show="yg.savedSuccessfully">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="yg.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+            <strong>Bravo!</strong> Les objectifs ont été sauvegardés avec succès!
+          </div>
+        </div>
+      </div>
+      <!-- Error while saving -->
+      <div class="row" ng-show="yg.errorWhileSaving">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="yg.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+            <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde des objectifs!
+            <pre style="text-align: left;">{{yg.errorWhileSavingDetails}}</pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" >
+        <div class="col-md-2 col-md-offset-4">
+          <button type="button" class="btn btn-primary" ng-click="yg.save();">Sauvegarder</button>
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+          <button type="button" class="btn btn-primary" ng-click="yg.reset();">Rétablir la répartition par défaut</button>
+          <span class="help-block">la répartition par défaut est: 30% - 15% - 6% - 4% - 6% - 6% - 8% - 15% - 10%</span>
+        </div>
+      </div>
+    </div>
+
+  <div class="row" ng-show="!yg.yearlyGoal['id'] && yg.searchedYear == yg.selectedYear">
+    <div class="col-md-2 col-md-offset-4">
+      <input type="submit" class="btn btn-primary" value="Renseigner les objectifs de l'année {{yg.selectedYear}}" ng-click="yg.createYear(yg.selectedYear)"/>
+    </div>
+  </div>
+
+
+  </div>
+</div>
+
