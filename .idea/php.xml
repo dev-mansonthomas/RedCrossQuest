@@ -26,6 +26,8 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/config" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/server/vendor/sendgrid/php-http-client" />
+      <path value="$PROJECT_DIR$/server/vendor/sendgrid/sendgrid" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

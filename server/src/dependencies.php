@@ -1,4 +1,7 @@
 <?php
+
+use SendGrid;
+
 // DIC configuration
 $container = $app->getContainer();
 
@@ -47,22 +50,10 @@ $container['mailer'] = function (\Slim\Container $c)
 {
   $settings = $c['settings']['email'];
 
-  $mailer = new PHPMailer();
+  $sendgrid       = new SendGrid($settings['sendgrid.api_key']);
+  $sendgridSender = new SendGrid\Email("RedCrossQuest", $settings['sendgrid.sender']);
 
-  $mailer->Host       = $settings['server'];
-  $mailer->isSMTP();
-  $mailer->SMTPAuth   = true;
-  $mailer->SMTPSecure = 'ssl';
-  $mailer->Port       = $settings['port'];
-	$mailer->Username   = $settings['username'];
-	$mailer->Password   = $settings['password'];
-	$mailer->isHTML(true);
-  $mailer->CharSet = 'UTF-8';
-
-  // ca écrit sur la "page", donc dans la réponse JSON. (utiliser output_buffering pour capturer)
-	//$mailer->SMTPDebug = 3;
-
-  return new \RedCrossQuest\BusinessService\EmailBusinessService($c->logger, $mailer, $c['settings']['appSettings']);
+  return new \RedCrossQuest\BusinessService\EmailBusinessService($c->logger, $sendgrid, $sendgridSender, $c['settings']['appSettings']);
 };
 
 

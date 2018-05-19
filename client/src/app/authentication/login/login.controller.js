@@ -72,12 +72,12 @@
         if(success)
         {
           vm.error=null;
-          vm.success='Un email vient de vous être envoyé ('+email+') avec un lien pour réinitialiser votre mot de passe. (checker votre dossier spam)';
+          vm.success='Un email vient de vous être envoyé ('+email+') avec un lien pour réinitialiser votre mot de passe. L\'email va arriver dans une minute ! (Checkez votre dossier spam)';
           vm.loading=false;
         }
         else
         {
-          vm.error='Une erreur est survenue. Veuillez contacter votre cadre local ou départemental';
+          vm.error='Une erreur est survenue. Veuillez contacter support@redcrossquest.com';
           vm.success=null;
           vm.loading=false;
         }

@@ -21,7 +21,8 @@
         "nesbot/carbon": "^1.21",
         "lcobucci/jwt": "^3.2",
         "phpmailer/phpmailer": "^5.2",
-        "ramsey/uuid": "^3.6"
+        "ramsey/uuid": "^3.6",
+        "sendgrid/sendgrid": "^6.2"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

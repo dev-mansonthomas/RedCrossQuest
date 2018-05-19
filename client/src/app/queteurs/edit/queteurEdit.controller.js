@@ -229,13 +229,13 @@
     {
       //vm.uploadFiles();
 
-      if(angular.isDefined(vm.current.anonymization_token) && !vm.current.unAnonymizeConfirmed)
+      if(angular.isDefined(vm.current.anonymization_token) && vm.current.anonymization_token != null && !vm.current.unAnonymizeConfirmed)
       {
         vm.current.unanonymizeAskConfirmation=true;
       }
       else
       {
-        if (angular.isDefined(vm.current.id))
+        if (angular.isDefined(vm.current.id) && vm.current.id != null)
         {
           vm.current.$update(vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
         }

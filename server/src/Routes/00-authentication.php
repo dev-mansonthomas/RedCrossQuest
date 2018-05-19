@@ -43,7 +43,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
     //refusing null, empty, big
     if($username == null     || $password == null      ||
       strlen($username) == 0 || strlen($password) == 0 ||
-      strlen($username) > 10 || strlen($password) > 20)
+      strlen($username) > 20 || strlen($password) > 20)
     {
       $response401 = $response->withStatus(401);
       $response401->getBody()->write(json_encode("{error:'username or password error. Code 1'}"));
@@ -158,7 +158,9 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
       //$this->logger->debug(print_r($queteur,true));
       $this->mailer->sendInitEmail($queteur, $uuid);
 
-      $response->getBody()->write('{"success":true,"email":"'.$queteur->email.'"}');
+      //protect email address
+      $email = substr($queteur->email, 0, 1)."...@...".substr($queteur->email,-5, 5);
+      $response->getBody()->write('{"success":true,"email":"'.$email.'"}');
       return $response;
 
     }

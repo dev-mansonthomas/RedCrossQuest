@@ -19,6 +19,8 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/ramsey/uuid" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/robmorgan/phinx" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/sendgrid/php-http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/sendgrid/sendgrid" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/slim/php-view" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/slim/slim" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/config" />

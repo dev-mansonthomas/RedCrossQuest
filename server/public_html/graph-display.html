@@ -1,0 +1,145 @@
+  <!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+  <meta charset="UTF-8">
+  <title>Graphique de Suivi de la quête</title>
+
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+  <!-- BOOTSTRAP 3.3.7 Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+
+  <script type="text/javascript" src="https://spotfire.cloud.tibco.com/spotfire/wp/GetJavaScriptApi.ashx?Version=7.5"></script>
+  <script>
+    reloadEnabled = true;
+    myTimeoutId = null;
+    function parseQuery(qstr) {
+      var query = {};
+      var a = (qstr[0] === '?' ? qstr.substr(1) : qstr).split('&');
+      for (var i = 0; i < a.length; i++) {
+        var b = a[i].split('=');
+        query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+      }
+      return query;
+    }
+
+    var serverUrl    = "https://spotfire.cloud.tibco.com/spotfire/wp/";
+
+    function reload()
+    {
+      if(reloadEnabled === true)
+      {
+        location.reload(true);
+        console.log("reloading...");
+      }
+      else
+      {
+        console.log("auto-reload disabled");
+      }
+    }
+
+    window.onload = function()
+    {
+      var query = parseQuery(document.location.search);
+
+      if( typeof query.g ==='undefined' ||
+          typeof query.i ==='undefined' ||
+          query.i.length !== 36          ||
+          (query.i.match(new RegExp("-", "g")) || []).length !== 4)
+      {
+        alert("initialization error");
+        return;
+      }
+
+
+      function errorHandler(errorCode, description)
+      {
+        alert(errorCode+' '+description);
+      }
+
+      //https://spotfire.cloud.tibco.com/spotfire/wp/OpenAnalysis?file=/users/mansonthomas/Public/SpotfireCloud
+      var analysisPath = "/users/mansonthomas/fr-rcq-prod/"+query.g;
+      var parameters   = 'token="'+query.i+'";'; //
+
+      //var analysisPath = "/users/mansonthomas/Public/RCQ-Public-MontantsVisibles";
+      //var parameters   = 'token="64ac08e2-2fcd-4d63-bbb4-4062d9a66732";';
+
+
+      var app = new spotfire.webPlayer.Application(serverUrl, null, analysisPath, parameters, false);
+      app.onError(errorHandler);
+      var doc = app.openDocument("container");
+
+      myTimeoutId = setTimeout(reload,6*60*1000);
+    };
+
+    function enable()
+    {
+      reloadEnabled = true;
+      document.getElementById('actif')  .classList.add("active");
+      document.getElementById('inactif').classList.remove("active");
+      var refreshDelay = document.getElementById('refresh_delay').value;
+
+      var refreshDelayInt = parseInt(refreshDelay);
+      if( refreshDelayInt < 5 || refreshDelayInt > 60)
+      {
+        refreshDelayInt = 5;
+      }
+      clearTimeout(myTimeoutId);
+      myTimeoutId = setTimeout(reload, refreshDelayInt*60*1000);
+      console.log("enabling auto reload");
+    }
+
+    function disable()
+    {
+      reloadEnabled = false;
+      document.getElementById('actif')  .classList.remove ("active");
+      document.getElementById('inactif').classList.add("active");
+      clearTimeout(myTimeoutId);
+      console.log("disabling auto reload");
+    }
+  </script>
+</head>
+<body style="margin:0px;height:100%;">
+<div class="container" style="height:100% !important;width:100%;background-color: #222222;margin:0px;padding:0px;">
+
+
+  <div class="row" style="height:30px;">
+    <div class="col-md-2">
+      <img src="/assets/images/RedCrossQuestLogo.png" style="top:0px;left:0px;margin:0px;height:30px;"/>
+    </div>
+    <div class="col-md-3 col-md-offset-4" style="padding-top: 2px;">
+      <span style="color:white">Mise-à-jour automatique ?</span>
+      <div class="btn-group btn-group-xs" role="group" aria-label="...">
+        <button type="button" id="actif"   onclick="enable() " class="btn btn-default active">Actif</button>
+        <button type="button" id="inactif" onclick="disable()" class="btn btn-default">Inactif</button>
+      </div>
+    </div>
+    <div class="col-md-1">
+      <span style="color:white">Refresh delay</span>
+    </div>
+    <div class="col-md-2">
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon glyphicon glyphicon-time" style="top:0px;" id="basic-addon2"></span>
+        <input id="refresh_delay" class="form-control" placeholder="délai en min" aria-describedby="basic-addon2" value="5">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" onclick="enable()">Save</button>
+      </span>
+      </div>
+
+    </div>
+  </div>
+  <div class="row" id="container" style="height:97% !important;width:100%;margin:0px;padding:0px;"></div>
+</div>
+</body>
+</html>
