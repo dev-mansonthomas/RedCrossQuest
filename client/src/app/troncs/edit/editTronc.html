@@ -9,15 +9,15 @@
 
       <div class="well">
         <div class="row">
-          <div class="col-md-2 col-md-offset-2">
+          <div class="col-md-3 col-md-offset-1">
 
             <div class="form-group" ng-class="{'has-error':troncForm.enabled.$invalid}">
-              <label for="activeRadio1" class="control-label">Actif</label> <br/>
+              <label for="activeRadio1" class="control-label">Opérationnel pour la quête</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="active" id="activeRadio1" ng-model="tronc.current.enabled" value="1" required> Oui
+                <input type="radio" name="active" id="activeRadio1" ng-model="tronc.current.enabled" value="true"   required ng-checked="tronc.current.enabled===true"> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="active" id="activeRadio2" ng-model="tronc.current.enabled" value="0" required> Non
+                <input type="radio" name="active" id="activeRadio2" ng-model="tronc.current.enabled" value="false" required ng-checked="tronc.current.enabled===false"> Non
               </label>
             </div>
           </div>
@@ -52,7 +52,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-8 col-md-offset-2">
+          <div class="col-md-9 col-md-offset-1">
 
             <div class="form-group">
               <label for="notes" class="control-label">Notes</label>

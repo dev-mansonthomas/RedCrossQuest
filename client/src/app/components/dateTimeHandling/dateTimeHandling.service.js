@@ -25,6 +25,15 @@ angular
         };
       }
 
+      if(typeof serverDate === 'string')
+      {
+        return {
+          dateInLocalTimeZone       : moment(serverDate).toDate(),
+          dateInLocalTimeZoneMoment : moment(serverDate),
+          stringVersion             : serverDate
+        };
+      }
+
       //date store in UTC + Timezone offset with Carbon on php side.
       //Carbon date is updated to Paris Timezone, so no need of further manipulation
       //this parse the Carbon time without '000' ending in the UTC timezone, and then convert it to Europe/Paris (the value of the tronc_queteur.retour.timezone)

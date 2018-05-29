@@ -29,7 +29,7 @@ environments:
     local-testing:
         adapter: mysql
         host: 127.0.0.1
-        name: rcq-test
+        name: rcq
         user: root
         pass: 'CRFCRF'
         port: 3306

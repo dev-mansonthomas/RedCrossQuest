@@ -15,17 +15,18 @@
 
     $rootScope.$emit('title-updated', 'Liste des Troncs');
     vm.typeTroncList=[
+      {id:0,label:'Tout type'},
       {id:1,label:'Tronc'},
       {id:2,label:'Urne chez un commerçant'},
       {id:3,label:'Autre'},
-      {id:3,label:'Terminal Carte Bleue'}
+      {id:4,label:'Terminal Carte Bleue'}
     ];
 
     vm.list = TroncResource.query();
 
     vm.searchSubmit = function()
     {
-      vm.list = TroncResource.query({'active':vm.active});
+      vm.list = TroncResource.query({'active':vm.active, 'type':vm.type===0?'':vm.type});
     };
   }
 })();

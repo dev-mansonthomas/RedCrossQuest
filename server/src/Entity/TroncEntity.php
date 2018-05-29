@@ -23,7 +23,7 @@ class TroncEntity extends Entity
       $this->getString ('id'          , $data);
       $this->getString ('ul_id'       , $data);
       $this->getString ('created'     , $data);
-      $this->getString ('enabled'     , $data);
+      $this->getBoolean('enabled'     , $data);
       $this->getString ('notes'       , $data);
       $this->getInteger('type'        , $data);
       $this->getInteger('nombreTronc' , $data);

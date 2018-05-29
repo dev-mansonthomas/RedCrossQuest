@@ -2,14 +2,24 @@
 <div class="container" data-ng-controller="QueteurEditController as queteur">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      Un Quêteur: <span ng-bind="queteur.current.id"></span>
-      <span ng-show="queteur.current.first_name"> - </span>
-      <b>
-        <span ng-bind="queteur.current.first_name"></span>
-        <span ng-bind="queteur.current.last_name"></span>
-        <span ng-show="queteur.current.nivol"> - </span>
-        <span ng-bind="queteur.current.nivol"></span>
-      </b>
+      <div class="row">
+        <div class="col-md-9">
+          <h5>
+            Un Quêteur: <span ng-bind="queteur.current.id"></span>
+            <span ng-show="queteur.current.first_name"> - </span>
+            <b>
+              <span ng-bind="queteur.current.first_name"></span>
+              <span ng-bind="queteur.current.last_name"></span>
+              <span ng-show="queteur.current.nivol"> - </span>
+              <span ng-bind="queteur.current.nivol"></span>
+            </b>
+          </h5>
+        </div>
+        <div class="col-md-2">
+          <input type="button" class="btn btn-info" value="Créer un nouveau quêteur" ng-show="queteur.current.id > 0 " ng-click="queteur.createNewQueteur()"/>
+        </div>
+
+      </div>
     </div>
   </div>
   <div class="alert alert-success" role="alert">
@@ -61,7 +71,7 @@
                        class="form-control"
                        ng-model="queteur.current.nivol"
                        ng-required="queteur.current.secteur == 1 || queteur.current.secteur == 2 || queteur.current.secteur == 4"
-                       ng-pattern="'[0-9]{3,11}[A-Z]'"
+                       ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
                        ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
                        ng-change="queteur.searchSimilar();"
             />
@@ -208,7 +218,7 @@
             <label for="mobile" class="control-label">Téléphone</label>
             <div class="input-group">
               <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;+</span>
-              <input name="mobile" id="mobile" class="form-control"  type="number" ng-model="queteur.current.mobile" required ng-pattern="queteur.current.secteur >= 5? '33[16-79][0-9]{8,8}':'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+              <input name="mobile" id="mobile" class="form-control"  type="number" ng-model="queteur.current.mobile" required ng-pattern="queteur.current.secteur >= 5? '33[1,6,7,9][0-9]{8,8}':'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
             </div>
             <span class="help-block" ng-show="queteurForm.mobile.$invalid">Format : {{queteur.current.secteur >= 5?'+33[1 ou 6 ou 7 ou 9]01020304':'+33601020304 ou +33701020304'}} <br/><sub>(Ne <b>pas</b> mettre le +). Seul les numéros français sont autorisés</sub><br/>Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain.</span>
           </div>
@@ -298,7 +308,7 @@
           <div class="form-group">
             <label for="notes" class="control-label">Notes</label>
             <textarea rows="6" name="notes" id="notes" class="form-control" ng-model="queteur.current.notes"></textarea>
-            <span class="help-block">Info importantes sur le quêteurs, ex: Contraintes horaires etc...</span>
+            <span class="help-block">Info importantes sur le quêteur, ex: Contraintes horaires etc...</span>
           </div>
         </div>
       </div>
@@ -339,10 +349,7 @@
         <div class="col-md-2 col-md-offset-2">
           <a  ng-click="queteur.back();" class="btn btn-link">Annuler</a>
         </div>
-        <div class="col-md-2 col-md-offset-2">
-          <input type="button" class="btn btn-primary" value="Créer un nouveau quêteur" ng-show="queteur.current.id > 0 " ng-click="queteur.createNewUser()"/>
-        </div>
-        <div class="col-md-2 col-md-offset-1">
+        <div class="col-md-2 col-md-offset-4">
           <input type="button" class="btn btn-primary" value="Sauvegarder" ng-disabled="queteurForm.$invalid" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
         </div>
       </div>
@@ -469,7 +476,8 @@
       </div>
 
       <!-- CNIL GDPR -->
-      <div class="row" ng-show="queteur.currentUserRole >= 4 &&
+      <div class="row" ng-show="queteur.current.id > 0 &&
+                                queteur.currentUserRole >= 4 &&
                                !queteur.current.anonymization_token" style="padding-top:20px;">
         <div class="col-md-offset-2 col-md-8">
           <button class="btn btn-warning"
@@ -574,14 +582,14 @@
             </thead>
             <tbody>
               <tr ng-repeat="tq in queteur.current.troncs_queteur">
-                <th><a ng-href="/#!/tronc_queteur/edit/{{::tq.id}}">{{::tq.id}}</a>&nbsp;<span class="glyphicon glyphicon-bin" aria-hidden="true" style="color:grey;" ng-show="tq.deleted"></span></th>
-                <td>{{::tq.depart_theorique}} </td>
-                <td>{{::tq.depart}}</td>
-                <td>{{::tq.retour}}</td>
-                <td>{{::tq.duration.toFixed(2)}}</td>
-                <td>{{::tq.point_quete_id}}</td>
-                <td>
-                  {{(
+                <th><a ng-href="/#!/tronc_queteur/edit/{{tq.id}}">{{tq.id}}</a>&nbsp;<span class="glyphicon glyphicon-bin" aria-hidden="true" style="color:grey;" ng-show="tq.deleted"></span></th>
+                <td>{{tq.depart_theorique}} </td>
+                <td>{{tq.depart}}</td>
+                <td>{{tq.retour}}</td>
+                <td>{{tq.duration.toFixed(2)}}</td>
+                <td>{{tq.point_quete_id}}</td>
+                <td style="text-align: right">
+                  {{
                   tq.euro500 * 500 +
                   tq.euro200 * 200 +
                   tq.euro100 * 100 +
@@ -599,10 +607,9 @@
                   tq.cent1   * 0.01+
                   tq.don_cheque    +
                   tq.don_creditcard
-                  ).toFixed(2)}}
-                  €
+                  | currency : "€" : 2}}
                 </td>
-                <td>
+                <td style="text-align: right">
                   {{(tq.euro500 * 1.1  +
                   tq.euro200 * 1.1  +
                   tq.euro100 * 1    +

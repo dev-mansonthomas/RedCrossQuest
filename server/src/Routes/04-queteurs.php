@@ -64,7 +64,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
         }
 
 
-        if(array_key_exists('admin_ul_id',$params))
+        if(array_key_exists('admin_ul_id',$params) && $roleId > 4)
         {
           $adminUlId = $params['admin_ul_id'];
           //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
@@ -167,6 +167,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   {
     $ulId   = (int)$args['ul-id'  ];
     $roleId = (int)$args['role-id'];
+    $userId = $decodedToken->getUid();
     $params = $request->getQueryParams();
 
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
@@ -177,7 +178,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     if(array_key_exists('action', $params) && $params['action'] == "anonymize")
     {
       $queteurOriginalData = $queteurDBService->getQueteurById($queteurEntity->id);
-      $token               = $queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId);
+      $token               = $queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId, $userId);
       $this->mailer->sendAnonymizationEmail($queteurOriginalData, $token);
       $queteurAnonymizedData = $queteurDBService->getQueteurById($queteurEntity->id);
 
@@ -220,7 +221,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
     //$this->logger->addInfo("Uploading file for UL ID='$ulId' and queteurId='$queteurId''", array('decodedToken'=>$decodedToken));
 
 
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
+    //$queteurDBService = new QueteurDBService($this->db, $this->logger);
 //    $input            = $request->getParsedBody();
 //    $queteurEntity    = new QueteurEntity($input);
     //restore the leading +
@@ -255,11 +256,8 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
     $queteurId          = $queteurDBService->insert($queteurEntity, $ulId, $roleId);
-    $queteur            = $queteurDBService->getQueteurById($queteurId);
-    $queteur->mobile    = intval(substr($queteur->mobile, 1));
-    $queteur->birthdate = $queteur->birthdate->toW3cString();
-    
-    $response->getBody()->write(json_encode($queteur));
+
+    $response->getBody()->write(json_encode(array('queteurId' =>$queteurId), JSON_NUMERIC_CHECK));
   }
   catch(\Exception $e)
   {

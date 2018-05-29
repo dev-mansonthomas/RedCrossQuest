@@ -685,34 +685,37 @@ $searchNivol
    * @param int $queteurId The queteur to update
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
+   * @param int $userId id of the user performing the action.
    * @return string token associated with the queteur
    * @throws PDOException if the query fails to execute on the server
    */
-  public function anonymize(int $queteurId, int $ulId, int $roleId)
+  public function anonymize(int $queteurId, int $ulId, int $roleId, int $userId)
   {
     $token = Uuid::uuid4();
 
     $sql = "
 UPDATE `queteur`
 SET
-  `first_name`          = 'Anonimisé',
-  `last_name`           = 'Quêteur',
-  `email`               = '' ,
-  `secteur`             = 0,
-  `nivol`               = '',
-  `mobile`              = '',
-  `updated`             = NOW(),
-  `notes`               = '',
-  `birthdate`           = '1922-12-22',
-  `man`                 = 0,
-  `active`              = 0,
-  `anonymization_token` = :token,
-  `anonymization_date`  = NOW()
-WHERE `id`              = :id
+  `first_name`           = 'Anonimisé',
+  `last_name`            = 'Quêteur',
+  `email`                = '' ,
+  `secteur`              = 0,
+  `nivol`                = '',
+  `mobile`               = '',
+  `updated`              = NOW(),
+  `notes`                = '',
+  `birthdate`            = '1922-12-22',
+  `man`                  = 0,
+  `active`               = 0,
+  `anonymization_token`  = :token,
+  `anonymization_date`   = NOW(),
+  `anonymization_user_id`= :user_id
+WHERE `id`               = :id
 ";
     $parameters = [
-      "id"    => $queteurId,
-      "token" => $token
+      "id"        => $queteurId,
+      "token"     => $token,
+      "user_id"   => $userId
     ];
 
     if($roleId != 9)

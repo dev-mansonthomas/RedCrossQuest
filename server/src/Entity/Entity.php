@@ -28,6 +28,20 @@ class Entity
   }
 
   /**
+   * set on this object the property named $this->$key,  $data[$key] as a float value
+   * @param string $key the key of the data to be returned
+   * @param array  $data the associative array
+   */
+  protected function getFloat(string $key, array $data)
+  {
+    if(array_key_exists($key, $data))
+    {
+      $this->$key = (float) $data[$key];
+    }
+  }
+
+
+  /**
    * set on this object the property named $this->$key,  $data[$key] as an string value
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
@@ -50,7 +64,7 @@ class Entity
     {
       $value = $data[$key];
 
-      if($value."" === "1" || $value."" === "true")
+      if($value."" === "1" || $value."" === "true" || $value === true)
       {
         $this->$key = true;
       }

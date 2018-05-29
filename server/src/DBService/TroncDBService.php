@@ -12,12 +12,15 @@ class TroncDBService extends DBService
    * @param string  $query    search query
    * @param boolean $active   search active or incative troncs
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $type  Id of the type of tronc, if null, search all types.
    * @return TroncEntity[] list of troncs
    * @throws PDOException if the query fails to execute on the server
    *
    */
-    public function getTroncs(string $query=null, int $ulId, bool $active )
+    public function getTroncs(string $query=null, int $ulId, bool $active, ?int $type )
     {
+
+      $parameters = ["ul_id" => $ulId, 'enabled'=>$active ];
       $sql = "
 SELECT `id`,
        `ul_id`,
@@ -31,24 +34,27 @@ AND   t.ul_id = :ul_id
 ";
       if($query != null)
       {
+        $parameters[ "query"] =$query;
         $sql .="
 AND CONVERT(id, CHAR) like concat(:query,'%')
 ";
       }
 
+      if( $type != null)
+      {
+        $parameters[ "type"] =$type;
+        $sql .="
+AND `type` = :type
+";
+      }
+
+
       $sql .="
       ORDER BY id ASC
 ";
-      //$this->logger->debug($sql);
+      $this->logger->info($sql, $parameters);
       $stmt = $this->db->prepare($sql);
-      if($query != null)
-      {
-        $stmt->execute([ "query" => $query, "ul_id" => $ulId, 'enabled'=>$active ]);
-      }
-      else
-      {
-        $stmt->execute(["ul_id" => $ulId, 'enabled'=>$active ]);
-      }
+      $stmt->execute($parameters);
 
 
       $results = [];

@@ -6,9 +6,20 @@
     .controller('LoginController', LoginController);
 
   /** @ngInject */
-  function LoginController($rootScope, $location, $timeout,
+  function LoginController($rootScope, $location, $timeout, $window,
                            AuthenticationService) {
     var vm = this;
+
+
+    var forceSSL = function ()
+    {
+      if($location.host() !=='localhost' && $location.protocol() !== 'https')
+      {
+        $window.location.href = $location.absUrl().replace('http', 'https');
+      }
+    };
+    forceSSL();
+
 
     $rootScope.$emit('title-updated', 'Login');
 
@@ -26,13 +37,14 @@
     vm.login=function()
     {
       vm.loading = true;
-      $timeout(function () {vm.loading=false;vm.timeout=true; }, 10000);
+      var loginTimeout = $timeout(function () {vm.loading=false;vm.timeout=true; }, 10000);
 
       AuthenticationService.login(vm.username, vm.password,
         function success(result)
         {
           if (result === true)
           {
+            $timeout.cancel(loginTimeout);
             $location.path('/');
           }
           else
@@ -43,18 +55,12 @@
         },
         function error(message)
         {
+          $timeout.cancel(loginTimeout);
           vm.error = 'Service Indisponible - '+message.data;
           vm.loading = false;
 
         }
       );
-
-
-
-
-
-
-
     };
     vm.sendInit = function()
     {

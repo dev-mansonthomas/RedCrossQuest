@@ -26,20 +26,21 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
     $params = $request->getQueryParams();
 
     $active     = array_key_exists('active'     ,$params)?$params['active'    ]:1;
+    $type       = array_key_exists('type'       ,$params)?$params['type'      ]:null;
 
     if(array_key_exists('q',$params))
     {
       //$this->logger->addDebug("Tronc by search type '".$params['q']."''", array('decodedToken'=>$decodedToken));
-      $troncs = $troncDBService->getTroncs($params['q'], $ulId, $active );
+      $troncs = $troncDBService->getTroncs($params['q'], $ulId, $active, $type);
     }
     else if(array_key_exists('searchType',$params))
     {
       //$this->logger->addDebug("Tronc by search type '".$params['searchType']."''", array('decodedToken'=>$decodedToken));
-      $troncs = $troncDBService->getTroncsBySearchType($params['searchType'], $ulId);
+      $troncs = $troncDBService->getTroncsBySearchType($params['searchType'], $ulId, $type);
     }
     else
     {
-      $troncs = $troncDBService->getTroncs(null,$ulId, $active );
+      $troncs = $troncDBService->getTroncs(null,$ulId, $active, $type );
     }
 
     $response->getBody()->write(json_encode($troncs));

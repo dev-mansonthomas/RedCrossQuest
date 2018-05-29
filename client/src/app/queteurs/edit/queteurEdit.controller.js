@@ -171,14 +171,21 @@
 
 
 
-    vm.savedSuccessfullyFunction=function()
+    vm.savedSuccessfullyFunction=function(response)
     {
+      if(typeof response.queteurId ==='number')
+      {
+        vm.goToQueteur(response.queteurId);
+      }
+
       vm.savedSuccessfully=true;
       vm.current.anonymization_token      = null;
       vm.current.anonymization_date       = null;
       vm.current.unAnonymizeConfirmed     = false;
       vm.current.anonymizeAskConfirmation = false;
       vm.current.doAnonymizeButtonDisabled= false;
+
+      vm.current.birthdate = moment(vm.current.birthdate).toDate();
 
       $timeout(function () { vm.savedSuccessfully=false; }, 5000);
     };
@@ -411,7 +418,7 @@
     vm.doAnonymize=function()
     {
       vm.current.doAnonymizeButtonDisabled=true;
-      vm.current.$anonymize(vm.handleQueteur);
+      vm.current.$anonymize(vm.handleQueteur, vm.errorWhileSavingFunction);
     };
 
   }

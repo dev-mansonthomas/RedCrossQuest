@@ -14,6 +14,7 @@
                                 DailyStatsResource, moment)
   {
     var vm = this;
+    vm.decimalRegEx = /^[0-9]+(,[0-9]{1,2})?$/;
 
     var currentYear = (new Date()).getFullYear();
 
@@ -23,6 +24,7 @@
 
     for(var i=2004;i<currentYear; i++)
       vm.years[vm.years.length]=i;
+
 
     vm.doSearch=function()
     {

@@ -1,0 +1,690 @@
+<acme-navbar></acme-navbar>
+<div class="container" data-ng-controller="EditRecuFiscalController as rfe">
+
+
+  <div class="panel panel-primary tronc-queteur" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important">
+    <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h2>REÇU FISCAL</h2>
+      <span ng-show="rfe.current.recu_fiscal.id">
+        ID {{rfe.current.recu_fiscal.id}} -
+           {{rfe.current.recu_fiscal.first_name}}
+           {{rfe.current.recu_fiscal.last_name}}
+
+        du <b>{{rfe.current.recu_fiscal.donation_dateStr}}</b>
+        </span></div>
+  </div>
+
+
+  <div class="col-md-12 tronc-queteur" style="padding-left:0px;padding-right:0px; background-color:white;">
+
+    <div class="row jumbotron" style="background-color: orangered" ng-show="rfe.current.recu_fiscal.deleted=='true' || rfe.current.recu_fiscal.deleted == true">
+      <H2>Attention : Ce reçu fiscal est marqué comme supprimé !<br/> <br/>Il n'est pas pris en compte dans les graphiques/statistics</H2>
+    </div>
+
+    <div class="row jumbotron" style="background-color: yellow" ng-show="rfe.current.not_same_year == true">
+      <H2>Ce reçu fiscal est d'une année <u>ANTÉRIEURE ({{rfe.current.year_recu_fiscal}}) !</u></H2>
+    </div>
+
+    <div class="well">
+      <form novalidate name="recuFiscalForm">
+
+        <div class="row" ng-show="rfe.current.recu_fiscal.id > 0">
+          <div class="col-md-5 col-md-offset-7">
+            <div class="form-group">
+              <label for="deletedRadio1" class="control-label">Est ce que le reçu fiscal est marqué comme supprimé ?</label><br/>
+              <label class="radio-inline">
+                <input type="radio" name="deleted" id="deletedRadio1" ng-model="rfe.current.recu_fiscal.deleted" value="true" ng-required="rfe.current.adminEditMode" ng-checked="rfe.current.recu_fiscal.deleted===true"
+                       ng-click="rfe.fillForDeletion()"> Supprimé
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="deleted" id="deletedRadio2" ng-model="rfe.current.recu_fiscal.deleted" value="false" ng-required="rfe.current.adminEditMode" ng-checked="rfe.current.recu_fiscal.deleted===false">
+                <b>NON</b> Supprimé (Valeur normale)
+              </label>
+              <span class="help-block">
+                Marquer le tronc comme supprimé: cela ne supprime pas réellement le tronc, vous pouvez donc revenir en arrière.
+                Cela permet d'exclure le reçu fiscal des statistiques
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+
+
+        <div class="row" ng-show="rfe.savedSuccessfully">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rfe.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+              <strong>Bravo!</strong> Le reçu fiscal à bien été sauvegardé!
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-show="rfe.errorWhileSaving">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rfe.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+              <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde!
+              <pre style="text-align: left;">{{rfe.errorWhileSavingDetails}}</pre>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
+            <strong>REÇU FISCAL</strong>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.ref_recu_fiscal.$invalid}">
+              <label for="ref_recu_fiscal" class="control-label">N° d'ordre du Reçu Fiscal</label>
+              <input type="number"
+                     id="ref_recu_fiscal"
+                     name="ref_recu_fiscal"
+                     min="0"
+                     ng-model="rfe.current.recu_fiscal.ref_recu_fiscal" class="form-control" required autocomplete="off"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.forme.$invalid}">
+              <label for="type" class="control-label">Forme du don</label>
+              <select name="forme" id="forme" class="form-control" ng-model="rfe.current.recu_fiscal.forme" required
+                      ng-options="r.id as r.label
+                    for
+                    r in rfe.formDonList"
+              >
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.type.$invalid}">
+              <label for="type" class="control-label">Nature de Tronc</label>
+              <select name="type" id="type" class="form-control" ng-model="rfe.current.recu_fiscal.type" required
+                      ng-options="r.id as r.label
+                    for
+                    r in rfe.natureDonList"
+              >
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div ng-class="{'has-error':recuFiscalForm.donation_date.$invalid}">
+              <label for="donation_date" class="control-label">Horaire réelle de Retour</label>
+              <input name="donation_date"
+                     id="donation_date"
+                     type="datetime-local"
+                     class="form-control"
+                     ng-model="rfe.current.recu_fiscal.donation_date"
+                     ng-max="rfe.current.donation_dateMax"
+                     required/>
+              <span class="help-block" ng-show="recuFiscalForm.donation_date.$invalid">
+                  La date de donation ne doit pas être dans le futur
+                </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px;">
+          <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
+            <strong>DONATEUR</strong>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.first_name.$invalid}">
+              <label for="first_name" class="control-label">Prénom</label>
+              <input type="text" id="first_name" name="first_name" ng-model="rfe.current.recu_fiscal.first_name" class="form-control" required autocomplete="given-name"/>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.last_name.$invalid}">
+              <label for="last_name" class="control-label">Nom</label>
+              <input type="text" id="last_name" name="last_name" ng-model="rfe.current.recu_fiscal.last_name" class="form-control" required autocomplete="name"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.phone.$invalid}">
+              <label for="pqAddress" class="control-label">Téléphone</label>
+
+              <div class="input-group">
+                <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;+</span>
+                <input type="text" id="phone" name="phone" ng-model="rfe.current.recu_fiscal.phone" class="form-control"
+                       ng-pattern="'33[1,6,7,9][0-9]{8,8}'"
+                       autocomplete="tel-national"/>
+              </div>
+              <span class="help-block" ng-show="recuFiscalForm.phone.$invalid">Format : +33[1 ou 6 ou 7 ou 9]01020304 <br/><sub>(Ne <b>pas</b> mettre le +). Seul les numéros français sont autorisés</sub></span>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.email.$invalid}">
+              <label for="email" class="control-label">email</label>
+              <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">@</span>
+                <input type="email"  id="email" name="email" ng-model="rfe.current.recu_fiscal.email" class="form-control"  autocomplete='email'/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.pqAddress.$invalid}">
+              <label for="pqAddress" class="control-label">Adresse</label>
+              <input type="text" id="pqAddress" name="pqAddress" ng-model="rfe.current.recu_fiscal.address" class="form-control" required autocomplete="address-level1"/>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.pqPostalCode.$invalid}">
+              <label for="pqPostalCode" class="control-label">Code Postal</label>
+              <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="rfe.current.recu_fiscal.postal_code" class="form-control" required autocomplete='postal-code'/>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group" ng-class="{'has-error':recuFiscalForm.pqCity.$invalid}">
+              <label for="pqCity" class="control-label">Ville</label>
+              <input type="text" id="pqCity" name="pqCity" ng-model="rfe.current.recu_fiscal.city" class="form-control" required autocomplete='address-level2'/>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+        <!-- Cheque -->
+        <div ng-if="rfe.current.recu_fiscal.type==2">
+          <div class="row">
+            <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
+              <strong>CHÈQUES</strong>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':recuFiscalForm.don_cheque.$invalid}">
+              <label for="don_cheque" class="control-label">Don en Chèque</label>
+              <div class="input-group">
+
+                <input type="number"
+                       ng-pattern="rfe.cbFormat"
+                       min="0"
+                       name="don_cheque"
+                       id="don_cheque"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="rfe.current.recu_fiscal.don_cheque"
+                       ng-required="rfe.current.recu_fiscal.type==2"/>
+                <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true" style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Saisir le don en chèque</span>
+            </div>
+          </div>
+        </div>
+        <!-- FIN Cheque -->
+
+        <!-- TERMINAL CB -->
+        <div  ng-if="rfe.current.recu_fiscal.type==3">
+          <div class="row">
+            <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
+              <strong>CARTE BLEUE, Virement, Prélèvement</strong>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':recuFiscalForm.don_creditcard.$invalid}">
+              <label for="don_creditcard" class="control-label">Don en Carte Bleue, Virement, Prélèvement</label>
+              <div class="input-group">
+
+                <input type="number"
+                       ng-pattern="rfe.cbFormat"
+                       min="0"
+                       name="don_creditcard"
+                       id="don_creditcard"
+                       class="form-control"
+                       ng-model="rfe.current.recu_fiscal.don_creditcard"
+                       ng-required="rfe.current.recu_fiscal.type==3"/>
+                <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"  style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Saisir le don en CB, Virement, Prélèvement</span>
+            </div>
+          </div>
+
+        </div>
+        <!-- FIN TERMINAL CB -->
+
+        <div  ng-if="rfe.current.recu_fiscal.type==1">
+          <div id="anchorForm" class="row anchor">
+
+            <div class="form-group col-md-8 col-md-offset-2 alert alert-warning" role="alert" style="font-size: 20px;text-align:center;">
+              Veuillez saisir le <b style="color:red">nombre</b> de pièces/billets (<b style="color:red">pas</b> les montants!)
+            </div>
+
+          </div>
+
+
+          <div class="row">
+            <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
+             <strong>BILLETS</strong>
+            </div>
+          </div>
+          <div class="row" style="height:115px;">
+
+            <div class="form-group  col-md-2 col-md-offset-2" ng-class="{'has-error':recuFiscalForm.euro5.$invalid}">
+              <label for="euro5" class="control-label">Nombre de 5€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro5"
+                     id="euro5"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro5"
+
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro5">Montant : {{rfe.current.recu_fiscal.euro5*5}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.euro10.$invalid}">
+              <label for="euro10" class="control-label">Nombre de 10€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro10"
+                     id="euro10"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro10"
+
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro10">Montant : {{rfe.current.recu_fiscal.euro10*10}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.euro20.$invalid}">
+              <label for="euro20" class="control-label">Nombre de 20€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro20"
+                     id="euro20"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro20"
+
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro20">Montant : {{rfe.current.recu_fiscal.euro20*20}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.euro50.$invalid}">
+              <label for="euro50" class="control-label">Nombre de 50€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro50"
+                     id="euro50"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro50"
+
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro50">Montant : {{rfe.current.recu_fiscal.euro50*50}} €</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group  col-md-2 col-md-offset-2" ng-class="{'has-error':recuFiscalForm.euro100.$invalid}">
+              <label for="euro100" class="control-label">Nombre de 100€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro100"
+                     id="euro100"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro100"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro100">Montant : {{rfe.current.recu_fiscal.euro100*100}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.euro200.$invalid}">
+              <label for="euro200" class="control-label" >Nb de 200€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro200"
+                     id="euro200"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro200"
+
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro200">Montant : {{rfe.current.recu_fiscal.euro200*200}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.euro500.$invalid}">
+              <label for="euro500" class="control-label">Nb de 500€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro500"
+                     id="euro500"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro500"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro500">Montant : {{rfe.current.recu_fiscal.euro500*500}} €</span>
+            </div>
+          </div>
+
+          <div class="row" style="height:115px;">
+
+            <div class="form-group col-md-4">
+              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="rfe.setNonFilledBillToZero();">
+                Mettre à zéro les champs billets non remplis
+              </button>
+            </div>
+
+            <div class="alert alert-success form-group col-md-8" role="alert" style="text-align:right;font-size:larger;font-weight:bold;">
+              Total Billets :  {{
+              rfe.current.recu_fiscal.euro5*5     +
+              rfe.current.recu_fiscal.euro10*10   +
+              rfe.current.recu_fiscal.euro20*20   +
+              rfe.current.recu_fiscal.euro50*50   +
+              rfe.current.recu_fiscal.euro100*100 +
+              rfe.current.recu_fiscal.euro200*200 +
+              rfe.current.recu_fiscal.euro500*500
+              | currency : "€" : 2}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
+              <strong>PIÈCES</strong>
+            </div>
+          </div>
+
+          <div class="row" style="height:115px;">
+            <div class="form-group  col-md-2 col-md-offset-2" ng-class="{'has-error':recuFiscalForm.euro2.$invalid}">
+              <label for="euro2" class="control-label">Nombre de 2€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro2"
+                     id="euro2"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro2"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro2">Montant : {{rfe.current.recu_fiscal.euro2*2}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.cents50.$invalid}">
+              <label for="cents50" class="control-label">Nombre de 50 cents</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="cents50"
+                     id="cents50"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.cents50"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.cents50">Montant : {{(rfe.current.recu_fiscal.cents50*0.5).toFixed(2)}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.euro1.$invalid}">
+              <label for="euro1" class="control-label">Nombre de 1€</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="euro1"
+                     id="euro1"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.euro1"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.euro1">Montant : {{rfe.current.recu_fiscal.euro1*1}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.cents20.$invalid}">
+              <label for="cents20" class="control-label">Nombre de 20 cents</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="cents20"
+                     id="cents20"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.cents20"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.cents20">Montant : {{(rfe.current.recu_fiscal.cents20*0.2).toFixed(2)}} €</span>
+            </div>
+
+          </div>
+          <div class="row" style="height:115px;">
+
+            <div class="form-group  col-md-2  col-md-offset-2" ng-class="{'has-error':recuFiscalForm.cents05.$invalid}">
+              <label for="cents05" class="control-label">Nombre de 5 cents</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="cents05"
+                     id="cents05"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.cents5"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.cents5">Montant : {{(rfe.current.recu_fiscal.cents5*0.05).toFixed(2)}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.cents10.$invalid}">
+              <label for="cents10" class="control-label">Nombre de 10 cents</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="cents10"
+                     id="cents10"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.cents10"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.cents10">Montant : {{(rfe.current.recu_fiscal.cents10*0.1).toFixed(2)}} €</span>
+            </div>
+
+
+            <div class="form-group  col-md-2" ng-class="{'has-error': recuFiscalForm.cents02.$invalid}">
+              <label for="cents02" class="control-label">Nombre de 2 cents</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="cents02"
+                     id="cents02"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.cents2"
+                     ng-required="rfe.current.recu_fiscal.type==1"/>
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.cents2">Montant : {{(rfe.current.recu_fiscal.cents2*0.02).toFixed(2)}} €</span>
+            </div>
+
+            <div class="form-group  col-md-2" ng-class="{'has-error':recuFiscalForm.cents01.$invalid}">
+              <label for="cents01" class="control-label">Nombre de 1 cent</label>
+              <input type="number"
+                     ng-pattern="rfe.onlyNumbers"
+                     min="0"
+                     name="cents01"
+                     id="cents01"
+                     class="form-control input-fix-mousewheel"
+                     ng-model="rfe.current.recu_fiscal.cent1"
+                     ng-required="rfe.current.recu_fiscal.type==1"
+              />
+              <span class="help-block" ng-show="rfe.current.recu_fiscal.cent1">Montant : {{(rfe.current.recu_fiscal.cent1*0.01).toFixed(2)}} €</span>
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <div class="form-group col-md-4">
+              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="rfe.setNonFilledCoinToZero();">
+                Mettre à zéro les champs pièces non remplis
+              </button>
+            </div>
+            <div class="alert alert-success form-group col-md-8" role="alert" style="text-align:right;font-size:larger;margin-bottom: 0px !important;font-weight:bold;">
+              Total Pièces : {{
+              rfe.current.recu_fiscal.euro2   * 2    +
+              rfe.current.recu_fiscal.euro1   * 1    +
+              rfe.current.recu_fiscal.cents50 * 0.5  +
+              rfe.current.recu_fiscal.cents20 * 0.2  +
+              rfe.current.recu_fiscal.cents10 * 0.1  +
+              rfe.current.recu_fiscal.cents5  * 0.05 +
+              rfe.current.recu_fiscal.cents2  * 0.02 +
+              rfe.current.recu_fiscal.cent1   * 0.01
+              | currency : "€" : 2}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-4" style="text-align: right;">
+              <span class="help-block">A contrôler avec le résultat de la machine à compter les pièces</span>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="alert alert-success form-group col-md-12" role="alert" style="text-align:right;font-size:x-large; font-weight:bolder;margin-bottom: 0px !important;">
+              TOTAL DE LA DONATION : {{
+              rfe.current.recu_fiscal.euro2   * 2    +
+              rfe.current.recu_fiscal.euro1   * 1    +
+              rfe.current.recu_fiscal.cents50 * 0.5  +
+              rfe.current.recu_fiscal.cents20 * 0.2  +
+              rfe.current.recu_fiscal.cents10 * 0.1  +
+              rfe.current.recu_fiscal.cents5  * 0.05 +
+              rfe.current.recu_fiscal.cents2  * 0.02 +
+              rfe.current.recu_fiscal.cent1   * 0.01 +
+              rfe.current.recu_fiscal.euro5   * 5    +
+              rfe.current.recu_fiscal.euro10  * 10   +
+              rfe.current.recu_fiscal.euro20  * 20   +
+              rfe.current.recu_fiscal.euro50  * 50   +
+              rfe.current.recu_fiscal.euro100 * 100  +
+              rfe.current.recu_fiscal.euro200 * 200  +
+              rfe.current.recu_fiscal.euro500 * 500
+              | currency : "€" : 2}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8 col-md-offset-4" style="text-align: right;">
+              <span class="help-block">Total Billets + Pièces </span>
+            </div>
+          </div>
+
+
+
+          <div class="row">
+            <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large;margin-bottom: 0px !important;">
+              <strong>SACS DE BANQUE</strong>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+            <span class="help-block">Si vous versez en vrac les pièces dans un sac de banque et les billets dans un autre,
+              alors inscrivez sur chaque sac un identifiant unique et reportez cet identifiant dans les cases ci-dessous.
+              Un onglet des graphiques pour le compteur vous donnera le détail par sac (nombre de pièces, montant, poids)
+              <br/>
+              <b>Ex: 2018-PIECE-001, 2018-BILLET-001</b>
+            </span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group  col-md-4 col-md-offset-4" ng-class="{'has-error':recuFiscalForm.coins_money_bag_id.$invalid}">
+              <label for="coins_money_bag_id" class="control-label">Identifiant de sac de banque pour les pièces</label>
+              <div class="input-group">
+
+                <input
+                  id="coins_money_bag_id"
+                  type="text"
+                  ng-model="rfe.current.recu_fiscal.coins_money_bag_id"
+                  placeholder="Rechercher un identifiant de sac à pièces existant"
+                  uib-typeahead="moneyBagId as moneyBagId for moneyBagId in rfe.searchCoinMoneyBagId($viewValue)"
+                  typeahead-loading="loadingMoneyBagId"
+                  typeahead-no-results="noResultsCoin"
+                  typeahead-wait-ms="20"
+                  class="form-control"
+
+                  ng-required
+                  autocomplete="off">
+                <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
+                <span class="input-group-addon glyphicon glyphicon-coins" aria-hidden="true" style="top:0px;">&nbsp;</span>
+              </div>
+              <div ng-show="noResultsCoin">
+                <i class="glyphicon glyphicon-remove"></i> Identifiant de Sac non trouvé, vous allez créer un nouvel identifiant!
+              </div>
+              <span class="help-block">Utilisez les identifiants de sacs existants</span>
+            </div>
+
+            <div class="form-group  col-md-4" ng-class="{'has-error':recuFiscalForm.bills_money_bag_id.$invalid}">
+              <label for="bills_money_bag_id" class="control-label">Identifiant de sac de banque pour les billets</label>
+              <div class="input-group">
+
+                <input
+                  id="bills_money_bag_id"
+                  type="text"
+                  ng-model="rfe.current.recu_fiscal.bills_money_bag_id"
+                  placeholder="Rechercher un identifiant de sac à billets existant"
+                  uib-typeahead="moneyBagId as moneyBagId for moneyBagId in rfe.searchBillMoneyBagId($viewValue)"
+                  typeahead-loading="loadingMoneyBagId"
+                  typeahead-no-results="noResultsBill"
+                  typeahead-wait-ms="20"
+                  class="form-control"
+
+                  ng-required
+                  autocomplete="off">
+                <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
+                <span class="input-group-addon glyphicon glyphicon-money" aria-hidden="true" style="top:0px;">&nbsp;</span>
+              </div>
+              <div ng-show="noResultsBill">
+                <i class="glyphicon glyphicon-remove"></i> Identifiant de Sac non trouvé, vous allez créer un nouvel identifiant!
+              </div>
+              <span class="help-block">Utilisez les identifiants de sacs existants</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row" ng-show="rfe.current.confirmInputValues">
+          <div class="form-group col-md-6 col-md-offset-3">
+            <span style="color: red;font-weight: bold;font-size:24px;">une saisie anormale a été détectée</span><br/>
+
+            Les champs suivant ont une valeur saisie anormalement elevée.<br/>
+            Vérifiez la saisie, <b>éventuellement corrigez</b>, puis cliquez sur le bouton Confirmer pour sauvegarder.<br/>
+            <br/>
+            <ul ng-bind-html="rfe.current.confirmInputValuesMessage"></ul>
+
+          </div>
+        </div>
+
+        <div class="row" ng-show="rfe.current.confirmInputValues">
+          <div class="form-group col-md-2 col-md-offset-4">
+            <a ng-click="rfe.back();" class="btn btn-link">Annuler</a>
+          </div>
+          <div class="col-md-2">
+            <button type="button"
+                    ng-model="singleModel"
+                    class="btn btn-danger"
+                    uib-btn-checkbox
+                    ng-click="rfe.confirmSave();">
+              Confirmer
+            </button>
+          </div>
+        </div>
+
+        <div class="row" ng-show="!rfe.current.confirmInputValues">
+          <div class="form-group col-md-2 col-md-offset-8">
+            <a ng-click="rfe.back();" class="btn btn-link">Annuler</a>
+          </div>
+          <div class="col-md-2">
+            <input type="submit"
+                   class="btn btn-primary"
+                   value="Sauvegarder"
+                   ng-disabled="recuFiscalForm.$invalid || rfe.computeTotalDonation() == 0"
+                   ng-click="rfe.save()"
+            />
+            <span class="help-block" ng-if="rfe.computeTotalDonation()==0 && rfe.current.recu_fiscal.type > 0">La donation doit être d'un montant supérieur à 0€</span>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+

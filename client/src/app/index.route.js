@@ -136,14 +136,30 @@
         controllerAs: 'pq'
       })
       .when('/pointsQuetes/edit', {
-      templateUrl : 'app/admin/pointQuete/edit/editPointQuete.html',
-      controller  : 'EditPointQueteController',
-      controllerAs: 'pqe'
-    })
+        templateUrl : 'app/admin/pointQuete/edit/editPointQuete.html',
+        controller  : 'EditPointQueteController',
+        controllerAs: 'pqe'
+      })
       .when('/pointsQuetes/edit/:id', {
         templateUrl : 'app/admin/pointQuete/edit/editPointQuete.html',
         controller  : 'EditPointQueteController',
         controllerAs: 'pqe'
+      })
+      // ============== Recu Fiscal ==============
+      .when('/recu_fiscal', {
+        templateUrl : 'app/admin/recuFiscal/list/listRecuFiscal.html',
+        controller  : 'ListRecuFiscalController',
+        controllerAs: 'rf'
+      })
+      .when('/recu_fiscal/edit', {
+        templateUrl : 'app/admin/recuFiscal/edit/editRecuFiscal.html',
+        controller  : 'EditRecuFiscalController',
+        controllerAs: 'rfe'
+      })
+      .when('/recu_fiscal/edit/:id', {
+        templateUrl : 'app/admin/recuFiscal/edit/editRecuFiscal.html',
+        controller  : 'EditRecuFiscalController',
+        controllerAs: 'rfe'
       })
       // ============== OTHERWISE ==============
       .otherwise({

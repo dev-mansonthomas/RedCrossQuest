@@ -1,0 +1,129 @@
+<acme-navbar></acme-navbar>
+<div class="container" data-ng-controller="ListRecuFiscalController as rf">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-4">
+          <h5>Les Reçus Fiscaux</h5>
+        </div>
+        <div class="col-md-4 col-md-offset-4">
+          <input type="button" class="btn btn-info" value="Enregistrer un nouveau Reçu Fiscal"  ng-click="rf.createNewRecuFiscal  ()" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="well">
+    <form class="form-search" name="searchForm" novalidate ng-submit='rf.doSearch();'>
+      <div class="row">
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="recherche" class="control-label">Recherche </label>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+              <input class="form-control" placeholder="Recherche" id="recherche" data-ng-model="rf.search">
+            </div>
+            <div data-ng-show="rf.search">
+              <span data-ng-pluralize
+                    data-count="filteredContacts.length"
+                    data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
+              </span>
+            </div>
+            Nombre de points de Reçu Fiscaux: <span class="badge">{{rf.recuFiscal.length}}</span>
+          </div>
+        </div>
+        <div class="col-md-1 col-md-offset-1">
+          <label for="year" class="control-label">Année</label>
+          <select name="year" id="year" class="form-control" ng-model="rf.year" required
+                  ng-options="i as i
+                     for
+                     i in rf.years">
+            <option> </option>
+          </select>
+        </div>
+        <div class="col-md-2 col-md-offset-1">
+          <div class="form-group">
+            <label for="deletedRadio1" class="control-label">Supprimé ?</label><br/>
+            <label class="radio-inline">
+              <input type="radio" name="deleted" id="deletedRadio1" ng-model="rf.deleted" value="1" required ng-checked="rf.deleted==1 || rf.deleted == null"> Oui
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="deleted" id="deletedRadio2" ng-model="rf.deleted" value="0" required> Non
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-1 col-md-offset-1"><br/>
+          <input type="submit" class="btn btn-primary" value="Rechercher" />
+        </div>
+      </div>
+      <div class="row" ng-show="rf.currentUserRole=='9'" ng-cloak style="margin-top:15px;">
+        <div class="col-md-2">
+          <strong>Section Super Admin</strong>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="ulId" class="control-label">Unité Locale</label>
+            <input
+              id="ulId"
+              type="text"
+              ng-model="rf.admin_ul"
+              placeholder="Tappez votre recherche"
+              uib-typeahead="ul as ul.full_name for ul in rf.searchUL($viewValue)"
+              typeahead-loading="loadingULs"
+              typeahead-no-results="noResults"
+              typeahead-wait-ms="20"
+              class="form-control"
+              ng-required
+              autocomplete="off">
+            <i   ng-show="loadingULs" class="glyphicon glyphicon-refresh"></i>
+            <div ng-show="noResults">
+              <i class="glyphicon glyphicon-remove"></i> Aucune Unité Locale trouvée
+            </div>
+            <span class="help-block">Recherche par nom, code postal, ville</span>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+
+  <div clas="row">
+
+    <table class="table table-hover table-condensed histo">
+      <thead>
+      <tr>
+        <th>id                  </th>
+        <th>ul_id               </th>
+        <th>Réf Reçu Fiscal     </th>
+        <th>Prénom              </th>
+        <th>Nom                 </th>
+        <th>Email               </th>
+        <th>Téléphone           </th>
+        <th>Date du don         </th>
+        <th>Montant total du don</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr ng-repeat="r in rf.recuFiscal">
+        <td><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">{{::r.id                 }}</a></td>
+        <td>{{::r.ul_id                                                           }}</td>
+        <td><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">{{::r.ref_recu_fiscal    }}</a></td>
+        <td><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">{{::r.first_name         }}</a></td>
+        <td><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">{{::r.last_name          }}</a></td>
+        <td><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">{{::r.email              }}</a></td>
+        <td><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">+{{::r.phone              }}</a></td>
+        <td><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">{{::r.donation_date      }}</a></td>
+        <td style="text-align: right;"><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">{{::r.total_amount | currency : "€" : 2}}</a></td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+</div>

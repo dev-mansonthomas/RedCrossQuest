@@ -5,6 +5,7 @@ namespace RedCrossQuest\BusinessService;
 
 use RedCrossQuest\Entity\QueteurEntity;
 use SendGrid;
+use Carbon\Carbon;
 
 
 class EmailBusinessService
@@ -50,6 +51,9 @@ class EmailBusinessService
     $recipient = new SendGrid\Email($queteur->first_name.' '.$queteur->last_name, $queteur->email);
     $subject = "[RedCrossQuest]".$deployment."[".$queteur->nivol."] Réinitialisation de votre mot de passe";
 
+    $startValidityDateCarbon = new Carbon();
+    $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
+
     $body = new SendGrid\Content("text/html",  ($deployment!=''?$deployment.'<br/>':'')."
 Bonjour ".$queteur->first_name.",<br/>
 <br/>
@@ -60,7 +64,7 @@ Bonjour ".$queteur->first_name.",<br/>
  Pour réinitialiser votre mot de passe, cliquez sur le lien suivant :<br/>
 <br/> 
  <a href='".$url."' target='_blank'>".$url."</a><br/>
- Ce lien est valide une heure à compter de : ".date('d/m/Y H:i:s', time())."
+ Ce lien est valide une heure à compter du : ".$startValidityDateString."
 <br/> 
 <br/> 
  Cordialement,<br/>
@@ -101,6 +105,7 @@ Bonjour ".$queteur->first_name.",<br/>
     $url=$this->appSettings['appUrl'];
 
     $deploymentType = $this->appSettings['deploymentType'];
+
     $deployment='';
     if($deploymentType == 'D')
     {
@@ -111,13 +116,16 @@ Bonjour ".$queteur->first_name.",<br/>
       $deployment='[Site de TEST]';
     }
 
+    $changePasswordDate = new Carbon();
+    $changePasswordDateString = $changePasswordDate->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
+
     $recipient = new SendGrid\Email($queteur->first_name.' '.$queteur->last_name, $queteur->email);
     $subject = "[RedCrossQuest]".$deployment."[".$queteur->nivol."] Votre mot de passe a été changé";
 
     $body = new SendGrid\Content("text/html", ($deployment!=''?$deployment.'<br/>':'')."
 Bonjour ".$queteur->first_name.",<br/>
 <br/>
- Cet email confirme le changement de votre mot de passe pour l'application RedCrossQuest.<br/>
+ Cet email confirme le changement de votre mot de passe pour l'application RedCrossQuest le $changePasswordDateString.<br/>
  Votre login est votre NIVOL : '".$queteur->nivol."'
  Si vous n'êtes pas à l'origine de cette demande, contactez votre cadre local ou départementale.<br/>
 <br/> 
@@ -167,6 +175,10 @@ Bonjour ".$queteur->first_name.",<br/>
       $deployment='[Site de TEST]';
     }
 
+    $anonymiseDateCarbon = new Carbon();
+    $anonymiseDateString = $anonymiseDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
+
+
     $recipient = new SendGrid\Email($queteur->first_name.' '.$queteur->last_name, $queteur->email);
     $subject = "[RedCrossQuest]".$deployment." ".$queteur->first_name.", Suite à votre demande, vos données viennent d'être anonymisées";
 
@@ -184,7 +196,7 @@ Votre contribution a participé au financement des activités de premiers secour
 Nous espèrons vous revoir bientôt à la quête ou en tant que bénévole!
 </p>
 
-<p>Conformément à votre demande, vos données personnelles ont été remplacées par les valeurs indiquées ci-après:
+<p>Conformément à votre demande, vos données personnelles ont été remplacées par les valeurs indiquées ci-après :
   <ul>
    <li>Nom: 'Quêteur' </li>
    <li>Prénom: 'Anonimisé'</li>
@@ -199,17 +211,17 @@ Nous espèrons vous revoir bientôt à la quête ou en tant que bénévole!
  </p>
 
 <p> 
-La date d'anonymisation ".date('d/m/Y H:i:s', time())." et ce token sont conservé dans notre base de données :
+La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conservé dans notre base de données :
 </p>
 </p>TOKEN : '$token'</p>
  
 <p>
   Si vous revenez preter main forte à l'unité locale de '".$queteur->ul_name."', vous pouvez communiquer ce Token. 
-  Il permettra de retrouver votre fiche anonymisée et de revaloriser votre fiche.
+  Il permettra de retrouver votre fiche anonymisée et de revaloriser votre fiche avec vos données pour une nouvelle participation à la quête!
   Vous retrouver ainsi vos statistiques des années passées.
 </p>
 <p>
- Si vous n'êtes pas à l'origine de cette demande, contactez l'unité locale de '".$queteur->ul_name."' et donner leur ce token ainsi que les informations listées plus haut dans cet email pour recréer votre fiche.
+ Si vous n'êtes pas à l'origine de cette demande, contactez l'unité locale de '".$queteur->ul_name."' et donner leur ce token ainsi que les informations listées plus haut dans cet email pour revaloriser votre fiche.
 </p>
  
 <br/> 

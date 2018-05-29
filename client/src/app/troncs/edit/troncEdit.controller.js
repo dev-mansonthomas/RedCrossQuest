@@ -22,7 +22,7 @@
       {id:1,label:'Tronc'},
       {id:2,label:'Urne chez un commerçant'},
       {id:3,label:'Autre'},
-      {id:3,label:'Terminal Carte Bleue'}
+      {id:4,label:'Terminal Carte Bleue'}
     ];
 
     vm.handleDate = function (theDate)
@@ -36,7 +36,6 @@
 
     if (angular.isDefined(troncId))
     {
-      $rootScope.$emit('title-updated', 'Edition du tronc - '+troncId);
       vm.current = TroncResource.get({ 'id': troncId });
 
       TroncQueteurResource.getTroncsQueteurForTroncId({'tronc_id': troncId}).$promise.then(
@@ -45,13 +44,14 @@
           var dataLength = data.length;
           for(var i=0;i<dataLength;i++)
           {
-            data[i].depart            = vm.handleDate(data[i].depart);
-            data[i].depart_theorique  = vm.handleDate(data[i].depart_theorique);
-            data[i].retour            = vm.handleDate(data[i].retour);
+            var oneRow = data[i];
+            oneRow.depart            = vm.handleDate(oneRow.depart);
+            oneRow.depart_theorique  = vm.handleDate(oneRow.depart_theorique);
+            oneRow.retour            = vm.handleDate(oneRow.retour);
 
-            if(data[i].retour !==null && data[i].depart !== null)
+            if(oneRow.retour !==null && oneRow.depart !== null)
             {
-              data[i].duration = moment.duration(data[i].retour.diff(data[i].depart)).asMinutes();
+              oneRow.duration = moment.duration(oneRow.retour.diff(oneRow.depart)).asMinutes();
             }
           }
 
@@ -62,16 +62,17 @@
           $log.error(error);
         }
       );
+      $rootScope.$emit('title-updated', 'Edition du tronc - '+troncId);
     }
     else
     {
       vm.current = new TroncResource();
+      vm.current.type=1;
+      vm.current.enabled=true;
       $rootScope.$emit('title-updated', 'Création d\'un nouveau Tronc');
     }
 
-    vm.save = save;
-
-    function save()
+    vm.save =function save()
     {
       if (angular.isDefined(troncId))
       {
@@ -82,7 +83,7 @@
       {
         vm.current.$save(savedSuccessfully, errorWhileSaving);
       }
-    }
+    };
 
 
     function savedSuccessfully()

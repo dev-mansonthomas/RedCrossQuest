@@ -276,7 +276,7 @@
       vm.current.dateRetourNotFilled = false;
       vm.current.fillTronc  = false;
 
-      if(vm.current.tronc_queteur.id == null  && tronc_queteur.rowCount == 0)
+      if(vm.current.tronc_queteur.id == null  && tronc_queteur.rowCount === 0)
       {
         vm.current.troncQueteurNotFound = true;
         return;
@@ -332,7 +332,7 @@
         //if the return date is non null, then it's time to fill the number of coins
         vm.current.fillTronc=true;
       }
-      //$log.debug(tronc_queteur);
+
 
       //this code is supposed to scroll the page to the form to set the coins
       //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again
@@ -496,6 +496,53 @@
         displayConfirmDialog=true;
         vm.current.confirmInputValuesMessage+="<li>plus de 120 pièces de 1cent</li>";
       }
+
+
+      if(vm.current.tronc_queteur.don_creditcard > 0)
+      {
+        if(vm.current.tronc_queteur.don_cb_total_number === 0)
+        {
+          vm.current.tronc_queteur.don_cb_total_number = 1;
+          displayConfirmDialog=true;
+          vm.current.confirmInputValuesMessage+="<li>Le total des paiements CB est supérieur à 0, mais le nombre total de paiement est égale à 0. " +
+            "Le nombre de paiement a été initialisé à 1 </li>";
+        }
+
+        if(vm.current.tronc_queteur.don_cb_sans_contact_amount === 0 && vm.current.tronc_queteur.don_cb_sans_contact_number > 0)
+        {
+          vm.current.tronc_queteur.don_cb_sans_contact_number = 0;
+          displayConfirmDialog=true;
+          vm.current.confirmInputValuesMessage+="<li>Le total sans contact est égale à 0, mais le nombre de paiement sans contact était supérieur à 0. " +
+            "Le nombre de paiement sans contact a été remis à 0 </li>";
+        }
+
+        if(vm.current.tronc_queteur.don_cb_sans_contact_amount === vm.current.tronc_queteur.don_creditcard &&
+          vm.current.tronc_queteur.don_cb_sans_contact_number !== vm.current.tronc_queteur.don_cb_total_number)
+        {
+          vm.current.tronc_queteur.don_cb_sans_contact_number = vm.current.tronc_queteur.don_cb_total_number;
+          displayConfirmDialog=true;
+          vm.current.confirmInputValuesMessage+="<li>Le total sans contact est égale au total des paiements CB, mais le nombre de paiement sans contact était différent du nombre total de paiement. " +
+            "Le nombre de paiement sans contact a été initialisé au nombre total de paiement </li>";
+        }
+
+        if(vm.current.tronc_queteur.don_cb_sans_contact_amount > 0 && vm.current.tronc_queteur.don_cb_sans_contact_number === 0)
+        {
+          vm.current.tronc_queteur.don_cb_sans_contact_number = 1;
+          displayConfirmDialog=true;
+          vm.current.confirmInputValuesMessage+="<li>Le total sans contact est supérieur à 0, mais le nombre de paiement sans contact était égale à 0. " +
+            "Le nombre de paiement sans contact a été initialisé à 1 </li>";
+        }
+
+        if(vm.current.tronc_queteur.don_cb_sans_contact_amount > 0 && vm.current.tronc_queteur.don_cb_sans_contact_amount / vm.current.tronc_queteur.don_cb_sans_contact_number > 30)
+        {
+          delete vm.current.tronc_queteur.don_cb_sans_contact_amount;
+          displayConfirmDialog=true;
+          vm.current.confirmInputValuesMessage+="<li>Le total sans contact est supérieur à 0, mais la moyenne des paiements est supérieurs à 30€ (maximum légal) ==> il doit y avoir une erreur dans la saisie " +
+            "Le montant des paiements sans contact a été vidé pour vous forcer à contrôler la saisie </li>";
+        }
+
+      }
+
 
       return displayConfirmDialog;
     };

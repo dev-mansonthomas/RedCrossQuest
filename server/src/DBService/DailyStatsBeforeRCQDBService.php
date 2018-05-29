@@ -101,6 +101,7 @@ AND     `ul_id`   = :ulId
    * @param int    $ulId  Id of the UL for which we create the data
    * @param string $year  year to create
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception if something else fails
    */
   public function createYear(int $ulId, string $year)
   {

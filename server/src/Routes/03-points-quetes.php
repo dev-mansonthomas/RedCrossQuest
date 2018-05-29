@@ -117,7 +117,6 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
     $input               = $request->getParsedBody();
     $pointQueteEntity    = new PointQueteEntity($input);
 
-
     $pointQueteDBService->update($pointQueteEntity, $ulId, $roleId);
   }
   catch(\Exception $e)
@@ -140,15 +139,13 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $respo
   {
     $ulId = (int)$args['ul-id'];
 
-
     $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
     $input               = $request->getParsedBody();
     $pointQueteEntity    = new PointQueteEntity($input);
 
     $pointQueteId = $pointQueteDBService->insert            ($pointQueteEntity, $ulId);
-    $pointQuete   = $pointQueteDBService->getPointQueteById ($pointQueteId    , $ulId);
 
-    $response->getBody()->write(json_encode($pointQuete));
+    $response->getBody()->write(json_encode(array('pointQueteId' =>$pointQueteId), JSON_NUMERIC_CHECK));
   }
   catch(\Exception $e)
   {

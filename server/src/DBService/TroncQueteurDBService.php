@@ -60,7 +60,11 @@ SELECT
  `don_creditcard`              ,
  `deleted`                     ,
  `coins_money_bag_id`          ,
- `bills_money_bag_id`
+ `bills_money_bag_id`          ,
+ `don_cb_sans_contact_amount`  ,
+ `don_cb_sans_contact_number`  ,
+ `don_cb_total_number`         ,       
+ `don_cheque_number`         
 FROM  `tronc_queteur` as t, 
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
@@ -137,7 +141,12 @@ SELECT
  `don_creditcard`              ,
  `deleted`                     ,
  `coins_money_bag_id`          ,
- `bills_money_bag_id`
+ `bills_money_bag_id`          ,
+ `don_cb_sans_contact_amount`  ,
+ `don_cb_sans_contact_number`  ,
+ `don_cb_total_number`         ,       
+ `don_cheque_number`         
+
 FROM  `tronc_queteur` as t, 
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
@@ -210,7 +219,12 @@ t.`id`                ,
  `don_creditcard`              ,
  `deleted`                     ,
  `coins_money_bag_id`          ,
- `bills_money_bag_id`
+ `bills_money_bag_id`          ,
+ `don_cb_sans_contact_amount`  ,
+ `don_cb_sans_contact_number`  ,
+ `don_cb_total_number`         ,       
+ `don_cheque_number`         
+
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.id         = :id
@@ -279,7 +293,12 @@ t.`id`                ,
  `don_creditcard`     ,
  `deleted`            ,
  `coins_money_bag_id` ,
- `bills_money_bag_id`
+ `bills_money_bag_id` ,
+`don_cb_sans_contact_amount`   ,
+ `don_cb_sans_contact_number`  ,
+ `don_cb_total_number`         ,       
+ `don_cheque_number`         
+
 FROM  `tronc_queteur` as t, 
       `queteur`       as q
 WHERE  t.queteur_id = :queteur_id
@@ -562,37 +581,40 @@ $comptage
  `last_update_user_id`          = :userId,
  `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces, 
  `coins_money_bag_id`           = :coins_money_bag_id,
- `bills_money_bag_id`           = :bills_money_bag_id
+ `bills_money_bag_id`           = :bills_money_bag_id,       
+ `don_cheque_number`            = :don_cheque_number        
+
 WHERE tq.`id`                   = :id
 AND    q.ul_id                  = :ul_id
 ";
 
       $stmt = $this->db->prepare($sql);
       $stmt->execute([
-        "euro500"           => $tq->euro500,
-        "euro200"           => $tq->euro200,
-        "euro100"           => $tq->euro100,
-        "euro50"            => $tq->euro50 ,
-        "euro20"            => $tq->euro20 ,
-        "euro10"            => $tq->euro10 ,
-        "euro5"             => $tq->euro5  ,
-        "euro2"             => $tq->euro2  ,
-        "euro1"             => $tq->euro1  ,
-        "cents50"           => $tq->cents50,
-        "cents20"           => $tq->cents20,
-        "cents10"           => $tq->cents10,
-        "cents5"            => $tq->cents5 ,
-        "cents2"            => $tq->cents2 ,
-        "cent1"             => $tq->cent1  ,
-        "foreign_coins"     => $tq->foreign_coins,
-        "foreign_banknote"  => $tq->foreign_banknote,
-        "don_cheque"        => $tq->don_cheque,
-        "userId"            => $userId,
-        "id"                => $tq->id,
-        "ul_id"             => $ulId,
-        "notes_retour_comptage_pieces" => $tq->notes_retour_comptage_pieces,
-        "coins_money_bag_id"=> $tq->coins_money_bag_id,
-        "bills_money_bag_id"=> $tq->bills_money_bag_id
+        "euro500"                       => $tq->euro500,
+        "euro200"                       => $tq->euro200,
+        "euro100"                       => $tq->euro100,
+        "euro50"                        => $tq->euro50 ,
+        "euro20"                        => $tq->euro20 ,
+        "euro10"                        => $tq->euro10 ,
+        "euro5"                         => $tq->euro5  ,
+        "euro2"                         => $tq->euro2  ,
+        "euro1"                         => $tq->euro1  ,
+        "cents50"                       => $tq->cents50,
+        "cents20"                       => $tq->cents20,
+        "cents10"                       => $tq->cents10,
+        "cents5"                        => $tq->cents5 ,
+        "cents2"                        => $tq->cents2 ,
+        "cent1"                         => $tq->cent1  ,
+        "foreign_coins"                 => $tq->foreign_coins,
+        "foreign_banknote"              => $tq->foreign_banknote,
+        "don_cheque"                    => $tq->don_cheque,
+        "userId"                        => $userId,
+        "id"                            => $tq->id,
+        "ul_id"                         => $ulId,
+        "notes_retour_comptage_pieces"  => $tq->notes_retour_comptage_pieces,
+        "coins_money_bag_id"            => $tq->coins_money_bag_id,
+        "bills_money_bag_id"            => $tq->bills_money_bag_id,
+        "don_cheque_number"             => $tq->don_cheque_number
       ]);
 
       $stmt->closeCursor();
@@ -621,8 +643,11 @@ UPDATE `tronc_queteur`            tq
       INNER JOIN  queteur         q
       ON          tq.queteur_id = q.id
 SET
- `don_creditcard`               = :don_creditcard,  
- `notes_retour_comptage_pieces` = :notes,
+ `don_creditcard`               = :don_creditcard,
+ `don_cb_sans_contact_amount`   = :don_cb_sans_contact_amount  ,
+ `don_cb_sans_contact_number`   = :don_cb_sans_contact_number  ,
+ `don_cb_total_number`          = :don_cb_total_number         ,  
+ `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces,
 $comptage
  `last_update`         = NOW(),
  `last_update_user_id` = :userId,
@@ -633,12 +658,14 @@ AND    q.ul_id         = :ul_id
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute([
-      "don_creditcard"    => $tq->don_creditcard,
-      "notes"             => $tq->notes,
-      "userId"            => $userId,
-      "id"                => $tq->id,
-      "ul_id"             => $ulId,
-      "notes_retour_comptage_pieces" => $tq->notes_retour_comptage_pieces
+      "don_creditcard"              => $tq->don_creditcard,
+      "don_cb_sans_contact_amount"  => $tq->don_cb_sans_contact_amount,
+      "don_cb_sans_contact_number"  => $tq->don_cb_sans_contact_number,
+      "don_cb_total_number"         => $tq->don_cb_total_number       ,
+      "userId"                      => $userId,
+      "id"                          => $tq->id,
+      "ul_id"                       => $ulId,
+      "notes_retour_comptage_pieces"=> $tq->notes_retour_comptage_pieces
     ]);
 
     $stmt->closeCursor();
@@ -933,7 +960,11 @@ t.`id`                        ,
 `don_creditcard`              ,
 `deleted`                     ,
 `coins_money_bag_id`          ,
-`bills_money_bag_id`
+`bills_money_bag_id`          ,
+`don_cb_sans_contact_amount`  ,
+`don_cb_sans_contact_number`  ,
+`don_cb_total_number`         ,       
+`don_cheque_number`         
 FROM  `tronc_queteur_historique`  as t, 
       `queteur`                   as q
 WHERE  t.tronc_queteur_id = :tronc_queteur_id
@@ -976,14 +1007,23 @@ ORDER BY t.id DESC
     }
 
     $sql = "
+SELECT DISTINCT t.money_bag_id FROM
+(
 SELECT DISTINCT(tq.$column) as money_bag_id
 FROM   tronc_queteur tq, 
-       queteur        q
+              queteur        q
 WHERE  tq.$column  like :query
 AND YEAR(tq.depart) =  YEAR(NOW())
 AND tq.queteur_id   = q.id
 AND q.ul_id         = :ul_id
-ORDER BY tq.$column ASC
+UNION
+SELECT DISTINCT(nd.$column) as money_bag_id
+FROM   named_donation nd
+WHERE  nd.$column  like :query
+AND YEAR(nd.donation_date) =  YEAR(NOW())
+AND nd.ul_id = :ul_id
+) as t
+ORDER BY t.money_bag_id ASC
 ";
 
     $stmt = $this->db->prepare($sql);

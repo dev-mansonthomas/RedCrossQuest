@@ -14,13 +14,13 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqCode.$invalid}">
               <label for="pqCode" class="control-label">Code</label>
-              <input type="text" id="pqCode" name="pqCode" ng-model="pqe.current.code" class="form-control"/>
+              <input type="text" id="pqCode" name="pqCode" ng-model="pqe.current.code" maxlength="10" class="form-control"/>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqName.$invalid}">
               <label for="pqName" class="control-label">Nom</label>
-              <input type="text" id="pqName" name="pqName" ng-model="pqe.current.name" class="form-control" required/>
+              <input type="text" id="pqName" name="pqName" ng-model="pqe.current.name" maxlength="100" class="form-control" required autocomplete="name"/>
             </div>
           </div>
 
@@ -29,10 +29,10 @@
             <div class="form-group" ng-class="{'has-error':pointQueteForm.enabled.$invalid}">
               <label for="pqEnabled1" class="control-label">Actif</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="enabled" id="pqEnabled1" ng-model="pqe.current.enabled" value="1" required> Oui
+                <input type="radio" name="enabled" id="pqEnabled1" ng-model="pqe.current.enabled" value="true"  required ng-checked="pqe.current.enabled===true"> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="enabled" id="pqEnabled2" ng-model="pqe.current.enabled" value="0" required> Non
+                <input type="radio" name="enabled" id="pqEnabled2" ng-model="pqe.current.enabled" value="false" required ng-checked="pqe.current.enabled===false"> Non
               </label>
             </div>
           </div>
@@ -47,19 +47,19 @@
           <div class="col-md-6">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqAddress.$invalid}">
               <label for="pqAddress" class="control-label">Adresse</label>
-              <input type="text" id="pqAddress" name="pqAddress" ng-model="pqe.current.address" class="form-control" required/>
+              <input type="text" id="pqAddress" name="pqAddress" ng-model="pqe.current.address" maxlength="70"  class="form-control" required autocomplete="address"/>
             </div>
           </div>
           <div class="col-md-1">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqPostalCode.$invalid}">
               <label for="pqPostalCode" class="control-label" style="font-size: 11px;">Code Postal</label>
-              <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="pqe.current.postal_code" class="form-control" required/>
+              <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="pqe.current.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'/>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqCity.$invalid}">
               <label for="pqCity" class="control-label">Ville</label>
-              <input type="text" id="pqCity" name="pqCity" ng-model="pqe.current.city" class="form-control" required/>
+              <input type="text" id="pqCity" name="pqCity" ng-model="pqe.current.city" class="form-control" maxlength="70"  required autocomplete='address-level2'/>
             </div>
           </div>
           <div class="col-md-2">
@@ -134,10 +134,10 @@
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqMinorAllowed.$invalid}">
               <label for="pqMinorAllowed1" class="control-label">Mineur Autorisé?</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="pqMinorAllowed" id="pqMinorAllowed1" ng-model="pqe.current.minor_allowed" value="1" required> Oui
+                <input type="radio" name="pqMinorAllowed" id="pqMinorAllowed1" ng-model="pqe.current.minor_allowed" value="true"  required ng-checked="pqe.current.minor_allowed===true"> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="pqMinorAllowed" id="pqMinorAllowed2" ng-model="pqe.current.minor_allowed" value="0" required> Non
+                <input type="radio" name="pqMinorAllowed" id="pqMinorAllowed2" ng-model="pqe.current.minor_allowed" value="false" required ng-checked="pqe.current.minor_allowed===false"> Non
               </label>
             </div>
 
@@ -152,7 +152,7 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqType.$invalid}">
               <label for="pqType" class="control-label">Type</label>
-              <select name="pqType" id="pqType" class="form-control" ng-model="pqe.current.type" required
+              <select name="pqType" id="pqType" class="form-control" ng-model="pqe.current.type" required placeholder="Type de point de quête"
                       ng-options="(t.id) as t.label
                       for
                       t in pqe.typePointQueteList"
@@ -163,8 +163,17 @@
           </div>
           <div class="col-md-4">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqTimeToReach.$invalid}">
-              <label for="pqTimeToReach" class="control-label">Temps moyen pour atteindre le Point de Quête</label>
-              <input type="text" id="pqTimeToReach" name="pqTimeToReach" ng-model="pqe.current.time_to_reach" class="form-control"/>
+              <label for="pqTimeToReach" class="control-label">Temps en minute pour atteindre le Point de Quête</label>
+              <div class="input-group">
+                <input type="number"
+                       min="0"
+                       id="pqTimeToReach"
+                       name="pqTimeToReach"
+                       ng-model="pqe.current.time_to_reach"
+                       class="form-control input-fix-mousewheel"
+                       required/>
+                <span class="input-group-addon glyphicon glyphicon-stopwatch"      style="top:0px;"   aria-hidden="true"></span>
+              </div>
             </div>
           </div>
           <div class="col-md-4">
@@ -219,7 +228,7 @@
           </div>
         </div>
         <!-- Error while saving -->
-        <div class="row" ng-show="pqe.errorWhileSaving">
+        <div class="row" ng-if="pqe.errorWhileSaving==true">
           <div class="col-md-8 col-md-offset-2">
             <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="pqe.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>

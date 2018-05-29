@@ -73,6 +73,11 @@ class TroncQueteurEntity extends Entity
   public $coins_money_bag_id;
   public $bills_money_bag_id;
 
+  public $don_cb_sans_contact_amount;
+  public $don_cb_sans_contact_number;
+  public $don_cb_total_number       ;
+  public $don_cheque_number         ;
+
 
   protected $logger;
 
@@ -144,7 +149,10 @@ class TroncQueteurEntity extends Entity
 
       $this->getInteger('rowCount'       , $data);
 
-
+      $this->getFloat  ('don_cb_sans_contact_amount'  , $data);
+      $this->getInteger('don_cb_sans_contact_number'  , $data);
+      $this->getInteger('don_cb_total_number'         , $data);
+      $this->getInteger('don_cheque_number'           , $data);
     }
 
   /***

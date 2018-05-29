@@ -278,6 +278,7 @@
           <div ng-show="tq.current.tronc_queteur.tronc_id > 0 && tq.current.readOnlyView && tq.currentUserRole >= 4" class="form-group col-md-4">
 
             <button class="btn btn-warning"
+                    type="button"
                     ng-show="tq.current.adminEditMode == false"
                     ng-click="tq.activateAdminEditMode();"
                     style="width:100%;height:70px;">
@@ -286,7 +287,7 @@
 
 
             <div class="form-group" ng-show="tq.current.adminEditMode == true" ng-cloak="">
-              <label for="deletedRadio1" class="control-label">Est ce que le tronc marqué comme supprimé ?</label><br/>
+              <label for="deletedRadio1" class="control-label">Est ce que le tronc est marqué comme supprimé ?</label><br/>
               <label class="radio-inline">
                 <input type="radio" name="deleted" id="deletedRadio1" ng-model="tq.current.tronc_queteur.deleted" value="true" ng-required="tq.current.adminEditMode" ng-checked="tq.current.tronc_queteur.deleted===true"
                        ng-click="tq.fillForDeletion()"> Supprimé
@@ -299,8 +300,10 @@
 
 
             <span class="help-block" ng-show="tq.current.adminEditMode == false">Permet de modifier toutes les données du tronc du queteur</span>
-            <span class="help-block" ng-show="tq.current.adminEditMode == true">Marquer le tronc comme supprimé, ne supprime pas réellement le tronc, on peut donc revenir en arrière.
-            Cela permet d'exclure le tronc des statistiques</span>
+            <span class="help-block" ng-show="tq.current.adminEditMode == true">
+              Marquer le tronc comme supprimé: cela ne supprime pas réellement le tronc, vous pouvez donc revenir en arrière.
+              Cela permet d'exclure le tronc des statistiques
+            </span>
 
           </div>
 
@@ -439,31 +442,132 @@
         </div>
 
         <!-- TERMINAL CB -->
-
-        <div class="row"  ng-show="tq.current.fillTronc && tq.current.tronc.type==4" ng-cloak>
-          <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
-            <strong>CARTE BLEUE</strong>
-          </div>
-        </div>
-
-        <div class="row" ng-show="tq.current.fillTronc && tq.current.tronc.type==4" ng-cloak>
-          <div class="form-group  col-md-4 col-md-offset-4" ng-class="{'has-error':troncQueteurForm.don_creditcard.$invalid}">
-            <label for="don_creditcard" class="control-label">Total des dons en Carte Bleue</label>
-            <div class="input-group">
-
-              <input type="number"
-                     ng-pattern="tq.cbFormat"
-                     min="0"
-                     name="don_creditcard"
-                     id="don_creditcard"
-                     class="form-control"
-                     ng-model="tq.current.tronc_queteur.don_creditcard"
-                     ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required="tq.current.fillTronc && tq.current.tronc.type==4"/>
-              <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;</span>
+        <div ng-show="tq.current.fillTronc && tq.current.tronc.type==4" ng-cloak>
+          <div class="row">
+            <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
+              <strong>CARTE BLEUE</strong>
             </div>
-            <span class="help-block">Saisir la somme des dons en CB sur le créneau de quête</span>
           </div>
+
+          <div class="row">
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_creditcard.$invalid}">
+              <label for="don_creditcard" class="control-label">Total des dons en Carte Bleue</label>
+              <div class="input-group">
+
+                <input type="number"
+                       ng-pattern="tq.cbFormat"
+                       min="0"
+                       name="don_creditcard"
+                       id="don_creditcard"
+                       class="form-control"
+                       ng-model="tq.current.tronc_queteur.don_creditcard"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required="tq.current.fillTronc && tq.current.tronc.type==4"/>
+                <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"  style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Saisir la somme des dons en CB sur le créneau de quête</span>
+            </div>
+
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cb_total_number.$invalid}">
+              <label for="don_cb_total_number" class="control-label">Nombre total de dons en CB</label>
+              <div class="input-group">
+
+                <input type="number"
+                       min="0"
+                       name="don_cb_total_number"
+                       id="don_cb_total_number"
+                       class="form-control"
+                       ng-model="tq.current.tronc_queteur.don_cb_total_number"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required="tq.current.fillTronc && tq.current.tronc.type==4 && tq.current.tronc_queteur.don_creditcard > 0"/>
+                <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Saisir la somme des dons en CB sur le créneau de quête</span>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cb_sans_contact_amount.$invalid}">
+              <label for="don_cb_sans_contact_amount" class="control-label">Total des dons 'Sans Contact'</label>
+              <div class="input-group">
+
+                <input type="number"
+                       ng-pattern="tq.cbFormat"
+                       min="0"
+                       max="{{tq.current.tronc_queteur.don_creditcard}}"
+                       name="don_cb_sans_contact_amount"
+                       id="don_cb_sans_contact_amount"
+                       class="form-control"
+                       ng-model="tq.current.tronc_queteur.don_cb_sans_contact_amount"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required="tq.current.fillTronc && tq.current.tronc.type==4 && tq.current.tronc_queteur.don_creditcard > 0"
+                       ng-
+                />
+                <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"  style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Saisir la somme des dons en CB <b>'Sans Contact'</b> sur le créneau de quête</span>
+            </div>
+
+            <div class="form-group  col-md-4 col-md-offset-2" ng-show="tq.current.tronc_queteur.don_creditcard > 0 && tq.current.tronc_queteur.don_cb_sans_contact_amount > 0">
+              <label for="don_cb_avec_contact_amount" class="control-label">Total de dons en CB avec Code Pin</label>
+              <div class="input-group">
+
+                <input type="number"
+                       min="0"
+                       name="don_cb_avec_contact_amount"
+                       id="don_cb_avec_contact_amount"
+                       class="form-control"
+                       ng-value="tq.current.tronc_queteur.don_creditcard - tq.current.tronc_queteur.don_cb_sans_contact_amount"
+                       ng-disabled="true"
+                />
+                <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Calcul automatique : Total de dons CB - Total de sans contact</span>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cb_sans_contact_number.$invalid}">
+              <label for="don_cb_sans_contact_number" class="control-label">Nombre de dons 'Sans Contact'</label>
+              <div class="input-group">
+
+                <input type="number"
+                       ng-pattern="tq.cbFormat"
+                       min="0"
+                       max="{{tq.current.tronc_queteur.don_cb_total_number}}"
+                       name="don_cb_sans_contact_number"
+                       id="don_cb_sans_contact_number"
+                       class="form-control"
+                       ng-model="tq.current.tronc_queteur.don_cb_sans_contact_number"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required="tq.current.fillTronc && tq.current.tronc.type==4 && tq.current.tronc_queteur.don_creditcard > 0"/>
+                <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true"  style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Saisir le nombre de dons en CB <b>'Sans Contact'</b> sur le créneau de quête</span>
+            </div>
+
+            <div class="form-group  col-md-4 col-md-offset-2" ng-show="tq.current.tronc_queteur.don_cb_total_number > 0 && tq.current.tronc_queteur.don_cb_sans_contact_number > 0">
+              <label for="don_cb_total_number" class="control-label">Nombre total de dons en CB avec Code Pin</label>
+              <div class="input-group">
+
+                <input type="number"
+                       min="0"
+                       name="don_cb_avec_contact_number"
+                       id="don_cb_avec_contact_number"
+                       class="form-control"
+                       ng-value="tq.current.tronc_queteur.don_cb_total_number - tq.current.tronc_queteur.don_cb_sans_contact_number"
+                       ng-disabled="true"
+                       />
+                <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Calcul automatique : Nb total de dons CB - Nombre total de sans contact</span>
+            </div>
+          </div>
+
+
+
         </div>
         <!-- FIN TERMINAL CB -->
 
@@ -766,8 +870,8 @@
 
           <!-- Cheque -->
           <div class="row" ng-show="tq.current.fillTronc && tq.current.tronc.type!=4" ng-cloak>
-            <div class="form-group  col-md-4 col-md-offset-4" ng-class="{'has-error':troncQueteurForm.don_cheque.$invalid}">
-              <label for="don_creditcard" class="control-label">Total des dons en Chèque</label>
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cheque.$invalid}">
+              <label for="don_cheque" class="control-label">Total des dons en Chèque</label>
               <div class="input-group">
 
                 <input type="number"
@@ -781,8 +885,29 @@
                        ng-required="tq.current.fillTronc && tq.current.tronc.type!=4"/>
                 <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
-              <span class="help-block">Saisir la somme des dons en chèque sur le créneau de quête du quêteur</span>
+              <span class="help-block">Saisir la somme total des dons en chèque sur le créneau de quête du quêteur pour lesquels le donateur ne demande pas de reçu fiscal.
+                Pour ces derniers, utilisez l'écran de saisie des dons avec recu fiscaux</span>
             </div>
+
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cheque.$invalid}">
+              <label for="don_cheque_number" class="control-label">Nombre de Chèques</label>
+              <div class="input-group">
+
+                <input type="number"
+                       min="0"
+                       name="don_cheque_number"
+                       id="don_cheque_number"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.don_cheque_number"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required="tq.current.fillTronc && tq.current.tronc.type!=4 && tq.current.tronc_queteur.don_cheque > 0"
+                />
+                <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true" style="top:0px;">&nbsp;</span>
+              </div>
+              <span class="help-block">Saisir le <b>nombre</b> de cheque</span>
+            </div>
+
+
           </div>
           <!-- FIN Cheque -->
 
@@ -845,7 +970,7 @@
                 placeholder="Rechercher un identifiant de sac à pièces existant"
                 uib-typeahead="moneyBagId as moneyBagId for moneyBagId in tq.searchCoinMoneyBagId($viewValue)"
                 typeahead-loading="loadingMoneyBagId"
-                typeahead-no-results="noResults"
+                typeahead-no-results="noResultsCoins"
                 typeahead-wait-ms="20"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
@@ -854,7 +979,7 @@
               <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-coins" aria-hidden="true" style="top:0px;">&nbsp;</span>
             </div>
-            <div ng-show="noResults">
+            <div ng-show="noResultsCoins">
               <i class="glyphicon glyphicon-remove"></i> Identifiant de Sac non trouvé, vous allez créer un nouvel identifiant!
             </div>
             <span class="help-block">Utilisez les identifiants de sacs existants</span>
@@ -871,7 +996,7 @@
                 placeholder="Rechercher un identifiant de sac à billets existant"
                 uib-typeahead="moneyBagId as moneyBagId for moneyBagId in tq.searchBillMoneyBagId($viewValue)"
                 typeahead-loading="loadingMoneyBagId"
-                typeahead-no-results="noResults"
+                typeahead-no-results="noResultsBills"
                 typeahead-wait-ms="20"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
@@ -880,7 +1005,7 @@
               <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-money" aria-hidden="true" style="top:0px;">&nbsp;</span>
             </div>
-            <div ng-show="noResults">
+            <div ng-show="noResultsBills">
               <i class="glyphicon glyphicon-remove"></i> Identifiant de Sac non trouvé, vous allez créer un nouvel identifiant!
             </div>
             <span class="help-block">Utilisez les identifiants de sacs existants</span>
@@ -935,7 +1060,7 @@
             ></textarea>
             <br/>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6" ng-show="tq.current.adminEditMode == true || tq.current.tronc_queteur.notes_update">
             <label for="notesUpdate" class="control-label">Notes de mise à jour par l'admin</label>
             <textarea
               id="notesUpdate"

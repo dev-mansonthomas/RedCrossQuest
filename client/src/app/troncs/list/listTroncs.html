@@ -2,16 +2,28 @@
 <div class="container" data-ng-controller="TroncsController as t">
 
   <div class="panel panel-primary">
-    <div class="panel-heading">Les Troncs</div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-2">
+         <h5>Les Troncs</h5>
+        </div>
+        <div class="col-md-3 col-md-offset-7">
+          <a href="/#!/troncs/edit" class="btn btn-info">
+            Créer de nouveaux troncs
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="row">
 
-    <div class="col-xs-12 col-md-12">
+    <div class="col-md-12">
       <div class="well">
         <form class="form-search">
           <div class="row">
             <div class="form-group col-md-3">
+              <br/>
               <div class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
                 <input class="form-control" placeholder="Search" data-ng-model="t.search">
@@ -24,9 +36,9 @@
               </div>
             </div>
 
-            <div class="col-md-2 col-md-offset-1">
+            <div class="col-md-3">
               <div class="form-group">
-                <label for="activeRadio1" class="control-label">Actif:</label><br/>
+                <label for="activeRadio1" class="control-label">Opérationnel pour la quête</label><br/>
                 <label class="radio-inline">
                   <input type="radio" name="active" id="activeRadio1" ng-model="t.active" value="1" required ng-checked="tronc.active==1 || tronc.active == null"> Actif
                 </label>
@@ -36,14 +48,22 @@
               </div>
             </div>
 
-
-            <div class="col-md-1 col-md-offset-1">
-              <input type="submit" class="btn btn-primary" value="Rechercher" ng-click="t.searchSubmit()" />
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="type" class="control-label">Type de Tronc</label>
+                <select name="type" id="type" class="form-control" ng-model="t.type" required
+                        ng-options="(r.id+'') as r.label
+                    for
+                    r in t.typeTroncList"
+                >
+                </select>
+              </div>
             </div>
+
+
             <div class="col-md-1 col-md-offset-1" >
-              <a href="/#!/troncs/edit" class="btn btn-primary">
-                Créer de nouveaux troncs
-              </a>
+              <br/>
+              <input type="submit" class="btn btn-primary" value="Rechercher" ng-click="t.searchSubmit()" />
             </div>
           </div>
         </form>
@@ -54,14 +74,14 @@
     <div class="col-xs-12 col-md-12">
       <div class="row">
 
-        <div class="contact-card col-sm-2" data-ng-repeat="tronc in t.list | filter:t.search | orderBy:'lastName'">
+        <div class="contact-card col-sm-2" data-ng-repeat="tronc in t.list | filter:t.search">
           <div class="contact-card-inner">
             <h4>
-              <a ng-href="/#!/troncs/edit/{{tronc.id}}"><span class="glyphicon glyphicon-cd" aria-hidden="true"></span> &nbsp;{{::tronc.id}}</a>
+              <a ng-href="/#!/troncs/edit/{{tronc.id}}"><span ng-class="{'glyphicon':true, 'glyphicon-cd':tronc.type==1, 'glyphicon-shop':tronc.type==2, 'glyphicon-asterisk':tronc.type==3, 'glyphicon-credit-card':tronc.type==4}" aria-hidden="true"></span> &nbsp;{{::tronc.id}}</a>
 
             </h4>
-            <div class="contact-address">{{::tronc.enabled}}</div>
-            <div class="contact-phone">{{::tronc.notes}}</div>
+            <div class="contact-address">{{::tronc.enabled?'Opérationnel':'Non Opérationnel'}}</div>
+            <div class="contact-phone"  >{{::tronc.notes}}</div>
           </div>
         </div>
 

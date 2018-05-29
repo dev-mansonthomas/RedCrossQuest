@@ -124,7 +124,7 @@
               type="text"
               ng-model="q.admin_ul"
               placeholder="Tappez votre recherche"
-              uib-typeahead="queteur as queteur.full_name for queteur in q.searchUL($viewValue)"
+              uib-typeahead="ul as ul.full_name for ul in q.searchUL($viewValue)"
               typeahead-loading="loadingULs"
               typeahead-no-results="noResults"
               typeahead-wait-ms="20"
@@ -158,10 +158,10 @@
             <div class="contact-phone">{{::queteur.point_quete_name}}</div>
 
             <div class="queteur-status">
-              <div ng-show=" queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-home"        aria-hidden="true" style="color:darkblue" ></span> Pas encore parti, départ théorique à {{:: queteur.depart_theorique}}</div>
-              <div ng-show="!queteur.retour           &&  queteur.depart"                   ><span class="glyphicon glyphicon-coins"       aria-hidden="true" style="color:gold"       ></span> En train de quêter, départ à {{::  queteur.depart          }}</div>
-              <div ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart"><span class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="color:purple"     ></span> Rentré de quête à {{::queteur.retour }}</div>
-              <div ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:grey"       ></span> Non Actif</div>
+              <div ng-show=" queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-home"        aria-hidden="true" style="color:darkblue"></span> Pas encore parti, départ théorique à {{:: queteur.depart_theorique}}</div>
+              <div ng-show="!queteur.retour           &&  queteur.depart"                   ><span class="glyphicon glyphicon-coins"       aria-hidden="true" style="color:gold"></span> En train de quêter, départ à {{::  queteur.depart          }}</div>
+              <div ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart"><span class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="color:purple"></span> Rentré de quête à {{::queteur.retour }}</div>
+              <div ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:grey"></span> Pas actif aujourd'hui</div>
             </div>
           </div>
         </div>

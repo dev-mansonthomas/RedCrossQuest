@@ -13,39 +13,46 @@
       <ul class="nav navbar-nav">
         <li style="padding-top:17px;">
 
-          <span ng-show="vm.deploymentType=='P'" class="label label-danger">PROD</span>
-          <span ng-show="vm.deploymentType=='D'" class="label label-primary">DEV</span>
-          <span ng-show="vm.deploymentType=='T'" class="label label-info">TEST</span>
+          <span ng-show="vm.deploymentType=='P'" class="label label-danger" >PROD</span>
+          <span ng-show="vm.deploymentType=='D'" class="label label-primary">DEV </span>
+          <span ng-show="vm.deploymentType=='T'" class="label label-info"   >TEST</span>
 
         </li>
-        <li><a ng-href="/#!/queteurs"      ng-show="vm.currentUlMode >= 2"                        ><span class="glyphicon glyphicon-group big-icon"    aria-hidden="true"></span>&nbsp;&nbsp;Quêteurs</a></li>
-        <li><a ng-href="/#!/queteurs/edit" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-user-add big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Ajout d'un Quêteurs</a></li>
-        <li><a ng-href="/#!/troncs/prepa"  ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-clock big-icon"    aria-hidden="true"></span>&nbsp;&nbsp;<span ng-show="vm.currentUlMode == 3">Préparation</span><span ng-show="vm.currentUlMode == 2">Déclaration</span> Tronc</a></li>
-        <li><a ng-href="/#!/troncs/depart" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-out big-icon"  aria-hidden="true"></span>&nbsp;&nbsp;Départ Tronc</a></li>
-        <li><a ng-href="/#!/troncs/retour" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-in big-icon"   aria-hidden="true"></span>&nbsp;&nbsp;Retour Tronc</a></li>
-        <li><a ng-href="/#!/tronc_queteur" ng-show="vm.currentUserRole>2 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-coins big-icon"    aria-hidden="true"></span>&nbsp;&nbsp;Comptage</a></li>
-        <li><a ng-href="/#!/graph"         ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 1"><span class="glyphicon glyphicon-charts big-icon"   aria-hidden="true"></span>&nbsp;&nbsp;Graphiques</a></li>
+        <li><a ng-href="/#!/queteurs"      ng-show="vm.currentUlMode >= 2"                        ><span class="glyphicon glyphicon-group big-icon"      aria-hidden="true"></span>&nbsp;&nbsp;Quêteurs</a></li>
+        <li><a ng-href="/#!/queteurs/edit" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-user-add big-icon"   aria-hidden="true"></span>&nbsp;&nbsp;Ajout d'un Quêteur</a></li>
+        <li><a ng-href="/#!/troncs/prepa"  ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-clock big-icon"      aria-hidden="true"></span>&nbsp;&nbsp;<span ng-show="vm.currentUlMode == 3">Préparation</span><span ng-show="vm.currentUlMode == 2">Déclaration</span> Tronc</a></li>
+        <li><a ng-href="/#!/troncs/depart" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-out big-icon"    aria-hidden="true"></span>&nbsp;&nbsp;Départ Tronc</a></li>
+        <li><a ng-href="/#!/troncs/retour" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-in big-icon"     aria-hidden="true"></span>&nbsp;&nbsp;Retour Tronc</a></li>
+        <li><a ng-href="/#!/tronc_queteur" ng-show="vm.currentUserRole>2 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-coins big-icon"      aria-hidden="true"></span>&nbsp;&nbsp;Comptage</a></li>
+        <li><a ng-href="/#!/graph"         ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 1"><span class="glyphicon glyphicon-charts big-icon"     aria-hidden="true"></span>&nbsp;&nbsp;Graphiques</a></li>
       </ul>
 
       <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="vm.logout();" style="margin-top:8px">
-        Logout
+        <span class="glyphicon glyphicon-power"         aria-hidden="true"></span> Logout
       </button>
 
       <div class="btn-group" uib-dropdown keyboard-nav ng-show="vm.currentUserRole>3">
         <button id="simple-btn-keyboard-nav" type="button" class="btn btn-primary" uib-dropdown-toggle style="margin-top:8px">
-          Administration <span class="caret"></span>
+          <span class="glyphicon glyphicon-adjust-alt"         aria-hidden="true"></span> Administration <span class="caret"></span>
+
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-          <li role="menuitem"><a ng-href="/#!/troncs"          ng-show="vm.currentUlMode >= 2">Liste des Troncs</a></li>
-          <li role="menuitem"><a ng-href="/#!/pointsQuetes"    ng-show="vm.currentUlMode >= 2">Points de Quêtes</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/troncs"         ><span class="glyphicon glyphicon-cd"             aria-hidden="true"></span> Liste des Troncs</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/pointsQuetes"   ><span class="glyphicon glyphicon-nearby-circle"  aria-hidden="true"></span> Points de Quêtes</a></li>
 
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
-          <li role="menuitem"><a ng-href="/#!/QRCode/troncs"   ng-show="vm.currentUlMode >= 2">Troncs - Impression des QRCode</a></li>
-          <li role="menuitem"><a ng-href="/#!/QRCode/queteurs" ng-show="vm.currentUlMode >= 2">Queteurs - Impression des QRCode</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/QRCode/troncs"  ><span class="glyphicon glyphicon-qrcode"         aria-hidden="true"></span> Troncs - Impression des QRCode</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/QRCode/queteurs"><span class="glyphicon glyphicon-qrcode"         aria-hidden="true"></span> Queteurs - Impression des QRCode</a></li>
+
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
-          <li role="menuitem"><a ng-href="/#!/dailyStats"      ng-show="vm.currentUlMode >= 1">Résultats Journalier (avant RCQ)</a></li>
-          <li role="menuitem"><a ng-href="/#!/yearlyGoals"     ng-show="vm.currentUlMode >= 2">Objectifs de quête</a></li>
-          <li role="menuitem"><a ng-href="/#!/settings"      ng-show="vm.currentUlMode >= 2">Paramétrage de l'UL</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 1"><a ng-href="/#!/dailyStats"     ><span class="glyphicon glyphicon-stats "         aria-hidden="true"></span> Résultats Journalier (avant RCQ)</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/yearlyGoals"    ><span class="glyphicon glyphicon-charts"         aria-hidden="true"></span> Objectifs de quête</a></li>
+
+          <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/recu_fiscal"    ><span class="glyphicon glyphicon-piggy-bank"     aria-hidden="true"></span> Reçu Fiscal</a></li>
+
+          <li class="divider" ng-show="vm.currentUlMode >= 2 && false"></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2 && false"><a ng-href="/#!/settings"       ><span class="glyphicon glyphicon-cogwheels"      aria-hidden="true"></span> Paramétrage de l'UL</a></li>
         </ul>
       </div>
 

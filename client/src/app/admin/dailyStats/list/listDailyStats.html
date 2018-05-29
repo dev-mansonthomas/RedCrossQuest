@@ -34,33 +34,34 @@
 
     <div class="row" ng-show="ds.list.length>0">
       <div class="col-md-8 col-md-offset-2" >
-
-        <table class="table .table-striped .table-hover .table-condensed">
-          <thead>
-            <th>id</th>
-            <th style="width:70px;">Date</th>
-            <th>Montant</th>
-            <th>&nbsp;</th>
-          </thead>
-          <tbody data-ng-repeat="dailyStats in ds.list">
-            <tr>
-              <td>{{::dailyStats.id}}</td>
-              <td style="width:70px;"><input name="tobedone" id="horaireDepartTheorique" type="date" class="form-control" ng-model="dailyStats.date" ng-readonly="true"/></td>
-              <td>
-                <div class="input-group">
-                  <input name="amount" id="amount" type="number" class="form-control" ng-model="dailyStats.amount" required/><span class="input-group-addon">€</span>
-                </div>
-              </td>
-              <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="ds.save(dailyStats.id, dailyStats.amount);">Sauvegarder</button></td>
-            </tr>
-          </tbody>
-          <tfoot>
-          <td></td>
-          <td style="text-align:right;">Total</td>
-          <th>{{(ds.computeTotal()).toFixed(2)}} €</th>
-          <td></td>
-          </tfoot>
-        </table>
+        <form name="dailyStatForms">
+          <table class="table .table-striped .table-hover .table-condensed">
+            <thead>
+              <th>id</th>
+              <th style="width:70px;">Date</th>
+              <th>Montant</th>
+              <th>&nbsp;</th>
+            </thead>
+            <tbody data-ng-repeat="dailyStats in ds.list">
+              <tr>
+                <td>{{::dailyStats.id}}</td>
+                <td style="width:70px;"><input name="stateDate_{{::dailyStats.id}}" id="statDate_{{::dailyStats.id}}" type="date" class="form-control" ng-model="dailyStats.date" ng-readonly="true"/></td>
+                <td>
+                  <div class="input-group" ng-class="{'has-error':dailyStatForms['amount_'+dailyStats.id].$invalid}">
+                  <input name="amount_{{::dailyStats.id}}" id="amount_{{::dailyStats.id}}" type="number" class="form-control" ng-model="dailyStats.amount" required autocomplete="off"/><span class="input-group-addon">€</span>
+                  </div>
+                </td>
+                <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="ds.save(dailyStats.id, dailyStats.amount);">Sauvegarder</button></td>
+              </tr>
+            </tbody>
+            <tfoot>
+            <td></td>
+            <td style="text-align:right;">Total</td>
+            <th>{{ds.computeTotal()| currency : "€" : 2}}</th>
+            <td></td>
+            </tfoot>
+          </table>
+        </form>
       </div>
     </div>
     <div ng-show="ds.list.length>0" class="row">
@@ -75,9 +76,11 @@
     </div>
     <div ng-show="ds.list.length>0" class="row">
       <div  class="col-md-2 col-md-offset-4">
-        <div class="input-group">
-          <input name="totalAmount" id="totalAmount" type="number" class="form-control" ng-model="ds.totalAmount"/><span class="input-group-addon">€</span>
-        </div>
+        <form name="repartitionForm">
+          <div class="input-group" ng-class="{'has-error':repartitionForm.totalAmount.$invalid}">
+            <input name="totalAmount" id="totalAmount" type="number" class="form-control" ng-model="ds.totalAmount"/><span class="input-group-addon">€</span>
+          </div>
+        </form>
       </div>
       <div  class="col-md-2">
         <button  type="button" class="btn btn-primary" ng-click="ds.repartition();">Répartir le montant annuel</button>
