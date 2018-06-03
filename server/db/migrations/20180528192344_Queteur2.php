@@ -30,7 +30,7 @@ class Queteur2 extends AbstractMigration
 
       $setToNullUpdateDate = "
 update queteur set updated = null
-where updated = '0000-00-00 00:00:00'";
+where CAST(updated as char) = '0000-00-00 00:00:00'";
 
       $this->execute($setToNullUpdateDate);
 

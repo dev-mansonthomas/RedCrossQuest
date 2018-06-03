@@ -34,8 +34,12 @@ rm -rf app assets bower_components favicon.ico graph-display.html index.html
 
 cp -rp ../../client/dist/* .
 mv index-*.html index.html
-mv graph-display-*.html graph-display.html
+#Do not rename, because linking is done with the serial id
+#mv graph-display-*.html graph-display.html
 
+# Update the URL of Spotfire DXP to match the country & environment
+sed -i '' 's/__country__/${COUNTRY}/g' graph-display.html
+sed -i '' 's/__env__/${ENV}/g'         graph-display.html
 
 # TODO see how to fix this in GULP
 mkdir -p bower_components/angular-i18n/ bower_components/zxcvbn/dist/    bower_components/bootstrap-sass/assets/fonts/bootstrap/
@@ -47,6 +51,7 @@ cd -
 
 # Get the correct app.yaml for the env
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml     app.yaml
+cp ~/.cred/phinx.yml                          server/phinx.yml
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-settings.php server/src/settings.php
 
 #removal of the log file
@@ -54,7 +59,7 @@ rm -f server/logs/app.log
 
 #DB Migration
 cd server
-php vendor/bin/phinx migrate --configuration ~/.cred/phinx.yml -e rcq-${COUNTRY}-${ENV}
+php vendor/bin/phinx migrate -e rcq-${COUNTRY}-${ENV}
 cd -
 
 #deployment
@@ -62,6 +67,7 @@ gcloud app deploy -q
 
 #restore default file
 cp app_template.yaml                app.yaml
+cp server/phinx-template.yml        server/phinx.yml
 
 # DO NOT USE VARIABLE for the next line, we do want to restore the dev version
 cp ~/.cred/rcq-fr-dev-settings.php  server/src/settings.php
