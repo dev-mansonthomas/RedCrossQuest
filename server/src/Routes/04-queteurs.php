@@ -81,7 +81,8 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
       $active       = array_key_exists('active'        ,$params)?$params['active'       ]:1;
       $rcqUser      = array_key_exists('rcqUser'       ,$params)?$params['rcqUser'      ]:0;
       $benevoleOnly = array_key_exists('$benevoleOnly' ,$params)?$params['$benevoleOnly']:0;
-
+      $queteurIds   = array_key_exists('queteurIds'    ,$params)?$params['queteurIds'   ]:null;
+      $QRSearchType = array_key_exists('QRSearchType'  ,$params)?$params['QRSearchType' ]:0;
 
       //$this->logger->addInfo( "Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId", array('decodedToken'=>$decodedToken));
 
@@ -90,8 +91,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
         $ulId = (int)$decodedToken->getUlId();
       }
 
-
-      $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser);
+      $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser, $queteurIds, $QRSearchType);
 
       $response->getBody()->write(json_encode($queteurs));
 
@@ -246,18 +246,27 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
   {
     $ulId   = (int)$args['ul-id'  ];
     $roleId = (int)$args['role-id'];
+    $params = $request->getQueryParams();
 
-    //$this->logger->addInfo("Request UL ID '".$ulId."''", array('decodedToken'=>$decodedToken));
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
-    $input = $request->getParsedBody();
 
-    $queteurEntity = new QueteurEntity($input);
-    //restore the leading +
-    $queteurEntity->mobile = "+".$queteurEntity->mobile;
+    if(array_key_exists('action', $params) && $params['action'] == "markAllAsPrinted")
+    {
+      $queteurDBService->markAllAsPrinted($ulId);
+    }
+    else
+    {
+      $input = $request->getParsedBody();
 
-    $queteurId          = $queteurDBService->insert($queteurEntity, $ulId, $roleId);
+      $queteurEntity = new QueteurEntity($input);
+      //restore the leading +
+      $queteurEntity->mobile = "+".$queteurEntity->mobile;
+      $queteurId          = $queteurDBService->insert($queteurEntity, $ulId, $roleId);
 
-    $response->getBody()->write(json_encode(array('queteurId' =>$queteurId), JSON_NUMERIC_CHECK));
+      $response->getBody()->write(json_encode(array('queteurId' =>$queteurId), JSON_NUMERIC_CHECK));
+    }
+
+
   }
   catch(\Exception $e)
   {

@@ -83,15 +83,98 @@
       <div class="panel-heading">QR Code des Quêteurs ACTIF</div>
     </div>
 
+    <form novalidate name="QueteurQRCodeForm">
+    <div class="row no-print">
+      <div class="col-md-3">
+        <button type="button" id="markAllAsPrinted" name="markAllAsPrinted" class="btn btn-warning" ng-click="qrcQueteurs.markAllAsPrinted();">Marquez tous les QRCode des <br/>Quêteur comme imprimés</button>
+        <br/><br/>
+        <button class="btn btn-danger"
+                ng-show="qrcQueteurs.confirmMarkAllAsRead"
+                ng-click="qrcQueteurs.doMarkAllAsPrinted();"
+                style="width:100%;height:70px;">
+          Confirmer l'annulation du départ
+        </button>
+        Nombre de QRCodes: <span class="badge">{{qrcQueteurs.list.length}}</span>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="searchTypeRadio1" class="control-label">Type de Recherche :</label><br/>
+          <label class="radio-inline">
+            <input type="radio" name="QRSearchType" id="searchTypeRadio1" ng-model="qrcQueteurs.QRSearchType" value="0" required ng-checked="qrcQueteurs.QRSearchType==0"> Tous
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="QRSearchType" id="searchTypeRadio2" ng-model="qrcQueteurs.QRSearchType" value="1" required ng-checked="qrcQueteurs.QRSearchType==1"> Imprimés
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="QRSearchType" id="searchTypeRadio3" ng-model="qrcQueteurs.QRSearchType" value="2" required ng-checked="qrcQueteurs.QRSearchType==2"> Non Imprimé
+          </label>
+        </div>
+        <br/>
+        <button class="btn btn-info"
+                ng-show="qrcQueteurs.confirmMarkAllAsRead"
+                ng-click="qrcQueteurs.cancelMarkAllAsPrinted();"
+                style="width:100%;height:70px;">
+          Ooups, je me suis trompé
+        </button>
+
+      </div>
+      <div class="col-md-5">
+        <div class="form-group" ng-class="{'has-error':QueteurQRCodeForm.listQueteurIds.$invalid}">
+          <label for="listQueteurIds" class="control-label">Impression d'un ou plusieurs QRCode</label>
+          <input
+            name="listQueteurIds"
+            id="listQueteurIds"
+            class="form-control"
+            ng-model="qrcQueteurs.listQueteurIds"
+            ng-pattern="qrcQueteurs.listQueteurIdsRegExp"
+            placeholder="Listes des ID des Quêteurs à imprimer séparé par une virgule"
+          />
+            <span class="help-block">
+              exemple:
+              <ul>
+                <li>3453 pour imprimé 1 QRCode</li>
+                <li>3453,6478,3892,38894 pour imprimé 4 QRCodes</li>
+              </ul>
+              Sous le QRCode, il est marqué QUETEUR-00000XXX-000000<b>YYYYY</b> => c'est le <b>YYYY</b> qu'il faut reporter dans ce champ
+            </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row no-print" ng-show="qrcQueteurs.savedSuccessfully">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="qrcQueteurs.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+          Les QR Code ont bien été marqué comme imprimés !
+        </div>
+      </div>
+    </div>
+    <div class="row no-print" ng-show="qrcQueteurs.errorWhileSaving">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="qrcQueteurs.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+          <strong>Oouupps!</strong> Une erreur est survenue lors du marquage des troncs comme étant imprimés
+          <pre style="text-align: left;">{{qrcQueteurs.errorWhileSavingDetails}}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="row no-print">
+      <div class="col-md-1 col-md-offset-10">
+        <button class="btn btn-primary" ng-click="qrcQueteurs.search();"
+        ng-disabled="QueteurQRCodeForm.$invalid"
+        >Rechercher</button>
+      </div>
+    </div>
     <div class="row no-print">
       Size: {{qrcQueteurs.size}}
       <input type="range" id="size" class="range ng-valid ng-dirty ng-touched" ng-model="qrcQueteurs.size" min="100" max="500">
     </div>
-
-    <table class="QRCodeTable" ng-repeat="table in qrcQueteurs.tables">
+    </form>
+    <table class="QRCodeTable" ng-repeat="table in qrcQueteurs.tables" style="width:237px;">
       <tbody>
         <tr ng-repeat="table_tr in table">
-          <td ng-repeat="table_td in table_tr" style='font-size:8px;'>
+          <td ng-repeat="table_td in table_tr" style='font-size:8px;width:237px;'>
 
             <table class="InfoTable">
               <tr>

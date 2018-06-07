@@ -11,6 +11,12 @@ angular.module('redCrossQuestClient').factory('TroncResource', function($resourc
     }, {
     update: {
       method: 'PUT' // this method issues a PUT request
+    },
+    markAllAsPrinted: {
+    method: 'POST',
+      params: {
+      action: 'cancelDepart'
     }
+  }
   });
 });

@@ -15,6 +15,8 @@
   {
     var vm = this;
 
+    vm.latlongRegExp=/^(\d+\.)*\d+$/;
+
     vm.typePointQueteList=[
       {id:1,label:'Voix Publique / Feux Rouge'},
       {id:2,label:'Piéton'},

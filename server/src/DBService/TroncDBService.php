@@ -261,4 +261,26 @@ VALUES
     $row = $stmt->fetch();
     return $row['cnt'];
   }
+
+
+  /**
+   * Mark All Troncs as printed
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function markAllAsPrinted(int $ulId)
+  {
+
+    $sql = "
+UPDATE `tronc`
+SET    `qr_code_printed` = 1
+WHERE  `ul_id`           = :ul_id
+";
+    $parameters["ul_id"] = $ulId;
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+    $stmt->closeCursor();
+
+  }
 }

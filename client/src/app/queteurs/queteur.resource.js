@@ -6,9 +6,15 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
 {
   return $resource('/rest/:roleId/ul/:ulId/queteurs/:id',
     {
-      roleId: function () { return $localStorage.currentUser.roleId},
-      ulId  : function () { return $localStorage.currentUser.ulId  },
-      id    : '@id'
+      roleId: function ()
+      {
+        return $localStorage.currentUser.roleId;
+      },
+      ulId: function ()
+      {
+        return $localStorage.currentUser.ulId;
+      },
+      id: '@id'
     },
     {
       update:
@@ -23,6 +29,13 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
               action: 'anonymize'
             }
         },
+      markAllAsPrinted: {
+        method: 'POST',
+        params: {
+          action: 'markAllAsPrinted'
+        }
+      },
+
       searchSimilarQueteurs:
         {
           method: 'GET',

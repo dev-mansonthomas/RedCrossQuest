@@ -92,18 +92,23 @@ AND
    * @param boolean $active       search only active or inactive queteurs
    * @param boolean $benevoleOnly Retourne que les bénévoles et anciens bénévoles (usecase: recherche de référent pour le queteur d'un jour)
    * @param boolean $rcqUser      return only RCQ users
+   * @param string  $queteurIds   IDs of queteurs separated by comma to search
+   * @param int     $QRSearchType Type of QRCode Search :  0 all, 1: Printed, 2: Not printed
    * @return QueteurEntity[] list of Queteurs
    * @throws PDOException if the query fails to execute on the server
    *
    */
-  public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId, bool $active, bool $benevoleOnly, bool $rcqUser)
+  public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId,
+                                 bool $active, bool $benevoleOnly, bool $rcqUser, ?string $queteurIds,
+                                 ?int $QRSearchType   )
   {
     $parameters      = ["ul_id" => $ulId];
     $querySQL        = "";
     $secteurSQL      = "";
     $benevoleOnlySQL = "";
     $rcqUserSQL      = "";
-
+    $queteurIdsSQL   = "";
+    $QRSearchTypeSQL = "";
 
     if($query !== null)
     {
@@ -139,10 +144,45 @@ AND EXISTS (SELECT queteur_id from users where queteur_id = q.id)
 ";
     }
 
+    if($QRSearchType > 0)
+    {
+      $QRSearchTypeSQL = "
+AND qr_code_printed = :qr_code_printed      
+      ";
+      $parameters["qr_code_printed"]=$QRSearchType;
+    }
+
+    // Only for QRCode Search,
+    if($queteurIds !== null && $queteurIds !== "")
+    {
+
+      if(strpos($queteurIds, ",") === false)
+      {
+        $queteurIdsSQL="
+AND q.id = :queteurId
+";
+        $parameters["queteurId"]=$queteurIds;
+      }
+      else
+      {
+        $queteurIdsArray = explode(",", $queteurIds);
+
+        $queteurIdsSQL = "
+AND q.id IN (
+";
+        foreach($queteurIdsArray as $qId)
+        {
+          $queteurIdsSQL.=":queteur_$qId,";
+          $parameters["queteur_$qId"]=$qId;
+        }
+        $queteurIdsSQL.="-10)";
+      }
+    }
+
 
 
     $sqlSearchAll = "
-SELECT 	q.`id`,
+SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
@@ -165,9 +205,9 @@ SELECT 	q.`id`,
        u.name       as 'ul_name',
        u.latitude   as 'ul_latitude',
        u.longitude  as 'ul_longitude'
-FROM 	queteur     AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
-		  point_quete AS pq, 
-		           ul AS u
+FROM  queteur     AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
+      point_quete AS pq, 
+               ul AS u
 WHERE  q.ul_id = :ul_id
 AND    q.ul_id = u.id
 AND    q.active= :active
@@ -175,13 +215,15 @@ $querySQL
 $secteurSQL 
 $benevoleOnlySQL
 $rcqUserSQL
+$queteurIdsSQL
+$QRSearchTypeSQL
 AND  
 (
   (
         tq.id IS NOT NULL
     AND tq.point_quete_id = pq.id
     AND tq.id = 
-    (	
+    ( 
         SELECT tqq.id 
         FROM  tronc_queteur tqq
         WHERE tqq.queteur_id = q.id
@@ -199,7 +241,7 @@ ORDER BY q.last_name ASC
 ";
 
     $sqlSearchNotLeft = "
-SELECT 	q.`id`,
+SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
@@ -221,9 +263,9 @@ SELECT 	q.`id`,
         u.name       as 'ul_name',
         u.latitude   as 'ul_latitude',
         u.longitude  as 'ul_longitude' 
-FROM 	     queteur AS q,
-		 tronc_queteur AS tq, 
-		            ul AS u
+FROM       queteur AS q,
+     tronc_queteur AS tq, 
+                ul AS u
 WHERE  q.ul_id = :ul_id
 AND    q.ul_id = u.id
 AND    q.active= :active
@@ -231,19 +273,19 @@ $querySQL
 $secteurSQL 
 $rcqUserSQL
 AND     q.id = tq.queteur_id
-AND    tq.id = (	
-			SELECT tqq.id 
-			FROM  tronc_queteur tqq
+AND    tq.id = (  
+      SELECT tqq.id 
+      FROM  tronc_queteur tqq
       WHERE tqq.queteur_id = q.id
       AND   depart IS NULL
       ORDER BY depart_theorique DESC
       LIMIT 1
-		)
+    )
 ORDER BY q.last_name ASC
 ";
 
     $sqlSearchNotReturned = "
-SELECT 	q.`id`,
+SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
         q.`last_name`,
@@ -265,9 +307,9 @@ SELECT 	q.`id`,
         u.name       as 'ul_name',
         u.latitude   as 'ul_latitude',
         u.longitude  as 'ul_longitude' 
-FROM 	     queteur AS q,
-		 tronc_queteur AS tq, 
-		            ul AS u
+FROM       queteur AS q,
+     tronc_queteur AS tq, 
+                ul AS u
 WHERE  q.ul_id = :ul_id
 AND    q.ul_id = u.id
 AND    q.active= :active
@@ -275,15 +317,15 @@ $querySQL
 $secteurSQL 
 $rcqUserSQL
 AND     q.id = tq.queteur_id
-AND    tq.id = (	
-			SELECT tqq.id 
-			FROM  tronc_queteur tqq
+AND    tq.id = (  
+      SELECT tqq.id 
+      FROM  tronc_queteur tqq
       WHERE tqq.queteur_id = q.id
       AND   depart IS NOT NULL
       AND   retour IS     NULL
       ORDER BY depart_theorique DESC
       LIMIT 1
-		)
+    )
 ORDER BY q.last_name ASC
 ";
     $sql = null;
@@ -302,7 +344,7 @@ ORDER BY q.last_name ASC
     }
 
 
-    //$this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql));
+    $this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql));
     $stmt   = $this->db->prepare($sql);
     $parameters["active"] = $active;
 
@@ -731,6 +773,28 @@ AND   `ul_id`           = :ul_id
     $stmt->closeCursor();
 
     return $token;
+  }
+
+
+  /**
+   * Mark All Queteur as printed
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function markAllAsPrinted(int $ulId)
+  {
+
+    $sql = "
+UPDATE `queteur`
+SET    `qr_code_printed` = 1
+WHERE  `ul_id`           = :ul_id
+";
+    $parameters["ul_id"] = $ulId;
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+    $stmt->closeCursor();
+
   }
 
 

@@ -194,7 +194,7 @@
           <div class="col-md-3 col-md-offset-5 form-group">
             <button type="submit"
                     class="btn btn-warning"
-                    ng-click="pt.save(true);"
+                    ng-click="pt.current.preparationAndDepart = true;pt.save();"
                     ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed()">Préparer et Départ</button>
             <span class="help-block">C'est l'action exceptionnelle que vous devez utiliser si le tronc n'a pas pu être préparé.</span>
           </div>
@@ -203,7 +203,7 @@
           <div class="col-md-3 form-group">
             <button type="submit"
                     class="btn btn-warning"
-                    ng-click="pt.save(false);"
+                    ng-click="pt.current.preparationAndDepart = false;pt.save();"
                     ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed()">Sauvegarder la préparation du tronc</button>
             <span class="help-block">C'est l'action normale que vous devez utiliser 90% du temps</span>
           </div>

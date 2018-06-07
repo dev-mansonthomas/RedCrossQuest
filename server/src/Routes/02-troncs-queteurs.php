@@ -108,16 +108,20 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       elseif ($action =="cancelDepart")
       {
         $numberOfRowUpdated = $troncQueteurDBService->cancelDepart($tq, $ulId, $userId);
-        if($numberOfRowUpdated != 0 )
+        if($numberOfRowUpdated != 1 )
         {
+          $this->logger->addError("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null", array("tronc_queteur"=>$tq->id));
+
           throw new \Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null");
         }
       }
       elseif ($action =="cancelRetour")
       {
+
         $numberOfRowUpdated = $troncQueteurDBService->cancelRetour($tq, $ulId, $userId);
-        if($numberOfRowUpdated != 0 )
+        if($numberOfRowUpdated != 1 )
         {
+          $this->logger->addError("numberOfRowUpdated=$numberOfRowUpdated, likely that comptage is not null", array("tronc_queteur"=>$tq->id));
           throw new \Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that comptage is not null");
         }
 

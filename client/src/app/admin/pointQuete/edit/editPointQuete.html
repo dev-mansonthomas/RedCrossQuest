@@ -13,7 +13,7 @@
         <div class="row">
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqCode.$invalid}">
-              <label for="pqCode" class="control-label">Code</label>
+              <label for="pqCode" class="control-label">Abbréviation</label>
               <input type="text" id="pqCode" name="pqCode" ng-model="pqe.current.code" maxlength="10" class="form-control"/>
             </div>
           </div>
@@ -71,13 +71,13 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqLatitude.$invalid}">
               <label for="pqLatitude" class="control-label">Latitude</label>
-              <input type="text" id="pqLatitude" name="pqLatitude" ng-model="pqe.current.latitude" class="form-control"    ng-maxlength="18" required/>
+              <input type="text" id="pqLatitude" name="pqLatitude" ng-model="pqe.current.latitude" class="form-control"    ng-maxlength="18" required ng-pattern="pqe.latlongRegExp"/>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqLongitude.$invalid}">
               <label for="pqLongitude" class="control-label">Longitude</label>
-              <input type="text" id="pqLongitude" name="pqLongitude" ng-model="pqe.current.longitude" class="form-control" ng-maxlength="18" required/>
+              <input type="text" id="pqLongitude" name="pqLongitude" ng-model="pqe.current.longitude" class="form-control" ng-maxlength="18" required ng-pattern="pqe.latlongRegExp"/>
             </div>
           </div>
           <div class="col-md-8">

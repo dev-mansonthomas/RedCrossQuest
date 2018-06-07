@@ -95,7 +95,7 @@
 
     function savedSuccessfully(returnData)
     {
-      if(returnData.troncInUse == true)
+      if(returnData.troncInUse === true)
       {//Tronc is in use
         vm.current.troncAlreadyInUse=true;
         vm.current.troncAlreadyInUseInfo=returnData.troncInUseInfo;
@@ -144,22 +144,18 @@
      * Save a Départ Tronc
      * if preparationAndDepart is set to true, then it saves the preparation and immediately save the Depart
      * */
-    vm.save = function (preparationAndDepart)
+    vm.save = function ()
     {
-      $log.debug("Saved called");
-      $log.debug(vm.current);
-
       var troncQueteur = new TroncQueteurResource();
-      troncQueteur.queteur_id             = $scope.pt.current.queteur.id;
-      troncQueteur.tronc_id               = $scope.pt.current.tronc.id;
-      troncQueteur.point_quete_id         = $scope.pt.current.lieuDeQuete;
-      troncQueteur.depart_theorique       = $scope.pt.current.horaireDepartTheorique;
-      troncQueteur.notes_depart_theorique = $scope.pt.current.notes_depart_theorique;
+      troncQueteur.queteur_id             = vm.current.queteur.id;
+      troncQueteur.tronc_id               = vm.current.tronc.id;
+      troncQueteur.point_quete_id         = vm.current.lieuDeQuete;
+      troncQueteur.depart_theorique       = vm.current.horaireDepartTheorique;
+      troncQueteur.notes_depart_theorique = vm.current.notes_depart_theorique;
 
-      troncQueteur.preparationAndDepart   = preparationAndDepart;
+      troncQueteur.preparationAndDepart   = vm.current.preparationAndDepart ;
 
       troncQueteur.$save(savedSuccessfully, onSaveError);
-      $log.debug("Saved completed");
     };
 
     /**
@@ -250,7 +246,7 @@
         var queteurDecodedAndNotFoundInDB=function (reason, queteurId, ulId)
         {
           //TODO display a message to the user
-          alert("Vous n'êtes pas autorisé à effectuer cette action");
+          alert("Quêteur Non trouvé ! Attention un QRCode imprimé depuis la plateforme de TEST ne fonctionnera pas sur la PROD !") ;
           $log.debug(JSON.stringify(reason) +' ' + queteurId+' '+ulId);
           //JSON.stringify(reason) +' ' + queteurId+' '+ulId
         };
@@ -279,7 +275,7 @@
 
           var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
           {
-            alert("Vous n'êtes pas autorisé à effectuer cette action") ;
+            alert("Tronc Non trouvé ! Attention un QRCode imprimé depuis la plateforme de TEST ne fonctionnera pas sur la PROD !") ;
             $log.debug(JSON.stringify(reason) +' ' + troncId+' '+ulId);
             //reason +' ' + troncId+' '+ulId
           };
