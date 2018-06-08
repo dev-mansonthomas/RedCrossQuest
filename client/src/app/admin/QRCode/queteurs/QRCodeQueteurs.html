@@ -86,13 +86,13 @@
     <form novalidate name="QueteurQRCodeForm">
     <div class="row no-print">
       <div class="col-md-3">
-        <button type="button" id="markAllAsPrinted" name="markAllAsPrinted" class="btn btn-warning" ng-click="qrcQueteurs.markAllAsPrinted();">Marquez tous les QRCode des <br/>Quêteur comme imprimés</button>
+        <button type="button" id="markAllAsPrinted" name="markAllAsPrinted" class="btn btn-warning" ng-click="qrcQueteurs.markAllAsPrinted();">Marquer tous les QRCode des <br/>Quêteurs comme étant imprimés</button>
         <br/><br/>
         <button class="btn btn-danger"
                 ng-show="qrcQueteurs.confirmMarkAllAsRead"
                 ng-click="qrcQueteurs.doMarkAllAsPrinted();"
                 style="width:100%;height:70px;">
-          Confirmer l'annulation du départ
+          Je confirme que je veux marquer <br/>les QRCode comme étant imprimés
         </button>
         Nombre de QRCodes: <span class="badge">{{qrcQueteurs.list.length}}</span>
       </div>

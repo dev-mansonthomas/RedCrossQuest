@@ -10,7 +10,7 @@
     .controller('QRCodeQueteursController', QRCodeQueteursController);
 
   /** @ngInject */
-  function QRCodeQueteursController($rootScope, $log,$localStorage,
+  function QRCodeQueteursController($rootScope, $log,$localStorage, $timeout,
                                     QueteurResource)
   {
     var vm = this;
