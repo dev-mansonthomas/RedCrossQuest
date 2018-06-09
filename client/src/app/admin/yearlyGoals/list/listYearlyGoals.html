@@ -39,7 +39,7 @@
     <div ng-show="yg.yearlyGoal['id']">
       <div class="row"  style="margin-bottom: 20px;">
         <div class="col-md-2 col-md-offset-4">
-          Objectif de l'année {{yg.selectedYear}}
+          <strong>Objectif de l'année {{yg.selectedYear}}</strong>
         </div>
         <div class="col-md-2">
           <div class="input-group">
@@ -278,7 +278,7 @@
 
   <div class="row" ng-show="!yg.yearlyGoal['id'] && yg.searchedYear == yg.selectedYear">
     <div class="col-md-2 col-md-offset-4">
-      <input type="submit" class="btn btn-primary" value="Renseigner les objectifs de l'année {{yg.selectedYear}}" ng-click="yg.createYear(yg.selectedYear)"/>
+      <button type="submit" class="btn btn-primary" ng-disabled="yg.saveInProgress" ng-click="yg.createYear(yg.selectedYear)">Renseigner les objectifs de l'année {{yg.selectedYear}}</button>
     </div>
   </div>
 

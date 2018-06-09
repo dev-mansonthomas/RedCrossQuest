@@ -672,12 +672,11 @@
             <a ng-click="rfe.back();" class="btn btn-link">Annuler</a>
           </div>
           <div class="col-md-2">
-            <input type="submit"
+            <button type="button"
                    class="btn btn-primary"
-                   value="Sauvegarder"
-                   ng-disabled="recuFiscalForm.$invalid || rfe.computeTotalDonation() == 0"
+                   ng-disabled="recuFiscalForm.$invalid || rfe.computeTotalDonation() == 0 || rfe.current.saveInProgress"
                    ng-click="rfe.save()"
-            />
+            >Sauvegarder</button>
             <span class="help-block" ng-if="rfe.computeTotalDonation()==0 && rfe.current.recu_fiscal.type > 0">La donation doit être d'un montant supérieur à 0€</span>
 
           </div>

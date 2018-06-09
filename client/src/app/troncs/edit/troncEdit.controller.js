@@ -37,7 +37,7 @@
     if (angular.isDefined(troncId))
     {
       vm.current = TroncResource.get({ 'id': troncId });
-
+      vm.current.saveInProgress=false;
       TroncQueteurResource.getTroncsQueteurForTroncId({'tronc_id': troncId}).$promise.then(
         function success(data)
         {
@@ -67,6 +67,7 @@
     else
     {
       vm.current = new TroncResource();
+      vm.current.saveInProgress=false;
       vm.current.type=1;
       vm.current.enabled=true;
       $rootScope.$emit('title-updated', 'Création d\'un nouveau Tronc');
@@ -74,6 +75,7 @@
 
     vm.save =function save()
     {
+      vm.current.saveInProgress=true;
       if (angular.isDefined(troncId))
       {
         vm.current.$update(savedSuccessfully, errorWhileSaving);
@@ -89,12 +91,13 @@
     function savedSuccessfully()
     {
       vm.savedSuccessfully=true;
-
+      vm.current.saveInProgress=false;
       $timeout(function () { vm.savedSuccessfully=false; }, 5000);
     }
 
     function errorWhileSaving(error)
     {
+      vm.current.saveInProgress=false;
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=error;
     }

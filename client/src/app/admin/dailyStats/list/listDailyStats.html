@@ -26,7 +26,7 @@
 
           </div>
           <div class="col-md-4">
-            <input type="submit" class="btn btn-primary" value="Rechercher" ng-click="ds.doSearch()"/>
+            <button type="button" class="btn btn-primary" ng-click="ds.doSearch()">Rechercher</button>
           </div>
         </div>
       </form>
@@ -89,7 +89,7 @@
 
     <div class="row" ng-show="ds.list.length == 0 && ds.searchedYear == ds.selectedYear">
       <div class="col-md-2 col-md-offset-5">
-        <input type="submit" class="btn btn-primary" value="Créer l'année {{ds.selectedYear}}" ng-click="ds.createYear(ds.selectedYear)"/>
+        <input type="submit" class="btn btn-primary" value="Créer l'année {{ds.selectedYear}}" ng-disabled="ds.saveInProgress" ng-click="ds.createYear(ds.selectedYear)"/>
       </div>
     </div>
 

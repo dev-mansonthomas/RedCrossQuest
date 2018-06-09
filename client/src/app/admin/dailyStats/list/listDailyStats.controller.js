@@ -50,8 +50,9 @@
 
     vm.createYear=function(year)
     {
+      vm.saveInProgress=true;
       var dailyStatsResource = new DailyStatsResource({year:year});
-      dailyStatsResource.$createYear(function(){vm.doSearch();}, function(error){$log.error(error);});
+      dailyStatsResource.$createYear(function(){vm.saveInProgress=false;vm.doSearch();}, function(error){vm.saveInProgress=false;$log.error(error);});
     };
 
     vm.save=function(id, amount)

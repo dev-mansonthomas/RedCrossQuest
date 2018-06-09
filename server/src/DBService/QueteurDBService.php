@@ -149,7 +149,7 @@ AND EXISTS (SELECT queteur_id from users where queteur_id = q.id)
       $QRSearchTypeSQL = "
 AND qr_code_printed = :qr_code_printed      
       ";
-      $parameters["qr_code_printed"]=$QRSearchType;
+      $parameters["qr_code_printed"]=$QRSearchType=="1"?1:0;
     }
 
     // Only for QRCode Search,
@@ -344,7 +344,7 @@ ORDER BY q.last_name ASC
     }
 
 
-    $this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql));
+    $this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql, "parameters"=>$parameters));
     $stmt   = $this->db->prepare($sql);
     $parameters["active"] = $active;
 

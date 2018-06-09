@@ -350,7 +350,7 @@
           <a  ng-click="queteur.back();" class="btn btn-link">Annuler</a>
         </div>
         <div class="col-md-2 col-md-offset-4">
-          <input type="button" class="btn btn-primary" value="Sauvegarder" ng-disabled="queteurForm.$invalid" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
+          <input type="button" class="btn btn-primary" value="Sauvegarder" ng-disabled="queteurForm.$invalid || queteur.current.saveInProgress" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
         </div>
       </div>
 
@@ -371,7 +371,12 @@
                 <span class="help-block" ng-show="queteur.current.user" >Ce bénévole <b>est</b> un utilisateur de l'application RCQ</span>
                 <div class="row"  ng-show="!queteur.current.user">
                   <div class="col-md-12 ">
-                    <button class="btn btn-default" type="button" id="createUserButton" ng-click="queteur.createUser()">Faire de ce bénévole un utilisateur de l'application RCQ</button>
+                    <button class="btn btn-default"
+                            type="button"
+                            id="createUserButton"
+                            ng-click="queteur.createUser()"
+                            ng-disabled="queteur.current.userSaveInProgress"
+                    >Faire de ce bénévole un utilisateur de l'application RCQ</button>
                     <span class="help-block">
                       En cliquant sur ce bouton :
                       <ul>

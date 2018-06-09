@@ -173,6 +173,7 @@
 
     vm.savedSuccessfullyFunction=function(response)
     {
+      vm.current.saveInProgress=false;
       if(typeof response.queteurId ==='number')
       {
         vm.goToQueteur(response.queteurId);
@@ -192,6 +193,7 @@
 
     vm.errorWhileSavingFunction=function(error)
     {
+      vm.current.saveInProgress=false;
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=error;
     };
@@ -236,12 +238,16 @@
     {
       //vm.uploadFiles();
 
-      if(angular.isDefined(vm.current.anonymization_token) && vm.current.anonymization_token != null && !vm.current.unAnonymizeConfirmed)
+      if(angular.isDefined(vm.current.anonymization_token) &&
+          vm.current.anonymization_token != null &&
+          vm.current.anonymization_token != "" &&
+         !vm.current.unAnonymizeConfirmed)
       {
         vm.current.unanonymizeAskConfirmation=true;
       }
       else
       {
+        vm.current.saveInProgress=true;
         if (angular.isDefined(vm.current.id) && vm.current.id != null)
         {
           vm.current.$update(vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);

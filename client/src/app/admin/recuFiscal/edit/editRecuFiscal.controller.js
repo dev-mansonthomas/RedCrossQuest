@@ -54,6 +54,7 @@
     vm.loadData=function(recu_fiscal_id)
     {
       vm.current = {};
+      vm.current.saveInProgress = false;
 
       if (angular.isDefined(recu_fiscal_id) &&  recu_fiscal_id !== 0)
       {
@@ -118,7 +119,7 @@
 
     vm.save = function save()
     {
-
+      vm.current.saveInProgress = true;
       if(vm.checkInputValues() && vm.current.overrideWarning !== true)
       {
         vm.current.confirmInputValues=true;
@@ -141,6 +142,7 @@
 
     function onSaveError(error)
     {
+      vm.current.saveInProgress = false;
       $log.debug(error);
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=JSON.stringify(error);
@@ -150,6 +152,7 @@
     function savedSuccessfully(response)
     {
       vm.current = {};
+      vm.current.saveInProgress = false;
       vm.savedSuccessfully=true;
 
       if(response && typeof response.namedDonationId ==='number')
@@ -165,6 +168,7 @@
     vm.back=function()
     {
       vm.current = {};
+      vm.current.saveInProgress = false;
       $location.path('/recu_fiscal/').replace();
     };
 

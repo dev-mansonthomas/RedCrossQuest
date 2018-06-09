@@ -5,7 +5,7 @@
     <div class="panel-heading" ng-show="tronc.current.id" ng-cloak>Un Tronc:  <b><span ng-bind="tronc.current.id"></span></b> crée le {{tronc.current.created}}</div>
     <div class="panel-heading" ng-show="!tronc.current.id" ng-cloak>Création de troncs</div>
   </div>
-  <form novalidate ng-submit='tronc.save();' name="troncForm">
+  <form novalidate  name="troncForm">
 
       <div class="well">
         <div class="row">
@@ -66,7 +66,7 @@
             <a ng-href="/#!/troncs" class="btn btn-link">Annuler</a>
           </div>
           <div class="col-md-2 col-md-offset-8">
-            <input type="submit" class="btn btn-primary" value="Sauvegarder" ng-disabled="troncForm.$invalid" />
+            <button type="button" class="btn btn-primary" ng-disabled="troncForm.$invalid || tronc.current.saveInProgress" ng-click='tronc.save();'>Sauvegarder</button>
           </div>
         </div>
 

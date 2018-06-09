@@ -15,7 +15,7 @@
   {
     var vm = this;
 
-    vm.latlongRegExp=/^(\d+\.)*\d+$/;
+    vm.latlongRegExp=/^-?(\d+\.)*\d+$/;
 
     vm.typePointQueteList=[
       {id:1,label:'Voix Publique / Feux Rouge'},
@@ -43,7 +43,7 @@
       vm.current          = new PointQueteResource();
       vm.current.ul_id    = $localStorage.currentUser.ulId;
       vm.current.ul_name  = $localStorage.currentUser.ulName;
-
+      vm.current.enabled  = true;
       vm.current.address     = $localStorage.guiSettings.ul.address;
       vm.current.postal_code = $localStorage.guiSettings.ul.postal_code;
       vm.current.city        = $localStorage.guiSettings.ul.city;

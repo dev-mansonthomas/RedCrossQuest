@@ -40,6 +40,7 @@
     vm.initData = function()
     {
       vm.current = {};
+      vm.current.saveInProgress=false;
       vm.current.ul_id=$localStorage.currentUser.ulId;
 
       vm.current.horaireDepartTheorique = new Date();
@@ -95,6 +96,7 @@
 
     function savedSuccessfully(returnData)
     {
+      vm.current.saveInProgress=false;
       if(returnData.troncInUse === true)
       {//Tronc is in use
         vm.current.troncAlreadyInUse=true;
@@ -131,7 +133,7 @@
 
     function onSaveError(errorMessage)
     {
-
+      vm.current.saveInProgress=false;
       $log.error(errorMessage);
       vm.errorWhileSaving = true;
 
@@ -146,6 +148,7 @@
      * */
     vm.save = function ()
     {
+      vm.current.saveInProgres=true;
       var troncQueteur = new TroncQueteurResource();
       troncQueteur.queteur_id             = vm.current.queteur.id;
       troncQueteur.tronc_id               = vm.current.tronc.id;

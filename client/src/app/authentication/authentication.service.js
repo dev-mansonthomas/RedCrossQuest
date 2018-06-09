@@ -18,7 +18,7 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
 
   return service;
 
-  function sendInit(username, callback)
+  function sendInit(username, callback, errorCallback)
   {
     $http.post('/rest/sendInit', { username: username })
       .then(function success(response) {
@@ -36,7 +36,7 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
       },
       function error(error)
       {
-        $log.error(error);
+        errorCallback(error);
       });
   }
 

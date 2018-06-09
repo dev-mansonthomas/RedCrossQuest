@@ -17,6 +17,7 @@
 
     vm.savedSuccessfully=false;
     vm.errorWhileSaving =false;
+    vm.saveInProgress   =false;
 
     vm.currentYear  = (new Date()).getFullYear();
     vm.selectedYear = vm.currentYear;
@@ -46,8 +47,9 @@
 
     vm.createYear=function(year)
     {
+      vm.saveInProgress=true;
       var yearlyGoalsResource = new YearlyGoalsResource({year:year});
-      yearlyGoalsResource.$createYear(function(){vm.doSearch();}, function(error){$log.error(error);});
+      yearlyGoalsResource.$createYear(function(){vm.saveInProgress=false;vm.doSearch();}, function(error){vm.saveInProgress=false;$log.error(error);});
     };
 
     vm.save=function()

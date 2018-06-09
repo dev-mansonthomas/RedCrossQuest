@@ -73,20 +73,28 @@
       }
 
       vm.loading = true;
-      AuthenticationService.sendInit(vm.username, function(success, email){
-
+      AuthenticationService.sendInit(vm.username, function(success, email)
+      {
         if(success)
         {
           vm.error=null;
-          vm.success='Un email vient de vous être envoyé ('+email+') avec un lien pour réinitialiser votre mot de passe. L\'email va arriver dans une minute ! (Checkez votre dossier spam)';
+          vm.success=true;
+          vm.email=email;
           vm.loading=false;
         }
         else
         {
-          vm.error='Une erreur est survenue. Veuillez contacter support@redcrossquest.com';
+          vm.error = true;
+          vm.errorStr='Une erreur est survenue. Veuillez contacter support@redcrossquest.com';
           vm.success=null;
           vm.loading=false;
         }
+      }, function (error)
+      {
+        vm.error = true;
+        vm.errorStr=JSON.stringify(error);
+        vm.success=null;
+        vm.loading=false;
       });
     };
   }
