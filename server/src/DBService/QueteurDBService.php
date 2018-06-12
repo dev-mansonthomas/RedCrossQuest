@@ -256,6 +256,8 @@ SELECT  q.`id`,
         q.`man`,
         q.`birthdate`,
         q.`qr_code_printed`,
+       tq.`point_quete_id`,
+       pq.name AS 'point_quete_name',
        tq.`point_quete_id`, 
        tq.`depart_theorique`, 
        tq.`depart`, 
@@ -265,7 +267,8 @@ SELECT  q.`id`,
         u.longitude  as 'ul_longitude' 
 FROM       queteur AS q,
      tronc_queteur AS tq, 
-                ul AS u
+                ul AS u,
+       point_quete AS pq
 WHERE  q.ul_id = :ul_id
 AND    q.ul_id = u.id
 AND    q.active= :active
@@ -282,6 +285,7 @@ AND    tq.id      = (
       ORDER BY depart_theorique DESC
       LIMIT 1
     )
+AND  tq.point_quete_id = pq.id
 ORDER BY q.last_name ASC
 ";
 
