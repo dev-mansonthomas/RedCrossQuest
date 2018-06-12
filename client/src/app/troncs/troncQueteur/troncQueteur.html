@@ -3,24 +3,37 @@
 
   <!-- print version of tronc queteur -->
   <div class="tronc-queteur-print">
-    <table>
+    <table style="margin-top:120px;margin-left:100px;">
       <thead>
         <tr>
-          <th colspan="3"> Croix Rouge -  {{tq.ulName}}</th>
+          <th colspan="3"> Croix-Rouge -  {{tq.ulName}}</th>
         </tr>
         <tr>
-          <td style="text-align: left;padding-left:20px;">
-            Tronc N° {{tq.current.tronc_queteur.id}}2
-          </td>
-          <td colspan="2">
-            Rentré le {{tq.current.tronc_queteur.retourStr}}
+          <td colspan="3">
+            Sortie de Tronc N° '{{tq.current.tronc_queteur.id}}' avec le tronc N° '{{tq.current.tronc_queteur.tronc_id}}'
           </td>
         </tr>
-      <tr>
-        <td colspan="3" style="text-align: left;padding-left:20px;">
-          Point de Quête: {{tq.current.tronc_queteur.point_quete.name}}
-        </td>
-      </tr>
+        <tr>
+          <td colspan="3">
+            Départ le '{{tq.current.tronc_queteur.departStr}}' - Rentré le '{{tq.current.tronc_queteur.retourStr}}'
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <table style="font-size: 8px;">
+              <tr>
+                <td style="width:100px;font-weight: normal;">Sac de Pièces</td>
+                <td style="text-align: left;">{{tq.current.tronc_queteur.coins_money_bag_id}}</td>
+                <td style="width:100px;font-weight: normal;">Sac de Billets</td>
+                <td style="text-align: left;">{{tq.current.tronc_queteur.bills_money_bag_id}}</td>
+              </tr>
+            </table>
+        </tr>
+        <tr>
+          <td colspan="3" style="text-align: left;padding-left:20px;">
+            Point de Quête: {{tq.current.tronc_queteur.point_quete.name}}
+          </td>
+        </tr>
       </thead>
       <tbody>
         <tr>
@@ -130,6 +143,18 @@
             tq.current.tronc_queteur.cent1   * 0.01
             | currency : "€" : 2}}</td>
         </tr>
+
+        <tr>
+          <td style="text-align: right;font-weight: bold;" colspan="2">Total Chèque</td>
+          <td style="text-align: right;font-weight: bold;">{{tq.current.tronc_queteur.don_cheque | currency : "€" : 2}} </td>
+        </tr>
+
+        <tr>
+          <td style="text-align: right;font-weight: bold;" colspan="2">Total Carte Bleue</td>
+          <td style="text-align: right;font-weight: bold;">{{tq.current.tronc_queteur.don_creditcard | currency : "€" : 2}} </td>
+        </tr>
+
+
         <tr>
 
         </tr>
@@ -151,7 +176,9 @@
             tq.current.tronc_queteur.cents10 * 0.1  +
             tq.current.tronc_queteur.cents5  * 0.05 +
             tq.current.tronc_queteur.cents2  * 0.02 +
-            tq.current.tronc_queteur.cent1   * 0.01
+            tq.current.tronc_queteur.cent1   * 0.01 +
+            tq.current.tronc_queteur.don_cheque     +
+            tq.current.tronc_queteur.don_creditcard
             | currency : "€" : 2}}
           </td>
         </tr>
@@ -451,7 +478,7 @@
 
           <div class="row">
             <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_creditcard.$invalid}">
-              <label for="don_creditcard" class="control-label">Total des dons en Carte Bleue</label>
+              <label for="don_creditcard" class="control-label">Total des dons  {Sans Contact + Code PIN}</label>
               <div class="input-group">
 
                 <input type="number"
@@ -469,7 +496,7 @@
             </div>
 
             <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cb_total_number.$invalid}">
-              <label for="don_cb_total_number" class="control-label">Nombre total de dons en CB</label>
+              <label for="don_cb_total_number" class="control-label">Nombre total de dons {Sans Contact + Code PIN}</label>
               <div class="input-group">
 
                 <input type="number"
@@ -521,7 +548,7 @@
                        ng-value="tq.current.tronc_queteur.don_creditcard - tq.current.tronc_queteur.don_cb_sans_contact_amount"
                        ng-disabled="true"
                 />
-                <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
+                <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
               <span class="help-block">Calcul automatique : Total de dons CB - Total de sans contact</span>
             </div>
@@ -1105,17 +1132,25 @@
         </div>
 
         <div class="row" ng-show="!tq.current.confirmInputValues">
-          <div class="form-group col-md-2 col-md-offset-8">
+          <div class="col-md-2">
             <a ng-click="tq.back();" class="btn btn-link">Annuler</a>
           </div>
+          <div class="col-md-2 col-md-offset-6">
+            <button
+              type="button"
+              class="btn btn-info"
+                 id="tronc_queteur_print"
+               name="tronc_queteur_print"
+              ng-click="tq.print()"
+            >Imprimer</button>
+          </div>
           <div class="col-md-2">
-            <input type="submit"
+            <button type="button"
                    class="btn btn-primary"
-                   value="Sauvegarder"
                    ng-disabled="troncQueteurForm.$invalid"
                    ng-click="tq.save()"
                    ng-if="tq.current.tronc_queteur.tronc_id > 0 && !tq.current.readOnlyView && tq.current.not_same_year!=true  || tq.current.adminEditMode == true"
-            />
+            >Sauvegarder</button>
 
           </div>
         </div>

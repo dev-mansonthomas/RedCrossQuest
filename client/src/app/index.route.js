@@ -17,6 +17,11 @@
         controller  : 'LoginController',
         controllerAs: 'vm'
       })
+      .when('/login/:login', {
+        templateUrl : 'app/authentication/login/login.html',
+        controller  : 'LoginController',
+        controllerAs: 'vm'
+      })
       .when('/resetPassword', {
         templateUrl : 'app/authentication/resetPassword/resetPassword.html',
         controller  : 'ResetPasswordController',

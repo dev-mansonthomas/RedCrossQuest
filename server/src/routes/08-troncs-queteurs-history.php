@@ -32,7 +32,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($reques
 
     $troncQueteurs = $troncQueteurDBService->getTroncQueteurHistoryById($troncQueteurId, $ulId);
 
-    $response->getBody()->write(json_encode($troncQueteurs, JSON_NUMERIC_CHECK));
+    $response->getBody()->write(json_encode($troncQueteurs));
 
     return $response;
   }

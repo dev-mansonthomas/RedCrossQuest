@@ -21,7 +21,7 @@
     $rootScope.$emit('title-updated', 'Préparation d\'un Tronc');
 
     vm.typePointQueteList=[
-      {id:1,label:'Voix Publique'},
+      {id:1,label:'Voie Publique'},
       {id:2,label:'Piéton'},
       {id:3,label:'Boutique'},
       {id:4,label:'Base UL'},
@@ -208,7 +208,7 @@
       if(moment().diff(vm.current.queteur.birthdate.date, 'years')>=18)
         return true;
 
-      return vm.pointsQueteHash[vm.current.lieuDeQuete].minor_allowed === '1';
+      return vm.pointsQueteHash[vm.current.lieuDeQuete].minor_allowed === true;
     };
 
     /**

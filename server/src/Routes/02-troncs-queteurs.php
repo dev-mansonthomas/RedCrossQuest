@@ -287,21 +287,25 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
 
         $tronc_id     = $params['tronc_id'];
         $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
-        $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
+
+        $this->logger->addError("print_r", array('tq'=>print_r($troncQueteur, true)));
+        $this->logger->addError ("json_encode", array('tq'=>print_r(json_encode($troncQueteur), true)));
+
+        $response->getBody()->write(json_encode($troncQueteur));
         return $response;
       }
       else if($action == "getTroncsQueteurForTroncId")
       {
         $tronc_id     = $params['tronc_id'];
         $troncQueteur = $troncQueteurDBService->getTroncsQueteurByTroncId($tronc_id, $ulId);
-        $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
+        $response->getBody()->write(json_encode($troncQueteur));
         return $response;
       }
       else if($action == "getTroncsOfQueteur")
       {
         $queteur_id             = $params['queteur_id'];
         $troncsQueteur          = $troncQueteurDBService->getTroncsQueteur($queteur_id, $ulId);
-        $response->getBody()->write(json_encode($troncsQueteur, JSON_NUMERIC_CHECK));
+        $response->getBody()->write(json_encode($troncsQueteur));
 
         return $response;
       }
@@ -350,8 +354,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
       new TroncDBService       ($this->db, $this->logger));
 
     $troncQueteur = $troncQueteurAction->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId, $roleId);
-
-    $response->getBody()->write(json_encode($troncQueteur, JSON_NUMERIC_CHECK));
+    $response->getBody()->write(json_encode($troncQueteur));
 
     return $response;
   }

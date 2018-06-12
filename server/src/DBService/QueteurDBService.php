@@ -205,7 +205,7 @@ SELECT  q.`id`,
        u.name       as 'ul_name',
        u.latitude   as 'ul_latitude',
        u.longitude  as 'ul_longitude'
-FROM  queteur     AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
+FROM  queteur     AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id AND tq.deleted = 0,
       point_quete AS pq, 
                ul AS u
 WHERE  q.ul_id = :ul_id
@@ -227,7 +227,7 @@ AND
         SELECT tqq.id 
         FROM  tronc_queteur tqq
         WHERE tqq.queteur_id = q.id
-        ORDER BY depart_theorique DESC
+        ORDER BY tqq.depart_theorique DESC
         LIMIT 1
     )
   )
@@ -272,12 +272,13 @@ AND    q.active= :active
 $querySQL 
 $secteurSQL 
 $rcqUserSQL
-AND     q.id = tq.queteur_id
-AND    tq.id = (  
+AND     q.id      = tq.queteur_id
+AND    tq.deleted = 0
+AND    tq.id      = (  
       SELECT tqq.id 
       FROM  tronc_queteur tqq
       WHERE tqq.queteur_id = q.id
-      AND   depart IS NULL
+      AND   tqq.depart IS NULL
       ORDER BY depart_theorique DESC
       LIMIT 1
     )
@@ -316,8 +317,9 @@ AND    q.active= :active
 $querySQL 
 $secteurSQL 
 $rcqUserSQL
-AND     q.id = tq.queteur_id
-AND    tq.id = (  
+AND     q.id      = tq.queteur_id
+AND    tq.deleted = 0
+AND    tq.id      = (  
       SELECT tqq.id 
       FROM  tronc_queteur tqq
       WHERE tqq.queteur_id = q.id

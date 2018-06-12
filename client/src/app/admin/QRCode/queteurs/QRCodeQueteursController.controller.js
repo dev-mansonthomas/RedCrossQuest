@@ -100,6 +100,7 @@
     vm.onSaveSuccess = function()
     {
       vm.savedSuccessfully=true;
+      vm.confirmMarkAllAsRead=false;
       $timeout(function () { vm.savedSuccessfully=false; }, 10000);
     };
 

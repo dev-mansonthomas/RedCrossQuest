@@ -206,14 +206,14 @@
         </div>
         <div class="row" style="margin-top: 20px;margin-bottom: 20px;">
           <div class="col-md-2 col-md-offset-1">
-            <a ng-href="/#!/pointsQuetes" class="btn btn-link">Cancel</a>
+            <a ng-href="/#!/pointsQuetes" class="btn btn-link">Annuler</a>
           </div>
           <div class="col-md-2 col-md-offset-1">
-            <input type="button" class="btn btn-primary" value="Créer un nouveau point de quête" ng-show="pqe.current.id > 0 " ng-click="pqe.createNewPointQuete()"/>
+            <button type="button" class="btn btn-primary" ng-show="pqe.current.id > 0 " ng-click="pqe.createNewPointQuete()">Créer un nouveau point de quête</button>
           </div>
 
           <div class="col-md-2 col-md-offset-3">
-            <input type="button" class="btn btn-primary" value="Save" ng-disabled="pointQueteForm.$invalid" ng-show="pqe.currentUserRole>1" ng-click='pqe.save();'/>
+            <button type="button" class="btn btn-primary" ng-disabled="pointQueteForm.$invalid" ng-show="pqe.currentUserRole>1" ng-click='pqe.save();'>Sauvegarder</button>
           </div>
         </div>
 

@@ -18,7 +18,7 @@
     vm.latlongRegExp=/^-?(\d+\.)*\d+$/;
 
     vm.typePointQueteList=[
-      {id:1,label:'Voix Publique / Feux Rouge'},
+      {id:1,label:'Voie Publique / Feux Rouge'},
       {id:2,label:'Piéton'},
       {id:3,label:'Commerçant'},
       {id:4,label:'Base UL'},

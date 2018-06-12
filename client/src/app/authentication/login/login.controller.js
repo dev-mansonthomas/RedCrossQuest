@@ -6,7 +6,7 @@
     .controller('LoginController', LoginController);
 
   /** @ngInject */
-  function LoginController($rootScope, $location, $timeout, $window,
+  function LoginController($rootScope, $location, $timeout, $window, $routeParams,
                            AuthenticationService) {
     var vm = this;
 
@@ -25,6 +25,8 @@
 
 
     vm.timeout=false;
+
+    vm.username=$routeParams.login;
 
     initController();
 

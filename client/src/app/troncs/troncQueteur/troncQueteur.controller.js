@@ -603,6 +603,10 @@
       $log.debug(error);
     };
 
+    vm.print=function()
+    {
+      window.print();
+    };
 
 
     vm.searchCoinMoneyBagId=function(searchedString)

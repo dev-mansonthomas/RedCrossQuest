@@ -23,7 +23,7 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
-      $this->$key = (int)$data[$key];
+      $this->$key = $data[$key] == null ? null : (int)$data[$key];
     }
   }
 
@@ -36,7 +36,7 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
-      $this->$key = (float) $data[$key];
+      $this->$key = $data[$key] == null ? null : (float) $data[$key];
     }
   }
 

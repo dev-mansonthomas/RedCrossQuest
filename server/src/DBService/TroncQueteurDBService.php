@@ -550,7 +550,7 @@ AND    q.ul_id                = :ul_id
         }
       }
 
-      $this->logger->warning($tq->notes_retour_comptage_pieces);
+      //$this->logger->warning($tq->notes_retour_comptage_pieces);
 
 
       $sql = "
@@ -1023,7 +1023,7 @@ WHERE  nd.$column  like :query
 AND YEAR(nd.donation_date) =  YEAR(NOW())
 AND nd.ul_id = :ul_id
 ) as t
-ORDER BY t.money_bag_id ASC
+ORDER BY t.money_bag_id DESC
 ";
 
     $stmt = $this->db->prepare($sql);

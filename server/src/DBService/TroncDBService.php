@@ -52,7 +52,7 @@ AND `type` = :type
       $sql .="
       ORDER BY id ASC
 ";
-      $this->logger->info($sql, $parameters);
+      //$this->logger->info($sql, $parameters);
       $stmt = $this->db->prepare($sql);
       $stmt->execute($parameters);
 
@@ -192,7 +192,7 @@ AND   `ul_id`       = :ul_id
       $stmt = $this->db->prepare($sql);
       $stmt->execute([
         "notes"      => $tronc->notes,
-        "enabled"    => $tronc->enabled,
+        "enabled"    => $tronc->enabled==true ?1:0,
         "id"         => $tronc->id,
         "type"         => $tronc->type,
         "ul_id"      => $ulId

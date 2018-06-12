@@ -84,7 +84,7 @@
               name="referent_volunteer"
               type="text"
               ng-model="queteur.current.referent_volunteerQueteur"
-              placeholder="Tapper le nom, prénom ou NIVOL du référent"
+              placeholder="Taper le nom, prénom ou NIVOL du référent"
               uib-typeahead="queteur as queteur.full_name for queteur in queteur.searchQueteur($viewValue)"
               typeahead-loading="loadingQueteurs"
               typeahead-no-results="noResults"
@@ -576,6 +576,7 @@
             <thead>
               <tr>
                 <th>ID (click to edit)</th>
+                <th>Tronc ID</th>
                 <th>Départ théorique</th>
                 <th>Départ</th>
                 <th>Retour</th>
@@ -588,6 +589,7 @@
             <tbody>
               <tr ng-repeat="tq in queteur.current.troncs_queteur">
                 <th><a ng-href="/#!/tronc_queteur/edit/{{tq.id}}">{{tq.id}}</a>&nbsp;<span class="glyphicon glyphicon-bin" aria-hidden="true" style="color:grey;" ng-show="tq.deleted"></span></th>
+                <td>{{tq.tronc_id}} </td>
                 <td>{{tq.depart_theorique}} </td>
                 <td>{{tq.depart}}</td>
                 <td>{{tq.retour}}</td>

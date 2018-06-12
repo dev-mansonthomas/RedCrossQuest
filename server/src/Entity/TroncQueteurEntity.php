@@ -92,38 +92,38 @@ class TroncQueteurEntity extends Entity
     {
       $this->logger = $logger;
 
-      $this->getString('id'               , $data);
-      $this->getString('queteur_id'       , $data);
-      $this->getString('point_quete_id'   , $data);
-      $this->getString('tronc_id'         , $data);
-      $this->getDate  ('depart_theorique' , $data);
+      $this->getInteger('id'               , $data);
+      $this->getInteger('queteur_id'       , $data);
+      $this->getInteger('point_quete_id'   , $data);
+      $this->getInteger('tronc_id'         , $data);
+      $this->getDate   ('depart_theorique' , $data);
 
       //$this->logger->addInfo("Date before/after",array("before"=>$data['depart_theorique'],"after"=>$this->depart_theorique));
 
-      $this->getDate  ('depart'           , $data);
-      $this->getDate  ('retour'           , $data);
-      $this->getDate  ('comptage'         , $data);
-      $this->getDate  ('last_update'      , $data);
+      $this->getDate   ('depart'           , $data);
+      $this->getDate   ('retour'           , $data);
+      $this->getDate   ('comptage'         , $data);
+      $this->getDate   ('last_update'      , $data);
       $this->getInteger('last_update_user_id', $data);
 
-      $this->getString('euro500'          , $data);
-      $this->getString('euro200'          , $data);
-      $this->getString('euro100'          , $data);
-      $this->getString('euro50'           , $data);
-      $this->getString('euro20'           , $data);
-      $this->getString('euro10'           , $data);
-      $this->getString('euro5'            , $data);
-      $this->getString('euro2'            , $data);
-      $this->getString('euro1'            , $data);
-      $this->getString('cents50'          , $data);
-      $this->getString('cents20'          , $data);
-      $this->getString('cents10'          , $data);
-      $this->getString('cents5'           , $data);
-      $this->getString('cents2'           , $data);
-      $this->getString('cent1'            , $data);
+      $this->getInteger('euro500'          , $data);
+      $this->getInteger('euro200'          , $data);
+      $this->getInteger('euro100'          , $data);
+      $this->getInteger('euro50'           , $data);
+      $this->getInteger('euro20'           , $data);
+      $this->getInteger('euro10'           , $data);
+      $this->getInteger('euro5'            , $data);
+      $this->getInteger('euro2'            , $data);
+      $this->getInteger('euro1'            , $data);
+      $this->getInteger('cents50'          , $data);
+      $this->getInteger('cents20'          , $data);
+      $this->getInteger('cents10'          , $data);
+      $this->getInteger('cents5'           , $data);
+      $this->getInteger('cents2'           , $data);
+      $this->getInteger('cent1'            , $data);
 
-      $this->getString('don_cheque'       , $data);
-      $this->getString('don_creditcard'   , $data);
+      $this->getFloat  ('don_cheque'       , $data);
+      $this->getFloat  ('don_creditcard'   , $data);
       
 
       $this->getString('foreign_coins'    , $data);
@@ -139,8 +139,8 @@ class TroncQueteurEntity extends Entity
 
       $this->getBoolean('deleted'               , $data);
 
-      $this->getString('tronc_queteur_id'       , $data);
-      $this->getDate  ('insert_date'            , $data);
+      $this->getInteger('tronc_queteur_id'       , $data);
+      $this->getDate   ('insert_date'            , $data);
 
       $this->getBoolean('preparationAndDepart'               , $data);
 

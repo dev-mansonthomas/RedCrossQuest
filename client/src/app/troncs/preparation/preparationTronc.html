@@ -91,6 +91,7 @@
                typeahead-loading="loadingQueteurs"
                typeahead-no-results="noResults"
                typeahead-wait-ms="20"
+               typeahead-select-on-blur="true"
                class="form-control"
                ng-required
                autocomplete="off">
@@ -99,6 +100,7 @@
                 <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
               </div>
               <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+              <div class="alert alert-warning" role="alert"><strong>ATTENTION</strong>:<br/> En saisie manuelle, ne pas utiliser la touche "TAB" <br/>(petit bug pas encore résolu)</div>
             </div>
             <div class="form-group" ng-class="{'has-error':prepaTroncForm.horaireDepartTheorique.$invalid}" ng-show="pt.current.queteur.id>0 && pt.current.tronc.id > 0">
               <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
@@ -124,6 +126,7 @@
                 typeahead-loading="loadingTroncs"
                 typeahead-no-results="noTroncsResults"
                 typeahead-wait-ms="20"
+                typeahead-select-on-blur="true"
                 class="form-control"
                 ng-required
                 autocomplete="off">
@@ -133,8 +136,9 @@
               </div>
 
               <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+              <div class="alert alert-warning" role="alert"><strong>ATTENTION</strong>:<br/> En saisie manuelle, ne pas utiliser la touche "TAB" <br/>(petit bug pas encore résolu)</div>
             </div>
-            <div class="form-group"  ng-show="pt.current.queteur.id>0  && pt.current.tronc.id > 0">
+            <div class="form-group"  ng-show="pt.current.queteurId >0  && pt.current.tronc.id > 0">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
               <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required
                       ng-options="pq.id as pt.getTypeLabel(pq.type)+' - '+ (pq.code!= '' ? pq.code+' - ': '')+pq.name
