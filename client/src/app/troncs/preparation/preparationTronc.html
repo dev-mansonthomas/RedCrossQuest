@@ -6,13 +6,13 @@
 <!-- Modal window in case of error -->
   <script type="text/ng-template" id="myModalContent.html">
     <div class="modal-header">
-      <h3 class="modal-title">Erreur lors de la sauvegarde de la préparation du tronc!</h3>
+      <h3 class="modal-title">Erreur lors de la sauvegarde de la préparation du {Tronc-Quêteur}!</h3>
     </div>
     <div class="modal-body">
 
       <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">Ce tronc est comptabilisé comme étant en cours d'utilisation <b>{{troncInfos.length}}</b> fois</div>
+        <div class="panel-heading">Ce <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> est comptabilisé comme étant en cours d'utilisation <b>{{troncInfos.length}}</b> fois</div>
 
         <table class='table'>
           <thead>
@@ -50,8 +50,8 @@
 
     </div>
     <div class="modal-footer">
-      <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()">Supprimer les Anciens Troncs et sauver la préparation du tronc courant</button>
-      <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le tronc au bon quêteur</button>
+      <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()">Supprimer les Anciens <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> et sauver la préparation du {Tronc-Quêteur} courant</button>
+      <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> au bon quêteur</button>
     </div>
   </script>
 
@@ -59,7 +59,7 @@
 
 
   <div class="panel panel-primary" style="background-color: #0275d8!important; border-color:#0275d8!important;">
-    <div class="panel-heading" style="background-color: #0275d8!important; border-color:#0275d8!important;"><h2>Préparation Tronc</h2></div>
+    <div class="panel-heading" style="background-color: #0275d8!important; border-color:#0275d8!important;"><h2>Préparation du <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong></h2></div>
   </div>
 
 

@@ -10,7 +10,7 @@
         </tr>
         <tr>
           <td colspan="3">
-            Sortie de Tronc N° '{{tq.current.tronc_queteur.id}}' avec le tronc N° '{{tq.current.tronc_queteur.tronc_id}}'
+            {Tronc-Queteur} N° '{{tq.current.tronc_queteur.id}}' avec le tronc N° '{{tq.current.tronc_queteur.tronc_id}}'
           </td>
         </tr>
         <tr>
@@ -219,7 +219,7 @@
   </div>
   <!-- END OF  - print version of tronc queteur -->
   <div class="panel panel-primary tronc-queteur" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important">
-    <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h2>Comptage de Tronc</h2>
+    <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h2>Comptage du <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong></h2>
       <span ng-show="tq.current.tronc_queteur.id">
         ID {{tq.current.tronc_queteur.id}} -
         Tronc N° {{tq.current.tronc.id}} -
@@ -1141,7 +1141,7 @@
 
         <div class="row" ng-show="!tq.current.confirmInputValues">
           <div class="col-md-2">
-            <a ng-click="tq.back();" class="btn btn-link">Annuler</a>
+            <a ng-click="tq.back();" class="btn btn-link" ng-if="tq.current.tronc_queteur.id > 0" ng-cloak>Annuler</a>
           </div>
           <div class="col-md-2 col-md-offset-6">
             <button
@@ -1150,6 +1150,8 @@
                  id="tronc_queteur_print"
                name="tronc_queteur_print"
               ng-click="tq.print()"
+              ng-if="tq.current.tronc_queteur.id > 0"
+           ng-cloak
             >Imprimer</button>
           </div>
           <div class="col-md-2">
@@ -1158,6 +1160,7 @@
                    ng-disabled="troncQueteurForm.$invalid"
                    ng-click="tq.save()"
                    ng-if="tq.current.tronc_queteur.tronc_id > 0 && !tq.current.readOnlyView && tq.current.not_same_year!=true  || tq.current.adminEditMode == true"
+                    ng-cloak
             >Sauvegarder</button>
 
           </div>
@@ -1170,9 +1173,9 @@
     <!-- ugly hack, otherwise the panel below is troncated on the top-->
     <div class="panel panel-primary" style="border:none!important;box-shadow:none;">&nbsp;</div>
     <div class="panel panel-primary" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important">
-      <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h3>Précédentes versions du tronc</h3>
+      <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h3>Précédentes versions du <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong></h3>
         <span ng-show="tq.current.tronc_queteur.id">
-          Tronc N° {{tq.current.tronc.id}} - TroncQueteur N° {{tq.current.tronc_queteur.id}}
+          Tronc N° {{tq.current.tronc.id}} - {Tronc-Queteur} N° {{tq.current.tronc_queteur.id}}
              {{tq.current.tronc_queteur.queteur.first_name}}
              {{tq.current.tronc_queteur.queteur.last_name}} -
              {{tq.current.tronc_queteur.queteur.nivol}}
