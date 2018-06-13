@@ -131,8 +131,8 @@ $typeSQL
 ORDER by name ASC
 ";
 
-    $this->logger->addError("parameters", Array("parameters"=>$parameters));
-    $this->logger->addError("parameters", Array("sql"=>$sql));
+    //$this->logger->addError("parameters", Array("parameters"=>$parameters));
+    //$this->logger->addError("parameters", Array("sql"=>$sql));
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);

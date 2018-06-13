@@ -350,7 +350,7 @@ ORDER BY q.last_name ASC
     }
 
 
-    $this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql, "parameters"=>$parameters));
+    //$this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql, "parameters"=>$parameters));
     $stmt   = $this->db->prepare($sql);
     $parameters["active"] = $active;
 
@@ -707,8 +707,8 @@ $searchNivol
 ";
 
     $stmt   = $this->db->prepare($sql);
-    $this->logger->addInfo($sql);
-    $this->logger->addInfo(print_r($parameters, true));
+    //$this->logger->addInfo($sql);
+    //$this->logger->addInfo(print_r($parameters, true));
     $stmt->execute($parameters);
 
     $results = [];
