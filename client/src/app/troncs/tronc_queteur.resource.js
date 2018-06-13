@@ -66,19 +66,6 @@ angular.module('redCrossQuestClient').factory('TroncQueteurResource', function (
           adminMode: true
         }
       },
-      saveCreditCard: {
-        method: 'POST',
-        params: {
-          action: 'saveCreditCard'
-        }
-      },
-      saveCreditCardAsAdmin: {
-        method: 'POST',
-        params: {
-          action: 'saveCreditCard',
-          adminMode: true
-        }
-      },
       saveAsAdmin: {
         method: 'POST',
         params: {

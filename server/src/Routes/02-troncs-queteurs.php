@@ -97,10 +97,6 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       {
         $troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
       }
-      elseif ($action =="saveCreditCard")
-      {
-        $troncQueteurDBService->updateCreditCardCount($tq, $adminMode, $ulId, $userId);
-      }
       elseif ($action =="saveAsAdmin")
       {
         $troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
@@ -287,10 +283,6 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
 
         $tronc_id     = $params['tronc_id'];
         $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
-
-        $this->logger->addError("print_r", array('tq'=>print_r($troncQueteur, true)));
-        $this->logger->addError ("json_encode", array('tq'=>print_r(json_encode($troncQueteur), true)));
-
         $response->getBody()->write(json_encode($troncQueteur));
         return $response;
       }

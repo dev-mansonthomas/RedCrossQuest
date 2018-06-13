@@ -550,9 +550,6 @@ AND    q.ul_id                = :ul_id
         }
       }
 
-      //$this->logger->warning($tq->notes_retour_comptage_pieces);
-
-
       $sql = "
 UPDATE `tronc_queteur`            tq
       INNER JOIN  queteur         q
@@ -576,6 +573,10 @@ SET
  `foreign_coins`                = :foreign_coins,     
  `foreign_banknote`             = :foreign_banknote,  
  `don_cheque`                   = :don_cheque,
+ `don_creditcard`               = :don_creditcard,
+ `don_cb_sans_contact_amount`   = :don_cb_sans_contact_amount  ,
+ `don_cb_sans_contact_number`   = :don_cb_sans_contact_number  ,
+ `don_cb_total_number`          = :don_cb_total_number         ,  
 $comptage
  `last_update`                  = NOW(),
  `last_update_user_id`          = :userId,
@@ -614,64 +615,15 @@ AND    q.ul_id                  = :ul_id
         "notes_retour_comptage_pieces"  => $tq->notes_retour_comptage_pieces,
         "coins_money_bag_id"            => $tq->coins_money_bag_id,
         "bills_money_bag_id"            => $tq->bills_money_bag_id,
-        "don_cheque_number"             => $tq->don_cheque_number
+        "don_cheque_number"             => $tq->don_cheque_number,
+        "don_creditcard"                => $tq->don_creditcard,
+        "don_cb_sans_contact_amount"    => $tq->don_cb_sans_contact_amount,
+        "don_cb_sans_contact_number"    => $tq->don_cb_sans_contact_number,
+        "don_cb_total_number"           => $tq->don_cb_total_number
       ]);
 
       $stmt->closeCursor();
     }
-
-  /**
-   * Update one tronc for credit card data
-   *
-   * @param TroncQueteurEntity  $tq         The tronc to update
-   * @param boolean             $adminMode  If the user performing the action is administrator
-   * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param int                 $userId     id of the user performing the operation
-   * @throws \Exception if the query fails
-   * @throws PDOException if the query fails to execute on the server
-   */
-  public function updateCreditCardCount(TroncQueteurEntity $tq, bool $adminMode , int $ulId, int $userId)
-  {
-    $comptage = "";
-    if(!$adminMode)
-    {
-      $comptage = " `comptage`                     = NOW(),";
-    }
-
-    $sql = "
-UPDATE `tronc_queteur`            tq
-      INNER JOIN  queteur         q
-      ON          tq.queteur_id = q.id
-SET
- `don_creditcard`               = :don_creditcard,
- `don_cb_sans_contact_amount`   = :don_cb_sans_contact_amount  ,
- `don_cb_sans_contact_number`   = :don_cb_sans_contact_number  ,
- `don_cb_total_number`          = :don_cb_total_number         ,  
- `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces,
-$comptage
- `last_update`         = NOW(),
- `last_update_user_id` = :userId,
- `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces
-WHERE tq.`id`          = :id
-AND    q.ul_id         = :ul_id
-";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
-      "don_creditcard"              => $tq->don_creditcard,
-      "don_cb_sans_contact_amount"  => $tq->don_cb_sans_contact_amount,
-      "don_cb_sans_contact_number"  => $tq->don_cb_sans_contact_number,
-      "don_cb_total_number"         => $tq->don_cb_total_number       ,
-      "userId"                      => $userId,
-      "id"                          => $tq->id,
-      "ul_id"                       => $ulId,
-      "notes_retour_comptage_pieces"=> $tq->notes_retour_comptage_pieces
-    ]);
-
-    $stmt->closeCursor();
-
-  }
-
 
   /**
    * Update one tronc as Admin for data like dates, and point_quete

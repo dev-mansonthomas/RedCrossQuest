@@ -21,8 +21,7 @@
     vm.typeTroncList=[
       {id:1,label:'Tronc'},
       {id:2,label:'Urne chez un commerçant'},
-      {id:3,label:'Autre'},
-      {id:4,label:'Terminal Carte Bleue'}
+      {id:3,label:'Autre'}
     ];
 
     vm.handleDate = function (theDate)
