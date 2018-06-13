@@ -665,27 +665,29 @@ q.`first_name` like :first_name
     {
       if($numberOfParameters>0)
       {
-        $AND="OR";
+        $OR="OR";
       }
 
       $searchLastName = "
-$AND q.`last_name` like :last_name
+$OR q.`last_name` like :last_name
 ";
       $parameters["last_name"] = "%".$lastName."%";
       $numberOfParameters++;
-      $AND="";
+      $OR="";
     }
 
     if($nivol != null)
     {
       if($numberOfParameters>0)
       {
-        $AND="OR";
+        $OR="OR";
       }
 
       $searchNivol = "
-$AND q.`nivol` like :nivol
+$OR q.`nivol` like :nivol
 ";
+      $numberOfParameters++;
+      $OR="";
       $parameters["nivol"] = "%".$nivol."%";
     }
 

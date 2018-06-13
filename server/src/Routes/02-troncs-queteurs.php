@@ -95,6 +95,8 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       }
       elseif ($action =="saveCoins")
       {
+        $this->logger->addError("SaveCoins", array("input"=>$input));
+        $this->logger->addError("SaveCoins", array("tronc_queteur"=>$tq));
         $troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
       }
       elseif ($action =="saveAsAdmin")
