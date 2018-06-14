@@ -734,7 +734,12 @@
           </div>
 
           <div class="row" style="">
-            <div class="alert alert-success form-group col-md-8 col-md-offset-4" role="alert" style="text-align:right;font-size:larger;margin-bottom: 0px !important;font-weight:bold;">
+            <div class="form-group col-md-4">
+              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledCoinToZero();" ng-if="!tq.current.readOnlyView" ng-cloak>
+                Mettre à zéro les champs pièces non remplis
+              </button>
+            </div>
+            <div class="alert alert-success form-group col-md-8" role="alert" style="text-align:right;font-size:larger;margin-bottom: 0px !important;font-weight:bold;">
               Total Pièces : {{
               tq.current.tronc_queteur.euro2   * 2    +
               tq.current.tronc_queteur.euro1   * 1    +
@@ -796,7 +801,7 @@
                          ng-required="tq.current.fillTronc && tq.current.tronc_queteur.don_creditcard > 0"/>
                   <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
                 </div>
-                <span class="help-block">Saisir la somme des dons en CB sur le créneau de quête</span>
+                <span class="help-block">Saisir le nombre de dons en CB sur le créneau de quête</span>
               </div>
             </div>
 
@@ -965,7 +970,8 @@
               tq.current.tronc_queteur.euro100 * 100  +
               tq.current.tronc_queteur.euro200 * 200  +
               tq.current.tronc_queteur.euro500 * 500  +
-              tq.current.tronc_queteur.don_cheque
+              tq.current.tronc_queteur.don_cheque +
+              tq.current.tronc_queteur.don_creditcard
               | currency : "€" : 2}}
             </div>
           </div>

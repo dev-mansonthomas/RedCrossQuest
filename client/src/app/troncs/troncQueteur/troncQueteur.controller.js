@@ -91,6 +91,19 @@
 
     };
 
+
+    vm.setNonFilledCoinToZero=function()
+    {
+      vm.current.tronc_queteur.euro2    = vm.isEmpty(vm.current.tronc_queteur.euro2   );
+      vm.current.tronc_queteur.euro1    = vm.isEmpty(vm.current.tronc_queteur.euro1   );
+      vm.current.tronc_queteur.cents50  = vm.isEmpty(vm.current.tronc_queteur.cents50 );
+      vm.current.tronc_queteur.cents20  = vm.isEmpty(vm.current.tronc_queteur.cents20 );
+      vm.current.tronc_queteur.cents10  = vm.isEmpty(vm.current.tronc_queteur.cents10 );
+      vm.current.tronc_queteur.cents5   = vm.isEmpty(vm.current.tronc_queteur.cents5  );
+      vm.current.tronc_queteur.cents2   = vm.isEmpty(vm.current.tronc_queteur.cents2  );
+      vm.current.tronc_queteur.cent1    = vm.isEmpty(vm.current.tronc_queteur.cent1   );
+
+    };
     vm.setNonFilledBillToZero=function()
     {
 
