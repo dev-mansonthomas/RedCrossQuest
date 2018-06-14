@@ -205,7 +205,7 @@ SELECT  q.`id`,
        u.name       as 'ul_name',
        u.latitude   as 'ul_latitude',
        u.longitude  as 'ul_longitude'
-FROM  queteur     AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id AND tq.deleted = 0,
+FROM  queteur     AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
       point_quete AS pq, 
                ul AS u
 WHERE  q.ul_id = :ul_id

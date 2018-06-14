@@ -6,7 +6,7 @@
     <div class="panel-heading">Les Quêteurs</div>
   </div>
   <div class="well">
-    <form class="form-search" name="searchForm" novalidate ng-submit='q.doSearch();'>
+    <form class="form-search" name="searchForm" novalidate>
       <div class="row">
 
         <div class="col-md-4">
@@ -75,7 +75,7 @@
         </div>
         <div class="col-md-1">
           <br/>
-          <input type="submit" class="btn btn-primary" value="Rechercher" />
+          <button type="button" class="btn btn-primary" ng-click="q.doSearch();">Rechercher</button>
         </div>
       </div>
       <div class="row" ng-show="q.currentUserRole>=4" ng-cloak style="padding-top:10px;margin-top: 10px;border-top:solid 1px silver">
