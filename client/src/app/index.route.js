@@ -166,6 +166,12 @@
         controller  : 'EditRecuFiscalController',
         controllerAs: 'rfe'
       })
+      // ============== MAILING   ==============
+      .when('/mailing', {
+        templateUrl : 'app/admin/mailing/launch.html',
+        controller  : 'MailingController',
+        controllerAs: 'mc'
+      })
       // ============== OTHERWISE ==============
       .otherwise({
         redirectTo: '/'
