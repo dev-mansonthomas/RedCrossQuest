@@ -358,9 +358,13 @@
 
           <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.horaireDepartTheorique.$invalid}">
             <label for="horaireDepartTheorique" class="control-label">Horaire Théorique de Départ</label>
-            <input name="horaireDepartTheorique" id="horaireDepartTheorique" type="datetime-local" class="form-control"
-                   ng-model="tq.current.tronc_queteur.depart_theorique" required
-                   ng-readonly="tq.current.adminEditMode == false"/>
+            <input name="horaireDepartTheorique"
+                     id="horaireDepartTheorique"
+                   type="datetime-local"
+                  class="form-control"
+               ng-model="tq.current.tronc_queteur.depart_theorique"
+               required
+            ng-readonly="tq.current.adminEditMode == false"/>
             <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Required</span>
           </div>
 

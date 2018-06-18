@@ -196,29 +196,13 @@
       }
       else
       {
-        //savedSuccessfully function handle the save of data in adminMode
-        if(vm.current.tronc.type == 4)
+        if(vm.current.adminEditMode && vm.currentUserRole >= 4)
         {
-          if(vm.current.adminEditMode && vm.currentUserRole >= 4)
-          {
-            vm.current.tronc_queteur.$saveCreditCardAsAdmin(savedSuccessfully, onSaveError);
-          }
-          else
-          {
-            vm.current.tronc_queteur.$saveCreditCard(savedSuccessfully, onSaveError);
-          }
+          vm.current.tronc_queteur.$saveCoinsAsAdmin(savedSuccessfully, onSaveError);
         }
         else
         {
-          if(vm.current.adminEditMode && vm.currentUserRole >= 4)
-          {
-            vm.current.tronc_queteur.$saveCoinsAsAdmin(savedSuccessfully, onSaveError);
-          }
-          else
-          {
-            vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
-          }
-
+          vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
         }
       }
     };

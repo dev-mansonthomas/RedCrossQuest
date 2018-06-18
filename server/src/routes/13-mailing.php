@@ -1,0 +1,135 @@
+<?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: tmanson
+ * Date: 06/03/2017
+ * Time: 18:38
+ */
+
+use \RedCrossQuest\DBService\NamedDonationDBService;
+use \RedCrossQuest\Entity\NamedDonationEntity;
+
+include_once("../../src/Entity/YearlyGoalEntity.php");
+/********************************* QUETEUR ****************************************/
+
+
+/**
+ * Get summary info about mailing
+ *
+ * Dispo pour le role admin local
+ */
+$app->get('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, $args)
+{
+  $decodedToken = $request->getAttribute('decodedJWT');
+  try
+  {
+    $ulId   = (int)$args['ul-id'];
+    $roleId = (int)$args['role-id'];
+    $params = $request->getQueryParams();
+
+    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
+    //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
+    $namedDonations = $namedDonationDBService->getNamedDonations($query, $deleted, $year, $ulId);
+
+
+    $response->getBody()->write(json_encode($namedDonations));
+
+
+
+    return $response;
+  }
+  catch(\Exception $e)
+  {
+    $this->logger->addError("Error while fetching the NamedDonation for a year($year), deleted($deleted), query($query)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    throw $e;
+  }
+
+});
+
+/**
+ *
+ * get one named donation
+ *
+ */
+$app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
+{
+  $namedDonationEntity  = null;
+  try
+  {
+    $ulId   = (int)$args['ul-id'];
+    $id     = (int)$args['id'];
+    $roleId = (int)$args['role-id'];
+
+    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
+
+    $namedDonationEntity = $namedDonationDBService->getNamedDonationById($id, $ulId, $roleId);
+
+    $response->getBody()->write(json_encode($namedDonationEntity));
+    return $response;
+
+  }
+  catch(\Exception $e)
+  {
+    $this->logger->addError("Error while geting namedDonation $id", array("Exception"=>$e));
+    throw $e;
+  }
+});
+
+/**
+ *
+ * Update named donation
+ *
+ */
+$app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
+{
+  $decodedToken         = $request->getAttribute('decodedJWT');
+  $namedDonationEntity  = null;
+  try
+  {
+    $ulId   = (int)$args['ul-id'];
+    $userId = (int)$decodedToken->getUid ();
+
+    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
+    $input                  = $request->getParsedBody();
+    $namedDonationEntity    = new NamedDonationEntity($input, $this->logger);
+
+    $namedDonationDBService->update($namedDonationEntity, $ulId, $userId);
+  }
+  catch(\Exception $e)
+  {
+    $this->logger->addError("Error while updating namedDonation", array('namedDonationEntity'=>$namedDonationEntity, "Exception"=>$e));
+    throw $e;
+  }
+  return $response;
+});
+
+
+
+/**
+ * Create named donation
+ */
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $response, $args)
+{
+  $decodedToken         = $request->getAttribute('decodedJWT');
+  $namedDonationEntity  = null;
+  try
+  {
+    $ulId   = (int)$args['ul-id'];
+    $userId = (int)$decodedToken->getUid ();
+
+    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
+    $input                  = $request->getParsedBody();
+    $namedDonationEntity    = new NamedDonationEntity($input, $this->logger);
+    $namedDonationId = $namedDonationDBService->insert($namedDonationEntity, $ulId, $userId);
+
+    $response->getBody()->write(json_encode(array("namedDonationId"=>$namedDonationId), JSON_NUMERIC_CHECK));
+  }
+  catch(\Exception $e)
+  {
+    $this->logger->addError("error while creating named donation", array('namedDonationEntity'=>$namedDonationEntity, "Exception"=>$e));
+    throw $e;
+  }
+  return $response;
+});
+
+

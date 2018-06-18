@@ -3,7 +3,7 @@ namespace RedCrossQuest\Entity;
 
 use Monolog\Logger;
 
-class NamedDonationEntity extends Entity
+class MailingSummaryEntity extends Entity
 {
   public $ul_id            ;
   public $secteur          ;
