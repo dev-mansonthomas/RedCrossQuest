@@ -6,11 +6,8 @@
  * Time: 18:38
  */
 
-use \RedCrossQuest\DBService\NamedDonationDBService;
-use \RedCrossQuest\Entity\NamedDonationEntity;
-
-include_once("../../src/Entity/YearlyGoalEntity.php");
-/********************************* QUETEUR ****************************************/
+use \RedCrossQuest\DBService\MailingDBService;
+use \RedCrossQuest\DBService\UniteLocaleDBService;
 
 
 /**
@@ -24,63 +21,27 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, 
   try
   {
     $ulId   = (int)$args['ul-id'];
-    $roleId = (int)$args['role-id'];
-    $params = $request->getQueryParams();
 
-    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
-    //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
-    $namedDonations = $namedDonationDBService->getNamedDonations($query, $deleted, $year, $ulId);
+    $mailingDBService = new MailingDBService($this->db, $this->logger);
+    $mailingSummary = $mailingDBService->getMailingSummary($ulId);
 
-
-    $response->getBody()->write(json_encode($namedDonations));
-
-
+    $response->getBody()->write(json_encode($mailingSummary));
 
     return $response;
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while fetching the NamedDonation for a year($year), deleted($deleted), query($query)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
-    throw $e;
-  }
-
-});
-
-/**
- *
- * get one named donation
- *
- */
-$app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
-{
-  $namedDonationEntity  = null;
-  try
-  {
-    $ulId   = (int)$args['ul-id'];
-    $id     = (int)$args['id'];
-    $roleId = (int)$args['role-id'];
-
-    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
-
-    $namedDonationEntity = $namedDonationDBService->getNamedDonationById($id, $ulId, $roleId);
-
-    $response->getBody()->write(json_encode($namedDonationEntity));
-    return $response;
-
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->addError("Error while geting namedDonation $id", array("Exception"=>$e));
+    $this->logger->addError("Error while fetching the Mailing Summary for UL ($ulId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 });
 
+
+
 /**
- *
- * Update named donation
- *
+ * Send a batch of mailing
  */
-$app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, $args)
 {
   $decodedToken         = $request->getAttribute('decodedJWT');
   $namedDonationEntity  = null;
@@ -89,44 +50,39 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request,
     $ulId   = (int)$args['ul-id'];
     $userId = (int)$decodedToken->getUid ();
 
-    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
-    $input                  = $request->getParsedBody();
-    $namedDonationEntity    = new NamedDonationEntity($input, $this->logger);
+    $uniteLocalDBService = new UniteLocaleDBService($this->db, $this->logger);
+    $uniteLocaleEntity = $uniteLocalDBService->getUniteLocaleById($ulId);
 
-    $namedDonationDBService->update($namedDonationEntity, $ulId, $userId);
+    $mailingReport = $this->mailer->sendThanksEmailBatch($ulId, $uniteLocaleEntity);
+
+    $response->getBody()->write(json_encode($mailingReport));
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while updating namedDonation", array('namedDonationEntity'=>$namedDonationEntity, "Exception"=>$e));
+    $this->logger->addError("error while sending batch email", array('ulId'=>$ulId, "Exception"=>$e));
     throw $e;
   }
   return $response;
 });
 
 
-
 /**
- * Create named donation
+ * Confirm the opening of a spotfire dashboard for a queteur
  */
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $response, $args)
+$app->post('/thanks_mailing/{guid}', function ($request, $response, $args)
 {
-  $decodedToken         = $request->getAttribute('decodedJWT');
-  $namedDonationEntity  = null;
   try
   {
-    $ulId   = (int)$args['ul-id'];
-    $userId = (int)$decodedToken->getUid ();
+    $guid   = $args['guid'];
 
-    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
-    $input                  = $request->getParsedBody();
-    $namedDonationEntity    = new NamedDonationEntity($input, $this->logger);
-    $namedDonationId = $namedDonationDBService->insert($namedDonationEntity, $ulId, $userId);
+    $mailingDBService = new MailingDBService($this->db, $this->logger);
+    $mailingDBService->confirmRead($guid);
 
-    $response->getBody()->write(json_encode(array("namedDonationId"=>$namedDonationId), JSON_NUMERIC_CHECK));
+    $response->getBody()->write(json_encode($guid));
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while creating named donation", array('namedDonationEntity'=>$namedDonationEntity, "Exception"=>$e));
+    $this->logger->addError("error while marking spotifre report as read (Merci) for guid", array('guid'=>$guid, "Exception"=>$e));
     throw $e;
   }
   return $response;

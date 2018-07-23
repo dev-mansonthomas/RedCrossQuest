@@ -3,7 +3,12 @@
 namespace RedCrossQuest\BusinessService;
 
 
+use Ramsey\Uuid\Uuid;
+use RedCrossQuest\DBService\MailingDBService;
+use RedCrossQuest\Entity\MailingInfoEntity;
 use RedCrossQuest\Entity\QueteurEntity;
+use RedCrossQuest\Entity\UniteLocaleEntity;
+use RedCrossQuest\Entity\UniteLocaleSettingsEntity;
 use SendGrid;
 use Carbon\Carbon;
 
@@ -14,14 +19,40 @@ class EmailBusinessService
   protected $sendgrid;
   protected $sendgridSender;
   protected $appSettings;
+  /**
+   * @var MailingDBService
+   * */
+  protected $mailingDBService;
 
-  public function __construct($logger, $sendgrid, $sendgridSender, $appSettings)
+  public function __construct($logger, $sendgrid, $sendgridSender, $appSettings, MailingDBService $mailingDBService)
   {
-    $this->logger         = $logger;
-    $this->sendgrid       = $sendgrid;
-    $this->sendgridSender = $sendgridSender;
-    $this->appSettings    = $appSettings;
+    $this->logger           = $logger;
+    $this->sendgrid         = $sendgrid;
+    $this->sendgridSender   = $sendgridSender;
+    $this->appSettings      = $appSettings;
+    $this->mailingDBService = $mailingDBService;
   }
+
+
+  /**
+   * Return a string to be put in the email subjects
+   * @param string $deploymentType D, T or P
+   * @return string nothing for production, [Site de DEV] for D, [Site de TEST] for T
+   */
+  public function getDeploymentInfo($deploymentType)
+  {
+    $deployment='';
+    if($deploymentType == 'D')
+    {
+      $deployment='[Site de DEV]';
+    }
+    else if($deploymentType == 'T')
+    {
+      $deployment='[Site de TEST]';
+    }
+    return $deployment;
+  }
+
 
 
   /**
@@ -36,16 +67,7 @@ class EmailBusinessService
 
     $url=$this->appSettings['appUrl'].$this->appSettings['resetPwdPath'].$uuid;
 
-    $deploymentType = $this->appSettings['deploymentType'];
-    $deployment='';
-    if($deploymentType == 'D')
-    {
-      $deployment='[Site de DEV]';
-    }
-    else if($deploymentType == 'T')
-    {
-      $deployment='[Site de TEST]';
-    }
+    $deployment = self::getDeploymentInfo($this->appSettings['deploymentType']);
 
 
     $recipient = new SendGrid\Email($queteur->first_name.' '.$queteur->last_name, $queteur->email);
@@ -104,17 +126,7 @@ Bonjour ".$queteur->first_name.",<br/>
 
     $url=$this->appSettings['appUrl'];
 
-    $deploymentType = $this->appSettings['deploymentType'];
-
-    $deployment='';
-    if($deploymentType == 'D')
-    {
-      $deployment='[Site de DEV]';
-    }
-    else if($deploymentType == 'T')
-    {
-      $deployment='[Site de TEST]';
-    }
+    $deployment = self::getDeploymentInfo($this->appSettings['deploymentType']);
 
     $changePasswordDate = new Carbon();
     $changePasswordDateString = $changePasswordDate->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
@@ -164,16 +176,7 @@ Bonjour ".$queteur->first_name.",<br/>
   {
     $this->logger->addInfo("sendAnonymizationEmail:'".$queteur->email."'");
 
-    $deploymentType = $this->appSettings['deploymentType'];
-    $deployment='';
-    if($deploymentType == 'D')
-    {
-      $deployment='[Site de DEV]';
-    }
-    else if($deploymentType == 'T')
-    {
-      $deployment='[Site de TEST]';
-    }
+    $deployment = self::getDeploymentInfo($this->appSettings['deploymentType']);
 
     $anonymiseDateCarbon = new Carbon();
     $anonymiseDateString = $anonymiseDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
@@ -242,5 +245,157 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
     {
       $this->logger->addInfo("sendAnonymizationEmail:'".$queteur->email."' SUCCESS");
     }
+  }
+
+
+
+  /**
+   * Send a batch of X emails to thanks Queteur for their participation
+   * @param int $ul_id id of the UL
+   * @param UniteLocaleEntity $uniteLocaleEntity s
+   * @return MailingInfoEntity[] Mailing information with status
+   *
+   */
+  public function sendThanksEmailBatch(int $ul_id, UniteLocaleEntity $uniteLocaleEntity)
+  {
+    $mailInfoEntity = $this->mailingDBService->getMailingInfo($ul_id, $this->appSettings['email']['thanksMailBatchSize']);
+
+    if($mailInfoEntity != null)
+    {
+      $count = count($mailInfoEntity);
+      for($i=0;$i<$count; $i++)
+      {
+        $mailInfoEntity[$i] = $this->sendThanksEmail($mailInfoEntity[$i], $uniteLocaleEntity);
+      }
+    }
+
+    return $mailInfoEntity;
+  }
+
+
+
+
+
+  /**
+   * Send an email to allow the user to reset its password (or create the password for the first connexion)
+   * @param MailingInfoEntity $mailingInfoEntity  Info for the mailing
+   * @param UniteLocaleEntity $uniteLocaleEntity  Info about the UL
+   * @return MailingInfoEntity updated with token and status
+   */
+  public function sendThanksEmail(MailingInfoEntity $mailingInfoEntity, UniteLocaleEntity $uniteLocaleEntity)
+  {
+    //if spotfire_access_token not generated, generate it and store it
+    if($mailingInfoEntity->spotfire_access_token == null || strlen($mailingInfoEntity->spotfire_access_token) != 36)
+    {
+      $mailingInfoEntity->spotfire_access_token = Uuid::uuid4()->toString();
+      $this->mailingDBService->updateQueteurWithSpotfireAccessToken($mailingInfoEntity->spotfire_access_token, $mailingInfoEntity->id, $uniteLocaleEntity->id);
+    }
+
+    $rcqBanner = "<div style='background-color: #222222;'><img src=\"https://www.redcrossquest.com/assets/images/RedCrossQuestLogo.png\" style=\"height: 50px;\"/></div>";
+
+    $emailContact = urlencode("
+$rcqBanner
+
+Bonjour la Croix Rouge de ".$uniteLocaleEntity->name.",<br/>
+<br/>
+J'ai une demande en relation avec <b>mes données personnelles et l'application RedCrossQuest</b>:<br/>
+Note: cet email est à transférer au responsable de la quête, au trésorier ou au président de l'UL<br/>
+<br/> 
+------------------<br/>
+<i>Votre demande ici</i><br/>
+------------------<br/>
+<br/>
+<a href='https://www.redcrossquest.com/#!/queteurs/edit/".$mailingInfoEntity->id."' target='_blank'>Lien vers RCQ</a><br/>
+<br/>
+En vous remerciant,<br/>
+".$mailingInfoEntity->first_name." ".$mailingInfoEntity->last_name.", ".$mailingInfoEntity->email.".<br/><br/>");
+
+
+
+
+
+    $url=$this->appSettings['appUrl'].$this->appSettings['graphPath']."?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
+
+
+    $deployment = self::getDeploymentInfo($this->appSettings['deploymentType']);
+
+
+    $recipient = new SendGrid\Email($mailingInfoEntity->first_name.' '.$mailingInfoEntity->last_name, $mailingInfoEntity->email);
+    $subject   = "[RedCrossQuest]".$deployment.$mailingInfoEntity->first_name.", Merci pour votre Participation aux Journées Nationales de la Croix Rouge";
+
+    $startValidityDateCarbon = new Carbon();
+    $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
+
+    $body = new SendGrid\Content("text/html",  ($deployment!=''?$deployment.'<br/>':'')."
+$rcqBanner
+<br/>    
+Bonjour ".$mailingInfoEntity->first_name.",<br/>
+<br/>
+Encore une fois nous tenions à te remercier pour ta participation aux journées nationales 2018 de la Croix-Rouge française !<br/>
+<br/>
+Nous t'avons préparé un petit résumé de ce que ta participation représente pour l'unité locale de ".$uniteLocaleEntity->name.". <br/>
+Tu y trouveras également un message de remerciement de son Président. <br/>
+<br/>
+Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
+<a href='$url' target='_blank'>
+<img src='https://www.redcrossquest.com/assets/images/RedCrossQuest-Merci.jpg' alt='Cliquez ICI'>
+</a><br/>
+<small style='color:silver;'>ou recopie l'addresse suivante dans ton navigateur:<br/>
+<a href='$url' style='color:grey;'>$url</a>
+</small>
+<br/>
+<br/>
+Amicalement,<br/>
+L'Unité Locale de ".$uniteLocaleEntity->name.",<br/>
+".$uniteLocaleEntity->phone."<br/>
+".$uniteLocaleEntity->email."<br/>
+".$uniteLocaleEntity->address.", ".$uniteLocaleEntity->postal_code.", ".$uniteLocaleEntity->city."<br/>
+<br/>
+<small style='color:silver;'>
+Cet email est envoyé depuis la plateforme RedCrossQuest qui permet aux unités locales de gérer les journées nationales.<br/>
+Vos données ne sont utilisées que pour la gestion des Journées Nationales et ne sont pas partagées avec un tiers.<br/>
+Notre politique de protection des données conforme à la RGPD est <a href=\"".$this->appSettings['RGPD']."\" target='_blank' style='color:grey;'>disponible ici</a>.<br/>
+Vous pouvez demander à ne plus recevoir d'email de la platforme ou à corriger / anonymiser vos données par email<br/>
+<a href=\"mailto:".$uniteLocaleEntity->email."?subject=[RedCrossQuest]Newsletter ou données personnelles&body=$emailContact\" style='color:grey;'>Contactez nous ici</a><br/>
+<br/>
+email envoyé le $startValidityDateString<br/>
+</small>
+");
+
+
+    try
+    {
+      $mail = new SendGrid\Mail($this->sendgridSender, $subject, $recipient, $body);
+      $response = $this->sendgrid->client->mail()->send()->post($mail);
+
+      $mailingInfoEntity->status =  $response->statusCode();
+      $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
+
+      if($response->statusCode() < 200 || $response->statusCode() >= 300)
+      {
+        $this->logger->addError("sendThanksEmail:'".$mailingInfoEntity->email." ERROR ",
+          array('response'=>print_r($response, true),
+          'mailingInfoEntity' => $mailingInfoEntity,
+          'uniteLocaleEntity' => $uniteLocaleEntity));
+      }
+      else
+      {
+        $this->logger->addInfo("sendThanksEmail:'".$mailingInfoEntity->email."' SUCCESS");
+      }
+    }
+    catch(\Exception $e)
+    {
+      $this->logger->addError("sendThanksEmail:'".$mailingInfoEntity->email." ERROR ",
+        array(
+          'exception'=> $e,
+          'mailingInfoEntity' => $mailingInfoEntity,
+          'uniteLocaleEntity' => $uniteLocaleEntity)
+      );
+      $mailingInfoEntity->status = substr($e->getMessage()."", 0,200);
+      $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
+      //do not rethrow, email sending must continue
+    }
+
+    return $mailingInfoEntity;
   }
 }

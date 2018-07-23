@@ -1,9 +1,178 @@
 <acme-navbar xmlns="http://www.w3.org/1999/html"></acme-navbar>
-<div class="container" data-ng-controller="MailingController as mc">
+<div class="container">
 
   <div class="panel panel-primary">
     <div class="panel-heading">Envoie du Mailing de Remerciement aux Quêteurs</div>
   </div>
+
+  <div class="well">
+    <div class="row">
+      <div class="col-md-4">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th colspan="2">e-mails à envoyer</th>
+            </tr>
+            <tr>
+              <th>Secteur</th>
+              <th>Compte</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="s in mc.mailingSummary['UNSENT_EMAIL']">
+              <td>{{mc.typeBenevoleList[s.secteur]}}</td>
+              <td>{{s.count}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Total</th>
+              <td>{{mc.totalToBeSent}}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+      </div>
+
+      <div class="col-md-4">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th colspan="2">e-mails envoyés avec succès</th>
+            </tr>
+            <tr>
+              <th>Secteur</th>
+              <th>Compte</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="s in mc.mailingSummary['EMAIL_SUCCESS']">
+              <td>{{mc.typeBenevoleList[s.secteur]}}</td>
+              <td>{{s.count}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Total</th>
+              <td>{{mc.totalSent}}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+      </div>
+
+      <div class="col-md-4">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th colspan="2">e-mails en erreur</th>
+            </tr>
+            <tr>
+              <th>Secteur</th>
+              <th>Compte</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="s in mc.mailingSummary['EMAIL_ERROR']">
+              <td>{{mc.typeBenevoleList[s.secteur]}}</td>
+              <td>{{s.count}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Total</th>
+              <td>{{mc.totalError}}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="progress">
+    <div class="progress-bar progress-bar-success" style="width: {{mc.pourcentageSent}}%">
+      {{mc.pourcentageSent}}% envoyés avec succès
+    </div>
+    <div class="progress-bar progress-bar-danger" style="width: {{mc.pourcentageError}}%">
+      {{mc.pourcentageError}}% en erreur
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-offset-2 col-md-8">
+      <blockquote>
+        <p>
+          Les emails sont envoyés 10 par 10.
+          Si vous cliquez sur le bouton "Stopper l'envoie des emails", l'envoie en cours ne sera pas interrompue, mais le suivant ne sera pas envoyé.
+        </p>
+      </blockquote>
+    </div>
+  </div>
+
+  <div class="row" style="height:40px;">
+    <div class="col-md-2 col-md-offset-4">
+      <button
+        type="button"
+        class="btn btn-primary"
+        ng-click="mc.stop=false; mc.send();"
+        ng-show="!mc.running"
+      >Démarrer l'envoie des emails</button>
+
+      <img src="assets/images/loading.gif" alt="Envoie en cours, veuillez patienter" ng-show="mc.running" width=""/>
+    </div>
+
+    <div class="col-md-2 col-md-offset-1">
+      <button type="button" class="btn btn-warning" ng-click="mc.stopProcessing();">Stopper l'envoie des emails</button>
+    </div>
+  </div>
+
+
+  <div class="row" ng-show="mc.errorWhileSending">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="mc.errorWhileSending=false"><span aria-hidden="true">&times;</span></button>
+        <strong>Oouupps!</strong> Une erreur est survenue lors de l'envoie des emails!
+        <pre style="text-align: left;">{{mc.errorWhileSending}}</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <table class="table table-striped" ng-if="mc.mailingReport">
+    <thead>
+    <tr>
+      <th colspan="2">e-mails venant tout juste d'être traités</th>
+    </tr>
+    <tr>
+      <th>id                   </th>
+      <th>email                </th>
+      <th>first_name           </th>
+      <th>last_name            </th>
+      <th>secteur              </th>
+      <th>man                  </th>
+      <th>token                </th>
+      <th>status               </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="r in mc.mailingReport">
+     <td>{{r.id                   }}</td>
+     <td>{{r.email                }}</td>
+     <td>{{r.first_name           }}</td>
+     <td>{{r.last_name            }}</td>
+     <td>{{r.secteur              }}</td>
+     <td>{{r.man                  }}</td>
+     <td>{{r.spotfire_access_token}}</td>
+     <td>{{r.status == 202 ? 'Succèss '+r.status : 'Erreur : '+(r.status == 401?'401 - Configuration RCQ Incorrect - Contactez support@redcrossquest.com':r.status) }}</td>
+    </tr>
+    </tbody>
+  </table>
+
 
 
 </div>

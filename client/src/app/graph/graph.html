@@ -1,60 +1,6 @@
 <acme-navbar></acme-navbar>
-
-
 <div class="container">
-
-
-
-
-  <div class="container" data-ng-controller="GraphController as g">
-
-   <!--
-    <div class="row" style="margin-bottom: 50px;">
-      <div class="col-md-6 col-md-offset-3" ng-show="!g.showCountDown || g.showGraphs===false">
-        <button class="btn btn-primary" ng-click="g.grantAccessToGraph();" style="width:100%;height:70px;">
-          Cliquez sur ce bouton pour <span ng-show="g.showGraphs">ré-</span>activer l'accès aux graphiques (accès valide 4h)
-        </button>
-      </div>
-    </div>
-
--->
-    <div class="row" ng-show="g.showDebug ">
-      <div class="col-md-8 col-md-offset-2">
-
-        {{g.tokenAndExpirationDate}}
-        tokenAndExpirationDate.token: {{g.tokenAndExpirationDate.token}}<br/>
-        tokenAndExpirationDate.tokenExpiration: {{g.tokenAndExpirationDate.token_expiration_local}}<br/>
-
-
-      token: {{g.token}}       <br/>
-
-      minutes : '{{g.minutes}}'  <br/>
-      pair : '{{g.pair}}'  <br/>
-
-      original : {{g.orignalDate}} <br/>
-      nextUpdate : {{g.nextUpdate}}  <br/>
-
-      now : {{g.now}}<br/>
-      numberOfSecond : {{g.numberOfSecondsUntilUpdate}}<br/>
-
-      </div>
-    </div>
-
-    <!-- Timer -->
-    <div class="row" ng-show="g.showCountDown">
-      <div class="col-md-6 col-md-offset-3">
-
-        Vos graphiques seront disponible dans
-
-        <button class="btn btn-primary" type="button">
-         <span class="badge">{{g.countDown}}</span>  secondes
-        </button>
-
-
-
-      </div>
-    </div>
-
+  <div class="container">
     <!-- Graph Links -->
     <div class="container" ng-show="g.showGraphs">
 
@@ -63,9 +9,6 @@
           L'accès au graphiques sont valide jusqu'à <b>{{g.tokenAndExpirationDate.token_expiration_local}}</b><br/><br/>
         </div>
       </div>
-
-
-
 
       <div class="row" ng-show="g.currentUserRole == 1"  style="margin-bottom: 20px;">
         <div class="col-md-6 col-md-offset-3 success"  >
@@ -97,14 +40,8 @@
           <a ng-href="/graph-display.html?i={{g.token}}&amp;g=RCQ-Admin"     target="_blank"><span class="glyphicon glyphicon-stats big-icon"    aria-hidden="true"></span> Graphique pour l'admin de l'UL </a>
         </div>
       </div>
-
-
-
     </div>
-
-
   </div>
-
 </div>
 
 

@@ -3,7 +3,7 @@
  */
 
 angular.module('redCrossQuestClient').factory('MailingResource', function($resource, $localStorage) {
-  return $resource('/rest/:roleId/ul/:ulId/mailing/:type',
+  return $resource('/rest/:roleId/ul/:ulId/mailing',
     {
       roleId: function () { return $localStorage.currentUser.roleId},
       ulId  : function () { return $localStorage.currentUser.ulId  },
@@ -11,6 +11,10 @@ angular.module('redCrossQuestClient').factory('MailingResource', function($resou
     }, {
     update: {
       method: 'PUT' // this method issues a PUT request
-    }
+    },
+      save:{
+        method:'POST',
+        isArray: true
+      }
   });
 });

@@ -1,7 +1,8 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-use \RedCrossQuest\Entity\NamedDonationEntity;
+use RedCrossQuest\Entity\MailingInfoEntity;
+use RedCrossQuest\Entity\MailingSummaryEntity;
 use PDOException;
 
 
@@ -10,31 +11,38 @@ class MailingDBService extends DBService
 
 
   /**
-   * Get all named donation for an UL
+   * Get stats about unsent, sent and sent with error emails per sectors.
    *
-   * @param string $query search string
-   * @param bool $deleted search for deleted or non deleted rows
-   * @param string $year search for named donation of the specified year, if null, search all year
    * @param int $ulId the Id of the Unite Local
-   * @return NamedDonationEntity[] list of NamedDonationEntity
+   * @return MailingSummaryEntity[][] list of summaries
    * @throws PDOException if the query fails to execute on the server
    */
   public function getMailingSummary(int $ulId)
   {
     $parameters = ["ul_id" => $ulId];
 
+    $summary = [];
 
-
+//-- email non envoyé par secteurs
     $sql = "
-select q.secteur, count(1)
-from tronc_queteur tq, queteur q
-where tq.queteur_id = q.id
-and     tq.deleted = 0
-and     q.ul_id      = 348
-and year(tq.depart)=2018
-group by q.secteur
-order by q.secteur asc;
-";
+select secteur, count(1) as count
+from queteur q
+where q.ul_id = 348
+AND q.anonymization_token is null
+AND q.mailing_preference = 1
+and q.id not IN ( 
+  select queteur_id 
+  from queteur_mailing_status 
+  where year=year(now()) 
+)
+AND q.id IN (
+  select queteur_id
+  from tronc_queteur
+  where year(comptage) = year(now())
+  and deleted = 0
+)
+group by secteur 
+order by secteur asc";
 
 
     $stmt = $this->db->prepare($sql);
@@ -45,252 +53,231 @@ order by q.secteur asc;
     $i=0;
     while($row = $stmt->fetch())
     {
-      $results[$i++] =  new NamedDonationEntity($row, $this->logger);
+      $results[$i++] =  new MailingSummaryEntity($row, $this->logger);
     }
-    $this->logger->info("search named_donation ".count($results), $parameters) ;
+
+    $summary["UNSENT_EMAIL"] = $results;
+
+
+// email successfully sent
+    $sql = "
+select  secteur, count(1) as count
+from queteur q
+where q.ul_id = 348
+AND q.anonymization_token is null
+AND q.mailing_preference = 1
+AND q.id IN ( 
+  select queteur_id 
+  from queteur_mailing_status 
+  where year=year(now()) 
+  and status_code = '202')
+  AND q.id IN (
+  select queteur_id
+  from tronc_queteur
+  where year(comptage) = year(now())
+  and deleted = 0
+)
+group by secteur
+order by secteur asc";
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  new MailingSummaryEntity($row, $this->logger);
+    }
+
+    $summary["EMAIL_SUCCESS"] = $results;
+
+
+//email sent with error
+    $sql = "
+select secteur, count(1) as count
+from queteur q
+where q.ul_id = 348
+AND q.anonymization_token is null
+AND q.mailing_preference = 1
+and q.id IN ( 
+  select queteur_id 
+  from queteur_mailing_status 
+  where year=year(now()) 
+  and status_code != '202')
+  AND q.id IN (
+  select queteur_id
+  from tronc_queteur
+  where year(comptage) = year(now())
+  and deleted = 0
+)
+group by secteur
+order by secteur asc";
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  new MailingSummaryEntity($row, $this->logger);
+    }
+
+    $summary["EMAIL_ERROR"] = $results;
+
+
+    return $summary;
+  }
+
+
+  /**
+   * Get emailing information (names email etc...)
+   *
+   * @param int $ulId the Id of the Unite Local
+   * @param int $pagingSize the number of email sent at once
+   * @return MailingSummaryEntity[][] list of summaries
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getMailingInfo(int $ulId, int $pagingSize)
+  {
+    $parameters = ["ul_id" => $ulId];
+
+    $sql = "
+select id, first_name, last_name, email, secteur, man, spotfire_access_token
+from queteur q
+where q.ul_id = :ul_id
+AND   q.anonymization_token is null
+AND   q.mailing_preference = 1
+-- if in mailing status, it means it has already been sent (in error or success)
+and q.id not IN 
+( 
+  select queteur_id 
+  from   queteur_mailing_status 
+  where  year=year(now())
+)
+-- queteur has participated this year
+AND q.id IN 
+(
+  select queteur_id
+  from   tronc_queteur
+  where  year(comptage) = year(now())
+  and    deleted = 0
+)
+-- benevole first, if there is an error, it's less a problem
+order by q.secteur asc, q.id asc
+LIMIT 0, $pagingSize";
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  new MailingInfoEntity($row, $this->logger);
+    }
+
     return $results;
   }
 
   /**
-   * Insert one NamedDonation
-   *
-   * @param NamedDonationEntity $namedDonation         The namedDonation to be inserted
-   * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param int                 $userId     id of the user performing the operation
-   * @return int id of the new row
+   * Insert one queteur_mailing_status
+
+   * @param int    $queteur_id    Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param string $status_code   Status code of the send email
    * @throws PDOException if the query fails to execute on the server
    */
-  public function insert(NamedDonationEntity $namedDonation, int $ulId, int $userId)
+  public function insertQueteurMailingStatus(int $queteur_id, string $status_code)
   {
 
     $queryData = [
-      'last_update_user_id'=> $userId,
-      'ul_id'              => $ulId,
-      'ref_recu_fiscal'    => $namedDonation->ref_recu_fiscal,
-      'first_name'         => $namedDonation->first_name,
-      'last_name'          => $namedDonation->last_name,
-      'donation_date'      => $namedDonation->donation_date,
-      'don_cheque'         => $namedDonation->don_cheque,
-      'address'            => $namedDonation->address,
-      'postal_code'        => $namedDonation->postal_code,
-      'city'               => $namedDonation->city,
-      'phone'              => $namedDonation->phone,
-      'email'              => $namedDonation->email,
-      'euro500'            => $namedDonation->euro500,
-      'euro200'            => $namedDonation->euro200,
-      'euro100'            => $namedDonation->euro100,
-      'euro50'             => $namedDonation->euro50,
-      'euro20'             => $namedDonation->euro20,
-      'euro10'             => $namedDonation->euro10,
-      'euro5'              => $namedDonation->euro5,
-      'euro2'              => $namedDonation->euro2,
-      'euro1'              => $namedDonation->euro1,
-      'cents50'            => $namedDonation->cents50,
-      'cents20'            => $namedDonation->cents20,
-      'cents10'            => $namedDonation->cents10,
-      'cents5'             => $namedDonation->cents5,
-      'cents2'             => $namedDonation->cents2,
-      'cent1'              => $namedDonation->cent1,
-      'notes'              => $namedDonation->notes,
-      'type'               => $namedDonation->type,
-      'forme'              => $namedDonation->forme,
-      'don_creditcard'     => $namedDonation->don_creditcard,
-      'deleted'            => $namedDonation->deleted?1:0,
-      'coins_money_bag_id' => $namedDonation->coins_money_bag_id,
-      'bills_money_bag_id' => $namedDonation->bills_money_bag_id
+      'queteur_id'=> $queteur_id,
+      'status_code'=> $status_code
     ];
 
-
       $sql = "
-INSERT INTO `named_donation`
+INSERT INTO `queteur_mailing_status`
 (
-  `ul_id`,
-  `ref_recu_fiscal`,
-  `first_name`,
-  `last_name`,
-  `donation_date`,
-  `don_cheque`,
-  `address`,
-  `postal_code`,
-  `city`,
-  `phone`,
-  `email`,
-  `euro500`,
-  `euro200`,
-  `euro100`,
-  `euro50`,
-  `euro20`,
-  `euro10`,
-  `euro5`,
-  `euro2`,
-  `euro1`,
-  `cents50`,
-  `cents20`,
-  `cents10`,
-  `cents5`,
-  `cents2`,
-  `cent1`,
-  `notes`,
-  `type`,
-  `forme`,
-  `don_creditcard`,
-  `deleted`,
-  `coins_money_bag_id`,
-  `bills_money_bag_id`,
-  `last_update_user_id`,
-  `last_update`
+  `queteur_id`,
+  `year`,
+  `status_code`,
+  `email_send_date`
 )
 VALUES
 (
-:ul_id,
-:ref_recu_fiscal,
-:first_name,
-:last_name,
-:donation_date,
-:don_cheque,
-:address,
-:postal_code,
-:city,
-:phone,
-:email,
-:euro500,
-:euro200,
-:euro100,
-:euro50,
-:euro20,
-:euro10,
-:euro5,
-:euro2,
-:euro1,
-:cents50,
-:cents20,
-:cents10,
-:cents5,
-:cents2,
-:cent1,
-:notes,
-:type,
-:forme,
-:don_creditcard,
-:deleted,
-:coins_money_bag_id,
-:bills_money_bag_id,
-:last_update_user_id,
+:queteur_id,
+YEAR(NOW()),
+:status_code,
 NOW()
 );
 ";
 
     $stmt = $this->db->prepare($sql);
-
-    $this->db->beginTransaction();
     $stmt->execute($queryData);
-
     $stmt->closeCursor();
-
-    $stmt = $this->db->query("select last_insert_id()");
-    $row  = $stmt->fetch();
-
-    $lastInsertId = $row['last_insert_id()'];
-
-    $stmt->closeCursor();
-    $this->db->commit();
-
-
-    return $lastInsertId;
   }
 
 
   /**
-   * Insert one NamedDonation
+   * Update queteur with the spotfire access token
+   * Should only be called if there's no existing spotfire token
    *
-   * @param NamedDonationEntity $namedDonation         The namedDonation to be inserted
-   * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param int                 $userId     id of the user performing the operation
-   * @return int id of the new row
+   * @param string $spotfireAccessToken the spotfire access token
+   * @param int    $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int    $queteurId     Id of the queteur
    * @throws PDOException if the query fails to execute on the server
    */
-  public function update(NamedDonationEntity $namedDonation, int $ulId, int $userId)
+  public function updateQueteurWithSpotfireAccessToken(string $spotfireAccessToken, int $queteurId, int $ulId)
   {
-
     $queryData = [
-      'last_update_user_id'=> $userId,
-      'ul_id'              => $ulId,
-      'id'                 => $namedDonation->id,
-      'ref_recu_fiscal'    => $namedDonation->ref_recu_fiscal,
-      'first_name'         => $namedDonation->first_name,
-      'last_name'          => $namedDonation->last_name,
-      'donation_date'      => $namedDonation->donation_date,
-      'don_cheque'         => $namedDonation->don_cheque,
-      'address'            => $namedDonation->address,
-      'postal_code'        => $namedDonation->postal_code,
-      'city'               => $namedDonation->city,
-      'phone'              => $namedDonation->phone,
-      'email'              => $namedDonation->email,
-      'euro500'            => $namedDonation->euro500,
-      'euro200'            => $namedDonation->euro200,
-      'euro100'            => $namedDonation->euro100,
-      'euro50'             => $namedDonation->euro50,
-      'euro20'             => $namedDonation->euro20,
-      'euro10'             => $namedDonation->euro10,
-      'euro5'              => $namedDonation->euro5,
-      'euro2'              => $namedDonation->euro2,
-      'euro1'              => $namedDonation->euro1,
-      'cents50'            => $namedDonation->cents50,
-      'cents20'            => $namedDonation->cents20,
-      'cents10'            => $namedDonation->cents10,
-      'cents5'             => $namedDonation->cents5,
-      'cents2'             => $namedDonation->cents2,
-      'cent1'              => $namedDonation->cent1,
-      'notes'              => $namedDonation->notes,
-      'type'               => $namedDonation->type,
-      'forme'              => $namedDonation->forme,
-      'don_creditcard'     => $namedDonation->don_creditcard,
-      'deleted'            => $namedDonation->deleted?1:0,
-      'coins_money_bag_id' => $namedDonation->coins_money_bag_id,
-      'bills_money_bag_id' => $namedDonation->bills_money_bag_id
+      'id'                   => $queteurId,
+      'ul_id'                => $ulId     ,
+      'spotfire_access_token'=> $spotfireAccessToken
     ];
 
-
     $sql = "
-UPDATE `named_donation`
-SET 
-              
-  `ref_recu_fiscal`     = :ref_recu_fiscal,     
-  `first_name`          = :first_name,          
-  `last_name`           = :last_name,           
-  `donation_date`       = :donation_date,                
-  `don_cheque`          = :don_cheque,          
-  `address`             = :address,             
-  `postal_code`         = :postal_code,         
-  `city`                = :city,                
-  `phone`               = :phone,               
-  `email`               = :email,               
-  `euro500`             = :euro500,             
-  `euro200`             = :euro200,             
-  `euro100`             = :euro100,             
-  `euro50`              = :euro50,              
-  `euro20`              = :euro20,              
-  `euro10`              = :euro10,              
-  `euro5`               = :euro5,               
-  `euro2`               = :euro2,               
-  `euro1`               = :euro1,               
-  `cents50`             = :cents50,             
-  `cents20`             = :cents20,             
-  `cents10`             = :cents10,             
-  `cents5`              = :cents5,              
-  `cents2`              = :cents2,              
-  `cent1`               = :cent1,               
-  `notes`               = :notes,               
-  `type`                = :type,                
-  `forme`               = :forme,               
-  `don_creditcard`      = :don_creditcard,      
-  `deleted`             = :deleted,             
-  `coins_money_bag_id`  = :coins_money_bag_id,  
-  `bills_money_bag_id`  = :bills_money_bag_id,  
-  `last_update_user_id` = :last_update_user_id, 
-  `last_update`         = NOW()                 
+UPDATE `queteur`
+SET   `spotfire_access_token`     = :spotfire_access_token                      
 WHERE `id`    = :id
 AND   `ul_id` = :ul_id  
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute($queryData);
+
+    $stmt->closeCursor();
+  }
+
+
+  /**
+   * Update queteur_mailing_status->spotfire_opened to 1, to mark the fact that the spotfire graph has been opened.
+   *
+   * @param string $guid the GUID of the spotfire_access_token from queteur table
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function confirmRead(string $guid)
+  {
+    $this->logger->addInfo("$guid to update");
+
+    $queryData = [
+      'guid'                   => $guid
+    ];
+
+    $sql = "
+UPDATE `queteur_mailing_status` qms
+INNER JOIN  queteur            q
+ON          qms.`queteur_id` = q.`id`
+SET   qms.`spotfire_opened`       = 1,
+      qms.`spotfire_open_date`    = NOW()                      
+WHERE   q.`spotfire_access_token` = :guid
 ";
 
     $stmt = $this->db->prepare($sql);

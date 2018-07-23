@@ -27,72 +27,67 @@
         controller  : 'ResetPasswordController',
         controllerAs: 'vm'
       })
-      .when('/testQRCode', {
-        templateUrl : 'app/test/testQRCode.html',
-        controller  : 'TestQRCodeController',
-        controllerAs: 'TestQRCode'
-      })
       // ============== QUETEURS ==============
       .when('/queteurs', {
         templateUrl : 'app/queteurs/list/listQueteurs.html',
         controller  : 'QueteursController',
-        controllerAs: 'queteurs'
+        controllerAs: 'q'
       })
       .when('/queteurs/edit', {
         templateUrl : 'app/queteurs/edit/editQueteur.html',
         controller  : 'QueteurEditController',
-        controllerAs: 'queteurEdit'
+        controllerAs: 'queteur'
       })
       .when('/queteurs/edit/:id', {
         templateUrl : 'app/queteurs/edit/editQueteur.html',
         controller  : 'QueteurEditController',
-        controllerAs: 'queteurEdit'
+        controllerAs: 'queteur'
       })
       // ============== TRONCS ==============
       .when('/troncs', {
         templateUrl : 'app/troncs/list/listTroncs.html',
         controller  : 'TroncsController',
-        controllerAs: 'troncs'
+        controllerAs: 't'
       })
       .when('/troncs/edit', {
         templateUrl : 'app/troncs/edit/editTronc.html',
         controller  : 'TroncEditController',
-        controllerAs: 'troncEdit'
+        controllerAs: 'tronc'
       })
       .when('/troncs/edit/:id', {
         templateUrl : 'app/troncs/edit/editTronc.html',
         controller  : 'TroncEditController',
-        controllerAs: 'troncEdit'
+        controllerAs: 'tronc'
       })
       .when('/troncs/prepa', {
         templateUrl : 'app/troncs/preparation/preparationTronc.html',
         controller  : 'PreparationTroncController',
-        controllerAs: 'prepaTronc'
+        controllerAs: 'pt'
       })
       .when('/troncs/depart', {
         templateUrl : 'app/troncs/depart/departTronc.html',
         controller  : 'DepartTroncController',
-        controllerAs: 'departTronc'
+        controllerAs: 'dt'
       })
       .when('/troncs/retour', {
         templateUrl : 'app/troncs/retour/retourTronc.html',
         controller  : 'RetourTroncController',
-        controllerAs: 'retourTronc'
+        controllerAs: 'rt'
       })
       .when('/troncs/retour/:id', {
         templateUrl : 'app/troncs/retour/retourTronc.html',
         controller  : 'RetourTroncController',
-        controllerAs: 'retourTronc'
+        controllerAs: 'rt'
       })
       .when('/tronc_queteur/', {
         templateUrl : 'app/troncs/troncQueteur/troncQueteur.html',
         controller  : 'TroncQueteurController',
-        controllerAs: 'troncQueteur'
+        controllerAs: 'tq'
       })
       .when('/tronc_queteur/edit/:id', {
         templateUrl : 'app/troncs/troncQueteur/troncQueteur.html',
         controller  : 'TroncQueteurController',
-        controllerAs: 'troncQueteur'
+        controllerAs: 'tq'
       })
 
       // ============== Daily Stats ==============
@@ -131,7 +126,7 @@
       .when('/graph', {
         templateUrl : 'app/graph/graph.html',
         controller  : 'GraphController',
-        controllerAs: 'graph'
+        controllerAs: 'g'
       })
 
       // ============== Points Quetes ==============

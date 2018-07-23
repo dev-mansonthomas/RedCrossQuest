@@ -51,7 +51,7 @@ class NamedDonationEntity extends Entity
   public $last_update_user_id;
 
 
-  protected $logger;
+
 
    /**
      * Accept an array of data matching properties of this class
@@ -59,10 +59,11 @@ class NamedDonationEntity extends Entity
      *
      * @param array $data The data to use to create
      * @param Logger $logger
+     * @throws \Exception if a parse Date or JSON fails
      */
     public function __construct(array $data, Logger $logger)
     {
-      $this->logger = $logger;
+      parent::__construct($logger);
 
       $this->getInteger('id'              , $data);
       $this->getInteger('ul_id'           , $data);

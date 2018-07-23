@@ -25,23 +25,24 @@ class UniteLocaleEntity  extends Entity
    * and create the class
    *
    * @param array $data The data to use to create
+   * @throws \Exception if a parse Date or JSON fails
    */
   public function __construct(array $data)
   {
-    $this->getString('id'                        , $data);
-    $this->getString('name'                      , $data);
-    $this->getString('phone'                     , $data);
-    $this->getString('latitude'                  , $data);
-    $this->getString('longitude'                 , $data);
-    $this->getString('address'                   , $data);
-    $this->getString('postal_code'               , $data);
-    $this->getString('city'                      , $data);
-    $this->getString('external_id'               , $data);
-    $this->getString('email'                     , $data);
-    $this->getString('id_structure_rattachement' , $data);
-    $this->getDate  ('date_demarrage_activite'   , $data);
-    $this->getDate  ('date_demarrage_rcq'        , $data);
-    $this->getString('mode'                      , $data);
-    $this->getString('publicDashboard'           , $data);
+    $this->getInteger('id'                        , $data);
+    $this->getString ('name'                      , $data);
+    $this->getString ('phone'                     , $data);
+    $this->getFloat  ('latitude'                  , $data);
+    $this->getFloat  ('longitude'                 , $data);
+    $this->getString ('address'                   , $data);
+    $this->getString ('postal_code'               , $data);
+    $this->getString ('city'                      , $data);
+    $this->getString ('external_id'               , $data);
+    $this->getString ('email'                     , $data);
+    $this->getString ('id_structure_rattachement' , $data);
+    $this->getDate   ('date_demarrage_activite'   , $data);
+    $this->getDate   ('date_demarrage_rcq'        , $data);
+    $this->getString ('mode'                      , $data);
+    $this->getString ('publicDashboard'           , $data);
   }
 }

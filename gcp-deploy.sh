@@ -30,16 +30,29 @@ cd -
 
 cd server/public_html
 #remove previous version
-rm -rf app assets bower_components favicon.ico graph-display-*.html index.html
+rm -rf assets bower_components favicon.ico fonts graph-display*.html index.html scripts styles
 
 cp -rp ../../client/dist/* .
 mv index-*.html index.html
-#Do not rename, because linking is done with the serial id
-#mv graph-display-*.html graph-display.html
+
+GRAPH_FILE_NAME=$(ls graph-display-*.html)
+regex="graph-display-([a-f0-9]*)\.html"
+
+
+if [[ $GRAPH_FILE_NAME =~ $regex ]]
+then
+    echo $FILE_NAME serial is ${BASH_REMATCH[1]}
+    SERIAL_ID=${BASH_REMATCH[1]}
+    sed -i "" "s/-${SERIAL_ID}//g" scripts/app*.js
+else
+    echo "$FILE_NAME doesn't match $regex"
+fi
+
+mv graph-display-*.html graph-display.html
 
 # Update the URL of Spotfire DXP to match the country & environment
-sed -i '' "s/__country__/${COUNTRY}/g" graph-display-*.html
-sed -i '' "s/__env__/${ENV}/g"         graph-display-*.html
+sed -i '' "s/__country__/${COUNTRY}/g" graph-display.html
+sed -i '' "s/__env__/${ENV}/g"         graph-display.html
 
 # TODO see how to fix this in GULP
 mkdir -p bower_components/angular-i18n/ bower_components/zxcvbn/dist/    bower_components/bootstrap-sass/assets/fonts/bootstrap/

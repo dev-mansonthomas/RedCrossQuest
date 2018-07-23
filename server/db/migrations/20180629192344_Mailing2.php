@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Mailing extends AbstractMigration
+class Mailing2 extends AbstractMigration
 {
     /**
      * Change Method.
@@ -29,19 +29,16 @@ class Mailing extends AbstractMigration
     {
       $queteur = $this->table('queteur');
 
+      // 1: all communications, 0: None
       $queteur
-        ->addColumn('spotfire_access_token', 'string', array('limit' => 36, 'null' => true))
+        ->addColumn('mailing_preference', 'integer', array('default' => 1, 'null' => false))
         ->update();
 
 
       $queteur_mailing_status = $this->table('queteur_mailing_status');
       $queteur_mailing_status
-        ->addColumn('queteur_id' , 'integer')
-        ->addColumn('year'       , 'integer')
-        ->addColumn('status_code', 'string', array('limit' => 200))
-
-        ->addForeignKey('queteur_id', 'queteur', 'id')
-        ->create();
+        ->addIndex(['queteur_id', 'year'], ['unique' => true, 'name' => 'idx_queteur_year'])
+        ->update();
 
     }
 }

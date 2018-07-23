@@ -159,8 +159,9 @@ class AuthorisationMiddleware
         return $this->denyRequest($response, "0001");
       }
 
+      $this->logger->addError("$path");
       //public path
-      if($path == 'authenticate' || $path == 'sendInit' || $path == 'resetPassword' || $path == 'getInfoFromUUID')
+      if($path == 'authenticate' || $path == 'sendInit' || $path == 'resetPassword' || $path == 'getInfoFromUUID' || strpos($path,'thanks_mailing/') === 0 )
       {
         return $next($request, $response);
       }

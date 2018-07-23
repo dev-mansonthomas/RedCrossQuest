@@ -257,6 +257,7 @@ AND    q.ul_id      = :ul_id
    * @param int $ulId the Id of the Unite Local
    * @return TroncQueteurEntity[] list of Tronc of the queteur
    * @throws PDOException if the query fails to execute on the server
+   *
    */
   public function getTroncsQueteur(int $queteur_id, int $ulId)
   {

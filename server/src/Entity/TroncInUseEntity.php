@@ -17,11 +17,12 @@ class TroncInUseEntity  extends Entity
   public $nivol;
 
   /**
-     * Accept an array of data matching properties of this class
-     * and create the class
-     *
-     * @param array $data The data to use to create
-     */
+   * Accept an array of data matching properties of this class
+   * and create the class
+   *
+   * @param array $data The data to use to create
+   * @throws \Exception if a parse Date or JSON fails
+   */
   public function __construct(array $data)
   {
     $this->getString  ('id'               , $data);

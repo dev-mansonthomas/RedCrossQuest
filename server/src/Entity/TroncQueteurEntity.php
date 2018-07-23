@@ -79,18 +79,17 @@ class TroncQueteurEntity extends Entity
   public $don_cheque_number         ;
 
 
-  protected $logger;
-
    /**
-     * Accept an array of data matching properties of this class
-     * and create the class
-     *
-     * @param array $data The data to use to create
-     * @param Logger $logger
-     */
+    * Accept an array of data matching properties of this class
+    * and create the class
+    *
+    * @param array $data The data to use to create
+    * @param Logger $logger
+    * @throws \Exception if a parse Date or JSON fails
+    */
     public function __construct(array $data, Logger $logger)
     {
-      $this->logger = $logger;
+      parent::__construct($logger);
 
       $this->getInteger('id'               , $data);
       $this->getInteger('queteur_id'       , $data);

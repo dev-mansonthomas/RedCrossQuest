@@ -210,7 +210,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
       }
       else
       {
-        throw new \Exception("Unknown action" );
+        throw new \Exception("Unknown action '$action'" );
       }
 
     }

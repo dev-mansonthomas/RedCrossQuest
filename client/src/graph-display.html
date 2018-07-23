@@ -22,7 +22,7 @@
 
   <script type="text/javascript" src="https://spotfire-next.cloud.tibco.com/spotfire/wp/GetJavaScriptApi.ashx?Version=7.12"></script>
   <script>
-    reloadEnabled = true;
+    reloadEnabled = false;
     myTimeoutId = null;
     function parseQuery(qstr) {
       var query = {};
@@ -60,6 +60,15 @@
       {
         alert("initialization error");
         return;
+      }
+
+      if(query.g === 'Merci')
+      {
+        var url = new URL(document.location);
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", url.protocol+"/rest/thanks_mailing/"+query.i, true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.send();
       }
 
 
@@ -122,8 +131,8 @@
     <div class="col-md-3 col-md-offset-4" style="padding-top: 2px;">
       <span style="color:white">Mise-à-jour automatique ?</span>
       <div class="btn-group btn-group-xs" role="group" aria-label="...">
-        <button type="button" id="actif"   onclick="enable() " class="btn btn-default active">Actif</button>
-        <button type="button" id="inactif" onclick="disable()" class="btn btn-default">Inactif</button>
+        <button type="button" id="actif"   onclick="enable() " class="btn btn-default">Actif</button>
+        <button type="button" id="inactif" onclick="disable()" class="btn btn-default active">Inactif</button>
       </div>
     </div>
     <div class="col-md-1">

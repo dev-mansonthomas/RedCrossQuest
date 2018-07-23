@@ -5,11 +5,9 @@ use Monolog\Logger;
 
 class MailingSummaryEntity extends Entity
 {
-  public $ul_id            ;
   public $secteur          ;
   public $count            ;
 
-  protected $logger;
 
   /**
    * Accept an array of data matching properties of this class
@@ -20,9 +18,8 @@ class MailingSummaryEntity extends Entity
    */
   public function __construct(array $data, Logger $logger)
   {
-    $this->logger = $logger;
+    parent::__construct($logger);
 
-    $this->getInteger('ul_id'           , $data);
     $this->getInteger('secteur'         , $data);
     $this->getInteger('count'           , $data);
   }

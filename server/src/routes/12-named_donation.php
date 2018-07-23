@@ -9,9 +9,6 @@
 use \RedCrossQuest\DBService\NamedDonationDBService;
 use \RedCrossQuest\Entity\NamedDonationEntity;
 
-include_once("../../src/Entity/YearlyGoalEntity.php");
-/********************************* QUETEUR ****************************************/
-
 
 /**
  * Fetch the named donation of an UL

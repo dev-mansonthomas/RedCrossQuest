@@ -1,6 +1,8 @@
 <?php
 
-use SendGrid;
+use SendGrid\Email;
+use \RedCrossQuest\BusinessService\EmailBusinessService;
+use \RedCrossQuest\DBService\MailingDBService;
 
 // DIC configuration
 $container = $app->getContainer();
@@ -48,12 +50,12 @@ $container['db'] = function (\Slim\Container $c)
 
 $container['mailer'] = function (\Slim\Container $c)
 {
-  $settings = $c['settings']['email'];
+  $settings = $c['settings']['appSettings']['email'];
 
   $sendgrid       = new SendGrid($settings['sendgrid.api_key']);
-  $sendgridSender = new SendGrid\Email("RedCrossQuest", $settings['sendgrid.sender']);
+  $sendgridSender = new Email("RedCrossQuest", $settings['sendgrid.sender']);
 
-  return new \RedCrossQuest\BusinessService\EmailBusinessService($c->logger, $sendgrid, $sendgridSender, $c['settings']['appSettings']);
+  return new EmailBusinessService($c->logger, $sendgrid, $sendgridSender, $c['settings']['appSettings'], new MailingDBService($c->db, $c->logger));
 };
 
 
