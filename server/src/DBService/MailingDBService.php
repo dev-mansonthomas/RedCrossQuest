@@ -27,7 +27,7 @@ class MailingDBService extends DBService
     $sql = "
 select secteur, count(1) as count
 from queteur q
-where q.ul_id = 348
+where q.ul_id = :ul_id
 AND q.anonymization_token is null
 AND q.mailing_preference = 1
 and q.id not IN ( 
@@ -63,7 +63,7 @@ order by secteur asc";
     $sql = "
 select  secteur, count(1) as count
 from queteur q
-where q.ul_id = 348
+where q.ul_id = :ul_id
 AND q.anonymization_token is null
 AND q.mailing_preference = 1
 AND q.id IN ( 
@@ -99,7 +99,7 @@ order by secteur asc";
     $sql = "
 select secteur, count(1) as count
 from queteur q
-where q.ul_id = 348
+where q.ul_id = :ul_id
 AND q.anonymization_token is null
 AND q.mailing_preference = 1
 and q.id IN ( 
