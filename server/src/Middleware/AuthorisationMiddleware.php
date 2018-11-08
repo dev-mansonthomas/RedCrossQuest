@@ -102,10 +102,6 @@ class AuthorisationMiddleware
       $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
       $errorCode = '0010';
     }
-    /*else
-    {
-      //$this->logger->addInfo("JWT Validation OK:".print_r($tokenStr, true));
-    }*/
     try
     {
       $decodedToken = DecodedToken::withData(
@@ -159,7 +155,7 @@ class AuthorisationMiddleware
         return $this->denyRequest($response, "0001");
       }
 
-      $this->logger->addError("$path");
+      //$this->logger->addError("$path");
       //public path
       if($path == 'authenticate' || $path == 'sendInit' || $path == 'resetPassword' || $path == 'getInfoFromUUID' || strpos($path,'thanks_mailing/') === 0 )
       {

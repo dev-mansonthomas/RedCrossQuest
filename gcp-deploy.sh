@@ -86,3 +86,6 @@ cp server/phinx-template.yml        server/phinx.yml
 cp ~/.cred/rcq-fr-dev-settings.php  server/src/settings.php
 
 kill -15 $CLOUD_PROXY_PID
+
+#switch back to dev project (for stackdriver & storage)
+gcloud config set project redcrossquest-${COUNTRY}-dev

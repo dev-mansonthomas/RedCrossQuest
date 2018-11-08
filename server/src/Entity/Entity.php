@@ -14,11 +14,29 @@ use Monolog\Logger;
 class Entity
 {
   protected $logger;
-
-
+  /***
+    @var string[]
+   */
+  protected $_fieldList
+;
   public function __construct(Logger $logger)
   {
     $this->logger = $logger;
+  }
+
+  public function generateCSVHeader()
+  {
+    return implode(";", $this->_fieldList)."\n";
+  }
+
+  public function generateCSVRow()
+  {
+    $csvRow="";
+    foreach($this->_fieldList as $field)
+    {
+      $csvRow.= $this->{$field}.";";
+    }
+    return $csvRow."\n";
   }
 
 

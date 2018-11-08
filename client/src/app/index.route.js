@@ -167,6 +167,12 @@
         controller  : 'MailingController',
         controllerAs: 'mc'
       })
+      // ============== MAILING   ==============
+      .when('/exportData', {
+        templateUrl : 'app/admin/exportData/exportData.html',
+        controller  : 'ExportDataController',
+        controllerAs: 'ed'
+      })
       // ============== OTHERWISE ==============
       .otherwise({
         redirectTo: '/'

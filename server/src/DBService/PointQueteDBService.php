@@ -128,7 +128,7 @@ AND   pq.ul_id    = :ul_id
 AND   pq.enabled  = :active
 $querySQL
 $typeSQL
-ORDER by name ASC
+ORDER BY type ASC, name ASC
 ";
 
     //$this->logger->addError("parameters", Array("parameters"=>$parameters));

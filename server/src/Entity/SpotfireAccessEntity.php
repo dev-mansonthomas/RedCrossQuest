@@ -10,7 +10,7 @@ class SpotfireAccessEntity extends Entity
   public $ul_id                       ;
   public $user_id                     ;
 
-
+  protected $_fieldList = ['id','token','token_expiration','ul_id','user_id'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class

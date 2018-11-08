@@ -20,10 +20,10 @@
 
 
 
-  <script type="text/javascript" src="https://spotfire-next.cloud.tibco.com/spotfire/wp/GetJavaScriptApi.ashx?Version=7.12"></script>
+  <script type="text/javascript" src="https://spotfire-next.cloud.tibco.com/spotfire/js-api/loader.js"></script>
   <script>
     reloadEnabled = false;
-    myTimeoutId = null;
+    myTimeoutId   = null ;
     function parseQuery(qstr) {
       var query = {};
       var a = (qstr[0] === '?' ? qstr.substr(1) : qstr).split('&');
@@ -34,7 +34,7 @@
       return query;
     }
 
-    var serverUrl    = "https://spotfire-next.cloud.tibco.com/spotfire/wp/";
+
 
     function reload()
     {
@@ -71,24 +71,63 @@
         xhttp.send();
       }
 
-
-      function errorHandler(errorCode, description)
-      {
-        alert(errorCode+' '+description);
-      }
-
+      var serverUrl    = "https://spotfire-next.cloud.tibco.com/spotfire/wp/";
       //https://spotfire.cloud.tibco.com/spotfire/wp/OpenAnalysis?file=/users/mansonthomas/Public/SpotfireCloud
+      var analysisPath = "/Users/3c74owwyq2yp63mlspdhjaenrwb34sfa/Public/fr-rcq-prod/"+query.g;
       //var analysisPath = "/Users/3c74owwyq2yp63mlspdhjaenrwb34sfa/Public/__country__-rcq-__env__/"+query.g;
-      var analysisPath = "/Users/3c74owwyq2yp63mlspdhjaenrwb34sfa/Public/__country__-rcq-__env__/"+query.g;
+      //var analysisPath = "/Users/3c74owwyq2yp63mlspdhjaenrwb34sfa/Public/__country__-rcq-__env__/"+query.g;
       var parameters   = 'token="'+query.i+'";RCQURL="'+window.location.protocol+'//'+window.location.host+'";'; //
 
       //var analysisPath = "/users/mansonthomas/Public/RCQ-Public-MontantsVisibles";
       //var parameters   = 'token="64ac08e2-2fcd-4d63-bbb4-4062d9a66732";';
 
+      var spotfireApp = null;
+      var customizationInfo = null;
+      var reloadInstances = true;
+      var apiVersion = "7.14";
 
-      var app = new spotfire.webPlayer.Application(serverUrl, null, analysisPath, parameters, false);
-      app.onError(errorHandler);
-      var doc = app.openDocument("container");
+
+      function onReadyCallback(response, app)
+      {
+        spotfireApp = app;
+        if(response.status === "OK")
+        {
+          // The application is ready, meaning that the api is loaded and that
+          // the analysis path is validated for the current session
+          // (anonymous or logged in user)
+          doc = app.openDocument("container", 0);
+          console.log("Spotfire init ok")
+        }
+        else
+        {
+          console.log("Status not OK. " + response.status + ": " + response.message)
+        }
+      }
+
+
+      function onCreateLoginElement()
+      {
+        console.log("onCreateLoginElement called");
+        // Optionally create and return a div to host the login button
+        return null;
+      }
+
+
+      spotfire.webPlayer.createApplication(
+        serverUrl,
+        customizationInfo,
+        analysisPath,
+        parameters,
+        reloadInstances,
+        apiVersion,
+        onReadyCallback,
+        onCreateLoginElement
+      );
+
+
+
+
+
 
       myTimeoutId = setTimeout(reload,6*60*1000);
     };

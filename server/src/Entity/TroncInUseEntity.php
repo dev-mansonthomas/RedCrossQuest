@@ -16,6 +16,7 @@ class TroncInUseEntity  extends Entity
   public $mobile;
   public $nivol;
 
+  protected $_fieldList = ['id','depart_theorique','depart','queteur_id','tronc_id','first_name','last_name','email','mobile','nivol'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class

@@ -3,13 +3,15 @@ namespace RedCrossQuest\DBService;
 
 abstract class DBService
 {
-    protected $db;
-    protected $logger;
+  /** @var \PDO */
+  protected $db;
+  /** @var \Monolog\Logger */
+  protected $logger;
 
-    public function __construct($db, $logger)
-    {
-      $this->db     = $db;
-      $this->logger = $logger;
-    }
+  public function __construct($db, $logger)
+  {
+    $this->db     = $db;
+    $this->logger = $logger;
+  }
 
 }

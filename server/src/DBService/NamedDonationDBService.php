@@ -18,6 +18,7 @@ class NamedDonationDBService extends DBService
    * @param int $ulId the Id of the Unite Local
    * @return NamedDonationEntity[] list of NamedDonationEntity
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception if parsing errors occurs
    */
   public function getNamedDonations(?string $query, bool $deleted, ?string $year, int $ulId)
   {
@@ -90,7 +91,7 @@ $yearSQL
 ORDER BY `id` DESC
 ";
 
-    $this->logger->info("search named_donation ", array('sql'=> $sql));
+    //$this->logger->info("search named_donation ", array('sql'=> $sql));
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);
@@ -102,7 +103,7 @@ ORDER BY `id` DESC
     {
       $results[$i++] =  new NamedDonationEntity($row, $this->logger);
     }
-    $this->logger->info("search named_donation ".count($results), $parameters) ;
+    //$this->logger->info("search named_donation ".count($results), $parameters) ;
     return $results;
   }
 

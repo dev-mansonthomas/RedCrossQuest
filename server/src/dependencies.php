@@ -3,6 +3,8 @@
 use SendGrid\Email;
 use \RedCrossQuest\BusinessService\EmailBusinessService;
 use \RedCrossQuest\DBService\MailingDBService;
+use Google\Cloud\Storage\StorageClient;
+use Google\Cloud\Storage\Bucket;
 
 // DIC configuration
 $container = $app->getContainer();
@@ -58,6 +60,35 @@ $container['mailer'] = function (\Slim\Container $c)
   return new EmailBusinessService($c->logger, $sendgrid, $sendgridSender, $c['settings']['appSettings'], new MailingDBService($c->db, $c->logger));
 };
 
+/**
+ * @param \Slim\Container container
+ * @return Bucket
+ */
+$container['bucket'] = function (\Slim\Container $c)
+{
+  $appSettings = $c['settings']['appSettings'];
+
+  $country        = $appSettings['country'         ];
+  $env            = strtolower($appSettings['deploymentType'  ]);
+  $bucketTemplate = $appSettings['exportDataBucket'];
+
+  $envLabel=[];
+  $envLabel['D'] = "dev";
+  $envLabel['T'] = "test";
+  $envLabel['P'] = "prod";
+
+  $gcpBucket  = str_replace("_country_", $country, str_replace("_env_", $env           , $bucketTemplate));
+  $project_id = str_replace("_country_", $country, str_replace("_env_", $envLabel[$env], "redcrossquest-_country_-_env_"));
+
+  //documentation : https://cloud.google.com/storage/docs/reference/libraries
+  //https://github.com/googleapis/google-cloud-php
+  $storage = new StorageClient([
+    'projectId' => $project_id
+  ]);
+
+  return $storage->bucket($gcpBucket);
+
+};
 
 $c['errorHandler'] = function (\Slim\Container $c) {
   return function (\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, \Exception $exception) use ($c)

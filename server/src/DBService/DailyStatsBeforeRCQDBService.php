@@ -30,16 +30,28 @@ class DailyStatsBeforeRCQDBService extends DBService
   ];
 
 
+
   /**
    * Get all stats for UL $ulId and a particular year
    *
    * @param int     $ulId The ID of the Unite Locale
    * @param string  $year The year for which we wants the daily stats
-   * @return array of PointQueteEntity  The PointQuete
+   * @return DailyStatsBeforeRCQEntity[]  The PointQuete
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception if some parsing error occurs
    */
-  public function getDailyStats(int $ulId, string $year)
+  public function getDailyStats(int $ulId, ?string $year)
   {
+
+    $parameters = ["ul_id" => $ulId];
+    $yearSQL   = "";
+
+    if($year != null)
+    {
+      $parameters["year"] = $year."%";
+      $yearSQL = "AND   d.date  LIKE :year";
+    }
+
 
     $sql = "
 SELECT  d.`id`,
@@ -48,22 +60,23 @@ SELECT  d.`id`,
         d.`amount`
 FROM `daily_stats_before_rcq` AS d
 WHERE d.ul_id = :ul_id
-AND   d.date  LIKE :year
+$yearSQL
 ORDER BY d.date ASC
 ";
 
 
     $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId, "year" => $year."%"]);
+    $stmt->execute($parameters);
 
     $results = [];
     $i = 0;
     while ($row = $stmt->fetch())
     {
-      $results[$i++] = new DailyStatsBeforeRCQEntity($row);
+      $results[$i++] = new DailyStatsBeforeRCQEntity($row, $this->logger);
     }
 
     $stmt->closeCursor();
+
     return $results;
   }
 

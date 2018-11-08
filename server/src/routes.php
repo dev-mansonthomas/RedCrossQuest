@@ -14,4 +14,5 @@ include_once("../../src/routes/10-unite-locale.php");
 include_once("../../src/routes/11-yearly-goals.php");
 include_once("../../src/routes/12-named_donation.php");
 include_once("../../src/routes/13-mailing.php");
+include_once("../../src/routes/14-exportData.php");
 

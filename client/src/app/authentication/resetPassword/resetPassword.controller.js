@@ -107,7 +107,7 @@
 
         }
         else {
-          vm.error = "Votre demande est invalide ou périmée";
+          vm.error = "Votre demande est invalide ou périmée ou votre utilisateur a été désactivé. Veuillez contacter le support.";
         }
 
       });

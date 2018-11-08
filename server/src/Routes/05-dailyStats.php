@@ -40,6 +40,10 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
     //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
     $dailyStats = $dailyStatsBeforeRCQDBService->getDailyStats($ulId, $year);
 
+
+    $this->logger->addInfo($dailyStats[0]->generateCSVHeader());
+    $this->logger->addInfo($dailyStats[0]->generateCSVRow());
+
     $response->getBody()->write(json_encode($dailyStats));
 
     return $response;

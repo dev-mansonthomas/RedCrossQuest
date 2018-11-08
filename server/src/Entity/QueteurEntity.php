@@ -48,6 +48,8 @@ class QueteurEntity  extends Entity
   public $anonymization_token         ;
   public $anonymization_date          ;
 
+  protected $_fieldList = ['id','email','first_name','last_name','secteur','nivol','mobile','created','updated','parent_authorization','temporary_volunteer_form','notes','ul_id','ul_name','ul_longitude','ul_latitude','point_quete_id','point_quete_name','depart_theorique','depart','retour','active','man','birthdate','qr_code_printed','referent_volunteer','referent_volunteer_entity','anonymization_token','anonymization_date'];
+
   /**
    * Accept an array of data matching properties of this class
    * and create the class

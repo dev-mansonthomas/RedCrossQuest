@@ -8,7 +8,7 @@ class MailingSummaryEntity extends Entity
   public $secteur          ;
   public $count            ;
 
-
+  protected $_fieldList = ['secteur', 'count'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class

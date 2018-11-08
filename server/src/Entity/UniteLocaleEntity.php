@@ -19,7 +19,7 @@ class UniteLocaleEntity  extends Entity
   public $mode;
   public $publicDashboard;
 
-
+  protected $_fieldList = ['id','name','phone','latitude','longitude','address','postal_code','city','external_id','email','id_structure_rattachement','date_demarrage_activite','date_demarrage_rcq','mode','publicDashboard'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class

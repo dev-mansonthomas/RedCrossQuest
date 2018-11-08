@@ -19,6 +19,8 @@ class YearlyGoalEntity  extends Entity
   public $day_8_percentage;
   public $day_9_percentage;
 
+  protected $_fieldList = ['id','ul_id','year','amount','day_1_percentage','day_2_percentage','day_3_percentage','day_4_percentage','day_5_percentage','day_6_percentage','day_7_percentage','day_8_percentage','day_9_percentage'];
+
   /**
    * Accept an array of data matching properties of this class
    * and create the class

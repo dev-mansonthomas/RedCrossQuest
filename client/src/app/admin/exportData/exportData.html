@@ -1,0 +1,48 @@
+<acme-navbar xmlns="http://www.w3.org/1999/html"></acme-navbar>
+<div class="container">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">Export des données de l'UL</div>
+  </div>
+
+  <div class="row" style="height:40px;">
+    <div class="col-md-2 col-md-offset-4">
+      <button
+        type="button"
+        class="btn btn-primary"
+        ng-click="ed.send();"
+        ng-show="!ed.running"
+      >Démarrer l'export des données de l'Unité Locale</button>
+
+      <img src="assets/images/loading.gif" alt="Envoie en cours, veuillez patienter" ng-show="mc.running" width=""/>
+    </div>
+
+  </div>
+
+  <div class="row" ng-show="ed.password">
+    <div class="col-md-8 col-md-offset-2">
+      <label for="password" class="control-label">Password de l'archive</label>
+      <input name="password"
+             id="password"
+             type="text"
+             class="form-control"
+             ng-model="ed.password"
+             ng-readonly="true"/>
+      <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Required</span>
+    </div>
+  </div>
+
+
+  <div class="row" ng-show="ed.errorWhileSending">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="ed.errorWhileSending=false"><span aria-hidden="true">&times;</span></button>
+        <strong>Oouupps!</strong> Une erreur est survenue lors de l'envoie des emails!
+        <pre style="text-align: left;">{{ed.errorWhileSending}}</pre>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>

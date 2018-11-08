@@ -185,4 +185,56 @@ VALUES
     return $row['cnt'];
   }
 
+
+  /**
+   * Get all goals for UL $ulId (and if specified, a particular year, all if not)
+   *
+   * @param int     $ulId The ID of the Unite Locale
+   * @param string  $year The year for which we wants the yearly goals
+   * @return YearlyGoalEntity[]  The YearlyGoalEntity
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getYearlyGoalsForExportData(int $ulId, ?string $year)
+  {
+    $parameters = ["ul_id" => $ulId];
+    $yearSQL="";
+    if($year != null)
+    {
+      $yearSQL="AND   y.year  = :year";
+      $parameters["year"] = $year;
+    }
+
+
+    $sql = "
+SELECT  y.`id`,
+        y.`ul_id`,
+        y.`year`,
+        y.`amount`,
+        y.`day_1_percentage`,
+        y.`day_2_percentage`,
+        y.`day_3_percentage`,
+        y.`day_4_percentage`,
+        y.`day_5_percentage`,
+        y.`day_6_percentage`,
+        y.`day_7_percentage`,
+        y.`day_8_percentage`,
+        y.`day_9_percentage`
+FROM `yearly_goal` AS y
+WHERE y.ul_id = :ul_id
+$yearSQL
+ORDER BY y.id ASC
+";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  new YearlyGoalEntity($row);
+    }
+    return $results;
+  }
+
 }

@@ -12,6 +12,7 @@ class TroncEntity extends Entity
   /** utiliser seulement à la création*/
   public $nombreTronc;
 
+  protected $_fieldList = ['id','ul_id','created','enabled','notes','nombreTronc'];
   /**
      * Accept an array of data matching properties of this class
      * and create the class

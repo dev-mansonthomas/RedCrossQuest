@@ -10,6 +10,7 @@ class UniteLocaleSettingsEntity  extends Entity
   public $updated;
   public $last_update_user_id;
 
+  protected $_fieldList = ['id','ul_id','settings','created','updated','last_update_user_id'];
 
   /**
    * Accept an array of data matching properties of this class

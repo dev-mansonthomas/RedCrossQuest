@@ -120,6 +120,48 @@ LIMIT 1
   }
 
 
+
+  /***
+   * This function is used by dataExport
+   *
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return UserEntity[] array of users of  the UnitéLocale
+   * @throws \Exception in case of incorrect number of rows updated
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getULUsers(int $ulId)
+  {
+
+    $sql = "
+SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
+       u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
+       u.init_passwd_date, u.active, u.created, u.updated, q.first_name, q.last_name
+FROM   users u, queteur q
+WHERE  u.queteur_id = q.id
+AND    q.ul_id      = :ul_id
+
+LIMIT 1
+";
+
+    $parameters = ["ul_id"=>$ulId];
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+
+    $results = [];
+    $i = 0;
+    while ($row = $stmt->fetch())
+    {
+      $results[$i++] = new UserEntity($row);
+    }
+
+    $stmt->closeCursor();
+
+    return $results;
+
+  }
+
+
   /***
    * This function is used by queteurEditForm, where the info from the user is retrieved from the queteurId
    *

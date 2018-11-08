@@ -525,33 +525,33 @@ AND    q.ul_id                = :ul_id
    * @throws \Exception if the query fails
    * @throws PDOException if the query fails to execute on the server
    */
-    public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId)
-    {
+  public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId)
+  {
 
-      if(!$tq->isMoneyFilled())
-      {// si pas de données sur l'argent, on ne fait pas l'update
-        return;
-      }
+    if(!$tq->isMoneyFilled())
+    {// si pas de données sur l'argent, on ne fait pas l'update
+      return;
+    }
 
-      $comptage = "";
-      if(!$adminMode)
-      {// do not overwrite the comptage date in admin mode
-        $comptage = " `comptage`                     = NOW(),";
+    $comptage = "";
+    if(!$adminMode)
+    {// do not overwrite the comptage date in admin mode
+      $comptage = " `comptage`                     = NOW(),";
+    }
+    else
+    {// admin mode
+      if($tq->isMoneyFilled())
+      {
+        //coalesce: si comptage est null, alors prends now()
+        // cela permet de Si les données argent sont rempli
+        //  qu'il n'y a pas de date de comptage de rempli, alors on met a jour la date de comptage.
+        //  S'il y avait déjà une date, on ne la met pas à jour (il y a last_update et la table d'historisation)
+        //
+        $comptage = " `comptage`                     = COALESCE(comptage, NOW()),";
       }
-      else
-      {// admin mode
-        if($tq->isMoneyFilled())
-        {
-          //coalesce: si comptage est null, alors prends now()
-          // cela permet de Si les données argent sont rempli
-          //  qu'il n'y a pas de date de comptage de rempli, alors on met a jour la date de comptage.
-          //  S'il y avait déjà une date, on ne la met pas à jour (il y a last_update et la table d'historisation)
-          //
-          $comptage = " `comptage`                     = COALESCE(comptage, NOW()),";
-        }
-      }
+    }
 
-      $sql = "
+    $sql = "
 UPDATE `tronc_queteur`            tq
       INNER JOIN  queteur         q
       ON          tq.queteur_id = q.id
@@ -590,41 +590,41 @@ WHERE tq.`id`                   = :id
 AND    q.ul_id                  = :ul_id
 ";
 
-      $stmt = $this->db->prepare($sql);
-      $stmt->execute([
-        "euro500"                       => $tq->euro500,
-        "euro200"                       => $tq->euro200,
-        "euro100"                       => $tq->euro100,
-        "euro50"                        => $tq->euro50 ,
-        "euro20"                        => $tq->euro20 ,
-        "euro10"                        => $tq->euro10 ,
-        "euro5"                         => $tq->euro5  ,
-        "euro2"                         => $tq->euro2  ,
-        "euro1"                         => $tq->euro1  ,
-        "cents50"                       => $tq->cents50,
-        "cents20"                       => $tq->cents20,
-        "cents10"                       => $tq->cents10,
-        "cents5"                        => $tq->cents5 ,
-        "cents2"                        => $tq->cents2 ,
-        "cent1"                         => $tq->cent1  ,
-        "foreign_coins"                 => $tq->foreign_coins,
-        "foreign_banknote"              => $tq->foreign_banknote,
-        "don_cheque"                    => $tq->don_cheque,
-        "userId"                        => $userId,
-        "id"                            => $tq->id,
-        "ul_id"                         => $ulId,
-        "notes_retour_comptage_pieces"  => $tq->notes_retour_comptage_pieces,
-        "coins_money_bag_id"            => $tq->coins_money_bag_id,
-        "bills_money_bag_id"            => $tq->bills_money_bag_id,
-        "don_cheque_number"             => $tq->don_cheque_number,
-        "don_creditcard"                => $tq->don_creditcard,
-        "don_cb_sans_contact_amount"    => $tq->don_cb_sans_contact_amount,
-        "don_cb_sans_contact_number"    => $tq->don_cb_sans_contact_number,
-        "don_cb_total_number"           => $tq->don_cb_total_number
-      ]);
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+      "euro500"                       => $tq->euro500,
+      "euro200"                       => $tq->euro200,
+      "euro100"                       => $tq->euro100,
+      "euro50"                        => $tq->euro50 ,
+      "euro20"                        => $tq->euro20 ,
+      "euro10"                        => $tq->euro10 ,
+      "euro5"                         => $tq->euro5  ,
+      "euro2"                         => $tq->euro2  ,
+      "euro1"                         => $tq->euro1  ,
+      "cents50"                       => $tq->cents50,
+      "cents20"                       => $tq->cents20,
+      "cents10"                       => $tq->cents10,
+      "cents5"                        => $tq->cents5 ,
+      "cents2"                        => $tq->cents2 ,
+      "cent1"                         => $tq->cent1  ,
+      "foreign_coins"                 => $tq->foreign_coins,
+      "foreign_banknote"              => $tq->foreign_banknote,
+      "don_cheque"                    => $tq->don_cheque,
+      "userId"                        => $userId,
+      "id"                            => $tq->id,
+      "ul_id"                         => $ulId,
+      "notes_retour_comptage_pieces"  => $tq->notes_retour_comptage_pieces,
+      "coins_money_bag_id"            => $tq->coins_money_bag_id,
+      "bills_money_bag_id"            => $tq->bills_money_bag_id,
+      "don_cheque_number"             => $tq->don_cheque_number,
+      "don_creditcard"                => $tq->don_creditcard,
+      "don_cb_sans_contact_amount"    => $tq->don_cb_sans_contact_amount,
+      "don_cb_sans_contact_number"    => $tq->don_cb_sans_contact_number,
+      "don_cb_total_number"           => $tq->don_cb_total_number
+    ]);
 
-      $stmt->closeCursor();
-    }
+    $stmt->closeCursor();
+  }
 
   /**
    * Update one tronc as Admin for data like dates, and point_quete
@@ -693,18 +693,18 @@ AND    q.ul_id         = :ul_id
     $returnInfo = (object) [
       'troncInUse'     => $checkTroncResult!= null,
       'troncInUseInfo' => $checkTroncResult
-      ];
+    ];
 
     if($checkTroncResult == null)
     {
       $queryData =
-      [
-        "queteur_id"            => $tq->queteur_id,
-        "point_quete_id"        => $tq->point_quete_id,
-        "tronc_id"              => $tq->tronc_id,
-        "userId"                => $userId,
-        "notes_depart_theorique"=> $tq->notes_depart_theorique
-      ];
+        [
+          "queteur_id"            => $tq->queteur_id,
+          "point_quete_id"        => $tq->point_quete_id,
+          "tronc_id"              => $tq->tronc_id,
+          "userId"                => $userId,
+          "notes_depart_theorique"=> $tq->notes_depart_theorique
+        ];
 
       $departTheoriqueQuery = "";
 
@@ -775,7 +775,7 @@ $departTheoriqueQuery
   public function checkTroncNotAlreadyInUse(int $troncId, int $ulId)
   {
     $sql = "
-SELECT 	
+SELECT  
 tq.id, 
 tq.queteur_id,
 tq.tronc_id,  
@@ -786,9 +786,9 @@ q.last_name,
 q.email, 
 q.mobile, 
 q.nivol
-FROM 	tronc_queteur tq,
+FROM  tronc_queteur tq,
       queteur        q
-WHERE 	 q.ul_id      = :ul_id
+WHERE    q.ul_id      = :ul_id
 AND     tq.deleted    = 0
 AND     tq.tronc_id   = :tronc_id
 AND     tq.queteur_id = q.id
@@ -823,16 +823,16 @@ AND    (tq.depart     is null OR
 
 
 
-   /***
-    *  work with  checkTroncNotAlreadyInUse($troncId, $ulId).
-    * If the use decide to delete the tronc_queteur row because the existing rows
-    * represents a session of quete that has not been performed
-    * @param int $troncId the Id of the tronc to be deleted
-    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-    * @param int $userId the ID of the user performing the action
-    * @throws PDOException if the query fails to execute on the server
-    *
-    */
+  /***
+   *  work with  checkTroncNotAlreadyInUse($troncId, $ulId).
+   * If the use decide to delete the tronc_queteur row because the existing rows
+   * represents a session of quete that has not been performed
+   * @param int $troncId the Id of the tronc to be deleted
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $userId the ID of the user performing the action
+   * @throws PDOException if the query fails to execute on the server
+   *
+   */
   public function deleteNonReturnedTroncQueteur(int $troncId, int $ulId, int $userId)
   {
 
@@ -992,6 +992,116 @@ ORDER BY t.money_bag_id DESC
     return $results;
   }
 
+
+
+  /**
+   * Get all tronc_queteur for an UniteLocale (for the specified year)
+   *
+   * @param int $ulId the id of the unite locale  (join with queteur table)
+   * @param string $year extract for the specified year. If null, all years.
+   * @return TroncQueteurEntity[]  The tronc
+   * @throws \Exception if some parsing fails
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getTroncsQueteurFromUL(int $ulId, ?string $year)
+  {
+    $parameters = ["ul_id" => $ulId];
+    $yearSQL="";
+    if($year != null)
+    {
+      $yearSQL="AND  YEAR(tq.depart) = :year";
+      $parameters["year"] = $year;
+    }
+
+
+    $sql = "
+select
+tq.id,
+tq.queteur_id,
+tq.point_quete_id,
+tq.tronc_id,
+tq.depart_theorique,
+tq.depart,
+tq.retour,
+tq.comptage,
+tq.last_update,
+tq.last_update_user_id,
+q.first_name,
+q.last_name,
+q.mobile,
+tq.euro200,
+tq.euro100,
+tq.euro50,
+tq.euro20,
+tq.euro10,
+tq.euro5,
+tq.euro2,
+tq.euro1,
+tq.cents50,
+tq.cents20,
+tq.cents10,
+tq.cents5,
+tq.cents2,
+tq.cent1,
+(tq.euro2*2 +
+tq.euro1*1 +
+tq.cents50*0.5 +
+tq.cents20*0.2 +
+tq.cents10*0.1 +
+tq.cents5*0.05 +
+tq.cents2*0.02 +
+tq.cent1*0.01 +
+tq.euro5*5 +
+tq.euro10*10 +
+tq.euro20*20 +
+tq.euro50*50 +
+tq.euro100*100 +
+tq.euro200*200 +
+tq.euro500*500 +
+tq.don_cheque +
+tq.don_creditcard) as amount,
+( tq.euro500 * 1.1 +
+ tq.euro200 * 1.1 +
+ tq.euro100 * 1 +
+ tq.euro50 * 0.9 +
+ tq.euro20 * 0.8 +
+ tq.euro10 * 0.7 +
+ tq.euro5 * 0.6 +
+ tq.euro2 * 8.5 +
+ tq.euro1 * 7.5 +
+ tq.cents50 * 7.8 +
+ tq.cents20 * 5.74 +
+ tq.cents10 * 4.1 +
+ tq.cents5 * 3.92 +
+ tq.cents2 * 3.06 +
+ tq.cent1 * 2.3) as weight,
+(timestampdiff(second,depart, retour))/3600 as time_spent_in_hours,
+tq.deleted,
+tq.don_creditcard,
+tq.don_cheque,
+tq.coins_money_bag_id,
+tq.bills_money_bag_id
+from tronc_queteur as tq,
+        queteur           as q
+WHERE tq.queteur_id = q.id
+AND    q.ul_id = :ul_id
+$yearSQL
+order by tq.id asc
+
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute($parameters);
+
+    $results = [];
+    $i=0;
+    while($row = $stmt->fetch())
+    {
+      $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
+    }
+    return $results;
+  }
 
 
 }

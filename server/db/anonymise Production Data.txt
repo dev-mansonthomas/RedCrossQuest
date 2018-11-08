@@ -1,0 +1,27 @@
+1/ Download a dump of the production
+
+2/ change :
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `rcq_fr_prod_db` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `rcq_fr_prod_db`;
+
+
+to :
+
+DROP DATABASE `rcq`;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `rcq` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `rcq`;
+
+3/ execute the whole scripts
+(DB users are not impacted, so connection details to this schema do not change)
+
+4/execute the following query :
+
+update queteur set email='rcq@mansonthomas.com';
+update queteur set mobile='N/A';
+update users set password = '$2y$10$xC4HuNn2vGuu3fGxgFlrEOgIyCbJM1lF/S5Gy14snS2CqFtv8ubiq'; -- password : test
+update named_donation set email='rcq@mansonthomas.com';
+update named_donation set phone='N/A';
+update named_donation set address='N/A';
+update named_donation set first_name='N/A';
+update named_donation set last_name ='N/A';

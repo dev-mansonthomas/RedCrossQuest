@@ -51,15 +51,17 @@
           }
           else
           {
-            vm.error = 'Login ou mot de passe incorrect';
-            vm.loading = false;
+            vm.errorStr = 'Login ou mot de passe incorrect';
+            vm.error    = true;
+            vm.loading  = false;
           }
         },
         function error(message)
         {
           $timeout.cancel(loginTimeout);
-          vm.error = 'Service Indisponible - '+message.data;
-          vm.loading = false;
+          vm.error    = true;
+          vm.errorStr = 'Service Indisponible - '+message.data;
+          vm.loading  = false;
 
         }
       );

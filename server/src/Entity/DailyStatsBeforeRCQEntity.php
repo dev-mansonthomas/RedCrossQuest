@@ -10,6 +10,7 @@ class DailyStatsBeforeRCQEntity  extends Entity
   public $date         ;
   public $amount       ;
 
+  protected $_fieldList = ['id', 'ul_id', 'date', 'amount'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class
