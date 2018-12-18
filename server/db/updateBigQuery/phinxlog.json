@@ -1,0 +1,5 @@
+[
+{"name": "version","type":"INTEGER"},
+{"name": "migration_name","type":"STRING"},
+{"name": "start_time","type":"STRING"},
+{"name": "end_time","type":"STRING"}

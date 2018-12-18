@@ -1,0 +1,69 @@
+#!/bin/sh
+TABLE_SCHEMA=$1
++ TABLE_SCHEMA=rcq_fr_test_db
+TABLE_NAME=$2
++ TABLE_NAME=queteur
+
+mytime=`date '+%y%m%d%H%M'`
+date '+%y%m%d%H%M'
+++ date +%y%m%d%H%M
++ mytime=1811072102
+hostname=`hostname | tr 'A-Z' 'a-z'`
+hostname | tr 'A-Z' 'a-z'
+++ hostname
+++ tr A-Z a-z
++ hostname=busybox
+file_prefix="trimax$TABLE_NAME$mytime$TABLE_SCHEMA"
++ file_prefix=trimaxqueteur1811072102rcq_fr_test_db
+bucket_name=$file_prefix
++ bucket_name=trimaxqueteur1811072102rcq_fr_test_db
+splitat="4000000000"
++ splitat=4000000000
+bulkfiles=200
++ bulkfiles=200
+maxbad=300
++ maxbad=300
+split=/usr/local/opt/coreutils/libexec/gnubin/split
++ split=/usr/local/opt/coreutils/libexec/gnubin/split
+# make sure schema and table names are supplied
+if [ $# -ne 2 ];then
+echo "DB and table name required"
+exit 1
+fi
++ '[' 2 -ne 2 ']'
+
+# make sure the table does not has blob or text columns
+
+#cat > blob_query.txt << heredoc
+#select sum(IF((DATA_TYPE LIKE '%blob%' OR DATA_TYPE LIKE '%text%'),1, 0)) from INFORMATION_SCHEMA.columns where TABLE_SCHEMA = '$TABLE_SCHEMA' AND TABLE_NAME = '$TABLE_NAME'
+#heredoc
+#mycount=`mysql -Bs < blob_query.txt`
+#if [ $mycount -ne 0 ];then
+#echo "blob or text column found in table $TABLE_NAME"
+#exit 3
+#fi
+
+# create google cloud bucket
+#gsutil mb gs://$bucket_name
+#if [ $? -ne 0 ];then
+#echo "bucket $bucket_name could not be created in cloud"
+#exit 4
+#fi
+
+
+# create JSON schema from mysql table structure
+cat > json_query.txt << heredoc
+select CONCAT('{"name": "', COLUMN_NAME, '","type":"', IF(DATA_TYPE like "%int%", "INTEGER",IF(DATA_TYPE = "decimal","FLOAT","STRING")) , '"},') as json from information_schema.columns where TABLE_SCHEMA = '$TABLE_SCHEMA' AND TABLE_NAME = '$TABLE_NAME';
+heredoc
++ cat
+echo '[' >  $TABLE_NAME.json
++ echo '['
+mysql -Bs < json_query.txt | sed '$s/,$//' >> $TABLE_NAME.json
++ mysql -Bs
++ sed '$s/,$//'
+mysql $TABLE_SCHEMA -Bse"show create table $TABLE_NAME\G" > $TABLE_NAME.sql
++ mysql rcq_fr_test_db '-Bseshow create table queteur\G'
+#echo ', {"name": "hostname","type":"STRING"} ]' >>  $TABLE_NAME.json
+
+exit
++ exit

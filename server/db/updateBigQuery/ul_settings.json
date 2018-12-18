@@ -1,0 +1,7 @@
+[
+{"name": "id","type":"INTEGER"},
+{"name": "ul_id","type":"INTEGER"},
+{"name": "settings","type":"STRING"},
+{"name": "created","type":"STRING"},
+{"name": "updated","type":"STRING"},
+{"name": "last_update_user_id","type":"INTEGER"}

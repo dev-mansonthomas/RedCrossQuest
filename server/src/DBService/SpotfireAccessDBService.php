@@ -26,6 +26,18 @@ class SpotfireAccessDBService extends DBService
   {
     $token = Uuid::uuid4();
 
+    $currentValidToken = $this->getValidToken($userId, $ulId);
+
+    if($currentValidToken != null)
+    {//A valid Token exist, we don't overwrite it. (Otherwise the spotfire access keeps beeing disconnected)
+
+     // $this->logger->info('spotfireAccess Token:', [$currentValidToken->token]);
+
+      return (object)["token"=>$currentValidToken->token];
+    }
+
+
+
     //clean up previous access
     $deleteSQL="
     DELETE FROM spotfire_access
@@ -45,7 +57,7 @@ INSERT INTO `spotfire_access`
   `ul_id`,
   `user_id`
 )
-VALUES
+VALUES  
 (
   :token,
   :token_expiration,
@@ -92,7 +104,10 @@ VALUES
     FROM    spotfire_access
     WHERE   ul_id   = :ulId
     AND     user_id = :userId
+    AND     token_expiration > NOW()
     ";
+//+ INTERVAL 1 HOUR
+//TODO need to check if we need an offset of 1 or 2 hours, for the timezone differences.
 
     $stmt = $this->db->prepare($sql);
 
@@ -102,8 +117,15 @@ VALUES
           "ulId"   => $ulId
       ]);
 
-    $data =$stmt->fetch();
-    $spotfireAccess = new SpotfireAccessEntity($data);
+    if($stmt->rowCount() == 1)
+    {
+      $data = $stmt->fetch();
+      $spotfireAccess = new SpotfireAccessEntity($data);
+    }
+    else
+    {
+      $spotfireAccess = null;
+    }
     $stmt->closeCursor();
     return $spotfireAccess;
   }

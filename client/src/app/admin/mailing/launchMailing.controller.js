@@ -24,7 +24,7 @@
       '',
       'Action Sociale'                        ,
       'Secours'                               ,
-      'Non Bénévole'                          ,
+      'Bénévole d\'un Jour'                   ,
       'Ancien Bénévole, Inactif ou Adhérent'  ,
       'Commerçant'                            ,
       'Spécial'

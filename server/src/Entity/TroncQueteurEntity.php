@@ -12,6 +12,7 @@ class TroncQueteurEntity extends Entity
    * The ID of tronc_queteur is stored in tronc_queteur_id column
    */
   public $id               ;
+  public $ul_id            ;
   public $queteur_id       ;
   /**
    * Full queteur object, initialized by $routes.php under some circumstances
@@ -25,11 +26,13 @@ class TroncQueteurEntity extends Entity
 
   public $point_quete_id   ;
   public $tronc_id         ;
+
   public $depart_theorique ;
   public $depart           ;
   public $retour           ;
   public $comptage         ;
   public $last_update      ;
+
   public $last_update_user_id;
 
   public $euro500          ;
@@ -73,8 +76,6 @@ class TroncQueteurEntity extends Entity
   public $coins_money_bag_id;
   public $bills_money_bag_id;
 
-  public $don_cb_sans_contact_amount;
-  public $don_cb_sans_contact_number;
   public $don_cb_total_number       ;
   public $don_cheque_number         ;
 
@@ -83,6 +84,7 @@ class TroncQueteurEntity extends Entity
   public $amount;
   public $weight;
   public $time_spent_in_hours;
+
 
   protected $_fieldList = ['id','queteur_id','queteur','point_quete','point_quete_id','tronc_id','depart_theorique','depart','retour','comptage','last_update','last_update_user_id','euro500','euro200','euro100','euro50','euro20','euro10','euro5','euro2','euro1','cents50','cents20','cents10','cents5','cents2','cent1','don_cheque','don_creditcard','foreign_coins','foreign_banknote','notes_depart_theorique','notes_retour','notes_retour_comptage_pieces','notes_update','last_name','first_name','deleted','tronc_queteur_id','insert_date','preparationAndDepart','coins_money_bag_id','bills_money_bag_id','don_cb_sans_contact_amount','don_cb_sans_contact_number','don_cb_total_number','don_cheque_number','amount','weight','time_spent_in_hours'];
 
@@ -98,72 +100,71 @@ class TroncQueteurEntity extends Entity
     {
       parent::__construct($logger);
 
-      $this->getInteger('id'               , $data);
-      $this->getInteger('queteur_id'       , $data);
-      $this->getInteger('point_quete_id'   , $data);
-      $this->getInteger('tronc_id'         , $data);
-      $this->getDate   ('depart_theorique' , $data);
+      $this->getInteger('id'                          , $data);
+      $this->getInteger('ul_id'                       , $data);
+      $this->getInteger('queteur_id'                  , $data);
+      $this->getInteger('point_quete_id'              , $data);
+      $this->getInteger('tronc_id'                    , $data);
+      $this->getDate   ('depart_theorique'            , $data);
 
       //$this->logger->addInfo("Date before/after",array("before"=>$data['depart_theorique'],"after"=>$this->depart_theorique));
 
-      $this->getDate   ('depart'           , $data);
-      $this->getDate   ('retour'           , $data);
-      $this->getDate   ('comptage'         , $data);
-      $this->getDate   ('last_update'      , $data);
-      $this->getInteger('last_update_user_id', $data);
+      $this->getDate   ('depart'                      , $data);
+      $this->getDate   ('retour'                      , $data);
+      $this->getDate   ('comptage'                    , $data);
+      $this->getDate   ('last_update'                 , $data);
+      $this->getInteger('last_update_user_id'         , $data);
 
-      $this->getInteger('euro500'          , $data);
-      $this->getInteger('euro200'          , $data);
-      $this->getInteger('euro100'          , $data);
-      $this->getInteger('euro50'           , $data);
-      $this->getInteger('euro20'           , $data);
-      $this->getInteger('euro10'           , $data);
-      $this->getInteger('euro5'            , $data);
-      $this->getInteger('euro2'            , $data);
-      $this->getInteger('euro1'            , $data);
-      $this->getInteger('cents50'          , $data);
-      $this->getInteger('cents20'          , $data);
-      $this->getInteger('cents10'          , $data);
-      $this->getInteger('cents5'           , $data);
-      $this->getInteger('cents2'           , $data);
-      $this->getInteger('cent1'            , $data);
+      $this->getInteger('euro500'                     , $data);
+      $this->getInteger('euro200'                     , $data);
+      $this->getInteger('euro100'                     , $data);
+      $this->getInteger('euro50'                      , $data);
+      $this->getInteger('euro20'                      , $data);
+      $this->getInteger('euro10'                      , $data);
+      $this->getInteger('euro5'                       , $data);
+      $this->getInteger('euro2'                       , $data);
+      $this->getInteger('euro1'                       , $data);
+      $this->getInteger('cents50'                     , $data);
+      $this->getInteger('cents20'                     , $data);
+      $this->getInteger('cents10'                     , $data);
+      $this->getInteger('cents5'                      , $data);
+      $this->getInteger('cents2'                      , $data);
+      $this->getInteger('cent1'                       , $data);
 
-      $this->getFloat  ('don_cheque'       , $data);
-      $this->getFloat  ('don_creditcard'   , $data);
+      $this->getFloat  ('don_cheque'                  , $data);
+      $this->getFloat  ('don_creditcard'              , $data);
       
 
-      $this->getString('foreign_coins'    , $data);
-      $this->getString('foreign_banknote' , $data);
+      $this->getString('foreign_coins'                , $data);
+      $this->getString('foreign_banknote'             , $data);
 
       $this->getString('notes_depart_theorique'       , $data);
       $this->getString('notes_retour'                 , $data);
       $this->getString('notes_retour_comptage_pieces' , $data);
       $this->getString('notes_update'                 , $data);
 
-      $this->getString('last_name'              , $data);
-      $this->getString('first_name'             , $data);
+      $this->getString('last_name'                    , $data);
+      $this->getString('first_name'                   , $data);
 
-      $this->getBoolean('deleted'               , $data);
+      $this->getBoolean('deleted'                     , $data);
 
-      $this->getInteger('tronc_queteur_id'       , $data);
-      $this->getDate   ('insert_date'            , $data);
+      $this->getInteger('tronc_queteur_id'            , $data);
+      $this->getDate   ('insert_date'                 , $data);
 
-      $this->getBoolean('preparationAndDepart'               , $data);
+      $this->getBoolean('preparationAndDepart'        , $data);
 
-      $this->getString('coins_money_bag_id'       , $data);
-      $this->getString('bills_money_bag_id'       , $data);
+      $this->getString('coins_money_bag_id'           , $data);
+      $this->getString('bills_money_bag_id'           , $data);
 
-      $this->getInteger('rowCount'       , $data);
+      $this->getInteger('rowCount'                    , $data);
 
-      $this->getFloat  ('don_cb_sans_contact_amount'  , $data);
-      $this->getInteger('don_cb_sans_contact_number'  , $data);
       $this->getInteger('don_cb_total_number'         , $data);
       $this->getInteger('don_cheque_number'           , $data);
 
 
-      $this->getFloat  ('amount'              , $data);
-      $this->getFloat  ('weight'              , $data);
-      $this->getFloat  ('time_spent_in_hours' , $data);
+      $this->getFloat  ('amount'                      , $data);
+      $this->getFloat  ('weight'                      , $data);
+      $this->getFloat  ('time_spent_in_hours'         , $data);
     }
 
   /***
@@ -201,5 +202,34 @@ class TroncQueteurEntity extends Entity
     function checkPositive($value)
     {
       return $value != null && $value > 0;
+    }
+
+    /**
+     * Prepare the object to be published to PubSub (final target is BigQuery)
+     * Unset unwanted variables, they are those that don't have a definition in BigQuery
+     * Change the dateTime format
+     *
+     * @return TroncQueteurEntity the object itself
+     */
+    function prepareForPublish()
+    {
+      $this->depart_theorique = $this->depart_theorique ->toDateTimeString();
+      $this->depart           = $this->depart           ->toDateTimeString();
+      $this->retour           = $this->retour           ->toDateTimeString();
+      $this->comptage         = $this->comptage         ->toDateTimeString();
+      $this->last_update      = $this->last_update      ->toDateTimeString();
+
+      unset($this->queteur              );
+      unset($this->point_quete          );
+      unset($this->tronc_queteur_id     );
+      unset($this->insert_date          );
+      unset($this->preparationAndDepart );
+      unset($this->amount               );
+      unset($this->weight               );
+      unset($this->time_spent_in_hours  );
+      unset($this->first_name           );
+      unset($this->last_name            );
+
+      return $this;
     }
 }

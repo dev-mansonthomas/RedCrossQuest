@@ -23,12 +23,12 @@
         "phpmailer/phpmailer": "^5.2",
         "ramsey/uuid": "^3.6",
         "sendgrid/sendgrid": "^6.2",
-        "google/cloud-storage": "^1.6",
+        "google/cloud-storage": "^1.9.2",
         "google/apiclient": "^2.2",
         "ext-bz2" : "^7.2",
         "ext-PDO" : "^7.2",
         "ext-json": "^1.6",
-        "ext-zip ": "^7.2"
+        "google/cloud-pubsub": "^1.6"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

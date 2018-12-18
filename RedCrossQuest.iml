@@ -12,7 +12,12 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/apiclient-services" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/auth" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud-core" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud-pubsub" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud-storage" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/gax" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/grpc-gcp" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/protobuf" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/grpc/grpc" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/guzzlehttp/guzzle" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/guzzlehttp/psr7" />
@@ -28,6 +33,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/container" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/ramsey/uuid" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/rize/uri-template" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/robmorgan/phinx" />
@@ -37,8 +43,10 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/slim/slim" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/config" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/console" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/contracts" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/debug" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/filesystem" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/yaml" />

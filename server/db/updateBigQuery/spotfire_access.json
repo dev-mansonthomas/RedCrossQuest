@@ -1,0 +1,6 @@
+[
+{"name": "id","type":"INTEGER"},
+{"name": "token","type":"STRING"},
+{"name": "token_expiration","type":"STRING"},
+{"name": "ul_id","type":"INTEGER"},
+{"name": "user_id","type":"INTEGER"}

@@ -667,6 +667,10 @@ q.`first_name` like :first_name
       {
         $OR="OR";
       }
+      else
+      {
+        $OR="";
+      }
 
       $searchLastName = "
 $OR q.`last_name` like :last_name
@@ -681,6 +685,10 @@ $OR q.`last_name` like :last_name
       if($numberOfParameters>0)
       {
         $OR="OR";
+      }
+      else
+      {
+        $OR="";
       }
 
       $searchNivol = "

@@ -328,6 +328,7 @@ UPDATE  `users`
 SET     init_passwd_uuid  = :uuid,
         init_passwd_date  = DATE_ADD(NOW(), INTERVAL 1 HOUR)
 WHERE   nivol             = :nivol
+AND     active            = 1
 ";
 
     $stmt = $this->db->prepare($sql);

@@ -6,6 +6,7 @@
  * Time: 18:35
  */
 
+require '../../vendor/autoload.php';
 
 use Carbon\Carbon;
 
@@ -80,6 +81,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       $action = $params['action'];
       $input  = $request->getParsedBody();
 
+      /** @var TroncQueteurEntity */
       $tq = new TroncQueteurEntity($input, $this->logger);
 
       if ($action =="saveReturnDate")
@@ -95,9 +97,35 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       }
       elseif ($action =="saveCoins")
       {
-        $this->logger->addError("SaveCoins", array("input"=>$input));
-        $this->logger->addError("SaveCoins", array("tronc_queteur"=>$tq));
+        //$this->logger->addError("SaveCoins", array("input"=>$input));
+        //$this->logger->addError("SaveCoins", array("tronc_queteur"=>$tq));
         $troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
+
+        /**
+         * When updating BigQuery, we need to know if it's the first time the user input the coins data or not
+         * So that we know it's an insert or update that we must perform
+         */
+
+        $responseMessageIds = null;
+        try
+        {
+          if($tq->comptage == null || true)
+          {
+            $responseMessageIds = $this->PubSub->publish("tronc_queteur", $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
+          }
+          else
+          {
+            $responseMessageIds = $this->PubSub->publish("tronc_queteur_updated", $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
+          }
+
+          $this->logger->addError("Publish responses ", array("response"=>$responseMessageIds));
+
+        }
+        catch(\Exception $exception)
+        {
+          $this->logger->addError("error while publishing on topic='tronc_queteur'", array("exception"=>$exception));
+        }
+
       }
       elseif ($action =="saveAsAdmin")
       {

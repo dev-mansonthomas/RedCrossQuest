@@ -6,6 +6,8 @@ use \RedCrossQuest\DBService\MailingDBService;
 use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Storage\Bucket;
 
+use \RedCrossQuest\Service\PubSubService;
+
 // DIC configuration
 $container = $app->getContainer();
 
@@ -59,6 +61,15 @@ $container['mailer'] = function (\Slim\Container $c)
 
   return new EmailBusinessService($c->logger, $sendgrid, $sendgridSender, $c['settings']['appSettings'], new MailingDBService($c->db, $c->logger));
 };
+
+//PubSub
+$container['PubSub'] = function (\Slim\Container $c)
+{
+  $settings = $c['settings']['PubSub'];
+  return new PubSubService($settings, $c->logger);
+};
+
+
 
 /**
  * @param \Slim\Container container

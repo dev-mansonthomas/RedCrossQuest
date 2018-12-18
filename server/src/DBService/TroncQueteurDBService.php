@@ -26,6 +26,7 @@ class TroncQueteurDBService extends DBService
     $sql = "
 SELECT 
  t.`id`               ,
+ `ul_id`              ,
  `queteur_id`         ,
  `point_quete_id`     ,
  `tronc_id`           ,
@@ -61,15 +62,11 @@ SELECT
  `deleted`                     ,
  `coins_money_bag_id`          ,
  `bills_money_bag_id`          ,
- `don_cb_sans_contact_amount`  ,
- `don_cb_sans_contact_number`  ,
  `don_cb_total_number`         ,       
  `don_cheque_number`         
-FROM  `tronc_queteur` as t, 
-      `queteur` as q
+FROM  `tronc_queteur` as t
 WHERE  t.tronc_id   = :tronc_id
-AND    t.queteur_id = q.id
-AND    q.ul_id      = :ul_id
+AND    t.ul_id      = :ul_id
 ORDER BY id DESC
 LIMIT 1
 ";
@@ -105,6 +102,7 @@ LIMIT 1
     $sql = "
 SELECT 
  t.`id`              ,
+ `ul_id`             ,
  `queteur_id`        ,
  `point_quete_id`    ,
  `tronc_id`          ,
@@ -142,8 +140,6 @@ SELECT
  `deleted`                     ,
  `coins_money_bag_id`          ,
  `bills_money_bag_id`          ,
- `don_cb_sans_contact_amount`  ,
- `don_cb_sans_contact_number`  ,
  `don_cb_total_number`         ,       
  `don_cheque_number`         
 
@@ -151,7 +147,7 @@ FROM  `tronc_queteur` as t,
       `queteur` as q
 WHERE  t.tronc_id   = :tronc_id
 AND    t.queteur_id = q.id
-AND    q.ul_id      = :ul_id
+AND    t.ul_id      = :ul_id
 ORDER BY t.id DESC
 
 ";
@@ -185,6 +181,7 @@ ORDER BY t.id DESC
     $sql = "
 SELECT 
 t.`id`                ,
+ `ul_id`              ,
  `queteur_id`         ,
  `point_quete_id`     ,
  `tronc_id`           ,
@@ -220,16 +217,12 @@ t.`id`                ,
  `deleted`                     ,
  `coins_money_bag_id`          ,
  `bills_money_bag_id`          ,
- `don_cb_sans_contact_amount`  ,
- `don_cb_sans_contact_number`  ,
  `don_cb_total_number`         ,       
  `don_cheque_number`         
 
-FROM  `tronc_queteur` as t, 
-      `queteur`       as q
+FROM  `tronc_queteur` as t
 WHERE  t.id         = :id
-AND    t.queteur_id = q.id
-AND    q.ul_id      = :ul_id
+AND    t.ul_id      = :ul_id
 
 ";
 
@@ -264,6 +257,7 @@ AND    q.ul_id      = :ul_id
     $sql = "
 SELECT 
 t.`id`                ,
+ `ul_id`              ,
  `queteur_id`         ,
  `point_quete_id`     ,
  `tronc_id`           ,
@@ -295,16 +289,12 @@ t.`id`                ,
  `deleted`            ,
  `coins_money_bag_id` ,
  `bills_money_bag_id` ,
-`don_cb_sans_contact_amount`   ,
- `don_cb_sans_contact_number`  ,
  `don_cb_total_number`         ,       
  `don_cheque_number`         
 
-FROM  `tronc_queteur` as t, 
-      `queteur`       as q
+FROM  `tronc_queteur` as t
 WHERE  t.queteur_id = :queteur_id
-AND    t.queteur_id = q.id
-AND    q.ul_id      = :ul_id
+AND    t.ul_id      = :ul_id
 ORDER BY t.id desc 
 ";
 
@@ -334,13 +324,11 @@ ORDER BY t.id desc
   {
     $sql = "
 UPDATE `tronc_queteur`           tq
-      INNER JOIN  queteur         q
-      ON          tq.queteur_id = q.id
 SET    `depart`             = :depart,
        `last_update`        = NOW(),
        `last_update_user_id`= :userId            
 WHERE tq.`id`               = :id
-AND    q.ul_id              = :ul_id
+AND   tq.ul_id              = :ul_id
 ";
     $currentDate = new Carbon();
     $currentDate->tz='UTC';
@@ -373,13 +361,11 @@ AND    q.ul_id              = :ul_id
   {
     $sql = "
 UPDATE `tronc_queteur`           tq
-      INNER JOIN  queteur         q
-      ON          tq.queteur_id = q.id
 SET    `depart`             = :depart,
        `last_update`        = NOW(),
        `last_update_user_id`= :userId            
 WHERE tq.`id`               = :id
-AND    q.ul_id              = :ul_id
+AND   tq.ul_id              = :ul_id
 ";
 
 
@@ -410,14 +396,12 @@ AND    q.ul_id              = :ul_id
   {
     $sql = "
 UPDATE `tronc_queteur`           tq
-      INNER JOIN  queteur         q
-      ON          tq.`queteur_id` = q.id
 SET    `depart`             = null,
        `last_update`        = NOW(),
        `last_update_user_id`= :userId            
 WHERE tq.`id`               = :id
 AND   tq.`retour`           is null
-AND    q.`ul_id`            = :ul_id
+AND   tq.`ul_id`            = :ul_id
 ";
 
 
@@ -449,14 +433,12 @@ AND    q.`ul_id`            = :ul_id
   {
     $sql = "
 UPDATE `tronc_queteur`           tq
-      INNER JOIN  queteur         q
-      ON          tq.`queteur_id` = q.id
 SET    `retour`             = null,
        `last_update`        = NOW(),
        `last_update_user_id`= :userId            
 WHERE tq.`id`               = :id
 AND   tq.`comptage`         is null
-AND    q.`ul_id`            = :ul_id
+AND   tq.`ul_id`            = :ul_id
 ";
 
 
@@ -488,14 +470,12 @@ AND    q.`ul_id`            = :ul_id
   {
     $sql = "
 UPDATE `tronc_queteur`            tq
-      INNER JOIN  queteur         q
-      ON          tq.queteur_id = q.id
 SET    `retour`               = :retour,
        `last_update`          = NOW(),
        `last_update_user_id`  = :userId,
        `notes_retour`         = :notes_retour            
 WHERE tq.`id`                 = :id
-AND    q.ul_id                = :ul_id
+AND   tq.ul_id                = :ul_id
 ";
     $currentDate = new Carbon();
     $stmt        = $this->db->prepare($sql);
@@ -553,8 +533,6 @@ AND    q.ul_id                = :ul_id
 
     $sql = "
 UPDATE `tronc_queteur`            tq
-      INNER JOIN  queteur         q
-      ON          tq.queteur_id = q.id
 SET
  `euro500`                      = :euro500,           
  `euro200`                      = :euro200,           
@@ -575,8 +553,6 @@ SET
  `foreign_banknote`             = :foreign_banknote,  
  `don_cheque`                   = :don_cheque,
  `don_creditcard`               = :don_creditcard,
- `don_cb_sans_contact_amount`   = :don_cb_sans_contact_amount  ,
- `don_cb_sans_contact_number`   = :don_cb_sans_contact_number  ,
  `don_cb_total_number`          = :don_cb_total_number         ,  
 $comptage
  `last_update`                  = NOW(),
@@ -587,7 +563,7 @@ $comptage
  `don_cheque_number`            = :don_cheque_number        
 
 WHERE tq.`id`                   = :id
-AND    q.ul_id                  = :ul_id
+AND   tq.ul_id                  = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);
@@ -618,8 +594,6 @@ AND    q.ul_id                  = :ul_id
       "bills_money_bag_id"            => $tq->bills_money_bag_id,
       "don_cheque_number"             => $tq->don_cheque_number,
       "don_creditcard"                => $tq->don_creditcard,
-      "don_cb_sans_contact_amount"    => $tq->don_cb_sans_contact_amount,
-      "don_cb_sans_contact_number"    => $tq->don_cb_sans_contact_number,
       "don_cb_total_number"           => $tq->don_cb_total_number
     ]);
 
@@ -641,8 +615,6 @@ AND    q.ul_id                  = :ul_id
     //$this->logger->debug("Admin Updates dates, point_quete_id or deleted ", [$tq]);
     $sql = "
 UPDATE `tronc_queteur`             tq
-      INNER JOIN  `queteur`         q
-      ON          tq.`queteur_id` = q.`id`
 SET
   `depart_theorique`   = :depart_theorique,
   `depart`             = :depart,
@@ -653,7 +625,7 @@ SET
   `last_update_user_id`= :userId,
   `notes_update`       = :notes_update
 WHERE tq.`id`          = :id
-AND    q.ul_id         = :ul_id
+AND   tq.ul_id         = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);
@@ -699,6 +671,7 @@ AND    q.ul_id         = :ul_id
     {
       $queryData =
         [
+          "ul_id"                 => $ulId,
           "queteur_id"            => $tq->queteur_id,
           "point_quete_id"        => $tq->point_quete_id,
           "tronc_id"              => $tq->tronc_id,
@@ -722,6 +695,7 @@ AND    q.ul_id         = :ul_id
       $sql = "
 INSERT INTO `tronc_queteur`
 ( 
+   `ul_id`,
    `queteur_id`, 
    `point_quete_id`, 
    `tronc_id`, 
@@ -732,6 +706,7 @@ INSERT INTO `tronc_queteur`
 )
 VALUES
 (
+  :ul_id,
   :queteur_id,
   :point_quete_id, 
   :tronc_id, 
@@ -777,6 +752,7 @@ $departTheoriqueQuery
     $sql = "
 SELECT  
 tq.id, 
+tq.ul_id, 
 tq.queteur_id,
 tq.tronc_id,  
 tq.depart_theorique, 
@@ -839,12 +815,10 @@ AND    (tq.depart     is null OR
     //update the tronc to deleted=1, limiting the update to the rows of the UL and set who is deleting the row
     $sql ="
 UPDATE            tronc_queteur tq
-      INNER JOIN  queteur       q
-      ON          tq.queteur_id = q.id
 SET   deleted             = 1,
       last_update_user_id = :user_id
 WHERE tq.tronc_id = :tronc_id
-AND    q.ul_id    = :ul_id
+AND   tq.ul_id    = :ul_id
 AND  (tq.depart IS NULL OR 
       tq.retour IS NULL)
 ";
@@ -877,6 +851,7 @@ AND  (tq.depart IS NULL OR
     $sql = "
 SELECT 
 t.`id`                        ,
+`ul_id`                       ,
 `insert_date`                 ,
 `tronc_queteur_id`            ,
 `queteur_id`                  ,
@@ -914,15 +889,11 @@ t.`id`                        ,
 `deleted`                     ,
 `coins_money_bag_id`          ,
 `bills_money_bag_id`          ,
-`don_cb_sans_contact_amount`  ,
-`don_cb_sans_contact_number`  ,
 `don_cb_total_number`         ,       
 `don_cheque_number`         
-FROM  `tronc_queteur_historique`  as t, 
-      `queteur`                   as q
+FROM  `tronc_queteur_historique`  as t
 WHERE  t.tronc_queteur_id = :tronc_queteur_id
-AND    t.queteur_id       = q.id
-AND    q.ul_id            = :ul_id
+AND    t.ul_id            = :ul_id
 ORDER BY t.id DESC
 ";
 
@@ -962,19 +933,17 @@ ORDER BY t.id DESC
     $sql = "
 SELECT DISTINCT t.money_bag_id FROM
 (
-SELECT DISTINCT(tq.$column) as money_bag_id
-FROM   tronc_queteur tq, 
-              queteur        q
-WHERE  tq.$column  like :query
-AND YEAR(tq.depart) =  YEAR(NOW())
-AND tq.queteur_id   = q.id
-AND q.ul_id         = :ul_id
-UNION
-SELECT DISTINCT(nd.$column) as money_bag_id
-FROM   named_donation nd
-WHERE  nd.$column  like :query
-AND YEAR(nd.donation_date) =  YEAR(NOW())
-AND nd.ul_id = :ul_id
+  SELECT DISTINCT(tq.$column) as money_bag_id
+  FROM   tronc_queteur tq
+  WHERE  tq.$column   like :query
+  AND YEAR(tq.depart) =    YEAR(NOW())
+  AND tq.ul_id        =    :ul_id
+  UNION
+  SELECT DISTINCT(nd.$column) as money_bag_id
+  FROM   named_donation nd
+  WHERE  nd.$column          like :query
+  AND YEAR(nd.donation_date) =    YEAR(NOW())
+  AND nd.ul_id               =    :ul_id
 ) as t
 ORDER BY t.money_bag_id DESC
 ";
@@ -1017,6 +986,7 @@ ORDER BY t.money_bag_id DESC
     $sql = "
 select
 tq.id,
+tq.ul_id,
 tq.queteur_id,
 tq.point_quete_id,
 tq.tronc_id,

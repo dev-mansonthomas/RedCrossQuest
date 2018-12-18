@@ -40,6 +40,14 @@
       <path value="$PROJECT_DIR$/server/vendor/google/apiclient" />
       <path value="$PROJECT_DIR$/server/vendor/google/apiclient-services" />
       <path value="$PROJECT_DIR$/server/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/server/vendor/grpc/grpc" />
+      <path value="$PROJECT_DIR$/server/vendor/google/cloud-pubsub" />
+      <path value="$PROJECT_DIR$/server/vendor/google/grpc-gcp" />
+      <path value="$PROJECT_DIR$/server/vendor/google/protobuf" />
+      <path value="$PROJECT_DIR$/server/vendor/google/gax" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/contracts" />
+      <path value="$PROJECT_DIR$/server/vendor/ralouphie/getallheaders" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
