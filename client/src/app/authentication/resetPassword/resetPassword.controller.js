@@ -121,7 +121,7 @@
 
         if (success) {
           vm.error = null;
-          vm.success = 'Un email de confirmation vient de vous être envoyé (' + email + ')';
+          vm.success = 'Un email de confirmation vient de vous être envoyé (' + JSON.stringify(email).slice(1, -1) + ')';
           vm.loading = false;
         }
         else {
