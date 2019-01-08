@@ -207,7 +207,15 @@ $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
       $queteurDBService = new QueteurDBService($this->db, $this->logger);
       $queteur = $queteurDBService->getQueteurById($user->queteur_id);
 
-      $response->getBody()->write('{"success":true,"first_name":"' . $queteur->first_name . '","last_name":"' . $queteur->last_name . '","email":"' . $queteur->email . '","mobile":"' . $queteur->mobile . '","nivol":"' . $queteur->nivol . '"}');
+      $response->getBody()->write(json_encode([
+          'success' => true,
+          'first_name' => $queteur->first_name,
+          'last_name' => $queteur->last_name,
+          'email' => $queteur->email,
+          'mobile' => $queteur->mobile,
+          'nivol' => $queteur->nivol,
+      ]));
+
       return $response;
 
     }
