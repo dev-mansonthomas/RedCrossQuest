@@ -20,7 +20,9 @@ gcloud config set project redcrossquest-${COUNTRY}-${ENV}
 
 #open proxy connection to MySQL instance
 #We use 3310, so that the deployment do not conflict with existing proxy connection on port 3307 (test) & 3308 (prod)
-cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:rcq-${COUNTRY}-${ENV}=tcp:3310 &
+#cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:rcq-${COUNTRY}-${ENV}=tcp:3310 &
+cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:rcq-db-inst-${COUNTRY}-${ENV}s-1=tcp:3310 &
+
 CLOUD_PROXY_PID=$!
 
 #Build the AngularJS frontend

@@ -63,9 +63,9 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       password_verify($password, $user->password))
     {
 
-      $spotfireDBService    = new \RedCrossQuest\DBService\SpotfireAccessDBService($this->db, $this->logger);
-      $queteurDBService     = new QueteurDBService    ($this->db, $this->logger);
-      $uniteLocaleDBService = new UniteLocaleDBService($this->db, $this->logger);
+      $spotfireDBService    = new SpotfireAccessDBService ($this->db, $this->logger);
+      $queteurDBService     = new QueteurDBService        ($this->db, $this->logger);
+      $uniteLocaleDBService = new UniteLocaleDBService    ($this->db, $this->logger);
 
       $queteur = $queteurDBService    ->getQueteurById    ($user   ->queteur_id);
       $ul      = $uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
@@ -104,6 +104,7 @@ $app->post('/authenticate', function ($request, $response, $args) use ($app)
       $userDBService->registerSuccessfulLogin($user->id);
 
       //generate a spotfire token at the same time
+      //Token will be retrieved by client on a separate REST Call
       $spotfireDBService->grantAccess($user->id , $queteur->ul_id,   $sessionLength);
 
 

@@ -8,34 +8,8 @@
 
 use \RedCrossQuest\DBService\SpotfireAccessDBService;
 
-/*
- * grant access to spotfire graph to user.
- * (access rights are determined by its role, stored in the users table)
-
-$app->post('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
-{
-  $decodedToken = $request->getAttribute('decodedJWT');
-  //$this->logger->addDebug("generating spotfire access for ");
-  try
-  {
-    $ulId   = (int)$decodedToken->getUlId();
-    $userId = (int)$decodedToken->getUid ();
 
 
-    $spotfireDBService      = new SpotfireAccessDBService($this->db, $this->logger);
-    $insertDateTimeAndToken = $spotfireDBService->grantAccess($userId, $ulId,   8);
-
-    $response->getBody()->write(json_encode($insertDateTimeAndToken));
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->addError("Error while granting access to spotfire graphs to user($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
-    throw $e;
-  }
-  return $response;
-});
-
- */
 /**
  * fetch an existing token for the user
  */
