@@ -142,6 +142,7 @@ order by secteur asc";
    * @param int $pagingSize the number of email sent at once
    * @return MailingSummaryEntity[][] list of summaries
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception if some parsing error occurs
    */
   public function getMailingInfo(int $ulId, int $pagingSize)
   {

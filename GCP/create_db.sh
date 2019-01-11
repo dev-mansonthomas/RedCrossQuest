@@ -1,8 +1,39 @@
 #!/bin/bash
-. ./common.sh
-
+#
+# Usage:  ./create_db.sh fr test
+# Usage:  ./create_db.sh fr prod
+#
+# This script
+# * creates a MySQL instance
+# * set the root password
+# * import production dump
+# * if it's not production: anonymise the data
+# * create a user for the Google App application to do CRUD operations
+#
+#
+# it uses ~/.cred/rcq-fr-test-db-setup.properties  (country and env taken from command line arguments)
+# it also uses ~/.cred/.my.cnf-${COUNTRY}-${ENV}  to connect to the proper instance (through a cloud_sql_proxy)
+#
+#MYSQL_DB_VERSION=MYSQL_5_7
+#MYSQL_INSTANCE=rcq-db-inst-fr-test-3
+#MYSQL_ZONE=europe-west1-c
+#MYSQL_STORAGE=10GB
+#MYSQL_STORAGE_TYPE=HDD
+#MYSQL_TIER=db-f1-micro
+#MYSQL_FLAGS=default_time_zone=+00:00,log_bin_trust_function_creators=ON
+#MYSQL_BACKUP=off
+#MYSQL_BACKUP_STARTUP_TIME=04:00
+#MYSQL_ROOT=root_password
+## 180 sec for db-f1-micro
+#MYSQL_WAIT_AFTER_CREATE=200
+#
+#MYSQL_USER=rcq-fr-test-user
+#MYSQL_PASSWORD=user_password
+#MYSQL_DB=rcq_fr_test_db
+#
 COUNTRY=$1
 ENV=$2
+SKIP_INSTANCE_CREATION=$3
 
 if [ "${COUNTRY}1" != "fr1" ]
 then
@@ -23,7 +54,6 @@ mkdir -p logs tmp
 
 . ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
 
-
 if [ "${MYSQL_BACKUP}1" = "on1" ]
 then
   echo "backup enabled"
@@ -37,42 +67,68 @@ else
   BACKUP_ENABLE_BIN_LOG=""
 fi
 
+if [ "${SKIP_INSTANCE_CREATION}1" != "skip-instance1" ]
+then
 
+    gcloud sql instances create ${MYSQL_INSTANCE}    \
+            --assign-ip                              \
+            ${BACKUP}                                \
+            ${BACKUP_START_TIME}                     \
+            ${BACKUP_ENABLE_BIN_LOG}                 \
+            --database-flags=${MYSQL_FLAGS}          \
+            --database-version=${MYSQL_DB_VERSION}   \
+            --gce-zone=${MYSQL_ZONE}                 \
+            --maintenance-release-channel=production \
+            --maintenance-window-day=MON             \
+            --maintenance-window-hour=4              \
+            --pricing-plan=PER_USE                   \
+            --storage-auto-increase                  \
+            --storage-size=${MYSQL_STORAGE}          \
+            --storage-type=${MYSQL_STORAGE_TYPE}     \
+            --tier=${MYSQL_TIER}                     \
+            --format=json                            | tee logs/${COUNTRY}-${ENV}.log
 
+    echo "waiting ${MYSQL_WAIT_AFTER_CREATE} seconds"
+    sleep ${MYSQL_WAIT_AFTER_CREATE}
+    gcloud sql users set-password root --instance=${MYSQL_INSTANCE} --password=${MYSQL_ROOT} --host "%"
 
-cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:rcq-db-inst-${COUNTRY}-${ENV}-1=tcp:3310 &
+fi
+
+cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
 CLOUD_PROXY_PID=$!
 
+echo "wait for proxy to initialize"
+sleep 2
+cp  ./sql/CreateUser.sql ./tmp/CreateUser.sql
 
-declare -A settings=(
- ["MYSQL_USER"]="${MYSQL_USER}"
- ["MYSQL_PASSWORD"]="${MYSQL_PASSWORD}"
- ["MYSQL_DB"]="${MYSQL_DB}"
-)
+sed -i '' -e "s/¤MYSQL_USER¤/${MYSQL_USER}/g" -e "s/¤MYSQL_PASSWORD¤/${MYSQL_PASSWORD}/g" -e "s/¤MYSQL_DB¤/${MYSQL_DB}/g" ./tmp/CreateUser.sql
 
-editFileConfiguration  "$(declare -p settings)" ./sql/CreateUser.sql ./tmp/CreateUser.sql
 
 #backup copy of the current file
 cp ~/.my.cnf ~/.my.cnf.bak
-
 cp ~/.cred/.my.cnf-${COUNTRY}-${ENV} ~/.my.cnf
 
-mysql @./tmp/CreateUser.sql
-
-cp "${MYSQL_DB_DUMP}" ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
+echo    "drop database if exists ${MYSQL_DB};" >  ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
+cat     "${MYSQL_DB_DUMP}"                     >> ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
 
 if [ "${ENV}1" != "prod1" ]
 then
-    sed -i -e s/${MYSQL_DB_DUMP_DB_NAME_ORI}/${MYSQL_DB}/g ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
-    mysql @./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
-    mysql @./sql/AnonymiseDB.sql
+    echo "proceeding to NON-production import (${ENV})"
+    sed -i '' -e s/${MYSQL_DB_DUMP_DB_NAME_ORI}/${MYSQL_DB}/g ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
+    echo "importing dump"
+    mysql < ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
+    echo "anonymising data"
+    mysql ${MYSQL_DB} < ./sql/AnonymiseDB.sql
 else
+    echo "proceeding to production import (${ENV})"
     mysql @./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
 fi
 
-
+echo "creating user"
+mysql ${MYSQL_DB} < ./tmp/CreateUser.sql
 
 #restore the backup
 cp ~/.my.cnf.bak ~/.my.cnf
-
+kill -15 ${CLOUD_PROXY_PID}
+rm ./tmp/*
 

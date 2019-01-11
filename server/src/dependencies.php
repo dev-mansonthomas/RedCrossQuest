@@ -1,6 +1,5 @@
 <?php
 
-use SendGrid\Email;
 use \RedCrossQuest\BusinessService\EmailBusinessService;
 use \RedCrossQuest\DBService\MailingDBService;
 use Google\Cloud\Storage\StorageClient;
@@ -55,11 +54,7 @@ $container['db'] = function (\Slim\Container $c)
 $container['mailer'] = function (\Slim\Container $c)
 {
   $settings = $c['settings']['appSettings']['email'];
-
-  $sendgrid       = new SendGrid($settings['sendgrid.api_key']);
-  $sendgridSender = new Email("RedCrossQuest", $settings['sendgrid.sender']);
-
-  return new EmailBusinessService($c->logger, $sendgrid, $sendgridSender, $c['settings']['appSettings'], new MailingDBService($c->db, $c->logger));
+  return new EmailBusinessService($c->logger, $settings['sendgrid.api_key'], $settings['sendgrid.sender'], $c['settings']['appSettings'], new MailingDBService($c->db, $c->logger));
 };
 
 //PubSub

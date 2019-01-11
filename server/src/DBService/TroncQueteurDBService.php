@@ -250,7 +250,7 @@ AND    t.ul_id      = :ul_id
    * @param int $ulId the Id of the Unite Local
    * @return TroncQueteurEntity[] list of Tronc of the queteur
    * @throws PDOException if the query fails to execute on the server
-   *
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getTroncsQueteur(int $queteur_id, int $ulId)
   {
@@ -746,6 +746,7 @@ $departTheoriqueQuery
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return array Array of TroncInUseEntity that contains informations of the existing use of the tronc
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function checkTroncNotAlreadyInUse(int $troncId, int $ulId)
   {
@@ -787,7 +788,7 @@ AND    (tq.depart     is null OR
       $i=0;
       while($row = $stmt->fetch())
       {
-        $existingUseOfTronc[$i++]=new TroncInUseEntity($row);
+        $existingUseOfTronc[$i++]=new TroncInUseEntity($row, $this->logger);
       }
       $stmt->closeCursor();
       return $existingUseOfTronc;

@@ -21,7 +21,12 @@ gcloud config set project redcrossquest-${COUNTRY}-${ENV}
 #open proxy connection to MySQL instance
 #We use 3310, so that the deployment do not conflict with existing proxy connection on port 3307 (test) & 3308 (prod)
 #cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:rcq-${COUNTRY}-${ENV}=tcp:3310 &
-cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:rcq-db-inst-${COUNTRY}-${ENV}s-1=tcp:3310 &
+
+#to save money, the MySQL instance is deleted when not used
+#the instance name can't be reused, so we increment a counter rcq-db-inst-fr-test-2
+#
+. ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
+cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
 
 CLOUD_PROXY_PID=$!
 
@@ -66,6 +71,9 @@ cd -
 
 # Get the correct app.yaml for the env
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml     app.yaml
+#update the INSTANCE name in the file
+sed -i '' -e "s/¤MYSQL_INSTANCE¤/${MYSQL_INSTANCE}/g" app.yaml
+
 cp ~/.cred/phinx.yml                          server/phinx.yml
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-settings.php server/src/settings.php
 

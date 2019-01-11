@@ -98,7 +98,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
     $troncDBService = new TroncDBService($this->db, $this->logger);
 
     $input            = $request->getParsedBody();
-    $troncEntity      = new TroncEntity($input);
+    $troncEntity      = new TroncEntity($input, $this->logger);
 
     $troncDBService->update($troncEntity, $ulId);
     return ;
@@ -127,7 +127,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/troncs', function ($request, $response, 
     $troncDBService = new TroncDBService($this->db, $this->logger);
 
     $input            = $request->getParsedBody();
-    $troncEntity      = new TroncEntity($input);
+    $troncEntity      = new TroncEntity($input, $this->logger);
 
     $troncDBService->insert($troncEntity, $ulId);
     return ;

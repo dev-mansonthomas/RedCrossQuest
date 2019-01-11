@@ -115,7 +115,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
 
     $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
     $input               = $request->getParsedBody();
-    $pointQueteEntity    = new PointQueteEntity($input);
+    $pointQueteEntity    = new PointQueteEntity($input, $this->logger);
 
     $pointQueteDBService->update($pointQueteEntity, $ulId, $roleId);
   }
@@ -141,7 +141,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $respo
 
     $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
     $input               = $request->getParsedBody();
-    $pointQueteEntity    = new PointQueteEntity($input);
+    $pointQueteEntity    = new PointQueteEntity($input, $this->logger);
 
     $pointQueteId = $pointQueteDBService->insert            ($pointQueteEntity, $ulId);
 

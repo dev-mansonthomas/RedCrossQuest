@@ -26,7 +26,7 @@
 
     vm.searchSubmit = function()
     {
-      vm.list = TroncResource.query({'active':vm.active, 'type':vm.type===0?'':vm.type});
+      vm.list = TroncResource.query({'active':vm.active, 'type':vm.type===0?'':vm.type, 'q':vm.search});
     };
   }
 })();

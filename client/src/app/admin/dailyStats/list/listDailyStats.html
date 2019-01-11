@@ -28,7 +28,7 @@
       </form>
     </div>
 
-    <div class="row" ng-show="ds.list.length>0">
+    <div class="row" ng-show="ds.list.length>0 && ds.searchedYear == ds.selectedYear">
       <div class="col-md-8 col-md-offset-2" >
         <form name="dailyStatForms">
           <table class="table .table-striped .table-hover .table-condensed">
@@ -60,17 +60,14 @@
         </form>
       </div>
     </div>
-    <div ng-show="ds.list.length>0" class="row">
+    <div ng-show="ds.list.length>0 && ds.searchedYear == ds.selectedYear" class="row">
       <div class="col-md-9 col-md-offset-1">
         <b>Vous ne connaissez pas le détail par année, mais vous avez le montant total de la quête de l'année {{ds.selectedYear}} ?</b><br/>
         Indiquez le montant de l'année {{ds.selectedYear}} ci-dessous et cliquez sur le bouton pour répartir automatiquement le montant et <b>sauvegarder</b><br/>
-
         <br/><br/>
-
-
       </div>
     </div>
-    <div ng-show="ds.list.length>0" class="row">
+    <div ng-show="ds.list.length>0 && ds.searchedYear == ds.selectedYear" class="row">
       <div  class="col-md-2 col-md-offset-4">
         <form name="repartitionForm">
           <div class="input-group" ng-class="{'has-error':repartitionForm.totalAmount.$invalid}">
@@ -86,6 +83,14 @@
     <div class="row" ng-show="ds.list.length == 0 && ds.searchedYear == ds.selectedYear">
       <div class="col-md-2 col-md-offset-5">
         <input type="submit" class="btn btn-primary" value="Créer l'année {{ds.selectedYear}}" ng-disabled="ds.saveInProgress" ng-click="ds.createYear(ds.selectedYear)"/>
+      </div>
+    </div>
+
+    <div class="row" ng-show="ds.searchedYear != ds.selectedYear" ng-cloak>
+      <div class="col-md-8 col-md-offset-2">
+        <b>Cliquer sur Rechercher pour voir les données de l'année sélectionnée.<br/></b>
+        Si un bouton "Créer l'année XXXX" apparait, cela veut dire que vous n'avez pas encore saisie de données pour l'année sélectionner.
+
       </div>
     </div>
 

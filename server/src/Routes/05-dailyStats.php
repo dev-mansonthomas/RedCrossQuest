@@ -40,10 +40,12 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
     //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
     $dailyStats = $dailyStatsBeforeRCQDBService->getDailyStats($ulId, $year);
 
+    if($dailyStats !== null && count($dailyStats) > 0)
+    {
+      $this->logger->addInfo($dailyStats[0]->generateCSVHeader());
+      $this->logger->addInfo($dailyStats[0]->generateCSVRow());
 
-    $this->logger->addInfo($dailyStats[0]->generateCSVHeader());
-    $this->logger->addInfo($dailyStats[0]->generateCSVRow());
-
+    }
     $response->getBody()->write(json_encode($dailyStats));
 
     return $response;
@@ -72,7 +74,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
 
     $dailyStatsBeforeRCQDBService = new DailyStatsBeforeRCQDBService($this->db, $this->logger);
     $input                        = $request->getParsedBody();
-    $dailyStatsBeforeRCQEntity    = new DailyStatsBeforeRCQEntity($input);
+    $dailyStatsBeforeRCQEntity    = new DailyStatsBeforeRCQEntity($input, $this->logger);
     
     $dailyStatsBeforeRCQDBService->update($dailyStatsBeforeRCQEntity, $ulId);
   }

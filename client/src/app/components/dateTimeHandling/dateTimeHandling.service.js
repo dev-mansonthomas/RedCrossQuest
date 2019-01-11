@@ -52,5 +52,12 @@ angular
 
     };
 
+    instance.handleDateWithoutTime=function(dateWithoutTime)
+    {
+      if(dateWithoutTime == null)
+        return "";
+      return moment(dateWithoutTime).format("YYYY-MM-DD");
+    };
+
     return instance;
   });

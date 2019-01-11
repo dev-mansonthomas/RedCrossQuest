@@ -108,7 +108,7 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch());
+      $result = new UserEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -152,7 +152,7 @@ LIMIT 1
     $i = 0;
     while ($row = $stmt->fetch())
     {
-      $results[$i++] = new UserEntity($row);
+      $results[$i++] = new UserEntity($row, $this->logger);
     }
 
     $stmt->closeCursor();
@@ -206,7 +206,7 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch());
+      $result = new UserEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -260,7 +260,7 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch());
+      $result = new UserEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -298,7 +298,7 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch());
+      $result = new UserEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
       return $result;
     }

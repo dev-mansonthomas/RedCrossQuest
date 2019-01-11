@@ -249,7 +249,9 @@
       {
         vm.current.saveInProgress=true;
         if (angular.isDefined(vm.current.id) && vm.current.id != null)
-        {
+        {//WARNING : le 9 janvier (heure d'hiver), coté javascript la date envoyé est le jour d'avant à 23h
+          // le fix ci dessous, envoie la date en string, qui est vue comme une date venant de la DB pour Entity.php
+          vm.current.birthdate = DateTimeHandlingService.handleDateWithoutTime(vm.current.birthdate);
           vm.current.$update(vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
         }
         else

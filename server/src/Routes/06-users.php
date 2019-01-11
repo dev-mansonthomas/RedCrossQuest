@@ -34,7 +34,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
     {
       $action         = $params['action'];
       $input          = $request->getParsedBody();
-      $userEntity     = new UserEntity($input);
+      $userEntity     = new UserEntity($input, $this->logger);
 
       $userDBService  = new UserDBService($this->db, $this->logger);
       if ($action =="update")
@@ -77,7 +77,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
 
     $input      = $request->getParsedBody();
-    $userEntity = new UserEntity($input);
+    $userEntity = new UserEntity($input, $this->logger);
     $queteur    = $queteurDBService->getQueteurById($userEntity->queteur_id);
 
     //check NIVOL has not been changed

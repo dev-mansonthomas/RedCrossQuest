@@ -21,6 +21,7 @@ class SpotfireAccessDBService extends DBService
    * @param int $tokenTTL TimeToLive in Hours of the Token
    * @return Object the date right after insertion, so that the frontend can know how long to wait for the next update of Spotfire.
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function grantAccess(int $userId, int $ulId, int $tokenTTL)
   {
@@ -96,6 +97,7 @@ VALUES
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return SpotfireAccessEntity the info of the spotfire token
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getValidToken(int $userId, int $ulId)
   {
@@ -120,7 +122,7 @@ VALUES
     if($stmt->rowCount() == 1)
     {
       $data = $stmt->fetch();
-      $spotfireAccess = new SpotfireAccessEntity($data);
+      $spotfireAccess = new SpotfireAccessEntity($data, $this->logger);
     }
     else
     {

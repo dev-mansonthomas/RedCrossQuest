@@ -10,19 +10,28 @@
     .controller('DailyStatsController', DailyStatsController);
 
   /** @ngInject */
-  function DailyStatsController($rootScope, $log, $timeout,
+  function DailyStatsController($rootScope, $log, $timeout, $localStorage,
                                 DailyStatsResource, moment)
   {
     var vm = this;
     vm.decimalRegEx = /^[0-9]+(,[0-9]{1,2})?$/;
 
-    var currentYear = (new Date()).getFullYear();
 
-    vm.selectedYear = currentYear-1;
+    var firstRCQYear = (new Date()).getFullYear();
+    try
+    {//list years starting from the year before they use RCQ
+      firstRCQYear = $localStorage.guiSettings.ul.date_demarrage_rcq.date.substring(0,4);
+    }
+    catch(exception)
+    {
+      //do nothing
+    }
+
+    vm.selectedYear = firstRCQYear-1;
 
     vm.years = [];
 
-    for(var i=2004;i<currentYear; i++)
+    for(var i=2004;i<firstRCQYear; i++)
       vm.years[vm.years.length]=i;
 
 
@@ -90,7 +99,7 @@
       }
       else
       {
-        alert('length:'+length);
+        //alert('length:'+length);
       }
 
       for(var i=0; i < length; i++)

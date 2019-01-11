@@ -19,7 +19,6 @@
       <path value="$PROJECT_DIR$/server/vendor/ramsey/uuid" />
       <path value="$PROJECT_DIR$/server/vendor/monolog/monolog" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/console" />
-      <path value="$PROJECT_DIR$/server/vendor/symfony/debug" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/translation" />
       <path value="$PROJECT_DIR$/server/vendor/fzaninotto/faker" />
       <path value="$PROJECT_DIR$/server/vendor/nesbot/carbon" />
@@ -48,6 +47,14 @@
       <path value="$PROJECT_DIR$/server/vendor/google/gax" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/contracts" />
       <path value="$PROJECT_DIR$/server/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/server/vendor/cakephp/collection" />
+      <path value="$PROJECT_DIR$/server/vendor/cakephp/datasource" />
+      <path value="$PROJECT_DIR$/server/vendor/cakephp/utility" />
+      <path value="$PROJECT_DIR$/server/vendor/cakephp/cache" />
+      <path value="$PROJECT_DIR$/server/vendor/cakephp/log" />
+      <path value="$PROJECT_DIR$/server/vendor/cakephp/core" />
+      <path value="$PROJECT_DIR$/server/vendor/cakephp/database" />
+      <path value="$PROJECT_DIR$/server/vendor/google/common-protos" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

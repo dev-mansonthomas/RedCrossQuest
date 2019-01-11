@@ -1,5 +1,6 @@
 <?php
 namespace RedCrossQuest\Entity;
+use Monolog\Logger;
 
 class TroncEntity extends Entity
 {
@@ -16,11 +17,13 @@ class TroncEntity extends Entity
   /**
      * Accept an array of data matching properties of this class
      * and create the class
-     *
-     * @param array $data The data to use to create
-     */
-    public function __construct(array $data)
-    {
+   * @param array $data The data to use to create
+   * @param Logger $logger
+   * @throws \Exception if a parse Date or JSON fails
+   */
+  public function __construct(array $data, Logger $logger)
+  {
+    parent::__construct($logger);
       $this->getString ('id'          , $data);
       $this->getString ('ul_id'       , $data);
       $this->getString ('created'     , $data);

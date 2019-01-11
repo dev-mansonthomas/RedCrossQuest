@@ -141,7 +141,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
       $user = $userDBService->getUserInfoWithQueteurId($queteurId, $ulId, $roleId);
       $queteur->user = $user;
     }
-    
+
     $response->getBody()->write(json_encode($queteur));
   }
   catch(\Exception $e)
@@ -172,9 +172,9 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 
     $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $input            = $request->getParsedBody();
-    $queteurEntity    = new QueteurEntity($input);
+    $queteurEntity    = new QueteurEntity($input, $this->logger);
 
-
+    $this->logger->addError("Queteur",array('queteurEntity'=>$queteurEntity));
     if(array_key_exists('action', $params) && $params['action'] == "anonymize")
     {
       $queteurOriginalData = $queteurDBService->getQueteurById($queteurEntity->id);
@@ -223,7 +223,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
 
     //$queteurDBService = new QueteurDBService($this->db, $this->logger);
 //    $input            = $request->getParsedBody();
-//    $queteurEntity    = new QueteurEntity($input);
+//    $queteurEntity    = new QueteurEntity($input, $this->logger);
     //restore the leading +
 //    $queteurEntity->mobile = "+".$queteurEntity->mobile;
 //    $queteurDBService->update($queteurEntity, $ulId);
@@ -258,7 +258,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     {
       $input = $request->getParsedBody();
 
-      $queteurEntity = new QueteurEntity($input);
+      $queteurEntity = new QueteurEntity($input, $this->logger);
       //restore the leading +
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
       $queteurId          = $queteurDBService->insert($queteurEntity, $ulId, $roleId);
