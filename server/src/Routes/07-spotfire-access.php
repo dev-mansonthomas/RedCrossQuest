@@ -6,9 +6,7 @@
  * Time: 18:38
  */
 
-use \RedCrossQuest\DBService\SpotfireAccessDBService;
-
-
+require '../../vendor/autoload.php';
 
 /**
  * fetch an existing token for the user
@@ -22,9 +20,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $a
         $ulId   = (int)$decodedToken->getUlId();
         $userId = (int)$decodedToken->getUid ();
 
-        $spotfireDBService  = new SpotfireAccessDBService($this->db, $this->logger);
-
-        $validToken = $spotfireDBService->getValidToken($userId, $ulId);
+        $validToken = $this->spotfireAccessDBService->getValidToken($userId, $ulId);
 
         $response->getBody()->write(json_encode($validToken));
     }

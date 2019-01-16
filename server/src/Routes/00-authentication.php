@@ -10,10 +10,8 @@ require '../../vendor/autoload.php';
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 
-use \RedCrossQuest\DBService\UserDBService;
-use \RedCrossQuest\DBService\QueteurDBService;
-use \RedCrossQuest\DBService\UniteLocaleDBService;
-use \RedCrossQuest\DBService\SpotfireAccessDBService;
+
+
 
 use \RedCrossQuest\Entity\UserEntity;
 
@@ -63,21 +61,15 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
       return $response401;
     }
 
-    $userDBService  = new UserDBService($this->db, $this->logger);
-    $user           = $userDBService->getUserInfoWithNivol($username);
+    $user           = $this->userDBService->getUserInfoWithNivol($username);
 
     // $this->logger->addDebug("User Entity for user id='".$user->id."' nivol='".$username."'".print_r($user, true));
 
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
-
-      $spotfireDBService    = new SpotfireAccessDBService ($this->db, $this->logger);
-      $queteurDBService     = new QueteurDBService        ($this->db, $this->logger);
-      $uniteLocaleDBService = new UniteLocaleDBService    ($this->db, $this->logger);
-
-      $queteur = $queteurDBService    ->getQueteurById    ($user   ->queteur_id);
-      $ul      = $uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
+      $queteur = $this->queteurDBService    ->getQueteurById    ($user   ->queteur_id);
+      $ul      = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
 
       $signer = new Sha256();
 
@@ -112,11 +104,11 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
 
       $response->getBody()->write(json_encode(["token"=>$jwtToken->__toString()]));
 
-      $userDBService->registerSuccessfulLogin($user->id);
+      $this->userDBService->registerSuccessfulLogin($user->id);
 
       //generate a spotfire token at the same time
       //Token will be retrieved by client on a separate REST Call
-      $spotfireDBService->grantAccess($user->id , $queteur->ul_id,   $sessionLength);
+      $this->spotfireAccessDBService->grantAccess($user->id , $queteur->ul_id,   $sessionLength);
 
       return $response;
     }
@@ -124,7 +116,7 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
     {//we found the user, but password is not good
 
       $this->logger->addError("Authentication failed, wrong password, for user id='".$user->id."' nivol='".$username."'");
-      $userDBService->registerFailedLogin($user->id);
+      $this->userDBService->registerFailedLogin($user->id);
 
       $response401 = $response->withStatus(401);
       $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.1']));
@@ -134,7 +126,7 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
     else
     {
       $this->logger->addError("Authentication failed, wrong password, for user nivol='".$username."', response is not a UserEntity : ".print_r($user,true));
-      $userDBService->registerFailedLogin($user->id);
+      $this->userDBService->registerFailedLogin($user->id);
 
       $response401 = $response->withStatus(401);
       $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.2']));
@@ -194,14 +186,11 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
       return $response401;
     }
 
-
-    $userDBService = new UserDBService   ($this->db, $this->logger);
-    $uuid          = $userDBService->sendInit($username);
+    $uuid          = $this->userDBService->sendInit($username);
 
     if($uuid != null)
     {
-      $queteurDBService = new QueteurDBService($this->db, $this->logger);
-      $queteur = $queteurDBService->getQueteurByNivol($username);
+      $queteur = $this->queteurDBService->getQueteurByNivol($username);
       //$this->logger->debug(print_r($queteur,true));
       $this->mailer->sendInitEmail($queteur, $uuid);
 
@@ -227,8 +216,6 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
 });
 
 
-
-
 /**
  * Get user information from the UUID
  *
@@ -252,22 +239,16 @@ $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
       return $response401;
     }
 
-
-
-
     if (strlen($uuid) != 36)
     {
       $response->getBody()->write(json_encode(["success"=>false]));
       return $response;
     }
-    $userDBService = new UserDBService   ($this->db, $this->logger);
-    $user = $userDBService->getUserInfoWithUUID($uuid);
 
-
+    $user = $this->userDBService->getUserInfoWithUUID($uuid);
     if ($uuid != null)
     {
-      $queteurDBService = new QueteurDBService($this->db, $this->logger);
-      $queteur = $queteurDBService->getQueteurById($user->queteur_id);
+      $queteur = $this->queteurDBService->getQueteurById($user->queteur_id);
 
       $response->getBody()->write(json_encode([
         "success"       => true,
@@ -316,17 +297,15 @@ $app->post('/resetPassword', function ($request, $response, $args) use ($app)
       return $response401;
     }
 
-    $userDBService = new UserDBService($this->db, $this->logger);
-    $user          = $userDBService->getUserInfoWithUUID($uuid);
+    $user          = $this->userDBService->getUserInfoWithUUID($uuid);
 
     if($user instanceof UserEntity)
     {
-      $success = $userDBService->resetPassword($uuid, $password);
+      $success = $this->userDBService->resetPassword($uuid, $password);
 
       if($success)
       {
-        $queteurDBService = new QueteurDBService($this->db, $this->logger);
-        $queteur          = $queteurDBService->getQueteurById($user->queteur_id);
+        $queteur          = $this->queteurDBService->getQueteurById($user->queteur_id);
 
         $this->mailer->sendResetPasswordEmailConfirmation($queteur);
 

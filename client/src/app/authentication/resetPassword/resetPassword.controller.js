@@ -48,43 +48,52 @@
 
     AuthenticationService.logout();
 
-    vm.checkIfPasswordMatch = function () {
+    vm.checkIfPasswordMatch = function ()
+    {
       vm.passwordMatch = vm.password === vm.passwordRepeat;
     };
 
-    vm.getPasswordCheckText = function () {
+    vm.getPasswordCheckText = function ()
+    {
       if (typeof vm.passwordRepeat === 'undefined' || vm.passwordRepeat === '')
         return "";
 
       return vm.passwordMatch === true ? "Bravo! les mots de passe correspondent!" : "Echec : Les deux mots de passe ne correspondent pas";
     };
 
-    vm.computeStrength = function () {
+    vm.computeStrength = function ()
+    {
       if (typeof vm.password === 'undefined' || vm.password === '')
         vm.rate = 0;
       else
         vm.rate = zxcvbn(vm.password).score;
     };
 
-    vm.getTxtFromRating = function () {
+    vm.getTxtFromRating = function ()
+    {
       if (typeof vm.password === 'undefined' || vm.password === '')
         return "";
 
       vm.checkIfPasswordMatch();
 
-      if (vm.rate === 0) {
+      if (vm.rate === 0)
+      {
         return "Booouuuuhhh, vraiment... c'est pas un password ca ;)";
       }
-      else if (vm.rate === 1) {
+      else if (vm.rate === 1)
+      {
         return "Trop facile à deviner ! Ayez un peu d'imagination ;)";
       }
-      else if (vm.rate === 2) {
+      else if (vm.rate === 2)
+      {
         return "Devinable sans trop de difficulté... encore un effort !";
       }
-      else if (vm.rate === 3) {
+      else if (vm.rate === 3)
+      {
         return "Difficilement devinable, c'est pas mal !";
       }
-      else if (vm.rate === 4) {
+      else if (vm.rate === 4)
+      {
         return "Très bon password ! Bravo !";
       }
     };

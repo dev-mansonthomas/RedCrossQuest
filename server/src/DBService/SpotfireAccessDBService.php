@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use Ramsey\Uuid\Uuid;
 
 use DateTime;

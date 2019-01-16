@@ -47,29 +47,19 @@ class ExportDataBusinessService
                                         'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
 
 
-  public function __construct($logger                      ,
-                              $queteurDBService            ,
-                              $userDBService               ,
-                              $pointQueteDBService         ,
-                              $dailyStatsBeforeRCQDBService,
-                              $troncDBService              ,
-                              $namedDonationDBService      ,
-                              $troncQueteurDBService       ,
-                              $uniteLocaleDBService        ,
-                              $uniteLocaleSettingsDBService,
-                              $yearlyGoalDBService        )
+  public function __construct(\Slim\Container $c)
   {
-    $this->logger                       = $logger                       ;
-    $this->queteurDBService             = $queteurDBService             ;
-    $this->userDBService                = $userDBService                ;
-    $this->pointQueteDBService          = $pointQueteDBService          ;
-    $this->dailyStatsBeforeRCQDBService = $dailyStatsBeforeRCQDBService ;
-    $this->troncDBService               = $troncDBService               ;
-    $this->namedDonationDBService       = $namedDonationDBService       ;
-    $this->troncQueteurDBService        = $troncQueteurDBService        ;
-    $this->uniteLocaleDBService         = $uniteLocaleDBService         ;
-    $this->uniteLocaleSettingsDBService = $uniteLocaleSettingsDBService ;
-    $this->yearlyGoalDBService          = $yearlyGoalDBService          ;
+    $this->logger                       = $c->logger                       ;
+    $this->queteurDBService             = $c->queteurDBService             ;
+    $this->userDBService                = $c->userDBService                ;
+    $this->pointQueteDBService          = $c->pointQueteDBService          ;
+    $this->dailyStatsBeforeRCQDBService = $c->dailyStatsBeforeRCQDBService ;
+    $this->troncDBService               = $c->troncDBService               ;
+    $this->namedDonationDBService       = $c->namedDonationDBService       ;
+    $this->troncQueteurDBService        = $c->troncQueteurDBService        ;
+    $this->uniteLocaleDBService         = $c->uniteLocaleDBService         ;
+    $this->uniteLocaleSettingsDBService = $c->uniteLocaleSettingsDBService ;
+    $this->yearlyGoalDBService          = $c->yearlyGoalDBService          ;
   }
 
 
@@ -135,8 +125,6 @@ class ExportDataBusinessService
 
     try
     {
-
-
       $dateTime = date('Y-m-d-H-i-s', time());
       $ulNameForFileName = strtr(strtr($exportData['ul']->name, [' '=> '']), $this->unwanted_array );
 

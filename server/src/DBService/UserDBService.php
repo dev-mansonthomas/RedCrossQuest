@@ -1,11 +1,9 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use Ramsey\Uuid\Uuid;
-
-
-include_once("../../src/DBService/DBService.php");
-
 use RedCrossQuest\Entity\UserEntity;
 use PDOException;
 

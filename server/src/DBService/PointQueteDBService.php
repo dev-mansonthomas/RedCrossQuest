@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\PointQueteEntity;
 use PDOException;
 
@@ -132,9 +134,6 @@ $querySQL
 $typeSQL
 ORDER BY type ASC, name ASC
 ";
-
-    //$this->logger->addError("parameters", Array("parameters"=>$parameters));
-    //$this->logger->addError("parameters", Array("sql"=>$sql));
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);

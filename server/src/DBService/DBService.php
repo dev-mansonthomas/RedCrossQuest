@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 abstract class DBService
 {
   /** @var \PDO */

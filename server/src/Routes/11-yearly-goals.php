@@ -6,10 +6,10 @@
  * Time: 18:38
  */
 
-use \RedCrossQuest\DBService\YearlyGoalDBService;
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\YearlyGoalEntity;
 
-include_once("../../src/Entity/YearlyGoalEntity.php");
 /********************************* QUETEUR ****************************************/
 
 
@@ -36,9 +36,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $respon
       $year =  date("Y");
     }
 
-    $yearlyGoalDBService = new YearlyGoalDBService($this->db, $this->logger);
-    //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
-    $yearlyGoal = $yearlyGoalDBService->getYearlyGoals($ulId, $year);
+    $yearlyGoal = $this->yearlyGoalDBService->getYearlyGoals($ulId, $year);
 
     if($yearlyGoal != null)
     {
@@ -70,11 +68,10 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function ($request, $r
   {
     $ulId = (int)$args['ul-id'];
 
-    $yearlyGoalDBService = new YearlyGoalDBService($this->db, $this->logger);
     $input               = $request->getParsedBody();
     $yearlyGoalEntity    = new YearlyGoalEntity($input, $this->logger);
     
-    $yearlyGoalDBService->update($yearlyGoalEntity, $ulId);
+    $this->yearlyGoalDBService->update($yearlyGoalEntity, $ulId);
   }
   catch(\Exception $e)
   {
@@ -96,9 +93,8 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $respo
   {
     $ulId = (int)$args['ul-id'];
 
-    $yearlyGoalDBService = new YearlyGoalDBService($this->db, $this->logger);
     $input               = $request->getParsedBody();
-    $yearlyGoalDBService->createYear($ulId, $input['year']);
+    $this->yearlyGoalDBService->createYear($ulId, $input['year']);
   }
   catch(\Exception $e)
   {

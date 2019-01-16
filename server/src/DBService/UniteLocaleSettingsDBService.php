@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use PDOException;
 use RedCrossQuest\Entity\UniteLocaleSettingsEntity;
 

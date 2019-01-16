@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\TroncEntity;
 use PDOException;
 
@@ -194,7 +196,7 @@ AND   `ul_id`       = :ul_id
       $stmt = $this->db->prepare($sql);
       $stmt->execute([
         "notes"      => $tronc->notes,
-        "enabled"    => $tronc->enabled==true ?1:0,
+        "enabled"    => $tronc->enabled?1:0,
         "id"         => $tronc->id,
         "type"         => $tronc->type,
         "ul_id"      => $ulId

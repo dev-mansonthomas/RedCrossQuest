@@ -8,17 +8,44 @@ use Google\Cloud\Storage\Bucket;
 use \RedCrossQuest\Service\PubSubService;
 use \RedCrossQuest\Service\ReCaptchaService;
 
+use \RedCrossQuest\DBService\UserDBService;
+use \RedCrossQuest\DBService\QueteurDBService;
+use \RedCrossQuest\DBService\UniteLocaleDBService;
+use \RedCrossQuest\DBService\SpotfireAccessDBService;
+use \RedCrossQuest\DBService\TroncDBService;
+use \RedCrossQuest\DBService\TroncQueteurDBService;
+use \RedCrossQuest\DBService\PointQueteDBService  ;
+use \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
+use \RedCrossQuest\DBService\NamedDonationDBService;
+use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
+
+use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
+use \RedCrossQuest\BusinessService\SettingsBusinessService;
+use \RedCrossQuest\BusinessService\ExportDataBusinessService;
+use \RedCrossQuest\DBService\YearlyGoalDBService;
+
 // DIC configuration
 $container = $app->getContainer();
 
 // view renderer
+/**
+ * @property \Slim\Views\PhpRenderer $renderer
+ * @param    \Slim\Container $c
+ * @return   \Slim\Views\PhpRenderer
+ */
 $container['renderer'] = function (\Slim\Container $c)
 {
   $settings = $c->get('settings')['renderer'];
-  return new Slim\Views\PhpRenderer($settings['template_path']);
+  return new \Slim\Views\PhpRenderer($settings['template_path']);
 };
 
 // monolog
+
+/**
+ * @property Monolog\Logger $logger
+ * @param \Slim\Container $c
+ * @return Monolog\Logger
+ */
 $container['logger'] = function (\Slim\Container $c)
 {
   $settings = $c->get('settings')['logger'];
@@ -29,7 +56,13 @@ $container['logger'] = function (\Slim\Container $c)
 
   return $logger;
 };
+
 // DB connection
+/**
+ * @property PDO $db
+ * @param \Slim\Container $c
+ * @return PDO
+ */
 $container['db'] = function (\Slim\Container $c)
 {
   $db = $c['settings']['db'];
@@ -51,14 +84,22 @@ $container['db'] = function (\Slim\Container $c)
 };
 
 //email
-
+/**
+ * @property EmailBusinessService $mailer
+ * @param \Slim\Container $c
+ * @return EmailBusinessService
+ */
 $container['mailer'] = function (\Slim\Container $c)
 {
-  $settings = $c['settings']['appSettings']['email'];
-  return new EmailBusinessService($c->logger, $settings['sendgrid.api_key'], $settings['sendgrid.sender'], $c['settings']['appSettings'], new MailingDBService($c->db, $c->logger));
+  return new EmailBusinessService($c);
 };
 
 //PubSub
+/**
+ * @property PubSubService $PubSub
+ * @param \Slim\Container $c
+ * @return PubSubService
+ */
 $container['PubSub'] = function (\Slim\Container $c)
 {
   $settings = $c['settings']['PubSub'];
@@ -66,6 +107,11 @@ $container['PubSub'] = function (\Slim\Container $c)
 };
 
 //Google ReCaptcha v3
+/**
+ * @property ReCaptchaService $reCaptcha
+ * @param \Slim\Container $c
+ * @return ReCaptchaService
+ */
 $container['reCaptcha'] = function (\Slim\Container $c)
 {
   return new ReCaptchaService($c['settings'], $c->logger);
@@ -73,7 +119,9 @@ $container['reCaptcha'] = function (\Slim\Container $c)
 
 
 /**
- * @param \Slim\Container container
+ * @property Bucket $bucket
+ *
+ * @param \Slim\Container $c
  * @return Bucket
  */
 $container['bucket'] = function (\Slim\Container $c)
@@ -120,4 +168,150 @@ $c['errorHandler'] = function (\Slim\Container $c) {
       ->withHeader('Content-Type', 'text/html')
       ->write('Something went wrong! - '.$exception->getMessage());
   };
+};
+/**
+ * @property UserDBService $UserDBService
+ * @param \Slim\Container $c
+ * @return UserDBService
+ */
+$container['userDBService'] = function (\Slim\Container $c)
+{
+  return new UserDBService($c->db, $c->logger);
+};
+/**
+ * @property SpotfireAccessDBService $SpotfireAccessDBService
+ * @param \Slim\Container $c
+ * @return SpotfireAccessDBService
+ */
+$container['spotfireAccessDBService'] = function (\Slim\Container $c)
+{
+  return new SpotfireAccessDBService($c->db, $c->logger);
+};
+/**
+ * @property QueteurDBService $queteurDBService
+ * @param \Slim\Container $c
+ * @return QueteurDBService
+ */
+$container['queteurDBService'] = function (\Slim\Container $c)
+{
+  return new QueteurDBService($c->db, $c->logger);
+};
+/**
+ * @property UniteLocaleDBService $uniteLocaleDBService
+ * @param \Slim\Container $c
+ * @return UniteLocaleDBService
+ */
+$container['uniteLocaleDBService'] = function (\Slim\Container $c)
+{
+  return new UniteLocaleDBService($c->db, $c->logger);
+};
+
+
+/**
+ * @property UniteLocaleSettingsDBService $uniteLocaleSettingsDBService
+ * @param \Slim\Container $c
+ * @return UniteLocaleSettingsDBService
+ */
+$container['uniteLocaleSettingsDBService'] = function (\Slim\Container $c)
+{
+  return new UniteLocaleSettingsDBService($c->db, $c->logger);
+};
+
+
+
+
+/**
+ * @property TroncDBService $troncDBService
+ * @param \Slim\Container $c
+ * @return TroncDBService
+ */
+$container['troncDBService'] = function (\Slim\Container $c)
+{
+  return new TroncDBService($c->db, $c->logger);
+};
+/**
+ * @property TroncQueteurDBService $troncQueteurDBService
+ * @param \Slim\Container $c
+ * @return TroncQueteurDBService
+ */
+$container['troncQueteurDBService'] = function (\Slim\Container $c)
+{
+  return new TroncQueteurDBService($c->db, $c->logger);
+};
+/**
+ * @property PointQueteDBService $pointQueteDBService
+ * @param \Slim\Container $c
+ * @return PointQueteDBService
+ */
+$container['pointQueteDBService'] = function (\Slim\Container $c)
+{
+  return new PointQueteDBService($c->db, $c->logger);
+};
+/**
+ * @property DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService
+ * @param \Slim\Container $c
+ * @return DailyStatsBeforeRCQDBService
+ */
+$container['dailyStatsBeforeRCQDBService'] = function (\Slim\Container $c)
+{
+  return new DailyStatsBeforeRCQDBService($c->db, $c->logger);
+};
+/**
+ * @property NamedDonationDBService $namedDonationDBService
+ * @param \Slim\Container $c
+ * @return NamedDonationDBService
+ */
+$container['namedDonationDBService'] = function (\Slim\Container $c)
+{
+  return new NamedDonationDBService($c->db, $c->logger);
+};
+
+/**
+ * @property YearlyGoalDBService $yearlyGoalDBService
+ * @param \Slim\Container $c
+ * @return YearlyGoalDBService
+ */
+$container['yearlyGoalDBService'] = function (\Slim\Container $c)
+{
+  return new YearlyGoalDBService($c->db, $c->logger);
+};
+
+/**
+ * @property MailingDBService $mailingDBService
+ * @param \Slim\Container $c
+ * @return MailingDBService
+ */
+$container['mailingDBService'] = function (\Slim\Container $c)
+{
+  return new MailingDBService($c->db, $c->logger);
+};
+
+
+
+/**
+ * @property TroncQueteurBusinessService $troncQueteurBusinessService
+ * @param \Slim\Container $c
+ * @return TroncQueteurBusinessService
+ */
+$container['troncQueteurBusinessService'] = function (\Slim\Container $c)
+{
+  return new TroncQueteurBusinessService( $c);
+};
+/**
+ * @property SettingsBusinessService $settingsBusinessService
+ * @param \Slim\Container $c
+ * @return SettingsBusinessService
+ */
+$container['settingsBusinessService'] = function (\Slim\Container $c)
+{
+  return new SettingsBusinessService($c);
+};
+/**
+ * @property ExportDataBusinessService $exportDataBusinessService
+ * @param \Slim\Container $c
+ * @return ExportDataBusinessService
+ */
+$container['exportDataBusinessService'] = function (\Slim\Container $c)
+{
+  return new ExportDataBusinessService($c);
 };

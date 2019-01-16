@@ -6,7 +6,8 @@
  * Time: 18:33
  */
 
-use \RedCrossQuest\DBService\TroncDBService;
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\TroncEntity;
 
 /********************************* TRONC ****************************************/
@@ -22,7 +23,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
   {
     $ulId = (int)$args['ul-id'];
 
-    $troncDBService = new TroncDBService($this->db, $this->logger);
+
     $params = $request->getQueryParams();
 
     $active     = array_key_exists('active'     ,$params)?$params['active'    ]:1;
@@ -30,17 +31,15 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
 
     if(array_key_exists('q',$params))
     {
-      //$this->logger->addDebug("Tronc by search type '".$params['q']."''", array('decodedToken'=>$decodedToken));
-      $troncs = $troncDBService->getTroncs($params['q'], $ulId, $active, $type);
+      $troncs = $this->troncDBService->getTroncs($params['q'], $ulId, $active, $type);
     }
     else if(array_key_exists('searchType',$params))
     {
-      //$this->logger->addDebug("Tronc by search type '".$params['searchType']."''", array('decodedToken'=>$decodedToken));
-      $troncs = $troncDBService->getTroncsBySearchType($params['searchType'], $ulId, $type);
+      $troncs = $this->troncDBService->getTroncsBySearchType($params['searchType'], $ulId, $type);
     }
     else
     {
-      $troncs = $troncDBService->getTroncs(null,$ulId, $active, $type );
+      $troncs = $this->troncDBService->getTroncs(null,$ulId, $active, $type );
     }
 
     $response->getBody()->write(json_encode($troncs));
@@ -67,9 +66,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
     $ulId    = (int)$args['ul-id'];
     $troncId = (int)$args['id'   ];
 
-    $troncDBService = new TroncDBService($this->db, $this->logger);
-
-    $tronc = $troncDBService->getTroncById($troncId, $ulId);
+    $tronc = $this->troncDBService->getTroncById($troncId, $ulId);
     $response->getBody()->write(json_encode($tronc));
 
     return $response;
@@ -95,12 +92,11 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
   {
     $ulId    = (int)$args['ul-id'];
 
-    $troncDBService = new TroncDBService($this->db, $this->logger);
 
     $input            = $request->getParsedBody();
     $troncEntity      = new TroncEntity($input, $this->logger);
 
-    $troncDBService->update($troncEntity, $ulId);
+    $this->troncDBService->update($troncEntity, $ulId);
     return ;
 
   }
@@ -124,12 +120,11 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/troncs', function ($request, $response, 
   {
     $ulId    = (int)$args['ul-id'];
 
-    $troncDBService = new TroncDBService($this->db, $this->logger);
 
     $input            = $request->getParsedBody();
     $troncEntity      = new TroncEntity($input, $this->logger);
 
-    $troncDBService->insert($troncEntity, $ulId);
+    $this->troncDBService->insert($troncEntity, $ulId);
     return ;
 
   }

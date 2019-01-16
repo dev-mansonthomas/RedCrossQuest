@@ -6,12 +6,10 @@
  * Time: 18:38
  */
 
-use \RedCrossQuest\DBService\QueteurDBService;
-use \RedCrossQuest\DBService\UserDBService;
+require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\UserEntity;
 
-include_once("../../src/Entity/QueteurEntity.php");
 /********************************* QUETEUR ****************************************/
 
 
@@ -36,20 +34,18 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
       $input          = $request->getParsedBody();
       $userEntity     = new UserEntity($input, $this->logger);
 
-      $userDBService  = new UserDBService($this->db, $this->logger);
       if ($action =="update")
       {
-        $userDBService->updateActiveAndRole($userEntity);
+        $this->userDBService->updateActiveAndRole($userEntity);
       }
       else
       {//send init mail to user
-        $queteurDBService = new QueteurDBService($this->db, $this->logger);
-        $queteur = $queteurDBService->getQueteurById($userEntity->queteur_id);
-        $uuid = $userDBService->sendInit($userEntity->nivol);
+        $queteur          = $this->queteurDBService->getQueteurById($userEntity->queteur_id);
+        $uuid             = $this->userDBService->sendInit($userEntity->nivol);
         $this->mailer->sendInitEmail($queteur, $uuid);
 
       }
-      $userEntity = $userDBService->getUserInfoWithUserId($userEntity->id, $ulId, $roleId);
+      $userEntity = $this->userDBService->getUserInfoWithUserId($userEntity->id, $ulId, $roleId);
       $response->getBody()->write(json_encode($userEntity));
     }
   }
@@ -73,12 +69,9 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
     $ulId   = (int)$args['ul-id'  ];
     $roleId = (int)$args['role-id'];
 
-    $userDBService    = new UserDBService   ($this->db, $this->logger);
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
-
     $input      = $request->getParsedBody();
     $userEntity = new UserEntity($input, $this->logger);
-    $queteur    = $queteurDBService->getQueteurById($userEntity->queteur_id);
+    $queteur    = $this->queteurDBService->getQueteurById($userEntity->queteur_id);
 
     //check NIVOL has not been changed
     if($userEntity->nivol != $queteur->nivol)
@@ -100,11 +93,11 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
     }
 
 
-    $userDBService->insert($userEntity->nivol, $userEntity->queteur_id);
+    $this->userDBService->insert($userEntity->nivol, $userEntity->queteur_id);
 
-    $user = $userDBService->getUserInfoWithQueteurId($userEntity->queteur_id, $ulId, $roleId);
-    
-    $uuid = $userDBService->sendInit($userEntity->nivol);
+    $user = $this->userDBService->getUserInfoWithQueteurId($userEntity->queteur_id, $ulId, $roleId);
+    $uuid = $this->userDBService->sendInit                ($userEntity->nivol);
+
     $this->mailer->sendInitEmail($queteur, $uuid);
 
     $response->getBody()->write(json_encode($user));

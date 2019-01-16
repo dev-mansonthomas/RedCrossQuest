@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 
 use Carbon\Carbon;
 
@@ -26,7 +28,7 @@ class TroncQueteurDBService extends DBService
     $sql = "
 SELECT 
  t.`id`               ,
- `ul_id`              ,
+ t.`ul_id`            ,
  `queteur_id`         ,
  `point_quete_id`     ,
  `tronc_id`           ,
@@ -102,7 +104,7 @@ LIMIT 1
     $sql = "
 SELECT 
  t.`id`              ,
- `ul_id`             ,
+ t.`ul_id`           ,
  `queteur_id`        ,
  `point_quete_id`    ,
  `tronc_id`          ,
@@ -181,7 +183,7 @@ ORDER BY t.id DESC
     $sql = "
 SELECT 
 t.`id`                ,
- `ul_id`              ,
+t.`ul_id`             ,
  `queteur_id`         ,
  `point_quete_id`     ,
  `tronc_id`           ,
@@ -219,7 +221,6 @@ t.`id`                ,
  `bills_money_bag_id`          ,
  `don_cb_total_number`         ,       
  `don_cheque_number`         
-
 FROM  `tronc_queteur` as t
 WHERE  t.id         = :id
 AND    t.ul_id      = :ul_id
@@ -257,7 +258,7 @@ AND    t.ul_id      = :ul_id
     $sql = "
 SELECT 
 t.`id`                ,
- `ul_id`              ,
+t.`ul_id`             ,
  `queteur_id`         ,
  `point_quete_id`     ,
  `tronc_id`           ,
@@ -360,7 +361,7 @@ AND   tq.ul_id              = :ul_id
   public function setDepartToCustomDate(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
     $sql = "
-UPDATE `tronc_queteur`           tq
+UPDATE `tronc_queteur`        tq
 SET    `depart`             = :depart,
        `last_update`        = NOW(),
        `last_update_user_id`= :userId            
@@ -487,8 +488,6 @@ AND   tq.ul_id                = :ul_id
       "notes_retour"      => $tq->notes_retour
     ]);
 
-
-    //$this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
 
     return $currentDate;
@@ -612,7 +611,6 @@ AND   tq.ul_id                  = :ul_id
   public function updateTroncQueteurAsAdmin(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
 
-    //$this->logger->debug("Admin Updates dates, point_quete_id or deleted ", [$tq]);
     $sql = "
 UPDATE `tronc_queteur`             tq
 SET
@@ -641,7 +639,6 @@ AND   tq.ul_id         = :ul_id
       "notes_update"      => $tq->notes_update
     ]);
 
-    //$this->logger->warning($stmt->rowCount());
     $stmt->closeCursor();
 
   }
@@ -681,7 +678,7 @@ AND   tq.ul_id         = :ul_id
 
       $departTheoriqueQuery = "";
 
-      if($tq->preparationAndDepart == true)
+      if($tq->preparationAndDepart)
       {//if the user click on "Prepart And Depart", then depart_theorique is override by current date
         $departTheoriqueQuery ="  NOW(),";
       }
@@ -780,7 +777,6 @@ AND    (tq.depart     is null OR
     ]);
 
     $rowCount = $stmt->rowCount();
-    $results  = null;
 
     if( $rowCount > 0)
     {
@@ -833,7 +829,6 @@ AND  (tq.depart IS NULL OR
 
 
     $stmt->closeCursor();
-    //$this->logger->info("deleted ".$rowCount." non returned tronc_queteur with tronc_id='".$troncId."'");
   }
 
 
@@ -852,7 +847,7 @@ AND  (tq.depart IS NULL OR
     $sql = "
 SELECT 
 t.`id`                        ,
-`ul_id`                       ,
+t.`ul_id`                     a,
 `insert_date`                 ,
 `tronc_queteur_id`            ,
 `queteur_id`                  ,

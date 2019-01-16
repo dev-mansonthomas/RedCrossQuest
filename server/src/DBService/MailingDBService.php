@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use RedCrossQuest\Entity\MailingInfoEntity;
 use RedCrossQuest\Entity\MailingSummaryEntity;
 use PDOException;

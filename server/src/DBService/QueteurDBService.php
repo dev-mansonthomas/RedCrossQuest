@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use RedCrossQuest\Entity\QueteurEntity;
 use PDOException;
 use Ramsey\Uuid\Uuid;
@@ -182,7 +184,42 @@ AND q.id IN (
 
 
 
-    $sqlSearchAll = "
+    $sql = null;
+    switch ($searchType)
+    {
+      case 0:
+        $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL);
+        break;
+      case 1:
+        $sql = $this->getSearchNotLeftQuery     ($querySQL, $secteurSQL, $rcqUserSQL);
+        break;
+      case 2:
+        $sql = $this->getSearchNotReturnedQuery ($querySQL, $secteurSQL, $rcqUserSQL);
+        break;
+      default:
+        $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL);
+    }
+
+
+    $stmt   = $this->db->prepare($sql);
+    $parameters["active"] = $active;
+
+    $stmt->execute($parameters);
+
+    $results = [];
+    $i = 0;
+    while ($row = $stmt->fetch())
+    {
+      $results[$i++] = new QueteurEntity($row, $this->logger);
+    }
+    $stmt->closeCursor();
+    return $results;
+  }
+
+  private function getSearchAllQuery($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL)
+  {
+
+     return "
 SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
@@ -240,8 +277,11 @@ AND
 )
 ORDER BY q.last_name ASC
 ";
+  }
 
-    $sqlSearchNotLeft = "
+  private function getSearchNotLeftQuery($querySQL, $secteurSQL, $rcqUserSQL)
+  {
+    return "
 SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
@@ -289,8 +329,12 @@ AND    tq.id      = (
 AND  tq.point_quete_id = pq.id
 ORDER BY q.last_name ASC
 ";
+  }
 
-    $sqlSearchNotReturned = "
+  private function getSearchNotReturnedQuery($querySQL, $secteurSQL, $rcqUserSQL)
+  {
+
+    return "
 SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
@@ -306,26 +350,26 @@ SELECT  q.`id`,
         q.`man`,
         q.`birthdate`,
         q.`qr_code_printed`,
-       tq.`point_quete_id`, 
-       tq.`depart_theorique`, 
-       tq.`depart`, 
+       tq.`point_quete_id`,
+       tq.`depart_theorique`,
+       tq.`depart`,
        tq.`retour`,
         u.name       as 'ul_name',
         u.latitude   as 'ul_latitude',
-        u.longitude  as 'ul_longitude' 
+        u.longitude  as 'ul_longitude'
 FROM       queteur AS q,
-     tronc_queteur AS tq, 
+     tronc_queteur AS tq,
                 ul AS u
 WHERE  q.ul_id = :ul_id
 AND    q.ul_id = u.id
 AND    q.active= :active
-$querySQL 
-$secteurSQL 
+$querySQL
+$secteurSQL
 $rcqUserSQL
 AND     q.id      = tq.queteur_id
 AND    tq.deleted = 0
-AND    tq.id      = (  
-      SELECT tqq.id 
+AND    tq.id      = (
+      SELECT tqq.id
       FROM  tronc_queteur tqq
       WHERE tqq.queteur_id = q.id
       AND   depart IS NOT NULL
@@ -335,38 +379,12 @@ AND    tq.id      = (
     )
 ORDER BY q.last_name ASC
 ";
-    $sql = null;
-    switch ($searchType) {
-      case 0:
-        $sql = $sqlSearchAll;
-        break;
-      case 1:
-        $sql = $sqlSearchNotLeft;
-        break;
-      case 2:
-        $sql = $sqlSearchNotReturned;
-        break;
-      default:
-        $sql = $sqlSearchAll;
-    }
-
-
-    //$this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql, "parameters"=>$parameters));
-    $stmt   = $this->db->prepare($sql);
-    $parameters["active"] = $active;
-
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new QueteurEntity($row, $this->logger);
-    }
-    //$this->logger->addDebug("retrieved $i queteurs, searchType:'$searchType', secteur='$secteur', query='$query' ".print_r($parameters, true));
-    $stmt->closeCursor();
-    return $results;
   }
+
+
+
+
+
 
   /**
    * Get one queteur by its ID
@@ -655,7 +673,6 @@ VALUES
     $searchFirstName = "";
     $searchLastName  = "";
     $searchNivol     = "";
-    $AND             = "";
     $numberOfParameters = 0;
 
     if($firstName != null)
@@ -723,8 +740,6 @@ $searchNivol
 ";
 
     $stmt   = $this->db->prepare($sql);
-    //$this->logger->addInfo($sql);
-    //$this->logger->addInfo(print_r($parameters, true));
     $stmt->execute($parameters);
 
     $results = [];

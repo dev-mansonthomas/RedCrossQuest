@@ -6,8 +6,9 @@
  * Time: 18:38
  */
 
-use \RedCrossQuest\DBService\QueteurDBService;
-use \RedCrossQuest\DBService\UserDBService;
+require '../../vendor/autoload.php';
+
+
 use \RedCrossQuest\Entity\QueteurEntity;
 
 
@@ -28,8 +29,6 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
   $ulId         = (int)$args['ul-id'];
   $roleId       = (int)$args['role-id'];
 
-  $queteurDBService = new QueteurDBService($this->db, $this->logger);
-
 
   if(array_key_exists('action', $params) && $params['action'] == "searchSimilarQueteurs")
   {
@@ -39,7 +38,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     $nivol      = array_key_exists('nivol'     , $params)?$params['nivol'      ]:null;
 
 
-    $queteurs = $queteurDBService->searchSimilarQueteur($ulId, $firstName, $lastName, $nivol);
+    $queteurs = $this->queteurDBService->searchSimilarQueteur($ulId, $firstName, $lastName, $nivol);
     $response->getBody()->write(json_encode($queteurs));
   }
   else
@@ -58,7 +57,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
       {
         if(array_key_exists('anonymization_token',$params))
         {// If the token is given, then other search criteria are ignored
-          $queteurs = $queteurDBService->getQueteurByAnonymizationToken($params['anonymization_token'],  $ulId, $roleId);
+          $queteurs = $this->queteurDBService->getQueteurByAnonymizationToken($params['anonymization_token'],  $ulId, $roleId);
           $response->getBody()->write(json_encode($queteurs));
           return $response;
         }
@@ -91,7 +90,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
         $ulId = (int)$decodedToken->getUlId();
       }
 
-      $queteurs = $queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser, $queteurIds, $QRSearchType);
+      $queteurs = $this->queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser, $queteurIds, $QRSearchType);
 
       $response->getBody()->write(json_encode($queteurs));
 
@@ -123,9 +122,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     $roleId = (int)$args['role-id'];
 
     $queteurId        = (int)$args['id'];
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
-
-    $queteur          = $queteurDBService->getQueteurById($queteurId);
+    $queteur          = $this->queteurDBService->getQueteurById($queteurId);
 
     if($queteur->ul_id != $ulId && $roleId != 9)
     {
@@ -136,9 +133,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 
     if($roleId >= 4)
     {//localAdmin & superAdmin
-      $userDBService = new UserDBService($this->db, $this->logger);
-
-      $user = $userDBService->getUserInfoWithQueteurId($queteurId, $ulId, $roleId);
+      $user = $this->userDBService->getUserInfoWithQueteurId($queteurId, $ulId, $roleId);
       $queteur->user = $user;
     }
 
@@ -170,17 +165,17 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     $userId = $decodedToken->getUid();
     $params = $request->getQueryParams();
 
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
     $input            = $request->getParsedBody();
     $queteurEntity    = new QueteurEntity($input, $this->logger);
 
     $this->logger->addError("Queteur",array('queteurEntity'=>$queteurEntity));
     if(array_key_exists('action', $params) && $params['action'] == "anonymize")
     {
-      $queteurOriginalData = $queteurDBService->getQueteurById($queteurEntity->id);
-      $token               = $queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId, $userId);
+      $queteurOriginalData   = $this->queteurDBService->getQueteurById($queteurEntity->id);
+      $token                 = $this->queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId, $userId);
+
       $this->mailer->sendAnonymizationEmail($queteurOriginalData, $token);
-      $queteurAnonymizedData = $queteurDBService->getQueteurById($queteurEntity->id);
+      $queteurAnonymizedData = $this->queteurDBService->getQueteurById($queteurEntity->id);
 
       $response->getBody()->write(json_encode($queteurAnonymizedData));
     }
@@ -190,7 +185,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
       //restore the leading +
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
-      $queteurDBService->update($queteurEntity, $ulId, $roleId);
+      $this->queteurDBService->update($queteurEntity, $ulId, $roleId);
 
     }
 
@@ -248,11 +243,9 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     $roleId = (int)$args['role-id'];
     $params = $request->getQueryParams();
 
-    $queteurDBService = new QueteurDBService($this->db, $this->logger);
-
     if(array_key_exists('action', $params) && $params['action'] == "markAllAsPrinted")
     {
-      $queteurDBService->markAllAsPrinted($ulId);
+      $this->queteurDBService->markAllAsPrinted($ulId);
     }
     else
     {
@@ -261,9 +254,9 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
       $queteurEntity = new QueteurEntity($input, $this->logger);
       //restore the leading +
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
-      $queteurId          = $queteurDBService->insert($queteurEntity, $ulId, $roleId);
+      $queteurId             = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
 
-      $response->getBody()->write(json_encode(array('queteurId' =>$queteurId), JSON_NUMERIC_CHECK));
+      $response->getBody()->write(json_encode(array('queteurId' => $queteurId), JSON_NUMERIC_CHECK));
     }
 
 

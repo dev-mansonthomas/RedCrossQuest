@@ -25,13 +25,16 @@ class EmailBusinessService
    * */
   protected $mailingDBService;
 
-  public function __construct($logger, $sendgridAPIKey, $sendgridSender, $appSettings, MailingDBService $mailingDBService)
+  public function __construct(\Slim\Container $c)
   {
-    $this->logger           = $logger;
-    $this->sendgridAPIKey         = $sendgridAPIKey;
-    $this->sendgridSender   = $sendgridSender;
-    $this->appSettings      = $appSettings;
-    $this->mailingDBService = $mailingDBService;
+    $settings =  $c['settings']['appSettings']['email'];
+
+    $this->logger           = $c->logger;
+
+    $this->sendgridAPIKey   = $settings['sendgrid.api_key'];
+    $this->sendgridSender   = $settings['sendgrid.sender'];
+    $this->appSettings      = $c->settings['appSettings'];
+    $this->mailingDBService = $c->mailingDBService;
   }
 
 
@@ -185,8 +188,6 @@ Bonjour ".$queteur->first_name.",<br/>
 
     $anonymiseDateCarbon = new Carbon();
     $anonymiseDateString = $anonymiseDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
-
-
 
 
     $email = new SendGrid\Mail\Mail();

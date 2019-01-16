@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\NamedDonationEntity;
 use PDOException;
 
@@ -22,7 +24,8 @@ class NamedDonationDBService extends DBService
    */
   public function getNamedDonations(?string $query, bool $deleted, ?string $year, int $ulId)
   {
-    $parameters = ["ul_id" => $ulId, 'deleted'=>($deleted === null ? false: $deleted)];
+                                                //Sonar lint suggestion : $deleted === null ? false: $deleted
+    $parameters = ["ul_id" => $ulId, 'deleted'=>(!($deleted === null) && $deleted)];
 
     $searchSQL = "";
     $yearSQL   = "";

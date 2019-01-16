@@ -4,6 +4,8 @@
 
 namespace RedCrossQuest\Middleware;
 
+require '../../vendor/autoload.php';
+
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\ValidationData;
