@@ -36,8 +36,9 @@
   /* [Nicolas - 18 may] Peut-etre pas necessaire ce @ngInject vu que j'ai defini l'injection , @ngInject
 
    */
-  function ResetPasswordController($rootScope, $location,
-                                   zxcvbn, AuthenticationService) {
+  function ResetPasswordController($rootScope, $location, $scope,
+                                   zxcvbn, AuthenticationService)
+  {
     var vm = this;
     vm.key = null;
     vm.rate = 0;
@@ -91,45 +92,73 @@
 
     vm.resetPassword = resetPassword;
 
-    initController();
+    //on slow network, the recaptcha lib is not yet loaded
+    addEventListener("load", initController);
 
-    function initController() {
+
+
+    function initController()
+    {
       // reset login status
       vm.key = $location.search()['key'];
-      AuthenticationService.getUserInfoWithUUID(vm.key, function (success, info) {
-        if (success) {
-          vm.info = [info.first_name, info.last_name, info.email, info.mobile, info.nivol];
-          vm.username = info.nivol;
+      vm.loading = true;
 
-          vm.error = null;
-          vm.loading = false;
+      //recaptchaKey is defined in index.html
+      grecaptcha.execute(recaptchaKey, {action: 'rcq/getUserInfoWithUUID'})
+        .then(function(token)
+        {
+          AuthenticationService.getUserInfoWithUUID
+          (
+            vm.key, token,
+            function (success, info)
+            {
+              if (success)
+              {
+                vm.info     = [info.first_name, info.last_name, info.email, info.mobile, info.nivol];
+                vm.username = info.nivol;
 
-
-        }
-        else {
-          vm.error = "Votre demande est invalide ou périmée ou votre utilisateur a été désactivé. Veuillez contacter le support.";
-        }
-
-      });
-
+                vm.error    = null;
+                vm.loading  = false;
+              }
+              else
+              {
+                vm.error = "Votre demande est invalide ou périmée ou votre utilisateur a été désactivé. Veuillez contacter le support.";
+              }
+            },
+            function (errorMessage)
+            {
+              vm.error = JSON.stringify(errorMessage.data);
+            }
+          );
+        });
 
     }
 
-    function resetPassword() {
+    function resetPassword()
+    {
       vm.loading = true;
-      AuthenticationService.resetPassword(vm.key, vm.password, function (success, email) {
 
-        if (success) {
-          vm.error = null;
-          vm.success = 'Un email de confirmation vient de vous être envoyé (' + email + ')';
-          vm.loading = false;
-        }
-        else {
-          vm.error = 'Une erreur est survenue. Veuillez contacter votre cadre local ou départemental';
-          vm.success = null;
-          vm.loading = false;
-        }
-      });
+      //recaptchaKey is defined in index.html
+      grecaptcha.execute(recaptchaKey, {action: 'rcq/resetPassword'})
+        .then(function(token)
+        {
+          AuthenticationService.resetPassword(vm.key, vm.password, token, function (success, email) {
+
+            if (success) {
+              vm.error = null;
+              vm.success = 'Un email de confirmation vient de vous être envoyé (' + email + ')';
+              vm.loading = false;
+            }
+            else {
+              vm.error = 'Une erreur est survenue. Veuillez contacter votre cadre local ou départemental';
+              vm.success = null;
+              vm.loading = false;
+            }
+          });
+
+        });
+
+
     }
 
   }
@@ -139,5 +168,5 @@
     .factory('zxcvbn', function () {
       return window.zxcvbn; // zxcvbn ext charge par le bout de code 'ZXCVBN_SRC'
     })
-    .controller('ResetPasswordController', ['$rootScope','$location', 'zxcvbn', 'AuthenticationService', ResetPasswordController]);
+    .controller('ResetPasswordController', ['$rootScope','$location', '$scope', 'zxcvbn', 'AuthenticationService', ResetPasswordController]);
 })();

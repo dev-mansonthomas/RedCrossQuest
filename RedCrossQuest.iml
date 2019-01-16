@@ -25,6 +25,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/gax" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/grpc-gcp" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/protobuf" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/recaptcha" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/grpc/grpc" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/guzzlehttp/guzzle" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/guzzlehttp/promises" />

@@ -6,6 +6,7 @@ use Google\Cloud\Storage\StorageClient;
 use Google\Cloud\Storage\Bucket;
 
 use \RedCrossQuest\Service\PubSubService;
+use \RedCrossQuest\Service\ReCaptchaService;
 
 // DIC configuration
 $container = $app->getContainer();
@@ -64,6 +65,11 @@ $container['PubSub'] = function (\Slim\Container $c)
   return new PubSubService($settings, $c->logger);
 };
 
+//Google ReCaptcha v3
+$container['reCaptcha'] = function (\Slim\Container $c)
+{
+  return new ReCaptchaService($c['settings'], $c->logger);
+};
 
 
 /**

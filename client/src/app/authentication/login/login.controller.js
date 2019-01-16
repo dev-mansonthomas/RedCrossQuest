@@ -23,10 +23,8 @@
 
     $rootScope.$emit('title-updated', 'Login');
 
-
-    vm.timeout=false;
-
-    vm.username=$routeParams.login;
+    vm.timeout  = false;
+    vm.username = $routeParams.login;
 
     initController();
 
@@ -41,30 +39,40 @@
       vm.loading = true;
       var loginTimeout = $timeout(function () {vm.loading=false;vm.timeout=true; }, 10000);
 
-      AuthenticationService.login(vm.username, vm.password,
-        function success(result)
-        {
-          if (result === true)
-          {
-            $timeout.cancel(loginTimeout);
-            $location.path('/');
-          }
-          else
-          {
-            vm.errorStr = 'Login ou mot de passe incorrect';
-            vm.error    = true;
-            vm.loading  = false;
-          }
-        },
-        function error(message)
-        {
-          $timeout.cancel(loginTimeout);
-          vm.error    = true;
-          vm.errorStr = 'Service Indisponible - '+message.data;
-          vm.loading  = false;
+      //recaptchaKey is defined in index.html
+      grecaptcha.execute(recaptchaKey, {action: 'rcq/login'})
+        .then(function(token) {
 
-        }
-      );
+          AuthenticationService.login(vm.username, vm.password, token,
+            function success(result)
+            {
+              if (result === true)
+              {
+                $timeout.cancel(loginTimeout);
+                $location.path('/');
+              }
+              else
+              {
+                vm.errorStr = 'Login ou mot de passe incorrect';
+                vm.error    = true;
+                vm.loading  = false;
+              }
+            },
+            function error(message)
+            {
+              $timeout.cancel(loginTimeout);
+              vm.error    = true;
+              vm.errorStr = 'Service Indisponible - '+message.data.error;
+              vm.loading  = false;
+
+            }
+          );
+
+        });
+
+
+
+
     };
     vm.sendInit = function()
     {
@@ -77,29 +85,37 @@
       }
 
       vm.loading = true;
-      AuthenticationService.sendInit(vm.username, function(success, email)
-      {
-        if(success)
-        {
-          vm.error=null;
-          vm.success=true;
-          vm.email=email;
-          vm.loading=false;
-        }
-        else
-        {
-          vm.error = true;
-          vm.errorStr='Une erreur est survenue. Veuillez contacter support@redcrossquest.com';
-          vm.success=null;
-          vm.loading=false;
-        }
-      }, function (error)
-      {
-        vm.error = true;
-        vm.errorStr=JSON.stringify(error);
-        vm.success=null;
-        vm.loading=false;
-      });
+
+      //recaptchaKey is defined in index.html
+      grecaptcha.execute(recaptchaKey, {action: 'rcq/sendInit'})
+        .then(function(token) {
+
+          AuthenticationService.sendInit(vm.username, token,
+            function(success, email)
+            {
+              if(success)
+              {
+                vm.error=null;
+                vm.success=true;
+                vm.email=email;
+                vm.loading=false;
+              }
+              else
+              {
+                vm.error = true;
+                vm.errorStr='Une erreur est survenue. Veuillez contacter support@redcrossquest.com';
+                vm.success=null;
+                vm.loading=false;
+              }
+            }, function (error)
+            {
+              vm.error = true;
+              vm.errorStr=JSON.stringify(error);
+              vm.success=null;
+              vm.loading=false;
+            }
+          );
+        });
     };
   }
 })();

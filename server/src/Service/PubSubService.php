@@ -17,8 +17,7 @@ use Google\Cloud\PubSub\PubSubClient;
 
 class PubSubService
 {
-
-  protected $db;
+  protected $settings;
   /** @var \Monolog\Logger */
   protected $logger;
   /** @var PubSubClient */
