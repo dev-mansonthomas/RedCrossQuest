@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\TroncEntity;
 use PDOException;
 
@@ -15,6 +17,7 @@ class TroncDBService extends DBService
    * @param int $type  Id of the type of tronc, if null, search all types.
    * @return TroncEntity[] list of troncs
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    *
    */
     public function getTroncs(string $query=null, int $ulId, bool $active, ?int $type )
@@ -61,7 +64,7 @@ AND `type` = :type
       $i=0;
       while($row = $stmt->fetch())
       {
-        $results[$i++] =  new TroncEntity($row);
+        $results[$i++] =  new TroncEntity($row, $this->logger);
       }
 
       $stmt->closeCursor();
@@ -81,6 +84,7 @@ AND `type` = :type
  *
  * @return TroncEntity[] array of troncs
  * @throws PDOException if the query fails to execute on the server
+ * @throws \Exception in other situations, possibly : parsing error in the entity
  */
   public function getTroncsBySearchType(int $searchType, int $ulId)
   {
@@ -121,7 +125,7 @@ ORDER BY id ASC
     $i=0;
     while($row = $stmt->fetch())
     {
-      $results[$i++] =  new TroncEntity($row);
+      $results[$i++] =  new TroncEntity($row, $this->logger);
     }
 
     $stmt->closeCursor();
@@ -158,7 +162,7 @@ AND    t.ul_id = :ul_id
 
       if($stmt->rowCount() == 1 )
       {
-        $tronc = new TroncEntity($stmt->fetch());
+        $tronc = new TroncEntity($stmt->fetch(), $this->logger);
         $stmt->closeCursor();
         return $tronc;
       }
@@ -192,7 +196,7 @@ AND   `ul_id`       = :ul_id
       $stmt = $this->db->prepare($sql);
       $stmt->execute([
         "notes"      => $tronc->notes,
-        "enabled"    => $tronc->enabled==true ?1:0,
+        "enabled"    => $tronc->enabled?1:0,
         "id"         => $tronc->id,
         "type"         => $tronc->type,
         "ul_id"      => $ulId
@@ -207,7 +211,6 @@ AND   `ul_id`       = :ul_id
    *
    * @param TroncEntity $tronc The tronc to update
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @return int the primary key of the new tronc
    * @throws PDOException if the query fails to execute on the server
    */
   public function insert(TroncEntity $tronc, int $ulId)

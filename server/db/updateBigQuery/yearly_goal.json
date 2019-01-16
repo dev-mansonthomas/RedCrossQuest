@@ -1,0 +1,14 @@
+[
+{"name": "id","type":"INTEGER"},
+{"name": "ul_id","type":"INTEGER"},
+{"name": "year","type":"INTEGER"},
+{"name": "amount","type":"FLOAT"},
+{"name": "day_1_percentage","type":"INTEGER"},
+{"name": "day_2_percentage","type":"INTEGER"},
+{"name": "day_3_percentage","type":"INTEGER"},
+{"name": "day_4_percentage","type":"INTEGER"},
+{"name": "day_5_percentage","type":"INTEGER"},
+{"name": "day_6_percentage","type":"INTEGER"},
+{"name": "day_7_percentage","type":"INTEGER"},
+{"name": "day_8_percentage","type":"INTEGER"},
+{"name": "day_9_percentage","type":"INTEGER"}

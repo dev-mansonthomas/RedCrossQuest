@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\UniteLocaleEntity;
 use PDOException;
 
@@ -14,6 +16,7 @@ class UniteLocaleDBService extends DBService
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return UniteLocaleEntity  The Unite Locale
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getUniteLocaleById(int $ulId)
   {
@@ -41,7 +44,7 @@ WHERE   `ul`.id    = :ul_id
 
     $stmt->execute(["ul_id" => $ulId]);
 
-    $ul = new UniteLocaleEntity($stmt->fetch());
+    $ul = new UniteLocaleEntity($stmt->fetch(), $this->logger);
     $stmt->closeCursor();
 
     return $ul;
@@ -55,6 +58,7 @@ WHERE   `ul`.id    = :ul_id
    * @param string $query : the criteria to search queteur on first_name, last_name, nivol
    * @return UniteLocaleEntity[]  the list of UniteLocale
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function searchUniteLocale(string $query)
   {
@@ -95,7 +99,7 @@ WHERE   UPPER(ul.`name`        ) like concat('%', UPPER(:query), '%')
       $i = 0;
       while ($row = $stmt->fetch())
       {
-        $results[$i++] = new UniteLocaleEntity($row);
+        $results[$i++] = new UniteLocaleEntity($row, $this->logger);
       }
 
       $stmt->closeCursor();

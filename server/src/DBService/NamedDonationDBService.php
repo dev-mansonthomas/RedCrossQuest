@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\NamedDonationEntity;
 use PDOException;
 
@@ -22,7 +24,8 @@ class NamedDonationDBService extends DBService
    */
   public function getNamedDonations(?string $query, bool $deleted, ?string $year, int $ulId)
   {
-    $parameters = ["ul_id" => $ulId, 'deleted'=>($deleted === null ? false: $deleted)];
+                                                //Sonar lint suggestion : $deleted === null ? false: $deleted
+    $parameters = ["ul_id" => $ulId, 'deleted'=>(!($deleted === null) && $deleted)];
 
     $searchSQL = "";
     $yearSQL   = "";
@@ -115,6 +118,7 @@ ORDER BY `id` DESC
    * @param int $roleId the Id of the role of the user. if 9, do not check for ulId
    * @return NamedDonationEntity The NamedDonationEntity
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getNamedDonationById(int $id, int $ulId, int $roleId)
   {
@@ -335,7 +339,6 @@ NOW()
    * @param NamedDonationEntity $namedDonation         The namedDonation to be inserted
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
-   * @return int id of the new row
    * @throws PDOException if the query fails to execute on the server
    */
   public function update(NamedDonationEntity $namedDonation, int $ulId, int $userId)

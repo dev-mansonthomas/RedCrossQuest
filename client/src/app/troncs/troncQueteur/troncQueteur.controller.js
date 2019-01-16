@@ -19,17 +19,17 @@
 
     $rootScope.$emit('title-updated', 'Comptage d\'un Tronc');
 
-    vm.onlyNumbers = /^[0-9]{1,3}$/;
-    vm.cbFormat    = /^[0-9]+(\.[0-9]{1,2})?$/;
+    vm.onlyNumbers    = /^[0-9]{1,3}$/;
+    vm.cbFormat       = /^[0-9]+(\.[0-9]{1,2})?$/;
 
     vm.currentUserRole= $localStorage.currentUser.roleId;
     vm.currentUlMode  = $localStorage.currentUser.ulMode;
     vm.ulName         = $localStorage.currentUser.ulName;
 
-    vm.first_name       = $localStorage.guiSettings.user.first_name;
-    vm.last_name        = $localStorage.guiSettings.user.last_name;
+    vm.first_name     = $localStorage.guiSettings.user.first_name;
+    vm.last_name      = $localStorage.guiSettings.user.last_name;
 
-    vm.currentDate = new Date();
+    vm.currentDate    = new Date();
 
     var tronc_queteur_id = $routeParams.id;
 
@@ -269,9 +269,9 @@
 
     function handleTroncQueteur(tronc_queteur)
     {
-      vm.current.tronc_queteur =  tronc_queteur;
-      vm.current.dateRetourNotFilled = false;
-      vm.current.fillTronc  = false;
+      vm.current.tronc_queteur        =  tronc_queteur;
+      vm.current.dateRetourNotFilled  = false;
+      vm.current.fillTronc            = false;
 
       if(vm.current.tronc_queteur.id == null  && tronc_queteur.rowCount === 0)
       {
@@ -288,8 +288,8 @@
         //if the tronc is not defined, it means that we've reached this page from the URL http://localhost:3000/#/troncs_queteur/id
         //tronc is initialized when QRCode scan or autocompletion
         // (from the queteur page) to visualize the data rather than editing it.
-        vm.current.tronc = tronc_queteur.tronc;
-        vm.current.readOnlyView=true;
+        vm.current.tronc        = tronc_queteur.tronc;
+        vm.current.readOnlyView = true;
       }
 
       if(vm.current.tronc_queteur.depart !== null)
@@ -329,7 +329,6 @@
         //if the return date is non null, then it's time to fill the number of coins
         vm.current.fillTronc=true;
       }
-
 
       //this code is supposed to scroll the page to the form to set the coins
       //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again
@@ -504,40 +503,6 @@
           vm.current.confirmInputValuesMessage+="<li>Le total des paiements CB est supérieur à 0, mais le nombre total de paiement est égale à 0. " +
             "Le nombre de paiement a été initialisé à 1 </li>";
         }
-
-        if(vm.current.tronc_queteur.don_cb_sans_contact_amount === 0 && vm.current.tronc_queteur.don_cb_sans_contact_number > 0)
-        {
-          vm.current.tronc_queteur.don_cb_sans_contact_number = 0;
-          displayConfirmDialog=true;
-          vm.current.confirmInputValuesMessage+="<li>Le total sans contact est égale à 0, mais le nombre de paiement sans contact était supérieur à 0. " +
-            "Le nombre de paiement sans contact a été remis à 0 </li>";
-        }
-
-        if(vm.current.tronc_queteur.don_cb_sans_contact_amount === vm.current.tronc_queteur.don_creditcard &&
-          vm.current.tronc_queteur.don_cb_sans_contact_number !== vm.current.tronc_queteur.don_cb_total_number)
-        {
-          vm.current.tronc_queteur.don_cb_sans_contact_number = vm.current.tronc_queteur.don_cb_total_number;
-          displayConfirmDialog=true;
-          vm.current.confirmInputValuesMessage+="<li>Le total sans contact est égale au total des paiements CB, mais le nombre de paiement sans contact était différent du nombre total de paiement. " +
-            "Le nombre de paiement sans contact a été initialisé au nombre total de paiement </li>";
-        }
-
-        if(vm.current.tronc_queteur.don_cb_sans_contact_amount > 0 && vm.current.tronc_queteur.don_cb_sans_contact_number === 0)
-        {
-          vm.current.tronc_queteur.don_cb_sans_contact_number = 1;
-          displayConfirmDialog=true;
-          vm.current.confirmInputValuesMessage+="<li>Le total sans contact est supérieur à 0, mais le nombre de paiement sans contact était égale à 0. " +
-            "Le nombre de paiement sans contact a été initialisé à 1 </li>";
-        }
-
-        if(vm.current.tronc_queteur.don_cb_sans_contact_amount > 0 && vm.current.tronc_queteur.don_cb_sans_contact_amount / vm.current.tronc_queteur.don_cb_sans_contact_number > 30)
-        {
-          delete vm.current.tronc_queteur.don_cb_sans_contact_amount;
-          displayConfirmDialog=true;
-          vm.current.confirmInputValuesMessage+="<li>Le total sans contact est supérieur à 0, mais la moyenne des paiements est supérieurs à 30€ (maximum légal) ==> il doit y avoir une erreur dans la saisie " +
-            "Le montant des paiements sans contact a été vidé pour vous forcer à contrôler la saisie </li>";
-        }
-
       }
 
 

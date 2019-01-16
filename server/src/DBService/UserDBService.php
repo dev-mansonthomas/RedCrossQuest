@@ -1,11 +1,9 @@
 <?php
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use Ramsey\Uuid\Uuid;
-
-
-include_once("../../src/DBService/DBService.php");
-
 use RedCrossQuest\Entity\UserEntity;
 use PDOException;
 
@@ -108,7 +106,7 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch());
+      $result = new UserEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -152,7 +150,7 @@ LIMIT 1
     $i = 0;
     while ($row = $stmt->fetch())
     {
-      $results[$i++] = new UserEntity($row);
+      $results[$i++] = new UserEntity($row, $this->logger);
     }
 
     $stmt->closeCursor();
@@ -206,7 +204,7 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch());
+      $result = new UserEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -260,7 +258,7 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch());
+      $result = new UserEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -298,7 +296,7 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch());
+      $result = new UserEntity($stmt->fetch(), $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -328,6 +326,7 @@ UPDATE  `users`
 SET     init_passwd_uuid  = :uuid,
         init_passwd_date  = DATE_ADD(NOW(), INTERVAL 1 HOUR)
 WHERE   nivol             = :nivol
+AND     active            = 1
 ";
 
     $stmt = $this->db->prepare($sql);

@@ -6,22 +6,11 @@
  * Time: 18:35
  */
 
+require '../../vendor/autoload.php';
 
 use Carbon\Carbon;
 
-use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
-use \RedCrossQuest\DBService\TroncQueteurDBService;
-use \RedCrossQuest\DBService\QueteurDBService     ;
-use \RedCrossQuest\DBService\PointQueteDBService  ;
-use \RedCrossQuest\DBService\TroncDBService       ;
-
 use \RedCrossQuest\Entity\TroncQueteurEntity;
-
-include_once("../../src/DBService/TroncQueteurDBService.php");
-include_once("../../src/DBService/QueteurDBService.php");
-include_once("../../src/DBService/PointQueteDBService.php");
-include_once("../../src/DBService/TroncDBService.php");
-include_once("../../src/BusinessService/TroncQueteurBusinessService.php");
 
 /********************************* TRONC_QUETEUR ****************************************/
 
@@ -41,8 +30,7 @@ $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($reques
 
     $this->logger->addError("user $userId of UL $ulId is deleting tronc id=$troncId");
 
-    $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
-    $troncQueteurDBService->deleteNonReturnedTroncQueteur($troncId, $ulId, $userId);
+    $this->troncQueteurDBService->deleteNonReturnedTroncQueteur($troncId, $ulId, $userId);
   }
   catch(\Exception $e)
   {
@@ -66,8 +54,6 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
     $params       = $request->getQueryParams();
     $userId       = (int)$decodedToken->getUid ();
 
-    $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
-
     $adminMode = false;
     if(array_key_exists('adminMode', $params))
     {//in order to not overwrite the comptage date in the DB
@@ -80,6 +66,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       $action = $params['action'];
       $input  = $request->getParsedBody();
 
+      /** @var TroncQueteurEntity */
       $tq = new TroncQueteurEntity($input, $this->logger);
 
       if ($action =="saveReturnDate")
@@ -88,24 +75,48 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
         if(array_key_exists('dateDepartIsMissing', $params) && $params['dateDepartIsMissing'] == true)
         {
           $this->logger->addInfo("Setting date depart that was missing for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart));
-          $troncQueteurDBService->setDepartToCustomDate($tq, $ulId, $userId);
+          $this->troncQueteurDBService->setDepartToCustomDate($tq, $ulId, $userId);
         }
 
-        $troncQueteurDBService->updateRetour($tq, $ulId, $userId);
+        $this->troncQueteurDBService->updateRetour($tq, $ulId, $userId);
       }
       elseif ($action =="saveCoins")
       {
-        $this->logger->addError("SaveCoins", array("input"=>$input));
-        $this->logger->addError("SaveCoins", array("tronc_queteur"=>$tq));
-        $troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
+        $this->troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
+
+        /**
+         * When updating BigQuery, we need to know if it's the first time the user input the coins data or not
+         * So that we know it's an insert or update that we must perform
+         */
+
+        $responseMessageIds = null;
+        try
+        {
+          if($tq->comptage == null || true)
+          {
+            $responseMessageIds = $this->PubSub->publish("tronc_queteur", $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
+          }
+          else
+          {
+            $responseMessageIds = $this->PubSub->publish("tronc_queteur_updated", $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
+          }
+
+          $this->logger->addError("Publish responses ", array("response"=>$responseMessageIds));
+
+        }
+        catch(\Exception $exception)
+        {
+          $this->logger->addError("error while publishing on topic='tronc_queteur'", array("exception"=>$exception));
+        }
+
       }
       elseif ($action =="saveAsAdmin")
       {
-        $troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
+        $this->troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
       }
       elseif ($action =="cancelDepart")
       {
-        $numberOfRowUpdated = $troncQueteurDBService->cancelDepart($tq, $ulId, $userId);
+        $numberOfRowUpdated = $this->troncQueteurDBService->cancelDepart($tq, $ulId, $userId);
         if($numberOfRowUpdated != 1 )
         {
           $this->logger->addError("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null", array("tronc_queteur"=>$tq->id));
@@ -116,7 +127,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       elseif ($action =="cancelRetour")
       {
 
-        $numberOfRowUpdated = $troncQueteurDBService->cancelRetour($tq, $ulId, $userId);
+        $numberOfRowUpdated = $this->troncQueteurDBService->cancelRetour($tq, $ulId, $userId);
         if($numberOfRowUpdated != 1 )
         {
           $this->logger->addError("numberOfRowUpdated=$numberOfRowUpdated, likely that comptage is not null", array("tronc_queteur"=>$tq->id));
@@ -159,25 +170,16 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
     $params       = $request->getQueryParams();
     $userId       = (int)$decodedToken->getUid ();
 
-    $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
-
     if(array_key_exists('action', $params))
     {
       $action   = $params['action'  ];
       $tronc_id = $params['tronc_id'];
       $roleId   = (int)$args['role-id'];
 
-      $troncQueteurBusinessService = new TroncQueteurBusinessService( $this->logger,
-        $troncQueteurDBService,
-        new QueteurDBService   ($this->db, $this->logger),
-        new PointQueteDBService($this->db, $this->logger),
-        new TroncDBService     ($this->db, $this->logger)
-      );
-
       if($action == "getTroncQueteurForTroncIdAndSetDepart")
       {// départ du tronc
         $this->logger->warn("TroncQueteur POST DEPART");
-        $tq = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
+        $tq = $this->troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
 
         if($tq->depart_theorique->year != (new Carbon())->year)
         {
@@ -195,7 +197,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
           {
             if($tq->depart == null)
             {
-              $departDate = $troncQueteurDBService->setDepartToNow($tq->id, $ulId, $userId);
+              $departDate = $this->troncQueteurDBService->setDepartToNow($tq->id, $ulId, $userId);
               $tq->depart = $departDate;
             }
             else
@@ -220,7 +222,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
       $input = $request->getParsedBody();
       $tq    = new TroncQueteurEntity($input, $this->logger);
 
-      $insertResponse = $troncQueteurDBService->insert($tq, $ulId, $userId);
+      $insertResponse = $this->troncQueteurDBService->insert($tq, $ulId, $userId);
 
       if($insertResponse->troncInUse != true)
       {//if the tronc is not already in use, the we can save the preparation
@@ -228,7 +230,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
         if($tq->preparationAndDepart == true)
         {//if the user click to Save And perform the depart, we proceed and save the depart
           $this->logger->warn("TroncQueteur POST PREPARATION DEPART NOW");
-          $troncQueteurDBService->setDepartToNow($insertResponse->lastInsertId, $ulId, $userId);
+          $this->troncQueteurDBService->setDepartToNow($insertResponse->lastInsertId, $ulId, $userId);
         }
       }
       else
@@ -264,41 +266,32 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
     $queteur_id = null;
     $tronc_id   = null;
 
-    $params = $request->getQueryParams();
+    $params       = $request->getQueryParams();
     $troncQueteur = null;
 
     if(array_key_exists('action', $params))
     {
       $action   = $params['action'  ];
       //$this->logger->debug("action='$action'", array('decodedToken'=>$decodedToken));
-      $troncQueteurDBService       = new TroncQueteurDBService($this->db, $this->logger);
 
       if($action == "getLastTroncQueteurFromTroncId")
       {
-        $troncQueteurBusinessService = new TroncQueteurBusinessService(
-          $this->logger                                      ,
-          $troncQueteurDBService                             ,
-          new QueteurDBService     ($this->db, $this->logger),
-          new PointQueteDBService  ($this->db, $this->logger),
-          new TroncDBService       ($this->db, $this->logger)
-        );
-
         $tronc_id     = $params['tronc_id'];
-        $troncQueteur = $troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
+        $troncQueteur = $this->troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
         $response->getBody()->write(json_encode($troncQueteur));
         return $response;
       }
       else if($action == "getTroncsQueteurForTroncId")
       {
         $tronc_id     = $params['tronc_id'];
-        $troncQueteur = $troncQueteurDBService->getTroncsQueteurByTroncId($tronc_id, $ulId);
+        $troncQueteur = $this->troncQueteurDBService->getTroncsQueteurByTroncId($tronc_id, $ulId);
         $response->getBody()->write(json_encode($troncQueteur));
         return $response;
       }
       else if($action == "getTroncsOfQueteur")
       {
         $queteur_id             = $params['queteur_id'];
-        $troncsQueteur          = $troncQueteurDBService->getTroncsQueteur($queteur_id, $ulId);
+        $troncsQueteur          = $this->troncQueteurDBService->getTroncsQueteur($queteur_id, $ulId);
         $response->getBody()->write(json_encode($troncsQueteur));
 
         return $response;
@@ -309,7 +302,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
         $type        = $params['type'];
 
         $this->logger->debug("action='$action'", array('query'=>$query, 'type'=>$type));
-        $moneyBagIds = $troncQueteurDBService->searchMoneyBagId($query, $type, $ulId);
+        $moneyBagIds = $this->troncQueteurDBService->searchMoneyBagId($query, $type, $ulId);
         $response->getBody()->write(json_encode($moneyBagIds));
         return $response;
       }
@@ -339,15 +332,8 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
     $ulId           = (int)$args['ul-id'];
     $troncQueteurId = (int)$args['id'];
     $roleId         = (int)$args['role-id'];
-    //$this->logger->debug("Getting tronc_queteur with id '".$troncQueteurId."'", array('decodedToken'=>$decodedToken));
 
-    $troncQueteurAction = new TroncQueteurBusinessService($this->logger,
-      new TroncQueteurDBService($this->db, $this->logger),
-      new QueteurDBService     ($this->db, $this->logger),
-      new PointQueteDBService  ($this->db, $this->logger),
-      new TroncDBService       ($this->db, $this->logger));
-
-    $troncQueteur = $troncQueteurAction->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId, $roleId);
+    $troncQueteur = $this->troncQueteurBusinessService->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId, $roleId);
     $response->getBody()->write(json_encode($troncQueteur));
 
     return $response;

@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use Ramsey\Uuid\Uuid;
 
 use DateTime;
@@ -21,10 +23,23 @@ class SpotfireAccessDBService extends DBService
    * @param int $tokenTTL TimeToLive in Hours of the Token
    * @return Object the date right after insertion, so that the frontend can know how long to wait for the next update of Spotfire.
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function grantAccess(int $userId, int $ulId, int $tokenTTL)
   {
     $token = Uuid::uuid4();
+
+    $currentValidToken = $this->getValidToken($userId, $ulId);
+
+    if($currentValidToken != null)
+    {//A valid Token exist, we don't overwrite it. (Otherwise the spotfire access keeps beeing disconnected)
+
+     // $this->logger->info('spotfireAccess Token:', [$currentValidToken->token]);
+
+      return (object)["token"=>$currentValidToken->token];
+    }
+
+
 
     //clean up previous access
     $deleteSQL="
@@ -45,7 +60,7 @@ INSERT INTO `spotfire_access`
   `ul_id`,
   `user_id`
 )
-VALUES
+VALUES  
 (
   :token,
   :token_expiration,
@@ -84,6 +99,7 @@ VALUES
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return SpotfireAccessEntity the info of the spotfire token
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getValidToken(int $userId, int $ulId)
   {
@@ -92,7 +108,10 @@ VALUES
     FROM    spotfire_access
     WHERE   ul_id   = :ulId
     AND     user_id = :userId
+    AND     token_expiration > NOW()
     ";
+//+ INTERVAL 1 HOUR
+//TODO need to check if we need an offset of 1 or 2 hours, for the timezone differences.
 
     $stmt = $this->db->prepare($sql);
 
@@ -102,8 +121,15 @@ VALUES
           "ulId"   => $ulId
       ]);
 
-    $data =$stmt->fetch();
-    $spotfireAccess = new SpotfireAccessEntity($data);
+    if($stmt->rowCount() == 1)
+    {
+      $data = $stmt->fetch();
+      $spotfireAccess = new SpotfireAccessEntity($data, $this->logger);
+    }
+    else
+    {
+      $spotfireAccess = null;
+    }
     $stmt->closeCursor();
     return $spotfireAccess;
   }

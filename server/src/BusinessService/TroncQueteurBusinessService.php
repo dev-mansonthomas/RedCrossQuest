@@ -19,18 +19,13 @@ class TroncQueteurBusinessService
   protected $pointQueteDBService  ;
   protected $troncDBService       ;
 
-  public function __construct($logger,
-                              $troncQueteurDBService ,
-                              $queteurDBService      ,
-                              $pointQueteDBService   ,
-                              $troncDBService        )
+  public function __construct(\Slim\Container $c)
   {
-    $this->logger = $logger;
-
-    $this->troncQueteurDBService = $troncQueteurDBService;
-    $this->queteurDBService      = $queteurDBService;
-    $this->pointQueteDBService   = $pointQueteDBService;
-    $this->troncDBService        = $troncDBService;
+    $this->logger                = $c->logger;
+    $this->troncQueteurDBService = $c->troncQueteurDBService;
+    $this->queteurDBService      = $c->queteurDBService;
+    $this->pointQueteDBService   = $c->pointQueteDBService;
+    $this->troncDBService        = $c->troncDBService;
   }
   
   public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId)

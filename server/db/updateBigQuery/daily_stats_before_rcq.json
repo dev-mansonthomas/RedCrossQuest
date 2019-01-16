@@ -1,0 +1,5 @@
+[
+{"name": "id","type":"INTEGER"},
+{"name": "ul_id","type":"INTEGER"},
+{"name": "date","type":"STRING"},
+{"name": "amount","type":"FLOAT"}

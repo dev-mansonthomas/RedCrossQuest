@@ -18,9 +18,9 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
 
   return service;
 
-  function sendInit(username, callback, errorCallback)
+  function sendInit(username, token, callback, errorCallback)
   {
-    $http.post('/rest/sendInit', { username: username })
+    $http.post('/rest/sendInit', { username: username, token: token })
       .then(function success(response) {
         // login successful if there's a token in the response
         if(response.data.success)
@@ -40,32 +40,36 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
       });
   }
 
-  function getUserInfoWithUUID(uuid, callback)
+  function getUserInfoWithUUID(uuid, token, callback, errorCallback)
   {
-    $http.get('/rest/getInfoFromUUID', { params:{uuid: uuid} })
-      .then(function successCallback(response) {
-        // login successful if there's a token in the response
-        if(response.data.success)
+    $http.get('/rest/getInfoFromUUID', { params:{uuid: uuid, token:token} })
+      .then(
+        function successCallback(response)
         {
-          // execute callback with true to indicate successful login
-          callback(true, response.data);
-        }
-        else
+          // login successful if there's a token in the response
+          if(response.data.success)
+          {
+            // execute callback with true to indicate successful login
+            callback(true, response.data);
+          }
+          else
+          {
+            // execute callback with false to indicate failed login
+            callback(false);
+          }
+        },
+        function (error)
         {
-          // execute callback with false to indicate failed login
-          callback(false);
-        }
-      },
-      function errorCallback(error){
-        $log.error(error);
-      });
+          errorCallback(error);
+          $log.error(error);
+        });
   }
 
 
 
-  function resetPassword(uuid, password, callback)
+  function resetPassword(uuid, password, token, callback)
   {
-    $http.post('/rest/resetPassword', { uuid: uuid, password: password })
+    $http.post('/rest/resetPassword', { uuid: uuid, password: password, token:token })
       .then(function successCallback(response) {
         // login successful if there's a token in the response
         if(response.data.success)
@@ -85,9 +89,9 @@ function AuthenticationService ($http, $localStorage, jwtHelper, $log)
   }
 
 
-  function login(username, password, callback, errorCallback)
+  function login(username, password, token, callback, errorCallback)
   {
-    $http.post('/rest/authenticate', { username: username, password: password })
+    $http.post('/rest/authenticate', { username: username, password: password, token:token })
       .then(function successCallback(response) {
         // login successful if there's a token in the response
         if (response.data.token)

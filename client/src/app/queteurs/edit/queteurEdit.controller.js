@@ -28,7 +28,7 @@
     vm.typeBenevoleList=[
       {id:1,label:'Action Sociale'                        },
       {id:2,label:'Secours'                               },
-      {id:3,label:'Non Bénévole'                          },
+      {id:3,label:'Bénévole d\'un Jour'                   },
       {id:4,label:'Ancien Bénévole, Inactif ou Adhérent'  },
       {id:5,label:'Commerçant'                            },
       {id:6,label:'Spécial'                               }
@@ -249,7 +249,9 @@
       {
         vm.current.saveInProgress=true;
         if (angular.isDefined(vm.current.id) && vm.current.id != null)
-        {
+        {//WARNING : le 9 janvier (heure d'hiver), coté javascript la date envoyé est le jour d'avant à 23h
+          // le fix ci dessous, envoie la date en string, qui est vue comme une date venant de la DB pour Entity.php
+          vm.current.birthdate = DateTimeHandlingService.handleDateWithoutTime(vm.current.birthdate);
           vm.current.$update(vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
         }
         else

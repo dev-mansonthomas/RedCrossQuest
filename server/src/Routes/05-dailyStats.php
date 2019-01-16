@@ -6,10 +6,10 @@
  * Time: 18:38
  */
 
-use \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
 
-include_once("../../src/Entity/DailyStatsBeforeRCQEntity.php");
 /********************************* QUETEUR ****************************************/
 
 
@@ -36,14 +36,16 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
       $year =  date("Y");
     }
 
-    $dailyStatsBeforeRCQDBService = new DailyStatsBeforeRCQDBService($this->db, $this->logger);
+
     //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
-    $dailyStats = $dailyStatsBeforeRCQDBService->getDailyStats($ulId, $year);
+    $dailyStats = $this->dailyStatsBeforeRCQDBService->getDailyStats($ulId, $year);
 
+    if($dailyStats !== null && count($dailyStats) > 0)
+    {
+      $this->logger->addInfo($dailyStats[0]->generateCSVHeader());
+      $this->logger->addInfo($dailyStats[0]->generateCSVRow());
 
-    $this->logger->addInfo($dailyStats[0]->generateCSVHeader());
-    $this->logger->addInfo($dailyStats[0]->generateCSVRow());
-
+    }
     $response->getBody()->write(json_encode($dailyStats));
 
     return $response;
@@ -70,11 +72,10 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
   {
     $ulId = (int)$args['ul-id'];
 
-    $dailyStatsBeforeRCQDBService = new DailyStatsBeforeRCQDBService($this->db, $this->logger);
     $input                        = $request->getParsedBody();
-    $dailyStatsBeforeRCQEntity    = new DailyStatsBeforeRCQEntity($input);
+    $dailyStatsBeforeRCQEntity    = new DailyStatsBeforeRCQEntity($input, $this->logger);
     
-    $dailyStatsBeforeRCQDBService->update($dailyStatsBeforeRCQEntity, $ulId);
+    $this->dailyStatsBeforeRCQDBService->update($dailyStatsBeforeRCQEntity, $ulId);
   }
   catch(\Exception $e)
   {
@@ -96,9 +97,8 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respon
   {
     $ulId = (int)$args['ul-id'];
 
-    $dailyStatsBeforeRCQDBService = new DailyStatsBeforeRCQDBService($this->db, $this->logger);
     $input                        = $request->getParsedBody();
-    $dailyStatsBeforeRCQDBService->createYear($ulId, $input['year']);
+    $this->dailyStatsBeforeRCQDBService->createYear($ulId, $input['year']);
   }
   catch(\Exception $e)
   {

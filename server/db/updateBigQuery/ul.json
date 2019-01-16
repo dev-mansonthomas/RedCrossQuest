@@ -1,0 +1,17 @@
+[
+{"name": "id","type":"INTEGER"},
+{"name": "name","type":"STRING"},
+{"name": "phone","type":"STRING"},
+{"name": "latitude","type":"FLOAT"},
+{"name": "longitude","type":"FLOAT"},
+{"name": "address","type":"STRING"},
+{"name": "postal_code","type":"STRING"},
+{"name": "city","type":"STRING"},
+{"name": "external_id","type":"INTEGER"},
+{"name": "email","type":"STRING"},
+{"name": "id_structure_rattachement","type":"INTEGER"},
+{"name": "date_demarrage_activite","type":"STRING"},
+{"name": "date_demarrage_rcq","type":"STRING"},
+{"name": "mode","type":"INTEGER"},
+{"name": "publicDashboard","type":"STRING"},
+{"name": "spotfire_access_token","type":"STRING"}

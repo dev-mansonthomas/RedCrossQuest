@@ -6,7 +6,8 @@
  * Time: 18:36
  */
 
-use \RedCrossQuest\DBService\PointQueteDBService;
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\PointQueteEntity;
 
 /********************************* POINT_QUETE ****************************************/
@@ -22,9 +23,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
 
   try
   {
-    $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
-
-    $pointQuete = $pointQueteDBService->getPointQueteById($id, $ulId, $roleId);
+    $pointQuete = $this->pointQueteDBService->getPointQueteById($id, $ulId, $roleId);
 
     $response->getBody()->write(json_encode($pointQuete));
 
@@ -53,8 +52,6 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
     $ulId   = (int)$args['ul-id'  ];
     $roleId = (int)$args['role-id'];
 
-    $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
-
     $params = $request->getQueryParams();
 
     $action = array_key_exists('action',$params)?$params['action']:null;
@@ -78,11 +75,11 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
       }
 
       //$this->logger->addInfo("PointQuetes query for ul: $ulId");
-      $pointQuetes = $pointQueteDBService->searchPointQuetes($query, $point_quete_type, $active, $ulId);
+      $pointQuetes = $this->pointQueteDBService->searchPointQuetes($query, $point_quete_type, $active, $ulId);
     }
     else
     {//used for the dropdown to select point de quete while preparing a tronc
-      $pointQuetes = $pointQueteDBService->getPointQuetes($ulId);
+      $pointQuetes = $this->pointQueteDBService->getPointQuetes($ulId);
     }
 
 
@@ -113,11 +110,10 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
     $ulId   = (int)$args['ul-id'  ];
     $roleId = (int)$args['role-id'];
 
-    $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
     $input               = $request->getParsedBody();
-    $pointQueteEntity    = new PointQueteEntity($input);
+    $pointQueteEntity    = new PointQueteEntity($input, $this->logger);
 
-    $pointQueteDBService->update($pointQueteEntity, $ulId, $roleId);
+    $this->pointQueteDBService->update($pointQueteEntity, $ulId, $roleId);
   }
   catch(\Exception $e)
   {
@@ -139,11 +135,10 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $respo
   {
     $ulId = (int)$args['ul-id'];
 
-    $pointQueteDBService = new PointQueteDBService($this->db, $this->logger);
     $input               = $request->getParsedBody();
-    $pointQueteEntity    = new PointQueteEntity($input);
+    $pointQueteEntity    = new PointQueteEntity($input, $this->logger);
 
-    $pointQueteId = $pointQueteDBService->insert            ($pointQueteEntity, $ulId);
+    $pointQueteId = $this->pointQueteDBService->insert            ($pointQueteEntity, $ulId);
 
     $response->getBody()->write(json_encode(array('pointQueteId' =>$pointQueteId), JSON_NUMERIC_CHECK));
   }

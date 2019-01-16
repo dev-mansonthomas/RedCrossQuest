@@ -1,6 +1,7 @@
 <?php
-
 namespace RedCrossQuest\DBService;
+
+require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
 use DateTime;
@@ -26,6 +27,7 @@ class DailyStatsBeforeRCQDBService extends DBService
     "2016"=>["2016-05-28", 8], //fin le 05/06
     "2017"=>["2017-06-10", 8], //fin le 18/06
     "2018"=>["2018-06-09", 8], //fin le 17/06
+    "2019"=>["2019-06-09", 8],
 
   ];
 

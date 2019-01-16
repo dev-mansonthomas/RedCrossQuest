@@ -1,0 +1,5 @@
+[
+{"name": "id","type":"INTEGER"},
+{"name": "queteur_id","type":"INTEGER"},
+{"name": "year","type":"INTEGER"},
+{"name": "status_code","type":"STRING"}

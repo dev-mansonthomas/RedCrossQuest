@@ -1,0 +1,14 @@
+[
+{"name": "id","type":"INTEGER"},
+{"name": "nivol","type":"STRING"},
+{"name": "queteur_id","type":"INTEGER"},
+{"name": "password","type":"STRING"},
+{"name": "role","type":"STRING"},
+{"name": "created","type":"STRING"},
+{"name": "updated","type":"STRING"},
+{"name": "active","type":"INTEGER"},
+{"name": "last_failure_login_date","type":"STRING"},
+{"name": "nb_of_failure","type":"INTEGER"},
+{"name": "last_successful_login_date","type":"STRING"},
+{"name": "init_passwd_uuid","type":"STRING"},
+{"name": "init_passwd_date","type":"STRING"}

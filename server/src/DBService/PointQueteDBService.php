@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Entity\PointQueteEntity;
 use PDOException;
 
@@ -15,6 +17,7 @@ class PointQueteDBService extends DBService
    * @param int $ulId The ID of the Unite Locale
    * @return PointQueteEntity[]  The list of PointQuete
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getPointQuetes(int $ulId)
   {
@@ -53,7 +56,7 @@ ORDER BY type ASC, name ASC
     $i = 0;
     while ($row = $stmt->fetch())
     {
-      $results[$i++] = new PointQueteEntity($row);
+      $results[$i++] = new PointQueteEntity($row, $this->logger);
     }
 
     $stmt->closeCursor();
@@ -70,6 +73,7 @@ ORDER BY type ASC, name ASC
    * @param  int $ulId The ID of the Unite Locale
    * @return PointQueteEntity[]  The list of PointQuete
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function searchPointQuetes(?string $query, ?int $point_quete_type, bool $active, int $ulId)
   {
@@ -131,9 +135,6 @@ $typeSQL
 ORDER BY type ASC, name ASC
 ";
 
-    //$this->logger->addError("parameters", Array("parameters"=>$parameters));
-    //$this->logger->addError("parameters", Array("sql"=>$sql));
-
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);
 
@@ -141,7 +142,7 @@ ORDER BY type ASC, name ASC
     $i = 0;
     while ($row = $stmt->fetch())
     {
-      $results[$i++] = new PointQueteEntity($row);
+      $results[$i++] = new PointQueteEntity($row, $this->logger);
     }
 
     $stmt->closeCursor();
@@ -158,6 +159,7 @@ ORDER BY type ASC, name ASC
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return PointQueteEntity  The point quete info
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getPointQueteById(int $point_quete_id, int $ulId, int $roleId)
   {
@@ -199,7 +201,7 @@ $ulRestriction
 
     $stmt->execute($parameters);
 
-    $point_quete = new PointQueteEntity($stmt->fetch());
+    $point_quete = new PointQueteEntity($stmt->fetch(), $this->logger);
     $stmt->closeCursor();
     return $point_quete;
   }

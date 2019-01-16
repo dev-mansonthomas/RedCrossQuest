@@ -1,6 +1,7 @@
 <?php
-
 namespace RedCrossQuest\DBService;
+
+require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\YearlyGoalEntity;
 use PDOException;
@@ -14,6 +15,7 @@ class YearlyGoalDBService extends DBService
    * @param string  $year The year for which we wants the yearly goals
    * @return YearlyGoalEntity  The YearlyGoalEntity
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getYearlyGoals(int $ulId, string $year)
   {
@@ -44,7 +46,7 @@ ORDER BY y.year DESC
     $row = $stmt->fetch();
     if($row)
     {
-      $yg= new YearlyGoalEntity($row);
+      $yg= new YearlyGoalEntity($row, $this->logger);
     }
 
 
@@ -193,6 +195,7 @@ VALUES
    * @param string  $year The year for which we wants the yearly goals
    * @return YearlyGoalEntity[]  The YearlyGoalEntity
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getYearlyGoalsForExportData(int $ulId, ?string $year)
   {
@@ -232,7 +235,7 @@ ORDER BY y.id ASC
     $i=0;
     while($row = $stmt->fetch())
     {
-      $results[$i++] =  new YearlyGoalEntity($row);
+      $results[$i++] =  new YearlyGoalEntity($row, $this->logger);
     }
     return $results;
   }

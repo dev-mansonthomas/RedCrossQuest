@@ -1,0 +1,8 @@
+[
+{"name": "id","type":"INTEGER"},
+{"name": "ul_id","type":"INTEGER"},
+{"name": "created","type":"STRING"},
+{"name": "enabled","type":"INTEGER"},
+{"name": "notes","type":"STRING"},
+{"name": "type","type":"INTEGER"},
+{"name": "qr_code_printed","type":"INTEGER"}

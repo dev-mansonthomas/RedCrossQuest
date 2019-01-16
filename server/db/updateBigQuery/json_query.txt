@@ -1,0 +1,1 @@
+select CONCAT('{"name": "', COLUMN_NAME, '","type":"', IF(DATA_TYPE like "%int%", "INTEGER",IF(DATA_TYPE = "decimal","FLOAT","STRING")) , '"},') as json from information_schema.columns where TABLE_SCHEMA = 'rcq_fr_test_db' AND TABLE_NAME = 'yearly_goal';

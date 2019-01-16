@@ -23,19 +23,14 @@ class SettingsBusinessService
   /** @var TroncDBService */
   protected $troncDBService;
 
-  public function __construct($logger                 ,
-                              $queteurDBService       ,
-                              $userDBService          ,
-                              $pointQueteDBService    ,
-                              $dailyStatsBeforeRCQDBService,
-                              $troncDBService)
+  public function __construct(\Slim\Container $c)
   {
-    $this->logger               = $logger             ;
-    $this->queteurDBService     = $queteurDBService   ;
-    $this->userDBService        = $userDBService      ;
-    $this->pointQueteDBService  = $pointQueteDBService;
-    $this->dailyStatsBeforeRCQDBService = $dailyStatsBeforeRCQDBService;
-    $this->troncDBService       = $troncDBService;
+    $this->logger                       = $c->logger                      ;
+    $this->queteurDBService             = $c->queteurDBService            ;
+    $this->userDBService                = $c->userDBService               ;
+    $this->pointQueteDBService          = $c->pointQueteDBService         ;
+    $this->dailyStatsBeforeRCQDBService = $c->dailyStatsBeforeRCQDBService;
+    $this->troncDBService               = $c->troncDBService              ;
   }
 
 

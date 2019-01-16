@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use PDOException;
 use RedCrossQuest\Entity\UniteLocaleSettingsEntity;
 
@@ -14,6 +16,7 @@ class UniteLocaleSettingsDBService extends DBService
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return UniteLocaleSettingsEntity  The Unite Locale Settings
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getUniteLocaleById(int $ulId)
   {
@@ -31,7 +34,7 @@ WHERE   `ul`.ul_id    = :ul_id
     $stmt = $this->db->prepare($sql);
 
     $stmt->execute(["ul_id" => $ulId]);
-    $uls = new UniteLocaleSettingsEntity($stmt->fetch());
+    $uls = new UniteLocaleSettingsEntity($stmt->fetch(), $this->logger);
     $stmt->closeCursor();
 
     return $uls;

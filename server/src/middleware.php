@@ -6,7 +6,8 @@
  * Time: 11:32
  */
 
-include_once ("../../src/Middleware/AuthorisationMiddleware.php");
+require '../../vendor/autoload.php';
+
 use \RedCrossQuest\Middleware\AuthorisationMiddleware;
 
 $app->add( new AuthorisationMiddleware($app) );

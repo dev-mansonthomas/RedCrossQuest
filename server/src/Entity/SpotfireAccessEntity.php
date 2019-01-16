@@ -1,6 +1,8 @@
 <?php
 namespace RedCrossQuest\Entity;
 
+use Monolog\Logger;
+
 class SpotfireAccessEntity extends Entity
 {
   public $id                          ;
@@ -16,10 +18,12 @@ class SpotfireAccessEntity extends Entity
    * and create the class
    *
    * @param array $data The data to use to create
+   * @param Logger $logger
    * @throws \Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data)
+  public function __construct(array $data, Logger $logger)
   {
+    parent::__construct($logger);
     $this->getInteger('id'                        , $data);
     $this->getString ('token'                     , $data);
     $this->getDate   ('token_expiration'          , $data);

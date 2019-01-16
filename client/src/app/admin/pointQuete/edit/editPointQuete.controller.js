@@ -11,7 +11,7 @@
 
   /** @ngInject */
   function EditPointQueteController($rootScope, $log, $localStorage, $routeParams, $timeout, $location,
-                                    PointQueteResource, DateTimeHandlingService,  GeoCoder)
+                                    PointQueteResource, DateTimeHandlingService, GeoCoder)
   {
     var vm = this;
 

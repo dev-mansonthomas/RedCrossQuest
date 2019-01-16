@@ -1,6 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
+use Monolog\Logger;
 
 class MailingInfoEntity extends Entity
 {
@@ -31,9 +32,12 @@ class MailingInfoEntity extends Entity
    * and create the class
    *
    * @param array $data The data to use to create
+   * @param Logger $logger
+   * @throws \Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data)
+  public function __construct(array $data, Logger $logger)
   {
+    parent::__construct($logger);
     $this->getString ('id'                          , $data);
     $this->getString ('email'                       , $data);
     $this->getString ('first_name'                  , $data);

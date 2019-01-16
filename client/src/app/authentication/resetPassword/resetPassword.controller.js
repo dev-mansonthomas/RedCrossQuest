@@ -36,8 +36,9 @@
   /* [Nicolas - 18 may] Peut-etre pas necessaire ce @ngInject vu que j'ai defini l'injection , @ngInject
 
    */
-  function ResetPasswordController($rootScope, $location,
-                                   zxcvbn, AuthenticationService) {
+  function ResetPasswordController($rootScope, $location, $scope,
+                                   zxcvbn, AuthenticationService)
+  {
     var vm = this;
     vm.key = null;
     vm.rate = 0;
@@ -47,43 +48,52 @@
 
     AuthenticationService.logout();
 
-    vm.checkIfPasswordMatch = function () {
+    vm.checkIfPasswordMatch = function ()
+    {
       vm.passwordMatch = vm.password === vm.passwordRepeat;
     };
 
-    vm.getPasswordCheckText = function () {
+    vm.getPasswordCheckText = function ()
+    {
       if (typeof vm.passwordRepeat === 'undefined' || vm.passwordRepeat === '')
         return "";
 
       return vm.passwordMatch === true ? "Bravo! les mots de passe correspondent!" : "Echec : Les deux mots de passe ne correspondent pas";
     };
 
-    vm.computeStrength = function () {
+    vm.computeStrength = function ()
+    {
       if (typeof vm.password === 'undefined' || vm.password === '')
         vm.rate = 0;
       else
         vm.rate = zxcvbn(vm.password).score;
     };
 
-    vm.getTxtFromRating = function () {
+    vm.getTxtFromRating = function ()
+    {
       if (typeof vm.password === 'undefined' || vm.password === '')
         return "";
 
       vm.checkIfPasswordMatch();
 
-      if (vm.rate === 0) {
+      if (vm.rate === 0)
+      {
         return "Booouuuuhhh, vraiment... c'est pas un password ca ;)";
       }
-      else if (vm.rate === 1) {
+      else if (vm.rate === 1)
+      {
         return "Trop facile à deviner ! Ayez un peu d'imagination ;)";
       }
-      else if (vm.rate === 2) {
+      else if (vm.rate === 2)
+      {
         return "Devinable sans trop de difficulté... encore un effort !";
       }
-      else if (vm.rate === 3) {
+      else if (vm.rate === 3)
+      {
         return "Difficilement devinable, c'est pas mal !";
       }
-      else if (vm.rate === 4) {
+      else if (vm.rate === 4)
+      {
         return "Très bon password ! Bravo !";
       }
     };
@@ -91,29 +101,71 @@
 
     vm.resetPassword = resetPassword;
 
-    initController();
+    //on slow network, the recaptcha lib is not yet loaded
+    addEventListener("load", initController);
 
-    function initController() {
+
+
+    function initController()
+    {
       // reset login status
       vm.key = $location.search()['key'];
-      AuthenticationService.getUserInfoWithUUID(vm.key, function (success, info) {
-        if (success) {
-          vm.info = [info.first_name, info.last_name, info.email, info.mobile, info.nivol];
-          vm.username = info.nivol;
+      vm.loading = true;
 
-          vm.error = null;
-          vm.loading = false;
+      //recaptchaKey is defined in index.html
+      grecaptcha.execute(recaptchaKey, {action: 'rcq/getUserInfoWithUUID'})
+        .then(function(token)
+        {
+          AuthenticationService.getUserInfoWithUUID
+          (
+            vm.key, token,
+            function (success, info)
+            {
+              if (success)
+              {
+                vm.info     = [info.first_name, info.last_name, info.email, info.mobile, info.nivol];
+                vm.username = info.nivol;
 
-
-        }
-        else {
-          vm.error = "Votre demande est invalide ou périmée ou votre utilisateur a été désactivé. Veuillez contacter le support.";
-        }
-
-      });
-
+                vm.error    = null;
+                vm.loading  = false;
+              }
+              else
+              {
+                vm.error = "Votre demande est invalide ou périmée ou votre utilisateur a été désactivé. Veuillez contacter le support.";
+              }
+            },
+            function (errorMessage)
+            {
+              vm.error = JSON.stringify(errorMessage.data);
+            }
+          );
+        });
 
     }
+
+    function resetPassword()
+    {
+      vm.loading = true;
+
+      //recaptchaKey is defined in index.html
+      grecaptcha.execute(recaptchaKey, {action: 'rcq/resetPassword'})
+        .then(function(token)
+        {
+          AuthenticationService.resetPassword(vm.key, vm.password, token, function (success, email) {
+
+            if (success) {
+              vm.error = null;
+              vm.success = 'Un email de confirmation vient de vous être envoyé (' + JSON.stringify(email).slice(1, -1) + ')';
+              vm.loading = false;
+            }
+            else {
+              vm.error = 'Une erreur est survenue. Veuillez contacter votre cadre local ou départemental';
+              vm.success = null;
+              vm.loading = false;
+            }
+          });
+
+        });
 
     function resetPassword() {
       vm.loading = true;
@@ -131,7 +183,6 @@
         }
       });
     }
-
   }
 
   angular
@@ -139,5 +190,5 @@
     .factory('zxcvbn', function () {
       return window.zxcvbn; // zxcvbn ext charge par le bout de code 'ZXCVBN_SRC'
     })
-    .controller('ResetPasswordController', ['$rootScope','$location', 'zxcvbn', 'AuthenticationService', ResetPasswordController]);
+    .controller('ResetPasswordController', ['$rootScope','$location', '$scope', 'zxcvbn', 'AuthenticationService', ResetPasswordController]);
 })();

@@ -2,6 +2,8 @@
 
 namespace RedCrossQuest\DBService;
 
+require '../../vendor/autoload.php';
+
 use RedCrossQuest\Entity\QueteurEntity;
 use PDOException;
 use Ramsey\Uuid\Uuid;
@@ -19,6 +21,7 @@ class QueteurDBService extends DBService
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return QueteurEntity[]  the list of Queteurs
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations
    */
   public function getQueteurs(string $query, int $ulId)
   {
@@ -71,7 +74,7 @@ AND
     $i = 0;
     while ($row = $stmt->fetch())
     {
-      $results[$i++] = new QueteurEntity($row);
+      $results[$i++] = new QueteurEntity($row, $this->logger);
     }
 
     $stmt->closeCursor();
@@ -96,7 +99,7 @@ AND
    * @param int     $QRSearchType Type of QRCode Search :  0 all, 1: Printed, 2: Not printed
    * @return QueteurEntity[] list of Queteurs
    * @throws PDOException if the query fails to execute on the server
-   *
+   * @throws \Exception in other situations
    */
   public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId,
                                  bool $active, bool $benevoleOnly, bool $rcqUser, ?string $queteurIds,
@@ -181,7 +184,42 @@ AND q.id IN (
 
 
 
-    $sqlSearchAll = "
+    $sql = null;
+    switch ($searchType)
+    {
+      case 0:
+        $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL);
+        break;
+      case 1:
+        $sql = $this->getSearchNotLeftQuery     ($querySQL, $secteurSQL, $rcqUserSQL);
+        break;
+      case 2:
+        $sql = $this->getSearchNotReturnedQuery ($querySQL, $secteurSQL, $rcqUserSQL);
+        break;
+      default:
+        $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL);
+    }
+
+
+    $stmt   = $this->db->prepare($sql);
+    $parameters["active"] = $active;
+
+    $stmt->execute($parameters);
+
+    $results = [];
+    $i = 0;
+    while ($row = $stmt->fetch())
+    {
+      $results[$i++] = new QueteurEntity($row, $this->logger);
+    }
+    $stmt->closeCursor();
+    return $results;
+  }
+
+  private function getSearchAllQuery($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL)
+  {
+
+     return "
 SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
@@ -239,8 +277,11 @@ AND
 )
 ORDER BY q.last_name ASC
 ";
+  }
 
-    $sqlSearchNotLeft = "
+  private function getSearchNotLeftQuery($querySQL, $secteurSQL, $rcqUserSQL)
+  {
+    return "
 SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
@@ -288,8 +329,12 @@ AND    tq.id      = (
 AND  tq.point_quete_id = pq.id
 ORDER BY q.last_name ASC
 ";
+  }
 
-    $sqlSearchNotReturned = "
+  private function getSearchNotReturnedQuery($querySQL, $secteurSQL, $rcqUserSQL)
+  {
+
+    return "
 SELECT  q.`id`,
         q.`email`,
         q.`first_name`,
@@ -305,26 +350,26 @@ SELECT  q.`id`,
         q.`man`,
         q.`birthdate`,
         q.`qr_code_printed`,
-       tq.`point_quete_id`, 
-       tq.`depart_theorique`, 
-       tq.`depart`, 
+       tq.`point_quete_id`,
+       tq.`depart_theorique`,
+       tq.`depart`,
        tq.`retour`,
         u.name       as 'ul_name',
         u.latitude   as 'ul_latitude',
-        u.longitude  as 'ul_longitude' 
+        u.longitude  as 'ul_longitude'
 FROM       queteur AS q,
-     tronc_queteur AS tq, 
+     tronc_queteur AS tq,
                 ul AS u
 WHERE  q.ul_id = :ul_id
 AND    q.ul_id = u.id
 AND    q.active= :active
-$querySQL 
-$secteurSQL 
+$querySQL
+$secteurSQL
 $rcqUserSQL
 AND     q.id      = tq.queteur_id
 AND    tq.deleted = 0
-AND    tq.id      = (  
-      SELECT tqq.id 
+AND    tq.id      = (
+      SELECT tqq.id
       FROM  tronc_queteur tqq
       WHERE tqq.queteur_id = q.id
       AND   depart IS NOT NULL
@@ -334,38 +379,12 @@ AND    tq.id      = (
     )
 ORDER BY q.last_name ASC
 ";
-    $sql = null;
-    switch ($searchType) {
-      case 0:
-        $sql = $sqlSearchAll;
-        break;
-      case 1:
-        $sql = $sqlSearchNotLeft;
-        break;
-      case 2:
-        $sql = $sqlSearchNotReturned;
-        break;
-      default:
-        $sql = $sqlSearchAll;
-    }
-
-
-    //$this->logger->addInfo("SQL Query for queteur search", array("sql"=>$sql, "parameters"=>$parameters));
-    $stmt   = $this->db->prepare($sql);
-    $parameters["active"] = $active;
-
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new QueteurEntity($row);
-    }
-    //$this->logger->addDebug("retrieved $i queteurs, searchType:'$searchType', secteur='$secteur', query='$query' ".print_r($parameters, true));
-    $stmt->closeCursor();
-    return $results;
   }
+
+
+
+
+
 
   /**
    * Get one queteur by its ID
@@ -373,6 +392,7 @@ ORDER BY q.last_name ASC
    * @param int $queteur_id The ID of the queteur
    * @return QueteurEntity  The queteur
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations
    */
   public function getQueteurById(int $queteur_id)
   {
@@ -408,7 +428,7 @@ AND    q.ul_id = u.id
 
     $stmt->execute(["queteur_id" => $queteur_id]);
 
-    $queteur = new QueteurEntity($stmt->fetch());
+    $queteur = new QueteurEntity($stmt->fetch(), $this->logger);
     $stmt->closeCursor();
 
     if($queteur->referent_volunteer > 0)
@@ -429,6 +449,7 @@ AND    q.ul_id = u.id
    * @param string $nivol The NIVOL of the queteur
    * @return QueteurEntity  The queteur
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations
    */
   public function getQueteurByNivol(string $nivol)
   {
@@ -463,7 +484,7 @@ AND    q.ul_id   = u.id
 
     $stmt->execute(["nivol" => $nivol]);
 
-    $queteur = new QueteurEntity($stmt->fetch());
+    $queteur = new QueteurEntity($stmt->fetch(), $this->logger);
     $stmt->closeCursor();
     return $queteur;
   }
@@ -479,6 +500,8 @@ AND    q.ul_id   = u.id
    */
   public function update(QueteurEntity $queteur, int $ulId, int $roleId)
   {
+
+    $this->logger->addError("queteur->birthdate:".$queteur->birthdate);
     $sql = "
 UPDATE `queteur`
 SET
@@ -640,6 +663,7 @@ VALUES
    * @param string $nivol what's beeing typed in nivol field
    * @throws PDOException if the query fails to execute on the server
    * @return QueteurEntity[]  the list of Queteurs matching the query
+   * @throws \Exception in other situations
    */
   public function searchSimilarQueteur(int $ulId, ?string $firstName, ?string $lastName, ?string $nivol)
   {
@@ -649,7 +673,6 @@ VALUES
     $searchFirstName = "";
     $searchLastName  = "";
     $searchNivol     = "";
-    $AND             = "";
     $numberOfParameters = 0;
 
     if($firstName != null)
@@ -667,6 +690,10 @@ q.`first_name` like :first_name
       {
         $OR="OR";
       }
+      else
+      {
+        $OR="";
+      }
 
       $searchLastName = "
 $OR q.`last_name` like :last_name
@@ -681,6 +708,10 @@ $OR q.`last_name` like :last_name
       if($numberOfParameters>0)
       {
         $OR="OR";
+      }
+      else
+      {
+        $OR="";
       }
 
       $searchNivol = "
@@ -709,15 +740,13 @@ $searchNivol
 ";
 
     $stmt   = $this->db->prepare($sql);
-    //$this->logger->addInfo($sql);
-    //$this->logger->addInfo(print_r($parameters, true));
     $stmt->execute($parameters);
 
     $results = [];
     $i = 0;
     while ($row = $stmt->fetch())
     {
-      $results[$i++] = new QueteurEntity($row);
+      $results[$i++] = new QueteurEntity($row, $this->logger);
     }
 
     $stmt->closeCursor();
@@ -738,6 +767,7 @@ $searchNivol
    * @param int $userId id of the user performing the action.
    * @return string token associated with the queteur
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations
    */
   public function anonymize(int $queteurId, int $ulId, int $roleId, int $userId)
   {
@@ -813,6 +843,7 @@ WHERE  `ul_id`           = :ul_id
    * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
    * @return QueteurEntity[]  One Queteur or 0, in an array for compatibilty with the search feature
    * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations, possibly : parsing error in the entity
    */
   public function getQueteurByAnonymizationToken(string $anonymization_token, int $ulId, int $roleId)
   {
@@ -860,7 +891,7 @@ AND    q.ul_id   = :ul_id
     $row = $stmt->fetch();
     if($row)
     {
-      $queteur = new QueteurEntity($row);
+      $queteur = new QueteurEntity($row, $this->logger);
       $stmt->closeCursor();
       return [$queteur];
     }
@@ -868,6 +899,5 @@ AND    q.ul_id   = :ul_id
     {
       return [];
     }
-
   }
 }
