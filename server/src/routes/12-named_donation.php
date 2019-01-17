@@ -6,7 +6,9 @@
  * Time: 18:38
  */
 
-use \RedCrossQuest\DBService\NamedDonationDBService;
+require '../../vendor/autoload.php';
+
+
 use \RedCrossQuest\Entity\NamedDonationEntity;
 
 
@@ -36,14 +38,9 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $res
       $ulId = $adminUlId;
     }
 
-    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
-    //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
-    $namedDonations = $namedDonationDBService->getNamedDonations($query, $deleted, $year, $ulId);
-
+    $namedDonations = $this->namedDonationDBService->getNamedDonations($query, $deleted, $year, $ulId);
 
     $response->getBody()->write(json_encode($namedDonations));
-
-
 
     return $response;
   }
@@ -69,9 +66,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request,
     $id     = (int)$args['id'];
     $roleId = (int)$args['role-id'];
 
-    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
-
-    $namedDonationEntity = $namedDonationDBService->getNamedDonationById($id, $ulId, $roleId);
+    $namedDonationEntity = $this->namedDonationDBService->getNamedDonationById($id, $ulId, $roleId);
 
     $response->getBody()->write(json_encode($namedDonationEntity));
     return $response;
@@ -98,11 +93,10 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request,
     $ulId   = (int)$args['ul-id'];
     $userId = (int)$decodedToken->getUid ();
 
-    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
     $input                  = $request->getParsedBody();
     $namedDonationEntity    = new NamedDonationEntity($input, $this->logger);
 
-    $namedDonationDBService->update($namedDonationEntity, $ulId, $userId);
+    $this->namedDonationDBService->update($namedDonationEntity, $ulId, $userId);
   }
   catch(\Exception $e)
   {
@@ -126,10 +120,9 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $re
     $ulId   = (int)$args['ul-id'];
     $userId = (int)$decodedToken->getUid ();
 
-    $namedDonationDBService = new NamedDonationDBService($this->db, $this->logger);
     $input                  = $request->getParsedBody();
     $namedDonationEntity    = new NamedDonationEntity($input, $this->logger);
-    $namedDonationId = $namedDonationDBService->insert($namedDonationEntity, $ulId, $userId);
+    $namedDonationId = $this->namedDonationDBService->insert($namedDonationEntity, $ulId, $userId);
 
     $response->getBody()->write(json_encode(array("namedDonationId"=>$namedDonationId), JSON_NUMERIC_CHECK));
   }
