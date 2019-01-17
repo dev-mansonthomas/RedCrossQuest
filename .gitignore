@@ -1,11 +1,7 @@
 ### Yeoman template
-node_modules/
 client/node_modules/
 client/bower_components/
 *.log
-
-/server/public_html/*
-!/server/public_html/.gitkeep
 
 build/
 dist/

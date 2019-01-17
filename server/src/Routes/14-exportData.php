@@ -6,7 +6,10 @@
  * Time: 18:38
  */
 
-use RedCrossQuest\BusinessService\ExportDataBusinessService;
+require '../../vendor/autoload.php';
+
+
+
 
 
 /**
@@ -22,23 +25,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($request, $respons
     $ulId     = (int)$args['ul-id'   ];
     $password = trim($request->getParsedBodyParam("password"));
 
-    $exportDataBusinessService = new ExportDataBusinessService(
-      $this->logger                                                                        ,
-      new \RedCrossQuest\DBService\QueteurDBService              ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\UserDBService                 ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\PointQueteDBService           ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService  ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\TroncDBService                ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\NamedDonationDBService        ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\TroncQueteurDBService         ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\UniteLocaleDBService          ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\UniteLocaleSettingsDBService  ($this->db, $this->logger),
-      new \RedCrossQuest\DBService\YearlyGoalDBService           ($this->db, $this->logger)
-    );
-
-
-
-    $zipFileName = $exportDataBusinessService->exportData($password, $ulId, null);
+    $zipFileName = $this->exportDataBusinessService->exportData($password, $ulId, null);
 
     $fh = fopen("/tmp/".$zipFileName, 'r  ');
 

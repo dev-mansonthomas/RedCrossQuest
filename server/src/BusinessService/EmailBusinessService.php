@@ -3,45 +3,60 @@
 namespace RedCrossQuest\BusinessService;
 
 
-use Monolog\Logger;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\DBService\MailingDBService;
 use RedCrossQuest\Entity\MailingInfoEntity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
-
-use RedCrossQuest\Service\MailService;
-
+use RedCrossQuest\Entity\UniteLocaleSettingsEntity;
+use SendGrid;
+use SendGrid\Mail;
 use Carbon\Carbon;
 
 
 class EmailBusinessService
 {
-  /**
-   * @var Logger
-   */
   protected $logger;
-
+  protected $sendgridAPIKey;
+  protected $sendgridSender;
   protected $appSettings;
   /**
    * @var MailingDBService
    * */
   protected $mailingDBService;
 
-  /**
-   * @var MailService
-   * */
-  protected $mailService;
-
-
-  public function __construct($logger, $mailService, $mailingDBService, $appSettings)
+  public function __construct(\Slim\Container $c)
   {
+    $settings =  $c['settings']['appSettings']['email'];
 
-    $this->logger           = $logger;
-    $this->appSettings      = $appSettings;
-    $this->mailService      = $mailService;
-    $this->mailingDBService = $mailingDBService;
+    $this->logger           = $c->logger;
+
+    $this->sendgridAPIKey   = $settings['sendgrid.api_key'];
+    $this->sendgridSender   = $settings['sendgrid.sender'];
+    $this->appSettings      = $c->settings['appSettings'];
+    $this->mailingDBService = $c->mailingDBService;
   }
+
+
+  /**
+   * Return a string to be put in the email subjects
+   * @param string $deploymentType D, T or P
+   * @return string nothing for production, [Site de DEV] for D, [Site de TEST] for T
+   */
+  public function getDeploymentInfo($deploymentType)
+  {
+    $deployment='';
+    if($deploymentType == 'D')
+    {
+      $deployment='[Site de DEV]';
+    }
+    else if($deploymentType == 'T')
+    {
+      $deployment='[Site de TEST]';
+    }
+    return $deployment;
+  }
+
 
 
   /**
@@ -55,18 +70,18 @@ class EmailBusinessService
     $this->logger->addInfo("sendInitEmail:'".$queteur->email."'");
 
     $url        = $this->appSettings['appUrl'].$this->appSettings['resetPwdPath'].$uuid;
+    $deployment = self::getDeploymentInfo($this->appSettings['deploymentType']);
 
     $startValidityDateCarbon = new Carbon();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
-    $this->mailService->sendMail(
-      "RedCrossQuest",
-      "sendInitEmail",
-      "[".$queteur->nivol."] Réinitialisation de votre mot de passe",
-      $queteur->email,
-      $queteur->first_name,
-      $queteur->last_name,
-      "
+    $email = new SendGrid\Mail\Mail();
+    $email->setFrom   ($this->sendgridSender,"RedCrossQuest");
+    $email->setSubject("[RedCrossQuest]".$deployment."[".$queteur->nivol."] Réinitialisation de votre mot de passe");
+    $email->addTo     ($queteur->email, $queteur->first_name.' '.$queteur->last_name);
+    $email->addContent(
+      "text/html",
+      ($deployment!=''?$deployment.'<br/>':'')."
 Bonjour ".$queteur->first_name.",<br/>
 <br/>
  Cet email fait suite à votre demande de réinitialisation de mot de passe pour l'application RedCrossQuest.<br/>
@@ -83,6 +98,21 @@ Bonjour ".$queteur->first_name.",<br/>
  Le support de RedCrossQuest<br/>
 ");
 
+
+    $sendgrid = new SendGrid($this->sendgridAPIKey);
+
+    try
+    {
+      $response = $sendgrid->send($email);
+      //TODO switch to debug
+      $this->logger->addInfo("Succes sendInitEmail:'".$queteur->email."''", array('response'=>print_r($response, true)));
+
+    }
+    catch(\Exception $e)
+    {
+      $this->logger->addError("Error while sendInitEmail:'".$queteur->email."", array('exception'=>$e));
+      throw $e;
+    }
   }
 
 
@@ -101,17 +131,17 @@ Bonjour ".$queteur->first_name.",<br/>
 
     $url=$this->appSettings['appUrl'];
 
+    $deployment = self::getDeploymentInfo($this->appSettings['deploymentType']);
+
     $changePasswordDate = new Carbon();
     $changePasswordDateString = $changePasswordDate->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
-    $this->mailService->sendMail(
-      "RedCrossQuest",
-      "sendResetPasswordEmailConfirmation",
-      "[".$queteur->nivol."] Votre mot de passe a été changé",
-      $queteur->email,
-      $queteur->first_name,
-      $queteur->last_name,
-      "
+
+    $email = new SendGrid\Mail\Mail();
+    $email->setFrom   ($this->sendgridSender,"RedCrossQuest");
+    $email->setSubject("[RedCrossQuest]".$deployment."[".$queteur->nivol."] Votre mot de passe a été changé");
+    $email->addTo     ($queteur->email, $queteur->first_name.' '.$queteur->last_name);
+    $email->addContent("text/html", ($deployment!=''?$deployment.'<br/>':'')."
 Bonjour ".$queteur->first_name.",<br/>
 <br/>
  Cet email confirme le changement de votre mot de passe pour l'application RedCrossQuest le $changePasswordDateString.<br/>
@@ -127,6 +157,20 @@ Bonjour ".$queteur->first_name.",<br/>
  RedCrossQuest<br/>
 ");
 
+    $sendgrid = new SendGrid($this->sendgridAPIKey);
+
+    try
+    {
+      $response = $sendgrid->send($email);
+      //TODO switch to debug
+      $this->logger->addInfo("Succes sendResetPasswordEmailConfirmation:'".$queteur->email."''", array('response'=>print_r($response, true)));
+
+    }
+    catch(\Exception $e)
+    {
+      $this->logger->addError("Error while sendResetPasswordEmailConfirmation:'".$queteur->email."", array('exception'=>$e));
+      throw $e;
+    }
   }
 
 
@@ -140,18 +184,17 @@ Bonjour ".$queteur->first_name.",<br/>
   {
     $this->logger->addInfo("sendAnonymizationEmail:'".$queteur->email."'");
 
+    $deployment = self::getDeploymentInfo($this->appSettings['deploymentType']);
+
     $anonymiseDateCarbon = new Carbon();
     $anonymiseDateString = $anonymiseDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
 
-    $this->mailService->sendMail(
-      "RedCrossQuest",
-      "sendAnonymizationEmail",
-      $queteur->first_name.", Suite à votre demande, vos données viennent d'être anonymisées",
-      $queteur->email,
-      $queteur->first_name,
-      $queteur->last_name,
-      "
+    $email = new SendGrid\Mail\Mail();
+    $email->setFrom   ($this->sendgridSender,"RedCrossQuest");
+    $email->setSubject("[RedCrossQuest]".$deployment." ".$queteur->first_name.", Suite à votre demande, vos données viennent d'être anonymisées");
+    $email->addTo     ($queteur->email, $queteur->first_name.' '.$queteur->last_name);
+    $email->addContent("text/html",  ($deployment!=''?$deployment.'<br/>':'')."
 <p>Bonjour ".$queteur->first_name.",</p>
 
 <p>
@@ -197,6 +240,22 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
  RedCrossQuest<br/>
 ");
 
+
+    $sendgrid = new SendGrid($this->sendgridAPIKey);
+
+    try
+    {
+      $response = $sendgrid->send($email);
+      //TODO switch to debug
+      $this->logger->addInfo("Succes sendAnonymizationEmail:'".$queteur->email."''", array('response'=>print_r($response, true)));
+
+    }
+    catch(\Exception $e)
+    {
+      $this->logger->addError("Error while sendAnonymizationEmail:'".$queteur->email."", array('exception'=>$e));
+      throw $e;
+    }
+
   }
 
 
@@ -223,6 +282,10 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
 
     return $mailInfoEntity;
   }
+
+
+
+
 
   /**
    * Send an email to allow the user to reset its password (or create the password for the first connexion)
@@ -261,21 +324,18 @@ En vous remerciant,<br/>
 
 
     $url        = $this->appSettings['appUrl'].$this->appSettings['graphPath']."?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
+    $deployment = self::getDeploymentInfo($this->appSettings['deploymentType']);
 
     $startValidityDateCarbon = new Carbon();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
-    try
-    {
 
-      $statusCode = $this->mailService->sendMail(
-        "RedCrossQuest",
-        "sendAnonymizationEmail",
-        $mailingInfoEntity->first_name.", Merci pour votre Participation aux Journées Nationales de la Croix Rouge",
-        $mailingInfoEntity->email,
-        $mailingInfoEntity->first_name,
-        $mailingInfoEntity->last_name,
-        "
+
+    $email = new SendGrid\Mail\Mail();
+    $email->setFrom   ($this->sendgridSender,"RedCrossQuest");
+    $email->setSubject("[RedCrossQuest]".$deployment.$mailingInfoEntity->first_name.", Merci pour votre Participation aux Journées Nationales de la Croix Rouge");
+    $email->addTo     ($mailingInfoEntity->email, $mailingInfoEntity->first_name.' '.$mailingInfoEntity->last_name);
+    $email->addContent("text/html",  ($deployment!=''?$deployment.'<br/>':'')."
 $rcqBanner
 <br/>    
 Bonjour ".$mailingInfoEntity->first_name.",<br/>
@@ -312,14 +372,28 @@ email envoyé le $startValidityDateString<br/>
 ");
 
 
-      $mailingInfoEntity->status = $statusCode;
+    $sendgrid = new SendGrid($this->sendgridAPIKey);
+
+    try
+    {
+      $response = $sendgrid->send($email);
+      //TODO switch to debug
+      $this->logger->addInfo("Succes sendAnonymizationEmail:'".$mailingInfoEntity->email."''", array('response'=>print_r($response, true)));
+
+      $mailingInfoEntity->status =  $response->statusCode();
       $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
     }
     catch(\Exception $e)
     {
+      $this->logger->addError("sendThanksEmail:'".$mailingInfoEntity->email." ERROR ",
+        array(
+          'exception'=> $e,
+          'mailingInfoEntity' => $mailingInfoEntity,
+          'uniteLocaleEntity' => $uniteLocaleEntity)
+      );
       $mailingInfoEntity->status = substr($e->getMessage()."", 0,200);
       $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
-      //Do not rethrow, continue
+      //do not rethrow, email sending must continue
     }
 
     return $mailingInfoEntity;

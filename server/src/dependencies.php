@@ -7,7 +7,6 @@ use Google\Cloud\Storage\Bucket;
 
 use \RedCrossQuest\Service\PubSubService;
 use \RedCrossQuest\Service\ReCaptchaService;
-use \RedCrossQuest\Service\MailService;
 
 use \RedCrossQuest\DBService\UserDBService;
 use \RedCrossQuest\DBService\QueteurDBService;
@@ -84,6 +83,16 @@ $container['db'] = function (\Slim\Container $c)
   }
 };
 
+//email
+/**
+ * @property EmailBusinessService $mailer
+ * @param \Slim\Container $c
+ * @return EmailBusinessService
+ */
+$container['mailer'] = function (\Slim\Container $c)
+{
+  return new EmailBusinessService($c);
+};
 
 //PubSub
 /**
@@ -275,34 +284,6 @@ $container['yearlyGoalDBService'] = function (\Slim\Container $c)
 $container['mailingDBService'] = function (\Slim\Container $c)
 {
   return new MailingDBService($c->db, $c->logger);
-};
-
-
-/**
- * @property MailService $mailService
- * @param \Slim\Container $c
- * @return MailService
- */
-$container['mailService'] = function (\Slim\Container $c)
-{
-  $settings =  $c['settings']['appSettings']['email'];
-
-  return new MailService($c->logger,  $settings['sendgrid.api_key'], $settings['sendgrid.sender'], $c['settings']['appSettings']['deploymentType']);
-};
-
-
-/**
- * @property EmailBusinessService $mailer
- * @param \Slim\Container $c
- * @return EmailBusinessService
- */
-$container['mailer'] = function (\Slim\Container $c)
-{
-  return new EmailBusinessService(
-    $c->logger,
-    $c->mailService,
-    $c->mailingDBService,
-    $c['settings']['appSettings']);
 };
 
 

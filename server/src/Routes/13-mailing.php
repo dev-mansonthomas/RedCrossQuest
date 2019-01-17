@@ -6,9 +6,7 @@
  * Time: 18:38
  */
 
-use \RedCrossQuest\DBService\MailingDBService;
-use \RedCrossQuest\DBService\UniteLocaleDBService;
-
+require '../../vendor/autoload.php';
 
 /**
  * Get summary info about mailing
@@ -22,8 +20,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, 
   {
     $ulId   = (int)$args['ul-id'];
 
-    $mailingDBService = new MailingDBService($this->db, $this->logger);
-    $mailingSummary = $mailingDBService->getMailingSummary($ulId);
+    $mailingSummary = $this->mailingDBService->getMailingSummary($ulId);
 
     $response->getBody()->write(json_encode($mailingSummary));
 
@@ -50,8 +47,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response,
     $ulId   = (int)$args['ul-id'];
     $userId = (int)$decodedToken->getUid ();
 
-    $uniteLocalDBService = new UniteLocaleDBService($this->db, $this->logger);
-    $uniteLocaleEntity = $uniteLocalDBService->getUniteLocaleById($ulId);
+    $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($ulId);
 
     $mailingReport = $this->mailer->sendThanksEmailBatch($ulId, $uniteLocaleEntity);
 
@@ -75,8 +71,7 @@ $app->post('/thanks_mailing/{guid}', function ($request, $response, $args)
   {
     $guid   = $args['guid'];
 
-    $mailingDBService = new MailingDBService($this->db, $this->logger);
-    $mailingDBService->confirmRead($guid);
+    $this->mailingDBService->confirmRead($guid);
 
     $response->getBody()->write(json_encode($guid));
   }
