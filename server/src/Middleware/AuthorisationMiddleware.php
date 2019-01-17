@@ -191,19 +191,12 @@ class AuthorisationMiddleware
       {
         $roleIdStr = $explodedPath[0];
 
-        if($roleIdStr == "1")
-        {//intVal return 1 in case of error
-          $roleId = 1;
+        if(!is_scalar($roleIdStr)) {
+          $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, print_r($decodedToken, true)));
+          return $this->denyRequest($response, '0004');
         }
-        else
-        {
-          $roleId = intVal($roleIdStr);
-          if($roleId == 1)
-          { //intVal return 1 when an error happen
-            $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, print_r($decodedToken, true)));
-            return $this->denyRequest($response, '0004');
-          }
-        }
+
+        $roleId = intval($roleIdStr);
       }
       else
       {

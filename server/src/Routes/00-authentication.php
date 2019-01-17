@@ -257,6 +257,7 @@ $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
         "email"         => $queteur->email     ,
         "mobile"        => $queteur->mobile    ,
         "nivol"         => $queteur->nivol ]));
+      
       return $response;
 
     }
