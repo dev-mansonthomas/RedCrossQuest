@@ -164,24 +164,7 @@
               vm.loading = false;
             }
           });
-
         });
-
-    function resetPassword() {
-      vm.loading = true;
-      AuthenticationService.resetPassword(vm.key, vm.password, function (success, email) {
-
-        if (success) {
-          vm.error = null;
-          vm.success = 'Un email de confirmation vient de vous être envoyé (' + JSON.stringify(email).slice(1, -1) + ')';
-          vm.loading = false;
-        }
-        else {
-          vm.error = 'Une erreur est survenue. Veuillez contacter votre cadre local ou départemental';
-          vm.success = null;
-          vm.loading = false;
-        }
-      });
     }
   }
 
