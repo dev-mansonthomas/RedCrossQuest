@@ -92,6 +92,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
         $responseMessageIds = null;
         try
         {
+          //TODO remove || true, implement properties, use configuration for topic name
           if($tq->comptage == null || true)
           {
             $responseMessageIds = $this->PubSub->publish("tronc_queteur", $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
