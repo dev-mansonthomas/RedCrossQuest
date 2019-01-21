@@ -28,7 +28,15 @@ class ReCaptchaService
     $this->lowestAcceptableScore  = $settings['ReCaptcha'  ]['lowestAcceptableScore'];
     $appUrl                       = $settings['appSettings']['appUrl'];
 
-    $this->redCrossQuestHost      = substr(substr(explode(":", $appUrl)[1],2), 0, -1);
+    if($appUrl == "http://localhost:3000/")
+    {
+      $this->redCrossQuestHost = "localhost";
+    }
+    else
+    {
+      $this->redCrossQuestHost      = substr(substr(explode(":", $appUrl)[1],2), 0, -1);
+    }
+
 
     $this->logger->addInfo("ReCaptcha Host Check is '".$this->redCrossQuestHost."'");
   }
