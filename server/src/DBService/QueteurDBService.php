@@ -753,11 +753,6 @@ $searchNivol
     return $results;
   }
 
-
-
-
-
-
   /**
    * Anonymize the data of a queteur
    *

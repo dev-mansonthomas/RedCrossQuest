@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# TODO : do the deploy outside of the source folder (copy the necessary files in a temp folder and run gcloud app deploy from there)
 COUNTRY=$1
 ENV=$2
 
@@ -101,7 +101,6 @@ cd -
 rm server/app.yaml
 
 #restore default file
-cp app_template.yaml                app.yaml
 cp server/phinx-template.yml        server/phinx.yml
 
 # DO NOT USE VARIABLE for the next line, we do want to restore the dev version
