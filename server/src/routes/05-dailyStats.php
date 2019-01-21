@@ -95,9 +95,9 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respon
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId = (int)$args['ul-id'];
+    $ulId  = (int)$args['ul-id'];
+    $input = $request->getParsedBody();
 
-    $input                        = $request->getParsedBody();
     $this->dailyStatsBeforeRCQDBService->createYear($ulId, $input['year']);
   }
   catch(\Exception $e)

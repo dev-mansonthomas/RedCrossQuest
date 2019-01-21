@@ -68,8 +68,8 @@
 
     vm.handleMailingSendingError = function(error)
     {
-      vm.errorWhileSending = error;
-      vm.running = false;
+      vm.errorWhileSending  = error;
+      vm.running            = false;
     };
 
     vm.send = function()

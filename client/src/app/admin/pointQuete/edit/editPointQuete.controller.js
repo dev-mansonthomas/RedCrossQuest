@@ -59,7 +59,7 @@
       {
         vm.current = pointQuete;
         vm.current.created      = DateTimeHandlingService.handleServerDate(vm.current.created).stringVersion;
-        $rootScope.$emit('title-updated', 'Point de quête - '+vm.current.name);
+        $rootScope.$emit('title-updated', 'Point de quête - '+JSON.stringify(vm.current.name).slice(1, -1));
       });
     }
     else
@@ -80,8 +80,8 @@
 
     function errorWhileSaving(error)
     {
-      vm.errorWhileSaving=true;
-      vm.errorWhileSavingDetails=error;
+      vm.errorWhileSaving        = true;
+      vm.errorWhileSavingDetails = error;
     }
 
     vm.save = function ()
@@ -171,7 +171,7 @@
       vm.current.address      = vm.geocoded.address;
       vm.current.postal_code  = vm.geocoded.postal_code;
       vm.current.city         = vm.geocoded.city;
-      vm.geocoded = {};
+      vm.geocoded             = {};
     };
 
 

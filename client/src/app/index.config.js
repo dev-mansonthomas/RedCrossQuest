@@ -14,7 +14,7 @@
       unauthenticatedRedirectPath: '/login',
       tokenGetter: ['options', '$localStorage', function(options, $localStorage) {
 
-        if(options && options.url.substr(options.url.length - 5) == '.html')
+        if(options && options.url.substr(options.url.length - 5) === '.html')
         {
           return null;
         }
@@ -32,11 +32,11 @@
 
 
     // Set Toastr options
-    toastrConfig.allowHtml = true;
-    toastrConfig.timeOut = 3000;
-    toastrConfig.positionClass = 'toast-top-right';
-    toastrConfig.preventDuplicates = true;
-    toastrConfig.progressBar = true;
+    toastrConfig.allowHtml          = true;
+    toastrConfig.timeOut            = 3000;
+    toastrConfig.positionClass      = 'toast-top-right';
+    toastrConfig.preventDuplicates  = true;
+    toastrConfig.progressBar        = true;
   }
 
 })();

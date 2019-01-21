@@ -51,10 +51,10 @@
     function handleResult (pointsQuete)
     {
       $log.info("Find '"+pointsQuete.length+"' pointsQuete");
+
       vm.pointsQuete = pointsQuete;
-      var counti = pointsQuete.length;
-      var i=0;
-      for(i=0;i<counti;i++)
+      var counti     = pointsQuete.length;
+      for(var i=0;i<counti;i++)
       {
         vm.pointsQuete[i].created      = DateTimeHandlingService.handleServerDate(vm.pointsQuete[i].created     ).stringVersion;
       }

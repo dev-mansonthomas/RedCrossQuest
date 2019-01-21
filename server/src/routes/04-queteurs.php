@@ -127,7 +127,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     if($queteur->ul_id != $ulId && $roleId != 9)
     {
       $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode("{error:'permission denied'}"));
+      $response401->getBody()->write(json_encode(["error"=>'permission denied']));
       return $response401;
     }
 

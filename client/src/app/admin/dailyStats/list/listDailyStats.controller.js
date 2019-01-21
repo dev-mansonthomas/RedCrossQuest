@@ -44,8 +44,8 @@
         for(var i=0; i<mylist.length; i++)
         {//orinal date format : 2013-06-09 00:00:00.000000
           //  console.log(mylist[i].date.date.substring(0, mylist[i].date.date.length -16 ));
-          mylist[i].date = moment( mylist[i].date.date.substring(0, mylist[i].date.date.length -16 ),"YYYY-MM-DD").toDate();
-          mylist[i].amount= parseFloat(mylist[i].amount);
+          mylist[i].date   = moment( mylist[i].date.date.substring(0, mylist[i].date.date.length -16 ),"YYYY-MM-DD").toDate();
+          mylist[i].amount = parseFloat(mylist[i].amount);
         }
 
         vm.searchedYear = vm.selectedYear;
@@ -81,19 +81,19 @@
       var length = vm.list.length;
       var repartition = null;
 
-      if(length == 9)
+      if(length === 9)
       {
         repartition = vm.repartitionPercentagesFor9;
       }
-      else if(length == 8)
+      else if(length === 8)
       {
         repartition = vm.repartitionPercentagesFor8;
       }
-      else if(length == 7)
+      else if(length === 7)
       {
         repartition = vm.repartitionPercentagesFor7;
       }
-      else if(length == 2)
+      else if(length === 2)
       {
         repartition = vm.repartitionPercentagesFor2;
       }

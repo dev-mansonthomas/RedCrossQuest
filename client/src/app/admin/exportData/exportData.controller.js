@@ -16,7 +16,7 @@
   {
     var vm = this;
     vm.currentUserRole = $localStorage.currentUser.roleId;
-    vm.ulId = $localStorage.currentUser.ulId;
+    vm.ulId            = $localStorage.currentUser.ulId;
     vm.settings        = $localStorage.guiSettings;
     vm.running         = false;
 
