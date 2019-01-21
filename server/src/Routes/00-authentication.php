@@ -9,10 +9,6 @@ require '../../vendor/autoload.php';
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
-
-
-
-
 use \RedCrossQuest\Entity\UserEntity;
 
 /********************************* Authentication ****************************************/
@@ -34,15 +30,14 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
     $username = trim($request->getParsedBodyParam("username"    ));
     $password = trim($request->getParsedBodyParam("password"    ));
     $token    = trim($request->getParsedBodyParam("token"       ));
-    $remoteIP =      $request->getServerParams ()['REMOTE_ADDR'  ];
 
     //refusing null, empty, big
-    if($username        == null || $password         == null || $token         == null || $remoteIP         == null ||
-      strlen($username) == 0    || strlen($password) == 0    || strlen($token) == 0    || strlen($remoteIP) == 0    ||
-      strlen($username) >  20   || strlen($password) >  20   || strlen($token) >  500  || strlen($remoteIP) >  15     )
+    if($username        == null || $password         == null || $token         == null ||
+      strlen($username) == 0    || strlen($password) == 0    || strlen($token) == 0    ||
+      strlen($username) >  20   || strlen($password) >  20   || strlen($token) >  500  )
     {
 
-      $this->logger->addError("Login attempted with username or password or token or remoteIP exceeding limits", array('remoteIp'=>substr($remoteIP, 0,50)));
+      $this->logger->addError("Login attempted with username or password or token or remoteIP exceeding limits");
 
       $response401 = $response->withStatus(401);
       $response401->getBody()->write(json_encode(['error'=>'username or password error. Code 1']));
@@ -50,8 +45,8 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
       return $response401;
     }
 
-    $this->logger->addInfo("ReCaptcha checking user for login", array('remoteIp'=>$remoteIP, 'username' => $username, 'token' => $token));
-    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $remoteIP, $username);
+    $this->logger->addInfo("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
+    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
 
     if($reCaptchaResponseCode > 0)
     {// error
@@ -160,7 +155,6 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
   {
     $username = trim($request->getParsedBodyParam("username"));
     $token    = trim($request->getParsedBodyParam("token"   ));
-    $remoteIP =      $request->getServerParams ()['REMOTE_ADDR'];
 
     //refusing null, empty, big
     if($username        == null ||
@@ -168,7 +162,7 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
       strlen($username) >  20    )
     {
 
-      $this->logger->addError("sendInit attempted with username or token exceeding limits", array('remoteIp'=>$remoteIP));
+      $this->logger->addError("sendInit attempted with username or token exceeding limits");
 
       $response401 = $response->withStatus(401);
       $response401->getBody()->write(json_encode( ["error" => "an error occurred. Code -1"]));
@@ -176,7 +170,7 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
       return $response401;
     }
 
-    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/sendInit", $remoteIP, $username);
+    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/sendInit", $username);
 
     if($reCaptchaResponseCode > 0)
     {// error
@@ -227,9 +221,8 @@ $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
     $uuid  = trim($request->getParam("uuid"));
     $token = trim($request->getParam("token"));
 
-    $remoteIP =      $request->getServerParams ()['REMOTE_ADDR'];
 
-    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/getUserInfoWithUUID", $remoteIP, "getInfoFromUUID");
+    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/getUserInfoWithUUID", "getInfoFromUUID");
 
     if($reCaptchaResponseCode > 0)
     {// error
@@ -286,9 +279,8 @@ $app->post('/resetPassword', function ($request, $response, $args) use ($app)
     $uuid     = trim($request->getParsedBodyParam("uuid"    ));
     $password = trim($request->getParsedBodyParam("password"));
     $token    = trim($request->getParsedBodyParam("token"));
-    $remoteIP =      $request->getServerParams ()['REMOTE_ADDR'];
 
-    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/resetPassword", $remoteIP, "getInfoFromUUID");
+    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/resetPassword", "getInfoFromUUID");
 
     if($reCaptchaResponseCode > 0)
     {// error

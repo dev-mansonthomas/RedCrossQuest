@@ -28,7 +28,9 @@ class ReCaptchaService
     $this->lowestAcceptableScore  = $settings['ReCaptcha'  ]['lowestAcceptableScore'];
     $appUrl                       = $settings['appSettings']['appUrl'];
 
-    $this->redCrossQuestHost      = substr(explode(":", $appUrl)[1],2);
+    $this->redCrossQuestHost      = substr(substr(explode(":", $appUrl)[1],2), 0, -1);
+
+    $this->logger->addInfo("ReCaptcha Host Check is '".$this->redCrossQuestHost."'");
   }
 
 //Changer les callbacks en un return d'un object
@@ -43,14 +45,27 @@ class ReCaptchaService
    *
    * @param $token            string    the token sent by the client
    * @param $actionRequired   string    what action is excpected by the server
-   * @param $remoteIP         string    the IP of the client
    * @param $username         string    the username of the client when applicable
    *
    * @return                  int       0: Success, 1: token empty/null/too long, 2: wrong action, 3: score too low, 4: response is an error, 5: exception occurred while performing the check.
    *
    */
-  public function verify($token, $actionRequired, $remoteIP, $username)
+  public function verify($token, $actionRequired, $username)
   {
+    //Google App Engine do not fill the REMOTE_ADDR, instead :
+    /*
+      [HTTP_X_FORWARDED_FOR] => <client_ip>, <google_proxy>
+    */
+    if(empty($_SERVER['REMOTE_ADDR']) && isset($_SERVER['HTTP_X_FORWARDED_FOR']) )
+    {
+      $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] );
+      $remoteIP = $ips[0] ;
+    }
+    else
+    {
+      $remoteIP = null;
+    }
+
     //discard token that are too long, null or empty
     if( $token         == null ||
         strlen($token) == 0    ||
@@ -121,6 +136,7 @@ class ReCaptchaService
             'actionRequired'=> $actionRequired,
             'remoteIp'      => $remoteIP,
             'username'      => $username,
+            'response'      => print_r($resp, true),
             'token'         => $token
           )
         );

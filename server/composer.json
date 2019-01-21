@@ -23,13 +23,13 @@
         "phpmailer/phpmailer": "^6.0",
         "ramsey/uuid": "^3.8",
         "sendgrid/sendgrid": "^7",
-        "google/cloud-storage": "^1.10",
         "google/apiclient": "^2.2",
+        "google/cloud-pubsub": "^1.7",
+        "google/cloud-storage": "^1.10",
+        "google/recaptcha": "^1.2",
         "ext-bz2" : "^7.2",
         "ext-PDO" : "^7.2",
-        "ext-json": "^1.6",
-        "google/cloud-pubsub": "^1.7",
-        "google/recaptcha": "^1.2"
+        "ext-json": "^1.6"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

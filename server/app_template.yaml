@@ -3,9 +3,25 @@ api_version: 1
 runtime: php
 env: flex
 
-runtime_config:
-  document_root: server/public_html
+#entrypoint: serve public_html/rest/index.php
+skip_files:
+  - ^db$
+  - ^vendor$
+  - ^Spotfire$
+  - ^complete-sync\.sh$
+  - ^phinx\.yml$
+  - ^phinx-template\.yml$
+  - ^selective-sync\.sh$
 
+
+
+runtime_config:
+  document_root: public_html
+  front_controller_file: public_html/rest/index.php
+
+  #
+  #¤MYSQL_INSTANCE¤ : gcp_deploy.sh replace this token by the value from MYSQL_INSTANCE variable in rcq-fr-test-db-setup.properties
+  #
 
 beta_settings:
     cloud_sql_instances: "instance_name"
@@ -18,6 +34,12 @@ env_variables:
     MYSQL_DSN: mysql:dbname=dbname;unix_socket=/cloudsql/instance_name;charset=utf8
     SENDGRID_API_KEY: API_KEY
     SENDGRID_SENDER: sender@domain.com
+    JWT_SECRET: SECRET
+    JWT_ISSUER: https://rcq.host.com
+    RECAPTCHA_SECRET: SECRET
+    APP_URL: https://rcq.host.com/
+    GOOGLE_MAPS_API: SECRET
+    APP_ENV: D    # D:Dev, T:Testing, P:Production,
 
 # This sample incurs costs to run on the App Engine flexible environment.
 # The settings below are to reduce costs during testing and are not appropriate

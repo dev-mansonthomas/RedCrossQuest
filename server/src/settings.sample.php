@@ -1,63 +1,53 @@
 <?php
-
-$mysqlUser    = getenv('MYSQL_USER'     );
-$mysqlP       = getenv('MYSQL_PASSWORD' );
-$mysqlDsn     = getenv('MYSQL_DSN'      );
-
-if($mysqlUser == "")
-{
-  $mysqlUser = 'rcq';
-}
-if($mysqlP == "")
-{
-  $mysqlP = 'rcq';
-}
-if($mysqlDsn == "")
-{
-  $mysqlDsn = 'mysql:host=127.0.0.1;port=3306;dbname=RCQ;charset=utf8;';
-}
-
 return [
-    'settings' => [
-        'displayErrorDetails' => true, // set to false in production
-
-        // Renderer settings
-        'renderer' => [
-            'template_path' => __DIR__ . '/../templates/',
-        ],
-
-        // Monolog settings
-        'logger' => [
-            'name' => 'RCQ',
-            'path' => __DIR__ . '/../logs/app.log',
-            'level'=> 'info',
-            'max_files' => 10
-        ],
-
-        'db' => [
-          'dsn'      => $mysqlDsn ,
-          'user'     => $mysqlUser,
-          'pwd'      => $mysqlP
-
-        ],
-        'jwt' => [
-          'secret'        => 'secret-rcq',
-          'issuer'        => 'https://rcq.server.com',
-          'audience'      => 'https://rcq.server.com'
-        ],
-        'appSettings' => [
-          'sessionLength'   => 6                       ,  // hours
-          'appUrl'          => 'http://localhost:3000/',
-          'resetPwdPath'    => '#!/resetPassword?key=' ,
-          'deploymentType'  => 'D'                     ,   //D:Dev, T:Testing, P:Production,
-          'gmapAPIKey'      => 'google maps api key'
-        ],
-      'email' => [
-        'server'    => 'smtp.server.com',
-        'port'      => 465,
-        'from'      => 'email@server.com',
-        'username'  => 'login',
-        'password'  => 'password'
-      ]
+  'settings' => [
+    'displayErrorDetails' => true, // set to false in production
+    // Renderer settings
+    'renderer'            => [
+      'template_path' => __DIR__ . '/../templates/',
     ],
+    // Monolog settings
+    'logger'              => [
+      'name'      => 'RCQ'                        ,
+      'path'      => __DIR__ . '/../logs/app.log' ,
+      'level'     => 'info'                       ,
+      'max_files' => 10
+    ],
+    'gcp' => [
+      'projectId' => 'redcrossquest-fr-test',
+    ],
+    'db'          => [
+      'dsn'  => getenv('MYSQL_DSN'     ),
+      'user' => getenv('MYSQL_USER'    ),
+      'pwd'  => getenv('MYSQL_PASSWORD')
+    ],
+    'PubSub'      => [
+      'tronc_queteur_topic'        => 'tronc_queteur'       ,
+      'tronc_queteur_update_topic' => 'tronc_queteur_update'
+    ],
+    'jwt'         => [
+      'secret'   => 'secret',
+      'issuer'   => 'https://rcq.host.com',
+      'audience' => 'https://rcq.host.com'
+    ],
+    'ReCaptcha'   => [
+      'secret'                => 'secret',
+      'lowestAcceptableScore' => 0.7
+    ],
+    'appSettings' => [
+      'sessionLength'    => 6                                         , //hours
+      'appUrl'           => 'https://rcq.host.com/'         ,
+      'resetPwdPath'     => '#!/resetPassword?key='                   ,
+      'deploymentType'   => 'T'                                       ,   //D:Dev, T:Testing, P:Production,
+      'gmapAPIKey'       => 'secret' ,
+      'RGPD'             => 'https://goo.gl/UpTLAK'                   ,
+      'graphPath'        => 'graph-display.html'                      ,
+      'queteurDashboard' => 'Merci'                                   ,
+      'email'            => [
+        'sendgrid.api_key'    => getenv('SENDGRID_API_KEY'),
+        'sendgrid.sender'     => getenv('SENDGRID_SENDER' ),
+        'thanksMailBatchSize' => 10
+      ],
+    ],
+  ],
 ];

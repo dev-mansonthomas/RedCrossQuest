@@ -23,11 +23,13 @@ class PubSubService
   /** @var PubSubClient */
   protected $pubSub;
 
-  public function __construct($pubSubSettings, $logger)
+  public function __construct($settings, $logger)
   {
-    $this->settings  = $pubSubSettings;
+    $this->settings  = $settings;
     $this->logger    = $logger;
-    $this->pubSub    = new PubSubClient();
+
+    $this->logger->addError("Creating PubSubClient() with projectId", array("projectId" => $this->settings));
+    $this->pubSub    = new PubSubClient();//["projectId" => $this->settings['gcp']['projectId']]
   }
 
   /**
@@ -65,8 +67,6 @@ class PubSubService
       {
         throw $exception;
       }
-
     }
-
   }
 }

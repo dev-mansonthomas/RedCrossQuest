@@ -28,6 +28,7 @@ gcloud config set project redcrossquest-${COUNTRY}-${ENV}
 #the instance name can't be reused, so we increment a counter rcq-db-inst-fr-test-2
 #
 . ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
+echo "cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &"
 cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
 
 CLOUD_PROXY_PID=$!
@@ -50,11 +51,11 @@ regex="graph-display-([a-f0-9]*)\.html"
 
 if [[ $GRAPH_FILE_NAME =~ $regex ]]
 then
-    echo $FILE_NAME serial is ${BASH_REMATCH[1]}
+    echo "$GRAPH_FILE_NAME serial is ${BASH_REMATCH[1]}"
     SERIAL_ID=${BASH_REMATCH[1]}
     sed -i "" "s/-${SERIAL_ID}//g" scripts/app*.js
 else
-    echo "$FILE_NAME doesn't match $regex"
+    echo "$GRAPH_FILE_NAME doesn't match $regex"
 fi
 
 mv graph-display-*.html graph-display.html
@@ -76,9 +77,9 @@ cp ../../client/bower_components/bootstrap-sass/assets/fonts/bootstrap/* bower_c
 cd -
 
 # Get the correct app.yaml for the env
-cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml     app.yaml
+cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml               server/app.yaml
 #update the INSTANCE name in the file
-sed -i '' -e "s/¤MYSQL_INSTANCE¤/${MYSQL_INSTANCE}/g" app.yaml
+sed -i '' -e "s/¤MYSQL_INSTANCE¤/${MYSQL_INSTANCE}/g"   server/app.yaml
 
 cp ~/.cred/phinx.yml                          server/phinx.yml
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-settings.php server/src/settings.php
@@ -92,7 +93,12 @@ php vendor/bin/phinx migrate -e rcq-${COUNTRY}-${ENV}
 cd -
 
 #deployment
+cd server
 gcloud app deploy -q
+cd -
+
+#remove app.yaml
+rm server/app.yaml
 
 #restore default file
 cp app_template.yaml                app.yaml
