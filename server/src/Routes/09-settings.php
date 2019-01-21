@@ -2,13 +2,9 @@
 
 /********************************* Application Settings Exposed to GUI ****************************************/
 
-use \RedCrossQuest\BusinessService\SettingsBusinessService;
-use \RedCrossQuest\DBService\UserDBService;
-use \RedCrossQuest\DBService\UniteLocaleDBService;
-use \RedCrossQuest\DBService\QueteurDBService;
-use \RedCrossQuest\DBService\PointQueteDBService;
-use \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
-use \RedCrossQuest\DBService\TroncDBService;
+require '../../vendor/autoload.php';
+
+
 
 
 /**
@@ -29,33 +25,15 @@ $app->get('/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response,
 
       if($action == "getSetupStatus")
       {
-        $settingsBusinessService = new SettingsBusinessService(
-          $this->logger,
-          new QueteurDBService              ($this->db, $this->logger),
-          new UserDBService                 ($this->db, $this->logger),
-          new PointQueteDBService           ($this->db, $this->logger),
-          new DailyStatsBeforeRCQDBService  ($this->db, $this->logger),
-          new TroncDBService                ($this->db, $this->logger)
-        );
-
-        $response->getBody()->write(json_encode($settingsBusinessService->getSetupStatus($decodedToken->getUlId())));
+        $response->getBody()->write(json_encode($this->settingsBusinessService->getSetupStatus($decodedToken->getUlId())));
         return $response;
       }
     }
     else
     {
-      $phpSettings = $this->get('settings');
-
-      $ulDBservice   = new UniteLocaleDBService($this->db, $this->logger);
-      $userDBservice = new UserDBService       ($this->db, $this->logger);
-
-      $guiSettings['mapKey'] = $phpSettings['appSettings']['gmapAPIKey'];
-
-      $ul       = $ulDBservice  ->getUniteLocaleById   ($decodedToken->getUlId());
-      $userInfo = $userDBservice->getUserInfoWithUserId($decodedToken->getUid(), $decodedToken->getUlId(), $roleId);
-
-      $guiSettings['ul'  ] = $ul;
-      $guiSettings['user'] = $userInfo;
+      $guiSettings['mapKey'] = $this->settings['appSettings']['gmapAPIKey'];
+      $guiSettings['ul'    ] = $this->uniteLocaleDBService->getUniteLocaleById   ($decodedToken->getUlId());
+      $guiSettings['user'  ] = $this->userDBService       ->getUserInfoWithUserId($decodedToken->getUid(), $decodedToken->getUlId(), $roleId);
 
       $response->getBody()->write(json_encode($guiSettings));
       return $response;

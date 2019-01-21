@@ -6,10 +6,7 @@
  * Time: 18:35
  */
 
-
-use \RedCrossQuest\DBService\TroncQueteurDBService;
-
-include_once("../../src/DBService/TroncQueteurDBService.php");
+require '../../vendor/autoload.php';
 
 /********************************* TRONC_QUETEUR ****************************************/
 
@@ -28,9 +25,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($reques
     $params         = $request->getQueryParams();
     $troncQueteurId = (int)$params['tronc_queteur_id'];
 
-    $troncQueteurDBService = new TroncQueteurDBService($this->db, $this->logger);
-
-    $troncQueteurs = $troncQueteurDBService->getTroncQueteurHistoryById($troncQueteurId, $ulId);
+    $troncQueteurs = $this->troncQueteurDBService->getTroncQueteurHistoryById($troncQueteurId, $ulId);
 
     $response->getBody()->write(json_encode($troncQueteurs));
 

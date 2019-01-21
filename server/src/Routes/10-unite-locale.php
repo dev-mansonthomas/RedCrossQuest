@@ -2,8 +2,7 @@
 
 /********************************* Application Settings Exposed to GUI ****************************************/
 
-use \RedCrossQuest\DBService\UniteLocaleDBService;
-
+require '../../vendor/autoload.php';
 
 /**
  * Search for Unité Locale.
@@ -19,9 +18,8 @@ $app->get('/{role-id:[9]}/ul', function ($request, $response, $args)
 
     if(array_key_exists('q',$params))
     {
-      $ulDBservice = new UniteLocaleDBService($this->db, $this->logger);
       $query = $params['q'];
-      $uls = $ulDBservice->searchUniteLocale($query);
+      $uls   = $this->uniteLocaleDBService->searchUniteLocale($query);
       $response->getBody()->write(json_encode($uls));
     }
 
