@@ -95,6 +95,8 @@ server/vendor/
 /server/logs/app.log
 /server/selective-sync.sh
 /server/complete-sync.sh
+/server/public_html/*
+!/server/public_html/rest
 /client/sync.sh
 /.idea/sqldialects.xml
 /.idea/dictionaries/tmanson.xml
