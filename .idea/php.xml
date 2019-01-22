@@ -27,9 +27,7 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/filesystem" />
       <path value="$PROJECT_DIR$/server/vendor/sendgrid/php-http-client" />
       <path value="$PROJECT_DIR$/server/vendor/sendgrid/sendgrid" />
-      <path value="$PROJECT_DIR$/server/vendor/google/cloud-core" />
       <path value="$PROJECT_DIR$/server/vendor/psr/cache" />
-      <path value="$PROJECT_DIR$/server/vendor/google/cloud-storage" />
       <path value="$PROJECT_DIR$/server/vendor/google/auth" />
       <path value="$PROJECT_DIR$/server/vendor/rize/uri-template" />
       <path value="$PROJECT_DIR$/server/vendor/guzzlehttp/psr7" />
@@ -41,7 +39,6 @@
       <path value="$PROJECT_DIR$/server/vendor/phpseclib/phpseclib" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/server/vendor/grpc/grpc" />
-      <path value="$PROJECT_DIR$/server/vendor/google/cloud-pubsub" />
       <path value="$PROJECT_DIR$/server/vendor/google/grpc-gcp" />
       <path value="$PROJECT_DIR$/server/vendor/google/protobuf" />
       <path value="$PROJECT_DIR$/server/vendor/google/gax" />
@@ -56,6 +53,8 @@
       <path value="$PROJECT_DIR$/server/vendor/cakephp/database" />
       <path value="$PROJECT_DIR$/server/vendor/google/common-protos" />
       <path value="$PROJECT_DIR$/server/vendor/google/recaptcha" />
+      <path value="$PROJECT_DIR$/server/vendor/google/cloud" />
+      <path value="$PROJECT_DIR$/server/vendor/codeinternetapplications/monolog-stackdriver" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

@@ -29,7 +29,8 @@
         "google/recaptcha": "^1.2",
         "ext-bz2" : "^7.2",
         "ext-PDO" : "^7.2",
-        "ext-json": "^1.6"
+        "ext-json": "^1.6",
+        "codeinternetapplications/monolog-stackdriver": "^1.2"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

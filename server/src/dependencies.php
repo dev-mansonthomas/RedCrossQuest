@@ -25,6 +25,9 @@ use \RedCrossQuest\BusinessService\SettingsBusinessService;
 use \RedCrossQuest\BusinessService\ExportDataBusinessService;
 use \RedCrossQuest\DBService\YearlyGoalDBService;
 
+use Monolog\Logger;
+use CodeInternetApplications\MonologStackdriver\StackdriverHandler;
+
 // DIC configuration
 $container = $app->getContainer();
 
@@ -51,9 +54,20 @@ $container['logger'] = function (\Slim\Container $c)
 {
   $settings = $c->get('settings')['logger'];
 
-  $logger = new Monolog\Logger($settings['name']);
-  $logger->pushProcessor(new Monolog\Processor\UidProcessor());
-  $logger->pushHandler  (new Monolog\Handler\StreamHandler($settings['path'], Monolog\Logger::INFO));
+  //$logger = new Monolog\Logger($settings['name']);
+  //$logger->pushProcessor(new Monolog\Processor\UidProcessor());
+  //$logger->pushHandler  (new Monolog\Handler\StreamHandler($settings['path'], Monolog\Logger::INFO));
+
+
+  $stackdriverHandler = new StackdriverHandler(
+    "RedCrossQuest-fr-dev",
+    $loggingClientOptions = [
+      'keyFilePath' => getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    ]
+  );
+
+  $logger = new Logger('stackdriver', [$stackdriverHandler]);
+
 
   return $logger;
 };

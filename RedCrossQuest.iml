@@ -11,6 +11,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/cakephp/datasource" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/cakephp/log" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/cakephp/utility" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/codeinternetapplications/monolog-stackdriver" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/container-interop/container-interop" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/firebase/php-jwt" />
@@ -18,9 +19,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/apiclient" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/apiclient-services" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/auth" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud-core" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud-pubsub" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud-storage" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/common-protos" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/gax" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/grpc-gcp" />
