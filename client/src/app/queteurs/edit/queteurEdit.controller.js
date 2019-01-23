@@ -40,26 +40,19 @@
       {id:3,label:'Compteur'      },
       {id:4,label:'Administrateur'}
     ];
-    if(vm.currentUserRole === 9)
-    {
-      vm.roleList.push({id:9,label:'Super Admin'   });
-    }
 
     vm.roleDesc=[];
     vm.roleDesc[1] = 'Consultation des quêteurs et le graphique public';
     vm.roleDesc[2] = 'Liste/Ajout/Update des quêteurs, préparation/départ/retour des troncs, graphique opérationnel';
     vm.roleDesc[3] = 'Opérateur + Comptage des troncs et tous les graphiques opérationnel et compteur';
     vm.roleDesc[4] = 'Compteur + administration des utilisateurs et paramétrage de RCQ pour l\'UL et accès à tous les graphiques';
-    vm.roleDesc[9] = 'Le grand manitou';
-
-
 
     vm.createNewQueteur=function()
     {
       vm.current          = new QueteurResource();
       vm.current.ul_id    = vm.ulId;
       vm.current.ul_name  = $localStorage.currentUser.ulName;
-      vm.current.active   = "1";
+      vm.current.active   = true;
 
       vm.current.unAnonymizeConfirmed     = false;
       vm.current.anonymizeAskConfirmation = false;
@@ -75,84 +68,101 @@
 
     vm.handleQueteur = function(queteur)
     {
-      vm.current = queteur;
 
-
-      $rootScope.$emit('title-updated', 'Edition du quêteur - '+vm.current.id+' - '+vm.current.first_name+' '+vm.current.last_name);
-
-      if(queteur.referent_volunteer_entity != null)
+      try
       {
-        vm.current.referent_volunteerQueteur = queteur.referent_volunteer_entity.first_name+' '+queteur.referent_volunteer_entity.last_name + ' - '+queteur.referent_volunteer_entity.nivol;
-      }
+        vm.current = queteur;
 
-      if(typeof vm.current.mobile === "string")
-      {
-        if(vm.current.mobile === "N/A")
+
+        $rootScope.$emit('title-updated', 'Edition du quêteur - '+vm.current.id+' - '+vm.current.first_name+' '+vm.current.last_name);
+
+        if(angular.isDefined(vm.current.created))
         {
-          vm.current.mobile = null;
+          vm.current.created = vm.handleDate(vm.current.created);
         }
-        try
+        if(angular.isDefined(vm.current.updated))
         {
-          vm.current.mobile = parseInt(vm.current.mobile.slice(1));
-        }
-        catch(e)
-        {
-          vm.current.mobile = null;
+          vm.current.updated = vm.handleDate(vm.current.updated);
         }
 
-      }
+        vm.current.ul_id=vm.current.ul_id+"";// otherwise the generated select is ? number(348) ?
 
-      /*lack of data with previous model (minor instead of birthdate), only for ULParisIV, minor and major where set fixed birthdate
-      * if editing one of these ==> set birthdate to null to force user to update the data*/
-
-      if(angular.isDefined(vm.current.birthdate))
-      {
-        var birthdate = vm.current.birthdate.date.toLocaleString().substr(0,10);
-
-        if(birthdate === '1922-12-22' || birthdate === '2007-07-07')
+        if(queteur.referent_volunteer_entity != null)
         {
-          vm.current.birthdate = null;
+          vm.current.referent_volunteerQueteur = queteur.referent_volunteer_entity.first_name+' '+queteur.referent_volunteer_entity.last_name + ' - '+queteur.referent_volunteer_entity.nivol;
         }
-        else
+
+        if(typeof vm.current.mobile === "string")
         {
-          vm.current.birthdate = moment( queteur.birthdate.date.substring(0, queteur.birthdate.date.length -16 ),"YYYY-MM-DD").toDate();
-          vm.computeAge();
-        }
-      }
-
-
-
-      if(angular.isDefined(vm.current.anonymization_date))
-      {
-        vm.current.anonymization_date = vm.handleDate(vm.current.anonymization_date);
-      }
-
-
-
-      TroncQueteurResource.getTroncsOfQueteur({'queteur_id': queteurId}).$promise.then(
-        function success(data)
-        {
-          var dataLength = data.length;
-          for(var i=0;i<dataLength;i++)
+          if(vm.current.mobile === "N/A")
           {
-            data[i].depart            = vm.handleDate(data[i].depart);
-            data[i].depart_theorique  = vm.handleDate(data[i].depart_theorique);
-            data[i].retour            = vm.handleDate(data[i].retour);
-
-            if(data[i].retour !==null && data[i].depart !== null)
-            {
-              data[i].duration = moment.duration(moment(data[i].retour).diff(moment(data[i].depart))).asMinutes();
-            }
+            vm.current.mobile = null;
+          }
+          try
+          {
+            vm.current.mobile = parseInt(vm.current.mobile.slice(1));
+          }
+          catch(e)
+          {
+            vm.current.mobile = null;
           }
 
-          vm.current.troncs_queteur  = data;
-        },
-        function error(error)
-        {
-          $log.error(error);
         }
 
-      );
+        /*lack of data with previous model (minor instead of birthdate), only for ULParisIV, minor and major where set fixed birthdate
+        * if editing one of these ==> set birthdate to null to force user to update the data*/
+
+        if(angular.isDefined(vm.current.birthdate))
+        {
+          var birthdate = vm.current.birthdate.date.toLocaleString().substr(0,10);
+
+          if(birthdate === '1922-12-22' || birthdate === '2007-07-07')
+          {
+            vm.current.birthdate = null;
+          }
+          else
+          {
+            vm.current.birthdate = moment( queteur.birthdate.date.substring(0, queteur.birthdate.date.length -16 ),"YYYY-MM-DD").toDate();
+            vm.computeAge();
+          }
+        }
+
+        if(angular.isDefined(vm.current.anonymization_date))
+        {
+          vm.current.anonymization_date = vm.handleDate(vm.current.anonymization_date);
+        }
+
+        TroncQueteurResource.getTroncsOfQueteur({'queteur_id': queteurId}).$promise.then(
+          function success(data)
+          {
+            var dataLength = data.length;
+            for(var i=0;i<dataLength;i++)
+            {
+              data[i].depart            = vm.handleDate(data[i].depart);
+              data[i].depart_theorique  = vm.handleDate(data[i].depart_theorique);
+              data[i].retour            = vm.handleDate(data[i].retour);
+
+              if(data[i].retour !==null && data[i].depart !== null)
+              {
+                data[i].duration = moment.duration(moment(data[i].retour).diff(moment(data[i].depart))).asMinutes();
+              }
+            }
+
+            vm.current.troncs_queteur  = data;
+          },
+          function error(error)
+          {
+            $log.error(error);
+          }
+
+        );
+
+      }
+      catch(ex)
+      {
+        $log.error(queteur);
+        $log.error(ex);
+      }
     };
 
 // Load data or create new queteur (after function definition)
@@ -167,10 +177,6 @@
       $rootScope.$emit('title-updated', 'Création d\'un nouveau quêtêur');
     }
 
-
-
-
-
     vm.savedSuccessfullyFunction=function(response)
     {
       vm.current.saveInProgress=false;
@@ -179,7 +185,7 @@
         vm.goToQueteur(response.queteurId);
       }
 
-      vm.savedSuccessfully=true;
+      vm.savedSuccessfully                = true;
       vm.current.anonymization_token      = null;
       vm.current.anonymization_date       = null;
       vm.current.unAnonymizeConfirmed     = false;
@@ -216,13 +222,16 @@
         method:'PUT'
       });
 
-      upload.then(function success(response){
+      upload.then(function success(response)
+      {
         $log.info('file ' + (response.config.data.file ? response.config.data.file.name:'undefined') + 'is uploaded successfully. Response: ' + response.data);
       },
-      function error(error){
+      function error(error)
+      {
         $log.error(error);
       },
-      function progress(evt){
+      function progress(evt)
+      {
         $log.info('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ (evt.config.data.file ? evt.config.data.file.name:'undefined'));
       });
 
@@ -403,7 +412,7 @@
 
     vm.searchSimilar=function()
     {
-      if(!vm.current.id)
+      if(!vm.current.id && (vm.current.first_name || vm.current.last_name || vm.current.nivol))
       {
         QueteurResource.searchSimilarQueteurs({ 'first_name': vm.current.first_name,'last_name': vm.current.last_name,'nivol': vm.current.nivol }).$promise.then(function(queteurs)
         {

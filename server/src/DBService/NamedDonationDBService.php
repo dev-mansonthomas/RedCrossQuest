@@ -24,8 +24,11 @@ class NamedDonationDBService extends DBService
    */
   public function getNamedDonations(?string $query, bool $deleted, ?string $year, int $ulId)
   {
-                                                //Sonar lint suggestion : $deleted === null ? false: $deleted
-    $parameters = ["ul_id" => $ulId, 'deleted'=>(!($deleted === null) && $deleted)];
+
+    $parameters = ["ul_id"   => $ulId,
+                   "deleted" => $deleted?1:0];
+
+    $this->logger->addInfo("searching named donation", $parameters);
 
     $searchSQL = "";
     $yearSQL   = "";
@@ -228,7 +231,7 @@ $ulIdWhere
       'type'               => $namedDonation->type,
       'forme'              => $namedDonation->forme,
       'don_creditcard'     => $namedDonation->don_creditcard,
-      'deleted'            => $namedDonation->deleted?1:0,
+      'deleted'            => $namedDonation->deleted===true?"1":"0",
       'coins_money_bag_id' => $namedDonation->coins_money_bag_id,
       'bills_money_bag_id' => $namedDonation->bills_money_bag_id
     ];
@@ -377,7 +380,7 @@ NOW()
       'type'               => $namedDonation->type,
       'forme'              => $namedDonation->forme,
       'don_creditcard'     => $namedDonation->don_creditcard,
-      'deleted'            => $namedDonation->deleted?1:0,
+      'deleted'            => $namedDonation->deleted===true?"1":"0",
       'coins_money_bag_id' => $namedDonation->coins_money_bag_id,
       'bills_money_bag_id' => $namedDonation->bills_money_bag_id
     ];

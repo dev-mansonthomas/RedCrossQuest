@@ -11,7 +11,7 @@
 
   /** @ngInject */
   function TroncEditController($rootScope, $log, $routeParams, $timeout,$localStorage,
-                               TroncResource, moment, TroncQueteurResource)
+                               TroncResource, moment, TroncQueteurResource, DateTimeHandlingService)
   {
     var vm      = this;
     var troncId = $routeParams.id;
@@ -26,17 +26,18 @@
 
     vm.handleDate = function (theDate)
     {
-      if(theDate ===null)
-        return null;
-
-      var dateAsString = theDate.date;
-      return moment( dateAsString.substring (0, dateAsString.length  - 3 ),"YYYY-MM-DD  HH:mm:ss.SSS");
+      return DateTimeHandlingService.handleServerDate(theDate).dateInLocalTimeZoneMoment;
     };
 
     if (angular.isDefined(troncId))
     {
-      vm.current = TroncResource.get({ 'id': troncId });
-      vm.current.saveInProgress=false;
+       TroncResource.get({ 'id': troncId }).$promise.then(function success(data)
+      {
+        vm.current = data;
+        vm.current.created = DateTimeHandlingService.handleServerDate(vm.current.created).stringVersion;
+        vm.current.saveInProgress=false;
+      });
+
       TroncQueteurResource.getTroncsQueteurForTroncId({'tronc_id': troncId}).$promise.then(
         function success(data)
         {

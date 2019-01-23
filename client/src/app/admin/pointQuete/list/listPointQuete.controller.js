@@ -15,7 +15,7 @@
   {
     var vm = this;
     vm.currentUserRole=$localStorage.currentUser.roleId;
-
+    vm.ul = $localStorage.guiSettings.ul;
     $rootScope.$emit('title-updated', 'Liste des points de quête');
 
     vm.typePointQueteList=[
@@ -32,7 +32,7 @@
     {
       var searchParams = {'action':'search','q':vm.search, 'point_quete_type':vm.point_quete_type, 'active':vm.active};
 
-      if(vm.currentUserRole === '9' && vm.admin_ul_id !== null)
+      if(vm.currentUserRole === 9 && vm.admin_ul_id !== null)
       {
         searchParams['admin_ul_id']=vm.admin_ul_id;
       }

@@ -173,12 +173,14 @@ AND q.id = :queteurId
         $queteurIdsSQL = "
 AND q.id IN (
 ";
+        $i=0;
         foreach($queteurIdsArray as $qId)
         {
-          $queteurIdsSQL.=":queteur_$qId,";
-          $parameters["queteur_$qId"]=$qId;
+          $queteurIdsSQL.=":queteur_$i,";
+          $parameters["queteur_$i"]=substr($qId,0,20);
+          $i++;
         }
-        $queteurIdsSQL.="-10)";
+        $queteurIdsSQL.="-10)";//-10 trick to always have something in the where clause
       }
     }
 
@@ -201,6 +203,18 @@ AND q.id IN (
     }
 
 
+    $this->logger->addInfo("Querying queteurs",
+                           array("sql"          => $sql          ,
+                                 "query"        => $query        ,
+                                 "searchType"   => $searchType   ,
+                                 "secteur"      => $secteur      ,
+                                 "ulId"         => $ulId         ,
+                                 "active"       => $active       ,
+                                 "benevoleOnly" => $benevoleOnly ,
+                                 "rcqUser"      => $rcqUser      ,
+                                 "queteurIds"   => $queteurIds   ,
+                                 "QRSearchType" => $QRSearchType
+                           ));
     $stmt   = $this->db->prepare($sql);
     $parameters["active"] = $active;
 
@@ -531,8 +545,8 @@ WHERE `id`              = :id
       "mobile"              => $queteur->mobile,
       "notes"               => $queteur->notes,
       "birthdate"           => $queteur->birthdate,
-      "man"                 => $queteur->man,
-      "active"              => $queteur->active,
+      "man"                 => $queteur->man===true?"1":"0",
+      "active"              => $queteur->active===true?"1":"0",
       "referent_volunteer"  => $queteur->referent_volunteer,
       "id"                  => $queteur->id
     ];
@@ -615,8 +629,8 @@ VALUES
       "notes"              => $queteur->notes,
       "ul_id"              => $roleId == 9? $queteur->ul_id : $ulId,  //this ulId is safer, checked with JWT Token. if superAdmin, we take the ul_id value of queteur, than can be different from the ulId of the superAdmin
       "birthdate"          => $queteur->birthdate,
-      "man"                => $queteur->man,
-      "active"             => $queteur->active,
+      "man"                => $queteur->man===true?"1":"0",
+      "active"             => $queteur->active===true?"1":"0",
       "referent_volunteer" => $queteur->secteur == 3 ? $queteur->referent_volunteer : 0
     ]);
 
@@ -667,8 +681,6 @@ VALUES
    */
   public function searchSimilarQueteur(int $ulId, ?string $firstName, ?string $lastName, ?string $nivol)
   {
-
-
     $parameters      = ["ul_id" => $ulId];
     $searchFirstName = "";
     $searchLastName  = "";

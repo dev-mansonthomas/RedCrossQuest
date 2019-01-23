@@ -29,8 +29,11 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($request, $respons
 
     $fh = fopen("/tmp/".$zipFileName, 'r  ');
 
-    $stream = new \Slim\Http\Stream($fh);
+    //$stream = new \Slim\Http\Stream($fh);
 
+
+    return $response->getBody()->write(json_encode([]));
+/*
     return $response->withHeader('Content-Type', 'application/force-download')
       ->withHeader('Content-Type', 'application/octet-stream')
       ->withHeader('Content-Type', 'application/download')
@@ -40,7 +43,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($request, $respons
       ->withHeader('Expires', '0')
       ->withHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
       ->withHeader('Pragma', 'public')
-      ->withBody($stream);
+      ->withBody($stream);*/
 
 
   }

@@ -14,7 +14,7 @@
                                       QueteurResource, PointQueteResource   ,
                                       TroncResource  , TroncQueteurResource ,
                                       QRDecodeService, $localStorage        ,
-                                      moment)
+                                      moment, DateTimeHandlingService)
   {
     var vm = this;
 
@@ -193,7 +193,7 @@
       {
         return response.map(function(tronc)
         {
-          tronc.stringView = tronc.id+" - "+tronc.created;
+          tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
           return tronc;
         });
       },

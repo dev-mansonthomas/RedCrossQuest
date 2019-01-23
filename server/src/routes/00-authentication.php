@@ -27,23 +27,9 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
 {
   try
   {
-    $username = trim($request->getParsedBodyParam("username"    ));
-    $password = trim($request->getParsedBodyParam("password"    ));
-    $token    = trim($request->getParsedBodyParam("token"       ));
-
-    //refusing null, empty, big
-    if($username        == null || $password         == null || $token         == null ||
-      strlen($username) == 0    || strlen($password) == 0    || strlen($token) == 0    ||
-      strlen($username) >  20   || strlen($password) >  20   || strlen($token) >  500  )
-    {
-
-      $this->logger->addError("Login attempted with username or password or token or remoteIP exceeding limits");
-
-      $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode(['error'=>'username or password error. Code 1']));
-
-      return $response401;
-    }
+    $username = checkStringParameter("username", $request->getParsedBodyParam("username"), 20);
+    $password = checkStringParameter("password", $request->getParsedBodyParam("password"), 20);
+    $token    = checkStringParameter("token"   , $request->getParsedBodyParam("token"   ), 500);
 
     $this->logger->addInfo("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
@@ -153,22 +139,8 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
   $username = "";
   try
   {
-    $username = trim($request->getParsedBodyParam("username"));
-    $token    = trim($request->getParsedBodyParam("token"   ));
-
-    //refusing null, empty, big
-    if($username        == null ||
-      strlen($username) == 0    ||
-      strlen($username) >  20    )
-    {
-
-      $this->logger->addError("sendInit attempted with username or token exceeding limits");
-
-      $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode( ["error" => "an error occurred. Code -1"]));
-
-      return $response401;
-    }
+    $username = checkStringParameter("username", $request->getParsedBodyParam("username"), 20);
+    $token    = checkStringParameter("token"   , $request->getParsedBodyParam("token"   ), 500);
 
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/sendInit", $username);
 
@@ -218,8 +190,8 @@ $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
 {
   try
   {
-    $uuid  = trim($request->getParam("uuid"));
-    $token = trim($request->getParam("token"));
+    $uuid  = checkStringParameter("uuid" , $request->getParam("uuid" ), 36 );
+    $token = checkStringParameter("token", $request->getParam("token"), 500);
 
 
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/getUserInfoWithUUID", "getInfoFromUUID");
@@ -276,9 +248,9 @@ $app->post('/resetPassword', function ($request, $response, $args) use ($app)
 {
   try
   {
-    $uuid     = trim($request->getParsedBodyParam("uuid"    ));
-    $password = trim($request->getParsedBodyParam("password"));
-    $token    = trim($request->getParsedBodyParam("token"));
+    $uuid     = checkStringParameter("uuid"    , $request->getParsedBodyParam("uuid"    ), 36 );
+    $password = checkStringParameter("password", $request->getParsedBodyParam("password"), 60 );
+    $token    = checkStringParameter("token"   , $request->getParsedBodyParam("token"   ), 500);
 
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/resetPassword", "getInfoFromUUID");
 

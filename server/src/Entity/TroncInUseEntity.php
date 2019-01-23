@@ -28,15 +28,15 @@ class TroncInUseEntity  extends Entity
   public function __construct(array $data, Logger $logger)
   {
     parent::__construct($logger);
-    $this->getString  ('id'               , $data);
+    $this->getInteger ('id'               , $data);
     $this->getDate    ('depart_theorique' , $data);
     $this->getDate    ('depart'           , $data);
     $this->getInteger ('queteur_id'       , $data);
     $this->getInteger ('tronc_id'         , $data);
-    $this->getString  ('first_name'       , $data);
-    $this->getString  ('last_name'        , $data);
-    $this->getString  ('email'            , $data);
-    $this->getString  ('mobile'           , $data);
-    $this->getString  ('nivol'            , $data);
+    $this->getString  ('first_name'       , $data, 100);
+    $this->getString  ('last_name'        , $data, 100);
+    $this->getString  ('email'            , $data, 64);
+    $this->getString  ('mobile'           , $data, 20);
+    $this->getString  ('nivol'            , $data, 15);
   }
 }

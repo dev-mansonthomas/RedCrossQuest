@@ -47,7 +47,7 @@
           Nombre de points de Quête: <span class="badge">{{pq.pointsQuete.length}}</span>
         </div>
         <div class="col-md-4">
-          <div class="input-group" ng-show="pq.currentUserRole=='9'">
+          <div class="input-group" ng-show="pq.currentUserRole==9">
             <label for="admin_ul_id" class="control-label">Unité Locale </label>
             <select id="admin_ul_id" class="form-control" placeholder="ID Unité Locale" data-ng-model="pq.admin_ul_id">
               <option value=''   >N/A                     </option>
@@ -120,7 +120,7 @@
 
         <td>{{::p.max_people        }}</td>
 
-        <td><span ng-show="p.minor_allowed==1" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-show="p.minor_allowed==0" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></td>
+        <td><span ng-show="p.minor_allowed==1" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-show="p.minor_allowed==0" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></td>
         <td>{{::p.created           }}</td>
         <td><span ng-show="p.enabled" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-show="!p.enabled" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></td>
         <td>{{::p.type              }}</td>

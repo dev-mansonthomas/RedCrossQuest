@@ -38,24 +38,24 @@ class UserEntity extends Entity
   public function __construct(array $data, Logger $logger)
   {
     parent::__construct($logger);
-    $this->getString ('id'                        , $data);
-    $this->getString ('nivol'                     , $data);
-    $this->getString ('queteur_id'                , $data);
-    $this->getString ('password'                  , $data);
+    $this->getInteger('id'                        , $data);
+    $this->getString ('nivol'                     , $data, 20);
+    $this->getInteger('queteur_id'                , $data);
+    $this->getString ('password'                  , $data, 60);
     $this->getBoolean('password_defined'          , $data);
 
 
-    $this->getString ('role'                      , $data);
+    $this->getInteger('role'                      , $data);
     $this->getDate   ('created'                   , $data);
     $this->getDate   ('updated'                   , $data);
-    $this->getString ('active'                    , $data);
+    $this->getBoolean('active'                    , $data);
     $this->getDate   ('last_failure_login_date'   , $data);
-    $this->getString ('nb_of_failure'             , $data);
+    $this->getInteger('nb_of_failure'             , $data);
     $this->getDate   ('last_successful_login_date', $data);
     $this->getDate   ('init_password_date'        , $data);
 
-    $this->getString ('first_name'                , $data);
-    $this->getString ('last_name'                 , $data);
+    $this->getString ('first_name'                , $data, 100);
+    $this->getString ('last_name'                 , $data, 100);
   }
 
 

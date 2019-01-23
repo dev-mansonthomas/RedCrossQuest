@@ -38,12 +38,12 @@ class MailingInfoEntity extends Entity
   public function __construct(array $data, Logger $logger)
   {
     parent::__construct($logger);
-    $this->getString ('id'                          , $data);
-    $this->getString ('email'                       , $data);
-    $this->getString ('first_name'                  , $data);
-    $this->getString ('last_name'                   , $data);
-    $this->getString ('secteur'                     , $data);
+    $this->getInteger('id'                          , $data);
+    $this->getEmail  ('email'                       , $data);
+    $this->getString ('first_name'                  , $data, 100);
+    $this->getString ('last_name'                   , $data, 100);
+    $this->getInteger('secteur'                     , $data);
     $this->getBoolean('man'                         , $data);
-    $this->getString ('spotfire_access_token'       , $data);
+    $this->getString ('spotfire_access_token'       , $data, 36);
   }
 }

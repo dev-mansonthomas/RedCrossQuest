@@ -36,7 +36,7 @@
 
 
       vm.current.tronc = tronc;
-      vm.current.tronc.stringView = tronc.id+" - "+tronc.created;
+      vm.current.tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
       vm.current.troncId = tronc.id;
 
 
@@ -125,7 +125,7 @@
       {
         return response.map(function(tronc)
         {
-          tronc.stringView = tronc.id+" - "+tronc.created;
+          tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
           return tronc;
         });
       },

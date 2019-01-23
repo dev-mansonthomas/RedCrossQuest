@@ -28,8 +28,13 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $res
 
 
     $query   = array_key_exists('q'       ,$params)?$params['q'        ]:null;
-    $deleted = array_key_exists('deleted' ,$params)?$params['deleted'  ]:0;
+    $deleted = array_key_exists('deleted' ,$params)?$params['deleted'  ]:false;
     $year    = array_key_exists('year'    ,$params)?$params['year'     ]:null;
+
+    if($deleted=="true")
+      $deleted=true;
+    else
+      $deleted=false;
 
     if(array_key_exists('admin_ul_id',$params) && $roleId > 4)
     {
@@ -38,6 +43,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $res
       $ulId = $adminUlId;
     }
 
+    $this->logger->addInfo("searching named donation", array('q'=>$query, 'deleted'=>$deleted, 'year'=>$year));
     $namedDonations = $this->namedDonationDBService->getNamedDonations($query, $deleted, $year, $ulId);
 
     $response->getBody()->write(json_encode($namedDonations));

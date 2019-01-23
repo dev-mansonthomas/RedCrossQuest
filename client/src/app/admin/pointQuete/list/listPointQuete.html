@@ -62,7 +62,7 @@
           <input type="submit" class="btn btn-primary" value="Rechercher" />
         </div>
       </div>
-      <div class="row" ng-show="pq.currentUserRole=='9'" ng-cloak style="margin-top:15px;">
+      <div class="row" ng-show="pq.currentUserRole==9" ng-cloak style="margin-top:15px;">
         <div class="col-md-2">
           <strong>Section Super Admin</strong>
         </div>
@@ -117,7 +117,7 @@
         <td>{{::p.ul_id             }}</td>
         <td><a ng-href="/#!/pointsQuetes/edit/{{::p.id}}">{{::p.code              }}</a></td>
         <td><a ng-href="/#!/pointsQuetes/edit/{{::p.id}}">{{::p.name              }}</a></td>
-        <td><a ng-href="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin=&destination={{::p.latitude}},{{::p.longitude}}" target="_blank">{{::p.address}}, {{::p.postal_code}}, {{::p.city}}</a></td>
+        <td><a ng-href="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin={{::pq.ul.latitude}},{{::pq.ul.longitude}}&destination={{::p.latitude}},{{::p.longitude}}" target="_blank">{{::p.address}}, {{::p.postal_code}}, {{::p.city}}</a></td>
 
         <td>{{::p.max_people        }}</td>
 

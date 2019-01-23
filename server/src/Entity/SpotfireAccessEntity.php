@@ -25,7 +25,7 @@ class SpotfireAccessEntity extends Entity
   {
     parent::__construct($logger);
     $this->getInteger('id'                        , $data);
-    $this->getString ('token'                     , $data);
+    $this->getString ('token'                     , $data, 36);
     $this->getDate   ('token_expiration'          , $data);
     $this->getInteger('ul_id'                     , $data);
     $this->getInteger('user_id'                   , $data);

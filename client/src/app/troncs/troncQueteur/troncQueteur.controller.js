@@ -391,7 +391,7 @@
         {
           return response.map(function(tronc)
           {
-            tronc.stringView = tronc.id+" - "+tronc.created;
+            tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
             return tronc;
           });
         },

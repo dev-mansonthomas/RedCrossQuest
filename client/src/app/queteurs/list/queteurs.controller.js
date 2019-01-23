@@ -64,7 +64,7 @@
         'anonymization_token' : vm.anonymization_token};
 
 
-      if(vm.currentUserRole === '9' && vm.admin_ul_id !== null)
+      if(vm.currentUserRole === 9 && vm.admin_ul_id !== null)
       {
         searchParams['admin_ul_id']=vm.admin_ul_id;
       }

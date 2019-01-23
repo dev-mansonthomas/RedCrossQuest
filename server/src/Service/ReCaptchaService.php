@@ -71,7 +71,7 @@ class ReCaptchaService
     }
     else
     {
-      $remoteIP = null;
+      $remoteIP = $_SERVER['REMOTE_ADDR'];
     }
 
     //discard token that are too long, null or empty

@@ -135,16 +135,16 @@ class TroncQueteurEntity extends Entity
       $this->getFloat  ('don_creditcard'              , $data);
       
 
-      $this->getString('foreign_coins'                , $data);
-      $this->getString('foreign_banknote'             , $data);
+      $this->getInteger('foreign_coins'                , $data);
+      $this->getInteger('foreign_banknote'             , $data);
 
-      $this->getString('notes_depart_theorique'       , $data);
-      $this->getString('notes_retour'                 , $data);
-      $this->getString('notes_retour_comptage_pieces' , $data);
-      $this->getString('notes_update'                 , $data);
+      $this->getString('notes_depart_theorique'       , $data, 500);
+      $this->getString('notes_retour'                 , $data, 500);
+      $this->getString('notes_retour_comptage_pieces' , $data, 500);
+      $this->getString('notes_update'                 , $data, 500);
 
-      $this->getString('last_name'                    , $data);
-      $this->getString('first_name'                   , $data);
+      $this->getString('last_name'                    , $data, 100);
+      $this->getString('first_name'                   , $data, 100);
 
       $this->getBoolean('deleted'                     , $data);
 
@@ -153,8 +153,8 @@ class TroncQueteurEntity extends Entity
 
       $this->getBoolean('preparationAndDepart'        , $data);
 
-      $this->getString('coins_money_bag_id'           , $data);
-      $this->getString('bills_money_bag_id'           , $data);
+      $this->getString ('coins_money_bag_id'          , $data, 20);
+      $this->getString ('bills_money_bag_id'          , $data, 20);
 
       $this->getInteger('rowCount'                    , $data);
 
@@ -213,11 +213,11 @@ class TroncQueteurEntity extends Entity
      */
     function prepareForPublish()
     {
-      $this->depart_theorique = $this->depart_theorique ->toDateTimeString();
-      $this->depart           = $this->depart           ->toDateTimeString();
-      $this->retour           = $this->retour           ->toDateTimeString();
-      $this->comptage         = $this->comptage         ->toDateTimeString();
-      $this->last_update      = $this->last_update      ->toDateTimeString();
+      $this->depart_theorique = $this->depart_theorique != null ? $this->depart_theorique ->toDateTimeString() : null;
+      $this->depart           = $this->depart           != null ? $this->depart           ->toDateTimeString() : null;
+      $this->retour           = $this->retour           != null ? $this->retour           ->toDateTimeString() : null;
+      $this->comptage         = $this->comptage         != null ? $this->comptage         ->toDateTimeString() : null;
+      $this->last_update      = $this->last_update      != null ? $this->last_update      ->toDateTimeString() : null;
 
       unset($this->queteur              );
       unset($this->point_quete          );

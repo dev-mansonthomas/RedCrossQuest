@@ -26,9 +26,9 @@ class UniteLocaleSettingsEntity  extends Entity
     parent::__construct($logger);
     $this->getInteger ('id'                      , $data);
     $this->getInteger ('ul_id'                   , $data);
-    $this->getString  ('settings'                , $data);
-    $this->getString  ('created'                 , $data);
-    $this->getString  ('updated'                 , $data);
+    $this->getJson    ('settings'                , $data, 4000);
+    $this->getDate    ('created'                 , $data);
+    $this->getDate    ('updated'                 , $data);
     $this->getInteger ('last_update_user_id'     , $data);
   }
 }

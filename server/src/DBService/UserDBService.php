@@ -215,6 +215,7 @@ LIMIT 1
 
   /***
    * This function is used by queteurEditForm, where the info from the user is retrieved from the queteurId
+   * Can't fetch data from superuser
    *
    * @param int $userId the Id of the user
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
@@ -284,6 +285,7 @@ FROM   users
 WHERE  upper(init_passwd_uuid) = upper(:uuid)
 AND    init_passwd_date > NOW()
 AND    active = 1
+AND    role  != 9
 LIMIT 1
 ";
 
@@ -327,6 +329,7 @@ SET     init_passwd_uuid  = :uuid,
         init_passwd_date  = DATE_ADD(NOW(), INTERVAL 1 HOUR)
 WHERE   nivol             = :nivol
 AND     active            = 1
+AND     role             != 9
 ";
 
     $stmt = $this->db->prepare($sql);
@@ -362,12 +365,13 @@ AND     active            = 1
   {
     $sql = "
 UPDATE  `users`
-SET     init_passwd_uuid  = null,
-        init_passwd_date  = null,
+SET     init_passwd_uuid  =  null,
+        init_passwd_date  =  null,
         password          = :password
 WHERE   upper(init_passwd_uuid) = upper(:uuid)
 AND     init_passwd_date > NOW()
 AND     active = 1
+AND     role  != 9
 ";
 
     $stmt = $this->db->prepare($sql);
@@ -400,7 +404,7 @@ AND     active = 1
 UPDATE  `users`
 SET     last_successful_login_date  = NOW(),
         nb_of_failure               = 0
-WHERE   id = :id
+WHERE   id                          = :id
 ";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(
@@ -428,7 +432,7 @@ WHERE   id = :id
 UPDATE  `users`
 SET     last_failure_login_date  = NOW(),
         nb_of_failure            = nb_of_failure + 1
-WHERE   id = :id
+WHERE   id                       = :id
 ";
     $stmt = $this->db->prepare($sql);
     $stmt->execute(
@@ -446,27 +450,43 @@ WHERE   id = :id
 
 
   /**
-   * this method update the 'active' and 'role' column of the user
+   * this method update the 'active' and 'role' column of the user (for non super user)
    * @param UserEntity $userEntity the user info
+   * @param int         $ulId   the UL ID  of the person performing the action
+   * @param int         $roleId the RoleID of the person performing the action
    * @return boolean true if query is successful, false otherwise
    * @throws PDOException if the query fails to execute on the server
    */
-  public function updateActiveAndRole(UserEntity $userEntity)
+  public function updateActiveAndRole(UserEntity $userEntity, int $ulId, int $roleId)
   {
     $sql = "
-UPDATE  `users`
-SET     active  = :active,
-        role    = :role
-WHERE   id      = :id
+UPDATE        `users`    u
+  INNER JOIN  `queteur`  q
+  ON         u.queteur_id = q.id
+SET          u.active     = :active,
+             u.role       = :role
+WHERE        u.id         = :id
+AND          u.role      != 9
 ";
+
+    $parameters = [
+      "id"     => $userEntity->id,
+      "active" => $userEntity->active===true?"1":"0",
+      "role"   => $userEntity->role
+    ];
+
+
+    if($roleId != 9)
+    {//allow super admin to update users from any UL
+      $sql .= "
+AND     q.ul_id = :ul_id      
+";
+      $parameters["ul_id"] = $ulId;
+    }
+
+
     $stmt = $this->db->prepare($sql);
-    $stmt->execute(
-      [
-        "id"     => $userEntity->id,
-        "active" => $userEntity->active,
-        "role"   => $userEntity->role
-      ]
-    );
+    $stmt->execute($parameters);
 
     if($stmt->rowCount() == 1)
     {

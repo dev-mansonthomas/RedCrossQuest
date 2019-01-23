@@ -39,16 +39,16 @@ class PointQueteEntity  extends Entity
 
     $this->getInteger('id'           , $data);
     $this->getInteger('ul_id'        , $data);
-    $this->getString ('code'         , $data);
-    $this->getString ('name'         , $data);
+    $this->getString ('code'         , $data, 10);
+    $this->getString ('name'         , $data, 100);
     $this->getFloat  ('latitude'     , $data);
     $this->getFloat  ('longitude'    , $data);
-    $this->getString ('address'      , $data);
-    $this->getString ('postal_code'  , $data);
-    $this->getString ('city'         , $data);
-    $this->getString ('max_people'   , $data);
-    $this->getString ('advice'       , $data);
-    $this->getString ('localization' , $data);
+    $this->getString ('address'      , $data, 70);
+    $this->getInteger('postal_code'  , $data);
+    $this->getString ('city'         , $data, 70);
+    $this->getString ('max_people'   , $data, 50);
+    $this->getString ('advice'       , $data, 500);
+    $this->getString ('localization' , $data, 500);
     $this->getBoolean('minor_allowed', $data);
     $this->getDate   ('created'      , $data);
     $this->getBoolean('enabled'      , $data);

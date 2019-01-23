@@ -23,9 +23,9 @@ class DailyStatsBeforeRCQEntity  extends Entity
   {
     parent::__construct($logger);
 
-    $this->getString('id'           , $data);
-    $this->getString('ul_id'        , $data);
-    $this->getDate  ('date'         , $data);
-    $this->getString('amount'       , $data);
+    $this->getInteger('id'           , $data);
+    $this->getInteger('ul_id'        , $data);
+    $this->getDate   ('date'         , $data);
+    $this->getFloat  ('amount'       , $data);
   }
 }

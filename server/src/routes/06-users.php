@@ -34,9 +34,21 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
       $input          = $request->getParsedBody();
       $userEntity     = new UserEntity($input, $this->logger);
 
-      if ($action =="update")
+      if ($action == "update")
       {
-        $this->userDBService->updateActiveAndRole($userEntity);
+        $this->logger->addInfo("Updating user activeAndRole", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
+
+        if($userEntity->role > $decodedToken->getRoleId())
+        {
+          $this->logger->addInfo("Connected user is trying to grand higher privilege than his to someone else", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
+          throw new \Exception("PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 14 at /app/src/DBService/UsersDBService.php:47");
+        }
+
+        $numberOfUpdatedRows = $this->userDBService->updateActiveAndRole($userEntity, $decodedToken->getUlId(), $decodedToken->getRoleId());
+        if($numberOfUpdatedRows == 0)
+        {
+          $this->logger->addInfo("Updating user activeAndRole FAILED, no row updated", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
+        }
       }
       else
       {//send init mail to user

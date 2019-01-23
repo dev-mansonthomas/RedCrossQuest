@@ -25,6 +25,8 @@
     for(var i=2004;i<=currentYear; i++)
       vm.years[vm.years.length]=i;
 
+    vm.deleted = false;
+
 
 
 
@@ -32,7 +34,7 @@
     {
       var searchParams = {'action':'search','q':vm.search, 'year':vm.year, 'deleted':vm.deleted};
 
-      if(vm.currentUserRole === '9' && vm.admin_ul_id !== null)
+      if(vm.currentUserRole === 9 && vm.admin_ul_id !== null)
       {
         searchParams['admin_ul_id']=vm.admin_ul_id;
       }

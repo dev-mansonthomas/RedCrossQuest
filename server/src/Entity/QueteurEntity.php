@@ -64,38 +64,38 @@ class QueteurEntity  extends Entity
   {
     parent::__construct($logger);
 
-    $this->getString('id'                          , $data);
-    $this->getString('email'                       , $data);
-    $this->getString('first_name'                  , $data);
-    $this->getString('last_name'                   , $data);
-    $this->getString('secteur'                     , $data);
-    $this->getString('nivol'                       , $data);
-    $this->getString('mobile'                      , $data);
-    $this->getString('created'                     , $data);
-    $this->getString('updated'                     , $data);
-    $this->getString('parent_authorization'        , $data);
-    $this->getString('temporary_volunteer_form'    , $data);
-    $this->getString('notes'                       , $data);
-    $this->getString('ul_id'                       , $data);
-    $this->getString('ul_name'                     , $data);
-    $this->getString('ul_latitude'                 , $data);
-    $this->getString('ul_longitude'                , $data);
+    $this->getInteger('id'                          , $data);
+    $this->getEmail  ('email'                       , $data);
+    $this->getString ('first_name'                  , $data, 100);
+    $this->getString ('last_name'                   , $data, 100);
+    $this->getInteger('secteur'                     , $data);
+    $this->getString ('nivol'                       , $data, 15);
+    $this->getString ('mobile'                      , $data, 20);
+    $this->getDate   ('created'                     , $data);
+    $this->getDate   ('updated'                     , $data);
+    //$this->getString ('parent_authorization'        , $data);
+    //$this->getString ('temporary_volunteer_form'    , $data);
+    $this->getString ('notes'                       , $data, 500);
+    $this->getInteger('ul_id'                       , $data);
+    $this->getString ('ul_name'                     , $data, 50);
+    $this->getFloat  ('ul_latitude'                 , $data);
+    $this->getFloat  ('ul_longitude'                , $data);
 
-    $this->getString('point_quete_id'              , $data);
-    $this->getString('point_quete_name'            , $data);
-    $this->getDate  ('depart_theorique'            , $data);
-    $this->getDate  ('depart'                      , $data);
-    $this->getDate  ('retour'                      , $data);
+    $this->getInteger('point_quete_id'              , $data);
+    $this->getString ('point_quete_name'            , $data, 100);
+    $this->getDate   ('depart_theorique'            , $data);
+    $this->getDate   ('depart'                      , $data);
+    $this->getDate   ('retour'                      , $data);
 
-    $this->getString('active'                      , $data);
-    $this->getString('man'                         , $data);
-    $this->getDate  ('birthdate'                   , $data);
+    $this->getBoolean('active'                      , $data);
+    $this->getBoolean('man'                         , $data);
+    $this->getDate   ('birthdate'                   , $data);
 
-    $this->getString('qr_code_printed'             , $data);
-    $this->getString('referent_volunteer'          , $data);
+    $this->getBoolean('qr_code_printed'             , $data);
+    $this->getInteger('referent_volunteer'          , $data);
 
-    $this->getString('anonymization_token'         , $data);
-    $this->getDate  ('anonymization_date'          , $data);
+    $this->getString ('anonymization_token'         , $data, 36);
+    $this->getDate   ('anonymization_date'          , $data);
 
 
   }

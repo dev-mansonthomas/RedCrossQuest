@@ -55,7 +55,7 @@
           <div class="form-group">
             <label for="secteur" class="control-label">Secteur</label>
             <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required
-                    ng-options="(r.id+'') as r.label
+                    ng-options="(r.id) as r.label
                       for
                       r in queteur.typeBenevoleList"
                     autofocus
@@ -168,10 +168,10 @@
           <div class="form-group" ng-class="{'has-error':queteurForm.man.$invalid}">
             <label for="manRadio1" class="control-label">Sexe</label>  <br/>
             <label class="radio-inline">
-              <input type="radio" name="man" id="manRadio1" ng-model="queteur.current.man" value="1" required> Homme
+              <input type="radio" name="man" id="manRadio1" ng-model="queteur.current.man" ng-value="true" required> Homme
             </label>
             <label class="radio-inline">
-              <input type="radio" name="man" id="manRadio2" ng-model="queteur.current.man" value="0" required> Femme
+              <input type="radio" name="man" id="manRadio2" ng-model="queteur.current.man" ng-value="false" required> Femme
             </label>
           </div>
         </div>
@@ -205,10 +205,10 @@
           <div class="form-group" ng-class="{'has-error':queteurForm.active.$invalid}">
             <label for="activeRadio1" class="control-label">Actif</label> <br/>
             <label class="radio-inline">
-              <input type="radio" name="active" id="activeRadio1" ng-model="queteur.current.active" value="1" required> Oui
+              <input type="radio" name="active" id="activeRadio1" ng-model="queteur.current.active" ng-value="true" required> Oui
             </label>
             <label class="radio-inline">
-              <input type="radio" name="active" id="activeRadio2" ng-model="queteur.current.active" value="0" required> Non
+              <input type="radio" name="active" id="activeRadio2" ng-model="queteur.current.active" ng-value="false" required> Non
             </label>
           </div>
         </div>
@@ -225,14 +225,14 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group" ng-show="queteur.currentUserRole!='9' || queteur.current.id != null" ng-cloak>
+          <div class="form-group" ng-show="queteur.currentUserRole!=9 || queteur.current.id != null" ng-cloak>
             <label for="ul_id" class="control-label">Unité Locale</label>
             <select name="ul_id" id="ul_id" class="form-control" ng-model="queteur.current.ul_id">
               <option value="{{::queteur.current.ul_id}}" selected>{{::queteur.current.ul_name}}</option>
             </select>
           </div>
 
-          <div class="form-group" ng-show="queteur.currentUserRole=='9' && queteur.current.id == null" ng-cloak>
+          <div class="form-group" ng-show="queteur.currentUserRole==9 && queteur.current.id == null" ng-cloak>
             <label for="ul_id_admin" class="control-label">Unité Locale</label>
             <input
               id="ul_id_admin"
@@ -397,10 +397,10 @@
                         <div class="col-md-4">
                           <label for="userActiveRadio1" class="control-label">Actif</label> <br/>
                           <label class="radio-inline">
-                            <input type="radio" name="userActive" id="userActiveRadio1" ng-model="queteur.current.user.active" value="1" ng-required="queteur.current.user"> Oui
+                            <input type="radio" name="userActive" id="userActiveRadio1" ng-model="queteur.current.user.active" ng-value="true"  ng-required="queteur.current.user"> Oui
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="userActive" id="userActiveRadio2" ng-model="queteur.current.user.active" value="0" ng-required="queteur.current.user"> Non
+                            <input type="radio" name="userActive" id="userActiveRadio2" ng-model="queteur.current.user.active" ng-value="false" ng-required="queteur.current.user"> Non
                           </label>
                         </div>
 
@@ -408,7 +408,7 @@
                           <label for="user.role" class="control-label">Rôle de l'utilisateur</label>
                           <!-- (r.id+'') otherwise the value of the option tag is value='number:1' -->
                           <select name="user.role" id="user.role" class="form-control" ng-model="queteur.current.user.role" ng-required="queteur.current.user"
-                                  ng-options="(r.id+'') as r.label
+                                  ng-options="(r.id) as r.label
                       for
                       r in queteur.roleList">
                             <option value=""></option>

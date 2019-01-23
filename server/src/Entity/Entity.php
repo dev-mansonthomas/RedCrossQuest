@@ -49,6 +49,12 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
+      $value = $data[$key];
+      if(strlen($value) > 10)
+      {
+        throw new \InvalidArgumentException("Invalid integer value" .json_encode(['key'=>$key, 'value'=>$value]) );
+      }
+
       $this->$key = $data[$key] === null ? null : (int)$data[$key];
     }
   }
@@ -62,6 +68,12 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
+      $value = $data[$key];
+      if(strlen($value) > 20)  // latitude, longitude(18,15) note: 12345.678, you will set the Datatype to DOUBLE(8, 3) where 8 is the total no. of digits excluding the decimal point, and 3 is the no. of digits to follow the decimal.
+      {
+        throw new \InvalidArgumentException("Invalid float value" .json_encode(['key'=>$key, 'value'=>$value]) );
+      }
+
       $this->$key = $data[$key] === null ? null : (float) $data[$key];
     }
   }
@@ -69,13 +81,19 @@ class Entity
 
   /**
    * set on this object the property named $this->$key,  $data[$key] as an string value
-   * @param string $key the key of the data to be returned
-   * @param array  $data the associative array
+   * @param string $key       the key of the data to be returned
+   * @param array  $data      the associative array
+   * @param int    $maxSize   the max acceptable length of the string
    */
-  protected function getString(string $key, array $data)
+  protected function getString(string $key, array $data, int $maxSize)
   {
     if(array_key_exists($key, $data))
     {
+      $value = $data[$key];
+      if(strlen($value) > $maxSize)
+      {
+        throw new \InvalidArgumentException("Invalid String value, length higher than the max permitted size" .json_encode(['key'=>$key, 'value'=>$value, 'maxSize'=>$maxSize]) );
+      }
       $this->$key = $data[$key];
     }
   }
@@ -85,15 +103,52 @@ class Entity
    * set on this object the property named $this->$key,  $data[$key] as an string value
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
-   * @throws \Exception if json_decode throws an error
    */
-  protected function getJson(string $key, array $data)
+  protected function getEmail(string $key, array $data)
   {
     if(array_key_exists($key, $data))
     {
+      $email               = $data[$key];
+      $length              = strlen($email);
+      $filterEmailResponse = filter_var($email, FILTER_VALIDATE_EMAIL);
+      if($length < 64 && $filterEmailResponse !== false)
+      {
+        $this->$key = $filterEmailResponse;
+      }
+      else if(empty($email) || $email == "N/A")
+      {
+        $this->$key = "";
+      }
+      else
+      {
+        $this->logger->addError("invalid email address or too long size", array("email.length"=>$length,"email"=>$email, "filterEmailResponse"=>$filterEmailResponse));
+        throw new \InvalidArgumentException("invalid email address or too long size ".json_encode(['key'=>$key, 'value'=>$email, 'maxSize'=>64]));
+      }
+    }
+  }
+
+  //
+
+  /**
+   * set on this object the property named $this->$key,  $data[$key] as an string value
+   * @param string $key the key of the data to be returned
+   * @param array  $data the associative array
+   * @param int    $maxSize   the max acceptable length of the string
+   * @throws \Exception if json_decode throws an error
+   */
+  protected function getJson(string $key, array $data, int $maxSize)
+  {
+    if(array_key_exists($key, $data))
+    {
+      $value = $data[$key];
+      if(strlen($value) > $maxSize)
+      {
+        throw new \InvalidArgumentException("Invalid JSON value, length higher than the max permitted size" .json_encode(['key'=>$key, 'value'=>$value, 'maxSize'=>$maxSize]) );
+      }
+
       try
       {
-        $this->$key = json_decode($data[$key], true);
+        $this->$key = json_decode($value, true);
       }
       catch(\Exception $e)
       {
@@ -123,7 +178,6 @@ class Entity
       {
         $this->$key = false;
       }
-
     }
     else
     {
@@ -159,6 +213,12 @@ class Entity
       else
       {
         $stringValue = $data[$key];
+
+        if(strlen($stringValue) > 25)
+        {
+          throw new \InvalidArgumentException("Invalid DATE value, length higher than the max permitted size " .json_encode(['key'=>$key, 'value'=>$stringValue, 'maxSize'=>25]) );
+        }
+
         if($stringValue != null)
         {
           if(strpos($stringValue, 'T') !== false)

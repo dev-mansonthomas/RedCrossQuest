@@ -34,19 +34,19 @@ class UniteLocaleEntity  extends Entity
   {
     parent::__construct($logger);
     $this->getInteger('id'                        , $data);
-    $this->getString ('name'                      , $data);
-    $this->getString ('phone'                     , $data);
+    $this->getString ('name'                      , $data, 50);
+    $this->getString ('phone'                     , $data, 13);
     $this->getFloat  ('latitude'                  , $data);
     $this->getFloat  ('longitude'                 , $data);
-    $this->getString ('address'                   , $data);
-    $this->getString ('postal_code'               , $data);
-    $this->getString ('city'                      , $data);
-    $this->getString ('external_id'               , $data);
-    $this->getString ('email'                     , $data);
-    $this->getString ('id_structure_rattachement' , $data);
+    $this->getString ('address'                   , $data, 200);
+    $this->getInteger('postal_code'               , $data);
+    $this->getString ('city'                      , $data, 70);
+    $this->getInteger('external_id'               , $data);
+    $this->getEmail  ('email'                     , $data);
+    $this->getInteger('id_structure_rattachement' , $data);
     $this->getDate   ('date_demarrage_activite'   , $data);
     $this->getDate   ('date_demarrage_rcq'        , $data);
-    $this->getString ('mode'                      , $data);
-    $this->getString ('publicDashboard'           , $data);
+    $this->getInteger('mode'                      , $data);
+    $this->getString ('publicDashboard'           , $data, 100);
   }
 }

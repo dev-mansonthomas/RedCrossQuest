@@ -24,11 +24,11 @@ class TroncEntity extends Entity
   public function __construct(array $data, Logger $logger)
   {
     parent::__construct($logger);
-      $this->getString ('id'          , $data);
-      $this->getString ('ul_id'       , $data);
-      $this->getString ('created'     , $data);
+      $this->getInteger('id'          , $data);
+      $this->getInteger('ul_id'       , $data);
+      $this->getDate   ('created'     , $data);
       $this->getBoolean('enabled'     , $data);
-      $this->getString ('notes'       , $data);
+      $this->getString ('notes'       , $data, 500);
       $this->getInteger('type'        , $data);
       $this->getInteger('nombreTronc' , $data);
 

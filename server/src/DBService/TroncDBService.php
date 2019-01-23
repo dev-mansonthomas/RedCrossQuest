@@ -23,7 +23,8 @@ class TroncDBService extends DBService
     public function getTroncs(string $query=null, int $ulId, bool $active, ?int $type )
     {
 
-      $parameters = ["ul_id" => $ulId, 'enabled'=>$active ];
+      $parameters = ["ul_id"  => $ulId,
+                     'enabled'=> $active===true?"1":"0" ];
       $sql = "
 SELECT `id`,
        `ul_id`,
@@ -196,9 +197,9 @@ AND   `ul_id`       = :ul_id
       $stmt = $this->db->prepare($sql);
       $stmt->execute([
         "notes"      => $tronc->notes,
-        "enabled"    => $tronc->enabled?1:0,
+        "enabled"    => $tronc->enabled===true?"1":"0",
         "id"         => $tronc->id,
-        "type"         => $tronc->type,
+        "type"       => $tronc->type,
         "ul_id"      => $ulId
       ]);
 
@@ -226,6 +227,10 @@ INSERT INTO `tronc`
 )
 VALUES
 ";
+    if($tronc->nombreTronc > 50 || !is_int($tronc->nombreTronc))
+    {
+      throw new \InvalidArgumentException("Invalid number of tronc to be created ".$tronc->nombreTronc);
+    }
     for($i=0;$i<$tronc->nombreTronc;$i++)
     {
       $sql .="(:ul_id, NOW(), :enabled, :notes, :type)".($i<$tronc->nombreTronc-1?",":"");
@@ -235,7 +240,7 @@ VALUES
 
     $stmt->execute([
       "ul_id"    => $ulId,
-      "enabled"  => $tronc->enabled,
+      "enabled"  => $tronc->enabled===true?"1":"0",
       "notes"    => $tronc->notes,
       "type"     => $tronc->type
     ]);

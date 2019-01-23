@@ -29,6 +29,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
   $ulId         = (int)$args['ul-id'];
   $roleId       = (int)$args['role-id'];
 
+  $this->logger->addInfo( "search queteur with roleId", array("roleId"=>$roleId, "admin_ul_id exists  "=>array_key_exists('admin_ul_id',$params)));
 
   if(array_key_exists('action', $params) && $params['action'] == "searchSimilarQueteurs")
   {
@@ -37,6 +38,10 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     $lastName   = array_key_exists('last_name' , $params)?$params['last_name'  ]:null;
     $nivol      = array_key_exists('nivol'     , $params)?$params['nivol'      ]:null;
 
+    if(empty($firstName) && empty($lastName) && empty($nivol))
+    {
+      $response->getBody()->write(json_encode([]));
+    }
 
     $queteurs = $this->queteurDBService->searchSimilarQueteur($ulId, $firstName, $lastName, $nivol);
     $response->getBody()->write(json_encode($queteurs));
@@ -66,7 +71,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
         if(array_key_exists('admin_ul_id',$params) && $roleId > 4)
         {
           $adminUlId = $params['admin_ul_id'];
-          //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
+          $this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
           $ulId = $adminUlId;
         }
 
@@ -84,7 +89,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
       $QRSearchType = array_key_exists('QRSearchType'  ,$params)?$params['QRSearchType' ]:0;
 
       //$this->logger->addInfo( "Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId", array('decodedToken'=>$decodedToken));
-
+      $queteurIds = substr($queteurIds, 0,100);
       if($ulId == null || $ulId == '')
       {
         $ulId = (int)$decodedToken->getUlId();
@@ -166,9 +171,12 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
     $params = $request->getQueryParams();
 
     $input            = $request->getParsedBody();
+    $this->logger->addError("input", array("input"=>$input));
+
     $queteurEntity    = new QueteurEntity($input, $this->logger);
 
     $this->logger->addError("Queteur",array('queteurEntity'=>$queteurEntity));
+
     if(array_key_exists('action', $params) && $params['action'] == "anonymize")
     {
       $queteurOriginalData   = $this->queteurDBService->getQueteurById($queteurEntity->id);

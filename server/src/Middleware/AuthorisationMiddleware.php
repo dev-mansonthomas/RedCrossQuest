@@ -29,7 +29,7 @@ class AuthorisationMiddleware
     '0001' => "Rejecting non https (%s) connection on '%s'",
     '0002' => "Rejecting request as \$authorizations is empty (so no token)",
     '0003' => "Rejecting request, fails to decode Token or Authentication fails: %s",
-    '0004' => "Rejecting request, failed to parse roleId from roleIdStr (%s') in Path: '%s' decoded token:%s",
+    '0004' => "Rejecting request, failed to parse roleId from roleIdStr (%s) in Path: '%s' decoded token:%s",
     '0005' => "Rejecting request, retrieving the roleId : explode function fails to return 2 elements array as expected for Path: '%s', explodedPath: %s DecodedToken: %s",
     '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: '%s', DecodedToken: %s",
     '0007' => "General Error while authenticating the request",
@@ -191,7 +191,8 @@ class AuthorisationMiddleware
       {
         $roleIdStr = $explodedPath[0];
 
-        if(!is_scalar($roleIdStr)) {
+        if(!is_scalar($roleIdStr))
+        {
           $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, print_r($decodedToken, true)));
           return $this->denyRequest($response, '0004');
         }
@@ -315,6 +316,22 @@ class DecodedToken
 
     return $instance;
   }
+
+  public function __toString()
+  {
+    return json_encode([  "authenticated" => $this->authenticated ,
+                          "errorCode"     => $this->errorCode     ,
+                          "username"      => $this->username      ,
+                          "uid"           => $this->uid           ,
+                          "ulId"          => $this->ulId          ,
+                          "ulName"        => $this->ulName        ,
+                          "ulMode"        => $this->ulMode        ,
+                          "queteurId"     => $this->queteurId     ,
+                          "roleId"        => $this->roleId        ,
+                          "d"             => $this->d
+                       ]);
+  }
+
 
   /**
    * @return mixed

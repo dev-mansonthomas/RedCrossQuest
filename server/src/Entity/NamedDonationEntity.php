@@ -69,14 +69,14 @@ class NamedDonationEntity extends Entity
       $this->getInteger('ul_id'           , $data);
 
       $this->getInteger('ref_recu_fiscal'  , $data);
-      $this->getString ('first_name'       , $data);
-      $this->getString ('last_name'        , $data);
+      $this->getString ('first_name'       , $data, 100);
+      $this->getString ('last_name'        , $data, 100);
       $this->getDate   ('donation_date'    , $data);
-      $this->getString ('address'          , $data);
-      $this->getString ('postal_code'      , $data);
-      $this->getString ('city'             , $data);
-      $this->getString ('phone'            , $data);
-      $this->getString ('email'            , $data);
+      $this->getString ('address'          , $data, 200);
+      $this->getInteger('postal_code'      , $data);
+      $this->getString ('city'             , $data, 70);
+      $this->getString ('phone'            , $data, 20);
+      $this->getEmail  ('email'            , $data);
 
       $this->getInteger('euro500'          , $data);
       $this->getInteger('euro200'          , $data);
@@ -98,15 +98,15 @@ class NamedDonationEntity extends Entity
       $this->getFloat  ('don_creditcard'   , $data);
       
 
-      $this->getString ('notes'            , $data);
+      $this->getString ('notes'            , $data, 500);
       $this->getInteger('type'             , $data);
       $this->getInteger('forme'            , $data);
 
 
       $this->getBoolean('deleted'             , $data);
 
-      $this->getString('coins_money_bag_id'   , $data);
-      $this->getString('bills_money_bag_id'   , $data);
+      $this->getString('coins_money_bag_id'   , $data, 20);
+      $this->getString('bills_money_bag_id'   , $data, 20);
 
       $this->getInteger('last_update_user_id' , $data);
       $this->getDate   ('last_update'         , $data);

@@ -1,4 +1,26 @@
 <?php
+
+/**
+ * @param string $parameterName the name of the parameter in the request
+ * @param string $parameter     the parameter value
+ * @param int    $maxSize       the max acceptable size of the string
+ * @return string the parameter, but trimmed.
+ *
+ */
+function checkStringParameter(string $parameterName, string $parameter, int $maxSize)
+{
+  $trimmedValue = trim($parameter);
+
+  if( $trimmedValue        == null ||
+     strlen($trimmedValue) == 0    ||
+     strlen($trimmedValue) >  $maxSize)
+  {
+    throw new \InvalidArgumentException("parameter '$$parameterName' is invalid");
+  }
+  return $trimmedValue;
+}
+
+
 // Routes
 include_once("../../src/routes/00-authentication.php");
 include_once("../../src/routes/01-troncs.php");
