@@ -8,6 +8,7 @@ use Google\Cloud\Storage\Bucket;
 use \RedCrossQuest\Service\PubSubService;
 use \RedCrossQuest\Service\ReCaptchaService;
 use \RedCrossQuest\Service\MailService;
+use RedCrossQuest\Service\ClientInputValidator;
 
 use \RedCrossQuest\DBService\UserDBService;
 use \RedCrossQuest\DBService\QueteurDBService;
@@ -305,7 +306,10 @@ $container['mailer'] = function (\Slim\Container $c)
     $c['settings']['appSettings']);
 };
 
-
+/* **********
+ * SERVICES *
+ * **********
+ */
 
 /**
  * @property TroncQueteurBusinessService $troncQueteurBusinessService
@@ -333,4 +337,14 @@ $container['settingsBusinessService'] = function (\Slim\Container $c)
 $container['exportDataBusinessService'] = function (\Slim\Container $c)
 {
   return new ExportDataBusinessService($c);
+};
+
+/**
+ * @property ClientInputValidator $clientInputValidator
+ * @param \Slim\Container $c
+ * @return ClientInputValidator
+ */
+$container['clientInputValidator'] = function (\Slim\Container $c)
+{
+  return new ClientInputValidator($c->logger);
 };

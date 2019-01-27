@@ -160,7 +160,7 @@ Bonjour ".$queteur->first_name.",<br/>
 </p>
 
 <p>Tout d'abord, la Croix Rouge française tient à vous remercier pour votre contribution à la quête de la Croix Rouge.<br/>
-Votre contribution a participé au financement des activités de premiers secours et d'actions sociales de l'unité locale de '".$queteur->ul_name."'<br/>
+Vous avez participé au financement des activités de premiers secours et d'actions sociales de l'unité locale de '".$queteur->ul_name."'<br/>
 Nous espèrons vous revoir bientôt à la quête ou en tant que bénévole!
 </p>
 
@@ -184,9 +184,10 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
 </p>TOKEN : '$token'</p>
  
 <p>
-  Si vous revenez preter main forte à l'unité locale de '".$queteur->ul_name."', vous pouvez communiquer ce Token. 
+  Si vous revenez preter main forte à l'unité locale de '".$queteur->ul_name."', vous pouvez communiquer ce Token à l'unité locale de '".$queteur->ul_name."'
   Il permettra de retrouver votre fiche anonymisée et de revaloriser votre fiche avec vos données pour une nouvelle participation à la quête!
   Vous retrouver ainsi vos statistiques des années passées.
+  (ce token n'est valable que pour l'unité locale de '".$queteur->ul_name."', un nouveau compte sera créé si vous quêter avec une autre unité locale)
 </p>
 <p>
  Si vous n'êtes pas à l'origine de cette demande, contactez l'unité locale de '".$queteur->ul_name."' et donner leur ce token ainsi que les informations listées plus haut dans cet email pour revaloriser votre fiche.

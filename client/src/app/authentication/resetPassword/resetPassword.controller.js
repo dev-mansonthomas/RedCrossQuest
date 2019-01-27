@@ -109,7 +109,7 @@
     function initController()
     {
       // reset login status
-      vm.key = $location.search()['key'];
+      vm.key     = $location.search()['key'];
       vm.loading = true;
 
       //recaptchaKey is defined in index.html
@@ -123,9 +123,7 @@
             {
               if (success)
               {
-                vm.info     = [info.first_name, info.last_name, info.email, info.mobile, info.nivol];
                 vm.username = info.nivol;
-
                 vm.error    = null;
                 vm.loading  = false;
               }

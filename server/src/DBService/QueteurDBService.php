@@ -125,7 +125,7 @@ AND
       $parameters["query"]=$query;
     }
 
-    if($secteur !== null)
+    if($secteur !== null && $secteur > 0)
     {
       $secteurSQL = "
 AND q.`secteur` = :secteur

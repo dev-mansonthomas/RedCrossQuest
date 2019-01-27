@@ -56,6 +56,10 @@
       <path value="$PROJECT_DIR$/server/vendor/cakephp/database" />
       <path value="$PROJECT_DIR$/server/vendor/google/common-protos" />
       <path value="$PROJECT_DIR$/server/vendor/google/recaptcha" />
+      <path value="$PROJECT_DIR$/server/vendor/google/cloud" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/server/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/server/vendor/egulias/email-validator" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

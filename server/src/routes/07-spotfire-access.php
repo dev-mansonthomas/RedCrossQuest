@@ -17,19 +17,18 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $a
     //$this->logger->addDebug("generating spotfire access for ");
     try
     {
-        $ulId   = (int)$decodedToken->getUlId();
-        $userId = (int)$decodedToken->getUid ();
+      $ulId   = $decodedToken->getUlId  ();
+      $userId = $decodedToken->getUid   ();
 
-        $validToken = $this->spotfireAccessDBService->getValidToken($userId, $ulId);
+      $validToken = $this->spotfireAccessDBService->getValidToken($userId, $ulId);
 
-        $response->getBody()->write(json_encode($validToken));
+      return $response->getBody()->write(json_encode($validToken));
     }
     catch(\Exception $e)
     {
         $this->logger->addError("Error while getting current Token for user ($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
         throw $e;
     }
-    return $response;
 });
 
 

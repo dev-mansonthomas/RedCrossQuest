@@ -49,6 +49,7 @@ GRAPH_FILE_NAME=$(ls graph-display-*.html)
 regex="graph-display-([a-f0-9]*)\.html"
 
 
+ #change the reference to this ID in the app*.js file  graph-display-([a-f0-9]*)\.html -> graph.html
 if [[ $GRAPH_FILE_NAME =~ $regex ]]
 then
     echo "$GRAPH_FILE_NAME serial is ${BASH_REMATCH[1]}"
@@ -57,8 +58,10 @@ then
 else
     echo "$GRAPH_FILE_NAME doesn't match $regex"
 fi
-
+#rename the file
 mv graph-display-*.html graph-display.html
+
+#TODO : update the path from test to prod
 
 # Update the URL of Spotfire DXP to match the country & environment
 sed -i '' "s/__country__/${COUNTRY}/g" graph-display.html

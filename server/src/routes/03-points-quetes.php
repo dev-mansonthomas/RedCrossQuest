@@ -15,19 +15,21 @@ use \RedCrossQuest\Entity\PointQueteEntity;
 /**
  * fetch point de quete for an UL
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args) {
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args)
+{
   $decodedToken = $request->getAttribute('decodedJWT');
-  $ulId   = (int)$args['ul-id'];
-  $id     = (int)$args['id'   ];
-  $roleId = (int)$args['role-id'];
+
+  $ulId   = $decodedToken->getUlId  ();
+  $roleId = $decodedToken->getRoleId();
+
+
+  $id     = $this->clientInputValidator->validateInteger('id', $args['id'], 1000000, true);
 
   try
   {
     $pointQuete = $this->pointQueteDBService->getPointQueteById($id, $ulId, $roleId);
 
-    $response->getBody()->write(json_encode($pointQuete));
-
-    return $response;
+    return $response->getBody()->write(json_encode($pointQuete));
 
   }
   catch(\Exception $e)
@@ -40,7 +42,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
 });
 
 
-  /**
+/**
  * fetch point de quete for an UL
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
@@ -49,30 +51,22 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
 
  try
   {
-    $ulId   = (int)$args['ul-id'  ];
-    $roleId = (int)$args['role-id'];
-
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
     $params = $request->getQueryParams();
-
-    $action = array_key_exists('action',$params)?$params['action']:null;
+    $action = $this->clientInputValidator->validateString("action", getParam($params,'action'), 40 , false );
 
     if( $action === "search")
     {//admin function
       if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
       {
-        $adminUlId = $params['admin_ul_id'];
-        //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
-        $ulId = $adminUlId;
+        $ulId = $this->clientInputValidator->validateInteger('admin_ul_id', $params['admin_ul_id'], 1000, true);
+        //$this->logger->addInfo("PointQuete list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
       }
 
-      $query            = array_key_exists('q'                ,$params)?$params['q'               ]:null;
-      $point_quete_type = array_key_exists('point_quete_type' ,$params)?$params['point_quete_type']:null;
-      $active           = array_key_exists('active'           ,$params)?$params['active'          ]:1;
-
-      if($ulId == null || $ulId == '')
-      {
-        $ulId = (int)$decodedToken->getUlId();
-      }
+      $query            = $this->clientInputValidator->validateString ("q"               , getParam($params,'q'               ), 40   , false);
+      $point_quete_type = $this->clientInputValidator->validateInteger('point_quete_type', getParam($params,'point_quete_type'), 10   , false);
+      $active           = $this->clientInputValidator->validateBoolean("active"          , getParam($params,'active'          ), false, true );
 
       //$this->logger->addInfo("PointQuetes query for ul: $ulId");
       $pointQuetes = $this->pointQueteDBService->searchPointQuetes($query, $point_quete_type, $active, $ulId);
@@ -81,8 +75,6 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
     {//used for the dropdown to select point de quete while preparing a tronc
       $pointQuetes = $this->pointQueteDBService->getPointQuetes($ulId);
     }
-
-
 
     $response->getBody()->write(json_encode($pointQuetes));
     return $response;
@@ -107,8 +99,8 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'  ];
-    $roleId = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
 
     $input               = $request->getParsedBody();
     $pointQueteEntity    = new PointQueteEntity($input, $this->logger);
@@ -133,8 +125,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $respo
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId = (int)$args['ul-id'];
-
+    $ulId                = $decodedToken->getUlId  ();
     $input               = $request->getParsedBody();
     $pointQueteEntity    = new PointQueteEntity($input, $this->logger);
 

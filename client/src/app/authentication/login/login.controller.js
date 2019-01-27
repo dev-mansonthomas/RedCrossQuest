@@ -62,7 +62,7 @@
             {
               $timeout.cancel(loginTimeout);
               vm.error    = true;
-              vm.errorStr = 'Service Indisponible - '+message.data.error;
+              vm.errorStr = 'Service Indisponible - '+JSON.stringify(message.data.error);
               vm.loading  = false;
 
             }

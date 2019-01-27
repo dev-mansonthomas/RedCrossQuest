@@ -7,18 +7,21 @@
  * @return string the parameter, but trimmed.
  *
  */
-function checkStringParameter(string $parameterName, string $parameter, int $maxSize)
-{
-  $trimmedValue = trim($parameter);
 
-  if( $trimmedValue        == null ||
-     strlen($trimmedValue) == 0    ||
-     strlen($trimmedValue) >  $maxSize)
-  {
-    throw new \InvalidArgumentException("parameter '$$parameterName' is invalid");
-  }
-  return $trimmedValue;
+/**
+ * In an associative array, return the value associated to the $key
+ * @param string $key    the searched key
+ * @param array  $param  the associative array where we search
+ * @return string the value or null if not found.
+ */
+function getParam(array $param, string $key)
+{
+  if(array_key_exists($key, $param))
+    return $param[$key];
+  return null;
 }
+
+
 
 
 // Routes

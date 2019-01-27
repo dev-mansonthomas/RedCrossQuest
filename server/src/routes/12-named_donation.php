@@ -22,33 +22,29 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $res
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'];
-    $roleId = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
+
     $params = $request->getQueryParams();
 
+    $this->logger->addInfo("params ".getParam($params,'deleted'         ), array("params"=>$params));
 
-    $query   = array_key_exists('q'       ,$params)?$params['q'        ]:null;
-    $deleted = array_key_exists('deleted' ,$params)?$params['deleted'  ]:false;
-    $year    = array_key_exists('year'    ,$params)?$params['year'     ]:null;
+    $query   = $this->clientInputValidator->validateString ("q"       , getParam($params,'q'               ), 100  , false );
+    $deleted = $this->clientInputValidator->validateBoolean("deleted" , getParam($params,'deleted'         ), false, false );
+    $year    = $this->clientInputValidator->validateInteger('year'    , getParam($params,'year'            ), 2050 , false );
 
-    if($deleted=="true")
-      $deleted=true;
-    else
-      $deleted=false;
 
-    if(array_key_exists('admin_ul_id',$params) && $roleId > 4)
+    if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
     {
-      $adminUlId = $params['admin_ul_id'];
-      //$this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
-      $ulId = $adminUlId;
+      $ulId = $this->clientInputValidator->validateInteger('admin_ul_id', $args['admin_ul_id'], 1000, true);
+      //$this->logger->addInfo("NamedDonation list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
     }
+
 
     $this->logger->addInfo("searching named donation", array('q'=>$query, 'deleted'=>$deleted, 'year'=>$year));
     $namedDonations = $this->namedDonationDBService->getNamedDonations($query, $deleted, $year, $ulId);
 
-    $response->getBody()->write(json_encode($namedDonations));
-
-    return $response;
+    return $response->getBody()->write(json_encode($namedDonations));
   }
   catch(\Exception $e)
   {
@@ -66,17 +62,17 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $res
 $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
 {
   $namedDonationEntity  = null;
+  $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'];
-    $id     = (int)$args['id'];
-    $roleId = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
+
+    $id     = $this->clientInputValidator->validateInteger('id', $args['id'], 1000000, true);
 
     $namedDonationEntity = $this->namedDonationDBService->getNamedDonationById($id, $ulId, $roleId);
 
-    $response->getBody()->write(json_encode($namedDonationEntity));
-    return $response;
-
+    return $response->getBody()->write(json_encode($namedDonationEntity));
   }
   catch(\Exception $e)
   {
@@ -96,8 +92,8 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request,
   $namedDonationEntity  = null;
   try
   {
-    $ulId   = (int)$args['ul-id'];
-    $userId = (int)$decodedToken->getUid ();
+    $ulId   = $decodedToken->getUlId  ();
+    $userId = $decodedToken->getUid   ();
 
     $input                  = $request->getParsedBody();
     $namedDonationEntity    = new NamedDonationEntity($input, $this->logger);
@@ -123,8 +119,8 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $re
   $namedDonationEntity  = null;
   try
   {
-    $ulId   = (int)$args['ul-id'];
-    $userId = (int)$decodedToken->getUid ();
+    $ulId   = $decodedToken->getUlId  ();
+    $userId = $decodedToken->getUid   ();
 
     $input                  = $request->getParsedBody();
     $namedDonationEntity    = new NamedDonationEntity($input, $this->logger);

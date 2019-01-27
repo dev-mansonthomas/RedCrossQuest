@@ -29,7 +29,9 @@
         "google/recaptcha": "^1.2",
         "ext-bz2" : "^7.2",
         "ext-PDO" : "^7.2",
-        "ext-json": "^1.6"
+        "ext-json": "^1.6",
+        "symfony/validator": "^4.2",
+        "egulias/email-validator": "^2.1"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

@@ -55,7 +55,7 @@
 
       if( typeof query.g ==='undefined' ||
           typeof query.i ==='undefined' ||
-          query.i.length !== 36          ||
+          query.i.length !== 36         ||
           (query.i.match(new RegExp("-", "g")) || []).length !== 4)
       {
         alert("initialization error");
@@ -64,7 +64,7 @@
 
       if(query.g === 'Merci')
       {
-        var url = new URL(document.location);
+        var url   = new URL(document.location);
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", url.protocol+"/rest/thanks_mailing/"+query.i, true);
         xhttp.setRequestHeader("Content-type", "application/json");
@@ -72,19 +72,13 @@
       }
 
       var serverUrl    = "https://spotfire-next.cloud.tibco.com/spotfire/wp/";
-      //https://spotfire.cloud.tibco.com/spotfire/wp/OpenAnalysis?file=/users/mansonthomas/Public/SpotfireCloud
       var analysisPath = "/Users/3c74owwyq2yp63mlspdhjaenrwb34sfa/Public/fr-rcq-prod/"+query.g;
-      //var analysisPath = "/Users/3c74owwyq2yp63mlspdhjaenrwb34sfa/Public/__country__-rcq-__env__/"+query.g;
-      //var analysisPath = "/Users/3c74owwyq2yp63mlspdhjaenrwb34sfa/Public/__country__-rcq-__env__/"+query.g;
       var parameters   = 'token="'+query.i+'";RCQURL="'+window.location.protocol+'//'+window.location.host+'";'; //
 
-      //var analysisPath = "/users/mansonthomas/Public/RCQ-Public-MontantsVisibles";
-      //var parameters   = 'token="64ac08e2-2fcd-4d63-bbb4-4062d9a66732";';
-
-      var spotfireApp = null;
+      var spotfireApp       = null;
       var customizationInfo = null;
-      var reloadInstances = true;
-      var apiVersion = "7.14";
+      var reloadInstances   = true;
+      var apiVersion        = "7.14";
 
 
       function onReadyCallback(response, app)
@@ -135,7 +129,7 @@
     function enable()
     {
       reloadEnabled = true;
-      document.getElementById('actif')  .classList.add("active");
+      document.getElementById('actif'  ).classList.add   ("active");
       document.getElementById('inactif').classList.remove("active");
       var refreshDelay = document.getElementById('refresh_delay').value;
 
