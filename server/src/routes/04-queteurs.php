@@ -8,13 +8,10 @@
 
 require '../../vendor/autoload.php';
 
-
 use \RedCrossQuest\Entity\QueteurEntity;
+use RedCrossQuest\Service\ClientInputValidator;
 
-
-include_once("../../src/Entity/QueteurEntity.php");
 /********************************* QUETEUR ****************************************/
-
 
 /**
  * récupère les queteurs
@@ -25,21 +22,22 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
 {
   $decodedToken = $request->getAttribute('decodedJWT');
 
-  $params       = $request->getQueryParams();
-  $ulId         = (int)$args['ul-id'];
-  $roleId       = (int)$args['role-id'];
+  $params = $request->getQueryParams();
+  $ulId   = $decodedToken->getUlId  ();
+  $roleId = $decodedToken->getRoleId();
 
   $this->logger->addInfo( "search queteur with roleId", array("roleId"=>$roleId, "admin_ul_id exists  "=>array_key_exists('admin_ul_id',$params)));
 
-  if(array_key_exists('action', $params) && $params['action'] == "searchSimilarQueteurs")
+
+  if($this->clientInputValidator->validateString("action", getParam($params,'action'), 30 , false ) == "searchSimilarQueteurs")
   {
 
-    $firstName  = array_key_exists('first_name', $params)?$params['first_name' ]:null;
-    $lastName   = array_key_exists('last_name' , $params)?$params['last_name'  ]:null;
-    $nivol      = array_key_exists('nivol'     , $params)?$params['nivol'      ]:null;
+    $firstName  = $this->clientInputValidator->validateString("first_name", getParam($params,'first_name'), 100 , false );
+    $lastName   = $this->clientInputValidator->validateString("last_name" , getParam($params,'last_name') , 100 , false );
+    $nivol      = $this->clientInputValidator->validateString("nivol"     , getParam($params,'nivol')     , 15  , false );
 
     if(empty($firstName) && empty($lastName) && empty($nivol))
-    {
+    {//if nothing is give, return empty array
       $response->getBody()->write(json_encode([]));
     }
 
@@ -58,48 +56,34 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     try
     {
 
-      if($roleId >= 4)
-      {
-        if(array_key_exists('anonymization_token',$params))
-        {// If the token is given, then other search criteria are ignored
-          $queteurs = $this->queteurDBService->getQueteurByAnonymizationToken($params['anonymization_token'],  $ulId, $roleId);
-          $response->getBody()->write(json_encode($queteurs));
-          return $response;
-        }
+      if(array_key_exists('anonymization_token',$params) && $roleId >= 4)
+      {// If the token is given, then other search criteria are ignored
+        $queteurs = $this->queteurDBService->getQueteurByAnonymizationToken(
+          $this->clientInputValidator->validateString("anonymization_token", getParam($params,'anonymization_token'), 36 , true, ClientInputValidator::$UUID_VALIDATION),
+          $ulId, $roleId);
 
-
-        if(array_key_exists('admin_ul_id',$params) && $roleId > 4)
-        {
-          $adminUlId = $params['admin_ul_id'];
-          $this->logger->addInfo("Queteur list - UL ID:'$ulId' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
-          $ulId = $adminUlId;
-        }
-
+        return $response->getBody()->write(json_encode($queteurs));
       }
 
-
-
-      $query        = array_key_exists('q'             ,$params)?$params['q'            ]:null;
-      $searchType   = array_key_exists('searchType'    ,$params)?$params['searchType'   ]:null;
-      $secteur      = array_key_exists('secteur'       ,$params)?$params['secteur'      ]:null;
-      $active       = array_key_exists('active'        ,$params)?$params['active'       ]:1;
-      $rcqUser      = array_key_exists('rcqUser'       ,$params)?$params['rcqUser'      ]:0;
-      $benevoleOnly = array_key_exists('$benevoleOnly' ,$params)?$params['$benevoleOnly']:0;
-      $queteurIds   = array_key_exists('queteurIds'    ,$params)?$params['queteurIds'   ]:null;
-      $QRSearchType = array_key_exists('QRSearchType'  ,$params)?$params['QRSearchType' ]:0;
-
-      //$this->logger->addInfo( "Queteurs search: query:'$query', searchType:'$searchType', secteur:'$secteur', UL ID:'$ulId', role ID : $roleId", array('decodedToken'=>$decodedToken));
-      $queteurIds = substr($queteurIds, 0,100);
-      if($ulId == null || $ulId == '')
+      if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
       {
-        $ulId = (int)$decodedToken->getUlId();
+        $ulId = $this->clientInputValidator->validateInteger('admin_ul_id', $params['admin_ul_id'], 1000, true);
+        //$this->logger->addInfo("Queteur list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
       }
+
+      $query        = $this->clientInputValidator->validateString ("q"               , getParam($params,'q'               ), 100  , false );
+      $searchType   = $this->clientInputValidator->validateInteger('searchType'      , getParam($params,'searchType'      ), 5    , false );
+      $secteur      = $this->clientInputValidator->validateInteger('secteur'         , getParam($params,'secteur'         ), 10   , false );
+      $active       = $this->clientInputValidator->validateBoolean("active"          , getParam($params,'active'          ), false, true  );
+      $rcqUser      = $this->clientInputValidator->validateBoolean("rcqUser"         , getParam($params,'rcqUser'         ), false, false );
+      $benevoleOnly = $this->clientInputValidator->validateBoolean("benevoleOnly"    , getParam($params,'benevoleOnly'    ), false, false );
+      $queteurIds   = $this->clientInputValidator->validateString ("queteurIds"      , getParam($params,'queteurIds'      ), 50   , false );
+      $QRSearchType = $this->clientInputValidator->validateInteger('QRSearchType'    , getParam($params,'QRSearchType'    ), 5    , false );
+
 
       $queteurs = $this->queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser, $queteurIds, $QRSearchType);
 
-      $response->getBody()->write(json_encode($queteurs));
-
-      return $response;
+      return $response->getBody()->write(json_encode($queteurs));
     }
     catch(\Exception $e)
     {
@@ -107,9 +91,6 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
       throw $e;
     }
   }
-
-
-
 });
 
 
@@ -123,8 +104,8 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'];
-    $roleId = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
 
     $queteurId        = (int)$args['id'];
     $queteur          = $this->queteurDBService->getQueteurById($queteurId);
@@ -165,19 +146,17 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'  ];
-    $roleId = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
     $userId = $decodedToken->getUid();
     $params = $request->getQueryParams();
+    $input  = $request->getParsedBody();
 
-    $input            = $request->getParsedBody();
-    $this->logger->addError("input", array("input"=>$input));
-
-    $queteurEntity    = new QueteurEntity($input, $this->logger);
+    $queteurEntity = new QueteurEntity($input, $this->logger);
 
     $this->logger->addError("Queteur",array('queteurEntity'=>$queteurEntity));
 
-    if(array_key_exists('action', $params) && $params['action'] == "anonymize")
+    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 10 , false ) == "anonymize")
     {
       $queteurOriginalData   = $this->queteurDBService->getQueteurById($queteurEntity->id);
       $token                 = $this->queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId, $userId);
@@ -185,41 +164,36 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
       $this->mailer->sendAnonymizationEmail($queteurOriginalData, $token);
       $queteurAnonymizedData = $this->queteurDBService->getQueteurById($queteurEntity->id);
 
-      $response->getBody()->write(json_encode($queteurAnonymizedData));
+      return $response->getBody()->write(json_encode($queteurAnonymizedData));
     }
     else
     {//regular Update
 
       //restore the leading +
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
-
       $this->queteurDBService->update($queteurEntity, $ulId, $roleId);
-
     }
-
   }
   catch(\Exception $e)
   {
     $this->logger->addError("Error while updating queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
     throw $e;
   }
-
-  return $response;
 });
 
-/**
+/* *
  * Upload files for one queteur
  *
  * Dispo pour les roles de 2 à 9
- */
+
 $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
 
   try
   {
-    $ulId      = (int)$args['ul-id'];
-    $queteurId = (int)$args['id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
 
     //$this->logger->addInfo("Uploading file for UL ID='$ulId' and queteurId='$queteurId''", array('decodedToken'=>$decodedToken));
 
@@ -238,6 +212,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
   }
   return $response;
 });
+ */
 
 /**
  * Crée un nouveau queteur
@@ -247,11 +222,11 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'  ];
-    $roleId = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
     $params = $request->getQueryParams();
 
-    if(array_key_exists('action', $params) && $params['action'] == "markAllAsPrinted")
+    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 20 , false ) == "markAllAsPrinted")
     {
       $this->queteurDBService->markAllAsPrinted($ulId);
     }
@@ -264,7 +239,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
       $queteurId             = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
 
-      $response->getBody()->write(json_encode(array('queteurId' => $queteurId), JSON_NUMERIC_CHECK));
+      return $response->getBody()->write(json_encode(array('queteurId' => $queteurId), JSON_NUMERIC_CHECK));
     }
 
 
@@ -274,7 +249,6 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
     $this->logger->addError("Error while creating a new Queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
     throw $e;
   }
-  return $response;
 });
 
 

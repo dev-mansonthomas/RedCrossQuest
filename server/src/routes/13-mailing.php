@@ -8,6 +8,8 @@
 
 require '../../vendor/autoload.php';
 
+use RedCrossQuest\Service\ClientInputValidator;
+
 /**
  * Get summary info about mailing
  *
@@ -18,7 +20,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, 
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'];
+    $ulId   = $decodedToken->getUlId  ();
 
     $mailingSummary = $this->mailingDBService->getMailingSummary($ulId);
 
@@ -44,8 +46,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response,
   $namedDonationEntity  = null;
   try
   {
-    $ulId   = (int)$args['ul-id'];
-    $userId = (int)$decodedToken->getUid ();
+    $ulId   = $decodedToken->getUlId  ();
 
     $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($ulId);
 
@@ -69,7 +70,7 @@ $app->post('/thanks_mailing/{guid}', function ($request, $response, $args)
 {
   try
   {
-    $guid   = $args['guid'];
+    $guid   = $this->clientInputValidator->validateString("guid"    , $args['guid'], 36  , true, ClientInputValidator::$UUID_VALIDATION);
 
     $this->mailingDBService->confirmRead($guid);
 

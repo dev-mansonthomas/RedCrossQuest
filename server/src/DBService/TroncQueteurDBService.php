@@ -593,7 +593,7 @@ AND   tq.ul_id                  = :ul_id
       "notes_retour_comptage_pieces"  => $tq->notes_retour_comptage_pieces,
       "coins_money_bag_id"            => $tq->coins_money_bag_id,
       "bills_money_bag_id"            => $tq->bills_money_bag_id,
-      "don_cheque_number"             => $tq->don_cheque_number,
+      "don_cheque_number"             => $tq->don_cheque_number == null? 0:$tq->don_cheque_number,
       "don_creditcard"                => $tq->don_creditcard,
       "don_cb_total_number"           => $tq->don_cb_total_number
     ]);

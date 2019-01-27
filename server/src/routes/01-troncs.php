@@ -21,21 +21,25 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId = (int)$args['ul-id'];
-
-
+    $ulId   = $decodedToken->getUlId();
     $params = $request->getQueryParams();
+    $active = $this->clientInputValidator->validateBoolean("active", getParam($params,'active'), false, true);
 
-    $active     = array_key_exists('active'     ,$params)?$params['active'    ]:1;
-    $type       = array_key_exists('type'       ,$params)?$params['type'      ]:null;
+    if(!array_key_exists('type'     ,$params))
+      $type   = null;
+    else
+      $type   = $this->clientInputValidator->validateInteger("type", getParam($params, 'type'), 5, true);
 
     if(array_key_exists('q',$params))
     {
-      $troncs = $this->troncDBService->getTroncs($params['q'], $ulId, $active, $type);
+      $q =  $this->clientInputValidator->validateInteger("q", $params['q'], 1000000  , true );
+
+      $troncs = $this->troncDBService->getTroncs($q, $ulId, $active, $type);
     }
     else if(array_key_exists('searchType',$params))
     {
-      $troncs = $this->troncDBService->getTroncsBySearchType($params['searchType'], $ulId, $type);
+      $searchType = $this->clientInputValidator->validateInteger("searchType", getParam($params, 'searchType'), 2, true);
+      $troncs     = $this->troncDBService->getTroncsBySearchType($searchType, $ulId, $type);
     }
     else
     {
@@ -53,7 +57,6 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
     throw $e;
   }
 });
-
 /*
  * récupère le détails d'un tronc (a enrichir avec les troncs_queteurs associés)
  *
@@ -63,8 +66,10 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId    = (int)$args['ul-id'];
-    $troncId = (int)$args['id'   ];
+    $ulId = $decodedToken->getUlId();
+
+
+    $troncId = $this->clientInputValidator->validateInteger('id', $args['id'], 1000000, true);
 
     $tronc = $this->troncDBService->getTroncById($troncId, $ulId);
     $response->getBody()->write(json_encode($tronc));
@@ -90,7 +95,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId    = (int)$args['ul-id'];
+    $ulId = $decodedToken->getUlId();
 
 
     $input            = $request->getParsedBody();
@@ -118,8 +123,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/troncs', function ($request, $response, 
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId    = (int)$args['ul-id'];
-
+    $ulId = $decodedToken->getUlId();
 
     $input            = $request->getParsedBody();
     $troncEntity      = new TroncEntity($input, $this->logger);

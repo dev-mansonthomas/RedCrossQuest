@@ -258,49 +258,12 @@
       <div class="row" ng-show="queteur.current.secteur >= 3" style="padding-bottom:15px;">
         <div class="col-md-8 col-md-offset-2">
           <h3><span class="label label-warning">Attention !</span> Quêteur d'un jour - Formulaire à remplir !</h3>
-          <span class="help-block">Téléchargez le(s) formulaire(s), imprimez le(s), faites le(s) remplir et signer par le quêteur d'un jour (et parents), puis scannez les documents et attachez les à ce formulaire.</span>
+          <span class="help-block">Téléchargez le(s) formulaire(s), imprimez le(s), faites le(s) remplir et signer par le quêteur d'un jour (et parents), puis conserver ce document.</span>
           <div class="col-md-4 col-md-offset-2">
             <a href="/assets/docs/RCQ-QueteurUnJourEtMentionCNIL.pdf" target="_blank"><span class="glyphicon glyphicon-list-alt"   ></span>&nbsp;Formulaire Quêteur d'un Jour</a>
           </div>
           <div class="col-md-4 col-md-offset-2" ng-show="queteur.current.age < 18">
             <a href="/assets/docs/RCQ-AutorisationParentale.pdf"      target="_blank"><span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;Autorisation Parentale</a>
-          </div>
-        </div>
-      </div>
-      <div class="row" ng-show="queteur.current.secteur >= 3 && false">
-        <div class="col-md-4 col-md-offset-2">
-          <div class="form-group">
-            <label for="temporary_volunteer_form" class="control-label">Formulaire du Quêteur occasionel</label>
-            <input type="file"
-                   name="temporary_volunteer_form"
-                   id="temporary_volunteer_form"
-                   ng-model="temporary_volunteer_form"
-                   ngf-max-size="2MB"
-                   ngf-accept="'image/*', 'application/pdf'"
-                   ngf-model-invalid="errorFile"
-            />
-            <span class="help-block">Scanner le formulaire de bénévole occasionnel et ajouter le fichier ici</span>
-            <span class="help-block" ng-show="queteurForm.temporary_volunteer_form.$error.maxSize">Scanner le formulaire de bénévole occasionnel et ajouter le fichier ici</span>
-            <span class="progress" ng-show="queteur.current.temporary_volunteer_form.progress >= 0">
-              <div style="width:{{queteur.current.temporary_volunteer_form.progress}}%"
-                 ng-bind="queteur.current.temporary_volunteer_form.progress + '%'"></div>
-            </span>
-            <span ng-show="queteur.current.temporary_volunteer_form.result">Upload Successful</span>
-            <span class="err" ng-show="errorMsg">{{errorMsg}}</span>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group" ng-show="queteur.current.secteur >= 3 && queteur.current.age < 18 ">
-            <label for="parent_authorization_form" class="control-label">Authorisation Parentale</label>
-            <input type="file"
-                   name="parent_authorization_form"
-                   id="parent_authorization_form"
-                   ng-model="parent_authorization_form"
-                   ngf-max-size="2MB"
-                   ngf-accept="'image/*', 'application/pdf'"
-                   ngf-model-invalid="errorFile"
-            />
-            <span class="help-block">Scanner l'autorisation parentale et ajouter le fichier ici</span>
           </div>
         </div>
       </div>

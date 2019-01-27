@@ -23,13 +23,12 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'];
-
+    $ulId   = $decodedToken->getUlId  ();
     $params = $request->getQueryParams();
 
     if(array_key_exists('year',$params))
     {
-      $year = $params['year'];
+      $year = $this->clientInputValidator->validateInteger('year', $params['year'], 2050, true);
     }
     else
     {
@@ -43,12 +42,10 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
     if($dailyStats !== null && count($dailyStats) > 0)
     {
       $this->logger->addInfo($dailyStats[0]->generateCSVHeader());
-      $this->logger->addInfo($dailyStats[0]->generateCSVRow());
+      $this->logger->addInfo($dailyStats[0]->generateCSVRow   ());
 
     }
-    $response->getBody()->write(json_encode($dailyStats));
-
-    return $response;
+    return $response->getBody()->write(json_encode($dailyStats));
   }
   catch(\Exception $e)
   {
@@ -57,8 +54,6 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
   }
 
 });
-
-
 
 /**
  *
@@ -70,8 +65,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId = (int)$args['ul-id'];
-
+    $ulId                         = $decodedToken->getUlId ();
     $input                        = $request->getParsedBody();
     $dailyStatsBeforeRCQEntity    = new DailyStatsBeforeRCQEntity($input, $this->logger);
     
@@ -85,8 +79,6 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
   return $response;
 });
 
-
-
 /**
  * Creation of all days for a year for an UL)
  */
@@ -95,14 +87,15 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respon
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId  = (int)$args['ul-id'];
+    $ulId  = $decodedToken->getUlId ();
     $input = $request->getParsedBody();
+    $year  = $this->clientInputValidator->validateInteger('year', getParam($input, 'year'), 2050, true);
 
-    $this->dailyStatsBeforeRCQDBService->createYear($ulId, $input['year']);
+    $this->dailyStatsBeforeRCQDBService->createYear($ulId, $year);
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while creating year (".$input['year'].")", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->addError("error while creating year ($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
   return $response;

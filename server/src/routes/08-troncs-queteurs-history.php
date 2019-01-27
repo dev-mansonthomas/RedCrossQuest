@@ -21,16 +21,13 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($reques
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId           = (int)$args['ul-id'];
-
+    $ulId           = $decodedToken->getUlId  ();
     $params         = $request->getQueryParams();
-    $troncQueteurId = (int)$params['tronc_queteur_id'];
+    $troncQueteurId = $this->clientInputValidator->validateInteger('tronc_queteur_id', getParam($params,'tronc_queteur_id'), 1000000, true);
 
     $troncQueteurs = $this->troncQueteurDBService->getTroncQueteurHistoryById($troncQueteurId, $ulId);
 
-    $response->getBody()->write(json_encode($troncQueteurs));
-
-    return $response;
+    return $response->getBody()->write(json_encode($troncQueteurs));
   }
   catch(\Exception $e)
   {

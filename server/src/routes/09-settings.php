@@ -16,32 +16,27 @@ $app->get('/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response,
   try
   {
     $params = $request->getQueryParams();
-    $roleId = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
+    $userId = $decodedToken->getUid   ();
 
     if(array_key_exists('action', $params))
     {
-      $action   = $params['action'  ];
-
+      $action   = $this->clientInputValidator->validateString("action", $params['action'], 20 , false );
 
       if($action == "getSetupStatus")
       {
-        $response->getBody()->write(json_encode($this->settingsBusinessService->getSetupStatus($decodedToken->getUlId())));
-        return $response;
+        return $response->getBody()->write(json_encode($this->settingsBusinessService->getSetupStatus($ulId)));
       }
     }
     else
     {
       $guiSettings['mapKey'] = $this->settings['appSettings']['gmapAPIKey'];
-      $guiSettings['ul'    ] = $this->uniteLocaleDBService->getUniteLocaleById   ($decodedToken->getUlId());
-      $guiSettings['user'  ] = $this->userDBService       ->getUserInfoWithUserId($decodedToken->getUid(), $decodedToken->getUlId(), $roleId);
+      $guiSettings['ul'    ] = $this->uniteLocaleDBService->getUniteLocaleById   ($ulId);
+      $guiSettings['user'  ] = $this->userDBService       ->getUserInfoWithUserId($userId, $ulId, $roleId);
 
-      $response->getBody()->write(json_encode($guiSettings));
-      return $response;
+      return $response->getBody()->write(json_encode($guiSettings));
     }
-
-
-
-
   }
   catch(\Exception $e)
   {

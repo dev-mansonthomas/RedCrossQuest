@@ -23,22 +23,21 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'  ];
-    $roleId = (int)$args['role-id'];
-    
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
     $params = $request->getQueryParams();
 
     if(array_key_exists('action', $params))
     {
-      $action         = $params['action'];
+      $action         = $this->clientInputValidator->validateString("action", $params['action'], 20 , true);
       $input          = $request->getParsedBody();
       $userEntity     = new UserEntity($input, $this->logger);
 
-      if ($action == "update")
+      if($action == "update")
       {
         $this->logger->addInfo("Updating user activeAndRole", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
 
-        if($userEntity->role > $decodedToken->getRoleId())
+        if($userEntity->role > $decodedToken->getRoleId() || $userEntity->role <= 0)
         {
           $this->logger->addInfo("Connected user is trying to grand higher privilege than his to someone else", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
           throw new \Exception("PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 14 at /app/src/DBService/UsersDBService.php:47");
@@ -48,6 +47,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
         if($numberOfUpdatedRows == 0)
         {
           $this->logger->addInfo("Updating user activeAndRole FAILED, no row updated", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
+          return $response->getBody()->write(json_encode($userEntity));//return the original objects
         }
       }
       else
@@ -58,7 +58,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
 
       }
       $userEntity = $this->userDBService->getUserInfoWithUserId($userEntity->id, $ulId, $roleId);
-      $response->getBody()->write(json_encode($userEntity));
+      return $response->getBody()->write(json_encode($userEntity));
     }
   }
   catch(\Exception $e)
@@ -66,7 +66,6 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
     $this->logger->addError("Error while updating ActiveAndRole or sending init password email", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
     throw $e;
   }
-  return $response;
 });
 
 
@@ -78,8 +77,8 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'  ];
-    $roleId = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
 
     $input      = $request->getParsedBody();
     $userEntity = new UserEntity($input, $this->logger);
@@ -112,14 +111,13 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
 
     $this->mailer->sendInitEmail($queteur, $uuid);
 
-    $response->getBody()->write(json_encode($user));
+    return $response->getBody()->write(json_encode($user));
   }
   catch(\Exception $e)
   {
     $this->logger->addError("error while creating a new user", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
     throw $e;
   }
-  return $response;
 });
 
 

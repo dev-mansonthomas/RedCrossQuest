@@ -13,6 +13,8 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/cakephp/utility" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/container-interop/container-interop" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/doctrine/lexer" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/egulias/email-validator" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/firebase/php-jwt" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/fzaninotto/faker" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/apiclient" />
@@ -57,6 +59,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/translation" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/validator" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/yaml" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />

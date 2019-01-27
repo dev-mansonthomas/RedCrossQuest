@@ -22,11 +22,10 @@ $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($reques
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-
-    $ulId    = (int)$args['ul-id'];
+    $ulId = $decodedToken->getUlId();
     //c'est bien le troncId qu'on passe ici, on va supprimer tout les tronc_queteur qui ont ce tronc_id et départ ou retour à nulle
-    $troncId = (int)$args['id'];
-    $userId  = (int)$decodedToken->getUid ();
+    $troncId = $this->clientInputValidator->validateInteger('id', $args['id'], 1000000, true);
+    $userId  = $decodedToken->getUid ();
 
     $this->logger->addError("user $userId of UL $ulId is deleting tronc id=$troncId");
 
@@ -50,20 +49,14 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId         = (int)$args['ul-id'];
-    $params       = $request->getQueryParams();
-    $userId       = (int)$decodedToken->getUid ();
-
-    $adminMode = false;
-    if(array_key_exists('adminMode', $params))
-    {//in order to not overwrite the comptage date in the DB
-      $adminMode = $params['adminMode'];
-      $this->logger->addDebug("adminMode parameter exist", array('decodedToken'=>$decodedToken));
-    }
+    $ulId      = $decodedToken->getUlId();
+    $params    = $request->getQueryParams();
+    $userId    = $decodedToken->getUid ();
+    $adminMode = $this->clientInputValidator->validateBoolean("adminMode", getParam($params,'adminMode'), false, false);
 
     if(array_key_exists('action', $params))
     {
-      $action = $params['action'];
+      $action = $this->clientInputValidator->validateString("action", $params['action'], 20 , true );
       $input  = $request->getParsedBody();
 
       /** @var TroncQueteurEntity */
@@ -72,10 +65,10 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
       if ($action =="saveReturnDate")
       {
         // if the depart Date was missing, we make mandatory for the user to fill one.
-        if(array_key_exists('dateDepartIsMissing', $params) && $params['dateDepartIsMissing'] == true)
+        if($this->clientInputValidator->validateBoolean("dateDepartIsMissing", getParam($params, 'dateDepartIsMissing'), false, false))
         {
-          $this->logger->addInfo("Setting date depart that was missing for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart));
-          $this->troncQueteurDBService->setDepartToCustomDate($tq, $ulId, $userId);
+            $this->logger->addInfo("Setting date depart that was missing for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart));
+            $this->troncQueteurDBService->setDepartToCustomDate($tq, $ulId, $userId);
         }
 
         $this->troncQueteurDBService->updateRetour($tq, $ulId, $userId);
@@ -95,7 +88,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
           //TODO remove || true, implement properties, use configuration for topic name
           if($tq->comptage == null || true)
           {
-            $responseMessageIds = $this->PubSub->publish("tronc_queteur", $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
+            $responseMessageIds = $this->PubSub->publish("tronc_queteur"        , $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
           }
           else
           {
@@ -163,19 +156,18 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
  */
 $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
 {
-  $this->logger->warn("TroncQueteur POST");
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId         = (int)$args['ul-id'];
-    $params       = $request->getQueryParams();
-    $userId       = (int)$decodedToken->getUid ();
+    $ulId   = $decodedToken->getUlId();
+    $params = $request->getQueryParams();
+    $userId = $decodedToken->getUid ();
 
     if(array_key_exists('action', $params))
     {
-      $action   = $params['action'  ];
-      $tronc_id = $params['tronc_id'];
-      $roleId   = (int)$args['role-id'];
+      $action   = $this->clientInputValidator->validateString ("action"  , $params['action'], 40 , true );
+      $tronc_id = $this->clientInputValidator->validateInteger('tronc_id', getParam($params,'tronc_id'), 1000000, true);;
+      $roleId   = $decodedToken->getRoleId();
 
       if($action == "getTroncQueteurForTroncIdAndSetDepart")
       {// départ du tronc
@@ -208,8 +200,8 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
             }
           }
         }
-        $response->getBody()->write(json_encode($tq));
-        return $response;
+
+        return $response->getBody()->write(json_encode($tq));
       }
       else
       {
@@ -240,9 +232,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
       }
 
       //in any case, we return the insert response
-      $response->getBody()->write(json_encode($insertResponse));
-
-      return $response;
+      return $response->getBody()->write(json_encode($insertResponse));
     }
 
   }
@@ -262,8 +252,8 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId       = (int)$args['ul-id'];
-    $roleId     = (int)$args['role-id'];
+    $ulId       = $decodedToken->getUlId();
+    $roleId     = $decodedToken->getRoleId();
     $queteur_id = null;
     $tronc_id   = null;
 
@@ -272,40 +262,39 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
 
     if(array_key_exists('action', $params))
     {
-      $action   = $params['action'  ];
+      $action   = $this->clientInputValidator->validateString("action", $params['action'], 40 , true );
       //$this->logger->debug("action='$action'", array('decodedToken'=>$decodedToken));
 
       if($action == "getLastTroncQueteurFromTroncId")
       {
-        $tronc_id     = $params['tronc_id'];
-        $troncQueteur = $this->troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
-        $response->getBody()->write(json_encode($troncQueteur));
-        return $response;
+        $troncId      = $this->clientInputValidator->validateInteger('tronc_id', getParam($params,'tronc_id'), 1000000, true);
+        $troncQueteur = $this->troncQueteurBusinessService->getLastTroncQueteurFromTroncId($troncId, $ulId, $roleId);
+
+        return $response->getBody()->write(json_encode($troncQueteur));
       }
       else if($action == "getTroncsQueteurForTroncId")
       {
-        $tronc_id     = $params['tronc_id'];
-        $troncQueteur = $this->troncQueteurDBService->getTroncsQueteurByTroncId($tronc_id, $ulId);
-        $response->getBody()->write(json_encode($troncQueteur));
-        return $response;
+        $troncId      = $this->clientInputValidator->validateInteger('tronc_id', getParam($params,'tronc_id'), 1000000, true);
+        $troncQueteur = $this->troncQueteurDBService->getTroncsQueteurByTroncId($troncId, $ulId);
+
+        return $response->getBody()->write(json_encode($troncQueteur));
       }
       else if($action == "getTroncsOfQueteur")
       {
-        $queteur_id             = $params['queteur_id'];
-        $troncsQueteur          = $this->troncQueteurDBService->getTroncsQueteur($queteur_id, $ulId);
-        $response->getBody()->write(json_encode($troncsQueteur));
+        $queteurId    = $this->clientInputValidator->validateInteger('queteur_id', getParam($params,'queteur_id'), 1000000, true);
+        $troncsQueteur= $this->troncQueteurDBService->getTroncsQueteur($queteurId, $ulId);
 
-        return $response;
+        return $response->getBody()->write(json_encode($troncsQueteur));
       }
       else if($action == "searchMoneyBagId")
       {
-        $query       = $params['q'];
-        $type        = $params['type'];
+        $query        = $this->clientInputValidator->validateString("q"   , getParam($params,'q'   ), 30 , true );
+        $type         = $this->clientInputValidator->validateString("type", getParam($params,'type'),  4 , true );
 
         $this->logger->debug("action='$action'", array('query'=>$query, 'type'=>$type));
         $moneyBagIds = $this->troncQueteurDBService->searchMoneyBagId($query, $type, $ulId);
-        $response->getBody()->write(json_encode($moneyBagIds));
-        return $response;
+
+        return $response->getBody()->write(json_encode($moneyBagIds));
       }
     }
 
@@ -330,14 +319,14 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId           = (int)$args['ul-id'];
-    $troncQueteurId = (int)$args['id'];
-    $roleId         = (int)$args['role-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
 
-    $troncQueteur = $this->troncQueteurBusinessService->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId, $roleId);
-    $response->getBody()->write(json_encode($troncQueteur));
+    $troncQueteurId = $this->clientInputValidator->validateInteger('id', $args['id'], 1000000, true);
+    $troncQueteur   = $this->troncQueteurBusinessService->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId, $roleId);
 
-    return $response;
+
+    return $response->getBody()->write(json_encode($troncQueteur));
   }
   catch(\Exception $e)
   {

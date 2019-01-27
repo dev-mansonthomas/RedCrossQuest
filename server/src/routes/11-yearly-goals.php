@@ -23,13 +23,12 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $respon
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = (int)$args['ul-id'];
-
+    $ulId   = $decodedToken->getUlId  ();
     $params = $request->getQueryParams();
 
     if(array_key_exists('year',$params))
     {
-      $year = $params['year'];
+      $year = $this->clientInputValidator->validateInteger('year', $params['year'], 2050, true);
     }
     else
     {
@@ -66,10 +65,9 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function ($request, $r
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId = (int)$args['ul-id'];
-
-    $input               = $request->getParsedBody();
-    $yearlyGoalEntity    = new YearlyGoalEntity($input, $this->logger);
+    $ulId             = $decodedToken->getUlId  ();
+    $input            = $request->getParsedBody();
+    $yearlyGoalEntity = new YearlyGoalEntity($input, $this->logger);
     
     $this->yearlyGoalDBService->update($yearlyGoalEntity, $ulId);
   }
@@ -91,10 +89,11 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $respo
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId = (int)$args['ul-id'];
+    $ulId   = $decodedToken->getUlId  ();
+    $input  = $request->getParsedBody();
+    $year   = $this->clientInputValidator->validateInteger('year', getParam($input,'year'), 2050, true);
 
-    $input               = $request->getParsedBody();
-    $this->yearlyGoalDBService->createYear($ulId, $input['year']);
+    $this->yearlyGoalDBService->createYear($ulId, $year);
   }
   catch(\Exception $e)
   {

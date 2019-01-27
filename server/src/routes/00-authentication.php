@@ -11,6 +11,8 @@ use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use \RedCrossQuest\Entity\UserEntity;
 
+use RedCrossQuest\Service\ClientInputValidator;
+
 /********************************* Authentication ****************************************/
 
 
@@ -27,9 +29,9 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
 {
   try
   {
-    $username = checkStringParameter("username", $request->getParsedBodyParam("username"), 20);
-    $password = checkStringParameter("password", $request->getParsedBodyParam("password"), 20);
-    $token    = checkStringParameter("token"   , $request->getParsedBodyParam("token"   ), 500);
+    $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true );
+    $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
+    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
 
     $this->logger->addInfo("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
@@ -42,6 +44,7 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
       return $response401;
     }
 
+    $this->logger->addInfo("getUserInfoWithNivol");
     $user           = $this->userDBService->getUserInfoWithNivol($username);
 
     // $this->logger->addDebug("User Entity for user id='".$user->id."' nivol='".$username."'".print_r($user, true));
@@ -49,7 +52,9 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
+      $this->logger->addInfo("getQueteurById");
       $queteur = $this->queteurDBService    ->getQueteurById    ($user   ->queteur_id);
+      $this->logger->addInfo("getUniteLocaleById");
       $ul      = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
 
       $signer = new Sha256();
@@ -139,8 +144,8 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
   $username = "";
   try
   {
-    $username = checkStringParameter("username", $request->getParsedBodyParam("username"), 20);
-    $token    = checkStringParameter("token"   , $request->getParsedBodyParam("token"   ), 500);
+    $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true);
+    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true);
 
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/sendInit", $username);
 
@@ -188,13 +193,22 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
  */
 $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
 {
+  $uuid ="";
   try
   {
-    $uuid  = checkStringParameter("uuid" , $request->getParam("uuid" ), 36 );
-    $token = checkStringParameter("token", $request->getParam("token"), 500);
+    $uuid     = $this->clientInputValidator->validateString("uuid"    , $request->getParam("uuid"     ), 36  , true, ClientInputValidator::$UUID_VALIDATION);
+    $token    = $this->clientInputValidator->validateString("token"   , $request->getParam("token"    ), 500 , true );
 
+    $appUrl = $this->get('settings')['appSettings']['appUrl'];
+    if($appUrl == "http://localhost:3000/")
+    {//ReCaptcha fails systematically for localhost ==> disable
+      $reCaptchaResponseCode = 0;
+    }
+    else
+    {
+      $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/getUserInfoWithUUID", "getInfoFromUUID");
+    }
 
-    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/getUserInfoWithUUID", "getInfoFromUUID");
 
     if($reCaptchaResponseCode > 0)
     {// error
@@ -217,10 +231,6 @@ $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
 
       $response->getBody()->write(json_encode([
         "success"       => true,
-        "first_name"    => $queteur->first_name,
-        "last_name"     => $queteur->last_name ,
-        "email"         => $queteur->email     ,
-        "mobile"        => $queteur->mobile    ,
         "nivol"         => $queteur->nivol ]));
       
       return $response;
@@ -248,9 +258,9 @@ $app->post('/resetPassword', function ($request, $response, $args) use ($app)
 {
   try
   {
-    $uuid     = checkStringParameter("uuid"    , $request->getParsedBodyParam("uuid"    ), 36 );
-    $password = checkStringParameter("password", $request->getParsedBodyParam("password"), 60 );
-    $token    = checkStringParameter("token"   , $request->getParsedBodyParam("token"   ), 500);
+    $uuid     = $this->clientInputValidator->validateString("uuid"    , $request->getParsedBodyParam("uuid"     ), 36  , true, ClientInputValidator::$UUID_VALIDATION);
+    $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
+    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
 
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/resetPassword", "getInfoFromUUID");
 
@@ -286,7 +296,7 @@ $app->post('/resetPassword', function ($request, $response, $args) use ($app)
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("unexpected exception during getInfoFromUUID", array("uuid"=>$uuid, "Exception"=>$e));
+    $this->logger->addError("unexpected exception during resetPassword", array("uuid"=>$uuid, "Exception"=>$e));
     $response->getBody()->write(json_encode(["success"=>false]));
     return $response;
   }

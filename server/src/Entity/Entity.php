@@ -10,6 +10,7 @@ namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
 use Monolog\Logger;
+use RedCrossQuest\Service\ClientInputValidator;
 
 class Entity
 {
@@ -21,7 +22,8 @@ class Entity
 ;
   public function __construct(Logger $logger)
   {
-    $this->logger = $logger;
+    $this->logger               = $logger;
+    $this->clientInputValidator = new ClientInputValidator($logger);
   }
 
   public function generateCSVHeader()
@@ -50,12 +52,9 @@ class Entity
     if(array_key_exists($key, $data))
     {
       $value = $data[$key];
-      if(strlen($value) > 10)
-      {
-        throw new \InvalidArgumentException("Invalid integer value" .json_encode(['key'=>$key, 'value'=>$value]) );
-      }
+      //$this->logger->addError("integer '$key'=>'$value' ".gettype($data[$key]));
 
-      $this->$key = $data[$key] === null ? null : (int)$data[$key];
+      $this->$key = "$value"=="0"? 0 : $this->clientInputValidator->validateInteger($key, $data[$key], 100000000, false, null);
     }
   }
 
@@ -89,12 +88,8 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
-      $value = $data[$key];
-      if(strlen($value) > $maxSize)
-      {
-        throw new \InvalidArgumentException("Invalid String value, length higher than the max permitted size" .json_encode(['key'=>$key, 'value'=>$value, 'maxSize'=>$maxSize]) );
-      }
-      $this->$key = $data[$key];
+      $value = $this->clientInputValidator->validateString($key, $data[$key], $maxSize , false );
+      $this->$key = $value == null ? '' : $value;
     }
   }
 
@@ -108,22 +103,7 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
-      $email               = $data[$key];
-      $length              = strlen($email);
-      $filterEmailResponse = filter_var($email, FILTER_VALIDATE_EMAIL);
-      if($length < 64 && $filterEmailResponse !== false)
-      {
-        $this->$key = $filterEmailResponse;
-      }
-      else if(empty($email) || $email == "N/A")
-      {
-        $this->$key = "";
-      }
-      else
-      {
-        $this->logger->addError("invalid email address or too long size", array("email.length"=>$length,"email"=>$email, "filterEmailResponse"=>$filterEmailResponse));
-        throw new \InvalidArgumentException("invalid email address or too long size ".json_encode(['key'=>$key, 'value'=>$email, 'maxSize'=>64]));
-      }
+      $this->$key = $this->clientInputValidator->validateString($key, $data[$key], 100 , false , ClientInputValidator::$EMAIL_VALIDATION);
     }
   }
 
@@ -140,11 +120,7 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
-      $value = $data[$key];
-      if(strlen($value) > $maxSize)
-      {
-        throw new \InvalidArgumentException("Invalid JSON value, length higher than the max permitted size" .json_encode(['key'=>$key, 'value'=>$value, 'maxSize'=>$maxSize]) );
-      }
+      $value = $this->clientInputValidator->validateString($key, $data[$key], $maxSize , false );
 
       try
       {
@@ -168,20 +144,7 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
-      $value = $data[$key];
-
-      if($value."" === "1" || $value."" === "true" || $value === true)
-      {
-        $this->$key = true;
-      }
-      else
-      {
-        $this->$key = false;
-      }
-    }
-    else
-    {
-      $this->$key = false;
+      $this->$key = $this->clientInputValidator->validateBoolean($key, $data[$key]."", false, false );
     }
   }
   /**

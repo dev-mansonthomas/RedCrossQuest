@@ -22,8 +22,9 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($request, $respons
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId     = (int)$args['ul-id'   ];
-    $password = trim($request->getParsedBodyParam("password"));
+    $ulId     = $decodedToken->getUlId  ();
+    $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password"), 40 , true );
+
 
     $zipFileName = $this->exportDataBusinessService->exportData($password, $ulId, null);
 
