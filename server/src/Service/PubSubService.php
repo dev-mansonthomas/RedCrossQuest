@@ -18,7 +18,7 @@ use Google\Cloud\PubSub\PubSubClient;
 class PubSubService
 {
   protected $settings;
-  /** @var \Monolog\Logger */
+  /** @var \Google\Cloud\Logging\PsrLogger */
   protected $logger;
   /** @var PubSubClient */
   protected $pubSub;
@@ -28,7 +28,7 @@ class PubSubService
     $this->settings  = $settings;
     $this->logger    = $logger;
 
-    $this->logger->addError("Creating PubSubClient() with projectId", array("projectId" => $this->settings));
+    $this->logger->error("Creating PubSubClient() with projectId", array("projectId" => $this->settings));
     $this->pubSub    = new PubSubClient();//["projectId" => $this->settings['gcp']['projectId']]
   }
 
@@ -50,7 +50,7 @@ class PubSubService
 
       $dataToPublish = $jsonEncodeData ? json_encode($data) : $data;
 
-      $this->logger->addError("publishing to '$topicName' data : ".$dataToPublish);
+      $this->logger->error("publishing to '$topicName' data : ".$dataToPublish);
 
       return $topic->publish([
         'data' => $dataToPublish,
@@ -61,7 +61,7 @@ class PubSubService
     }
     catch(\Exception $exception)
     {
-      $this->logger->addError("Error while publishing message on topic '$topicName'", ["data"=> json_encode($data), "exception"=>$exception] );
+      $this->logger->error("Error while publishing message on topic '$topicName'", ["data"=> json_encode($data), "exception"=>$exception] );
 
       if($raiseExceptionInCaseOfError)
       {

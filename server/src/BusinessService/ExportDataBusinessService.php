@@ -148,14 +148,14 @@ class ExportDataBusinessService
           $z->addFile("/tmp/$filename",$filename);
           $z->setEncryptionName($filename,  \ZipArchive::EM_AES_256 /*, $password*/);
           unlink("/tmp/$filename");
-          $this->logger->addError("$filename added to zip and deleted");
+          $this->logger->error("$filename added to zip and deleted");
         }
       }
       $z->close();
     }
     catch(\Exception $e)
     {
-      $this->logger->addError("UL_ID : $ulId, YEAR: $year",$e);
+      $this->logger->error("UL_ID : $ulId, YEAR: $year",$e);
       throw $e;
     }
 

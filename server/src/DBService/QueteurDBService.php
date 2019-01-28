@@ -203,7 +203,7 @@ AND q.id IN (
     }
 
 
-    $this->logger->addInfo("Querying queteurs",
+    $this->logger->info("Querying queteurs",
                            array("sql"          => $sql          ,
                                  "query"        => $query        ,
                                  "searchType"   => $searchType   ,
@@ -515,7 +515,7 @@ AND    q.ul_id   = u.id
   public function update(QueteurEntity $queteur, int $ulId, int $roleId)
   {
 
-    $this->logger->addError("queteur->birthdate:".$queteur->birthdate);
+    $this->logger->error("queteur->birthdate:".$queteur->birthdate);
     $sql = "
 UPDATE `queteur`
 SET

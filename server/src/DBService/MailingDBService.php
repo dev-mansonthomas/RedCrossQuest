@@ -268,7 +268,7 @@ AND   `ul_id` = :ul_id
    */
   public function confirmRead(string $guid)
   {
-    $this->logger->addInfo("$guid to update");
+    $this->logger->info("$guid to update");
 
     $queryData = [
       'guid'                   => $guid

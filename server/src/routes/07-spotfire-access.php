@@ -14,7 +14,7 @@ require '../../vendor/autoload.php';
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
 {
     $decodedToken = $request->getAttribute('decodedJWT');
-    //$this->logger->addDebug("generating spotfire access for ");
+    //$this->logger->debug("generating spotfire access for ");
     try
     {
       $ulId   = $decodedToken->getUlId  ();
@@ -26,7 +26,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $a
     }
     catch(\Exception $e)
     {
-        $this->logger->addError("Error while getting current Token for user ($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+        $this->logger->error("Error while getting current Token for user ($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
         throw $e;
     }
 });

@@ -33,7 +33,7 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
     $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
     $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
 
-    $this->logger->addInfo("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
+    $this->logger->info("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
 
     if($reCaptchaResponseCode > 0)
@@ -44,17 +44,17 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
       return $response401;
     }
 
-    $this->logger->addInfo("getUserInfoWithNivol");
+    $this->logger->info("getUserInfoWithNivol");
     $user           = $this->userDBService->getUserInfoWithNivol($username);
 
-    // $this->logger->addDebug("User Entity for user id='".$user->id."' nivol='".$username."'".print_r($user, true));
+    // $this->logger->debug("User Entity for user id='".$user->id."' nivol='".$username."'".print_r($user, true));
 
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
-      $this->logger->addInfo("getQueteurById");
+      $this->logger->info("getQueteurById");
       $queteur = $this->queteurDBService    ->getQueteurById    ($user   ->queteur_id);
-      $this->logger->addInfo("getUniteLocaleById");
+      $this->logger->info("getUniteLocaleById");
       $ul      = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
 
       $signer = new Sha256();
@@ -101,7 +101,7 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
     else if($user instanceof UserEntity)
     {//we found the user, but password is not good
 
-      $this->logger->addError("Authentication failed, wrong password, for user id='".$user->id."' nivol='".$username."'");
+      $this->logger->error("Authentication failed, wrong password, for user id='".$user->id."' nivol='".$username."'");
       $this->userDBService->registerFailedLogin($user->id);
 
       $response401 = $response->withStatus(401);
@@ -111,7 +111,7 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
     }
     else
     {
-      $this->logger->addError("Authentication failed, wrong password, for user nivol='".$username."', response is not a UserEntity : ".print_r($user,true));
+      $this->logger->error("Authentication failed, wrong password, for user nivol='".$username."', response is not a UserEntity : ".print_r($user,true));
       $this->userDBService->registerFailedLogin($user->id);
 
       $response401 = $response->withStatus(401);
@@ -124,7 +124,7 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("unexpected exception during authentication", array("Exception"=>$e));
+    $this->logger->error("unexpected exception during authentication", array("Exception"=>$e));
 
     $response401 = $response->withStatus(401);
     $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 3.']));
@@ -179,7 +179,7 @@ $app->post('/sendInit', function ($request, $response, $args) use ($app)
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("unexpected exception during sendInit", array("username"=>$username, "Exception"=>$e));
+    $this->logger->error("unexpected exception during sendInit", array("username"=>$username, "Exception"=>$e));
     $response->getBody()->write(json_encode(["success"=>false]));
     return $response;
   }
@@ -244,7 +244,7 @@ $app->get('/getInfoFromUUID', function ($request, $response, $args) use ($app)
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("unexpected exception during getInfoFromUUID", array("uuid"=>$uuid, "Exception"=>$e));
+    $this->logger->error("unexpected exception during getInfoFromUUID", array("uuid"=>$uuid, "Exception"=>$e));
 
     $response->getBody()->write(json_encode(["success"=>false]));
     return $response;
@@ -296,7 +296,7 @@ $app->post('/resetPassword', function ($request, $response, $args) use ($app)
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("unexpected exception during resetPassword", array("uuid"=>$uuid, "Exception"=>$e));
+    $this->logger->error("unexpected exception during resetPassword", array("uuid"=>$uuid, "Exception"=>$e));
     $response->getBody()->write(json_encode(["success"=>false]));
     return $response;
   }

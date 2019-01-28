@@ -13,7 +13,7 @@ namespace RedCrossQuest\Service;
 class ReCaptchaService
 {
 
-  /** @var \Monolog\Logger */
+  /** @var \Google\Cloud\Logging\PsrLogger */
   protected $logger;
 
   protected $secretKey;
@@ -38,7 +38,7 @@ class ReCaptchaService
     }
 
 
-    $this->logger->addInfo("ReCaptcha Host Check is '".$this->redCrossQuestHost."'");
+    $this->logger->info("ReCaptcha Host Check is '".$this->redCrossQuestHost."'");
   }
 
 //Changer les callbacks en un return d'un object
@@ -79,7 +79,7 @@ class ReCaptchaService
         strlen($token) == 0    ||
         strlen($token) >  500  )
     {
-      $this->logger->addError(
+      $this->logger->error(
         "ReCaptcha Token is too long",
         array(
           'actionRequired'=> $actionRequired,
@@ -102,7 +102,7 @@ class ReCaptchaService
 
         if($action != $actionRequired)
         {
-          $this->logger->addError(
+          $this->logger->error(
             "wrong action for reCaptcha",
             array(
               'actionRequired'=> $actionRequired,
@@ -117,7 +117,7 @@ class ReCaptchaService
 
         if($score < $this->lowestAcceptableScore)
         {
-          $this->logger->addError(
+          $this->logger->error(
             "reCaptcha score is too low",
             array(
               'actionRequired'=> $actionRequired,
@@ -131,14 +131,14 @@ class ReCaptchaService
           return 3;
         }
 
-        $this->logger->addInfo("ReCaptcha test is a success, action is correct and score is above minimal value, proceeding to login",
+        $this->logger->info("ReCaptcha test is a success, action is correct and score is above minimal value, proceeding to login",
           array('remoteIp'=>$remoteIP, 'username' => $username, 'score'=> $score, 'clientAction'=> $action, 'token' => $token));
 
         return 0;
       }
       else
       {
-        $this->logger->addError(
+        $this->logger->error(
           "reCaptcha general failure",
           array(
             'actionRequired'=> $actionRequired,
@@ -154,7 +154,7 @@ class ReCaptchaService
     }
     catch(\Exception $e)
     {
-      $this->logger->addError(
+      $this->logger->error(
         "Exception occurred during ReCaptcha Validation",
         array(
           'actionRequired'=> $actionRequired,

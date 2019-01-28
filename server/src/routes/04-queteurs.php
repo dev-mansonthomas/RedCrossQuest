@@ -26,7 +26,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
   $ulId   = $decodedToken->getUlId  ();
   $roleId = $decodedToken->getRoleId();
 
-  $this->logger->addInfo( "search queteur with roleId", array("roleId"=>$roleId, "admin_ul_id exists  "=>array_key_exists('admin_ul_id',$params)));
+  $this->logger->info( "search queteur with roleId", array("roleId"=>$roleId, "admin_ul_id exists  "=>array_key_exists('admin_ul_id',$params)));
 
 
   if($this->clientInputValidator->validateString("action", getParam($params,'action'), 30 , false ) == "searchSimilarQueteurs")
@@ -68,7 +68,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
       if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
       {
         $ulId = $this->clientInputValidator->validateInteger('admin_ul_id', $params['admin_ul_id'], 1000, true);
-        //$this->logger->addInfo("Queteur list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
+        //$this->logger->info("Queteur list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
       }
 
       $query        = $this->clientInputValidator->validateString ("q"               , getParam($params,'q'               ), 100  , false );
@@ -87,7 +87,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     }
     catch(\Exception $e)
     {
-      $this->logger->addError("error while fetching queteur with the following parameters query=$query, searchType=$searchType, secteur=$secteur, ulId=$ulId, active=$active, benevoleOnly=$benevoleOnly", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+      $this->logger->error("error while fetching queteur with the following parameters query=$query, searchType=$searchType, secteur=$secteur, ulId=$ulId, active=$active, benevoleOnly=$benevoleOnly", array('decodedToken'=>$decodedToken, "Exception"=>$e));
       throw $e;
     }
   }
@@ -127,7 +127,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while fetching queteur $queteurId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
+    $this->logger->error("Error while fetching queteur $queteurId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
     throw $e;
   }
 
@@ -154,7 +154,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 
     $queteurEntity = new QueteurEntity($input, $this->logger);
 
-    $this->logger->addError("Queteur",array('queteurEntity'=>$queteurEntity));
+    $this->logger->error("Queteur",array('queteurEntity'=>$queteurEntity));
 
     if($this->clientInputValidator->validateString("action", getParam($params,'action'), 10 , false ) == "anonymize")
     {
@@ -176,7 +176,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while updating queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
+    $this->logger->error("Error while updating queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
     throw $e;
   }
 });
@@ -195,7 +195,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
     $ulId   = $decodedToken->getUlId  ();
     $roleId = $decodedToken->getRoleId();
 
-    //$this->logger->addInfo("Uploading file for UL ID='$ulId' and queteurId='$queteurId''", array('decodedToken'=>$decodedToken));
+    //$this->logger->info("Uploading file for UL ID='$ulId' and queteurId='$queteurId''", array('decodedToken'=>$decodedToken));
 
 
     //$queteurDBService = new QueteurDBService($this->db, $this->logger);
@@ -207,7 +207,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($req
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while uploading files", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("Error while uploading files", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
   return $response;
@@ -246,7 +246,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while creating a new Queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
+    $this->logger->error("Error while creating a new Queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
     throw $e;
   }
 });

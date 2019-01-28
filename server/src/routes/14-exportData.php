@@ -50,7 +50,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($request, $respons
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while fetching the Mailing Summary for UL ($ulId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("Error while fetching the Mailing Summary for UL ($ulId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 });

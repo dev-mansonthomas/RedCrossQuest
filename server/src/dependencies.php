@@ -26,6 +26,10 @@ use \RedCrossQuest\BusinessService\SettingsBusinessService;
 use \RedCrossQuest\BusinessService\ExportDataBusinessService;
 use \RedCrossQuest\DBService\YearlyGoalDBService;
 
+use Google\Cloud\Logging\LoggingClient;
+
+use Google\Cloud\Logging\PsrLogger;
+
 // DIC configuration
 $container = $app->getContainer();
 
@@ -41,20 +45,24 @@ $container['renderer'] = function (\Slim\Container $c)
   return new \Slim\Views\PhpRenderer($settings['template_path']);
 };
 
-// monolog
 
 /**
- * @property Monolog\Logger $logger
+ * @property PsrLogger    $logger
  * @param \Slim\Container $c
- * @return Monolog\Logger
+ * @return PsrLogger
  */
 $container['logger'] = function (\Slim\Container $c)
 {
   $settings = $c->get('settings')['logger'];
 
-  $logger = new Monolog\Logger($settings['name']);
-  $logger->pushProcessor(new Monolog\Processor\UidProcessor());
-  $logger->pushHandler  (new Monolog\Handler\StreamHandler($settings['path'], Monolog\Logger::INFO));
+  $logger = LoggingClient::psrBatchLogger(
+    $settings['name'], [
+    'resource'=>[
+      'type'=>'gae_app'
+    ],
+    'labels'  =>null
+    ]);
+
 
   return $logger;
 };
@@ -80,7 +88,7 @@ $container['db'] = function (\Slim\Container $c)
   catch(\Exception $e)
   {
     $logger = $c->get('logger');
-    $logger->addError("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($db['pwd']), 'exception'=>$e));
+    $logger->error("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($db['pwd']), 'exception'=>$e));
     throw $e;
   }
 };
@@ -147,7 +155,7 @@ $c['errorHandler'] = function (\Slim\Container $c) {
   {
     $logger = $c->get('logger');
 
-    $logger->addError("An Error Occured",
+    $logger->error("An Error Occured",
       array(
         'URI'     => $request->getUri(),
         'headers' => $request->getHeaders(),

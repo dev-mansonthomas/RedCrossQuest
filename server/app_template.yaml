@@ -18,6 +18,7 @@ skip_files:
 runtime_config:
   document_root: public_html
   front_controller_file: public_html/rest/index.php
+  enable_stackdriver_integration: true
 
   #
   #¤MYSQL_INSTANCE¤ : gcp_deploy.sh replace this token by the value from MYSQL_INSTANCE variable in rcq-fr-test-db-setup.properties

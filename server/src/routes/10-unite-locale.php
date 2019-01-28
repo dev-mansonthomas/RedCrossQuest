@@ -31,7 +31,7 @@ $app->get('/{role-id:[9]}/ul', function ($request, $response, $args)
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while searching for UniteLocale ", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("Error while searching for UniteLocale ", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 });

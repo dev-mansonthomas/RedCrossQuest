@@ -506,7 +506,7 @@ AND   tq.ul_id                = :ul_id
    */
   public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId)
   {
-    $this->logger->addInfo("Saving coins for tronc",array("tronc"=> $tq, "adminMode" => $adminMode, "ulId"=>$ulId, "userId"=> $userId));
+    $this->logger->info("Saving coins for tronc",array("tronc"=> $tq, "adminMode" => $adminMode, "ulId"=>$ulId, "userId"=> $userId));
 
 
     if(!$tq->isMoneyFilled())

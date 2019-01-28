@@ -47,7 +47,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $respon
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("fetch the dailyStats for a year($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("fetch the dailyStats for a year($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 
@@ -73,7 +73,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function ($request, $r
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Update one day stats ", array('decodedToken'=>$decodedToken, "Exception"=>$e, "dailyStatsBeforeRCQEntity"=>$yearlyGoalEntity));
+    $this->logger->error("Update one day stats ", array('decodedToken'=>$decodedToken, "Exception"=>$e, "dailyStatsBeforeRCQEntity"=>$yearlyGoalEntity));
     throw $e;
   }
   return $response;
@@ -97,7 +97,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $respo
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while creating year (".$input['year'].")", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("error while creating year (".$input['year'].")", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
   return $response;

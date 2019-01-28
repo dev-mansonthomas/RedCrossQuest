@@ -7,7 +7,7 @@ abstract class DBService
 {
   /** @var \PDO */
   protected $db;
-  /** @var \Monolog\Logger */
+  /** @var \Google\Cloud\Logging\PsrLogger */
   protected $logger;
 
   public function __construct($db, $logger)

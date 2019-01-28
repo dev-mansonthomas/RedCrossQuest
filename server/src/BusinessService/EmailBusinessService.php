@@ -3,7 +3,7 @@
 namespace RedCrossQuest\BusinessService;
 
 
-use Monolog\Logger;
+use Google\Cloud\Logging\PsrLogger;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\DBService\MailingDBService;
 use RedCrossQuest\Entity\MailingInfoEntity;
@@ -18,7 +18,7 @@ use Carbon\Carbon;
 class EmailBusinessService
 {
   /**
-   * @var Logger
+   * @var PsrLogger
    */
   protected $logger;
 
@@ -52,7 +52,7 @@ class EmailBusinessService
    */
   public function sendInitEmail(QueteurEntity $queteur, string $uuid)
   {
-    $this->logger->addInfo("sendInitEmail:'".$queteur->email."'");
+    $this->logger->info("sendInitEmail:'".$queteur->email."'");
 
     $url        = $this->appSettings['appUrl'].$this->appSettings['resetPwdPath'].$uuid;
 
@@ -97,7 +97,7 @@ Bonjour ".$queteur->first_name.",<br/>
    */
   public function sendResetPasswordEmailConfirmation(QueteurEntity $queteur)
   {
-    $this->logger->addInfo("sendResetPasswordEmailConfirmation:'".$queteur->email."'");
+    $this->logger->info("sendResetPasswordEmailConfirmation:'".$queteur->email."'");
 
     $url=$this->appSettings['appUrl'];
 
@@ -138,7 +138,7 @@ Bonjour ".$queteur->first_name.",<br/>
    */
   public function sendAnonymizationEmail(QueteurEntity $queteur, string $token)
   {
-    $this->logger->addInfo("sendAnonymizationEmail:'".$queteur->email."'");
+    $this->logger->info("sendAnonymizationEmail:'".$queteur->email."'");
 
     $anonymiseDateCarbon = new Carbon();
     $anonymiseDateString = $anonymiseDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');

@@ -27,13 +27,13 @@ $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($reques
     $troncId = $this->clientInputValidator->validateInteger('id', $args['id'], 1000000, true);
     $userId  = $decodedToken->getUid ();
 
-    $this->logger->addError("user $userId of UL $ulId is deleting tronc id=$troncId");
+    $this->logger->error("user $userId of UL $ulId is deleting tronc id=$troncId");
 
     $this->troncQueteurDBService->deleteNonReturnedTroncQueteur($troncId, $ulId, $userId);
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("unexpected exception during deletion of tronc $troncId, ul: $ulId, user: $userId", array("Exception"=>$e));
+    $this->logger->error("unexpected exception during deletion of tronc $troncId, ul: $ulId, user: $userId", array("Exception"=>$e));
     throw $e;
   }
 
@@ -67,7 +67,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
         // if the depart Date was missing, we make mandatory for the user to fill one.
         if($this->clientInputValidator->validateBoolean("dateDepartIsMissing", getParam($params, 'dateDepartIsMissing'), false, false))
         {
-            $this->logger->addInfo("Setting date depart that was missing for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart));
+            $this->logger->info("Setting date depart that was missing for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart));
             $this->troncQueteurDBService->setDepartToCustomDate($tq, $ulId, $userId);
         }
 
@@ -95,12 +95,12 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
             $responseMessageIds = $this->PubSub->publish("tronc_queteur_updated", $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
           }
 
-          $this->logger->addError("Publish responses ", array("response"=>$responseMessageIds));
+          $this->logger->error("Publish responses ", array("response"=>$responseMessageIds));
 
         }
         catch(\Exception $exception)
         {
-          $this->logger->addError("error while publishing on topic='tronc_queteur'", array("exception"=>$exception));
+          $this->logger->error("error while publishing on topic='tronc_queteur'", array("exception"=>$exception));
         }
 
       }
@@ -113,7 +113,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
         $numberOfRowUpdated = $this->troncQueteurDBService->cancelDepart($tq, $ulId, $userId);
         if($numberOfRowUpdated != 1 )
         {
-          $this->logger->addError("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null", array("tronc_queteur"=>$tq->id));
+          $this->logger->error("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null", array("tronc_queteur"=>$tq->id));
 
           throw new \Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null");
         }
@@ -124,7 +124,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
         $numberOfRowUpdated = $this->troncQueteurDBService->cancelRetour($tq, $ulId, $userId);
         if($numberOfRowUpdated != 1 )
         {
-          $this->logger->addError("numberOfRowUpdated=$numberOfRowUpdated, likely that comptage is not null", array("tronc_queteur"=>$tq->id));
+          $this->logger->error("numberOfRowUpdated=$numberOfRowUpdated, likely that comptage is not null", array("tronc_queteur"=>$tq->id));
           throw new \Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that comptage is not null");
         }
 
@@ -137,7 +137,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while updating tronc_queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $tq));
+    $this->logger->error("Error while updating tronc_queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $tq));
     throw $e;
   }
 
@@ -171,7 +171,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
 
       if($action == "getTroncQueteurForTroncIdAndSetDepart")
       {// départ du tronc
-        $this->logger->warn("TroncQueteur POST DEPART");
+        $this->logger->warning("TroncQueteur POST DEPART");
         $tq = $this->troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
 
         if($tq->depart_theorique->year != (new Carbon())->year)
@@ -196,7 +196,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
             else
             {
               $tq->departAlreadyRegistered=true;
-              //$this->logger->warn("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it", array('decodedToken'=>$decodedToken));
+              //$this->logger->warning("TroncQueteur with id='".$troncQueteur->id."' has already a 'depart' defined('".$troncQueteur->depart."'), don't update it", array('decodedToken'=>$decodedToken));
             }
           }
         }
@@ -211,7 +211,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
     }
     else
     { // préparation du tronc
-      $this->logger->warn("TroncQueteur POST PREPARATION");
+      $this->logger->warning("TroncQueteur POST PREPARATION");
       $input = $request->getParsedBody();
       $tq    = new TroncQueteurEntity($input, $this->logger);
 
@@ -222,13 +222,13 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
 
         if($tq->preparationAndDepart == true)
         {//if the user click to Save And perform the depart, we proceed and save the depart
-          $this->logger->warn("TroncQueteur POST PREPARATION DEPART NOW");
+          $this->logger->warning("TroncQueteur POST PREPARATION DEPART NOW");
           $this->troncQueteurDBService->setDepartToNow($insertResponse->lastInsertId, $ulId, $userId);
         }
       }
       else
       {
-        $this->logger->warn("TroncQueteur POST PREPARATION - TRONC IN USE");
+        $this->logger->warning("TroncQueteur POST PREPARATION - TRONC IN USE");
       }
 
       //in any case, we return the insert response
@@ -238,7 +238,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while creating tronc_queteur or updating departure date", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $tq));
+    $this->logger->error("Error while creating tronc_queteur or updating departure date", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $tq));
     throw $e;
   }
 
@@ -301,7 +301,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while searching for tronc_queteur of tronc_id=$tronc_id or queteur_id=$queteur_id", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $troncQueteur));
+    $this->logger->error("Error while searching for tronc_queteur of tronc_id=$tronc_id or queteur_id=$queteur_id", array('decodedToken'=>$decodedToken, "Exception"=>$e, "tronc_queteur" => $troncQueteur));
     throw $e;
   }
 
@@ -330,7 +330,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, 
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while fetching tronc_queteur with id $troncQueteurId", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("error while fetching tronc_queteur with id $troncQueteurId", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 });

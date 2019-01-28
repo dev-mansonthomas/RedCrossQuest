@@ -25,7 +25,7 @@ class ClientInputValidator
   public static $EMAIL_VALIDATION="email";
   public static $UUID_VALIDATION="uuid";
 
-  /** @var \Monolog\Logger */
+  /** @var \Google\Cloud\Logging\PsrLogger */
   protected $logger;
 
   public function __construct($logger)
@@ -73,7 +73,7 @@ class ClientInputValidator
 
     if (0 !== count($violations))
     {
-      $this->logger->addError("Input value fails validations", array(
+      $this->logger->error("Input value fails validations", array(
         "parameterName" => $parameterName,
         "maxLength"     => $maxLength,
         "notNull"       => $notNull,
@@ -124,7 +124,7 @@ class ClientInputValidator
 
     if (0 !== count($violations))
     {
-      $this->logger->addError("Input value fails validations", array(
+      $this->logger->error("Input value fails validations", array(
         "parameterName" => $parameterName,
         "maxValue"      => $maxValue,
         "notNull"       => $notNull,
@@ -189,7 +189,7 @@ class ClientInputValidator
       return false;
     }
 
-    $this->logger->addError("Input value fails validations", array(
+    $this->logger->error("Input value fails validations", array(
       "parameterName" => $parameterName,
       "violations"    => $violations,
       "inputValue"    => $inputValue));

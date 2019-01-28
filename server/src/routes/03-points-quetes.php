@@ -34,7 +34,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while getting point_quete '$id' of ul with id $ulId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
+    $this->logger->error("error while getting point_quete '$id' of ul with id $ulId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
     throw $e;
   }
 
@@ -61,14 +61,14 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
       if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
       {
         $ulId = $this->clientInputValidator->validateInteger('admin_ul_id', $params['admin_ul_id'], 1000, true);
-        //$this->logger->addInfo("PointQuete list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
+        //$this->logger->info("PointQuete list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
       }
 
       $query            = $this->clientInputValidator->validateString ("q"               , getParam($params,'q'               ), 40   , false);
       $point_quete_type = $this->clientInputValidator->validateInteger('point_quete_type', getParam($params,'point_quete_type'), 10   , false);
       $active           = $this->clientInputValidator->validateBoolean("active"          , getParam($params,'active'          ), false, true );
 
-      //$this->logger->addInfo("PointQuetes query for ul: $ulId");
+      //$this->logger->info("PointQuetes query for ul: $ulId");
       $pointQuetes = $this->pointQueteDBService->searchPointQuetes($query, $point_quete_type, $active, $ulId);
     }
     else
@@ -82,7 +82,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while getting point_quete of ul with id $ulId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
+    $this->logger->error("error while getting point_quete of ul with id $ulId ", array('decodedToken'=>json_encode($decodedToken), "Exception"=>json_encode($e)));
     throw $e;
   }
 
@@ -109,7 +109,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while updating point quete", array('decodedToken'=>$decodedToken, "Exception"=>$e, "pointQueteEntity"=>$pointQueteEntity));
+    $this->logger->error("Error while updating point quete", array('decodedToken'=>$decodedToken, "Exception"=>$e, "pointQueteEntity"=>$pointQueteEntity));
     throw $e;
   }
 
@@ -135,7 +135,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $respo
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while creating a new PointQuete", array('decodedToken'=>$decodedToken, "Exception"=>$e, "pointQueteEntity"=>$pointQueteEntity));
+    $this->logger->error("Error while creating a new PointQuete", array('decodedToken'=>$decodedToken, "Exception"=>$e, "pointQueteEntity"=>$pointQueteEntity));
     throw $e;
   }
   return $response;

@@ -56,7 +56,7 @@ class AuthorisationMiddleware
 
     $this->jwtSettings =  $app->getContainer()->get('settings')['jwt'];
 
-    //$this->logger->addInfo("__construct finished");
+    //$this->logger->info("__construct finished");
   }
 
 
@@ -69,11 +69,11 @@ class AuthorisationMiddleware
    */
   public function authenticate(string $tokenStr) : DecodedToken
   {
-    //$this->logger->addDebug("Authentication check on :".print_r($tokenStr, true));
+    //$this->logger->debug("Authentication check on :".print_r($tokenStr, true));
     
     if(substr_count($tokenStr, ".") !=  2)
     {
-      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0008'],print_r($tokenStr, true)));
+      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0008'],print_r($tokenStr, true)));
       return new DecodedToken( '0008');
     }
 
@@ -87,10 +87,10 @@ class AuthorisationMiddleware
 
     if(!$token->verify($signer, $jwtSecret))
     {
-      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
+      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
       return new DecodedToken( '0009');
     }
-    //$this->logger->addDebug("JWT Token not altered:".print_r($tokenStr, true));
+    //$this->logger->debug("JWT Token not altered:".print_r($tokenStr, true));
 
     $data = new ValidationData (); // It will use the current time to validate (iat, nbf and exp)
     $data->setIssuer  ($issuer  );
@@ -101,7 +101,7 @@ class AuthorisationMiddleware
 
     if(!$validation)
     {
-      $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
+      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
       $errorCode = '0010';
     }
     try
@@ -122,7 +122,7 @@ class AuthorisationMiddleware
     }
     catch(\Exception $error)
     { //getClaim can raise exception if the claim is not here
-      $this->logger->addError(AuthorisationMiddleware::$errorMessage['0011'], array("exception"=>$error));
+      $this->logger->error(AuthorisationMiddleware::$errorMessage['0011'], array("exception"=>$error));
       throw $error;
     }
 
@@ -153,11 +153,11 @@ class AuthorisationMiddleware
       //check https for non localhost request
       if($scheme!="https" && $host != "localhost" )
       {//must be https except on localhost
-        $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0001'], $scheme, $host));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0001'], $scheme, $host));
         return $this->denyRequest($response, "0001");
       }
 
-      //$this->logger->addError("$path");
+      //$this->logger->error("$path");
       //public path
       if($path == 'authenticate' || $path == 'sendInit' || $path == 'resetPassword' || $path == 'getInfoFromUUID' || strpos($path,'thanks_mailing/') === 0 )
       {
@@ -168,7 +168,7 @@ class AuthorisationMiddleware
       //get token
       if(count($authorizations) == 0)
       {
-        $this->logger->addError(AuthorisationMiddleware::$errorMessage['0002']);
+        $this->logger->error(AuthorisationMiddleware::$errorMessage['0002']);
         return $this->denyRequest($response, '0002');
       }
       $authorization = $authorizations[0];
@@ -179,7 +179,7 @@ class AuthorisationMiddleware
       //check if authenticated
       if(!($decodedToken instanceof DecodedToken) || $decodedToken->getAuthenticated() === false)
       {//token invalid
-        $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true)));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true)));
         return $this->denyRequest($response, sprintf('0003'.'.%s',$decodedToken->getErrorCode()));
       }
       
@@ -193,7 +193,7 @@ class AuthorisationMiddleware
 
         if(!is_scalar($roleIdStr))
         {
-          $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, print_r($decodedToken, true)));
+          $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, print_r($decodedToken, true)));
           return $this->denyRequest($response, '0004');
         }
 
@@ -201,13 +201,13 @@ class AuthorisationMiddleware
       }
       else
       {
-        $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0005'], $path, print_r($explodedPath, true), print_r($decodedToken, true)));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0005'], $path, print_r($explodedPath, true), print_r($decodedToken, true)));
         return $this->denyRequest($response, '0005');
       }
 
       if($decodedToken->getRoleId() != $roleId)
       {
-        $this->logger->addError(sprintf(AuthorisationMiddleware::$errorMessage['0006'], $path, print_r($decodedToken, true)));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0006'], $path, print_r($decodedToken, true)));
         return $this->denyRequest($response, '0006');
       }
 
@@ -222,7 +222,7 @@ class AuthorisationMiddleware
       }
       catch(\Exception $applicationError)
       {
-        $this->logger->addError(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError, "request" => $request));
+        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError, "request" => $request));
 
         $response500 = $response->withStatus(500);
         $response500->getBody()->write(json_encode(array("exception"=>$applicationError, "error" => "application error")));
@@ -231,14 +231,14 @@ class AuthorisationMiddleware
 
       }
       //log execution time in milliseconds; error(true/false);request path
-      $this->logger->addDebug("[PERF];".(microtime(true)-$start).";false;".$path);
+      $this->logger->debug("[PERF];".(microtime(true)-$start).";false;".$path);
 
       return $response;
     }
     catch(\Exception $error)
     {
-      $this->logger->addDebug("[PERF];".(microtime(true)-$start).";true;".$path);
-      $this->logger->addError(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$error));
+      $this->logger->debug("[PERF];".(microtime(true)-$start).";true;".$path);
+      $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$error));
       return $this->denyRequest($response, '0007');
     }
 

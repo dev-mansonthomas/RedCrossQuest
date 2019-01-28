@@ -35,18 +35,18 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
 
       if($action == "update")
       {
-        $this->logger->addInfo("Updating user activeAndRole", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
+        $this->logger->info("Updating user activeAndRole", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
 
         if($userEntity->role > $decodedToken->getRoleId() || $userEntity->role <= 0)
         {
-          $this->logger->addInfo("Connected user is trying to grand higher privilege than his to someone else", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
+          $this->logger->info("Connected user is trying to grand higher privilege than his to someone else", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
           throw new \Exception("PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 14 at /app/src/DBService/UsersDBService.php:47");
         }
 
         $numberOfUpdatedRows = $this->userDBService->updateActiveAndRole($userEntity, $decodedToken->getUlId(), $decodedToken->getRoleId());
         if($numberOfUpdatedRows == 0)
         {
-          $this->logger->addInfo("Updating user activeAndRole FAILED, no row updated", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
+          $this->logger->info("Updating user activeAndRole FAILED, no row updated", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
           return $response->getBody()->write(json_encode($userEntity));//return the original objects
         }
       }
@@ -63,7 +63,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while updating ActiveAndRole or sending init password email", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
+    $this->logger->error("Error while updating ActiveAndRole or sending init password email", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
     throw $e;
   }
 });
@@ -98,7 +98,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
       }
       else
       {
-        $this->logger->addInfo("SuperAdmin is creating an user for another UL ".$queteur->ul_id." NIVOL:'".$userEntity->nivol."' - QueteurId:'".$userEntity->queteur_id."'");
+        $this->logger->info("SuperAdmin is creating an user for another UL ".$queteur->ul_id." NIVOL:'".$userEntity->nivol."' - QueteurId:'".$userEntity->queteur_id."'");
       }
 
     }
@@ -115,7 +115,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while creating a new user", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
+    $this->logger->error("error while creating a new user", array('decodedToken'=>$decodedToken, "Exception"=>$e, "userEntity"=>$userEntity));
     throw $e;
   }
 });

@@ -1,7 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-use Monolog\Logger;
+use Google\Cloud\Logging\PsrLogger;
 
 class TroncQueteurEntity extends Entity
 {
@@ -93,10 +93,10 @@ class TroncQueteurEntity extends Entity
     * and create the class
     *
     * @param array $data The data to use to create
-    * @param Logger $logger
+    * @param PsrLogger $logger
     * @throws \Exception if a parse Date or JSON fails
     */
-    public function __construct(array $data, Logger $logger)
+    public function __construct(array $data, PsrLogger $logger)
     {
       parent::__construct($logger);
 
@@ -107,7 +107,7 @@ class TroncQueteurEntity extends Entity
       $this->getInteger('tronc_id'                    , $data);
       $this->getDate   ('depart_theorique'            , $data);
 
-      //$this->logger->addInfo("Date before/after",array("before"=>$data['depart_theorique'],"after"=>$this->depart_theorique));
+      //$this->logger->info("Date before/after",array("before"=>$data['depart_theorique'],"after"=>$this->depart_theorique));
 
       $this->getDate   ('depart'                      , $data);
       $this->getDate   ('retour'                      , $data);

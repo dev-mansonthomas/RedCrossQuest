@@ -53,7 +53,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while getting list of troncs", array('decodedToken'=>$decodedToken, 'exception'=>$e));
+    $this->logger->error("Error while getting list of troncs", array('decodedToken'=>$decodedToken, 'exception'=>$e));
     throw $e;
   }
 });
@@ -79,7 +79,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while getting tronc by id '$troncId', ulId='$ulId'", array('decodedToken'=>$decodedToken, 'exception'=>$e));
+    $this->logger->error("Error while getting tronc by id '$troncId', ulId='$ulId'", array('decodedToken'=>$decodedToken, 'exception'=>$e));
     throw $e;
   }
 });
@@ -107,7 +107,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while updating tronc ulId='$ulId'", array('decodedToken'=>$decodedToken, 'troncEntity'=>$troncEntity, 'exception'=>$e));
+    $this->logger->error("error while updating tronc ulId='$ulId'", array('decodedToken'=>$decodedToken, 'troncEntity'=>$troncEntity, 'exception'=>$e));
     throw $e;
   }
 });
@@ -134,7 +134,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/troncs', function ($request, $response, 
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while inserting Tronc for ulId='$ulId'", array('decodedToken'=>$decodedToken, 'troncEntity'=>$troncEntity, 'exception'=>$e));
+    $this->logger->error("Error while inserting Tronc for ulId='$ulId'", array('decodedToken'=>$decodedToken, 'troncEntity'=>$troncEntity, 'exception'=>$e));
     throw $e;
   }
 });

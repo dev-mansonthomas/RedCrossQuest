@@ -9,7 +9,7 @@
 namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
-use Monolog\Logger;
+use Google\Cloud\Logging\PsrLogger;
 use RedCrossQuest\Service\ClientInputValidator;
 
 class Entity
@@ -20,7 +20,7 @@ class Entity
    */
   protected $_fieldList
 ;
-  public function __construct(Logger $logger)
+  public function __construct(PsrLogger $logger)
   {
     $this->logger               = $logger;
     $this->clientInputValidator = new ClientInputValidator($logger);
@@ -52,7 +52,7 @@ class Entity
     if(array_key_exists($key, $data))
     {
       $value = $data[$key];
-      //$this->logger->addError("integer '$key'=>'$value' ".gettype($data[$key]));
+      //$this->logger->error("integer '$key'=>'$value' ".gettype($data[$key]));
 
       $this->$key = "$value"=="0"? 0 : $this->clientInputValidator->validateInteger($key, $data[$key], 100000000, false, null);
     }
@@ -128,7 +128,7 @@ class Entity
       }
       catch(\Exception $e)
       {
-        $this->logger->addError("Error while decoding json for key '$key'", array("exception"=> $e, "data"=>$data));
+        $this->logger->error("Error while decoding json for key '$key'", array("exception"=> $e, "data"=>$data));
         throw $e;
       }
 
@@ -159,7 +159,7 @@ class Entity
     {
       if(is_array($data[$key]))
       {
-        //$this->logger->addError("json parsed momentjs");
+        //$this->logger->error("json parsed momentjs");
         // json parsed momentjs object : {"date":"2017-06-05 03:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"}
         $array = $data[$key];
         try
@@ -169,7 +169,7 @@ class Entity
         }
         catch(\Exception $e)
         {
-          $this->logger->addError("Error while decoding date (from momentjs date) for key '$key'", array("exception"=> $e, "data"=>$data));
+          $this->logger->error("Error while decoding date (from momentjs date) for key '$key'", array("exception"=> $e, "data"=>$data));
           throw $e;
         }
       }
@@ -187,15 +187,15 @@ class Entity
           if(strpos($stringValue, 'T') !== false)
           {
             //json javascript date : "2017-06-04T23:00:00.000Z"
-            //$this->logger->addError("json javascript ".$stringValue);
+            //$this->logger->error("json javascript ".$stringValue);
             try
             {
               $this->$key = Carbon::parse($stringValue);
-              //$this->logger->addError("json javascript parsed : ".$this->$key);
+              //$this->logger->error("json javascript parsed : ".$this->$key);
             }
             catch(\Exception $e)
             {
-              $this->logger->addError("Error while decoding date (from js date) for key '$key'", array("exception"=> $e, "data"=>$data));
+              $this->logger->error("Error while decoding date (from js date) for key '$key'", array("exception"=> $e, "data"=>$data));
               throw $e;
             }
 
@@ -205,16 +205,16 @@ class Entity
             // from DB Date :"2016-06-09 00:36:43"
             //  The parsing is done with UTC timezone, as dates are stored with this timezone in DB
             //  Then we switch the date to Paris Timezone to reflect the Timezone of the client
-            //$this->logger->addError("DB date '$stringValue'");
+            //$this->logger->error("DB date '$stringValue'");
             try
             {
               $this->$key = Carbon::parse($stringValue, 'UTC')->setTimezone("Europe/Paris");
 
-             // $this->logger->addError("DB date Carbon : ".$this->$key);
+             // $this->logger->error("DB date Carbon : ".$this->$key);
             }
             catch(\Exception $e)
             {
-              $this->logger->addError("Error while decoding date (from DB date) for key '$key'", array("exception"=> $e, "data"=>$data));
+              $this->logger->error("Error while decoding date (from DB date) for key '$key'", array("exception"=> $e, "data"=>$data));
               throw $e;
             }
           }

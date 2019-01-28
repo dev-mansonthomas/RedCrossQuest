@@ -27,7 +27,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $res
 
     $params = $request->getQueryParams();
 
-    $this->logger->addInfo("params ".getParam($params,'deleted'         ), array("params"=>$params));
+    $this->logger->info("params ".getParam($params,'deleted'         ), array("params"=>$params));
 
     $query   = $this->clientInputValidator->validateString ("q"       , getParam($params,'q'               ), 100  , false );
     $deleted = $this->clientInputValidator->validateBoolean("deleted" , getParam($params,'deleted'         ), false, false );
@@ -37,18 +37,18 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $res
     if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
     {
       $ulId = $this->clientInputValidator->validateInteger('admin_ul_id', $args['admin_ul_id'], 1000, true);
-      //$this->logger->addInfo("NamedDonation list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
+      //$this->logger->info("NamedDonation list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
     }
 
 
-    $this->logger->addInfo("searching named donation", array('q'=>$query, 'deleted'=>$deleted, 'year'=>$year));
+    $this->logger->info("searching named donation", array('q'=>$query, 'deleted'=>$deleted, 'year'=>$year));
     $namedDonations = $this->namedDonationDBService->getNamedDonations($query, $deleted, $year, $ulId);
 
     return $response->getBody()->write(json_encode($namedDonations));
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while fetching the NamedDonation for a year($year), deleted($deleted), query($query)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("Error while fetching the NamedDonation for a year($year), deleted($deleted), query($query)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 
@@ -76,7 +76,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request,
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while geting namedDonation $id", array("Exception"=>$e));
+    $this->logger->error("Error while geting namedDonation $id", array("Exception"=>$e));
     throw $e;
   }
 });
@@ -102,7 +102,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request,
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while updating namedDonation", array('namedDonationEntity'=>$namedDonationEntity, "Exception"=>$e));
+    $this->logger->error("Error while updating namedDonation", array('namedDonationEntity'=>$namedDonationEntity, "Exception"=>$e));
     throw $e;
   }
   return $response;
@@ -130,7 +130,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $re
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while creating named donation", array('namedDonationEntity'=>$namedDonationEntity, "Exception"=>$e));
+    $this->logger->error("error while creating named donation", array('namedDonationEntity'=>$namedDonationEntity, "Exception"=>$e));
     throw $e;
   }
   return $response;

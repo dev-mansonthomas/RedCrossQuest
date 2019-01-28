@@ -10,11 +10,11 @@ namespace RedCrossQuest\Service;
 
 use SendGrid;
 use SendGrid\Mail\Mail;
-use Monolog\logger;
+use \Google\Cloud\Logging\PsrLogger;
 
 class MailService
 {
-  /** @var \Monolog\Logger */
+  /** @var \Google\Cloud\Logging\PsrLogger */
   protected $logger;
 
   protected $sendgridAPIKey;
@@ -22,7 +22,7 @@ class MailService
   protected $deploymentType;
 
   /**
-   * @param logger $logger          Logger instance
+   * @param \Google\Cloud\Logging\PsrLogger $logger          Logger instance
    * @param string $sendgridAPIKey  The SendGrid API
    * @param string $sendgridSender  The sender email address
    * @param string $deploymentType  The deploymentType
@@ -70,7 +70,7 @@ class MailService
 
       $response = (new SendGrid($this->sendgridAPIKey))->send($email);
 
-      $this->logger->addInfo("Sending email successfully",
+      $this->logger->info("Sending email successfully",
         array(
           'mailType'       => $mailType,
           'deployment'     => $deploymentLogging,
@@ -82,7 +82,7 @@ class MailService
     }
     catch(\Exception $e)
     {
-      $this->logger->addError("Error while sending email",
+      $this->logger->error("Error while sending email",
         array(
           'application'    => $application,
           'mailType'       => $mailType,

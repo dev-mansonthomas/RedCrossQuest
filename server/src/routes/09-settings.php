@@ -40,7 +40,7 @@ $app->get('/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response,
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while getting settings", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("Error while getting settings", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 });

@@ -30,7 +30,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, 
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Error while fetching the Mailing Summary for UL ($ulId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("Error while fetching the Mailing Summary for UL ($ulId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 });
@@ -56,7 +56,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response,
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while sending batch email", array('ulId'=>$ulId, "Exception"=>$e));
+    $this->logger->error("error while sending batch email", array('ulId'=>$ulId, "Exception"=>$e));
     throw $e;
   }
   return $response;
@@ -78,7 +78,7 @@ $app->post('/thanks_mailing/{guid}', function ($request, $response, $args)
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while marking spotifre report as read (Merci) for guid", array('guid'=>$guid, "Exception"=>$e));
+    $this->logger->error("error while marking spotifre report as read (Merci) for guid", array('guid'=>$guid, "Exception"=>$e));
     throw $e;
   }
   return $response;

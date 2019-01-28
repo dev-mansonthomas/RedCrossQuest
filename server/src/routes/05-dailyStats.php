@@ -36,20 +36,20 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
     }
 
 
-    //$this->logger->addInfo("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
+    //$this->logger->info("DailyStats list - UL ID '".$ulId."'' role ID : $roleId");
     $dailyStats = $this->dailyStatsBeforeRCQDBService->getDailyStats($ulId, $year);
 
     if($dailyStats !== null && count($dailyStats) > 0)
     {
-      $this->logger->addInfo($dailyStats[0]->generateCSVHeader());
-      $this->logger->addInfo($dailyStats[0]->generateCSVRow   ());
+      $this->logger->info($dailyStats[0]->generateCSVHeader());
+      $this->logger->info($dailyStats[0]->generateCSVRow   ());
 
     }
     return $response->getBody()->write(json_encode($dailyStats));
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("fetch the dailyStats for a year($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("fetch the dailyStats for a year($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
 
@@ -73,7 +73,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("Update one day stats ", array('decodedToken'=>$decodedToken, "Exception"=>$e, "dailyStatsBeforeRCQEntity"=>$dailyStatsBeforeRCQEntity));
+    $this->logger->error("Update one day stats ", array('decodedToken'=>$decodedToken, "Exception"=>$e, "dailyStatsBeforeRCQEntity"=>$dailyStatsBeforeRCQEntity));
     throw $e;
   }
   return $response;
@@ -95,7 +95,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respon
   }
   catch(\Exception $e)
   {
-    $this->logger->addError("error while creating year ($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    $this->logger->error("error while creating year ($year)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
     throw $e;
   }
   return $response;

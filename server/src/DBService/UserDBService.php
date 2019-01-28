@@ -253,7 +253,7 @@ LIMIT 1
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);
 
-    //$this->logger->addInfo( "queryResult=$queryResult, queteurId=$userId, ulId=$ulId, roleId=$roleId, count=".$stmt->rowCount());
+    //$this->logger->info( "queryResult=$queryResult, queteurId=$userId, ulId=$ulId, roleId=$roleId, count=".$stmt->rowCount());
 
     $count = $stmt->rowCount();
 
@@ -292,7 +292,7 @@ LIMIT 1
     $stmt = $this->db->prepare($sql);
     $stmt->execute(["uuid" => $uuid]);
 
-    //$this->logger->addInfo( "queryResult=$queryResult, $uuid, ".$stmt->rowCount());
+    //$this->logger->info( "queryResult=$queryResult, $uuid, ".$stmt->rowCount());
 
     $count = $stmt->rowCount();
 

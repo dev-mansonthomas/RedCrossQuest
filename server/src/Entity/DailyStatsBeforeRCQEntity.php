@@ -1,7 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-use Monolog\Logger;
+use Google\Cloud\Logging\PsrLogger;
 
 class DailyStatsBeforeRCQEntity  extends Entity
 {
@@ -16,10 +16,10 @@ class DailyStatsBeforeRCQEntity  extends Entity
    * and create the class
    *
    * @param array $data The data to use to create
-   * @param Logger $logger
+   * @param PsrLogger $logger
    * @throws \Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data, Logger $logger)
+  public function __construct(array $data, PsrLogger $logger)
   {
     parent::__construct($logger);
 
