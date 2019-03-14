@@ -248,8 +248,8 @@
       //vm.uploadFiles();
 
       if(angular.isDefined(vm.current.anonymization_token) &&
-          vm.current.anonymization_token != null &&
-          vm.current.anonymization_token != "" &&
+          vm.current.anonymization_token !=  null &&
+          vm.current.anonymization_token !== ""   &&
          !vm.current.unAnonymizeConfirmed)
       {
         vm.current.unanonymizeAskConfirmation=true;
@@ -363,7 +363,8 @@
       {
         try
         {
-          $scope.queteur.current.ul_id = newValue.id;
+          $scope.queteur.current.ul_id   = newValue.id;
+          $scope.queteur.current.ul_name = newValue.full_name;
         }
         catch(exception)
         {

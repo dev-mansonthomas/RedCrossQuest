@@ -305,7 +305,7 @@ LIMIT 1
     else
     {
       $stmt->closeCursor();
-      throw new \Exception ("Update didn't update the correct number of rows($count) for $uuid");
+      throw new \Exception ("Update didn't update the correct number of rows($count) for '$uuid' ");
     }
 
   }

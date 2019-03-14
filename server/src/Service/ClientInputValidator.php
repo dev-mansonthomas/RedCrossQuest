@@ -46,7 +46,7 @@ class ClientInputValidator
   {
 
     if(!$notNull && $inputValue == null)
-      return null;
+      return (string) null;
 
     $validator = Validation::createValidator();
 
@@ -82,7 +82,8 @@ class ClientInputValidator
         "inputValue"    => $inputValue));
       throw new \InvalidArgumentException("Input value fails string validations");
     }
-
+//trim(htmlentities($inputValue, ENT_QUOTES | ENT_HTML5, "UTF-8"));
+    //issue with email address where it breaks the validation.
     return trim($inputValue);
   }
 
@@ -150,7 +151,7 @@ class ClientInputValidator
       throw new \InvalidArgumentException("Coding error, value can be null, but no default value is given. parameterName='$parameterName', inputValue='$inputValue', notNull='$notNull' defaultValueWhenNull='$defaultValueWhenNull'");
 
     if(!$notNull && $inputValue == null)
-      return $defaultValueWhenNull;
+      return (bool)$defaultValueWhenNull;
 
     if($inputValue === "1" || $inputValue === 1)
     {

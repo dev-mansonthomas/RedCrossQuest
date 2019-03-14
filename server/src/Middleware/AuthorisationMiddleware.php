@@ -151,7 +151,7 @@ class AuthorisationMiddleware
       $host   = $request->getUri()->getHost   ();
 
       //check https for non localhost request
-      if($scheme!="https" && $host != "localhost" )
+      if($scheme!="https" && $host != "localhost" && $host != "127.0.0.1" )
       {//must be https except on localhost
         $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0001'], $scheme, $host));
         return $this->denyRequest($response, "0001");
@@ -159,7 +159,12 @@ class AuthorisationMiddleware
 
       //$this->logger->error("$path");
       //public path
-      if($path == 'authenticate' || $path == 'sendInit' || $path == 'resetPassword' || $path == 'getInfoFromUUID' || strpos($path,'thanks_mailing/') === 0 )
+      if($path == 'authenticate'      ||
+         $path == 'sendInit'          ||
+         $path == 'resetPassword'     ||
+         $path == 'getInfoFromUUID'   ||
+         strpos($path,'thanks_mailing/') === 0 ||
+         strpos($path,'redQuest/'      ) === 0   )
       {
         return $next($request, $response);
       }

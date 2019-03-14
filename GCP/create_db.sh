@@ -2,7 +2,7 @@
 #
 # Usage:  ./create_db.sh fr test
 # Usage:  ./create_db.sh fr prod
-#
+# Usage:  ./create_db.sh fr prod skip-instance
 # This script
 # * creates a MySQL instance
 # * set the root password
@@ -35,15 +35,15 @@ COUNTRY=$1
 ENV=$2
 SKIP_INSTANCE_CREATION=$3
 
-if [ "${COUNTRY}1" != "fr1" ]
+if [[ "${COUNTRY}1" != "fr1" ]]
 then
   echo "'${COUNTRY}' the first parameter (country) is not valid. Valid values are ['fr']"
   exit 1
 fi
 
-if [ "${ENV}1" != "test1" ] && [ "${ENV}1" != "prod1" ]
+if [[ "${ENV}1" != "dev1" ]] && [[ "${ENV}1" != "test1" ]] && [[ "${ENV}1" != "prod1" ]]
 then
-  echo "'${ENV}' the second parameter (env) is not valid. Valid values are ['test', 'prod']"
+  echo "'${ENV}' the second parameter (env) is not valid. Valid values are ['dev', 'test', 'prod']"
   exit 1
 fi
 
@@ -54,7 +54,7 @@ mkdir -p logs tmp
 
 . ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
 
-if [ "${MYSQL_BACKUP}1" = "on1" ]
+if [[ "${MYSQL_BACKUP}1" = "on1" ]]
 then
   echo "backup enabled"
   BACKUP="--backup"
@@ -67,7 +67,7 @@ else
   BACKUP_ENABLE_BIN_LOG=""
 fi
 
-if [ "${SKIP_INSTANCE_CREATION}1" != "skip-instance1" ]
+if [[ "${SKIP_INSTANCE_CREATION}1" != "skip-instance1" ]]
 then
 
     gcloud sql instances create ${MYSQL_INSTANCE}    \
@@ -77,7 +77,7 @@ then
             ${BACKUP_ENABLE_BIN_LOG}                 \
             --database-flags=${MYSQL_FLAGS}          \
             --database-version=${MYSQL_DB_VERSION}   \
-            --gce-zone=${MYSQL_ZONE}                 \
+            --zone=${MYSQL_ZONE}                     \
             --maintenance-release-channel=production \
             --maintenance-window-day=MON             \
             --maintenance-window-hour=4              \
@@ -111,21 +111,21 @@ cp ~/.cred/.my.cnf-${COUNTRY}-${ENV} ~/.my.cnf
 echo    "drop database if exists ${MYSQL_DB};" >  ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
 cat     "${MYSQL_DB_DUMP}"                     >> ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
 
-if [ "${ENV}1" != "prod1" ]
+if [[ "${ENV}1" != "prod1" ]]
 then
     echo "proceeding to NON-production import (${ENV})"
     sed -i '' -e s/${MYSQL_DB_DUMP_DB_NAME_ORI}/${MYSQL_DB}/g ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
     echo "importing dump"
-    mysql < ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
+    cat ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql | mysql
     echo "anonymising data"
-    mysql ${MYSQL_DB} < ./sql/AnonymiseDB.sql
+    mysql ${MYSQL_DB}  < ./sql/AnonymiseDB.sql
 else
     echo "proceeding to production import (${ENV})"
-    mysql @./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql
+    cat ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql | mysql
 fi
 
 echo "creating user"
-mysql ${MYSQL_DB} < ./tmp/CreateUser.sql
+cat ./tmp/CreateUser.sql | mysql
 
 #restore the backup
 cp ~/.my.cnf.bak ~/.my.cnf

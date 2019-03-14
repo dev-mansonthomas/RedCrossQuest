@@ -157,7 +157,7 @@
               vm.loading = false;
             }
             else {
-              vm.error = 'Une erreur est survenue. Veuillez contacter votre cadre local ou départemental';
+              vm.error = 'Une erreur est survenue. Avez vous rempli le formulaire moins d\'une heure après avoir recçue l\'email ? <br/> <strong>🐢</strong> Si ce n\'est pas le cas, retourner sur la page de login et recommencez la procédure. <br/>Si ça ne fonctionne toujours pas, Veuillez contacter votre cadre local ou départemental';
               vm.success = null;
               vm.loading = false;
             }

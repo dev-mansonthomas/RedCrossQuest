@@ -76,7 +76,29 @@
       var parameters   = 'token="'+query.i+'";RCQURL="'+window.location.protocol+'//'+window.location.host+'";'; //
 
       var spotfireApp       = null;
-      var customizationInfo = null;
+      var customizationInfo = {};
+
+
+      customizationInfo.showAbout                   = false;
+      customizationInfo.showAnalysisInformationTool = false;
+      customizationInfo.showAuthor                  = false;
+      customizationInfo.showClose                   = false;
+      customizationInfo.showCustomizableHeader      = false;
+      customizationInfo.showDodPanel                = false;
+      customizationInfo.showExportFile              = false;
+      customizationInfo.showExportVisualization     = false;
+      customizationInfo.showFilterPanel             = false;
+      customizationInfo.showHelp                    = false;
+      customizationInfo.showLogout                  = false;
+      customizationInfo.showPageNavigation          = true;
+      customizationInfo.showReloadAnalysis          = false;
+      customizationInfo.showStatusBar               = true;
+      customizationInfo.showToolBar                 = false;
+      customizationInfo.showUndoRedo                = false;
+
+
+
+
       var reloadInstances   = true;
       var apiVersion        = "7.14";
 

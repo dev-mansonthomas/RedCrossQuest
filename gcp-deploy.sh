@@ -3,15 +3,15 @@
 COUNTRY=$1
 ENV=$2
 
-if [ "${COUNTRY}1" != "fr1" ]
+if [[ "${COUNTRY}1" != "fr1" ]]
 then
   echo "'${COUNTRY}' the first parameter (country) is not valid. Valid values are ['fr']"
   exit 1
 fi
 
-if [ "${ENV}1" != "test1" ] && [ "${ENV}1" != "prod1" ]
+if  [[ "${ENV}1" != "dev1" ]] && [[ "${ENV}1" != "test1" ]] && [[ "${ENV}1" != "prod1" ]]
 then
-  echo "'${ENV}' the second parameter (env) is not valid. Valid values are ['test', 'prod']"
+  echo "'${ENV}' the second parameter (env) is not valid. Valid values are ['dev', 'test', 'prod']"
   exit 1
 fi
 
@@ -82,7 +82,15 @@ cd -
 # Get the correct app.yaml for the env
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml               server/app.yaml
 #update the INSTANCE name in the file
+sed -i '' -e "s/¤COUNTRY¤/${COUNTRY}/g"                 server/app.yaml
+sed -i '' -e "s/¤ENV¤/${ENV}/g"                         server/app.yaml
 sed -i '' -e "s/¤MYSQL_INSTANCE¤/${MYSQL_INSTANCE}/g"   server/app.yaml
+sed -i '' -e "s/¤MYSQL_USER¤/${MYSQL_USER}/g"           server/app.yaml
+sed -i '' -e "s/¤MYSQL_PASSWORD¤/${MYSQL_PASSWORD}/g"   server/app.yaml
+sed -i '' -e "s/¤MYSQL_DB¤/${MYSQL_DB}/g"               server/app.yaml
+
+#cat server/app.yaml
+
 
 cp ~/.cred/phinx.yml                          server/phinx.yml
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-settings.php server/src/settings.php
@@ -106,8 +114,8 @@ rm server/app.yaml
 #restore default file
 cp server/phinx-template.yml        server/phinx.yml
 
-# DO NOT USE VARIABLE for the next line, we do want to restore the dev version
-cp ~/.cred/rcq-fr-dev-settings.php  server/src/settings.php
+# DO NOT USE VARIABLE for the next line, we do want to restore the local dev version
+cp ~/.cred/rcq-fr-local-settings.php  server/src/settings.php
 
 kill -15 $CLOUD_PROXY_PID
 

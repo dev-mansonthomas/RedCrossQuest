@@ -83,24 +83,22 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
          */
 
         $responseMessageIds = null;
+        $messageProperties  = ['ulId'=>$ulId,'uId'=>$userId, 'queteurId'=>$tq->queteur_id, 'tqId'=>$tq->id];
         try
         {
-          //TODO remove || true, implement properties, use configuration for topic name
-          if($tq->comptage == null || true)
-          {
-            $responseMessageIds = $this->PubSub->publish("tronc_queteur"        , $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
-          }
-          else
-          {
-            $responseMessageIds = $this->PubSub->publish("tronc_queteur_updated", $tq->prepareForPublish(), ['location' => 'Detroit'], true, true);
-          }
-
-          $this->logger->error("Publish responses ", array("response"=>$responseMessageIds));
-
+          $this->PubSub->publish(
+            $tq->comptage == null ?
+              $this->settings['PubSub']['tronc_queteur_topic']:
+              $this->settings['PubSub']['tronc_queteur_update_topic'],
+            $tq->prepareForPublish(),
+            $messageProperties,
+            true,
+            true);
         }
         catch(\Exception $exception)
         {
-          $this->logger->error("error while publishing on topic='tronc_queteur'", array("exception"=>$exception));
+          $this->logger->error("error while publishing on topic", array("messageProperties"=>$messageProperties,"exception"=>$exception));
+          //do not rethrow
         }
 
       }

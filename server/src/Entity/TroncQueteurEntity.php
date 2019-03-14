@@ -229,6 +229,8 @@ class TroncQueteurEntity extends Entity
       unset($this->time_spent_in_hours  );
       unset($this->first_name           );
       unset($this->last_name            );
+      unset($this->clientInputValidator );
+
 
       return $this;
     }

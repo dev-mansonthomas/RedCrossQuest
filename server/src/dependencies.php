@@ -47,6 +47,10 @@ $container['renderer'] = function (\Slim\Container $c)
 
 
 /**
+ *
+ * pecl install grpc
+ * pecl install protobuf
+ *
  * @property PsrLogger    $logger
  * @param \Slim\Container $c
  * @return PsrLogger
@@ -61,7 +65,7 @@ $container['logger'] = function (\Slim\Container $c)
       'type'=>'gae_app'
     ],
     'labels'  =>null
-    ]);
+  ]);
 
 
   return $logger;

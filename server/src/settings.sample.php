@@ -6,12 +6,10 @@ return [
     'renderer'            => [
       'template_path' => __DIR__ . '/../templates/',
     ],
-    // Logging settings
+    // logging settings
     'logger'              => [
-      'name'      => 'RCQ'                        ,
-      'path'      => __DIR__ . '/../logs/app.log' ,
-      'level'     => 'info'                       ,
-      'max_files' => 10
+      'name'      => 'RCQ' ,
+      'level'     => 'info'
     ],
     'gcp' => [
       'projectId' => 'redcrossquest-fr-test',

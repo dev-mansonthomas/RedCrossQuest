@@ -30,7 +30,8 @@
         "ext-PDO" : "^7.2",
         "ext-json": "^1.6",
         "symfony/validator": "^4.2",
-        "egulias/email-validator": "^2.1"
+        "egulias/email-validator": "^2.1",
+        "google/cloud": "^0.93.0"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}
