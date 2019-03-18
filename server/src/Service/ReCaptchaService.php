@@ -32,6 +32,10 @@ class ReCaptchaService
     {
       $this->redCrossQuestHost = "localhost";
     }
+    else if($appUrl == "http://rcq:3000/")
+    {
+      $this->redCrossQuestHost = "rcq";
+    }
     else
     {
       $this->redCrossQuestHost      = substr(substr(explode(":", $appUrl)[1],2), 0, -1);

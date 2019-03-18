@@ -11,9 +11,6 @@ return [
       'name'      => 'RCQ' ,
       'level'     => 'info'
     ],
-    'gcp' => [
-      'projectId' => 'redcrossquest-fr-test',
-    ],
     'db'          => [
       'dsn'  => getenv('MYSQL_DSN'     ),
       'user' => getenv('MYSQL_USER'    ),
@@ -24,20 +21,20 @@ return [
       'tronc_queteur_update_topic' => 'tronc_queteur_update'
     ],
     'jwt'         => [
-      'secret'   => 'secret',
-      'issuer'   => 'https://rcq.host.com',
-      'audience' => 'https://rcq.host.com'
+      'secret'   => getenv('JWT_SECRET'     ),
+      'issuer'   => getenv('JWT_ISSUER'     ),
+      'audience' => getenv('JWT_ISSUER'     )
     ],
     'ReCaptcha'   => [
-      'secret'                => 'secret',
+      'secret'                => getenv('RECAPTCHA_SECRET'),
       'lowestAcceptableScore' => 0.7
     ],
     'appSettings' => [
       'sessionLength'    => 6                                         , //hours
-      'appUrl'           => 'https://rcq.host.com/'         ,
+      'appUrl'           => getenv('APP_URL')                ,
       'resetPwdPath'     => '#!/resetPassword?key='                   ,
-      'deploymentType'   => 'T'                                       ,   //D:Dev, T:Testing, P:Production,
-      'gmapAPIKey'       => 'secret' ,
+      'deploymentType'   => getenv('APP_ENV')                ,   //D:Dev, T:Testing, P:Production,
+      'gmapAPIKey'       => getenv('GOOGLE_MAPS_API')        ,
       'RGPD'             => 'https://goo.gl/UpTLAK'                   ,
       'graphPath'        => 'graph-display.html'                      ,
       'queteurDashboard' => 'Merci'                                   ,

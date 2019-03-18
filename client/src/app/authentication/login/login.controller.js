@@ -13,7 +13,7 @@
 
     var forceSSL = function ()
     {
-      if($location.host() !=='localhost' && $location.protocol() !== 'https')
+      if($location.host() !=='localhost' && $location.host() !=='rcq' && $location.protocol() !== 'https')
       {
         $window.location.href = $location.absUrl().replace('http', 'https');
       }
