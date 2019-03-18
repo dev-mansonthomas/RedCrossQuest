@@ -56,7 +56,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
     try
     {
 
-      if(array_key_exists('anonymization_token',$params) && $roleId >= 4)
+      if(array_key_exists('anonymization_token',$params) && strlen($params['anonymization_token']) > 0 && $roleId >= 4)
       {// If the token is given, then other search criteria are ignored
         $queteurs = $this->queteurDBService->getQueteurByAnonymizationToken(
           $this->clientInputValidator->validateString("anonymization_token", getParam($params,'anonymization_token'), 36 , true, ClientInputValidator::$UUID_VALIDATION),

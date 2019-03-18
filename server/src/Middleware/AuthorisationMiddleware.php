@@ -151,7 +151,7 @@ class AuthorisationMiddleware
       $host   = $request->getUri()->getHost   ();
 
       //check https for non localhost request
-      if($scheme!="https" && $host != "localhost" && $host != "127.0.0.1" )
+      if($scheme!="https" && $host != "localhost" && $host != "127.0.0.1" && $host != "rcq" )
       {//must be https except on localhost
         $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0001'], $scheme, $host));
         return $this->denyRequest($response, "0001");

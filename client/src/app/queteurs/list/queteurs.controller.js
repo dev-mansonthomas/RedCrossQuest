@@ -21,7 +21,6 @@
     $rootScope.$emit('title-updated', 'Liste des quêtêurs');
 
     vm.typeBenevoleList=[
-      {id:'',label:''},
       {id:1 ,label:'Action Sociale'},
       {id:2 ,label:'Secours'},
       {id:3 ,label:'Bénévole d\'un Jour'},

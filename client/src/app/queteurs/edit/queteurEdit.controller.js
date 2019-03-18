@@ -265,6 +265,7 @@
         }
         else
         {
+          vm.current.ul_name=''; // ul_name : Id - name - postal code - city : too long for server side validation
           vm.current.$save  (vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
         }
       }
