@@ -12,14 +12,16 @@
   /** @ngInject */
   function QueteurEditController($rootScope, $scope, $log, $routeParams, $location, $localStorage, $timeout,
                                  QueteurResource, UserResource, TroncQueteurResource, UniteLocaleResource,
-                                 moment, Upload, DateTimeHandlingService)
+                                 moment, DateTimeHandlingService)
   {
     var vm = this;
 
-    var queteurId     = $routeParams.id;
-    vm.currentUserRole= $localStorage.currentUser.roleId;
-    vm.ulId           = $localStorage.currentUser.ulId;
+    var queteurId      = $routeParams.id;
+    vm.isRegistration  = $routeParams.registration === "1";
+    vm.currentUserRole = $localStorage.currentUser.roleId;
+    vm.ulId            = $localStorage.currentUser.ulId;
 
+    vm.rgpdVideoUrl    = $localStorage.guiSettings.RGPDVideo;
 
     vm.youngestBirthDate=moment().subtract(1  ,'years').toDate();
     vm.oldestBirthDate  =moment().subtract(100,'years').toDate();
@@ -53,6 +55,7 @@
       vm.current.ul_id    = vm.ulId;
       vm.current.ul_name  = $localStorage.currentUser.ulName;
       vm.current.active   = true;
+      vm.isRegistration   = false;
 
       vm.current.unAnonymizeConfirmed     = false;
       vm.current.anonymizeAskConfirmation = false;
@@ -74,7 +77,15 @@
         vm.current = queteur;
 
 
-        $rootScope.$emit('title-updated', 'Edition du quêteur - '+vm.current.id+' - '+vm.current.first_name+' '+vm.current.last_name);
+        if(vm.isRegistration)
+        {
+          $rootScope.$emit('title-updated', 'Validation de l\'inscription d\'un quêteur - '+vm.current.id+' - '+vm.current.first_name+' '+vm.current.last_name);
+        }
+        else
+        {
+          $rootScope.$emit('title-updated', 'Edition du quêteur - '+vm.current.id+' - '+vm.current.first_name+' '+vm.current.last_name);
+        }
+
 
         if(angular.isDefined(vm.current.created))
         {
@@ -132,44 +143,58 @@
           vm.current.anonymization_date = vm.handleDate(vm.current.anonymization_date);
         }
 
-        TroncQueteurResource.getTroncsOfQueteur({'queteur_id': queteurId}).$promise.then(
-          function success(data)
-          {
-            var dataLength = data.length;
-            for(var i=0;i<dataLength;i++)
+        if(!vm.isRegistration)
+        {
+          TroncQueteurResource.getTroncsOfQueteur({'queteur_id': queteurId}).$promise.then(
+            function success(data)
             {
-              data[i].depart            = vm.handleDate(data[i].depart);
-              data[i].depart_theorique  = vm.handleDate(data[i].depart_theorique);
-              data[i].retour            = vm.handleDate(data[i].retour);
-
-              if(data[i].retour !==null && data[i].depart !== null)
+              var dataLength = data.length;
+              for(var i=0;i<dataLength;i++)
               {
-                data[i].duration = moment.duration(moment(data[i].retour).diff(moment(data[i].depart))).asMinutes();
+                data[i].depart            = vm.handleDate(data[i].depart);
+                data[i].depart_theorique  = vm.handleDate(data[i].depart_theorique);
+                data[i].retour            = vm.handleDate(data[i].retour);
+
+                if(data[i].retour !==null && data[i].depart !== null)
+                {
+                  data[i].duration = moment.duration(moment(data[i].retour).diff(moment(data[i].depart))).asMinutes();
+                }
               }
+
+              vm.current.troncs_queteur  = data;
+            },
+            function error(error)
+            {
+              $log.error(error);
             }
-
-            vm.current.troncs_queteur  = data;
-          },
-          function error(error)
-          {
-            $log.error(error);
-          }
-
-        );
-
+          );
+        }
+        else
+        {
+          //to help the operator to see if the registration is not a duplicate of an existing user.
+          //TODO:  in case of duplicate, offer a button to attach the registration to the existing user
+          //in RedQuest : it means attaching the authentication mode to the existing queteur instead of the registration
+          vm.searchSimilar();
+        }
       }
       catch(ex)
       {
-        $log.error(queteur);
-        $log.error(ex);
+        $log.error(JSON.stringify(queteur));
+        $log.error(JSON.stringify(ex));
       }
     };
 
 // Load data or create new queteur (after function definition)
     if (angular.isDefined(queteurId))
     {
-      QueteurResource.get({ 'id': queteurId }).$promise.then(vm.handleQueteur);
-
+      if(vm.isRegistration)
+      {
+        QueteurResource.getQueteurRegistration({ 'id': queteurId }).$promise.then(vm.handleQueteur);
+      }
+      else
+      {
+        QueteurResource.get({ 'id': queteurId }).$promise.then(vm.handleQueteur);
+      }
     }
     else
     {
@@ -182,7 +207,16 @@
       vm.current.saveInProgress=false;
       if(typeof response.queteurId ==='number')
       {
-        vm.goToQueteur(response.queteurId);
+        if(response.queteurId > 0)
+        {
+
+          vm.goToQueteur(response.queteurId);
+        }
+        else
+        {
+          delete $location.$$search.registration;
+          $location.path('/queteurs/pendingValidation').replace();
+        }
       }
 
       vm.savedSuccessfully                = true;
@@ -204,39 +238,6 @@
       vm.errorWhileSavingDetails=error;
     };
 
-    vm.uploadFiles=function()
-    {
-      var queteurId=vm.current.id;
-
-
-      var upload = Upload.upload({
-        url: "/rest/"+ $localStorage.currentUser.roleId+"/ul/"+ $localStorage.currentUser.ulId+"/queteurs/"+queteurId+"/fileUpload",
-        data: {
-          queteurId: queteurId,
-          signedForms:
-            [
-              {queteur1Day        : vm.current.temporary_volunteer_form},
-              {parentAuthorization: vm.current.parent_authorization_form}
-            ]
-        },
-        method:'PUT'
-      });
-
-      upload.then(function success(response)
-      {
-        $log.info('file ' + (response.config.data.file ? response.config.data.file.name:'undefined') + 'is uploaded successfully. Response: ' + response.data);
-      },
-      function error(error)
-      {
-        $log.error(error);
-      },
-      function progress(evt)
-      {
-        $log.info('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :'+ (evt.config.data.file ? evt.config.data.file.name:'undefined'));
-      });
-
-    };
-
 
     vm.back=function()
     {
@@ -245,8 +246,6 @@
 
     vm.save = function ()
     {
-      //vm.uploadFiles();
-
       if(angular.isDefined(vm.current.anonymization_token) &&
           vm.current.anonymization_token !=  null &&
           vm.current.anonymization_token !== ""   &&
@@ -257,7 +256,7 @@
       else
       {
         vm.current.saveInProgress=true;
-        if (angular.isDefined(vm.current.id) && vm.current.id != null)
+        if (!vm.isRegistration && angular.isDefined(vm.current.id) && vm.current.id != null)
         {//WARNING : le 9 janvier (heure d'hiver), coté javascript la date envoyé est le jour d'avant à 23h
           // le fix ci dessous, envoie la date en string, qui est vue comme une date venant de la DB pour Entity.php
           vm.current.birthdate = DateTimeHandlingService.handleDateWithoutTime(vm.current.birthdate);
@@ -266,9 +265,29 @@
         else
         {
           vm.current.ul_name=''; // ul_name : Id - name - postal code - city : too long for server side validation
+          if(vm.isRegistration)
+          {
+            //otherwise Angular make a post on queteur/id, which match the update queteur( put))
+            vm.current.registration_id = vm.current.id;
+            delete vm.current.id;
+          }
           vm.current.$save  (vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
         }
       }
+    };
+
+    vm.associateRegistrationWithExistingQueteur=function(queteurId)
+    {
+      //store the registration id in the correct variable
+      vm.current.registration_id  = vm.current.id;
+      //store the queteur.id of the queteur we want to associate the registration with
+      vm.current.id               = queteurId;
+
+      vm.current.$associateRegistrationWithExistingQueteur(function success(response)
+                                                           {
+                                                             vm.goToQueteur(response.queteurId);
+                                                           },
+                                                           vm.errorWhileSavingFunction);
     };
 
     vm.confirmUnAnonymize=function()
@@ -414,7 +433,7 @@
 
     vm.searchSimilar=function()
     {
-      if(!vm.current.id && (vm.current.first_name || vm.current.last_name || vm.current.nivol))
+      if((!vm.current.id || vm.isRegistration) && (vm.current.first_name || vm.current.last_name || vm.current.nivol))
       {
         QueteurResource.searchSimilarQueteurs({ 'first_name': vm.current.first_name,'last_name': vm.current.last_name,'nivol': vm.current.nivol }).$promise.then(function(queteurs)
         {
@@ -425,6 +444,7 @@
 
     vm.goToQueteur=function(queteurId)
     {
+      delete $location.$$search.registration;
       $location.path('/queteurs/edit/' + queteurId).replace();
     };
 

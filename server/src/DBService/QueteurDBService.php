@@ -12,6 +12,275 @@ use Ramsey\Uuid\Uuid;
 class QueteurDBService extends DBService
 {
 
+
+  /**
+   * Count the number of pending registration
+   *
+   *
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return int the count of pending registration
+   * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations
+   */
+  public function countPendingQueteurRegistration(int $ulId)
+  {
+
+    $sql = "
+SELECT count(1) as count_pending_registration
+FROM `queteur_registration` qr, ul_settings us
+where us.ul_id = :ul_id
+AND 
+(
+  qr.ul_registration_token = us.token_benevole
+  OR
+  qr.ul_registration_token = us.token_benevole_1j
+)
+AND registration_approved is null
+";
+
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(["ul_id" => $ulId]);
+    $row = $stmt->fetch();
+    return (int) $row['count_pending_registration'];
+  }
+
+
+  /**
+   * List the pending registration
+   *
+   *
+   * @param int $ulId               Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $registrationStatus 0: pending registration, 1: approved registration, 2: refused registration
+   *
+   * @return QueteurEntity[]  the list of Queteurs
+   * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations
+   */
+  public function listPendingQueteurRegistration(int $ulId, int $registrationStatus)
+  {
+    $registrationStatusSQL = null;
+
+    if ($registrationStatus == 0 || $registrationStatus == null)
+    {
+      $registrationStatusSQL = "AND registration_approved is null";
+    }
+    else if ($registrationStatus == 1)
+    {
+      $registrationStatusSQL = "AND registration_approved = 1";
+    }
+    else if ($registrationStatus == 2)
+    {
+      $registrationStatusSQL = "AND registration_approved = 0";
+    }
+
+    $sql = "
+SELECT qr.`id`,
+       qr.`first_name`,
+       qr.`last_name`,
+       qr.`man`,
+       qr.`birthdate`,
+       qr.`email`,
+       qr.`secteur`,
+       qr.`nivol`,
+       qr.`mobile`,
+       qr.`created`,
+       qr.`ul_registration_token`,
+       qr.`queteur_registration_token`,
+       qr.`registration_approved`,
+       qr.`reject_reason`,
+       qr.`queteur_id`
+FROM `queteur_registration` qr, ul_settings us
+where us.ul_id = :ul_id
+AND 
+(
+  qr.ul_registration_token = us.token_benevole
+  OR
+  qr.ul_registration_token = us.token_benevole_1j
+)
+$registrationStatusSQL
+ORDER BY created desc
+";
+
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute(["ul_id" => $ulId]);
+
+    $results = [];
+    $i = 0;
+    while ($row = $stmt->fetch())
+    {
+      $results[$i++] = new QueteurEntity($row, $this->logger);
+    }
+
+    $stmt->closeCursor();
+    return $results;
+  }
+
+
+  /**
+   * Get a pending registration.
+   * This will fetch the registration only if it's a registration for the current UL and the registration have not already been approved or rejected.
+   *
+   * @param int $ulId           Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $registrationId the id of the registration
+   *
+   * @return QueteurEntity  the Queteurs Registration
+   * @throws PDOException if the query fails to execute on the server
+   * @throws \Exception in other situations
+   */
+  public function getQueteurRegistration(int $ulId, int $registrationId)
+  {
+    $sql = "
+SELECT qr.`id`,
+       qr.`first_name`,
+       qr.`last_name`,
+       qr.`man`,
+       qr.`birthdate`,
+       qr.`email`,
+       qr.`secteur`,
+       qr.`nivol`,
+       qr.`mobile`,
+       qr.`created`,
+       qr.`ul_registration_token`,
+       qr.`queteur_registration_token`,
+       qr.`registration_approved`,
+       qr.`reject_reason`,
+       qr.`queteur_id`,
+       u.`id`        as ul_id,
+       u.`name`      as ul_name,
+       u.`longitude` as ul_longitude,
+       u.`latitude`  as ul_latitude
+FROM `queteur_registration` qr, 
+            `ul_settings` us,
+            `ul` u
+where us.`ul_id` = :ul_id
+AND us.`ul_id` = u.`id`
+AND 
+(
+  qr.`ul_registration_token` = us.`token_benevole`
+  OR
+  qr.`ul_registration_token` = us.`token_benevole_1j`
+)
+AND qr.`id` = :id
+AND qr.`registration_approved` is null
+";
+
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute(["ul_id" => $ulId,
+                    "id"    => $registrationId]);
+
+    $queteurRegistration = null;
+    if ($row = $stmt->fetch())
+    {
+      $queteurRegistration = new QueteurEntity($row, $this->logger);
+    }
+    $stmt->closeCursor();
+    return $queteurRegistration;
+  }
+
+
+
+
+  /**
+   * Update one queteur registration with the approval decision, and if approved the newly inserted queteur id
+   *
+   * @param QueteurEntity $queteur The queteur to update (with the registration specific data)
+   * @param int           $queteurId  The id of the newly inserted queteur
+   * @param int           $userId the id of the person who approve or reject the registration
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function updateQueteurRegistration(QueteurEntity $queteur, int $queteurId, int $userId)
+  {
+
+    $sql = "
+UPDATE `queteur_registration`
+SET
+  `approval_date`           = NOW(),
+  `registration_approved`   = :registration_approved,
+  `reject_reason`           = :reject_reason ,
+  `queteur_id`              = :queteur_id,
+  `approver_user_id`        = :user_id 
+WHERE `id`                  = :id
+AND   ul_registration_token = :ul_registration_token
+";
+    $parameters = [
+      "registration_approved"  => $queteur->registration_approved == true ? 1:0,
+      "reject_reason"          => $queteur->reject_reason,
+      "queteur_id"             => $queteurId,
+      "user_id"                => $userId,
+      "id"                     => $queteur->registration_id,
+      "ul_registration_token"  => $queteur->ul_registration_token
+    ];
+
+
+    $stmt = $this->db->prepare($sql);
+    $this->logger->error("updating", array("parameters"=>$parameters));
+    $stmt->execute($parameters);
+
+    $stmt->closeCursor();
+  }
+
+  /**
+   * Update one queteur registration with as approved and associated with an existing queteur.
+   *
+   * @param QueteurEntity $queteur The queteur to update (with the registration specific data)
+   * @param int           $userId the id of the person who approve or reject the registration
+   * @param int           $ulId the id of the ul of the current user
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function associateRegistrationWithExistingQueteur(QueteurEntity $queteur, int $userId, int $ulId)
+  {
+
+    $sql = "
+UPDATE `queteur_registration`
+SET
+  `approval_date`           = NOW(),
+  `registration_approved`   = true,
+  `reject_reason`           = '' ,
+  `queteur_id`              = :queteur_id,
+  `approver_user_id`        = :user_id 
+WHERE `id`                  = :id
+AND   ul_registration_token = :ul_registration_token
+";
+    $parameters = [
+
+      "queteur_id"             => $queteur->id,
+      "user_id"                => $userId,
+      "id"                     => $queteur->registration_id,
+      "ul_registration_token"  => $queteur->ul_registration_token
+    ];
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+    $stmt->closeCursor();
+
+
+//forcing the user to active state
+    $sql2 = "
+UPDATE `queteur`
+SET
+    `active`  = true,
+    `updated` = NOW()
+WHERE `id`    = :id
+AND   ul_id   = :ul_id
+";
+    $parameters2 = [
+      "id"     => $queteur->id,
+      "ul_id"  => $ulId
+    ];
+
+    $stmt2 = $this->db->prepare($sql2);
+    $stmt2->execute($parameters2);
+    $stmt2->closeCursor();
+
+    $this->logger->debug("Associating registration with existing queteur, and set this last as active", array("parameters"=>$parameters, "parameters2"=>$parameters2));
+
+  }
+
   /**
    * Search queteur inside an Unite Local of id $ulId
    *
@@ -618,8 +887,9 @@ VALUES
 
     $stmt = $this->db->prepare($sql);
 
+
     $this->db->beginTransaction();
-    $stmt->execute([
+    $parameters = [
       "first_name"         => $queteur->first_name,
       "last_name"          => $queteur->last_name,
       "email"              => $queteur->email,
@@ -632,7 +902,13 @@ VALUES
       "man"                => $queteur->man===true?"1":"0",
       "active"             => $queteur->active===true?"1":"0",
       "referent_volunteer" => $queteur->secteur == 3 ? $queteur->referent_volunteer : 0
-    ]);
+    ];
+
+    $this->logger->error("Before insert queteur after registration", array("parameters"=>$parameters));
+
+    $stmt->execute($parameters);
+
+
 
     $stmt->closeCursor();
 

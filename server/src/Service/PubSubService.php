@@ -18,7 +18,7 @@ use Google\Cloud\PubSub\PubSubClient;
 class PubSubService
 {
   protected $settings;
-  /** @var \Google\Cloud\Logging\PsrLogger */
+  /** @var PsrLogger */
   protected $logger;
   /** @var PubSubClient */
   protected $pubSub;
@@ -28,7 +28,7 @@ class PubSubService
     $this->settings  = $settings;
     $this->logger    = $logger;
 
-    $this->logger->error("Creating PubSubClient() with projectId", array("projectId" => $this->settings));
+    $this->logger->info("Creating PubSubClient() with projectId", array("projectId" => $this->settings));
     $this->pubSub    = new PubSubClient();//["projectId" => $this->settings['gcp']['projectId']]
   }
 

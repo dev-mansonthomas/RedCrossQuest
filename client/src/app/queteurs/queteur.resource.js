@@ -6,21 +6,18 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
 {
   return $resource('/rest/:roleId/ul/:ulId/queteurs/:id',
     {
-      roleId: function ()
-      {
-        return $localStorage.currentUser.roleId;
-      },
-      ulId: function ()
-      {
-        return $localStorage.currentUser.ulId;
-      },
+      roleId: function () { return $localStorage.currentUser.roleId},
+      ulId  : function () { return $localStorage.currentUser.ulId  },
       id: '@id'
     },
     {
-      update:
-        {
-          method: 'PUT'
-        },
+      update: {
+        method: 'PUT',
+        params:
+          {
+            action: 'update'
+          }
+      },
       anonymize:
         {
           method: 'PUT',
@@ -29,8 +26,17 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
               action: 'anonymize'
             }
         },
-      markAllAsPrinted: {
-        method: 'POST',
+      associateRegistrationWithExistingQueteur:
+       {
+         method: 'PUT',
+         params:
+           {
+             action: 'associateRegistrationWithExistingQueteur'
+           }
+       },
+
+     markAllAsPrinted: {
+        method: 'PUT',
         params: {
           action: 'markAllAsPrinted'
         }
@@ -44,6 +50,33 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
             {
               action: 'searchSimilarQueteurs',
               tronc_id: '@tronc_id'
+            }
+        },
+      getQueteurRegistration:
+      {
+        method: 'GET',
+        params:
+        {
+          action: 'getQueteurRegistration'
+        }
+      }
+      ,
+      countPendingQueteurRegistration:
+        {
+          method: 'GET',
+          params:
+            {
+              action: 'countPendingQueteurRegistration'
+            }
+        }
+      ,
+      listPendingQueteurRegistration:
+        {
+          method: 'GET',
+          isArray: true,
+          params:
+            {
+              action: 'listPendingQueteurRegistration'
             }
         }
     });

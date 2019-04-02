@@ -29,7 +29,20 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
   $this->logger->info( "search queteur with roleId", array("roleId"=>$roleId, "admin_ul_id exists  "=>array_key_exists('admin_ul_id',$params)));
 
 
-  if($this->clientInputValidator->validateString("action", getParam($params,'action'), 30 , false ) == "searchSimilarQueteurs")
+
+  if($this->clientInputValidator->validateString("action", getParam($params,'action'), 31 , false ) == "countPendingQueteurRegistration")
+  {
+    $count = $this->queteurDBService->countPendingQueteurRegistration($ulId);
+    $response->getBody()->write(json_encode($count));
+  }
+  else if($this->clientInputValidator->validateString("action", getParam($params,'action'), 30 , false ) == "listPendingQueteurRegistration")
+  {
+    $registrationStatus  = $this->clientInputValidator->validateInteger("registration_status", getParam($params,'registration_status'), 2 , false, 0);
+
+    $queteurs = $this->queteurDBService->listPendingQueteurRegistration($ulId, $registrationStatus);
+    $response->getBody()->write(json_encode($queteurs));
+  }
+  else if($this->clientInputValidator->validateString("action", getParam($params,'action'), 30 , false ) == "searchSimilarQueteurs")
   {
 
     $firstName  = $this->clientInputValidator->validateString("first_name", getParam($params,'first_name'), 100 , false );
@@ -104,10 +117,23 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = $decodedToken->getUlId  ();
-    $roleId = $decodedToken->getRoleId();
+    $ulId       = $decodedToken->getUlId  ();
+    $roleId     = $decodedToken->getRoleId();
+    $params     = $request->getQueryParams();
+    $queteurId  = (int)$args['id'];
 
-    $queteurId        = (int)$args['id'];
+    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 22 , false ) == "getQueteurRegistration")
+    {
+      $queteur          = $this->queteurDBService->getQueteurRegistration($ulId, $queteurId);
+      //so that it's preset to active. No point of accepting a registration of an inactive queteur
+      $queteur->active = true;
+      //unset the decision to not pre select any answer
+      unset($queteur->registration_approved);
+      $response->getBody()->write(json_encode($queteur));
+      return $response;
+    }
+
+
     $queteur          = $this->queteurDBService->getQueteurById($queteurId);
 
     if($queteur->ul_id != $ulId && $roleId != 9)
@@ -119,8 +145,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 
     if($roleId >= 4)
     {//localAdmin & superAdmin
-      $user = $this->userDBService->getUserInfoWithQueteurId($queteurId, $ulId, $roleId);
-      $queteur->user = $user;
+      $queteur->user = $this->userDBService->getUserInfoWithQueteurId($queteurId, $ulId, $roleId);
     }
 
     $response->getBody()->write(json_encode($queteur));
@@ -154,9 +179,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 
     $queteurEntity = new QueteurEntity($input, $this->logger);
 
-    $this->logger->error("Queteur",array('queteurEntity'=>$queteurEntity));
-
-    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 10 , false ) == "anonymize")
+    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 40 , false ) == "anonymize")
     {
       $queteurOriginalData   = $this->queteurDBService->getQueteurById($queteurEntity->id);
       $token                 = $this->queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId, $userId);
@@ -166,85 +189,152 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 
       return $response->getBody()->write(json_encode($queteurAnonymizedData));
     }
-    else
+    else if($this->clientInputValidator->validateString("action", getParam($params,'action'), 40 , false ) == "associateRegistrationWithExistingQueteur")
+    {
+      //restore the leading +
+      $queteurEntity->mobile = "+".$queteurEntity->mobile;
+
+      $this->logger->error($queteurEntity->ul_registration_token." ".strlen($queteurEntity->ul_registration_token) == 36);
+
+
+      //validate the token, if validation fails, it throws an exception
+      $this->clientInputValidator->validateString("ul_registration_token", $queteurEntity->ul_registration_token, 36 , true, ClientInputValidator::$UUID_VALIDATION );
+
+      $queteurEntity->referent_volunteer = 0;
+
+      //as we're associating the registration to an existing queteur, it's necessarily an approval
+      $queteurEntity->registration_approved = true;
+      $this->queteurDBService->associateRegistrationWithExistingQueteur($queteurEntity, $userId, $ulId);
+
+      //publishing message to pubsub so that firebase is updated
+      $responseMessageIds = null;
+      $messageProperties  = [
+        'ulId'          => $ulId,
+        'uId'           => $userId,
+        'queteurId'     => $queteurEntity->id,
+        'registrationId'=> $queteurEntity->registration_id
+      ];
+
+      try
+      {
+        $this->PubSub->publish(
+          $this->settings['PubSub']['queteur_approval_topic'],
+          $queteurEntity,
+          $messageProperties,
+          true,
+          true);
+      }
+      catch(Exception $exception)
+      {
+        $this->logger->error("error while publishing registration approval - associateRegistrationWithExistingQueteur", array("messageProperties"=> $messageProperties,
+          "queteurEntity"    => $queteurEntity,
+          "exception"        => $exception));
+        //do not rethrow
+      }
+
+      return $response->getBody()->write(json_encode(array('queteurId' => $queteurEntity->id), JSON_NUMERIC_CHECK));
+    }
+    else if($this->clientInputValidator->validateString("action", getParam($params,'action'), 40 , false ) == "update")
     {//regular Update
 
       //restore the leading +
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
       $this->queteurDBService->update($queteurEntity, $ulId, $roleId);
     }
+    else if($this->clientInputValidator->validateString("action", getParam($params,'action'), 20 , false ) == "markAllAsPrinted")
+    {
+      $this->queteurDBService->markAllAsPrinted($ulId);
+    }
   }
-  catch(\Exception $e)
+  catch(Exception $e)
   {
     $this->logger->error("Error while updating queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
     throw $e;
   }
 });
 
-/* *
- * Upload files for one queteur
- *
- * Dispo pour les roles de 2 à 9
-
-$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/fileUpload', function ($request, $response, $args)
-{
-  $decodedToken = $request->getAttribute('decodedJWT');
-
-  try
-  {
-    $ulId   = $decodedToken->getUlId  ();
-    $roleId = $decodedToken->getRoleId();
-
-    //$this->logger->info("Uploading file for UL ID='$ulId' and queteurId='$queteurId''", array('decodedToken'=>$decodedToken));
-
-
-    //$queteurDBService = new QueteurDBService($this->db, $this->logger);
-//    $input            = $request->getParsedBody();
-//    $queteurEntity    = new QueteurEntity($input, $this->logger);
-    //restore the leading +
-//    $queteurEntity->mobile = "+".$queteurEntity->mobile;
-//    $queteurDBService->update($queteurEntity, $ulId);
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->error("Error while uploading files", array('decodedToken'=>$decodedToken, "Exception"=>$e));
-    throw $e;
-  }
-  return $response;
-});
- */
 
 /**
- * Crée un nouveau queteur
+ * Crée un nouveau queteur (via une création standard, ou approval d'une inscription RedQuest)
  */
 $app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = $decodedToken->getUlId  ();
-    $roleId = $decodedToken->getRoleId();
-    $params = $request->getQueryParams();
+    $ulId   = $decodedToken->getUlId       ();
+    $userId = $decodedToken->getUid        ();
+    $roleId = $decodedToken->getRoleId     ();
+    $params = $request     ->getQueryParams();
 
-    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 20 , false ) == "markAllAsPrinted")
-    {
-      $this->queteurDBService->markAllAsPrinted($ulId);
-    }
-    else
+    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 40 , false ) == "associateRegistrationWithExistingQueteur")
     {
       $input = $request->getParsedBody();
 
       $queteurEntity = new QueteurEntity($input, $this->logger);
       //restore the leading +
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
-      $queteurId             = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
 
+      //validate the token, if validation fails, it throws an exception
+      $this->clientInputValidator->validateString("ul_registration_token", $queteurEntity->ul_registration_token, 36 , true, ClientInputValidator::$UUID_VALIDATION );
+
+
+      if($queteurEntity->registration_approved)
+      {
+        $queteurEntity->referent_volunteer = 0;
+        $queteurId             = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
+        $this->queteurDBService->updateQueteurRegistration($queteurEntity, $queteurId, $userId);
+
+        //update the entity with the new ID
+        $queteurEntity->id = $queteurId;
+      }
+      else
+      {//reject
+        $this->queteurDBService->updateQueteurRegistration($queteurEntity, 0, $userId);
+        $queteurEntity->id = -1;
+      }
+
+      //publishing message to pubsub so that firebase is updated
+      $responseMessageIds = null;
+      $messageProperties  = [
+        'ulId'          => $ulId,
+        'uId'           => $userId,
+        'queteurId'     => $queteurEntity->id,
+        'registrationId'=> $queteurEntity->registration_id
+      ];
+
+      try
+      {
+        $this->PubSub->publish(
+          $this->settings['PubSub']['queteur_approval_topic'],
+          $queteurEntity,
+          $messageProperties,
+          true,
+          true);
+      }
+      catch(Exception $exception)
+      {
+        $this->logger->error("error while publishing registration approval", array("messageProperties"=> $messageProperties,
+                                                                                   "queteurEntity"    => $queteurEntity,
+                                                                                   "exception"        => $exception));
+        //do not rethrow
+      }
+      return $response->getBody()->write(json_encode(array('queteurId' => $queteurEntity->id), JSON_NUMERIC_CHECK));
+    }
+    else
+    {// queteur creation
+
+      $input = $request->getParsedBody();
+      $queteurEntity = new QueteurEntity($input, $this->logger);
+      //restore the leading +
+      $queteurEntity->mobile = "+".$queteurEntity->mobile;
+
+      $this->logger->info("queteur creation", array("queteur"=>$queteurEntity));
+      $queteurId  = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
       return $response->getBody()->write(json_encode(array('queteurId' => $queteurId), JSON_NUMERIC_CHECK));
     }
-
-
   }
-  catch(\Exception $e)
+  catch(Exception $e)
   {
     $this->logger->error("Error while creating a new Queteur", array('decodedToken'=>$decodedToken, "Exception"=>$e, "queteurEntity"=>$queteurEntity));
     throw $e;

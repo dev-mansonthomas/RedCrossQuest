@@ -95,7 +95,7 @@ angular
   {
     var local = this;
 
-    if(data.length == local.troncQRCodeLength)
+    if(data.length === local.troncQRCodeLength)
     {//queteur
       $log.debug("data length is 22 => TRONC");
 

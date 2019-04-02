@@ -26,8 +26,6 @@ class QueteurEntity  extends Entity
   public $mobile                      ;
   public $created                     ;
   public $updated                     ;
-  public $parent_authorization        ;
-  public $temporary_volunteer_form    ;
   public $notes                       ;
   public $ul_id                       ;
   public $ul_name                     ;
@@ -50,7 +48,24 @@ class QueteurEntity  extends Entity
   public $anonymization_token         ;
   public $anonymization_date          ;
 
-  protected $_fieldList = ['id','email','first_name','last_name','secteur','nivol','mobile','created','updated','parent_authorization','temporary_volunteer_form','notes','ul_id','ul_name','ul_longitude','ul_latitude','point_quete_id','point_quete_name','depart_theorique','depart','retour','active','man','birthdate','qr_code_printed','referent_volunteer','referent_volunteer_entity','anonymization_token','anonymization_date'];
+
+  //registration_queteur specific fields
+  public $ul_registration_token       ;
+  public $queteur_registration_token  ;
+  public $registration_approved       ;
+  public $reject_reason               ;
+  public $queteur_id                  ;
+  public $registration_id             ;
+
+
+  protected $_fieldList = [
+    'id','email','first_name','last_name','secteur','nivol','mobile','created','updated',
+    'notes','ul_id','ul_name','ul_longitude','ul_latitude','point_quete_id','point_quete_name',
+    'depart_theorique','depart','retour','active','man','birthdate','qr_code_printed','referent_volunteer',
+    'referent_volunteer_entity','anonymization_token','anonymization_date',
+    'ul_registration_token', 'queteur_registration_token', 'registration_approved', 'reject_reason',
+    'queteur_id', 'registration_id'
+    ];
 
   /**
    * Accept an array of data matching properties of this class
@@ -73,8 +88,6 @@ class QueteurEntity  extends Entity
     $this->getString ('mobile'                      , $data, 20);
     $this->getDate   ('created'                     , $data);
     $this->getDate   ('updated'                     , $data);
-    //$this->getString ('parent_authorization'        , $data);
-    //$this->getString ('temporary_volunteer_form'    , $data);
     $this->getString ('notes'                       , $data, 500);
     $this->getInteger('ul_id'                       , $data);
     $this->getString ('ul_name'                     , $data, 50);
@@ -97,6 +110,13 @@ class QueteurEntity  extends Entity
     $this->getString ('anonymization_token'         , $data, 36);
     $this->getDate   ('anonymization_date'          , $data);
 
+
+    $this->getString ('ul_registration_token'       , $data, 36);
+    $this->getString ('queteur_registration_token'  , $data, 36);
+    $this->getBoolean('registration_approved'       , $data);
+    $this->getString ('reject_reason'               , $data, 200);
+    $this->getInteger('queteur_id'                  , $data);
+    $this->getInteger('registration_id'             , $data);
 
   }
 }

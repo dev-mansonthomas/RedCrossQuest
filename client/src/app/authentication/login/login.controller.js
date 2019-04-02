@@ -51,12 +51,19 @@
                 $timeout.cancel(loginTimeout);
                 $location.path('/');
               }
-              else
+              else if (result === false)
               {
                 vm.errorStr = 'Login ou mot de passe incorrect';
                 vm.error    = true;
                 vm.loading  = false;
               }
+              else
+              {
+                vm.errorStr = JSON.stringify(result);
+                vm.error    = true;
+                vm.loading  = false;
+              }
+              $timeout.cancel(loginTimeout);
             },
             function error(message)
             {

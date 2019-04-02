@@ -18,7 +18,8 @@ return [
     ],
     'PubSub'      => [
       'tronc_queteur_topic'        => 'tronc_queteur'       ,
-      'tronc_queteur_update_topic' => 'tronc_queteur_update'
+      'tronc_queteur_update_topic' => 'tronc_queteur_update',
+      'queteur_approval_topic'     => 'queteur_approval_topic'
     ],
     'jwt'         => [
       'secret'   => getenv('JWT_SECRET'     ),
@@ -36,6 +37,7 @@ return [
       'deploymentType'   => getenv('APP_ENV')                ,   //D:Dev, T:Testing, P:Production,
       'gmapAPIKey'       => getenv('GOOGLE_MAPS_API')        ,
       'RGPD'             => 'https://goo.gl/UpTLAK'                   ,
+      'RGPDVideo'        => 'https://firebasestorage.googleapis.com/path_to_video',
       'graphPath'        => 'graph-display.html'                      ,
       'queteurDashboard' => 'Merci'                                   ,
       'email'            => [

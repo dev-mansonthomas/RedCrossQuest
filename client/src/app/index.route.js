@@ -43,6 +43,11 @@
         controller  : 'QueteurEditController',
         controllerAs: 'queteur'
       })
+      .when('/queteurs/pendingValidation', {
+        templateUrl : 'app/queteurs/listRegistration/listRegistration.html',
+        controller  : 'ListRegistrationController',
+        controllerAs: 'lr'
+      })
       // ============== TRONCS ==============
       .when('/troncs', {
         templateUrl : 'app/troncs/list/listTroncs.html',

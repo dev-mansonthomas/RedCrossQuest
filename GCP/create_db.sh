@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# Usage:  ./create_db.sh fr dev
 # Usage:  ./create_db.sh fr test
 # Usage:  ./create_db.sh fr prod
 # Usage:  ./create_db.sh fr prod skip-instance
@@ -48,7 +49,7 @@ then
 fi
 
 #set current project to test project
-gcloud config set project redcrossquest-${COUNTRY}-${ENV}
+gcloud config set project rcq-${COUNTRY}-${ENV}
 
 mkdir -p logs tmp
 
@@ -94,7 +95,7 @@ then
 
 fi
 
-cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
+cloud_sql_proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
 CLOUD_PROXY_PID=$!
 
 echo "wait for proxy to initialize"

@@ -40,11 +40,12 @@
         </p>
       </div>
       <div  class="col-md-6">
-        <video width="480" height="180" poster="http://mansonthomas.com/CRF/RedCrossQuest/preview.png" controls>
-          <source src="http://mansonthomas.com/CRF/RedCrossQuest/protection_donnees_perso.mp4" type="video/mp4">
+        <video width="480" height="180" poster="assets/images/preview.png" controls ng-cloak>
+          <source src="{{queteur.rgpdVideoUrl}}"  type="video/mp4">
           Votre navigateur ne supporte pas les vidéos.
-        </video><br/>
-        <small>Source: <a href="//www.dailymotion.com/video/x2eppuf">Dailymotion - Tulipe & Cie pour ADP</a></small>
+        </video>
+        <br/>
+        <small>Source: <a href="//www.dailymotion.com/video/x2eppuf" target="_blank">Dailymotion - Tulipe & Cie pour ADP</a></small>
       </div>
     </div>
   </div>
@@ -147,10 +148,11 @@
               <th>Mobile</th>
               <th>Email</th>
               <th>Actif ?</th>
+              <th ng-show="queteur.isRegistration">Associer cette inscription <br/>avec le quêteur existant ?</th>
             </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="sim in queteur.current.similarQueteurs" ng-click="queteur.goToQueteur(sim.id);">
+              <tr ng-repeat="sim in queteur.current.similarQueteurs" ng-click="queteur.isRegistration?null:queteur.goToQueteur(sim.id);">
                 <th scope="row">{{sim.id}}</th>
                 <td>{{sim.first_name}}</td>
                 <td>{{sim.last_name}}</td>
@@ -158,6 +160,12 @@
                 <td>{{sim.mobile}}</td>
                 <td>{{sim.email}}</td>
                 <td>{{sim.active == 1 ? 'Oui':'Non'}}</td>
+                <td ng-show="queteur.isRegistration">
+                  <a  ng-click="queteur.associateRegistrationWithExistingQueteur(sim.id);" class="btn btn-success" style="font-size: 10px;">Valider l'inscription et l'associer à ce quêteur</a>
+                  <span ng-show="sim.active != 1"><br/>
+                    <small style="color: silver;">La fiche du quêter sera réactivée</small>
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -197,8 +205,17 @@
             <label for="email" class="control-label">Email</label>
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon1">@</span>
-              <input name="email" id="email" class="form-control" type="email" ng-model="queteur.current.email" required autocomplete="email"/>
+              <input
+                    name="email"
+                      id="email"
+                    class="form-control"
+                     type="email"
+                 ng-model="queteur.current.email"
+               ng-pattern="queteur.current.user.id>0?'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$':''"
+                required
+                autocomplete="email"/>
             </div>
+            <span class="help-block" ng-show="queteurForm.email.$invalid">Les utilisateurs de l'application RedCrossQuest doivent utiliser leur email croix rouge personnel : <strong>prenom.nom@croix-rouge.fr</strong></span>
           </div>
         </div>
         <div class="col-md-4">
@@ -279,14 +296,35 @@
       <div class="row">
         <div class="col-md-4 col-md-offset-2">
           <div class="form-group" ng-show="queteur.current.id">
-            <label for="created" class="control-label">Créé le</label>
+            <label for="created" class="control-label"><span ng-show="!queteur.isRegistration   == true">Créé le</span><span ng-show="queteur.isRegistration   == true">Inscrit le</span></label>
             <input name="created" id="created" class="form-control" ng-model="queteur.current.created" readonly/>
           </div>
         </div>
         <div class="col-md-4">
-          <div class="form-group"ng-show="queteur.current.id">
+          <div class="form-group"ng-show="queteur.current.id && !queteur.isRegistration   == true">
             <label for="updated" class="control-label">Mise à jour le</label>
             <input name="updated" id="updated" class="form-control" ng-model="queteur.current.updated" readonly/>
+          </div>
+
+          <div class="form-group"ng-show="queteur.current.id && queteur.isRegistration   == true">
+            <div class="form-group" ng-class="{'has-error':queteurForm.registration_approved.$invalid}">
+              <label for="registrationApprovedRadio1" class="control-label">Je valide l'inscription et crée un nouveau quêteur?</label><br/>
+              <label class="radio-inline">
+                <input type="radio" name="registration_approved" id="registrationApprovedRadio1" ng-model="queteur.current.registration_approved" ng-value="true" ng-required="queteur.isRegistration == true"> Oui
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="registration_approved" id="registrationApprovedRadio2" ng-model="queteur.current.registration_approved" ng-value="false" ng-required="queteur.isRegistration == true"> Non
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" ng-show="queteur.isRegistration == true && queteur.current.registration_approved== false ">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="form-group" ng-class="{'has-error':queteurForm.registrationRejectReason.$invalid}">
+            <label for="registrationRejectReason" class="control-label">Motif du refus de l'inscription ?</label><br/>
+            <small>Soyez courtois :)</small>
+            <input name="registrationRejectReason" id="registrationRejectReason" class="form-control" type="text" ng-model="queteur.current.reject_reason" ng-required="queteur.isRegistration == true && queteur.current.registration_approved!= true" autocomplete="off"/>
           </div>
         </div>
       </div>
@@ -319,11 +357,12 @@
       </div>
 
       <!-- RCQ USER -->
-      <div ng-show="queteur.current.id       > 0 &&
-                    queteur.current.active  == 1 &&
+      <div ng-show="!queteur.isRegistration  == true     &&
+                     queteur.current.id       > 0        &&
+                     queteur.current.active  == 1        &&
                     !queteur.current.anonymization_token &&
-                    queteur.current.secteur <= 2 &&
-                    queteur.currentUserRole >= 4">
+                     queteur.current.secteur <= 2        &&
+                     queteur.currentUserRole >= 4">
         <div class="row">
           <div class="col-md-8 col-md-offset-2">
             <div class="panel" ng-class="{'panel-warning':!queteur.current.user, 'panel-success':queteur.current.user.id>0}">
@@ -445,9 +484,10 @@
       </div>
 
       <!-- CNIL GDPR -->
-      <div class="row" ng-show="queteur.current.id > 0 &&
-                                queteur.currentUserRole >= 4 &&
-                               !queteur.current.anonymization_token" style="padding-top:20px;">
+      <div class="row" ng-show="!queteur.isRegistration   == true &&
+                                 queteur.current.id       > 0     &&
+                                 queteur.currentUserRole  >= 4    &&
+                                !queteur.current.anonymization_token" style="padding-top:20px;">
         <div class="col-md-offset-2 col-md-8">
           <button class="btn btn-warning"
                   ng-click="queteur.anonymize();"
@@ -532,7 +572,7 @@
 
 
       <!-- liste des troncs -->
-      <div class="row" ng-show="queteur.current.id > 0" style="padding-top:20px;">
+      <div class="row" ng-show="queteur.current.id > 0 && !queteur.isRegistration   == true" style="padding-top:20px;">
         <div class="panel panel-default">
           <!-- Default panel contents -->
           <div class="panel-heading">Listes des troncs ({{::queteur.current.troncs_queteur.length}}) de <b><span ng-bind="queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span></b></div>

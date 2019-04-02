@@ -22,13 +22,20 @@
 
     /** @ngInject */
     function NavbarController($localStorage,  $location,
-                              moment, AuthenticationService)
+                              moment, AuthenticationService, QueteurResource)
     {
       var vm = this;
       vm.relativeDate   = moment(vm.creationDate).fromNow();
       vm.currentUserRole= $localStorage.currentUser.roleId;
       vm.currentUlMode  = $localStorage.currentUser.ulMode;
       vm.deploymentType = $localStorage.currentUser.d;
+      vm.pendingQueteurRegistrationCount = 0;
+
+      QueteurResource.countPendingQueteurRegistration().$promise.then(function(result){
+        vm.pendingQueteurRegistrationCount = result[0];
+      });
+
+
 
       vm.logout=function()
       {

@@ -49,10 +49,10 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId      = $decodedToken->getUlId();
-    $params    = $request->getQueryParams();
-    $userId    = $decodedToken->getUid ();
-    $adminMode = $this->clientInputValidator->validateBoolean("adminMode", getParam($params,'adminMode'), false, false);
+    $ulId      = $decodedToken->getUlId       ();
+    $params    = $request     ->getQueryParams();
+    $userId    = $decodedToken->getUid        ();
+    $adminMode = $this        ->clientInputValidator->validateBoolean("adminMode", getParam($params,'adminMode'), false, false);
 
     if(array_key_exists('action', $params))
     {

@@ -475,7 +475,7 @@
 
 
 
-        <div ng-show="(tq.current.fillTronc || tq.current.adminEditMode) && tq.current.tronc.type!=4" ng-cloak>
+        <div ng-show="tq.current.fillTronc || tq.current.adminEditMode" ng-cloak>
           <div id="anchorForm" class="row anchor" ng-if="!tq.current.readOnlyView  && tq.current.adminEditMode == false">
 
             <div class="form-group col-md-8 col-md-offset-2 alert alert-warning" role="alert" style="font-size: 20px;text-align:center;">
@@ -502,7 +502,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro5"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required="tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro5">Montant : {{tq.current.tronc_queteur.euro5*5}} €</span>
             </div>
 
@@ -516,7 +516,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro10"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required="tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro10">Montant : {{tq.current.tronc_queteur.euro10*10}} €</span>
             </div>
 
@@ -530,7 +530,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro20"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro20">Montant : {{tq.current.tronc_queteur.euro20*20}} €</span>
             </div>
 
@@ -544,7 +544,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro50"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro50">Montant : {{tq.current.tronc_queteur.euro50*50}} €</span>
             </div>
           </div>
@@ -559,7 +559,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro100"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro100">Montant : {{tq.current.tronc_queteur.euro100*100}} €</span>
             </div>
 
@@ -573,7 +573,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro200"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro200">Montant : {{tq.current.tronc_queteur.euro200*200}} €</span>
             </div>
 
@@ -587,7 +587,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro500"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro500">Montant : {{tq.current.tronc_queteur.euro500*500}} €</span>
             </div>
           </div>
@@ -629,7 +629,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro2"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro2">Montant : {{tq.current.tronc_queteur.euro2*2}} €</span>
             </div>
 
@@ -643,7 +643,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.cents50"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.cents50">Montant : {{(tq.current.tronc_queteur.cents50*0.5).toFixed(2)}} €</span>
             </div>
 
@@ -657,7 +657,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro1"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro1">Montant : {{tq.current.tronc_queteur.euro1*1}} €</span>
             </div>
 
@@ -671,7 +671,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.cents20"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.cents20">Montant : {{(tq.current.tronc_queteur.cents20*0.2).toFixed(2)}} €</span>
             </div>
 
@@ -688,7 +688,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.cents5"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.cents5">Montant : {{(tq.current.tronc_queteur.cents5*0.05).toFixed(2)}} €</span>
             </div>
 
@@ -702,7 +702,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.cents10"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.cents10">Montant : {{(tq.current.tronc_queteur.cents10*0.1).toFixed(2)}} €</span>
             </div>
 
@@ -717,7 +717,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.cents2"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.cents2">Montant : {{(tq.current.tronc_queteur.cents2*0.02).toFixed(2)}} €</span>
             </div>
 
@@ -731,7 +731,7 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.cent1"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && tq.current.tronc.type!=4"
+                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"
               />
               <span class="help-block" ng-show="tq.current.tronc_queteur.cent1">Montant : {{(tq.current.tronc_queteur.cent1*0.01).toFixed(2)}} €</span>
             </div>
@@ -828,7 +828,7 @@
             </div>
           </div>
 
-          <div class="row" ng-show="tq.current.fillTronc && tq.current.tronc.type!=4" ng-cloak>
+          <div class="row" ng-show="tq.current.fillTronc" ng-cloak>
             <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cheque.$invalid}">
               <label for="don_cheque" class="control-label">Total des dons en Chèque</label>
               <div class="input-group">
@@ -841,7 +841,7 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.don_cheque"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required="tq.current.fillTronc && tq.current.tronc.type!=4"/>
+                       ng-required="tq.current.fillTronc && !tq.current.adminEditMode"/>
                 <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
               <span class="help-block">Saisir la somme total des dons en chèque sur le créneau de quête du quêteur pour lesquels le donateur ne demande pas de reçu fiscal.
@@ -859,7 +859,7 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.don_cheque_number"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required="tq.current.fillTronc && tq.current.tronc.type!=4 && tq.current.tronc_queteur.don_cheque > 0"
+                       ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_cheque > 0"
                 />
                 <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>

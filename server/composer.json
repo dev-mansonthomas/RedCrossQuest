@@ -1,5 +1,5 @@
 {
-    "name": "rcq/redCrossQuest",
+    "name": "rcq/redcrossquest",
     "description": "",
     "keywords": ["microframework","rest","router", "psr7"],
     "homepage": "http://github.com/slimphp/Slim-Skeleton",

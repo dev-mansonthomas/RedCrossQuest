@@ -69,6 +69,21 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
 {
   display:none;
 }
+.pendingQueteurCount span
+{
+  background-color:red;
+}
+
+.pendingQueteurCountZero span
+{
+  background-color:silver;
+}
+
+
+.pendingQueteurCount span:hover
+{
+  background-color:blue;
+}
 
 @media print
 {

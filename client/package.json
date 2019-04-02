@@ -1,7 +1,14 @@
 {
-  "name": "client",
-  "version": "0.0.0",
+  "name": "redcrossquest-client",
+  "description": "RedCrossQuest front end",
+  "licence": "GPL-3.0",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dev-mansonthomas/RedCrossQuest.git"
+  },
   "dependencies": {
+    "latest-version": "^5.0.0",
     "natives": "^1.1.6",
     "npm": "^6.9.0"
   },

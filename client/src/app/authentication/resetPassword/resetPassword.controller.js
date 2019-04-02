@@ -116,8 +116,7 @@
       grecaptcha.execute(recaptchaKey, {action: 'rcq/getUserInfoWithUUID'})
         .then(function(token)
         {
-          AuthenticationService.getUserInfoWithUUID
-          (
+          AuthenticationService.getUserInfoWithUUID(
             vm.key, token,
             function (success, info)
             {

@@ -39,7 +39,7 @@ $app->post('/authenticate', function($request, $response, $args) use ($app)
     if($reCaptchaResponseCode > 0)
     {// error
       $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>"an error occurred. Code $reCaptchaResponseCode"]));
+      $response401->getBody()->write(json_encode(["error" =>"An error occurred - ReCode $reCaptchaResponseCode"]));
 
       return $response401;
     }

@@ -272,7 +272,7 @@
           var troncDecodedAndFoundInDB = function(tronc)
           {
             vm.current.tronc = tronc;
-            vm.current.tronc.stringView = tronc.id+" - "+tronc.created;
+            vm.current.tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
             $scope.pt.current.troncId = tronc.id;
           };
 
