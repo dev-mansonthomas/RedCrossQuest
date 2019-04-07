@@ -1,0 +1,8 @@
+dispatch:
+  # Send all rest traffic to the backend
+  - url: "*/rest/*"
+    service: default
+
+  # Send the rest to the front (angularjs)
+  - url: "*/*"
+    service: front

@@ -1,0 +1,19 @@
+
+#the angular application is static, once it has been built
+#so we use an GAE standard to deploy the code with static_files
+#the files are put on google CDN.
+##########################################################################
+##########################################################################
+# There's a 10 Minutes delay after  deploying so that the CDN is updated!#
+##########################################################################
+##########################################################################
+service: front
+runtime: python27
+api_version: 1
+threadsafe: true
+handlers:
+  - url: /
+    static_files: dist/index.html
+    upload: dist/index.html
+  - url: /
+    static_dir: dist

@@ -18,7 +18,7 @@ use \RedCrossQuest\Entity\UserEntity;
  * or
  * send email for Password reset
  */
-$app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $response, $args)
+$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -72,7 +72,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $respons
 /**
  * create a new user
  */
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

@@ -17,7 +17,7 @@ require '../../vendor/autoload.php';
  *
  * Dispo pour le role admin local
  */
-$app->get('/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

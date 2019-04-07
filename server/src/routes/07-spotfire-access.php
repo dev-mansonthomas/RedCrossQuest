@@ -11,7 +11,7 @@ require '../../vendor/autoload.php';
 /**
  * fetch an existing token for the user
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
 {
     $decodedToken = $request->getAttribute('decodedJWT');
     //$this->logger->debug("generating spotfire access for ");

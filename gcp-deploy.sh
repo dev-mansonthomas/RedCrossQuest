@@ -2,6 +2,7 @@
 # TODO : do the deploy outside of the source folder (copy the necessary files in a temp folder and run gcloud app deploy from there)
 COUNTRY=$1
 ENV=$2
+TARGET=$3
 
 if [[ "${COUNTRY}1" != "fr1" ]]
 then
@@ -15,109 +16,87 @@ then
   exit 1
 fi
 
-. ~/.cred/rcq-${COUNTRY}-${ENV}.properties
-
-#set current project to test project
-gcloud config set project redcrossquest-${COUNTRY}-${ENV}
-
-#open proxy connection to MySQL instance
-#We use 3310, so that the deployment do not conflict with existing proxy connection on port 3307 (test) & 3308 (prod)
-#cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:rcq-${COUNTRY}-${ENV}=tcp:3310 &
-
-#to save money, the MySQL instance is deleted when not used
-#the instance name can't be reused, so we increment a counter rcq-db-inst-fr-test-2
-#
-. ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
-echo "cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &"
-cloud_sql_proxy -instances=redcrossquest-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
-
-CLOUD_PROXY_PID=$!
-
-#Build the AngularJS frontend
-cd client
-./build.sh
-cd -
-
-cd server/public_html
-#remove previous version
-rm -rf assets bower_components favicon.ico fonts graph-display*.html index.html scripts styles
-
-cp -rp ../../client/dist/* .
-mv index-*.html index.html
-
-GRAPH_FILE_NAME=$(ls graph-display-*.html)
-regex="graph-display-([a-f0-9]*)\.html"
-
-
- #change the reference to this ID in the app*.js file  graph-display-([a-f0-9]*)\.html -> graph.html
-if [[ $GRAPH_FILE_NAME =~ $regex ]]
+if  [[ "${TARGET}1" == "1" ]]
 then
-    echo "$GRAPH_FILE_NAME serial is ${BASH_REMATCH[1]}"
-    SERIAL_ID=${BASH_REMATCH[1]}
-    sed -i "" "s/-${SERIAL_ID}//g" scripts/app*.js
-else
-    echo "$GRAPH_FILE_NAME doesn't match $regex"
+  echo "Deploying All artifacts"
+  TARGET="all"
 fi
-#rename the file
-mv graph-display-*.html graph-display.html
 
-#TODO : update the path from test to prod
-
-# Update the URL of Spotfire DXP to match the country & environment
-sed -i '' "s/__country__/${COUNTRY}/g" graph-display.html
-sed -i '' "s/__env__/${ENV}/g"         graph-display.html
-
-#Updating Google reCaptcha public ID
-#hardcoded value that works for dev env.
-sed -i '' "s/6Lex7ogUAAAAALTYBxHbGoyBuRPm9bVxrT4gz8lO/${GOOGLE_RECAPTCHA_KEY}/g"         index.html
-
-# TODO see how to fix this in GULP
-mkdir -p bower_components/angular-i18n/ bower_components/zxcvbn/dist/    bower_components/bootstrap-sass/assets/fonts/bootstrap/
-cp ../../client/bower_components/angular-i18n/angular-locale_fr-fr.js    bower_components/angular-i18n/
-cp ../../client/bower_components/zxcvbn/dist/zxcvbn.js                   bower_components/zxcvbn/dist/zxcvbn.js
-cp ../../client/bower_components/bootstrap-sass/assets/fonts/bootstrap/* bower_components/bootstrap-sass/assets/fonts/bootstrap/
-
-cd -
-
-# Get the correct app.yaml for the env
-cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml               server/app.yaml
-#update the INSTANCE name in the file
-sed -i '' -e "s/¤COUNTRY¤/${COUNTRY}/g"                 server/app.yaml
-sed -i '' -e "s/¤ENV¤/${ENV}/g"                         server/app.yaml
-sed -i '' -e "s/¤MYSQL_INSTANCE¤/${MYSQL_INSTANCE}/g"   server/app.yaml
-sed -i '' -e "s/¤MYSQL_USER¤/${MYSQL_USER}/g"           server/app.yaml
-sed -i '' -e "s/¤MYSQL_PASSWORD¤/${MYSQL_PASSWORD}/g"   server/app.yaml
-sed -i '' -e "s/¤MYSQL_DB¤/${MYSQL_DB}/g"               server/app.yaml
-
-#cat server/app.yaml
+if  [[ "${TARGET}1" != "all1" ]] && [[ "${TARGET}1" != "route1" ]] && [[ "${TARGET}1" != "front1" ]] && [[ "${TARGET}1" != "back1" ]]&& [[ "${TARGET}1" != "functions1" ]]
+then
+  echo "'${TARGET}' the third parameter (target) is not valid. Valid values are ['route', 'front', 'back', 'functions', 'all']"
+  exit 1
+fi
 
 
-cp ~/.cred/phinx.yml                          server/phinx.yml
-cp ~/.cred/rcq-${COUNTRY}-${ENV}-settings.php server/src/settings.php
+echo "Deploying ${TARGET}"
 
-#removal of the log file
-rm -f server/logs/app.log
 
-#DB Migration
-cd server
-php vendor/bin/phinx migrate -e rcq-${COUNTRY}-${ENV}
-cd -
+if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "route1" ]]
+then
+  echo
+  echo
+  echo "##############################################################"
+  echo "##############################################################"
+  echo "#                 ROUTING TABLE                              #"
+  echo "##############################################################"
+  echo "##############################################################"
+  echo
+  echo
 
-#deployment
-cd server
-gcloud app deploy -q
-cd -
+  #deploy routing information
+  gcloud app deploy GCP/dispatch.yaml -q
+fi
 
-#remove app.yaml
-rm server/app.yaml
+if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "front1" ]]
+then
 
-#restore default file
-cp server/phinx-template.yml        server/phinx.yml
+  echo
+  echo
+  echo "##############################################################"
+  echo "##############################################################"
+  echo "#                     FRONT END                              #"
+  echo "##############################################################"
+  echo "##############################################################"
+  echo
+  echo
 
-# DO NOT USE VARIABLE for the next line, we do want to restore the local dev version
-cp ~/.cred/rcq-fr-local-settings.php  server/src/settings.php
+  #deploy front project
+  GCP/deploy_front.sh "${COUNTRY}" "${ENV}"
+fi
 
-kill -15 $CLOUD_PROXY_PID
+if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "back1" ]]
+then
+  echo
+  echo
+  echo "##############################################################"
+  echo "##############################################################"
+  echo "#                     BACK END                              #"
+  echo "##############################################################"
+  echo "##############################################################"
+  echo
+  echo
 
-#switch back to dev project (for stackdriver & storage)
-gcloud config set project redcrossquest-${COUNTRY}-dev
+  #deploy back project
+  GCP/deploy_back.sh "${COUNTRY}" "${ENV}"
+
+fi
+
+
+if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "functions1" ]]
+then
+  echo
+  echo
+  echo "##############################################################"
+  echo "##############################################################"
+  echo "#                     CLOUD FUNCTIONS                        #"
+  echo "##############################################################"
+  echo "##############################################################"
+  echo
+  echo
+
+  #deploy back project
+  GCP/deploy_cloudFunctions.sh "${COUNTRY}" "${ENV}"
+
+fi
+

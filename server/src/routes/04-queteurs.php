@@ -18,7 +18,7 @@ use RedCrossQuest\Service\ClientInputValidator;
  *
  * Dispo pour tout les roles
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
 
@@ -112,7 +112,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response,
  *
  * Dispo pour tout les roles
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -166,7 +166,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
  *
  * Dispo pour les roles de 2 à 9
  */
-$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
+$app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -257,7 +257,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $resp
 /**
  * Crée un nouveau queteur (via une création standard, ou approval d'une inscription RedQuest)
  */
-$app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

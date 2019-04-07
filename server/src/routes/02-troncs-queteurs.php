@@ -17,7 +17,7 @@ use \RedCrossQuest\Entity\TroncQueteurEntity;
 /**
  * Supprime les tronc_queteurs qui implique le tronc ({id}) et qui ont soit la colonne départ ou retour de null.
  */
-$app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
+$app->delete(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -44,7 +44,7 @@ $app->delete('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($reques
  * update troncs
  *
  */
-$app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -152,14 +152,14 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request,
  * autoriser pour role >2
  *
  */
-$app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
   {
-    $ulId   = $decodedToken->getUlId();
-    $params = $request->getQueryParams();
-    $userId = $decodedToken->getUid ();
+    $ulId   = $decodedToken ->getUlId       ();
+    $params = $request      ->getQueryParams();
+    $userId = $decodedToken ->getUid        ();
 
     if(array_key_exists('action', $params))
     {
@@ -245,7 +245,7 @@ $app->post('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $res
 /**
  * Recherche un tronc_queteur
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -312,7 +312,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $resp
  * récupère un tronc_queteur par son id
  *
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

@@ -10,7 +10,7 @@ require '../../vendor/autoload.php';
 /**
  * get the google maps API Key
  */
-$app->get('/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

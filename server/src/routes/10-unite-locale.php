@@ -8,7 +8,7 @@ require '../../vendor/autoload.php';
  * Search for Unité Locale.
  * Only for super admin
  */
-$app->get('/{role-id:[9]}/ul', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[9]}/ul', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

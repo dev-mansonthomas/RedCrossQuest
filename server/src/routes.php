@@ -21,7 +21,26 @@ function getParam(array $param, string $key)
   return null;
 }
 
+/**
+ * get the Path prefix
+ * local dev : no prefix (and GAE Flex)
+ * GAE Standard : /rest
+ * @param bool for authentication, we need an extra / in the prefix
+ * @return string the prefix
+ */
+function getPrefix($authCheck=false)
+{
+  return isGAE() ? "/rest".($authCheck?"/":""):"";
+}
 
+/**
+ * if the application is deployed on Google App Engine, it returns true.
+ * @return bool
+ */
+function isGAE()
+{
+  return array_key_exists('GAE_RUNTIME', $_SERVER );
+}
 
 
 // Routes

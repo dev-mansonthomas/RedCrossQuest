@@ -15,7 +15,7 @@ use \RedCrossQuest\Entity\PointQueteEntity;
 /**
  * fetch point de quete for an UL
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
 
@@ -45,7 +45,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
 /**
  * fetch point de quete for an UL
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
 
@@ -94,7 +94,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $respon
  *
  * Dispo pour les roles de 2 à 9
  */
-$app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args)
+$app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -120,7 +120,7 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $r
 /**
  * Crée un nouveau queteur
  */
-$app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

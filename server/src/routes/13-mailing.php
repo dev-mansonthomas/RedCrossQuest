@@ -15,7 +15,7 @@ use RedCrossQuest\Service\ClientInputValidator;
  *
  * Dispo pour le role admin local
  */
-$app->get('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -40,7 +40,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, 
 /**
  * Send a batch of mailing
  */
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, $args)
 {
   $decodedToken         = $request->getAttribute('decodedJWT');
   $namedDonationEntity  = null;
@@ -66,7 +66,7 @@ $app->post('/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response,
 /**
  * Confirm the opening of a spotfire dashboard for a queteur
  */
-$app->post('/thanks_mailing/{guid}', function ($request, $response, $args)
+$app->post(getPrefix().'/thanks_mailing/{guid}', function ($request, $response, $args)
 {
   try
   {

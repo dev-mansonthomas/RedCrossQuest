@@ -18,7 +18,7 @@ use \RedCrossQuest\Entity\YearlyGoalEntity;
  *
  * Dispo pour le role admin local
  */
-$app->get('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -60,7 +60,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $respon
  * Update goal and it's split across days for an UL
  *
  */
-$app->put('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function ($request, $response, $args)
+$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -68,7 +68,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function ($request, $r
     $ulId             = $decodedToken->getUlId  ();
     $input            = $request->getParsedBody();
     $yearlyGoalEntity = new YearlyGoalEntity($input, $this->logger);
-    
+
     $this->yearlyGoalDBService->update($yearlyGoalEntity, $ulId);
   }
   catch(\Exception $e)
@@ -84,7 +84,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function ($request, $r
 /**
  * Create goals for a year
  */
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

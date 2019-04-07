@@ -16,7 +16,7 @@ use \RedCrossQuest\Entity\TroncEntity;
 /**
  récupère la liste des troncs (affichage des Troncs & QRCode Troncs)
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -61,7 +61,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $
  * récupère le détails d'un tronc (a enrichir avec les troncs_queteurs associés)
  *
  * */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -90,7 +90,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
  * Update le tronc, seulement pour l'admin
  *
  * */
-$app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
+$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -118,7 +118,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $respon
  * Update le tronc, seulement pour l'admin
  *
  * */
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/troncs', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/troncs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

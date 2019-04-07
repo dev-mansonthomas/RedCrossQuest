@@ -16,7 +16,7 @@ require '../../vendor/autoload.php';
  * récupère l'historique d'un tronc_queteur par son id
  *
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

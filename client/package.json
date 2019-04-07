@@ -1,7 +1,7 @@
 {
   "name": "redcrossquest-client",
   "description": "RedCrossQuest front end",
-  "licence": "GPL-3.0",
+  "license": "GPL-3.0",
   "version": "1.0.0",
   "repository": {
     "type": "git",

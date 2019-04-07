@@ -17,7 +17,7 @@ use \RedCrossQuest\Entity\NamedDonationEntity;
  *
  * Dispo pour le role admin local
  */
-$app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -59,7 +59,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $res
  * get one named donation
  *
  */
-$app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
 {
   $namedDonationEntity  = null;
   $decodedToken = $request->getAttribute('decodedJWT');
@@ -86,7 +86,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request,
  * Update named donation
  *
  */
-$app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
+$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
 {
   $decodedToken         = $request->getAttribute('decodedJWT');
   $namedDonationEntity  = null;
@@ -113,7 +113,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request,
 /**
  * Create named donation
  */
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $response, $args)
 {
   $decodedToken         = $request->getAttribute('decodedJWT');
   $namedDonationEntity  = null;

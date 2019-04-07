@@ -18,7 +18,7 @@ use \RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
  *
  * Dispo pour le role admin local
  */
-$app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
+$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -60,7 +60,7 @@ $app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $respons
  * Update amount of money collected for one day of one year of the current Unite Locale
  *
  */
-$app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $response, $args)
+$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try
@@ -68,7 +68,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
     $ulId                         = $decodedToken->getUlId ();
     $input                        = $request->getParsedBody();
     $dailyStatsBeforeRCQEntity    = new DailyStatsBeforeRCQEntity($input, $this->logger);
-    
+
     $this->dailyStatsBeforeRCQDBService->update($dailyStatsBeforeRCQEntity, $ulId);
   }
   catch(\Exception $e)
@@ -82,7 +82,7 @@ $app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $re
 /**
  * Creation of all days for a year for an UL)
  */
-$app->post('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
+$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
   try

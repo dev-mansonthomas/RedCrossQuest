@@ -28,10 +28,10 @@ class AuthorisationMiddleware
   private static $errorMessage = [
     '0001' => "Rejecting non https (%s) connection on '%s'",
     '0002' => "Rejecting request as \$authorizations is empty (so no token)",
-    '0003' => "Rejecting request, fails to decode Token or Authentication fails: %s",
+    '0003' => "Rejecting request, fails to decode Token or Authentication fails: %s, path: %s, \$_SERVER: %s",
     '0004' => "Rejecting request, failed to parse roleId from roleIdStr (%s) in Path: '%s' decoded token:%s",
     '0005' => "Rejecting request, retrieving the roleId : explode function fails to return 2 elements array as expected for Path: '%s', explodedPath: %s DecodedToken: %s",
-    '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: '%s', DecodedToken: %s",
+    '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: Path: '%s', \$roleIdStr:'%s',  \$roleId:'%s', \$decodedToken->getRoleId():'%s', DecodedToken: %s",
     '0007' => "General Error while authenticating the request",
     '0008' => "wrong format for a jwt token (should have exactly 2 '.')  '%s'",
     '0009' => "rejecting token, signature verification fails. Token : '%s'",
@@ -144,9 +144,11 @@ class AuthorisationMiddleware
   {
     $path  = "";
     $start =  0;
+
     try
     {
       $path   = $request->getUri()->getPath   ();
+      //$this->logger->error($path, array("\$_SERVER"=>$_SERVER));
       $scheme = $request->getUri()->getScheme ();
       $host   = $request->getUri()->getHost   ();
 
@@ -158,13 +160,14 @@ class AuthorisationMiddleware
       }
 
       //$this->logger->error("$path");
-      //public path
-      if($path == 'authenticate'      ||
-         $path == 'sendInit'          ||
-         $path == 'resetPassword'     ||
-         $path == 'getInfoFromUUID'   ||
-         strpos($path,'thanks_mailing/') === 0 ||
-         strpos($path,'redQuest/'      ) === 0   )
+
+      //public path that must not go through authentication check
+      if($path == getPrefix(true).'authenticate'      ||
+         $path == getPrefix(true).'sendInit'          ||
+         $path == getPrefix(true).'resetPassword'     ||
+         $path == getPrefix(true).'getInfoFromUUID'   ||
+         strpos($path,getPrefix(true).'thanks_mailing/') === 0 ||
+         strpos($path,getPrefix(true).'redQuest/'      ) === 0   )
       {
         return $next($request, $response);
       }
@@ -177,22 +180,24 @@ class AuthorisationMiddleware
         return $this->denyRequest($response, '0002');
       }
       $authorization = $authorizations[0];
-      $tokenStr = substr($authorization, $this->bearerStrLen, strlen($authorization) - $this->bearerStrLen);
+      $tokenStr      = substr($authorization, $this->bearerStrLen, strlen($authorization) - $this->bearerStrLen);
 
       $decodedToken = $this->authenticate($tokenStr);
 
       //check if authenticated
-      if(!($decodedToken instanceof DecodedToken) || $decodedToken->getAuthenticated() === false)
+      if($decodedToken->getAuthenticated() === false)
       {//token invalid
-        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true)));
-        return $this->denyRequest($response, sprintf('0003'.'.%s',$decodedToken->getErrorCode()));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true), $path));
+        return $this->denyRequest($response, sprintf('0003'.'.%s - %s', $decodedToken->getErrorCode(), $path));
       }
       
       //check if the roleId in the URL match the one in the JWT Token (user might have changed the URL)
       $path         = $request->getUri()->getPath();
-      $explodedPath = explode("/", $path,2);
+      $explodedPath = explode("/",  isGAE() ? substr($path, strlen('/rest/')):$path,2);
 
-      if(count($explodedPath) == 2) //explode with limit 2 will return one element + the rest of the string, so array size is 2.
+      //$this->logger->error("path info", array("path"=>$path, "explodedPath"=>$explodedPath, "\$_SERVER"=>$_SERVER));
+
+      if(count($explodedPath) == 2) //explode with limit 2 will return one element + the rest of the string, so array size is maximum 2 but can be less
       {
         $roleIdStr = $explodedPath[0];
 
@@ -212,7 +217,7 @@ class AuthorisationMiddleware
 
       if($decodedToken->getRoleId() != $roleId)
       {
-        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0006'], $path, print_r($decodedToken, true)));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0006'], $path, $roleIdStr, $roleId, $decodedToken->getRoleId(), print_r($decodedToken, true)));
         return $this->denyRequest($response, '0006');
       }
 
