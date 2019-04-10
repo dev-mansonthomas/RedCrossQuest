@@ -83,11 +83,11 @@
     };
     vm.sendInit = function()
     {
-      var regexp = /[0-9]{4,7}[A-Z]{1,1}/;
+      var regexp = /[0-9]{4,7}[A-Za-z]{1,1}/;
 
       if(typeof vm.username === "undefined" || vm.username === '' || !regexp.test(vm.username))
       {
-        vm.error="Veuillez saisir votre login (nivol)";
+        vm.errorStr="Veuillez saisir votre login (nivol) au bon format (sans les premiers 0)";
         return;
       }
 

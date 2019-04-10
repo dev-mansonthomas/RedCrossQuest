@@ -327,7 +327,7 @@ LIMIT 1
 UPDATE  `users`
 SET     init_passwd_uuid  = :uuid,
         init_passwd_date  = DATE_ADD(NOW(), INTERVAL 1 HOUR)
-WHERE   nivol             = :nivol
+WHERE   nivol             = UPPER(:nivol)
 AND     active            = 1
 AND     role             != 9
 ";
