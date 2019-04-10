@@ -23,7 +23,18 @@ then
   exit 1
 fi
 
+#load common functions
+. common.sh
+
+PROJECT_ID="rcq-${COUNTRY}-${ENV}"
+setProject ${PROJECT_ID}
+
 ./init_lib/create_gae.sh
-
 ./init_lib/create_topics.sh
+./init_lib/init_api.sh
 
+#init RedQuest API as well
+PROJECT_ID="rq-${COUNTRY}-${ENV}"
+setProject ${PROJECT_ID}
+
+./init_lib/init_api.sh

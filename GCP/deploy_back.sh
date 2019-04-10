@@ -18,8 +18,17 @@ fi
 #load properties
 . ~/.cred/rcq-${COUNTRY}-${ENV}.properties
 
-#set current project to target project
-gcloud config set project rcq-${COUNTRY}-${ENV}
+
+#load common functions
+if [[ -f common.sh ]]
+then
+  . common.sh
+else
+  . GCP/common.sh
+fi
+#if it does not exists, it means we're being called by ../gcp-deploy.sh (so not the same working dir), and it includes the common.sh
+setProject "rcq-${COUNTRY}-${ENV}"
+
 
 
 ##############################################################

@@ -16,12 +16,18 @@ then
 fi
 
 
+#load common functions
+if [[ -f common.sh ]]
+then
+  . common.sh
+else
+  . GCP/common.sh
+fi
+#if it does not exists, it means we're being called by ../gcp-deploy.sh (so not the same working dir), and it includes the common.sh
+setProject "rcq-${COUNTRY}-${ENV}"
+
 #load properties
 . ~/.cred/rcq-${COUNTRY}-${ENV}.properties
-
-#set current project to target project
-gcloud config set project rcq-${COUNTRY}-${ENV}
-
 
 ##############################################################
 ##############################################################
@@ -66,7 +72,7 @@ sed -i '' "s/__env__/${ENV}/g"         graph-display.html
 echo "***** editing ReCaptCha key *****"
 #Updating Google reCaptcha public ID
 #hardcoded value that works for dev env.
-sed -i '' "s/6Lex7ogUAAAAALTYBxHbGoyBuRPm9bVxrT4gz8lO/${GOOGLE_RECAPTCHA_KEY}/g"         index.html
+sed -i '' "s/6LfotpwUAAAAAC8_CXrehkh_47heekwAJDqPwQCZ/${GOOGLE_RECAPTCHA_KEY}/g"         index.html
 
 echo "***** fixing bower libraries *****"
 # TODO see how to fix this in GULP

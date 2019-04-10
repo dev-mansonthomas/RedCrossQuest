@@ -28,42 +28,16 @@ then
   exit 1
 fi
 
+#load common functions
+. GCP/common.sh
+
+setProject "rcq-${COUNTRY}-${ENV}"
+
+#list current connect google account
+gcloud auth list
+
 
 echo "Deploying ${TARGET}"
-
-
-if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "route1" ]]
-then
-  echo
-  echo
-  echo "##############################################################"
-  echo "##############################################################"
-  echo "#                 ROUTING TABLE                              #"
-  echo "##############################################################"
-  echo "##############################################################"
-  echo
-  echo
-
-  #deploy routing information
-  gcloud app deploy GCP/dispatch.yaml -q
-fi
-
-if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "front1" ]]
-then
-
-  echo
-  echo
-  echo "##############################################################"
-  echo "##############################################################"
-  echo "#                     FRONT END                              #"
-  echo "##############################################################"
-  echo "##############################################################"
-  echo
-  echo
-
-  #deploy front project
-  GCP/deploy_front.sh "${COUNTRY}" "${ENV}"
-fi
 
 if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "back1" ]]
 then
@@ -80,6 +54,25 @@ then
   #deploy back project
   GCP/deploy_back.sh "${COUNTRY}" "${ENV}"
 
+fi
+
+
+
+if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "front1" ]]
+then
+
+  echo
+  echo
+  echo "##############################################################"
+  echo "##############################################################"
+  echo "#                     FRONT END                              #"
+  echo "##############################################################"
+  echo "##############################################################"
+  echo
+  echo
+
+  #deploy front project
+  GCP/deploy_front.sh "${COUNTRY}" "${ENV}"
 fi
 
 
@@ -100,3 +93,19 @@ then
 
 fi
 
+
+if  [[ "${TARGET}1" == "all1" ]] || [[ "${TARGET}1" == "route1" ]]
+then
+  echo
+  echo
+  echo "##############################################################"
+  echo "##############################################################"
+  echo "#                 ROUTING TABLE                              #"
+  echo "##############################################################"
+  echo "##############################################################"
+  echo
+  echo
+
+  #deploy routing information
+  gcloud app deploy GCP/dispatch.yaml -q
+fi
