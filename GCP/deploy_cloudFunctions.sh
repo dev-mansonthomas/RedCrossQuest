@@ -110,9 +110,11 @@ function deployHttpFunction
 {
   FUNCTION_NAME="$1"
   #get the correct project prefix for the function
-  PROJECT_ID="${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]}-${COUNTRY}-${ENV}"
+  PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]}
+  PROJECT_NAME_UPPER=$(echo ${PROJECT_NAME} | tr a-z A-Z)
+  PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 
-  SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${FUNCTION_NAME}
+  SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
 
   echo
   echo "################################################################################################################"
@@ -143,7 +145,10 @@ function deployPubSubFunction
   FUNCTION_TOPIC="${PARAM_ARRAY[1]}"
 
   #get the correct project prefix for the function
-  PROJECT_ID="${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]}-${COUNTRY}-${ENV}"
+   #get the correct project prefix for the function
+  PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]}
+  PROJECT_NAME_UPPER=$(echo ${PROJECT_NAME} | tr a-z A-Z)
+  PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 
 
   echo
@@ -152,7 +157,7 @@ function deployPubSubFunction
   echo "################################################################################################################"
   echo
 
-  SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${FUNCTION_NAME}
+  SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
 
   generateEnvFile "${FUNCTION_NAME}"
   ENV_VAR="${RETURN_VALUE}"

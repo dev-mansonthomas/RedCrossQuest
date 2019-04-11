@@ -127,6 +127,10 @@ else
     cat ./tmp/${COUNTRY}-${ENV}-DB-DUMP.sql | mysql
 fi
 
+echo "creating tronc_queteur Historisation Trigger"
+cat ./sql/tronc_queteur_trigger.sql | mysql
+
+
 echo "creating user"
 cat ./tmp/CreateUser.sql | mysql
 
