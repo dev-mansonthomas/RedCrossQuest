@@ -47,6 +47,7 @@ class MailService
    * @param string $recipientFirstName    Recipient First Name
    * @param string $recipientLastName     Recipient Last Name
    * @param string $content               Email html content
+   * @return int Mail status code
    * @throws \Exception                   when sending the email fails
    */
   public function sendMail($application,

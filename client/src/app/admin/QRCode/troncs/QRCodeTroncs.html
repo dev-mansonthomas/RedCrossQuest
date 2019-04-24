@@ -68,6 +68,8 @@
       <div class="panel-heading">QR Code des Troncs ACTIF</div>
     </div>
 
+    <div class="alert alert-danger" style="background-color:red;color:black;font-size:36px;text-align:center;" ng-show="qrcQueteurs.deploymentType!='P'"><strong>⛔️ ATTENTION ⛔️</strong> <br/>NE PAS DIFFUSER - CE N'EST PAS LA PRODUCTION</div>
+
     <div class="row no-print">
       Size: {{qrcTroncs.size}}
       <input type="range" id="size" class="range ng-valid ng-dirty ng-touched" ng-model="qrcTroncs.size" min="100" max="500">

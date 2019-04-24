@@ -6,16 +6,16 @@
   'use strict';
 
   angular
-    .module('redCrossQuestClient')
-    .controller('SettingsController', SettingsController);
+  .module('redCrossQuestClient')
+  .controller('RedQuestController', RedQuestController);
 
   /** @ngInject */
-  function SettingsController($rootScope, $log, $localStorage, $location,
-                                SettingsResource, DateTimeHandlingService)
+  function RedQuestController($rootScope, $log, $localStorage, $location,
+                              SettingsResource)
   {
     var vm = this;
     vm.currentUserRole=$localStorage.currentUser.roleId;
-    $rootScope.$emit('title-updated', 'Paramètres');
+    $rootScope.$emit('title-updated', 'QRCode RedQuest');
 
     //load the local stoarge version first
     vm.settings       = $localStorage.guiSettings;
@@ -47,26 +47,11 @@
       vm.token_benevole_1j_url = 'https://'+computeSubDomain()+vm.settings.RedQuestDomain+'/registration?uuid='+vm.settings.ul_settings.token_benevole_1j;
     }
 
-
-
     function handleResult (settings)
     {
       vm.settings = settings;
       computeURL();
-      /*
-      $log.info("Find '"+settings.length+"' settings");
-      vm.settings = settings;
-      var counti = settings.length;
-      var i=0;
-      for(i=0;i<counti;i++)
-      {
-        vm.settings[i].created      = DateTimeHandlingService.handleServerDate(vm.settings[i].created     ).stringVersion;
-        vm.settings[i].updated      = DateTimeHandlingService.handleServerDate(vm.settings[i].updated     ).stringVersion;
-      }*/
     }
-
-
-
   }
 })();
 

@@ -31,9 +31,14 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
   {
     $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true );
     $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
-    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
 
-    $this->logger->info("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
+    $this->logger->info("Route : authenticate: $username");
+    //$token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
+
+    //$this->logger->info("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
+
+  //TODO Plane mode, uncomment
+    /*
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
 
     if($reCaptchaResponseCode > 0)
@@ -43,7 +48,7 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
 
       return $response401;
     }
-
+*/
     //$this->logger->info("getUserInfoWithNivol");
     $user           = $this->userDBService->getUserInfoWithNivol($username);
 
@@ -143,7 +148,12 @@ $app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($
   try
   {
     $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true);
+    $this->logger->info("Route : sendInit: $username");
+
+  //TODO : plane mode, uncomment
+    /*
     $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true);
+
 
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/sendInit", $username);
 
@@ -154,7 +164,7 @@ $app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($
 
       return $response401;
     }
-
+*/
     $uuid          = $this->userDBService->sendInit($username);
 
     if($uuid != null)
@@ -178,7 +188,8 @@ $app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($
   catch(\Exception $e)
   {
     $this->logger->error("unexpected exception during sendInit", array("username"=>$username, "Exception"=>$e));
-    $response->getBody()->write(json_encode(["success"=>false]));
+    //TODO remove exception
+    $response->getBody()->write(json_encode(["success"=>false, "ex"=>$e]));
     return $response;
   }
 

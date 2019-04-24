@@ -126,6 +126,11 @@
         controller  : 'QRCodeQueteursController',
         controllerAs: 'qrcQueteurs'
       })
+    .when('/QRCode/redQuest', {
+      templateUrl : 'app/admin/QRCode/redQuest/redQuest.html',
+      controller  : 'RedQuestController',
+      controllerAs: 'rq'
+    })
 
       // ============== Graph Spotfire ==============
       .when('/graph', {
@@ -177,6 +182,12 @@
         templateUrl : 'app/admin/exportData/exportData.html',
         controller  : 'ExportDataController',
         controllerAs: 'ed'
+      })
+      // ============== CHANGELOG   ==============
+      .when('/changelog', {
+        templateUrl : 'app/changelog/changelog.html',
+        controller  : 'ChangelogController',
+        controllerAs: 'cl'
       })
       // ============== OTHERWISE ==============
       .otherwise({

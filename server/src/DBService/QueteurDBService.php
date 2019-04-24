@@ -904,12 +904,7 @@ VALUES
       "referent_volunteer" => $queteur->secteur == 3 ? $queteur->referent_volunteer : 0
     ];
 
-    $this->logger->error("Before insert queteur after registration", array("parameters"=>$parameters));
-
     $stmt->execute($parameters);
-
-
-
     $stmt->closeCursor();
 
     $stmt = $this->db->query("select last_insert_id()");

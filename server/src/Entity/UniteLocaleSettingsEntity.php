@@ -11,8 +11,10 @@ class UniteLocaleSettingsEntity  extends Entity
   public $created;
   public $updated;
   public $last_update_user_id;
+  public $token_benevole;
+  public $token_benevole_1j;
 
-  protected $_fieldList = ['id','ul_id','settings','created','updated','last_update_user_id'];
+  protected $_fieldList = ['id','ul_id','settings','created','updated','last_update_user_id','token_benevole','token_benevole_1j'];
 
   /**
    * Accept an array of data matching properties of this class
@@ -30,5 +32,9 @@ class UniteLocaleSettingsEntity  extends Entity
     $this->getDate    ('created'                 , $data);
     $this->getDate    ('updated'                 , $data);
     $this->getInteger ('last_update_user_id'     , $data);
+
+    $this->getString  ('token_benevole'          , $data, 36);
+    $this->getString  ('token_benevole_1j'       , $data, 36);
+
   }
 }

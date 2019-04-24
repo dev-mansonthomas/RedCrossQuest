@@ -315,22 +315,30 @@ LIMIT 1
    * update the user with the init uuid (generated buy this method) and the time until the uuid is valid (now+one hour)
    *
    * @param string $username the nivol of the user who want to init its password
+   * @param bool          $firstInit  If it's the first init, the TTL of the link is 48h, otherwise 4h
    * @return string the generated uuid
    * @throws \Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function sendInit(string $username)
+  public function sendInit(string $username, bool $firstInit = false)
   {
     $uuid = Uuid::uuid4();
+
+    if($firstInit)
+      $mailTTL = 48;
+    else
+      $mailTTL = 4;
 
     $sql = "
 UPDATE  `users`
 SET     init_passwd_uuid  = :uuid,
-        init_passwd_date  = DATE_ADD(NOW(), INTERVAL 1 HOUR)
+        init_passwd_date  = DATE_ADD(NOW(), INTERVAL $mailTTL HOUR)
 WHERE   nivol             = UPPER(:nivol)
 AND     active            = 1
 AND     role             != 9
 ";
+
+    $this->logger->info("SendInit for password reset", ['username'=>$username, 'uuid'=>$uuid, 'mailTTL'=>$mailTTL]);
 
     $stmt = $this->db->prepare($sql);
     $stmt->execute(

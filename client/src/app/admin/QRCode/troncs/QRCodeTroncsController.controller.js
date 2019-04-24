@@ -14,7 +14,7 @@
                                   TroncResource)
   {
     var vm = this;
-
+    vm.deploymentType = $localStorage.currentUser.d;
     vm.size=200;
     var ulInfo = $localStorage.guiSettings.ul;
 

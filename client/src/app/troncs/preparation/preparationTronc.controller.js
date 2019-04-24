@@ -67,15 +67,9 @@
         return 'Base UL';
     };
 
-    //pointQuete list
-    vm.pointsQuete = PointQueteResource.query();
-    vm.pointsQuete.$promise.then(function success(pointQueteList)
-    {
-      vm.pointsQueteHash = [];
-      pointQueteList.forEach(function(onePointQuete){
-        vm.pointsQueteHash[onePointQuete.id]=onePointQuete;
-      });
-    });
+    //pointQuete list is normally loaded in localStorage in main.controller.js
+    vm.pointsQuete    = $localStorage.pointQuete;
+    vm.pointsQueteHash= $localStorage.pointsQueteHash;
 
     //This watch change on queteur variable to update the queteurId field
     $scope.$watch('pt.current.queteur', function(newValue/*, oldValue*/)
@@ -205,6 +199,12 @@
 
     vm.isQueteurAllowed=function()
     {
+      if(!vm.current.queteur)
+        return false;
+
+      if(!vm.current.queteur.birthdate)
+        return false;
+
       if(moment().diff(vm.current.queteur.birthdate.date, 'years')>=18)
         return true;
 

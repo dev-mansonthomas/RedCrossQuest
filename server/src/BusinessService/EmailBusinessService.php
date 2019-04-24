@@ -3,9 +3,11 @@
 namespace RedCrossQuest\BusinessService;
 
 
+use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Logging\PsrLogger;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\DBService\MailingDBService;
+use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\Entity\MailingInfoEntity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
@@ -29,28 +31,39 @@ class EmailBusinessService
   protected $mailingDBService;
 
   /**
+   * @var UniteLocaleDBService
+   * */
+  protected $uniteLocaleDBService;
+
+  /**
    * @var MailService
    * */
   protected $mailService;
 
 
-  public function __construct($logger, $mailService, $mailingDBService, $appSettings)
+  public function __construct(PsrLogger             $logger,
+                              MailService           $mailService,
+                              MailingDBService      $mailingDBService,
+                              UniteLocaleDBService  $uniteLocaleDBService,
+                              $appSettings)
   {
 
-    $this->logger           = $logger;
-    $this->appSettings      = $appSettings;
-    $this->mailService      = $mailService;
-    $this->mailingDBService = $mailingDBService;
+    $this->logger               = $logger;
+    $this->appSettings          = $appSettings;
+    $this->mailService          = $mailService;
+    $this->mailingDBService     = $mailingDBService;
+    $this->uniteLocaleDBService = $uniteLocaleDBService;
   }
 
 
   /**
    * Send an email to allow the user to reset its password (or create the password for the first connexion)
-   * @param QueteurEntity $queteur  The information of the user
-   * @param string        $uuid     The uuid to be inserted in the email
+   * @param QueteurEntity $queteur    The information of the user
+   * @param string        $uuid       The uuid to be inserted in the email
+   * @param bool          $firstInit  If it's the first init, the TTL of the link is 48h, otherwise 4h
    * @throws \Exception   if the email fails to be sent
    */
-  public function sendInitEmail(QueteurEntity $queteur, string $uuid)
+  public function sendInitEmail(QueteurEntity $queteur, string $uuid, bool $firstInit = false)
   {
     $this->logger->info("sendInitEmail:'".$queteur->email."'");
 
@@ -59,15 +72,24 @@ class EmailBusinessService
     $startValidityDateCarbon = new Carbon();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
+    $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
+
+    if($firstInit)
+      $mailTTL = "48 heures";
+    else
+      $mailTTL = "4  heures";
+
+    $title = "Réinitialisation de votre mot de passe";
+
     $this->mailService->sendMail(
       "RedCrossQuest",
       "sendInitEmail",
-      "[".$queteur->nivol."] Réinitialisation de votre mot de passe",
+      "[".$queteur->nivol."] $title",
       $queteur->email,
       $queteur->first_name,
       $queteur->last_name,
+      $this->getMailHeader($title, $queteur->first_name).
       "
-Bonjour ".$queteur->first_name.",<br/>
 <br/>
  Cet email fait suite à votre demande de réinitialisation de mot de passe pour l'application RedCrossQuest.<br/>
  Votre login est votre NIVOL : <b>'".$queteur->nivol."'</b><br/>
@@ -76,12 +98,9 @@ Bonjour ".$queteur->first_name.",<br/>
  Pour réinitialiser votre mot de passe, cliquez sur le lien suivant :<br/>
 <br/> 
  <a href='".$url."' target='_blank'>".$url."</a><br/>
- Ce lien est valide une heure à compter du : ".$startValidityDateString."
+ Ce lien est valide $mailTTL à compter du : ".$startValidityDateString."
 <br/> 
-<br/> 
- Cordialement,<br/>
- Le support de RedCrossQuest<br/>
-");
+<br/>".$this->getMailFooter($uniteLocaleEntity, false, $queteur));
 
   }
 
@@ -101,18 +120,22 @@ Bonjour ".$queteur->first_name.",<br/>
 
     $url=$this->appSettings['appUrl'];
 
+    $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
+
     $changePasswordDate = new Carbon();
     $changePasswordDateString = $changePasswordDate->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
+
+    $title="Votre mot de passe a été changé";
 
     $this->mailService->sendMail(
       "RedCrossQuest",
       "sendResetPasswordEmailConfirmation",
-      "[".$queteur->nivol."] Votre mot de passe a été changé",
+      "[".$queteur->nivol."] $title",
       $queteur->email,
       $queteur->first_name,
       $queteur->last_name,
+      $this->getMailHeader($title, $queteur->first_name).
       "
-Bonjour ".$queteur->first_name.",<br/>
 <br/>
  Cet email confirme le changement de votre mot de passe pour l'application RedCrossQuest le $changePasswordDateString.<br/>
  Votre login est votre NIVOL : '".$queteur->nivol."'
@@ -122,10 +145,7 @@ Bonjour ".$queteur->first_name.",<br/>
 <br/> 
  <a href='".$url."' target='_blank'>".$url."</a><br/>
 <br/> 
-<br/> 
- Cordialement,<br/>
- RedCrossQuest<br/>
-");
+".$this->getMailFooter($uniteLocaleEntity, false, $queteur));
 
   }
 
@@ -140,19 +160,21 @@ Bonjour ".$queteur->first_name.",<br/>
   {
     $this->logger->info("sendAnonymizationEmail:'".$queteur->email."'");
 
+    $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
+
     $anonymiseDateCarbon = new Carbon();
     $anonymiseDateString = $anonymiseDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
+    $title = "Suite à votre demande, vos données viennent d'être anonymisées";
 
     $this->mailService->sendMail(
       "RedCrossQuest",
       "sendAnonymizationEmail",
-      $queteur->first_name.", Suite à votre demande, vos données viennent d'être anonymisées",
+      $title,
       $queteur->email,
       $queteur->first_name,
       $queteur->last_name,
-      "
-<p>Bonjour ".$queteur->first_name.",</p>
+      $this->getMailHeader($title, $queteur->first_name)."
 
 <p>
  Cet email fait suite à votre demande d'anonymisation de vos données personnelles de l'application RedCrossQuest, 
@@ -192,11 +214,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
 <p>
  Si vous n'êtes pas à l'origine de cette demande, contactez l'unité locale de '".$queteur->ul_name."' et donner leur ce token ainsi que les informations listées plus haut dans cet email pour revaloriser votre fiche.
 </p>
- 
-<br/> 
- Cordialement,<br/>
- RedCrossQuest<br/>
-");
+".$this->getMailFooter($uniteLocaleEntity, false, $queteur));
 
   }
 
@@ -241,47 +259,22 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
       $this->mailingDBService->updateQueteurWithSpotfireAccessToken($mailingInfoEntity->spotfire_access_token, $mailingInfoEntity->id, $uniteLocaleEntity->id);
     }
 
-    $rcqBanner = "<div style='background-color: #222222;'><img src=\"https://www.redcrossquest.com/assets/images/RedCrossQuestLogo.png\" style=\"height: 50px;\"/></div>";
-
-    $emailContact = urlencode("
-$rcqBanner
-
-Bonjour la Croix Rouge de ".$uniteLocaleEntity->name.",<br/>
-<br/>
-J'ai une demande en relation avec <b>mes données personnelles et l'application RedCrossQuest</b>:<br/>
-Note: cet email est à transférer au responsable de la quête, au trésorier ou au président de l'UL<br/>
-<br/> 
-------------------<br/>
-<i>Votre demande ici</i><br/>
-------------------<br/>
-<br/>
-<a href='https://www.redcrossquest.com/#!/queteurs/edit/".$mailingInfoEntity->id."' target='_blank'>Lien vers RCQ</a><br/>
-<br/>
-En vous remerciant,<br/>
-".$mailingInfoEntity->first_name." ".$mailingInfoEntity->last_name.", ".$mailingInfoEntity->email.".<br/><br/>");
-
-
     $url        = $this->appSettings['appUrl'].$this->appSettings['graphPath']."?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
-
-    $startValidityDateCarbon = new Carbon();
-    $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
     try
     {
 
+      $title = $mailingInfoEntity->first_name.", Merci pour votre Participation aux Journées Nationales de la Croix Rouge";
       $statusCode = $this->mailService->sendMail(
         "RedCrossQuest",
         "sendAnonymizationEmail",
-        $mailingInfoEntity->first_name.", Merci pour votre Participation aux Journées Nationales de la Croix Rouge",
+        $title,
         $mailingInfoEntity->email,
         $mailingInfoEntity->first_name,
         $mailingInfoEntity->last_name,
-        "
-$rcqBanner
-<br/>    
-Bonjour ".$mailingInfoEntity->first_name.",<br/>
+        $this->getMailHeader($title, $mailingInfoEntity->first_name)."
 <br/>
-Encore une fois nous tenions à te remercier pour ta participation aux journées nationales 2018 de la Croix-Rouge française !<br/>
+Encore une fois nous tenions à te remercier pour ta participation aux journées nationales ".(new Carbon())->year()." de la Croix-Rouge française !<br/>
 <br/>
 Nous t'avons préparé un petit résumé de ce que ta participation représente pour l'unité locale de ".$uniteLocaleEntity->name.". <br/>
 Tu y trouveras également un message de remerciement de son Président. <br/>
@@ -295,22 +288,7 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
 </small>
 <br/>
 <br/>
-Amicalement,<br/>
-L'Unité Locale de ".$uniteLocaleEntity->name.",<br/>
-".$uniteLocaleEntity->phone."<br/>
-".$uniteLocaleEntity->email."<br/>
-".$uniteLocaleEntity->address.", ".$uniteLocaleEntity->postal_code.", ".$uniteLocaleEntity->city."<br/>
-<br/>
-<small style='color:silver;'>
-Cet email est envoyé depuis la plateforme RedCrossQuest qui permet aux unités locales de gérer les journées nationales.<br/>
-Vos données ne sont utilisées que pour la gestion des Journées Nationales et ne sont pas partagées avec un tiers.<br/>
-Notre politique de protection des données conforme à la RGPD est <a href=\"".$this->appSettings['RGPD']."\" target='_blank' style='color:grey;'>disponible ici</a>.<br/>
-Vous pouvez demander à ne plus recevoir d'email de la platforme ou à corriger / anonymiser vos données par email<br/>
-<a href=\"mailto:".$uniteLocaleEntity->email."?subject=[RedCrossQuest]Newsletter ou données personnelles&body=$emailContact\" style='color:grey;'>Contactez nous ici</a><br/>
-<br/>
-email envoyé le $startValidityDateString<br/>
-</small>
-");
+". $this->getMailFooter($uniteLocaleEntity, true, $mailingInfoEntity));
 
 
       $mailingInfoEntity->status = $statusCode;
@@ -326,4 +304,162 @@ email envoyé le $startValidityDateString<br/>
 
     return $mailingInfoEntity;
   }
+
+  /**
+   * @param string $title the title of the email
+   * @param string $bonjour the text that will be displayed after the "Bonjour word
+   * @return string return the html of the mail header
+   */
+  public function getMailHeader(string $title, string $bonjour)
+  {
+    return "
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<head>
+  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>
+  <title>[RedCrossQuest] $title</title>
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>
+<body>
+
+
+
+
+  <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"500\">
+  <tr>
+    <td style=\"background-color:#FFFFFF;\">
+      <table style=\"width:100%;padding:0; margin:0;\" >
+        <tr>
+          <td style=\"font-family: Helvetica; font-size: 24px;font-weight: bolder;padding:8px;\">
+            <div style='background-color: #222222;'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/RedCrossQuestLogo.png\" style=\"height: 50px;\"/></div>
+          </td>
+          <!-- 
+          //TODO 
+          https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/logoCRF.png
+          http://mansonthomas.com/CRF/Paris1erEt2eme/logoCRF.png
+          -->
+          <td style=\"text-align: right;\"><img src=\"http://mansonthomas.com/CRF/Paris1erEt2eme/logoCRF.png\" alt=\"Croix Rouge Française\" style=\"height: 90px;\"/></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <td style=\"background-color:#e3001b;padding-top:4px;padding-bottom:4px;text-align: center;vertical-align: top;\">
+    &nbsp;
+  </td>
+  <tr>
+    <td style=\"padding-top:20px;padding-bottom: 20px;text-align: center;\"><strong style=\"color:#054752;font-family: Arial, sans-serif;text-decoration:none;font-size:20px;line-height:18px;\"
+    > $title </strong></td>
+  </tr>
+  <tr>
+    <td style=\"padding:5px;font-family:Arial,sans-serif;color:#202020;font-size:16px;text-align:left;background-color: #ffffff;\">
+
+      <strong>Bonjour $bonjour,</strong>
+      <br/>
+
+    
+    ";
+  }
+
+  /**
+   * @param UniteLocaleEntity $uniteLocaleEntity UL info
+   * @param bool $isNewsletter : if true, the wording of the footer is slightly different
+   * @param mixed $queteurInfo : QueteurEntity or MailingInfoEntity : an object with the info of the queteur.
+   * @return string return the html of the mail header
+   */
+  public function getMailFooter(UniteLocaleEntity $uniteLocaleEntity, bool $isNewsletter, $queteurInfo)
+  {
+    $startValidityDateCarbon = new Carbon();
+    $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
+
+    $text1 = $isNewsletter ? "ne plus recevoir d'email de la platforme ou à" : "" ;
+    $text2 = $isNewsletter ? "Newsletter ou données personnelles" : "Données personnelles" ;
+    $text3 = $isNewsletter ? "la newsletter ou " : "" ;
+
+    $emailContact = urlencode($this->getDeploymentType()."
+Bonjour la Croix Rouge de ".$uniteLocaleEntity->name.",
+
+J'ai une demande en relation avec $text3 mes données personnelles et l'application RedCrossQuest:
+Note: cet email est à transférer au responsable de la quête, au trésorier ou au président de l'UL
+
+------------------
+Votre demande ici
+------------------
+
+https://".$this->getDeploymentInfo()."redcrossquest.com/#!/queteurs/edit/\".$queteurInfo->id
+
+En vous remerciant,
+".$queteurInfo->first_name." ".$queteurInfo->last_name.", 
+".$queteurInfo->email.".");
+
+
+
+    return "
+     <p>
+        <span style=\"font-size: 15px;color:grey\">
+        Amicalement,<br>
+L'Unité Locale de ".$uniteLocaleEntity->name.",<br/>
+".$uniteLocaleEntity->phone."<br/>
+".$uniteLocaleEntity->email."<br/>
+".$uniteLocaleEntity->address.", ".$uniteLocaleEntity->postal_code.", ".$uniteLocaleEntity->city."<br/>
+Via l'application RedCrossQuest.
+        </span>
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td style=\"background-color:azure; color:silver;text-align: justify;\">
+Cet email est envoyé depuis la plateforme RedCrossQuest qui permet aux unités locales de gérer les Journées Nationales.<br/>
+Vos données ne sont utilisées que pour la gestion des Journées Nationales et ne sont pas partagées avec un tiers.<br/>
+Notre politique de protection des données conforme à la RGPD est <a href=\"".$this->appSettings['RGPD']."\" target='_blank' style='color:grey;'>disponible ici</a>.<br/>
+Vous pouvez demander à $text1 corriger / anonymiser vos données par email<br/>
+<a href=\"mailto:".$uniteLocaleEntity->email."?subject=".$this->getDeploymentType()."[RedCrossQuest]$text2&body=$emailContact\" style='color:grey;'>Contactez votre unité locale ici</a><br/>
+<br/>
+email envoyé le $startValidityDateString<br/>
+    </td>
+  </tr>
+</table>
+
+</body>
+</head>
+</html>
+";
+  }
+
+
+  /**
+   * Return the subdomain for links to RCQ depending on the current environment
+   * @return string 'www.' for production, 'dev.' for D, 'test.' for T
+   */
+  private function getDeploymentInfo()
+  {
+    $deployment='www.';
+    if($this->appSettings['deploymentType'] == 'D')
+    {
+      $deployment='dev.';
+    }
+    else if($this->appSettings['deploymentType'] == 'T')
+    {
+      $deployment='test.';
+    }
+    return $deployment;
+  }
+
+  /**
+   * Return a string to be put in the email subjects
+   * @return string nothing for production, [Site de DEV] for D, [Site de TEST] for T
+   */
+  private function getDeploymentType()
+  {
+    $deployment='';
+    if($this->appSettings['deploymentType'] == 'D')
+    {
+      $deployment='[Site de DEV]';
+    }
+    else if($this->appSettings['deploymentType'] == 'T')
+    {
+      $deployment='[Site de TEST]';
+    }
+    return $deployment;
+  }
+
 }

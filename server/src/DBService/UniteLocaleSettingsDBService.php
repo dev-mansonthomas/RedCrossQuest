@@ -21,14 +21,16 @@ class UniteLocaleSettingsDBService extends DBService
   public function getUniteLocaleById(int $ulId)
   {
     $sql = "
-SELECT  `uls`.`id`,
-        `uls`.`ul_id`,
-        `uls`.`settings`,
-        `uls`.`created`,
-        `uls`.`updated`,
-        `uls`.`last_update_user_id`
-FROM    `ul_settings`
-WHERE   `ul`.ul_id    = :ul_id
+SELECT  `id`,
+        `ul_id`,
+        `settings`,
+        `created`,
+        `updated`,
+        `last_update_user_id`,
+        `token_benevole`,
+        `token_benevole_1j`
+FROM    `ul_settings` 
+WHERE   `ul_id` = :ul_id
 ";
 
     $stmt = $this->db->prepare($sql);

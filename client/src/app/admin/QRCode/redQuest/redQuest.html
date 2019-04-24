@@ -1,0 +1,69 @@
+<style script="text/css">
+  @media print {
+    a[href]:after {
+      content: none
+    }
+    .printBackground
+    {
+      -webkit-print-color-adjust: exact !important;
+    }
+
+  }
+</style>
+
+<acme-navbar></acme-navbar>
+<div class="container">
+
+  <div class="panel panel-primary hidden-print">
+    <div class="panel-heading">RedQuest : URL &amp; QRCode pour l'inscription des quêteurs</div>
+  </div>
+  <div class="alert alert-danger" style="background-color:red;color:black;font-size:36px;text-align:center;" ng-show="rq.deploymentType!='P'"><strong>⛔️ ATTENTION ⛔️</strong> <br/>NE PAS DIFFUSER - CE N'EST PAS LA PRODUCTION</div>
+  <div class="row hidden-print">
+    <div class="col-md-12">
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Instructions</div>
+        <div class="panel-body">
+          <ul>
+            <li><strong>Utiliser impérativement la dernière version de Chrome</strong></li>
+            <li>Imrpimez cette page et affichée la dans votre local</li>
+            <li>Envoyez le lien vert (à gauche) à vos bénévoles</li>
+            <li>Envoyez le lien bleu (à droite) à vos bénévoles d'un jour</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="alert alert-danger" role="alert" style="font-weight:bolder;text-align:center;font-size: 32px;-webkit-print-color-adjust: exact !important;background-color:#f2dede !important;color:#a94442 !important">
+    Comment s'inscrire à RedQuest : le site mobile du Quêteur
+  </div>
+  <div class="row">
+    <div class="col-md-5 col-md-offset-1 text-center">
+
+      <div class="alert alert-success" role="alert" style="-webkit-print-color-adjust: exact !important;background-color:#dff0d8 !important;"><h1 style="-webkit-print-color-adjust: exact !important;color:#3c763d !important;">Inscription des BENEVOLES</h1></div>
+
+
+      <qr text="rq.token_benevole_url" size="130" ng-cloak></qr><br/>
+
+      <a
+        ng-href="{{rq.token_benevole_url}}"
+         tartget="_blank"
+      style="font-size:18px;font-weight:bolder;">{{rq.token_benevole_url}}</a>
+
+    </div>
+    <div class="col-md-5 col-md-offset-1 text-center">
+
+      <div class="alert alert-info" role="alert"  style="-webkit-print-color-adjust: exact !important;background-color:#d9edf7 !important;"><H1 style="-webkit-print-color-adjust: exact !important;color:#31708f !important;">Inscription des BENEVOLES d'un Jour</H1></div>
+
+      <qr text="rq.token_benevole_1j_url" size="130" ng-cloak></qr><br/>
+
+      <a ng-href="{{rq.token_benevole_1j_url}}"
+         tartget="_blank"
+         style="font-size:18px;font-weight:bolder;">{{rq.token_benevole_1j_url}}</a>
+
+    </div>
+  </div>
+</div>

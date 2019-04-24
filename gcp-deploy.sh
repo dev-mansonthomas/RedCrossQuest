@@ -31,7 +31,7 @@ fi
 #load common functions
 . GCP/common.sh
 
-setProject "rcq-${COUNTRY}-${ENV}"
+setProject "redcrossquest-${COUNTRY}-${ENV}"
 
 #list current connect google account
 gcloud auth list

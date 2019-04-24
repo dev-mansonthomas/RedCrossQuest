@@ -80,7 +80,7 @@ class ClientInputValidator
         "validationType"=> $validationType,
         "violations"    => $violations,
         "inputValue"    => $inputValue));
-      throw new \InvalidArgumentException("Input value fails string validations");
+      throw new \InvalidArgumentException("Input value fails string validations. parameterName='$parameterName', inputValue='$inputValue'" );
     }
 //trim(htmlentities($inputValue, ENT_QUOTES | ENT_HTML5, "UTF-8"));
     //issue with email address where it breaks the validation.

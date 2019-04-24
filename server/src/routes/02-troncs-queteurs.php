@@ -78,19 +78,19 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', functio
         $this->troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
 
         /**
-         * When updating BigQuery, we need to know if it's the first time the user input the coins data or not
-         * So that we know it's an insert or update that we must perform
+         * Publish on pubsub to trigger recomputing of metrics for the queteur
          */
 
         $responseMessageIds = null;
-        $messageProperties  = ['ulId'=>$ulId,'uId'=>$userId, 'queteurId'=>$tq->queteur_id, 'tqId'=>$tq->id];
+        $messageProperties  = ['ul_id'=>"".$ulId,'user_id'=>"".$userId, 'queteur_id'=>"".$tq->queteur_id, 'tronc_queteur_id'=>"".$tq->id];
+        $dataToPublish      = ['ul_id'=>$ulId,'user_id'=>$userId, 'queteur_id'=>$tq->queteur_id, 'tronc_queteur_id'=>$tq->id,
+          'tronc_id'   => $tq->tronc_id, 'point_quete_id'=>$tq->point_quete_id, 'update_date' => Carbon::now()->toDateTimeString(),
+          'first_edit' => $tq->comptage == null ];
         try
         {
           $this->PubSub->publish(
-            $tq->comptage == null ?
-              $this->settings['PubSub']['tronc_queteur_topic']:
-              $this->settings['PubSub']['tronc_queteur_update_topic'],
-            $tq->prepareForPublish(),
+            $this->settings['PubSub']['tronc_queteur_update'],
+            $dataToPublish,
             $messageProperties,
             true,
             true);

@@ -50,8 +50,10 @@ REGION="europe-west1"
 HTTP_FUNCTIONS=("findQueteurById"          \
                 "findULDetailsByToken"     \
                 "registerQueteur"          \
-                "z_testCrossProjectFirestoreConnectivity"\
-                "z_testCrossProjectSQLConnectivity")
+                "z_testCrossProjectFirestoreConnectivity" \
+                "z_testCrossProjectSQLConnectivity"	  \
+		"tronc_setDepartOrRetour"		  \
+		"tronc_listPrepared"                      )
 
 #list of pubsub functions
 #Attention : pas d'espace entre les []
@@ -59,7 +61,8 @@ declare -A PUBSUB_FUNCTIONS=(["notifyRedQuestOfRegistrationApproval"]="queteur_a
                              ["processNewTroncQueteur"]="tronc_queteur"                           \
                              ["processUpdateTroncQueteur"]="tronc_queteur_updated"                \
                              ["queteurCurrentYearAmountTimeWeigthPerYear"]="queteur_data_updated" \
-                             ["ULQueteurStatsPerYear"]="ul_update"                                )
+                             ["ULQueteurStatsPerYear"]="ul_update"                                \
+                             ["ULTriggerRecompute"]="trigger_ul_update"                           )
 
 #in which project should the function be deployed : RedQuest or RedCrossQuest
 #deploy the function in the correct project
@@ -67,6 +70,8 @@ REDQUEST="rq"
 REDCROSSQUEST="rcq"
 declare -A FUNCTIONS_PROJECT_PREFIX=(["findQueteurById"]="${REDQUEST}"                                \
                                      ["findULDetailsByToken"]="${REDQUEST}"                           \
+				     ["tronc_setDepartOrRetour"]="${REDQUEST}"                        \
+				     ["tronc_listPrepared"]="${REDQUEST}"                             \
                                      ["registerQueteur"]="${REDQUEST}"                                \
                                      ["notifyRedQuestOfRegistrationApproval"]="${REDCROSSQUEST}"      \
                                      ["processNewTroncQueteur"]="${REDCROSSQUEST}"                    \
@@ -74,8 +79,12 @@ declare -A FUNCTIONS_PROJECT_PREFIX=(["findQueteurById"]="${REDQUEST}"          
                                      ["queteurCurrentYearAmountTimeWeigthPerYear"]="${REDCROSSQUEST}" \
                                      ["ULQueteurStatsPerYear"]="${REDCROSSQUEST}"                     \
                                      ["z_testCrossProjectFirestoreConnectivity"]="${REDCROSSQUEST}"   \
-                                     ["z_testCrossProjectSQLConnectivity"]="${REDQUEST}"              )
+                                     ["z_testCrossProjectSQLConnectivity"]="${REDQUEST}"              \
+                                     ["ULTriggerRecompute"]="${REDCROSSQUEST}"                        )
 
+
+declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="--timeout 540s"   \
+	                           ["ULQueteurStatsPerYear"]="--timeout 540s")
 
 ################################################################################################################
 #  FUNCTIONS
@@ -112,6 +121,16 @@ function deployHttpFunction
   #get the correct project prefix for the function
   PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]}
   PROJECT_NAME_UPPER=$(echo ${PROJECT_NAME} | tr a-z A-Z)
+
+  EXTRA_PARAMS=${FUNCTIONS_EXTRA_PARAMS[${FUNCTION_NAME}]}
+
+  if [[ "${PROJECT_NAME}1" == "1" ]]
+  then
+    echo "${FUNCTION_NAME} is not configured in associative array FUNCTIONS_PROJECT_PREFIX "
+    exit
+  fi
+
+
   PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 
   SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
@@ -127,7 +146,7 @@ function deployHttpFunction
 
   setProject ${PROJECT_ID}
 
-  DEPLOY_CMD="gcloud functions deploy ${FUNCTION_NAME} --source ${SOURCE} --runtime ${RUNTIME} --trigger-http --region ${REGION} ${ENV_VAR}"
+  DEPLOY_CMD="gcloud functions deploy ${FUNCTION_NAME} --source ${SOURCE} --runtime ${RUNTIME} --trigger-http --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS}"
   echo
   echo
   echo ${DEPLOY_CMD}
@@ -144,11 +163,19 @@ function deployPubSubFunction
   FUNCTION_NAME="${PARAM_ARRAY[0]}"
   FUNCTION_TOPIC="${PARAM_ARRAY[1]}"
 
+  if [[ "${FUNCTION_TOPIC}1" == "1" ]]
+  then
+    echo "${FUNCTION_NAME} is not configured in associative array PUBSUB_FUNCTIONS"
+    exit
+  fi
+
   #get the correct project prefix for the function
    #get the correct project prefix for the function
-  PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]}
+  PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[${FUNCTION_NAME}]}
   PROJECT_NAME_UPPER=$(echo ${PROJECT_NAME} | tr a-z A-Z)
   PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+
+  EXTRA_PARAMS=${FUNCTIONS_EXTRA_PARAMS[${FUNCTION_NAME}]}
 
 
   echo
@@ -165,7 +192,7 @@ function deployPubSubFunction
   setProject ${PROJECT_ID}
 
 
-  DEPLOY_CMD="gcloud functions deploy ${FUNCTION_NAME} --source ${SOURCE} --runtime ${RUNTIME} --trigger-topic ${FUNCTION_TOPIC} --region ${REGION} ${ENV_VAR}"
+  DEPLOY_CMD="gcloud functions deploy ${FUNCTION_NAME} --source ${SOURCE} --runtime ${RUNTIME} --trigger-topic ${FUNCTION_TOPIC} --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS}"
   echo
   echo
   echo ${DEPLOY_CMD}
@@ -205,6 +232,21 @@ else
   TARGET_ARRAY=(${TARGET//;/ })
   TRIGGER_TYPE="${TARGET_ARRAY[0]}"
   FUNCTION_NAME="${TARGET_ARRAY[1]}"
+
+  if [[ "${FUNCTION_NAME}1" == "1" ]] || [[ "${TRIGGER_TYPE}1" == "1" ]]
+  then
+    echo "Wrong syntax : function_name or trigger type is missing"
+    echo
+    echo '# ./deploy_CloudFunctions.sh fr dev "TRIGGER_TYPE;FUNCTION_NAME"'
+    echo '# TRIGGER_TYPE: http or pubsub'
+    echo
+    echo '# ./deploy_CloudFunctions.sh fr dev "http;registerQueteur"'
+    echo '# ./deploy_CloudFunctions.sh fr dev "pubsub;processNewTroncQueteur"'
+    echo '# ./deploy_CloudFunctions.sh fr dev all'
+
+    exit 1
+  fi
+
 
   echo
   echo "################################################################################################################"

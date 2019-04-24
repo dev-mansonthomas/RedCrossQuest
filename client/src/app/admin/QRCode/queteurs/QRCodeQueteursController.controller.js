@@ -20,6 +20,7 @@
     vm.QRSearchType = 2;
     vm.confirmMarkAllAsRead = false;
     vm.listQueteurIdsRegExp=/^(\d+( )?,( )?)*\d+$/;
+    vm.deploymentType = $localStorage.currentUser.d;
 
     $rootScope.$emit('title-updated', 'Impression des QRCode Quêteurs');
 

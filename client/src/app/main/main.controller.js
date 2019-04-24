@@ -7,7 +7,7 @@
 
   /** @ngInject */
   function MainController($timeout, $localStorage, $scope, $rootScope,
-                          toastr, SettingsResource)
+                          toastr, SettingsResource, PointQueteService)
   {
     var vm = this;
 
@@ -23,9 +23,9 @@
     vm.currentUserRole= $localStorage.currentUser.roleId;
 
 
-
-
-
+    //load in local storage the list of points de quete
+    //used in preparationQuete for autocomplete
+    PointQueteService.loadPointQuete();
 
     vm.displayInstructions=false;
 
@@ -46,12 +46,13 @@
     }
 
     $(function () {
-      $('[data-toggle="popover"]').popover()
+      $('[data-toggle="popover"]').popover();
     });
 
     activate();
 
-    function activate() {
+    function activate()
+    {
 
       $timeout(function() {
         vm.classAnimation = 'rubberBand';

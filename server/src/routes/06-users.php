@@ -53,7 +53,7 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($reque
       else
       {//send init mail to user
         $queteur          = $this->queteurDBService->getQueteurById($userEntity->queteur_id);
-        $uuid             = $this->userDBService->sendInit($userEntity->nivol);
+        $uuid             = $this->userDBService   ->sendInit      ($userEntity->nivol     );
         $this->mailer->sendInitEmail($queteur, $uuid);
 
       }
@@ -107,9 +107,9 @@ $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, 
     $this->userDBService->insert($userEntity->nivol, $userEntity->queteur_id);
 
     $user = $this->userDBService->getUserInfoWithQueteurId($userEntity->queteur_id, $ulId, $roleId);
-    $uuid = $this->userDBService->sendInit                ($userEntity->nivol);
+    $uuid = $this->userDBService->sendInit                ($userEntity->nivol, true);
 
-    $this->mailer->sendInitEmail($queteur, $uuid);
+    $this->mailer->sendInitEmail($queteur, $uuid, true);
 
     return $response->getBody()->write(json_encode($user));
   }

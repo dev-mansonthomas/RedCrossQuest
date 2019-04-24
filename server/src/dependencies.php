@@ -47,6 +47,16 @@ $container['renderer'] = function (\Slim\Container $c)
 
 
 /**
+ * @property string $RCQVersion
+ * @param    \Slim\Container $c
+ * @return   string version of RedCrossQuest
+ */
+$container['RCQVersion'] = function (\Slim\Container $c)
+{
+  return "2019.1";
+};
+
+/**
  *
  * pecl install grpc
  * pecl install protobuf
@@ -315,6 +325,7 @@ $container['mailer'] = function (\Slim\Container $c)
     $c->logger,
     $c->mailService,
     $c->mailingDBService,
+    $c->uniteLocaleDBService,
     $c['settings']['appSettings']);
 };
 

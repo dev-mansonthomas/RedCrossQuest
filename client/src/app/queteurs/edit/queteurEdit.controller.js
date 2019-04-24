@@ -22,9 +22,11 @@
     vm.ulId            = $localStorage.currentUser.ulId;
 
     vm.rgpdVideoUrl    = $localStorage.guiSettings.RGPDVideo;
+    vm.nivolOld        = [];
 
     vm.youngestBirthDate=moment().subtract(1  ,'years').toDate();
     vm.oldestBirthDate  =moment().subtract(100,'years').toDate();
+
 
 
     vm.typeBenevoleList=[
@@ -209,7 +211,6 @@
       {
         if(response.queteurId > 0)
         {
-
           vm.goToQueteur(response.queteurId);
         }
         else
@@ -229,6 +230,7 @@
       vm.current.birthdate = moment(vm.current.birthdate).toDate();
 
       $timeout(function () { vm.savedSuccessfully=false; }, 5000);
+      $scope.queteurForm.secteur.$setPristine();
     };
 
     vm.errorWhileSavingFunction=function(error)
@@ -237,7 +239,6 @@
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=error;
     };
-
 
     vm.back=function()
     {
@@ -397,9 +398,18 @@
 
     vm.userSavedSuccessfully=function(user)
     {
+      vm.current.initPasswordEmailSent = !vm.current.user.id;
+
       vm.current.user=user;
-      vm.savedSuccessfully=true;
+      vm.current.userSavedSuccessfully=true;
       $timeout(function () { vm.savedSuccessfully=false; }, 5000);
+    };
+
+    vm.errorWhileSavingUserFunction=function(error)
+    {
+      vm.current.saveInProgress=false;
+      vm.current.userErrorWhileSaving=true;
+      vm.current.userErrorWhileSavingDetails=error;
     };
 
     vm.createUser=function()
@@ -408,7 +418,7 @@
       vm.current.user.queteur_id = vm.current.id;
       vm.current.user.nivol      = vm.current.nivol;
 
-      vm.current.user.$save(vm.userSavedSuccessfully, vm.errorWhileSavingFunction);
+      vm.current.user.$save(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };
 
     vm.userSave=function()
@@ -418,7 +428,7 @@
       user.active = vm.current.user.active;
       user.role   = vm.current.user.role;
 
-      user.$update(vm.userSavedSuccessfully, vm.errorWhileSavingFunction);
+      user.$update(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };
 
     vm.reinitPassword=function()
@@ -428,7 +438,7 @@
       user.queteur_id   = vm.current.id;
       user.nivol        = vm.current.nivol;
 
-      user.$reInitPassword(vm.userSavedSuccessfully, vm.errorWhileSavingFunction);
+      user.$reInitPassword(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };
 
     vm.searchSimilar=function()

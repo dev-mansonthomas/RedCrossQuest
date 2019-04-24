@@ -55,8 +55,12 @@
         <div class="col-md-4 col-md-offset-2">
           <div class="form-group">
             <label for="secteur" class="control-label">Secteur</label>
-            <select name="secteur" id="secteur" class="form-control" ng-model="queteur.current.secteur" required
-                    ng-options="(r.id) as r.label
+            <select name="secteur"
+                      id="secteur"
+                   class="form-control"
+                ng-model="queteur.current.secteur"
+             ng-required="true"
+              ng-options="(r.id) as r.label
                       for
                       r in queteur.typeBenevoleList"
                     autofocus
@@ -357,12 +361,30 @@
       </div>
 
       <!-- RCQ USER -->
+
+      <!--
+       Not displayed when approving a registration
+       The current QUETEUR must already be created & active without anonymisation token
+       The secteur must be <= 2 (social/secours)
+       The current user must be admin
+       The user is already created OR user is not created and secteur is pristin.
+
+       ==> Open queteur d'un jour, change secteur to Social or secours
+           ==> queteur not saved yet
+           ==> So we must not display the user form with the button to create the user.
+           (this generate an error from server side anyway)
+
+
+       -->
+
       <div ng-show="!queteur.isRegistration  == true     &&
                      queteur.current.id       > 0        &&
                      queteur.current.active  == 1        &&
                     !queteur.current.anonymization_token &&
                      queteur.current.secteur <= 2        &&
-                     queteur.currentUserRole >= 4">
+                     queteur.currentUserRole >= 4        &&
+                    (queteur.current.user.id  > 0        || queteurForm.secteur.$pristine)">
+
         <div class="row">
           <div class="col-md-8 col-md-offset-2">
             <div class="panel" ng-class="{'panel-warning':!queteur.current.user, 'panel-success':queteur.current.user.id>0}">
@@ -384,8 +406,8 @@
                       En cliquant sur ce bouton :
                       <ul>
                         <li>Le bénévole deviendra un utilisateur de l'application et pourra se connecter à l'application RCQ</li>
-                        <li>Il recevera un email avec un lien pour initialiser son mot de passe</li>
-                        <li>Par défaut, il sera actif et aura le role "Viewer"</li>
+                        <li>Il recevera un <strong>email</strong> avec un lien pour initialiser son mot de passe</li>
+                        <li>Par défaut, il sera actif et aura le role "Lecture Seule"</li>
                         <li>L'utilisateur ne pourra plus être supprimé, seulement désactivé</li>
                       </ul>
                     </span>
@@ -418,6 +440,32 @@
                           <span class="help-block" style="height:38px">{{queteur.roleDesc[queteur.current.user.role]}}</span>
                         </div>
                       </div>
+
+                      <!-- Saving Successful -->
+                      <div class="row" ng-show="queteur.current.userSavedSuccessfully">
+                        <div class="col-md-8 col-md-offset-2">
+                          <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.current.userSavedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+                            <strong>Bravo!</strong> L'utilisateur a été sauvegardé avec succès!
+                            <div ng-show="queteur.current.initPasswordEmailSent">
+                              Un email contenant un lien permettant d'initialiser le mot de passe vient d'être envoyé.<br/>
+                              <small>Le lien est valide 48h à compter de maintenant</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Error while saving -->
+                      <div class="row" ng-show="queteur.current.userErrorWhileSaving">
+                        <div class="col-md-8 col-md-offset-2">
+                          <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.current.userErrorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+                            <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde de l'utilisateur!
+                            <pre style="text-align: left;">{{queteur.current.userErrorWhileSavingDetails}}</pre>
+                          </div>
+                        </div>
+                      </div>
+
                       <div class="row">
                         <div class="form-group col-md-6">
                           <button class="btn btn-default" type="button" id="reInitUserPassword" ng-click="queteur.reinitPassword()">Réinitialiser le Password</button>

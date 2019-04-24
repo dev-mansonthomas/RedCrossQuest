@@ -14,6 +14,7 @@ use Lcobucci\JWT\ValidationData;
 use \Psr\Http\Message\ServerRequestInterface;
 use \Psr\Http\Message\ResponseInterface;
 
+use Ramsey\Uuid\Uuid;
 use \Slim\App;
 
 
@@ -144,7 +145,7 @@ class AuthorisationMiddleware
   {
     $path  = "";
     $start =  0;
-
+    $uuid = Uuid::uuid4();
     try
     {
       $path   = $request->getUri()->getPath   ();
@@ -169,9 +170,10 @@ class AuthorisationMiddleware
          strpos($path,getPrefix(true).'thanks_mailing/') === 0 ||
          strpos($path,getPrefix(true).'redQuest/'      ) === 0   )
       {
+        $this->logger->error("Non authenticate route : $path - $uuid");
         return $next($request, $response);
       }
-
+      $this->logger->error("authenticated route : $path");
       $authorizations = $request->getHeader('Authorization');
       //get token
       if(count($authorizations) == 0)

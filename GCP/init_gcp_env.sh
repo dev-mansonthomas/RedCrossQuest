@@ -30,6 +30,7 @@ PROJECT_ID="rcq-${COUNTRY}-${ENV}"
 setProject ${PROJECT_ID}
 
 ./init_lib/create_gae.sh
+./init_lib/create_scheduler.sh
 ./init_lib/create_topics.sh
 ./init_lib/init_api.sh
 

@@ -11,12 +11,12 @@
 
 
       <ul class="nav navbar-nav">
-        <li style="padding-top:17px;">
+        <li style="padding-top:17px;" ng-click="vm.goToChangelog()">
 
           <span ng-show="vm.deploymentType=='P'" class="label label-danger" >PROD</span>
           <span ng-show="vm.deploymentType=='D'" class="label label-primary">DEV </span>
-          <span ng-show="vm.deploymentType=='T'" class="label label-info"   >TEST</span>
-
+          <span ng-show="vm.deploymentType=='T'" class="label label-info"   >TEST</span><br/>
+          <small style="color:silver;">v{{vm.RCQVersion}}</small>
         </li>
         <li><a ng-href="/#!/queteurs"      ng-show="vm.currentUlMode >= 2"  style="padding-right:5px !important;"><span class="glyphicon glyphicon-group big-icon"      aria-hidden="true"></span>&nbsp;&nbsp;Quêteurs</a></li>
         <li><a ng-href="/#!/queteurs/pendingValidation" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2" style="padding-left:0px !important;padding-top:17px;" ng-class="vm.pendingQueteurRegistrationCount>0 ? 'pendingQueteurCount':'pendingQueteurCountZero'"><span class="badge">{{vm.pendingQueteurRegistrationCount}}</span></a></li>
@@ -44,6 +44,7 @@
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
           <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/QRCode/troncs"  ><span class="glyphicon glyphicon-qrcode"         aria-hidden="true"></span> Troncs - Impression des QRCode</a></li>
           <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/QRCode/queteurs"><span class="glyphicon glyphicon-qrcode"         aria-hidden="true"></span> Queteurs - Impression des QRCode</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/QRCode/redQuest"><span class="glyphicon glyphicon-qrcode"         aria-hidden="true"></span> RedQuest - Impression des QRCode</a></li>
 
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
           <li role="menuitem" ng-show="vm.currentUlMode >= 1"><a ng-href="/#!/dailyStats"     ><span class="glyphicon glyphicon-stats "         aria-hidden="true"></span> Résultats Journalier (avant RCQ)</a></li>
@@ -52,15 +53,15 @@
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
           <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/recu_fiscal"    ><span class="glyphicon glyphicon-piggy-bank"     aria-hidden="true"></span> Reçu Fiscal</a></li>
 
-          <li class="divider" ng-show="vm.currentUlMode >= 2 && false"></li>
-          <li role="menuitem" ng-show="vm.currentUlMode >= 2 && false"><a ng-href="/#!/settings"><span class="glyphicon glyphicon-cogwheels"      aria-hidden="true"></span> Paramétrage de l'UL</a></li>
+          <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/settings"       ><span class="glyphicon glyphicon-cogwheels"      aria-hidden="true"></span> Paramétrage de l'UL</a></li>
 
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
-          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/mailing"       ><span class="glyphicon glyphicon-heart"      aria-hidden="true" style="color:red;"></span><span class="glyphicon glyphicon-arrow-right"      aria-hidden="true"></span><span class="glyphicon glyphicon-envelope"      aria-hidden="true"></span> Mailing de Remerciement</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/mailing"        ><span class="glyphicon glyphicon-heart"          aria-hidden="true" style="color:red;"></span><span class="glyphicon glyphicon-arrow-right"      aria-hidden="true"></span><span class="glyphicon glyphicon-envelope"      aria-hidden="true"></span> Mailing de Remerciement</a></li>
 
 
           <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
-          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/exportData"      ><span class="glyphicon glyphicon-file-cloud-download"      aria-hidden="true"></span>&nbsp;&nbsp;Export des données de L'UL</a></li>
+          <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/exportData"     ><span class="glyphicon glyphicon-file-cloud-download"      aria-hidden="true"></span>&nbsp;&nbsp;Export des données de L'UL</a></li>
         </ul>
       </div>
     </div>

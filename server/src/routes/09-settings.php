@@ -31,10 +31,14 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request
     }
     else
     {
-      $guiSettings['mapKey'   ] = $this->settings['appSettings']['gmapAPIKey'];
-      $guiSettings['RGPDVideo'] = $this->settings['appSettings']['RGPDVideo' ];
-      $guiSettings['ul'       ] = $this->uniteLocaleDBService->getUniteLocaleById   ($ulId);
-      $guiSettings['user'     ] = $this->userDBService       ->getUserInfoWithUserId($userId, $ulId, $roleId);
+      $guiSettings['mapKey'        ] = $this->settings['appSettings']['gmapAPIKey'     ];
+      $guiSettings['RGPDVideo'     ] = $this->settings['appSettings']['RGPDVideo'      ];
+      $guiSettings['RedQuestDomain'] = $this->settings['appSettings']['RedQuestDomain' ];
+      $guiSettings['ul'            ] = $this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId);
+      $guiSettings['ul_settings'   ] = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
+      $guiSettings['user'          ] = $this->userDBService                ->getUserInfoWithUserId($userId, $ulId, $roleId);
+      $guiSettings['RCQVersion'    ] = $this->RCQVersion;
+
 
       return $response->getBody()->write(json_encode($guiSettings));
     }

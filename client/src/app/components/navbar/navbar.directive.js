@@ -31,6 +31,12 @@
       vm.deploymentType = $localStorage.currentUser.d;
       vm.pendingQueteurRegistrationCount = 0;
 
+      if($localStorage.guiSettings)
+      {//first display guiSettings is not yet available.
+        vm.RCQVersion     = $localStorage.guiSettings.RCQVersion;
+      }
+
+
       QueteurResource.countPendingQueteurRegistration().$promise.then(function(result){
         vm.pendingQueteurRegistrationCount = result[0];
       });
@@ -41,7 +47,11 @@
       {
         AuthenticationService.logout();
         $location.path('/login').replace();
-      }
+      };
+      vm.goToChangelog=function()
+      {
+        $location.path('/changelog').replace();
+      };
     }
   }
 })();

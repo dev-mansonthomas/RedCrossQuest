@@ -8,9 +8,7 @@
   /** @ngInject */
   function LoginController($rootScope, $location, $timeout, $window, $routeParams,
                            AuthenticationService) {
-    var vm = this;
-
-
+    var vm       = this;
     var forceSSL = function ()
     {
       if($location.host() !=='localhost' && $location.host() !=='rcq' && $location.protocol() !== 'https')
@@ -39,45 +37,53 @@
       vm.loading = true;
       var loginTimeout = $timeout(function () {vm.loading=false;vm.timeout=true; }, 10000);
 
+
+      var doLogin = function(token) {
+
+        AuthenticationService.login(vm.username, vm.password, token,
+                                    function success(result)
+                                    {
+                                      if (result === true)
+                                      {
+                                        $timeout.cancel(loginTimeout);
+                                        $location.path('/');
+                                      }
+                                      else if (result === false)
+                                      {
+                                        vm.errorStr = 'Login ou mot de passe incorrect';
+                                        vm.error    = true;
+                                        vm.loading  = false;
+                                      }
+                                      else
+                                      {
+                                        vm.errorStr = JSON.stringify(result);
+                                        vm.error    = true;
+                                        vm.loading  = false;
+                                      }
+                                      $timeout.cancel(loginTimeout);
+                                    },
+                                    function error(message)
+                                    {
+                                      $timeout.cancel(loginTimeout);
+                                      vm.error    = true;
+                                      vm.errorStr = 'Service Indisponible - '+JSON.stringify(message.data.error);
+                                      vm.loading  = false;
+
+                                    }
+        );
+
+      };
+
+      if(true)
+      {//TODO Plane mode, remove
+        doLogin();
+      }
+      else
+      {
       //recaptchaKey is defined in index.html
       grecaptcha.execute(recaptchaKey, {action: 'rcq/login'})
-        .then(function(token) {
-
-          AuthenticationService.login(vm.username, vm.password, token,
-            function success(result)
-            {
-              if (result === true)
-              {
-                $timeout.cancel(loginTimeout);
-                $location.path('/');
-              }
-              else if (result === false)
-              {
-                vm.errorStr = 'Login ou mot de passe incorrect';
-                vm.error    = true;
-                vm.loading  = false;
-              }
-              else
-              {
-                vm.errorStr = JSON.stringify(result);
-                vm.error    = true;
-                vm.loading  = false;
-              }
-              $timeout.cancel(loginTimeout);
-            },
-            function error(message)
-            {
-              $timeout.cancel(loginTimeout);
-              vm.error    = true;
-              vm.errorStr = 'Service Indisponible - '+JSON.stringify(message.data.error);
-              vm.loading  = false;
-
-            }
-          );
-
-        });
-
-
+        .then(doLogin);
+      }
 
 
     };
@@ -93,36 +99,45 @@
 
       vm.loading = true;
 
-      //recaptchaKey is defined in index.html
-      grecaptcha.execute(recaptchaKey, {action: 'rcq/sendInit'})
-        .then(function(token) {
+      var doSendInit = function(token) {
 
-          AuthenticationService.sendInit(vm.username, token,
-            function(success, email)
-            {
-              if(success)
-              {
-                vm.error=null;
-                vm.success=true;
-                vm.email=email;
-                vm.loading=false;
-              }
-              else
-              {
-                vm.error = true;
-                vm.errorStr='Une erreur est survenue. Veuillez contacter support@redcrossquest.com';
-                vm.success=null;
-                vm.loading=false;
-              }
-            }, function (error)
-            {
-              vm.error = true;
-              vm.errorStr=JSON.stringify(error);
-              vm.success=null;
-              vm.loading=false;
-            }
-          );
-        });
+        AuthenticationService.sendInit(vm.username, token,
+                                       function(success, email)
+                                       {
+                                         if(success)
+                                         {
+                                           vm.error=null;
+                                           vm.success=true;
+                                           vm.email=email;
+                                           vm.loading=false;
+                                         }
+                                         else
+                                         {
+                                           vm.error = true;
+                                           vm.errorStr='Une erreur est survenue. Veuillez contacter support@redcrossquest.com';
+                                           vm.success=null;
+                                           vm.loading=false;
+                                         }
+                                       }, function (error)
+                                       {
+                                         vm.error = true;
+                                         vm.errorStr=JSON.stringify(error);
+                                         vm.success=null;
+                                         vm.loading=false;
+                                       }
+        );
+      };
+
+      if(true)
+      {//TODO Plane mode, remove
+        doSendInit();
+      }
+      else
+      {
+        //recaptchaKey is defined in index.html
+        grecaptcha.execute(recaptchaKey, {action: 'rcq/sendInit'})
+        .then(doSendInit);
+      }
     };
   }
 })();

@@ -209,10 +209,10 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($re
       //publishing message to pubsub so that firebase is updated
       $responseMessageIds = null;
       $messageProperties  = [
-        'ulId'          => $ulId,
-        'uId'           => $userId,
-        'queteurId'     => $queteurEntity->id,
-        'registrationId'=> $queteurEntity->registration_id
+        'ulId'          => "".$ulId,
+        'uId'           => "".$userId,
+        'queteurId'     => "".$queteurEntity->id,
+        'registrationId'=> "".$queteurEntity->registration_id
       ];
 
       try
@@ -267,22 +267,22 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($reques
     $roleId = $decodedToken->getRoleId     ();
     $params = $request     ->getQueryParams();
 
-    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 40 , false ) == "associateRegistrationWithExistingQueteur")
-    {
-      $input = $request->getParsedBody();
+    $input  = $request->getParsedBody();
+    $queteurEntity = new QueteurEntity($input, $this->logger);
 
-      $queteurEntity = new QueteurEntity($input, $this->logger);
+
+    if( isset($queteurEntity->registration_id) && is_scalar($queteurEntity->registration_id) )
+    {
       //restore the leading +
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
       //validate the token, if validation fails, it throws an exception
       $this->clientInputValidator->validateString("ul_registration_token", $queteurEntity->ul_registration_token, 36 , true, ClientInputValidator::$UUID_VALIDATION );
 
-
       if($queteurEntity->registration_approved)
       {
         $queteurEntity->referent_volunteer = 0;
-        $queteurId             = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
+        $queteurId = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
         $this->queteurDBService->updateQueteurRegistration($queteurEntity, $queteurId, $userId);
 
         //update the entity with the new ID
@@ -297,10 +297,10 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($reques
       //publishing message to pubsub so that firebase is updated
       $responseMessageIds = null;
       $messageProperties  = [
-        'ulId'          => $ulId,
-        'uId'           => $userId,
-        'queteurId'     => $queteurEntity->id,
-        'registrationId'=> $queteurEntity->registration_id
+        'ulId'          => "".$ulId,
+        'uId'           => "".$userId,
+        'queteurId'     => "".$queteurEntity->id,
+        'registrationId'=> "".$queteurEntity->registration_id
       ];
 
       try
@@ -324,8 +324,6 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($reques
     else
     {// queteur creation
 
-      $input = $request->getParsedBody();
-      $queteurEntity = new QueteurEntity($input, $this->logger);
       //restore the leading +
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
