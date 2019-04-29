@@ -14,13 +14,13 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqCode.$invalid}">
               <label for="pqCode" class="control-label">Abbréviation</label>
-              <input type="text" id="pqCode" name="pqCode" ng-model="pqe.current.code" maxlength="10" class="form-control"/>
+              <input type="text" id="pqCode" name="pqCode" ng-model="pqe.current.code" maxlength="10" class="form-control" ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqName.$invalid}">
               <label for="pqName" class="control-label">Nom</label>
-              <input type="text" id="pqName" name="pqName" ng-model="pqe.current.name" maxlength="100" class="form-control" required autocomplete="name" autofocus/>
+              <input type="text" id="pqName" name="pqName" ng-model="pqe.current.name" maxlength="100" class="form-control" required autocomplete="name" autofocus ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
 
@@ -29,10 +29,10 @@
             <div class="form-group" ng-class="{'has-error':pointQueteForm.enabled.$invalid}">
               <label for="pqEnabled1" class="control-label">Actif</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="enabled" id="pqEnabled1" ng-model="pqe.current.enabled" value="true"  required ng-checked="pqe.current.enabled===true"> Oui
+                <input type="radio" name="enabled" id="pqEnabled1" ng-model="pqe.current.enabled" value="true"  required ng-checked="pqe.current.enabled===true"  ng-disabled="pqe.currentUserRole < 4"> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="enabled" id="pqEnabled2" ng-model="pqe.current.enabled" value="false" required ng-checked="pqe.current.enabled===false"> Non
+                <input type="radio" name="enabled" id="pqEnabled2" ng-model="pqe.current.enabled" value="false" required ng-checked="pqe.current.enabled===false"  ng-disabled="pqe.currentUserRole < 4"> Non
               </label>
             </div>
           </div>
@@ -47,22 +47,22 @@
           <div class="col-md-6">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqAddress.$invalid}">
               <label for="pqAddress" class="control-label">Adresse</label>
-              <input type="text" id="pqAddress" name="pqAddress" ng-model="pqe.current.address" maxlength="70"  class="form-control" required autocomplete="address"/>
+              <input type="text" id="pqAddress" name="pqAddress" ng-model="pqe.current.address" maxlength="70"  class="form-control" required autocomplete="address" ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
           <div class="col-md-1">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqPostalCode.$invalid}">
               <label for="pqPostalCode" class="control-label" style="font-size: 11px;">Code Postal</label>
-              <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="pqe.current.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'/>
+              <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="pqe.current.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'  ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqCity.$invalid}">
               <label for="pqCity" class="control-label">Ville</label>
-              <input type="text" id="pqCity" name="pqCity" ng-model="pqe.current.city" class="form-control" maxlength="70"  required autocomplete='address-level2'/>
+              <input type="text" id="pqCity" name="pqCity" ng-model="pqe.current.city" class="form-control" maxlength="70"  required autocomplete='address-level2' ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2" ng-show="pqe.currentUserRole >= 4">
             <br/>
             <button type="button" class="btn btn-primary" ng-click="pqe.geoCodeAddress();"><span class="glyphicon glyphicon-arrow-down"></span> Géo Coder</button>
           </div>
@@ -71,17 +71,17 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqLatitude.$invalid}">
               <label for="pqLatitude" class="control-label">Latitude</label>
-              <input type="text" id="pqLatitude" name="pqLatitude" ng-model="pqe.current.latitude" class="form-control"    ng-maxlength="18" required ng-pattern="pqe.latlongRegExp"/>
+              <input type="text" id="pqLatitude" name="pqLatitude" ng-model="pqe.current.latitude" class="form-control"    ng-maxlength="18" required ng-pattern="pqe.latlongRegExp" ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqLongitude.$invalid}">
               <label for="pqLongitude" class="control-label">Longitude</label>
-              <input type="text" id="pqLongitude" name="pqLongitude" ng-model="pqe.current.longitude" class="form-control" ng-maxlength="18" required ng-pattern="pqe.latlongRegExp"/>
+              <input type="text" id="pqLongitude" name="pqLongitude" ng-model="pqe.current.longitude" class="form-control" ng-maxlength="18" required ng-pattern="pqe.latlongRegExp" ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
           <div class="col-md-8">
-            <div ng-show="pqe.geocoded.display_prompt">
+            <div ng-show="pqe.geocoded.display_prompt && pqe.currentUserRole >= 4">
               <label class="control-label">Suggestion Google Maps pour le nouvel emplacement :</label>
               <button type="button" class="btn btn-primary" ng-click="pqe.copyGoogleMapsSuggestion();"><span class="glyphicon glyphicon-arrow-up"></span> Recopier l'adresse suggérée : {{pqe.geocoded.formatted_address}}</button>
             </div>
@@ -125,7 +125,7 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqMaxPeople.$invalid}">
               <label for="pqMaxPeople" class="control-label">Nb de quêteur Max</label>
-              <input type="text" id="pqMaxPeople" name="pqMaxPeople" ng-model="pqe.current.max_people" class="form-control" required/>
+              <input type="text" id="pqMaxPeople" name="pqMaxPeople" ng-model="pqe.current.max_people" class="form-control" required  ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
           <div class="col-md-4">
@@ -134,10 +134,10 @@
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqMinorAllowed.$invalid}">
               <label for="pqMinorAllowed1" class="control-label">Mineur Autorisé?</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="pqMinorAllowed" id="pqMinorAllowed1" ng-model="pqe.current.minor_allowed" value="true"  required ng-checked="pqe.current.minor_allowed===true"> Oui
+                <input type="radio" name="pqMinorAllowed" id="pqMinorAllowed1" ng-model="pqe.current.minor_allowed" value="true"  required ng-checked="pqe.current.minor_allowed===true" ng-disabled="pqe.currentUserRole < 4"> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="pqMinorAllowed" id="pqMinorAllowed2" ng-model="pqe.current.minor_allowed" value="false" required ng-checked="pqe.current.minor_allowed===false"> Non
+                <input type="radio" name="pqMinorAllowed" id="pqMinorAllowed2" ng-model="pqe.current.minor_allowed" value="false" required ng-checked="pqe.current.minor_allowed===false" ng-disabled="pqe.currentUserRole < 4"> Non
               </label>
             </div>
 
@@ -152,7 +152,7 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqType.$invalid}">
               <label for="pqType" class="control-label">Type</label>
-              <select name="pqType" id="pqType" class="form-control" ng-model="pqe.current.type" required placeholder="Type de point de quête"
+              <select name="pqType" id="pqType" class="form-control" ng-model="pqe.current.type" required placeholder="Type de point de quête"   ng-disabled="pqe.currentUserRole < 4"
                       ng-options="(t.id) as t.label
                       for
                       t in pqe.typePointQueteList"
@@ -171,7 +171,8 @@
                        name="pqTimeToReach"
                        ng-model="pqe.current.time_to_reach"
                        class="form-control input-fix-mousewheel"
-                       required/>
+                       required
+                       ng-disabled="pqe.currentUserRole < 4"/>
                 <span class="input-group-addon glyphicon glyphicon-stopwatch"      style="top:0px;"   aria-hidden="true"></span>
               </div>
             </div>
@@ -179,7 +180,7 @@
           <div class="col-md-4">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqTransportToReach.$invalid}">
               <label for="pqTransportToReach" class="control-label">Type de Transport pour atteindre le point de quête</label>
-              <select name="pqTransportToReach" id="pqTransportToReach" class="form-control" ng-model="pqe.current.transport_to_reach" required
+              <select name="pqTransportToReach" id="pqTransportToReach" class="form-control" ng-model="pqe.current.transport_to_reach" required    ng-disabled="pqe.currentUserRole < 4"
                       ng-options="(t.id) as t.label
                       for
                       t in pqe.transportPointQueteList"
@@ -194,13 +195,13 @@
           <div class="col-md-6">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqAdvice.$invalid}">
               <label for="pqAdvice" class="control-label">Infos/Conseils</label>
-              <textarea id="pqAdvice" name="pqAdvice" class="form-control"  ng-model="pqe.current.advice"></textarea>
+              <textarea id="pqAdvice" name="pqAdvice" class="form-control"  ng-model="pqe.current.advice" ng-disabled="pqe.currentUserRole < 4"></textarea>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqLocalization.$invalid}">
               <label for="pqLocalization" class="control-label">Aide à la localisation</label>
-              <textarea id="pqLocalization" name="pqLocalization" class="form-control" ng-model="pqe.current.localization"></textarea>
+              <textarea id="pqLocalization" name="pqLocalization" class="form-control" ng-model="pqe.current.localization" ng-disabled="pqe.currentUserRole < 4"></textarea>
             </div>
           </div>
         </div>
@@ -209,11 +210,11 @@
             <a ng-href="/#!/pointsQuetes" class="btn btn-link">Annuler</a>
           </div>
           <div class="col-md-2 col-md-offset-1">
-            <button type="button" class="btn btn-primary" ng-show="pqe.current.id > 0 " ng-click="pqe.createNewPointQuete()">Créer un nouveau point de quête</button>
+            <button type="button" class="btn btn-primary" ng-show="pqe.currentUserRole >= 4 && pqe.current.id > 0 " ng-click="pqe.createNewPointQuete()">Créer un nouveau point de quête</button>
           </div>
 
           <div class="col-md-2 col-md-offset-3">
-            <button type="button" class="btn btn-primary" ng-disabled="pointQueteForm.$invalid" ng-show="pqe.currentUserRole>1" ng-click='pqe.save();'>Sauvegarder</button>
+            <button type="button" class="btn btn-primary" ng-disabled="pointQueteForm.$invalid" ng-show="pqe.currentUserRole >= 4" ng-click='pqe.save();'>Sauvegarder</button>
           </div>
         </div>
 

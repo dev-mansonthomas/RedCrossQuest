@@ -7,7 +7,7 @@
         <div class="col-md-4">
           <h5>Les Points de Quêtes</h5>
         </div>
-        <div class="col-md-4 col-md-offset-4">
+        <div class="col-md-4 col-md-offset-4" ng-show="pq.currentUserRole>=4">
           <input type="button" class="btn btn-info" value="Créer un nouveau point de quête"  ng-click="pq.createNewPointQuete()"/>
         </div>
       </div>
