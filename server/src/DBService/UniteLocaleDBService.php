@@ -66,6 +66,7 @@ WHERE   `ul`.id    = :ul_id
     $sql = "
 UPDATE `ul`
 SET
+  `email`       = :email,
   `name`        = :name,
   `address`     = :address,
   `postal_code` = :postal_code ,
@@ -75,6 +76,7 @@ SET
 WHERE `id`      = :id
 ";
     $parameters = [
+      "email"       => $ul->email,
       "name"        => $ul->name,
       "address"     => $ul->address,
       "postal_code" => $ul->postal_code,

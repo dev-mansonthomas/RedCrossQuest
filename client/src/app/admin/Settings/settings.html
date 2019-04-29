@@ -11,6 +11,23 @@
         <form novalidate name="ulSettingsForm">
           <div class="panel-body">
             <div class="row">
+              <div class="col-md-8">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.ulEmail.$invalid}">
+                  <label for="ulEmail" class="control-label">Email de contact</label>
+                  <input type="email" id="ulEmail" name="ulEmail" ng-model="s.settings.email" maxlength="100" class="form-control" required autocomplete="email" autofocus
+                         ng-pattern="'^.*@croix-rouge.fr$'"/>
+                  <span class="help-block">Cet email est affiché en signature des mails envoyé par RedCrossQuest en votre nom et dans l'application RedQuest</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqName.$invalid}">
+                  <label for="ulDateDemarrageRCQ" class="control-label">Date de démarrage d'utilisateur de RCQ</label>
+                  <input type="text" id="ulDateDemarrageRCQ" name="ulDateDemarrageRCQ" ng-model="s.settings.date_demarrage_rcq" class="form-control" readonly/>
+                  <span class="help-block">Date a partir de laquelle votre Unité Locale Utilise RedCrossQuest</span>
+                </div>
+
+              </div>
+            <div class="row">
               <div class="col-md-4">
                 <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqName.$invalid}">
                   <label for="ulName" class="control-label">Nom</label>

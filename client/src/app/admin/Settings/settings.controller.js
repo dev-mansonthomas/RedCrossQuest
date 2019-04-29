@@ -20,6 +20,7 @@
 
     //load the local stoarge version first
     vm.settings       = $localStorage.guiSettings.ul;
+    vm.settings.date_demarrage_rcq=DateTimeHandlingService.handleServerDate(vm.settings.date_demarrage_rcq).stringVersion;
     vm.mapKey         = $localStorage.guiSettings.mapKey;
     vm.deploymentType = $localStorage.currentUser.d;
     //update it with current DB Values
@@ -35,6 +36,7 @@
     function handleResult (settings)
     {
       vm.settings = settings;
+      vm.settings.date_demarrage_rcq=DateTimeHandlingService.handleServerDate(vm.settings.date_demarrage_rcq).stringVersion;
 
       /*
       $log.info("Find '"+settings.length+"' settings");
