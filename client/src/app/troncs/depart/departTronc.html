@@ -124,6 +124,15 @@
           </div>
         </div>
 
+        <!-- Error while saving -->
+        <div class="row" ng-show="dt.current.tronc_queteur.queteHasNotStartedYet">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-danger" role="alert" style="text-align: center;">
+              <strong>Attention!</strong> La quête ne commence que le {{dt.firstDayStr}}!
+            </div>
+          </div>
+        </div>
+
       </form>
     </div>
   </div>

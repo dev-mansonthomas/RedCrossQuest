@@ -112,7 +112,8 @@
                      ng-min="pt.current.horaireDepartTheoriqueNotBefore"
                      ng-model="pt.current.horaireDepartTheorique"
                      required/>
-              <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Required</span>
+              <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Champ Obligatoire</span>
+              <span class="help-block" ng-show="pt.isCurrentTimeBefore1stDayOfQuete()">Aucune préparation/départ n'est permise avant le début de la quête : {{pt.firstDayStr}}</span>
             </div>
           </div>
           <div class=" col-md-4">
@@ -142,13 +143,27 @@
             <div class="form-group"  ng-show="pt.current.queteurId >0  && pt.current.tronc.id > 0">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
 
-              <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="pt.current.lieuDeQuete" required
-                      ng-options="pq.id as pt.getTypeLabel(pq.type)+' - '+ (pq.code!= '' ? pq.code+' - ': '')+pq.name
-                      for
-                      pq in pt.pointsQuete">
-                <option value=""></option>
-              </select>
 
+              <input
+                id="lieuDeQuete"
+                type="text"
+                ng-model="pt.current.lieuDeQuete"
+                placeholder="Rechercher le point de quête"
+                uib-typeahead="pq as pt.getTypeLabel(pq.type)+' - '+ (pq.code!= '' ? pq.code+' - ': '')+pq.name
+                      for
+                      pq in pt.pointsQuete"
+                typeahead-loading="loadingTroncs"
+                typeahead-no-results="noTroncsResults"
+                typeahead-wait-ms="20"
+                typeahead-select-on-blur="true"
+                class="form-control"
+                ng-required
+                autocomplete="off">
+                <i   ng-show="loadingTroncs" class="glyphicon glyphicon-refresh"></i>
+                <div ng-show="noTroncResults">
+                  <i class="glyphicon glyphicon-remove"></i> Aucun Point de Quête trouvé
+                </div>
+              <span class="help-block">Pour voir toutes les options, tapper la lettre 'e'</span>
             </div>
           </div>
         </div>
@@ -186,6 +201,16 @@
         </div>
 
         <!-- Error while saving -->
+        <div class="row" ng-show="pt.current.queteHasNotStartedYet">
+          <div class="col-md-8 col-md-offset-2">
+            <div class="alert alert-danger" role="alert" style="text-align: center;">
+              <strong>Attention!</strong> La quête ne commence que le {{pt.firstDayStr}}!
+              <h1>Votre tronc n'a pas été sauvegardé !</h1>
+            </div>
+          </div>
+        </div>
+
+
         <div class="row" ng-show="pt.errorWhileSaving">
           <div class="col-md-8 col-md-offset-2">
             <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
@@ -198,12 +223,19 @@
 
 
         <div class="row">
-          <div class="col-md-3 col-md-offset-5 form-group">
+          <div class="col-md-4 col-md-offset-4 form-group">
             <button type="submit"
                     class="btn btn-warning"
                     ng-click="pt.current.preparationAndDepart = true;pt.save();"
-                    ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed() || pt.current.saveInProgress">Préparer et Départ</button>
+                    ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed() || pt.isCurrentTimeBefore1stDayOfQuete() || pt.current.saveInProgress">Préparer et Départ</button>
             <span class="help-block">C'est l'action exceptionnelle que vous devez utiliser si le tronc n'a pas pu être préparé.</span>
+            <span class="help-block" style="color:red;font-weight:bold;" ng-show="pt.isCurrentTimeBefore1stDayOfQuete()">
+              Cette fonction est désactivée tant que la quête n'a pas commencé!
+              <br/>
+              Vous pouvez cependant préparer des troncs avec un départ théorique après le {{pt.firstDayStr}}
+            </span>
+
+
           </div>
           <div class="col-md-1">
           </div>
@@ -238,11 +270,11 @@
             <div class="row">
               <div class="col-md-2">
                 <label for="pqCode" class="control-label">Code</label>
-                <input type="text" id="pqCode" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].code}}" class="form-control" readonly/>
+                <input type="text" id="pqCode" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].code}}" class="form-control" readonly/>
               </div>
               <div class="col-md-4">
                 <label for="pqName" class="control-label">Nom</label>
-                <input type="text" id="pqName" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].name}}" class="form-control" readonly/>
+                <input type="text" id="pqName" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].name}}" class="form-control" readonly/>
               </div>
               <div class="col-md-4">
                 <label for="pqName" class="control-label">Google Maps</label><br/>
@@ -250,29 +282,29 @@
 
 
 
-                <a ng-href="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin={{pt.current.queteur.ul_latitude}},{{pt.current.queteur.ul_longitude}}&destination={{pt.pointsQueteHash[pt.current.lieuDeQuete].latitude}},{{pt.pointsQueteHash[pt.current.lieuDeQuete].longitude}}" target="_blank">
-                  {{pt.pointsQueteHash[pt.current.lieuDeQuete].address}}, {{pt.pointsQueteHash[pt.current.lieuDeQuete].postal_code}}, {{pt.pointsQueteHash[pt.current.lieuDeQuete].city}}
+                <a ng-href="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin={{pt.current.queteur.ul_latitude}},{{pt.current.queteur.ul_longitude}}&destination={{pt.pointsQueteHash[pt.current.lieuDeQuete.id].latitude}},{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].longitude}}" target="_blank">
+                  {{pt.pointsQueteHash[pt.current.lieuDeQuete.id].address}}, {{pt.pointsQueteHash[pt.current.lieuDeQuete.id].postal_code}}, {{pt.pointsQueteHash[pt.current.lieuDeQuete.id].city}}
                 </a>
               </div>
             </div>
             <div class="row">
               <div class="col-md-2">
                 <label for="pqMaxPeople" class="control-label">Nb de quêteur Max</label>
-                <input type="text" id="pqMaxPeople" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].max_people}}" class="form-control" readonly/>
+                <input type="text" id="pqMaxPeople" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].max_people}}" class="form-control" readonly/>
               </div>
               <div class="col-md-4">
                 <label for="pqMinorAllowed" class="control-label">Mineur ?</label>
-                <input type="text" id="pqMinorAllowed" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].minor_allowed=='1'?'Autorisé':'NON Autorisé'}}" class="form-control" readonly/>
+                <input type="text" id="pqMinorAllowed" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].minor_allowed=='1'?'Autorisé':'NON Autorisé'}}" class="form-control" readonly/>
               </div>
               <div class="col-md-4">
                 <label for="pqCreated" class="control-label">Date Création du Point de Quête</label>
-                <input type="text" id="pqCreated" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].created.date}}" class="form-control" readonly/>
+                <input type="text" id="pqCreated" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].created.date}}" class="form-control" readonly/>
               </div>
             </div>
             <div class="row">
               <div class="col-md-2">
                 <label for="pqType" class="control-label">Type</label>
-                <select name="pqType" id="pqType" class="form-control" ng-model="pt.pointsQueteHash[pt.current.lieuDeQuete].type" disabled
+                <select name="pqType" id="pqType" class="form-control" ng-model="pt.pointsQueteHash[pt.current.lieuDeQuete.id].type" disabled
                         ng-options="(t.id) as t.label
                       for
                       t in pt.typePointQueteList"
@@ -284,11 +316,11 @@
               </div>
               <div class="col-md-4">
                 <label for="pqTimeToReach" class="control-label">Temps moyen pour atteindre le Point de Quête</label>
-                <input type="text" id="pqTimeToReach" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete].time_to_reach}}" class="form-control" readonly/>
+                <input type="text" id="pqTimeToReach" value="{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].time_to_reach}}" class="form-control" readonly/>
               </div>
               <div class="col-md-4">
                 <label for="pqTransportToReach" class="control-label">Type de Transport pour atteindre le point de quête</label>
-                <select name="pqTransportToReach" id="pqTransportToReach" class="form-control" ng-model="pt.pointsQueteHash[pt.current.lieuDeQuete].transport_to_reach" disabled
+                <select name="pqTransportToReach" id="pqTransportToReach" class="form-control" ng-model="pt.pointsQueteHash[pt.current.lieuDeQuete.id].transport_to_reach" disabled
                         ng-options="(t.id) as t.label
                       for
                       t in pt.transportPointQueteList"
@@ -300,11 +332,11 @@
             <div class="row">
               <div class="col-md-6">
                 <label for="pqAdvice" class="control-label">Infos/Conseils</label>
-                <textarea id="pqAdvice" class="form-control" ng-disabled="true">{{pt.pointsQueteHash[pt.current.lieuDeQuete].advice}}</textarea>
+                <textarea id="pqAdvice" class="form-control" ng-disabled="true">{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].advice}}</textarea>
               </div>
               <div class="col-md-6">
                 <label for="pqLocalization" class="control-label">Aide à la localisation</label>
-                <textarea id="pqLocalization" class="form-control" ng-disabled="true">{{pt.pointsQueteHash[pt.current.lieuDeQuete].localization}}</textarea>
+                <textarea id="pqLocalization" class="form-control" ng-disabled="true">{{pt.pointsQueteHash[pt.current.lieuDeQuete.id].localization}}</textarea>
               </div>
             </div>
           </div>

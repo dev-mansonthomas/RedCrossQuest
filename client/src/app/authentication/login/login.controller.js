@@ -74,16 +74,10 @@
 
       };
 
-      if(true)
-      {//TODO Plane mode, remove
-        doLogin();
-      }
-      else
-      {
-      //recaptchaKey is defined in index.html
-      grecaptcha.execute(recaptchaKey, {action: 'rcq/login'})
-        .then(doLogin);
-      }
+    //recaptchaKey is defined in index.html
+    grecaptcha.execute(recaptchaKey, {action: 'rcq/login'})
+      .then(doLogin);
+    
 
 
     };
@@ -128,16 +122,9 @@
         );
       };
 
-      if(true)
-      {//TODO Plane mode, remove
-        doSendInit();
-      }
-      else
-      {
-        //recaptchaKey is defined in index.html
-        grecaptcha.execute(recaptchaKey, {action: 'rcq/sendInit'})
-        .then(doSendInit);
-      }
+      //recaptchaKey is defined in index.html
+      grecaptcha.execute(recaptchaKey, {action: 'rcq/sendInit'})
+      .then(doSendInit);
     };
   }
 })();

@@ -20,12 +20,12 @@
         </li>
         <li><a ng-href="/#!/queteurs"      ng-show="vm.currentUlMode >= 2"  style="padding-right:5px !important;"><span class="glyphicon glyphicon-group big-icon"      aria-hidden="true"></span>&nbsp;&nbsp;Quêteurs</a></li>
         <li><a ng-href="/#!/queteurs/pendingValidation" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2" style="padding-left:0px !important;padding-top:17px;" ng-class="vm.pendingQueteurRegistrationCount>0 ? 'pendingQueteurCount':'pendingQueteurCountZero'"><span class="badge">{{vm.pendingQueteurRegistrationCount}}</span></a></li>
-        <li><a ng-href="/#!/queteurs/edit" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-user-add big-icon"   aria-hidden="true"></span>&nbsp;&nbsp;Ajout d'un Quêteur</a></li>
-        <li><a ng-href="/#!/troncs/prepa"  ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-clock big-icon"      aria-hidden="true"></span>&nbsp;&nbsp;<span ng-show="vm.currentUlMode == 3">Préparation</span><span ng-show="vm.currentUlMode == 2">Déclaration</span></a></li>
-        <li><a ng-href="/#!/troncs/depart" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-out big-icon"    aria-hidden="true"></span>&nbsp;&nbsp;Départ</a></li>
-        <li><a ng-href="/#!/troncs/retour" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-in big-icon"     aria-hidden="true"></span>&nbsp;&nbsp;Retour</a></li>
-        <li><a ng-href="/#!/tronc_queteur" ng-show="vm.currentUserRole>2 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-coins big-icon"      aria-hidden="true"></span>&nbsp;&nbsp;Comptage</a></li>
-        <li><a ng-href="/#!/graph"         ng-show="vm.currentUserRole>0 && vm.currentUlMode >= 1"><span class="glyphicon glyphicon-charts big-icon"     aria-hidden="true"></span>&nbsp;&nbsp;Graphiques</a></li>
+        <li><a ng-href="/#!/queteurs/edit" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-user-add big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Ajout d'un Quêteur</a></li>
+        <li><a ng-href="/#!/troncs/prepa"  ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-clock    big-icon" aria-hidden="true"></span>&nbsp;&nbsp;<span ng-show="vm.currentUlMode == 3">Préparation</span><span ng-show="vm.currentUlMode == 2">Déclaration</span></a></li>
+        <li><a ng-href="/#!/troncs/depart" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-out  big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Départ</a></li>
+        <li><a ng-href="/#!/troncs/retour" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-in   big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Retour</a></li>
+        <li><a ng-href="/#!/tronc_queteur" ng-show="vm.currentUserRole>2 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-coins    big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Comptage</a></li>
+        <li><a ng-href="/#!/graph"         ng-show="vm.currentUserRole>0 && vm.currentUlMode >= 1"><span class="glyphicon glyphicon-charts   big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Graphiques</a></li>
       </ul>
 
       <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="vm.logout();" style="margin-top:8px">

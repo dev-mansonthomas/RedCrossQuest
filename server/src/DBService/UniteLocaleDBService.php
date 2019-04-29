@@ -53,6 +53,48 @@ WHERE   `ul`.id    = :ul_id
 
 
   /**
+   * Update UL name and address
+   *
+   * @param UniteLocaleEntity $ul The UL info
+   * @param int           $ulId  The id of the UL to be updated
+   * @param int           $userId the id of the person who approve or reject the registration
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function updateUL(UniteLocaleEntity $ul, int $ulId, int $userId)
+  {
+
+    $sql = "
+UPDATE `ul`
+SET
+  `name`        = :name,
+  `address`     = :address,
+  `postal_code` = :postal_code ,
+  `city`        = :city,
+  `longitude`   = :longitude,
+  `latitude`    = :latitude
+WHERE `id`      = :id
+";
+    $parameters = [
+      "name"        => $ul->name,
+      "address"     => $ul->address,
+      "postal_code" => $ul->postal_code,
+      "city"        => $ul->city,
+      "longitude"   => $ul->longitude,
+      "latitude"    => $ul->latitude,
+      "id"          => $ulId
+    ];
+
+
+    $stmt = $this->db->prepare($sql);
+    $this->logger->warning("Updating Unite Locale id: $ulId by userId:$userId", array("parameters"=>$parameters));
+    $stmt->execute($parameters);
+
+    $stmt->closeCursor();
+  }
+
+
+
+  /**
    * Search unite locale by name, postal code, city
    *
    * @param string $query : the criteria to search queteur on first_name, last_name, nivol

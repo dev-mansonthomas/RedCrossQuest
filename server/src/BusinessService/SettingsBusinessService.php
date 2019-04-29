@@ -55,32 +55,30 @@ class SettingsBusinessService
     $setupStatus["numberOfDailyStats"] = $this->dailyStatsBeforeRCQDBService->getNumberOfDailyStats ($ulId);
     $setupStatus["numberOfTroncs"    ] = $this->troncDBService              ->getNumberOfTroncs     ($ulId);
 
-    if($setupStatus["numberOfQueteur"   ] <=10)
+    if($setupStatus["numberOfQueteur"       ] <=10)
     {
-      $setupStatus["queteurIncomplete"   ]=true;
+      $setupStatus ["queteurIncomplete"     ]=true;
     }
-    if($setupStatus["numberOfUser"   ] == 1)
+    if($setupStatus["numberOfUser"          ] == 1)
     {
-      $setupStatus["userIncomplete"   ]=true;
+      $setupStatus ["userIncomplete"        ]=true;
     }
-    if($setupStatus["numberOfPointQuete"   ] <=10)
+    if($setupStatus["numberOfPointQuete"    ] <=10)
     {
-      $setupStatus["pointQueteIncomplete"   ]=true;
+      $setupStatus ["pointQueteIncomplete"  ]=true;
     }
-    if($setupStatus["numberOfDailyStats"   ] <=17)
+    if($setupStatus["numberOfDailyStats"    ] <=17)
     {
-      $setupStatus["dailyStatsIncomplete"   ]=true;
+      $setupStatus ["dailyStatsIncomplete"  ]=true;
     }
-
-    if($setupStatus["numberOfTroncs"   ] <=5)
+    if($setupStatus["numberOfTroncs"        ] <=5)
     {
-      $setupStatus["troncsIncomplete"   ]=true;
+      $setupStatus ["troncsIncomplete"      ]=true;
     }
-
-    if($setupStatus["numberOfPointQuete"] == 0)
+    if($setupStatus["numberOfPointQuete"    ] == 0)
     {
       $this->pointQueteDBService->initBasePointQuete($ulId);
-      $setupStatus["BasePointQueteCreated"] = 1;
+      $setupStatus ["BasePointQueteCreated" ] = 1;
     }
 
   return $setupStatus;

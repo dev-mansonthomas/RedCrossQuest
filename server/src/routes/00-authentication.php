@@ -33,12 +33,9 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
     $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
 
     $this->logger->info("Route : authenticate: $username");
-    //$token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
+    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
+    $this->logger->info("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
 
-    //$this->logger->info("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
-
-  //TODO Plane mode, uncomment
-    /*
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
 
     if($reCaptchaResponseCode > 0)
@@ -48,7 +45,7 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
 
       return $response401;
     }
-*/
+
     //$this->logger->info("getUserInfoWithNivol");
     $user           = $this->userDBService->getUserInfoWithNivol($username);
 
@@ -149,9 +146,8 @@ $app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($
   {
     $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true);
     $this->logger->info("Route : sendInit: $username");
+    
 
-  //TODO : plane mode, uncomment
-    /*
     $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true);
 
 
@@ -164,7 +160,7 @@ $app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($
 
       return $response401;
     }
-*/
+
     $uuid          = $this->userDBService->sendInit($username);
 
     if($uuid != null)

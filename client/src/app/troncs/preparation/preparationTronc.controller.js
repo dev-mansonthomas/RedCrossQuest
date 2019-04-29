@@ -10,10 +10,10 @@
     .controller('PreparationTroncController', PreparationTroncController);
 
   /** @ngInject */
-  function PreparationTroncController($rootScope, $scope, $log,$uibModal, $timeout,
+  function PreparationTroncController($rootScope, $scope, $log,$uibModal, $timeout, $location,  $localStorage,
                                       QueteurResource, PointQueteResource   ,
                                       TroncResource  , TroncQueteurResource ,
-                                      QRDecodeService, $localStorage        ,
+                                      QRDecodeService,
                                       moment, DateTimeHandlingService)
   {
     var vm = this;
@@ -36,6 +36,23 @@
       {id:5,label:'Autre'}
     ];
 
+    vm.deploymentType = $localStorage.currentUser.d;
+
+    if($localStorage.guiSettings == null)
+    {//clicked too fast and guiSettings are not ready
+      $location.path('/').replace();
+      return;
+    }
+
+    vm.firstDay       = moment($localStorage.guiSettings.FirstDay);
+
+    vm.firstDayStr    = vm.firstDay.format("DD/MM/YYYY HH:mm:ss");
+
+    //return true if the current time is before the first day of quete and the current deployement is production
+    vm.isCurrentTimeBefore1stDayOfQuete=function()
+    {
+      return vm.deploymentType === 'P' && vm.firstDay.diff(moment(), 'secondes')>=0;
+    };
 
     vm.initData = function()
     {
@@ -43,13 +60,18 @@
       vm.current.saveInProgress=false;
       vm.current.ul_id=$localStorage.currentUser.ulId;
 
-      vm.current.horaireDepartTheorique = new Date();
+      vm.current.horaireDepartTheorique           = new Date();
+      vm.current.horaireDepartTheoriqueNotBefore  = vm.current.horaireDepartTheorique  ;
+      if(vm.isCurrentTimeBefore1stDayOfQuete())
+      {//Production only : tronc can't be prepared or depart before the 1st day of Quete
+        vm.current.horaireDepartTheoriqueNotBefore  = vm.firstDay.toDate();
+      }
 
       //on laisse l'heure courante.
       vm.current.horaireDepartTheorique.setMinutes(0) ;
       vm.current.horaireDepartTheorique.setSeconds(0) ;
       vm.current.horaireDepartTheorique.setMilliseconds(0) ;
-      vm.current.horaireDepartTheoriqueNotBefore = vm.current.horaireDepartTheorique;
+
     };
 
     vm.initData();
@@ -87,7 +109,6 @@
       }
     });
 
-
     function savedSuccessfully(returnData)
     {
       vm.current.saveInProgress=false;
@@ -116,6 +137,10 @@
             }
           }
         });
+      }
+      else if(returnData.queteHasNotStartedYet === true)
+      {
+        vm.current.queteHasNotStartedYet=true;
       }
       else
       {
@@ -146,7 +171,7 @@
       var troncQueteur = new TroncQueteurResource();
       troncQueteur.queteur_id             = vm.current.queteur.id;
       troncQueteur.tronc_id               = vm.current.tronc.id;
-      troncQueteur.point_quete_id         = vm.current.lieuDeQuete;
+      troncQueteur.point_quete_id         = vm.current.lieuDeQuete.id;
       troncQueteur.depart_theorique       = vm.current.horaireDepartTheorique;
       troncQueteur.notes_depart_theorique = vm.current.notes_depart_theorique;
 
@@ -208,6 +233,9 @@
       if(moment().diff(vm.current.queteur.birthdate.date, 'years')>=18)
         return true;
 
+      if(vm.current.lieuDeQuete == null)
+        return true;
+      
       return vm.pointsQueteHash[vm.current.lieuDeQuete].minor_allowed === true;
     };
 

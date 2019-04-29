@@ -9,8 +9,9 @@
 require '../../vendor/autoload.php';
 
 use Carbon\Carbon;
-
+use \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use \RedCrossQuest\Entity\TroncQueteurEntity;
+use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 
 /********************************* TRONC_QUETEUR ****************************************/
 
@@ -36,7 +37,6 @@ $app->delete(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', funct
     $this->logger->error("unexpected exception during deletion of tronc $troncId, ul: $ulId, user: $userId", array("Exception"=>$e));
     throw $e;
   }
-
 });
 
 
@@ -89,7 +89,7 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', functio
         try
         {
           $this->PubSub->publish(
-            $this->settings['PubSub']['tronc_queteur_update'],
+            $this->settings['PubSub']['tronc_queteur_update_topic'],
             $dataToPublish,
             $messageProperties,
             true,
@@ -188,8 +188,16 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($r
           {
             if($tq->depart == null)
             {
-              $departDate = $this->troncQueteurDBService->setDepartToNow($tq->id, $ulId, $userId);
-              $tq->depart = $departDate;
+
+              if(!TroncQueteurBusinessService::hasQueteAlreadyStarted($this->get('settings')['appSettings']['deploymentType']))
+              {//enforce policy :  can't prepare or depart tronc before the start of the quête
+                $tq->queteHasNotStartedYet=true;
+              }
+              else
+              {
+                $departDate = $this->troncQueteurDBService->setDepartToNow($tq->id, $ulId, $userId);
+                $tq->depart = $departDate;
+              }
             }
             else
             {
@@ -208,10 +216,15 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($r
 
     }
     else
-    { // préparation du tronc
+    { // préparation du tronc ou préparation & départ
       $this->logger->warning("TroncQueteur POST PREPARATION");
       $input = $request->getParsedBody();
       $tq    = new TroncQueteurEntity($input, $this->logger);
+
+      if(!TroncQueteurBusinessService::hasQueteAlreadyStarted($this->get('settings')['appSettings']['deploymentType'], $tq->depart_theorique))
+      {//enforce policy :  can't prepare or depart tronc before the start of the quête
+        return $response->getBody()->write(json_encode((object) ['queteHasNotStartedYet'     => true]));
+      }
 
       $insertResponse = $this->troncQueteurDBService->insert($tq, $ulId, $userId);
 

@@ -1,5 +1,8 @@
 <?php
 namespace RedCrossQuest\BusinessService;
+use Carbon\Carbon;
+use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
+
 /**
  * Created by IntelliJ IDEA.
  * User: tmanson
@@ -54,6 +57,25 @@ class TroncQueteurBusinessService
     $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId, $roleId);
 
     return  $troncQueteur;
+  }
+
+
+  /**
+   * In Production : If the current date now() or the date passed in parameter is after the 1st day of the quete, returns true, false otherwise.
+   * Other env : it returns always true to be able to test the application
+   */
+  public static function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null)
+  {
+    if(strlen($deployment) !=1)
+    {
+      throw new \Exception("\$deployment has an inccorect value ($deployment)");
+    }
+    
+    return
+      $deployment != 'P' ||
+      $dateToCheck == null ?
+        Carbon::now()->gte(Carbon::createFromFormat("Y-m-d", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate())):
+        $dateToCheck ->gte(Carbon::createFromFormat("Y-m-d", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()));
   }
 
 }

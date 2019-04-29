@@ -10,13 +10,23 @@
     .controller('DepartTroncController', DepartTroncController);
 
   /** @ngInject */
-  function DepartTroncController($rootScope, $scope, $log, $timeout, $localStorage,
-                                 PointQueteResource  ,
+  function DepartTroncController($rootScope, $scope, $log, $timeout, $localStorage, $location,
+                                 PointQueteResource  , moment,
                                  TroncResource  , TroncQueteurResource,
                                  QRDecodeService, DateTimeHandlingService)
   {
     var vm = this;
     $rootScope.$emit('title-updated', 'Départ de Tronc');
+
+    if($localStorage.guiSettings == null)
+    {//clicked too fast and guiSettings are not ready
+      $location.path('/').replace();
+      return;
+    }
+    
+    vm.firstDay       = moment($localStorage.guiSettings.FirstDay);
+    vm.firstDayStr    = vm.firstDay.format("DD/MM/YYYY HH:mm:ss");
+
 
     vm.initForm=function()
     {
@@ -60,7 +70,7 @@
         }
 
 
-        if(tronc_queteur.troncQueteurIsInAnIncorrectState !== true)
+        if(tronc_queteur.troncQueteurIsInAnIncorrectState !== true && tronc_queteur.queteHasNotStartedYet !== true)
         {
           vm.savedSuccessfully=true;
 

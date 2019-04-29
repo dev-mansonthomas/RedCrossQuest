@@ -71,7 +71,7 @@
     {
       if(response && typeof response.pointQueteId ==='number')
       {
-        vm.goToQueteur(response.pointQueteId);
+        vm.goToPointQuete(response.pointQueteId);
       }
       vm.savedSuccessfully= true;
       vm.errorWhileSaving = false;
@@ -97,7 +97,7 @@
 
     };
 
-    vm.goToQueteur=function(pointQueteId)
+    vm.goToPointQuete=function(pointQueteId)
     {
       $location.path('/pointsQuetes/edit/' + pointQueteId).replace();
     };

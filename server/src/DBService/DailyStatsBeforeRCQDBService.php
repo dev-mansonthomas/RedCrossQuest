@@ -27,10 +27,17 @@ class DailyStatsBeforeRCQDBService extends DBService
     "2016"=>["2016-05-28", 8], //fin le 05/06
     "2017"=>["2017-06-10", 8], //fin le 18/06
     "2018"=>["2018-06-09", 8], //fin le 17/06
-    "2019"=>["2019-06-09", 8],
+    "2019"=>["2019-05-18", 8],
 
   ];
 
+  /**
+   * return the date of the first day of the quete of the current year
+   */
+  public static function getCurrentQueteStartDate()
+  {
+    return DailyStatsBeforeRCQDBService::$queteDates[date("Y")][0];
+  }
 
 
   /**

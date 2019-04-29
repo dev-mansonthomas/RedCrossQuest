@@ -16,7 +16,7 @@
     "test": "gulp test"
   },
   "devDependencies": {
-    "browser-sync": "^2.26.3",
+    "browser-sync": "^2.26.4",
     "browser-sync-spa": "~1.0.3",
     "chalk": "^2.4.2",
     "del": "~3.0.0",
@@ -52,13 +52,13 @@
     "karma-jasmine": "^1.1.2",
     "karma-ng-html2js-preprocessor": "~1.0.0",
     "karma-phantomjs-launcher": "~1.0.2",
+    "libcipm": "^2.0.2",
     "lodash": "^4.17.11",
     "main-bower-files": "~2.13.1",
     "phantomjs": "~2.1.7",
     "uglify-save-license": "~0.4.1",
     "wiredep": "~4.0.0",
-    "wrench": "~1.5.9",
-    "libcipm": "^2.0.2"
+    "wrench": "~1.5.9"
   },
   "engines": {
     "node": ">=0.10.0"

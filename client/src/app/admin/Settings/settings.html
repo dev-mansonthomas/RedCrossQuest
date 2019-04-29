@@ -6,27 +6,130 @@
   </div>
 
     <uib-accordion close-others="true">
-      <div uib-accordion-group class="panel-default" heading="QRCodes pour l'inscription des bénévoles via RedQuest" is-open="true">
+      <div uib-accordion-group class="panel-default" heading="Nom et adresse de l'UL" is-open="true">
 
-        <div class="row">
-          <div class="col-md-5 col-md-offset-1 text-center">
+        <form novalidate name="ulSettingsForm">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqName.$invalid}">
+                  <label for="ulName" class="control-label">Nom</label>
+                  <input type="text" id="ulName" name="ulName" ng-model="s.settings.name" maxlength="50" class="form-control" required autocomplete="name" autofocus/>
+                </div>
+              </div>
+              <div class="col-md-2 ">
+                <label for="ulID" class="control-label">id</label>
+                <input type="text" id="ulID" name="pqID" ng-model="s.settings.id" class="form-control" readonly/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqAddress.$invalid}">
+                  <label for="ulAddress" class="control-label">Adresse</label>
+                  <input type="text" id="ulAddress" name="ulAddress" ng-model="s.settings.address" maxlength="70"  class="form-control" required autocomplete="address"/>
+                </div>
+              </div>
+              <div class="col-md-2" style="width:100px;">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqPostalCode.$invalid}">
+                  <label for="pqPostalCode" class="control-label" style="font-size: 11px;">Code Postal</label>
+                  <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="s.settings.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'/>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqCity.$invalid}">
+                  <label for="pqCity" class="control-label">Ville</label>
+                  <input type="text" id="pqCity" name="pqCity" ng-model="s.settings.city" class="form-control" maxlength="70"  required autocomplete='address-level2'/>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <br/>
+                <button type="button" class="btn btn-primary" ng-click="s.geoCodeAddress();"><span class="glyphicon glyphicon-arrow-down"></span> Géo Coder</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqLatitude.$invalid}">
+                  <label for="pqLatitude" class="control-label">Latitude</label>
+                  <input type="text" id="pqLatitude" name="pqLatitude" ng-model="s.settings.latitude" class="form-control"    ng-maxlength="18" required ng-pattern="s.latlongRegExp"/>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqLongitude.$invalid}">
+                  <label for="pqLongitude" class="control-label">Longitude</label>
+                  <input type="text" id="pqLongitude" name="pqLongitude" ng-model="s.settings.longitude" class="form-control" ng-maxlength="18" required ng-pattern="s.latlongRegExp"/>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div ng-show="s.geocoded.display_prompt">
+                  <label class="control-label">Suggestion Google Maps pour le nouvel emplacement :</label>
+                  <button type="button" class="btn btn-primary" ng-click="s.copyGoogleMapsSuggestion();"><span class="glyphicon glyphicon-arrow-up"></span> Recopier l'adresse suggérée : {{s.geocoded.formatted_address}}</button>
+                </div>
+                <div ng-show="s.current.currentUserLocationNotAvailable == 2" class="alert alert-warning" role="alert">
+                  <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="font-size: 20px;"></span> Votre navigateur ne supporte pas la fonction de géolocalisation.
+                  Veuillez remplir l'adresse et cliquer sur GéoCoder, puis déplacer le marqueur à l'emplacement voulu pour le point de quête.
+                </div>
+                <div ng-show="s.current.currentUserLocationNotAvailable == 1" class="alert alert-warning" role="alert">
+                  <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="font-size: 20px;"></span> Une erreur est survenue en tentant de vous géolocaliser.
+                  Veuillez remplir l'adresse et cliquer sur GéoCoder, puis déplacer le marqueur à l'emplacement voulu pour le point de quête.
+                </div>
 
-            <qr text="s.token_benevole_url" size="130" ng-cloak></qr><br/>
+                <div ng-show="s.current.errorWhileReverseGeoCoding" class="alert alert-danger" role="alert">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 20px;"></span> Une erreur est survenue en tentant de trouver la nouvelle adresse du marqueur.
+                  Veuillez essayer de déplacer le marqueur à un autre endroit.
+                </div>
 
-            <a ng-href="s.token_benevole_url"
-               tartget="_blank">{{s.token_benevole_url}}</a>
+                <div ng-show="s.current.errorWhileGeoCoding" class="alert alert-danger" role="alert">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 20px;"></span> Une erreur est survenue en tentant de trouver les coordonnées GPS de l'adresse.
+                  Veuillez vérifier l'adresse, la corriger, ou essayer une autre addresse proche de la cible.
+                </div>
 
+              </div>
+            </div>
+            <div class="row">
+              <div map-lazy-load="https://maps.google.com/maps/api/js"
+                   map-lazy-load-params="https://maps.googleapis.com/maps/api/js?key={{s.mapKey}}"> <!---->
+                <ng-map id="map"
+                        center="{{s.settings.latitude}},{{s.settings.longitude}}"
+                        zoom="15">
+                  <marker   position="{{s.settings.latitude}},{{s.settings.longitude}}"
+                            title="{{s.settings.name}}"
+                            on-dragend="s.updateCoordinatesAndAddress($event)"
+                            animation="Animation.BOUNCE"
+                            animation="DROP"
+                            draggable="true"></marker>
+                </ng-map>
+              </div>
+            </div>
 
+            
+          <div class="row" style="padding-top:25px">
+            <div class="col-md-2 col-md-offset-10">
+              <button type="button" class="btn btn-primary" ng-disabled="ulSettingsForm.$invalid" ng-show="s.currentUserRole>=4" ng-click='s.save();'>Sauvegarder</button>
+            </div>
           </div>
-          <div class="col-md-5 col-md-offset-1 text-center">
 
-            <qr text="s.token_benevole_1j_url" size="130" ng-cloak></qr><br/>
 
-            <a ng-href="s.token_benevole_1j_url"
-               tartget="_blank">{{s.token_benevole_1j_url}}</a>
-
+          <!-- Successful Save -->
+          <div class="row" ng-show="s.savedSuccessfully">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="s.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+                <strong>Bravo!</strong> Les paramètres de l'UL ont été sauvegardé avec succès!
+              </div>
+            </div>
           </div>
-        </div>
+          <!-- Error while saving -->
+          <div class="row" ng-if="s.errorWhileSaving==true">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="s.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+                <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde !
+                <pre style="text-align: left;">{{s.errorWhileSavingDetails}}</pre>
+              </div>
+            </div>
+          </div>
+          </div>
+        </form>
 
 
 

@@ -690,7 +690,7 @@ AND   tq.ul_id         = :ul_id
         $queryData["depart_theorique"] = $tq->depart_theorique->format('Y-m-d H:i:s');
       }
 
-
+//in case of preparationAndDepart, an update after this insert is done.
       $sql = "
 INSERT INTO `tronc_queteur`
 ( 

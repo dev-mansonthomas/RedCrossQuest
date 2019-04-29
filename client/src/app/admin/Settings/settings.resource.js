@@ -23,11 +23,18 @@ angular.module('redCrossQuestClient').factory('SettingsResource', function ($res
           action: 'getSetupStatus'
         }
       },
-
-
-
+      //get setup info to determine if the administator has do to something
+      getAllSettings: {
+        method: 'GET',
+          params: {
+          action: 'getAllSettings'
+        }
+      },
       createYear: {
         method: 'POST'
+      },
+      update: {
+        method: 'PUT' // this method issues a PUT request
       }
     });
 });

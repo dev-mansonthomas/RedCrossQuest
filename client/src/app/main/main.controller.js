@@ -29,7 +29,7 @@
 
     vm.displayInstructions=false;
 
-    SettingsResource.get().$promise.then(function(settings)
+    SettingsResource.getAllSettings().$promise.then(function(settings)
     {
       $localStorage.guiSettings = settings;
       vm.first_name = $localStorage.guiSettings.user.first_name;
