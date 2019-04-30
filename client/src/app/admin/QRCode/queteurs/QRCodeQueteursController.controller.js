@@ -15,7 +15,10 @@
   {
     var vm = this;
 
-    vm.size=200;
+    vm.size = 120;
+    vm.rows = 7;
+    vm.cols = 7;
+
     vm.ulName = $localStorage.currentUser.ulName;
     vm.QRSearchType = 2;
     vm.confirmMarkAllAsRead = false;
@@ -50,38 +53,40 @@
           });
 
         //  $log.debug("There is "+vm.list.length+" queteur, "+Math.ceil(vm.list.length/32)+" tableaux") ;
-
-        var numberOfTable= Math.ceil(vm.list.length/40);
-        vm.tables = [];
-        var global_i=0;
-
-        for(var table_i=0;table_i<numberOfTable; table_i++)
-        {
-          vm.tables[table_i]=[];
-          for(var table_tr_i=0;table_tr_i<8;table_tr_i++)
-          {//ligne
-            vm.tables[table_i][table_tr_i]=[];
-
-            for(var table_td_i=0;table_td_i<5;table_td_i++)
-            {//colonnes
-              var element = vm.list[global_i++];
-              if(element != null)
-              {
-                vm.tables[table_i][table_tr_i][table_td_i] = element;
-              }
-              else
-              {
-                return;
-              }
-
-            }
-          }
-        }
+        vm.draw();
       });
     };
     vm.search();
 
+    vm.draw=function()
+    {
+      var numberOfTable= Math.ceil(vm.list.length/(vm.rows*vm.cols));
+      vm.tables = [];
+      var global_i=0;
 
+      for(var table_i=0;table_i<numberOfTable; table_i++)
+      {
+        vm.tables[table_i]=[];
+        for(var table_tr_i=0;table_tr_i<vm.rows;table_tr_i++)
+        {//ligne
+          vm.tables[table_i][table_tr_i]=[];
+
+          for(var table_td_i=0;table_td_i<vm.cols;table_td_i++)
+          {//colonnes
+            var element = vm.list[global_i++];
+            if(element != null)
+            {
+              vm.tables[table_i][table_tr_i][table_td_i] = element;
+            }
+            else
+            {
+              return;
+            }
+
+          }
+        }
+      }
+    };
 
 
 

@@ -167,10 +167,26 @@
         >Rechercher</button>
       </div>
     </div>
-    <div class="row no-print">
-      Size: {{qrcQueteurs.size}}
-      <input type="range" id="size" class="range ng-valid ng-dirty ng-touched" ng-model="qrcQueteurs.size" min="100" max="500">
-    </div>
+      <div class="row no-print">
+        <div class="cold-md-12">
+          <label for="size">Size: {{qrcQueteurs.size}}</label>
+          <input type="range" id="size" class="range ng-valid ng-dirty ng-touched" ng-model="qrcQueteurs.size" min="100" max="500">
+        </div>
+      </div>
+      <div class="row no-print">
+        <div class="col-md-4 form-group">
+          <label for="rows">Nombre de lignes</label>
+          <input type="number" id="rows" ng-model="qrcQueteurs.rows">
+        </div>
+        <div class="col-md-4 form-group">
+          <label for="cols">Nombre de colonnes</label>
+          <input type="number" id="cols" ng-model="qrcQueteurs.cols">
+        </div>
+        <div class="col-md-4 form-group">
+          <label for="cols">Appliquer</label>
+          <input type="button" ng-click="qrcQueteurs.draw();" value="Appliquer">
+        </div>
+      </div>
     </form>
     <table class="QRCodeTable" ng-repeat="table in qrcQueteurs.tables" style="width:237px;">
       <tbody>

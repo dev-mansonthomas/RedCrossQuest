@@ -15,7 +15,9 @@
   {
     var vm = this;
     vm.deploymentType = $localStorage.currentUser.d;
-    vm.size=200;
+    vm.size = 120;
+    vm.rows = 6;
+    vm.cols = 7;
     var ulInfo = $localStorage.guiSettings.ul;
 
     $rootScope.$emit('title-updated', 'Impression des QRCode Tronc');
@@ -38,19 +40,23 @@
         });
 
       $log.debug("There is "+vm.list.length+" troncs, "+Math.ceil(vm.list.length/32)+" tableaux") ;
+      vm.draw();
+    });
 
-      var numberOfTable= Math.ceil(vm.list.length/40);
+    vm.draw=function()
+    {
+      var numberOfTable= Math.ceil(vm.list.length/(vm.rows*vm.cols));
       vm.tables = [];
       var global_i=0;
 
       for(var table_i=0;table_i<numberOfTable; table_i++)
       {
         vm.tables[table_i]=[];
-        for(var table_tr_i=0;table_tr_i<8;table_tr_i++)
+        for(var table_tr_i=0;table_tr_i<vm.rows;table_tr_i++)
         {
           vm.tables[table_i][table_tr_i]=[];
 
-          for(var table_td_i=0;table_td_i<5;table_td_i++)
+          for(var table_td_i=0;table_td_i<vm.cols;table_td_i++)
           {
             var element = vm.list[global_i++];
             if(element != null)
@@ -61,15 +67,10 @@
             {
               return;
             }
-
           }
         }
       }
-
-
-
-
-    });
+    };
 
   }
 })();

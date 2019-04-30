@@ -35,6 +35,10 @@
       {//first display guiSettings is not yet available.
         vm.RCQVersion     = $localStorage.guiSettings.RCQVersion;
       }
+      else
+      {
+        vm.RCQVersion     = "...";
+      }
 
 
       QueteurResource.countPendingQueteurRegistration().$promise.then(function(result){
