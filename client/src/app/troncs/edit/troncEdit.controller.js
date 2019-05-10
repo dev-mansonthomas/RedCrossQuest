@@ -49,7 +49,7 @@
             oneRow.depart_theorique  = vm.handleDate(oneRow.depart_theorique);
             oneRow.retour            = vm.handleDate(oneRow.retour);
 
-            if(oneRow.retour !==null && oneRow.depart !== null)
+            if(oneRow.retour !==null && oneRow.depart !== null && oneRow.retour !=="" && oneRow.depart !== "")
             {
               oneRow.duration = moment.duration(oneRow.retour.diff(oneRow.depart)).asMinutes();
             }
