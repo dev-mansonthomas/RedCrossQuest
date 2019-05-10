@@ -371,8 +371,8 @@ AND
    * @throws \Exception in other situations
    */
   public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId,
-                                 bool $active, bool $benevoleOnly, bool $rcqUser, ?string $queteurIds,
-                                 ?int $QRSearchType   )
+                                 bool $active, bool $benevoleOnly, bool $rcqUser, bool $rcqUserActif,
+                                 ?string $queteurIds, ?int $QRSearchType   )
   {
     $parameters      = ["ul_id" => $ulId];
     $querySQL        = "";
@@ -412,8 +412,9 @@ AND q.`secteur` IN (1,2,4)
     if($rcqUser == 1)
     {
       $rcqUserSQL="
-AND EXISTS (SELECT queteur_id from users where queteur_id = q.id)      
+AND EXISTS (SELECT u.queteur_id from users u where u.queteur_id = q.id AND u.active = :rcqUserActif)      
 ";
+      $parameters["rcqUserActif"]=$rcqUserActif=="1"?1:0;
     }
 
     if($QRSearchType > 0)
@@ -481,6 +482,7 @@ AND q.id IN (
                                  "active"       => $active       ,
                                  "benevoleOnly" => $benevoleOnly ,
                                  "rcqUser"      => $rcqUser      ,
+                                 "rcqUserActif" => $rcqUserActif ,
                                  "queteurIds"   => $queteurIds   ,
                                  "QRSearchType" => $QRSearchType
                            ));

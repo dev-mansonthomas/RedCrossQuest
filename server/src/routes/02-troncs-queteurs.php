@@ -189,7 +189,7 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($r
             if($tq->depart == null)
             {
 
-              if(!TroncQueteurBusinessService::hasQueteAlreadyStarted($this->get('settings')['appSettings']['deploymentType']))
+              if(!TroncQueteurBusinessService::hasQueteAlreadyStarted($this->get('settings')['appSettings']['deploymentType'], null, $this->logger))
               {//enforce policy :  can't prepare or depart tronc before the start of the quête
                 $tq->queteHasNotStartedYet=true;
               }
@@ -220,8 +220,9 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($r
       $this->logger->warning("TroncQueteur POST PREPARATION");
       $input = $request->getParsedBody();
       $tq    = new TroncQueteurEntity($input, $this->logger);
+      $hasQueteAlreadyStarted = TroncQueteurBusinessService::hasQueteAlreadyStarted($this->get('settings')['appSettings']['deploymentType'], $tq->depart_theorique , $this->logger);
 
-      if(!TroncQueteurBusinessService::hasQueteAlreadyStarted($this->get('settings')['appSettings']['deploymentType'], $tq->depart_theorique))
+      if(!$hasQueteAlreadyStarted)
       {//enforce policy :  can't prepare or depart tronc before the start of the quête
         return $response->getBody()->write(json_encode((object) ['queteHasNotStartedYet'     => true]));
       }

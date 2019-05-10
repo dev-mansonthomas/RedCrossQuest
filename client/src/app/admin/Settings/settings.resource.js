@@ -11,6 +11,7 @@ angular.module('redCrossQuestClient').factory('SettingsResource', function ($res
       id    : function () {return $localStorage.currentUser.ulId  }
     },
     {
+      //get the UL name, address, contact details etc...
       query:
         {
           method: 'GET',
@@ -30,11 +31,27 @@ angular.module('redCrossQuestClient').factory('SettingsResource', function ($res
           action: 'getAllSettings'
         }
       },
+      //Get the application settings
+      getULSettings: {
+        method: 'GET',
+        params: {
+          action: 'getULSettings'
+        }
+      },
       createYear: {
         method: 'POST'
       },
       update: {
-        method: 'PUT' // this method issues a PUT request
+        method: 'PUT', // this method issues a PUT request
+        params: {
+          action: 'updateUL'
+        }
+      },
+      updateRedQuestSettings: {
+        method: 'PUT', // this method issues a PUT request
+        params: {
+          action: 'updateRedQuestSettings'
+        }
       }
     });
 });

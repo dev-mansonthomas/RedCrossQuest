@@ -1,6 +1,7 @@
 <?php
 namespace RedCrossQuest\BusinessService;
 use Carbon\Carbon;
+use Google\Cloud\Logging\PsrLogger;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 
 /**
@@ -63,16 +64,23 @@ class TroncQueteurBusinessService
   /**
    * In Production : If the current date now() or the date passed in parameter is after the 1st day of the quete, returns true, false otherwise.
    * Other env : it returns always true to be able to test the application
+   * @param string $deployment the current deployment value
+   * @param Carbon $dateToCheck  preparation date
+   * @param $logger PsrLogger logger
+   * @return bool true if the quete has already started (or it's not production)
+   * @throws \Exception
    */
-  public static function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null)
+  public static function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null, $logger)
   {
     if(strlen($deployment) !=1)
     {
-      throw new \Exception("\$deployment has an inccorect value ($deployment)");
+      throw new \Exception("\$deployment has an incorrect value ($deployment)");
     }
+
+    if($deployment !== "P")
+      return true;
     
     return
-      $deployment != 'P' ||
       $dateToCheck == null ?
         Carbon::now()->gte(Carbon::createFromFormat("Y-m-d", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate())):
         $dateToCheck ->gte(Carbon::createFromFormat("Y-m-d", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()));

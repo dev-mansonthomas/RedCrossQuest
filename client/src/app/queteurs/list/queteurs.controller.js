@@ -16,6 +16,7 @@
     var vm = this;
     vm.searchType       = 0;
     vm.rcqUser          = 0;
+    vm.rcqUserActif     = 1;
     vm.currentUserRole  = $localStorage.currentUser.roleId;
 
     $rootScope.$emit('title-updated', 'Liste des quêtêurs');
@@ -55,11 +56,12 @@
       $log.debug("search with searchType:'"+vm.searchType+"' admin_ul_id:"+vm.admin_ul_id);
 
       var searchParams = {
-        'q'                   : vm.search     ,
-        'searchType'          : vm.searchType ,
-        'secteur'             : vm.secteur    ,
-        'active'              : vm.active     ,
-        'rcqUser'             : vm.rcqUser    ,
+        'q'                   : vm.search       ,
+        'searchType'          : vm.searchType   ,
+        'secteur'             : vm.secteur      ,
+        'active'              : vm.active       ,
+        'rcqUser'             : vm.rcqUser      ,
+        'rcqUserActif'        : vm.rcqUserActif ,
         'anonymization_token' : vm.anonymization_token};
 
 

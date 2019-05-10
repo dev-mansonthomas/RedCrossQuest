@@ -53,14 +53,12 @@ HTTP_FUNCTIONS=("findQueteurById"          \
                 "z_testCrossProjectFirestoreConnectivity" \
                 "z_testCrossProjectSQLConnectivity"	  \
 		"tronc_setDepartOrRetour"		  \
-		"tronc_listPrepared"                      )
+		"tronc_listPrepared"                      \
+		"historiqueTroncQueteur"		  )
 
 #list of pubsub functions
 #Attention : pas d'espace entre les []
 declare -A PUBSUB_FUNCTIONS=(["notifyRedQuestOfRegistrationApproval"]="queteur_approval_topic"    \
-                             ["processNewTroncQueteur"]="tronc_queteur"                           \
-                             ["processUpdateTroncQueteur"]="tronc_queteur_updated"                \
-                             ["queteurCurrentYearAmountTimeWeigthPerYear"]="queteur_data_updated" \
                              ["ULQueteurStatsPerYear"]="ul_update"                                \
                              ["ULTriggerRecompute"]="trigger_ul_update"                           )
 
@@ -74,17 +72,14 @@ declare -A FUNCTIONS_PROJECT_PREFIX=(["findQueteurById"]="${REDQUEST}"          
 				     ["tronc_listPrepared"]="${REDQUEST}"                             \
                                      ["registerQueteur"]="${REDQUEST}"                                \
                                      ["notifyRedQuestOfRegistrationApproval"]="${REDCROSSQUEST}"      \
-                                     ["processNewTroncQueteur"]="${REDCROSSQUEST}"                    \
-                                     ["processUpdateTroncQueteur"]="${REDCROSSQUEST}"                 \
-                                     ["queteurCurrentYearAmountTimeWeigthPerYear"]="${REDCROSSQUEST}" \
                                      ["ULQueteurStatsPerYear"]="${REDCROSSQUEST}"                     \
                                      ["z_testCrossProjectFirestoreConnectivity"]="${REDCROSSQUEST}"   \
                                      ["z_testCrossProjectSQLConnectivity"]="${REDQUEST}"              \
-                                     ["ULTriggerRecompute"]="${REDCROSSQUEST}"                        )
+                                     ["ULTriggerRecompute"]="${REDCROSSQUEST}"                        \
+				     ["historiqueTroncQueteur"]="${REDQUEST}")
 
 
-declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="--timeout 540s"   \
-	                           ["ULQueteurStatsPerYear"]="--timeout 540s")
+declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="--timeout 540s")
 
 ################################################################################################################
 #  FUNCTIONS

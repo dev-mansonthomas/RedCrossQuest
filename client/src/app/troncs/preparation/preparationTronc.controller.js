@@ -225,10 +225,10 @@
     vm.isQueteurAllowed=function()
     {
       if(!vm.current.queteur)
-        return false;
+        return true;
 
       if(!vm.current.queteur.birthdate)
-        return false;
+        return true;
 
       if(moment().diff(vm.current.queteur.birthdate.date, 'years')>=18)
         return true;

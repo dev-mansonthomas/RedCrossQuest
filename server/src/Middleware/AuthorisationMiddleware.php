@@ -173,7 +173,7 @@ class AuthorisationMiddleware
         $this->logger->error("Non authenticate route : $path - $uuid");
         return $next($request, $response);
       }
-      $this->logger->error("authenticated route : $path");
+      //$this->logger->error("authenticated route : $path");
       $authorizations = $request->getHeader('Authorization');
       //get token
       if(count($authorizations) == 0)

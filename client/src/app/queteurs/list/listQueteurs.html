@@ -64,7 +64,7 @@
         </div>
         <div class="col-md-2">
           <div class="form-group">
-            <label for="activeRadio1" class="control-label">Actif:</label><br/>
+            <label for="activeRadio1" class="control-label">Quêteur   Actif:</label><br/>
             <label class="radio-inline">
               <input type="radio" name="active" id="activeRadio1" ng-model="q.active" value="1" required ng-checked="q.active==1 || q.active == null"> Actif
             </label>
@@ -83,14 +83,31 @@
           <strong>Section Admin</strong>
         </div>
         <div class="col-md-2">
-          <div class="form-group">
-            <label for="rcqUserRadio1" class="control-label">Utilisateur RCQ ?</label><br/>
-            <label class="radio-inline">
-              <input type="radio" name="rcqUserRadio" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="rcqUserRadio" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==0"> Non
-            </label>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="rcqUserRadio1" class="control-label">Utilisateur RCQ ?</label><br/>
+                <label class="radio-inline">
+                  <input type="radio" name="rcqUserRadio" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="rcqUserRadio" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==0"> Non
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="rcqUserActifRadio1" class="control-label">Utilisateur RCQ Actif?</label><br/>
+                <label class="radio-inline">
+                  <input type="radio" name="rcqUserActifRadio" id="rcqUserActifRadio1" ng-model="q.rcqUserActif" value="1" required ng-checked="q.rcqUserActif==1"> Oui
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="rcqUserActifRadio" id="rcqUserActifRadio2" ng-model="q.rcqUserActif" value="0" required ng-checked="q.rcqUserActif==0"> Non
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-md-8">

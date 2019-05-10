@@ -414,9 +414,9 @@
 
     vm.createUser=function()
     {
-      vm.current.user = new UserResource();
-      vm.current.user.queteur_id = vm.current.id;
-      vm.current.user.nivol      = vm.current.nivol;
+      vm.current.user             = new UserResource();
+      vm.current.user.queteur_id  = vm.current.id;
+      vm.current.user.nivol       = vm.current.nivol;
 
       vm.current.user.$save(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };

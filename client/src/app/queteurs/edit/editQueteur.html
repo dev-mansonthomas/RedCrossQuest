@@ -215,7 +215,7 @@
                     class="form-control"
                      type="email"
                  ng-model="queteur.current.email"
-               ng-pattern="queteur.current.user.id>0?'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$':''"
+               ng-pattern="queteur.current.user.id>0 && queteur.current.user.active?'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$':''"
                 required
                 autocomplete="email"/>
             </div>
@@ -224,7 +224,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group" ng-class="{'has-error':queteurForm.active.$invalid}">
-            <label for="activeRadio1" class="control-label">Actif</label> <br/>
+            <label for="activeRadio1" class="control-label">Quêteur Actif</label> <br/>
             <label class="radio-inline">
               <input type="radio" name="active" id="activeRadio1" ng-model="queteur.current.active" ng-value="true" required> Oui
             </label>
@@ -400,7 +400,7 @@
                             type="button"
                             id="createUserButton"
                             ng-click="queteur.createUser()"
-                            ng-disabled="queteur.current.userSaveInProgress"
+                            ng-disabled="queteur.current.userSaveInProgress || queteurForm.$invalid"
                     >Faire de ce bénévole un utilisateur de l'application RCQ</button>
                     <span class="help-block">
                       En cliquant sur ce bouton :
@@ -419,7 +419,7 @@
                     <div class="panel-body">
                       <div class="row">
                         <div class="col-md-4">
-                          <label for="userActiveRadio1" class="control-label">Actif</label> <br/>
+                          <label for="userActiveRadio1" class="control-label">Utilisateur RCQ Actif</label> <br/>
                           <label class="radio-inline">
                             <input type="radio" name="userActive" id="userActiveRadio1" ng-model="queteur.current.user.active" ng-value="true"  ng-required="queteur.current.user"> Oui
                           </label>
@@ -435,7 +435,6 @@
                                   ng-options="(r.id) as r.label
                       for
                       r in queteur.roleList">
-                            <option value=""></option>
                           </select>
                           <span class="help-block" style="height:38px">{{queteur.roleDesc[queteur.current.user.role]}}</span>
                         </div>
@@ -447,7 +446,7 @@
                           <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.current.userSavedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
                             <strong>Bravo!</strong> L'utilisateur a été sauvegardé avec succès!
-                            <div ng-show="queteur.current.initPasswordEmailSent">
+                            <div ng-show="queteur.current.user.initPasswordEmailSent">
                               Un email contenant un lien permettant d'initialiser le mot de passe vient d'être envoyé.<br/>
                               <small>Le lien est valide 48h à compter de maintenant</small>
                             </div>
@@ -472,7 +471,7 @@
                           <span class="help-block">Un email sera envoyé à l'utilsateur avec un lien pour réinitialiser son mot de passe</span>
                         </div>
                         <div class="form-group col-md-6">
-                          <button class="btn btn-default" type="button" id="userSave" ng-click="queteur.userSave()">Sauvegarder</button>
+                          <button class="btn btn-default" type="button" id="userSave" ng-click="queteur.userSave()" ng-disabled="queteur.current.userSaveInProgress || queteurForm.$invalid ">Sauvegarder</button>
                           <span class="help-block">L'utilisateur devra se deconnecter/reconnecter pour que la modification soit effective</span>
                         </div>
                       </div>

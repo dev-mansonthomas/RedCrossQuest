@@ -28,21 +28,21 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request
 
   $this->logger->info( "search queteur with roleId", array("roleId"=>$roleId, "admin_ul_id exists  "=>array_key_exists('admin_ul_id',$params)));
 
+  $action = $this->clientInputValidator->validateString("action", getParam($params,'action'), 31 , false );
 
-
-  if($this->clientInputValidator->validateString("action", getParam($params,'action'), 31 , false ) == "countPendingQueteurRegistration")
+  if( $action == "countPendingQueteurRegistration")
   {
     $count = $this->queteurDBService->countPendingQueteurRegistration($ulId);
     $response->getBody()->write(json_encode($count));
   }
-  else if($this->clientInputValidator->validateString("action", getParam($params,'action'), 30 , false ) == "listPendingQueteurRegistration")
+  else if($action == "listPendingQueteurRegistration")
   {
     $registrationStatus  = $this->clientInputValidator->validateInteger("registration_status", getParam($params,'registration_status'), 2 , false, 0);
 
     $queteurs = $this->queteurDBService->listPendingQueteurRegistration($ulId, $registrationStatus);
     $response->getBody()->write(json_encode($queteurs));
   }
-  else if($this->clientInputValidator->validateString("action", getParam($params,'action'), 30 , false ) == "searchSimilarQueteurs")
+  else if($action == "searchSimilarQueteurs")
   {
 
     $firstName  = $this->clientInputValidator->validateString("first_name", getParam($params,'first_name'), 100 , false );
@@ -59,13 +59,6 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request
   }
   else
   {
-    $query        = "";
-    $searchType   = "";
-    $secteur      = "";
-    $active       = "";
-    $rcqUser      = "";
-    $benevoleOnly = "";
-
     try
     {
 
@@ -89,12 +82,13 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request
       $secteur      = $this->clientInputValidator->validateInteger('secteur'         , getParam($params,'secteur'         ), 10   , false );
       $active       = $this->clientInputValidator->validateBoolean("active"          , getParam($params,'active'          ), false, true  );
       $rcqUser      = $this->clientInputValidator->validateBoolean("rcqUser"         , getParam($params,'rcqUser'         ), false, false );
+      $rcqUserActif = $this->clientInputValidator->validateBoolean("rcqUserActif"    , getParam($params,'rcqUserActif'    ), false, false );
       $benevoleOnly = $this->clientInputValidator->validateBoolean("benevoleOnly"    , getParam($params,'benevoleOnly'    ), false, false );
       $queteurIds   = $this->clientInputValidator->validateString ("queteurIds"      , getParam($params,'queteurIds'      ), 50   , false );
       $QRSearchType = $this->clientInputValidator->validateInteger('QRSearchType'    , getParam($params,'QRSearchType'    ), 5    , false );
 
 
-      $queteurs = $this->queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser, $queteurIds, $QRSearchType);
+      $queteurs = $this->queteurDBService->searchQueteurs($query, $searchType, $secteur, $ulId, $active, $benevoleOnly, $rcqUser, $rcqUserActif, $queteurIds, $QRSearchType);
 
       return $response->getBody()->write(json_encode($queteurs));
     }

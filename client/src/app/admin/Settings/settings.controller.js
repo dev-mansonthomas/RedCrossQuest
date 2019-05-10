@@ -19,19 +19,28 @@
     $rootScope.$emit('title-updated', 'Paramètres');
 
     //load the local stoarge version first
-    vm.settings       = $localStorage.guiSettings.ul;
-    vm.settings.date_demarrage_rcq=DateTimeHandlingService.handleServerDate(vm.settings.date_demarrage_rcq).stringVersion;
-    vm.mapKey         = $localStorage.guiSettings.mapKey;
-    vm.deploymentType = $localStorage.currentUser.d;
+    vm.settings                     = $localStorage.guiSettings.ul;
+    vm.applicationSettings          = $localStorage.guiSettings.ul_settings;
+    vm.settings.date_demarrage_rcq  = DateTimeHandlingService.handleServerDate(vm.settings.date_demarrage_rcq).stringVersion;
+    vm.mapKey                       = $localStorage.guiSettings.mapKey;
+    vm.deploymentType               = $localStorage.currentUser.d;
     //update it with current DB Values
 
 
     vm.reload=function()
     {
       SettingsResource.query().$promise.then(handleResult);
+      SettingsResource.getULSettings().$promise.then(handleResultAppSettings);
     };
 
     vm.reload();
+
+
+
+    function handleResultAppSettings(settings)
+    {
+      vm.settings.applicationSettings = settings;
+    }
 
     function handleResult (settings)
     {
@@ -54,7 +63,12 @@
     vm.save = function ()
     {
       vm.settings.$update(savedSuccessfully, errorWhileSaving);
-    }
+    };
+
+    vm.updateRedQuestSettings = function()
+    {
+      vm.settings.$updateRedQuestSettings(savedSuccessfully, errorWhileSaving);
+    };
 
     function savedSuccessfully()
     {

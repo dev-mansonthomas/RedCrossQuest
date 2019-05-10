@@ -35,7 +35,25 @@ SELECT  `ul`.`id`,
         `ul`.`date_demarrage_activite`,
         `ul`.`date_demarrage_rcq`,
         `ul`.`mode`,
-        `ul`.`publicDashboard`
+        `ul`.`publicDashboard`,
+        `ul`.`president_man`,
+        `ul`.`president_nivol`,
+        `ul`.`president_first_name`,
+        `ul`.`president_last_name`,
+        `ul`.`president_email`,
+        `ul`.`president_mobile`,
+        `ul`.`tresorier_man`,
+        `ul`.`tresorier_nivol`,
+        `ul`.`tresorier_first_name`,
+        `ul`.`tresorier_last_name`,
+        `ul`.`tresorier_email`,
+        `ul`.`tresorier_mobile`,
+        `ul`.`admin_man`,
+        `ul`.`admin_nivol`,
+        `ul`.`admin_first_name`,
+        `ul`.`admin_last_name`,
+        `ul`.`admin_email`,
+        `ul`.`admin_mobile`
 FROM    `ul`
 WHERE   `ul`.id    = :ul_id
 ";
@@ -66,24 +84,62 @@ WHERE   `ul`.id    = :ul_id
     $sql = "
 UPDATE `ul`
 SET
-  `email`       = :email,
-  `name`        = :name,
-  `address`     = :address,
-  `postal_code` = :postal_code ,
-  `city`        = :city,
-  `longitude`   = :longitude,
-  `latitude`    = :latitude
+  `email`                = :email,
+  `name`                 = :name,
+  `phone`                = :phone,
+  `address`              = :address,
+  `postal_code`          = :postal_code ,
+  `city`                 = :city,
+  `longitude`            = :longitude,
+  `latitude`             = :latitude,
+  `president_man`        = :president_man,       
+  `president_nivol`      = :president_nivol,     
+  `president_first_name` = :president_first_name,
+  `president_last_name`  = :president_last_name, 
+  `president_email`      = :president_email,     
+  `president_mobile`     = :president_mobile,    
+  `tresorier_man`        = :tresorier_man,       
+  `tresorier_nivol`      = :tresorier_nivol,     
+  `tresorier_first_name` = :tresorier_first_name,
+  `tresorier_last_name`  = :tresorier_last_name, 
+  `tresorier_email`      = :tresorier_email,     
+  `tresorier_mobile`     = :tresorier_mobile,    
+  `admin_man`            = :admin_man,           
+  `admin_nivol`          = :admin_nivol,         
+  `admin_first_name`     = :admin_first_name,    
+  `admin_last_name`      = :admin_last_name,     
+  `admin_email`          = :admin_email,         
+  `admin_mobile`         = :admin_mobile       
 WHERE `id`      = :id
 ";
     $parameters = [
-      "email"       => $ul->email,
-      "name"        => $ul->name,
-      "address"     => $ul->address,
-      "postal_code" => $ul->postal_code,
-      "city"        => $ul->city,
-      "longitude"   => $ul->longitude,
-      "latitude"    => $ul->latitude,
-      "id"          => $ulId
+      "email"                => $ul->email,
+      "name"                 => $ul->name,
+      "phone"                => $ul->phone,
+      "address"              => $ul->address,
+      "postal_code"          => $ul->postal_code,
+      "city"                 => $ul->city,
+      "longitude"            => $ul->longitude,
+      "latitude"             => $ul->latitude,
+      "president_man"        => $ul->president_man == 1 ?  1 : 0,
+      "president_nivol"      => $ul->president_nivol,    
+      "president_first_name" => $ul->president_first_name,
+      "president_last_name"  => $ul->president_last_name,
+      "president_email"      => $ul->president_email,    
+      "president_mobile"     => $ul->president_mobile,   
+      "tresorier_man"        => $ul->tresorier_man == 1 ?  1 : 0,
+      "tresorier_nivol"      => $ul->tresorier_nivol,    
+      "tresorier_first_name" => $ul->tresorier_first_name,
+      "tresorier_last_name"  => $ul->tresorier_last_name,
+      "tresorier_email"      => $ul->tresorier_email,    
+      "tresorier_mobile"     => $ul->tresorier_mobile,   
+      "admin_man"            => $ul->admin_man == 1 ?  1 : 0,
+      "admin_nivol"          => $ul->admin_nivol,        
+      "admin_first_name"     => $ul->admin_first_name,   
+      "admin_last_name"      => $ul->admin_last_name,    
+      "admin_email"          => $ul->admin_email,        
+      "admin_mobile"         => $ul->admin_mobile,                
+      "id"                   => $ulId
     ];
 
 
@@ -99,7 +155,7 @@ WHERE `id`      = :id
   /**
    * Search unite locale by name, postal code, city
    *
-   * @param string $query : the criteria to search queteur on first_name, last_name, nivol
+   * @param string $query : the criteria to search UL on name postal code city and president, tresorier, admin first & last name
    * @return UniteLocaleEntity[]  the list of UniteLocale
    * @throws PDOException if the query fails to execute on the server
    * @throws \Exception in other situations, possibly : parsing error in the entity
@@ -124,9 +180,16 @@ SELECT  `ul`.`id`,
         `ul`.`mode`,
         `ul`.`publicDashboard`
 FROM    `ul`
-WHERE   UPPER(ul.`name`        ) like concat('%', UPPER(:query), '%')
-  OR    UPPER(ul.`postal_code` ) like concat('%', UPPER(:query), '%')
-  OR    UPPER(ul.`city`        ) like concat('%', UPPER(:query), '%')
+WHERE   UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`postal_code`         ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`city`                ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`president_first_name`) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`president_last_name` ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`admin_first_name`    ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`admin_last_name`     ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`tresorier_first_name`) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`tresorier_last_name` ) like concat('%', UPPER(:query), '%')
+
 
 ";
 

@@ -33,14 +33,27 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request
       }
       else if($action == "getAllSettings")
       {
+        $this->logger->error("1");
         $guiSettings['mapKey'        ] = $this->settings['appSettings']['gmapAPIKey'     ];
         $guiSettings['RGPDVideo'     ] = $this->settings['appSettings']['RGPDVideo'      ];
         $guiSettings['RedQuestDomain'] = $this->settings['appSettings']['RedQuestDomain' ];
+
+        $this->logger->error("2");
         $guiSettings['ul'            ] = $this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId);
+        $this->logger->error("3");
         $guiSettings['ul_settings'   ] = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
+        $this->logger->error("4");
         $guiSettings['user'          ] = $this->userDBService                ->getUserInfoWithUserId($userId, $ulId, $roleId);
+        $this->logger->error("5");
         $guiSettings['RCQVersion'    ] = $this->RCQVersion;
         $guiSettings['FirstDay'      ] = DailyStatsBeforeRCQDBService::getCurrentQueteStartDate();
+        $this->logger->error("6");
+
+        return $response->getBody()->write(json_encode($guiSettings));
+      }
+      else if($action == "getULSettings")
+      {
+        $guiSettings['ul_settings'   ] = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
 
         return $response->getBody()->write(json_encode($guiSettings));
       }
@@ -59,12 +72,13 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request
 
 
 /**
- * get the google maps API Key
+ *Update the UL data
  */
 $app->put(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
 
+  $params = $request->getQueryParams();
   $ulId   = $decodedToken->getUlId  ();
   $roleId = $decodedToken->getRoleId();
   $userId = $decodedToken->getUid   ();
@@ -79,9 +93,35 @@ $app->put(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request
 
   try
   {
-    $ulEntity    = new UniteLocaleEntity($input, $this->logger);
-    $this->uniteLocaleDBService->updateUL($ulEntity, $ulId, $userId);
+    if(array_key_exists('action', $params))
+    {
+      $action = $this->clientInputValidator->validateString("action", $params['action'], 22, false);
 
+      if ($action == "updateUL")
+      {
+        $ulEntity = new UniteLocaleEntity($input, $this->logger);
+        $this->uniteLocaleDBService->updateUL($ulEntity, $ulId, $userId);
+      }
+      else if($action == "updateRedQuestSettings")
+      {
+
+        $AutonomousDepartAndReturn = $this->clientInputValidator->validateBoolean('AutonomousDepartAndReturn', $input['applicationSettings']['redquest']['AutonomousDepartAndReturn'], true, false);
+
+        //recupère les settings exitants
+        
+        $ulSettings = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
+
+        if(isset($ulSettings['redquest']))
+        {
+          $ulSettings['redquest']['AutonomousDepartAndReturn']=$AutonomousDepartAndReturn;
+        }
+        else
+        {
+          $ulSettings['redquest']=[];
+          $ulSettings['redquest']['AutonomousDepartAndReturn']=$AutonomousDepartAndReturn;
+        }
+      }
+    }
   }
   catch(\Exception $e)
   {
