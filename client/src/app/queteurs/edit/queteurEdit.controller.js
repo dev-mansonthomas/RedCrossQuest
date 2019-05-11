@@ -27,6 +27,8 @@
     vm.youngestBirthDate=moment().subtract(1  ,'years').toDate();
     vm.oldestBirthDate  =moment().subtract(100,'years').toDate();
 
+    vm.pointQueteHash   = $localStorage.pointsQueteHash;
+
 
 
     vm.typeBenevoleList=[

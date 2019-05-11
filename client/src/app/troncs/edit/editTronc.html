@@ -104,13 +104,13 @@
       <table class='table'>
         <thead>
         <tr>
-          <th>ID (click to edit)</th>
-          <th>Queteur (click to see)</th>
-          <th>départ Théorique</th>
-          <th>départ</th>
-          <th>retour</th>
-          <th>durée(min)</th>
-          <th>point_quete id</th>
+          <th>ID (voir le {Tronc-Quêteur}</th>
+          <th>Queteur (voir le Quêteur)</th>
+          <th>Départ Théorique</th>
+          <th>Départ</th>
+          <th>Retour</th>
+          <th>Durée(min)</th>
+          <th>Point de Quête</th>
           <th>Montant</th>
         </tr>
         </thead>
@@ -122,7 +122,7 @@
           <td>{{::tq.depart.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
           <td>{{::tq.retour.toDate()           | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
           <td>{{::tq.duration.toFixed(2)}}</td>
-          <td>{{::tq.point_quete_id}}</td>
+          <td>{{tq.point_quete_id}} - {{tronc.pointQueteHash[tq.point_quete_id].name==null ?'Désactivé':tronc.pointQueteHash[tq.point_quete_id].name}}</td>
           <td>
 
             {{(

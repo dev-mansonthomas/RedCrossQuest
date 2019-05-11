@@ -16,7 +16,8 @@
     var vm      = this;
     var troncId = $routeParams.id;
 
-    vm.currentUserRole=$localStorage.currentUser.roleId;
+    vm.currentUserRole = $localStorage.currentUser.roleId;
+    vm.pointQueteHash  = $localStorage.pointsQueteHash;
 
     vm.typeTroncList=[
       {id:1,label:'Tronc'},
@@ -36,32 +37,9 @@
         vm.current = data;
         vm.current.created = DateTimeHandlingService.handleServerDate(vm.current.created).stringVersion;
         vm.current.saveInProgress=false;
+        loadTroncQueteurForTronc();
       });
 
-      TroncQueteurResource.getTroncsQueteurForTroncId({'tronc_id': troncId}).$promise.then(
-        function success(data)
-        {
-          var dataLength = data.length;
-          for(var i=0;i<dataLength;i++)
-          {
-            var oneRow = data[i];
-            oneRow.depart            = vm.handleDate(oneRow.depart);
-            oneRow.depart_theorique  = vm.handleDate(oneRow.depart_theorique);
-            oneRow.retour            = vm.handleDate(oneRow.retour);
-
-            if(oneRow.retour !==null && oneRow.depart !== null && oneRow.retour !=="" && oneRow.depart !== "")
-            {
-              oneRow.duration = moment.duration(oneRow.retour.diff(oneRow.depart)).asMinutes();
-            }
-          }
-
-          vm.current.troncs_queteur  = data;
-        },
-        function error(error)
-        {
-          $log.error(error);
-        }
-      );
       $rootScope.$emit('title-updated', 'Edition du tronc - '+troncId);
     }
     else
@@ -100,6 +78,34 @@
       vm.current.saveInProgress=false;
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=error;
+    }
+
+    function loadTroncQueteurForTronc()
+    {
+      TroncQueteurResource.getTroncsQueteurForTroncId({'tronc_id': troncId}).$promise.then(
+        function success(data)
+        {
+          var dataLength = data.length;
+          for(var i=0;i<dataLength;i++)
+          {
+            var oneRow = data[i];
+            oneRow.depart            = vm.handleDate(oneRow.depart);
+            oneRow.depart_theorique  = vm.handleDate(oneRow.depart_theorique);
+            oneRow.retour            = vm.handleDate(oneRow.retour);
+
+            if(oneRow.retour !==null && oneRow.depart !== null && oneRow.retour !=="" && oneRow.depart !== "")
+            {
+              oneRow.duration = moment.duration(oneRow.retour.diff(oneRow.depart)).asMinutes();
+            }
+          }
+
+          vm.current.troncs_queteur  = data;
+        },
+        function error(error)
+        {
+          $log.error(error);
+        }
+      );
     }
 
   }

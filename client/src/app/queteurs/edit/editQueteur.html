@@ -632,7 +632,7 @@
                 <th>Départ</th>
                 <th>Retour</th>
                 <th>Durée(min)</th>
-                <th>Point_quete id</th>
+                <th>Point de Quête</th>
                 <th>Montant</th>
                 <th>Poids</th>
               </tr>
@@ -645,7 +645,7 @@
                 <td>{{tq.depart}}</td>
                 <td>{{tq.retour}}</td>
                 <td>{{tq.duration.toFixed(2)}}</td>
-                <td>{{tq.point_quete_id}}</td>
+                <td>{{tq.point_quete_id}} - {{queteur.pointQueteHash[tq.point_quete_id].name==null ?'Désactivé':queteur.pointQueteHash[tq.point_quete_id].name}}</td>
                 <td style="text-align: right">
                   {{
                   tq.euro500 * 500 +
