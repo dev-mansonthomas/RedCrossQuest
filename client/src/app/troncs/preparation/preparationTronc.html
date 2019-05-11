@@ -93,14 +93,14 @@
                typeahead-wait-ms="20"
                typeahead-select-on-blur="true"
                class="form-control"
-               ng-required
+               ng-required="true"
                autofocus
                autocomplete="off">
               <i   ng-show="loadingQueteurs" class="glyphicon glyphicon-refresh"></i>
               <div ng-show="noResults">
                 <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
               </div>
-              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+              <span class="help-block">Scan QR Code ou saisie manuelle. Champ obligatoire.</span>
               <div class="alert alert-warning" role="alert" ng-if="false"><strong>ATTENTION</strong>:<br/> En saisie manuelle, ne pas utiliser la touche "TAB" <br/>(petit bug pas encore résolu)</div>
             </div>
             <div class="form-group" ng-class="{'has-error':prepaTroncForm.horaireDepartTheorique.$invalid}" ng-show="pt.current.queteur.id>0 && pt.current.tronc.id > 0">
@@ -111,7 +111,7 @@
                      class="form-control"
                      ng-min="pt.current.horaireDepartTheoriqueNotBefore"
                      ng-model="pt.current.horaireDepartTheorique"
-                     required/>
+                     ng-required="true"/>
               <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Champ Obligatoire</span>
               <span class="help-block" ng-show="pt.isCurrentTimeBefore1stDayOfQuete()">Aucune préparation/départ n'est permise avant le début de la quête : {{pt.firstDayStr}}</span>
             </div>
@@ -130,14 +130,14 @@
                 typeahead-wait-ms="20"
                 typeahead-select-on-blur="true"
                 class="form-control"
-                ng-required
+                ng-required="true"
                 autocomplete="off">
               <i   ng-show="loadingTroncs" class="glyphicon glyphicon-refresh"></i>
               <div ng-show="noTroncResults">
                 <i class="glyphicon glyphicon-remove"></i> Aucun Tronc trouvé
               </div>
 
-              <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+              <span class="help-block">Scan QR Code ou saisie manuelle. Champ obligatoire.</span>
               <div class="alert alert-warning" role="alert"  ng-if="false"><strong>ATTENTION</strong>:<br/> En saisie manuelle, ne pas utiliser la touche "TAB" <br/>(petit bug pas encore résolu)</div>
             </div>
             <div class="form-group"  ng-show="pt.current.queteurId >0  && pt.current.tronc.id > 0">
@@ -157,13 +157,13 @@
                 typeahead-wait-ms="20"
                 typeahead-select-on-blur="true"
                 class="form-control"
-                ng-required
+                ng-required="true"
                 autocomplete="off">
                 <i   ng-show="loadingTroncs" class="glyphicon glyphicon-refresh"></i>
                 <div ng-show="noTroncResults">
                   <i class="glyphicon glyphicon-remove"></i> Aucun Point de Quête trouvé
                 </div>
-              <span class="help-block">Pour voir toutes les options, tapper la lettre 'e'</span>
+              <span class="help-block">Pour voir toutes les options, tapper la lettre 'e'. Champ obligatoire.</span>
             </div>
           </div>
         </div>
