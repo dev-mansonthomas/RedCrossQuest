@@ -99,8 +99,7 @@ class ReCaptchaService
     try
     {
       //if the URL entered by the client has www. then we check the domain against www.$this->redCrossQuestHost (ex: www.redcrossquest.com)
-      $hasWWW = strtolower(substr( $_SERVER['SERVER_NAME'], 0, 4 )) === "www.";
-
+      $hasWWW = strtolower(substr( $_SERVER['HTTP_HOST'], 0, 4 )) === "www.";
       $resp = (new ReCaptcha($this->secretKey))->setExpectedHostname(($hasWWW?"www.":"").$this->redCrossQuestHost)->verify($token, $remoteIP);
 
       if ($resp->isSuccess())
