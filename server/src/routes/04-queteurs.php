@@ -154,7 +154,29 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($re
   return $response;
 });
 
+$app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
+{
+  $decodedToken = $request->getAttribute('decodedJWT');
+  try
+  {
+    $ulId   = $decodedToken->getUlId  ();
+    $roleId = $decodedToken->getRoleId();
+    $userId = $decodedToken->getUid();
+    $params = $request->getQueryParams();
 
+
+    if($this->clientInputValidator->validateString("action", getParam($params,'action'), 20 , false ) == "markAllAsPrinted")
+    {
+      $this->queteurDBService->markAllAsPrinted($ulId);
+    }
+
+  }
+  catch(Exception $e)
+  {
+    $this->logger->error("Error while updating queteurs", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+    throw $e;
+  }
+});
 /**
  * update un queteur
  *
@@ -235,10 +257,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($re
       $queteurEntity->mobile = "+".$queteurEntity->mobile;
       $this->queteurDBService->update($queteurEntity, $ulId, $roleId);
     }
-    else if($this->clientInputValidator->validateString("action", getParam($params,'action'), 20 , false ) == "markAllAsPrinted")
-    {
-      $this->queteurDBService->markAllAsPrinted($ulId);
-    }
+
   }
   catch(Exception $e)
   {

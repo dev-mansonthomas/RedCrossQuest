@@ -108,6 +108,7 @@
       vm.savedSuccessfully=true;
       vm.confirmMarkAllAsRead=false;
       $timeout(function () { vm.savedSuccessfully=false; }, 10000);
+      vm.search();
     };
 
     vm.onSaveError = function(error)
