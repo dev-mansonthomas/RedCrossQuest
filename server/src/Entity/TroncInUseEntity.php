@@ -15,8 +15,9 @@ class TroncInUseEntity  extends Entity
   public $email;
   public $mobile;
   public $nivol;
+  public $status;
 
-  protected $_fieldList = ['id','depart_theorique','depart','queteur_id','tronc_id','first_name','last_name','email','mobile','nivol'];
+  protected $_fieldList = ['id','depart_theorique','depart','queteur_id','tronc_id','first_name','last_name','email','mobile','nivol', 'status'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class
@@ -38,5 +39,6 @@ class TroncInUseEntity  extends Entity
     $this->getString  ('email'            , $data, 64);
     $this->getString  ('mobile'           , $data, 20);
     $this->getString  ('nivol'            , $data, 15);
+    $this->getString  ('status'           , $data, 50);
   }
 }

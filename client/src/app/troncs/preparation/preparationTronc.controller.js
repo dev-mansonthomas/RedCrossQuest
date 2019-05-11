@@ -156,7 +156,14 @@
       $log.error(errorMessage);
       vm.errorWhileSaving = true;
 
-      errorMessage.data.exception.xdebug_message=null;
+      try
+      {
+        errorMessage.data.exception.xdebug_message=null;
+      }
+      catch(ex)
+      {//do nothing
+      }
+
 
       vm.errorWhileSavingDetails = JSON.stringify(errorMessage.data.exception);
 
@@ -212,7 +219,7 @@
       {
         return response.map(function(tronc)
         {
-          tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
+          tronc.stringView = "tronc N°"+tronc.id;
           return tronc;
         });
       },

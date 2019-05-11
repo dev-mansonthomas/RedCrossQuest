@@ -660,7 +660,7 @@ AND   tq.ul_id         = :ul_id
    */
   public function insert(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
-    $checkTroncResult = $this->checkTroncNotAlreadyInUse($tq->tronc_id, $ulId);
+    $checkTroncResult = $this->checkTroncNotAlreadyInUse($tq->tronc_id, $tq->queteur_id,$ulId);
     $returnInfo = (object) [
       'troncInUse'     => $checkTroncResult!= null,
       'troncInUseInfo' => $checkTroncResult
@@ -742,14 +742,15 @@ $departTheoriqueQuery
    * when preparing the tronc, upon saving, this function is called to check if this tronc is not already associated
    * with a tronc_queteur row for which the dateDepart or dateRetour is null (which means it should be in use)
    * @param int $troncId the Id of the tronc that we want to check
+   * @param int $queteurId the Id of the queteur that we want to check
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return array Array of TroncInUseEntity that contains informations of the existing use of the tronc
    * @throws PDOException if the query fails to execute on the server
    * @throws \Exception in other situations, possibly : parsing error in the entity
    */
-  public function checkTroncNotAlreadyInUse(int $troncId, int $ulId)
+  public function checkTroncNotAlreadyInUse(int $troncId, int $queteurId, int $ulId)
   {
-    $sql = "
+    $sqlTronc = "
 SELECT  
 tq.id, 
 tq.ul_id, 
@@ -761,7 +762,8 @@ q.first_name,
 q.last_name, 
 q.email, 
 q.mobile, 
-q.nivol
+q.nivol,
+'tronc utilisé' as status
 FROM  tronc_queteur tq,
       queteur        q
 WHERE    q.ul_id      = :ul_id
@@ -772,27 +774,72 @@ AND    (tq.depart     is null OR
         tq.retour     is null)
 ";
 
-    $stmt = $this->db->prepare($sql);
+
+    $sqlQueteur = "
+SELECT  
+tq.id, 
+tq.ul_id, 
+tq.queteur_id,
+tq.tronc_id,  
+tq.depart_theorique, 
+tq.depart, 
+q.first_name, 
+q.last_name, 
+q.email, 
+q.mobile, 
+q.nivol,
+'quêteur à déjà un tronc' as status
+FROM  tronc_queteur tq,
+      queteur        q
+WHERE    q.ul_id      = :ul_id
+AND     tq.deleted    = 0
+AND     tq.queteur_id = :queteur_id
+AND     tq.queteur_id = q.id
+AND    (tq.depart     is null OR 
+        tq.retour     is null)
+";
+
+
+    $stmt = $this->db->prepare($sqlTronc);
     $stmt->execute([
-      "tronc_id"        => $troncId,
-      "ul_id"           => $ulId
+      "tronc_id"  => $troncId,
+      "ul_id"      => $ulId
     ]);
 
     $rowCount = $stmt->rowCount();
-
+    $existingUseOfTronc = [];
+    $i=0;
     if( $rowCount > 0)
     {
-      $existingUseOfTronc = [];
-      $i=0;
       while($row = $stmt->fetch())
       {
         $existingUseOfTronc[$i++]=new TroncInUseEntity($row, $this->logger);
       }
-      $stmt->closeCursor();
+    }
+    $stmt->closeCursor();
+
+    $stmt2 = $this->db->prepare($sqlQueteur);
+    $stmt2->execute([
+      "queteur_id" => $queteurId,
+      "ul_id"      => $ulId
+    ]);
+
+    $rowCount2 = $stmt2->rowCount();
+
+    if( $rowCount2 > 0)
+    {
+      while($row2 = $stmt2->fetch())
+      {
+        $existingUseOfTronc[$i++]=new TroncInUseEntity($row2, $this->logger);
+      }
+    }
+    $stmt2->closeCursor();
+
+    if( $rowCount > 0 ||  $rowCount2 > 0)
+    {
       return $existingUseOfTronc;
     }
-
-    $stmt->closeCursor();
+    
     return null;// it's ok, no use of tronc
   }
 

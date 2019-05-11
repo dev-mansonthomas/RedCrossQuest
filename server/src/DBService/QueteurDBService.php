@@ -314,30 +314,25 @@ SELECT  q.`id`,
 FROM `queteur` q
 WHERE q.ul_id = :ul_id
 ";
-    if ($query !== null) {
+
+    $parameters = ["ul_id" => $ulId];
+
+    if ($query !== null)
+    {
       $sql .= "
 AND  
-(       UPPER(q.`first_name`) like concat('%', UPPER(:first_name), '%')
-  OR    UPPER(q.`last_name` ) like concat('%', UPPER(:last_name ), '%')
-  OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:nivol     ), '%')
+(       UPPER(q.`first_name`) like concat('%', UPPER(:query), '%')
+  OR    UPPER(q.`last_name` ) like concat('%', UPPER(:query ), '%')
+  OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:query     ), '%')
+  OR    CONVERT(q.`id`, CHAR)     like concat(:query,'%')
 )
 ";
+      $parameters["query"]= $query;
     }
 
     $stmt = $this->db->prepare($sql);
-    if ($query !== null)
-    {
-      $stmt->execute([
-        "first_name" => $query,
-        "last_name" => $query,
-        "nivol" => $query,
-        "ul_id" => $ulId
-      ]);
-    }
-    else
-    {
-      $stmt->execute(["ul_id" => $ulId]);
-    }
+    $stmt->execute();
+
 
     $results = [];
     $i = 0;
@@ -389,6 +384,7 @@ AND
 (       UPPER(q.`first_name`) like concat('%', UPPER(:query), '%')
   OR    UPPER(q.`last_name` ) like concat('%', UPPER(:query), '%')
   OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:query), '%')
+  OR    CONVERT(q.`id`, CHAR)     like concat(:query,'%')
 )
 ";
       $parameters["query"]=$query;
