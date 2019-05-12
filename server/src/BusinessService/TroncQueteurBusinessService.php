@@ -39,7 +39,7 @@ class TroncQueteurBusinessService
     //if no tronc_queteur is found, a troncQueteur is still return with "rowCount"=0, and the tronc_id
     if($troncQueteur->queteur_id)
     {
-      $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById              ($troncQueteur->queteur_id     , $ulId, $roleId);
+      $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById              ($troncQueteur->queteur_id     , $roleId ==9 ? null: $ulId);
     }
 
     if($troncQueteur->point_quete_id)
@@ -53,7 +53,7 @@ class TroncQueteurBusinessService
   public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId, int $roleId)
   {
     $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId, $roleId);
-    $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $ulId, $roleId);
+    $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $roleId ==9 ? null: $ulId);
     $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById  ($troncQueteur->point_quete_id, $ulId, $roleId);
     $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId, $roleId);
 

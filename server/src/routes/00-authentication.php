@@ -194,6 +194,7 @@ $app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($
 
 /**
  * Get user information from the UUID
+ * Used in the reinit password process
  *
  */
 $app->get(getPrefix().'/getInfoFromUUID', function ($request, $response, $args) use ($app)

@@ -158,9 +158,9 @@
             <tbody>
               <tr ng-repeat="sim in queteur.current.similarQueteurs" ng-click="queteur.isRegistration?null:queteur.goToQueteur(sim.id);">
                 <th scope="row">{{sim.id}}</th>
-                <td>{{sim.first_name}}</td>
-                <td>{{sim.last_name}}</td>
-                <td>{{sim.nivol}}</td>
+                <td style="{{sim.first_name==queteur.current.first_name?'background-color:#FFFF00':''}}">{{sim.first_name}}</td>
+                <td style="{{sim.last_name==queteur.current.last_name  ?'background-color:#FFFF00':''}}">{{sim.last_name}}</td>
+                <td style="{{sim.nivol==queteur.current.nivol          ?'background-color:#FFFF00':''}}">{{sim.nivol}}</td>
                 <td>{{sim.mobile}}</td>
                 <td>{{sim.email}}</td>
                 <td>{{sim.active == 1 ? 'Oui':'Non'}}</td>
@@ -219,7 +219,7 @@
                 required
                 autocomplete="email"/>
             </div>
-            <span class="help-block" ng-show="queteurForm.email.$invalid">Les utilisateurs de l'application RedCrossQuest doivent utiliser leur email croix rouge personnel : <strong>prenom.nom@croix-rouge.fr</strong></span>
+            <span class="help-block" ng-show="queteurForm.email.$invalid">L'email est obligatoire.<br/> <strong>Si</strong> le Quêteur va être aussi un utilisateur de l'application RedCrossQuest, il doit utiliser leur email croix rouge personnel : <strong>prenom.nom@croix-rouge.fr</strong></span>
           </div>
         </div>
         <div class="col-md-4">
@@ -392,6 +392,32 @@
                 <h3 class="panel-title">Application RCQ</h3>
               </div>
               <div class="panel-body">
+
+                <!-- Saving Successful -->
+                <div class="row" ng-show="queteur.current.userSavedSuccessfully">
+                  <div class="col-md-12">
+                    <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.current.userSavedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+                      <strong>Bravo!</strong> L'utilisateur a été sauvegardé avec succès!
+                      <div ng-show="queteur.current.user.initPasswordEmailSent">
+                        Un email contenant un lien permettant d'initialiser le mot de passe vient d'être envoyé.<br/>
+                        <small>Le lien est valide 48h à compter de maintenant</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Error while saving -->
+                <div class="row" ng-show="queteur.current.userErrorWhileSaving">
+                  <div class="col-md-12">
+                    <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.current.userErrorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+                      <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde de l'utilisateur!
+                      <pre style="text-align: left;height:90px;">{{queteur.current.userErrorWhileSavingDetails}}</pre>
+                    </div>
+                  </div>
+                </div>
+
                 <span class="help-block" ng-show="!queteur.current.user">Ce bénévole <b>n'</b>est <b>pas</b> un utilisateur de l'application RCQ</span>
                 <span class="help-block" ng-show="queteur.current.user" >Ce bénévole <b>est</b> un utilisateur de l'application RCQ</span>
                 <div class="row"  ng-show="!queteur.current.user">
@@ -440,30 +466,7 @@
                         </div>
                       </div>
 
-                      <!-- Saving Successful -->
-                      <div class="row" ng-show="queteur.current.userSavedSuccessfully">
-                        <div class="col-md-8 col-md-offset-2">
-                          <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.current.userSavedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
-                            <strong>Bravo!</strong> L'utilisateur a été sauvegardé avec succès!
-                            <div ng-show="queteur.current.user.initPasswordEmailSent">
-                              Un email contenant un lien permettant d'initialiser le mot de passe vient d'être envoyé.<br/>
-                              <small>Le lien est valide 48h à compter de maintenant</small>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
 
-                      <!-- Error while saving -->
-                      <div class="row" ng-show="queteur.current.userErrorWhileSaving">
-                        <div class="col-md-8 col-md-offset-2">
-                          <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.current.userErrorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
-                            <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde de l'utilisateur!
-                            <pre style="text-align: left;">{{queteur.current.userErrorWhileSavingDetails}}</pre>
-                          </div>
-                        </div>
-                      </div>
 
                       <div class="row">
                         <div class="form-group col-md-6">

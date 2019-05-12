@@ -43,7 +43,18 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($reque
           throw new \Exception("PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 14 at /app/src/DBService/UsersDBService.php:47");
         }
 
-        $numberOfUpdatedRows = $this->userDBService->updateActiveAndRole($userEntity, $decodedToken->getUlId(), $decodedToken->getRoleId());
+
+
+        try
+        {
+          $numberOfUpdatedRows = $this->userDBService->updateActiveAndRole($userEntity, $decodedToken->getUlId(), $decodedToken->getRoleId());
+        }
+        catch(\RedCrossQuest\Exception\UserAlreadyExistsException $exception)
+        {
+          $this->logger->error($exception->getMessage(), [$exception->users, $exception]);
+          return $response->getBody()->write(json_encode(["error" =>$exception->getMessage()]));
+        }
+
         if($numberOfUpdatedRows == 0)
         {
           $this->logger->info("Updating user activeAndRole FAILED, no row updated", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
@@ -51,8 +62,8 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($reque
         }
       }
       else
-      {//send init mail to user
-        $queteur          = $this->queteurDBService->getQueteurById($userEntity->queteur_id);
+      {//send init mail to user                                                             //super user can do that for all users.
+        $queteur          = $this->queteurDBService->getQueteurById($userEntity->queteur_id, $roleId ==9 ? null: $ulId);
         $uuid             = $this->userDBService   ->sendInit      ($userEntity->nivol     );
         $this->mailer->sendInitEmail($queteur, $uuid);
 
@@ -82,7 +93,7 @@ $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, 
 
     $input      = $request->getParsedBody();
     $userEntity = new UserEntity($input, $this->logger);
-    $queteur    = $this->queteurDBService->getQueteurById($userEntity->queteur_id);
+    $queteur    = $this->queteurDBService->getQueteurById($userEntity->queteur_id, $roleId ==9 ? null: $ulId);
 
     //check NIVOL has not been changed
     if($userEntity->nivol != $queteur->nivol)
@@ -100,11 +111,19 @@ $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, 
       {
         $this->logger->info("SuperAdmin is creating an user for another UL ".$queteur->ul_id." NIVOL:'".$userEntity->nivol."' - QueteurId:'".$userEntity->queteur_id."'");
       }
-
     }
 
+    try
+    {
+      $this->userDBService->insert($userEntity->nivol, $userEntity->queteur_id);
+    }
+    catch(\RedCrossQuest\Exception\UserAlreadyExistsException $exception)
+    {
+      $this->logger->error($exception->getMessage(), [$exception->users, $exception]);
 
-    $this->userDBService->insert($userEntity->nivol, $userEntity->queteur_id);
+      return $response->getBody()->write(json_encode(["error" =>$exception->getMessage()]));
+    }
+
 
     $user = $this->userDBService->getUserInfoWithQueteurId($userEntity->queteur_id, $ulId, $roleId);
     $uuid = $this->userDBService->sendInit                ($userEntity->nivol, true);

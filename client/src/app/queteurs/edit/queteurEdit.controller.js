@@ -400,6 +400,12 @@
 
     vm.userSavedSuccessfully=function(user)
     {
+
+      if(user.error)
+      {
+        return vm.errorWhileSavingUserFunction(user.error);
+      }
+
       vm.current.initPasswordEmailSent = !vm.current.user.id;
 
       vm.current.user=user;
@@ -420,6 +426,11 @@
       vm.current.user.queteur_id  = vm.current.id;
       vm.current.user.nivol       = vm.current.nivol;
 
+      vm.current.saveInProgress             = true;
+      vm.current.userSavedSuccessfully      = false;
+      vm.current.userErrorWhileSaving       = false;
+      vm.current.userErrorWhileSavingDetails= '';
+
       vm.current.user.$save(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };
 
@@ -430,6 +441,11 @@
       user.active = vm.current.user.active;
       user.role   = vm.current.user.role;
 
+      vm.current.saveInProgress             = true;
+      vm.current.userSavedSuccessfully      = false;
+      vm.current.userErrorWhileSaving       = false;
+      vm.current.userErrorWhileSavingDetails= '';
+
       user.$update(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };
 
@@ -439,6 +455,11 @@
       user.id           = vm.current.user.id;
       user.queteur_id   = vm.current.id;
       user.nivol        = vm.current.nivol;
+
+      vm.current.saveInProgress             = true;
+      vm.current.userSavedSuccessfully      = false;
+      vm.current.userErrorWhileSaving       = false;
+      vm.current.userErrorWhileSavingDetails= '';
 
       user.$reInitPassword(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };

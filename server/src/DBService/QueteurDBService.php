@@ -669,13 +669,14 @@ ORDER BY q.last_name ASC
 
   /**
    * Get one queteur by its ID
-   * No UL_ID passed, as this method is used by the login process, which don't know yet the UL_ID
+   * UL_ID is optional as this method is used by the login process, which don't know yet the UL_ID
    * @param int $queteur_id The ID of the queteur
+   * @param int $ul_id Id of the UL that get the user
    * @return QueteurEntity  The queteur
    * @throws PDOException if the query fails to execute on the server
    * @throws \Exception in other situations
    */
-  public function getQueteurById(int $queteur_id)
+  public function getQueteurById(int $queteur_id, int $ul_id=null)
   {
     $sql = "
 SELECT  q.`id`,
@@ -705,16 +706,26 @@ WHERE  q.id    = :queteur_id
 AND    q.ul_id = u.id
 ";
 
+    $parameters = ["queteur_id" => $queteur_id];
+
+    if($ul_id > 0)
+    {
+      $sql .= "
+AND  u.id = :ul_id
+";
+      $parameters["ul_id"] = $ul_id;
+    }
+
     $stmt = $this->db->prepare($sql);
 
-    $stmt->execute(["queteur_id" => $queteur_id]);
+    $stmt->execute($parameters);
 
     $queteur = new QueteurEntity($stmt->fetch(), $this->logger);
     $stmt->closeCursor();
 
     if($queteur->referent_volunteer > 0)
     {
-      $referent         = $this->getQueteurById($queteur->referent_volunteer);
+      $referent         = $this->getQueteurById($queteur->referent_volunteer, $ul_id);
       $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
       $queteur->referent_volunteerQueteur = $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
     }

@@ -6,9 +6,51 @@ require '../../vendor/autoload.php';
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\Entity\UserEntity;
 use PDOException;
+use RedCrossQuest\Exception\UserAlreadyExistsException;
 
 class UserDBService extends DBService
 {
+
+
+  /**
+   * Check if at least one active user exist on the system with the passed nivol.
+   * If so, it throws an exception with the data of the users.
+   * if not, do nothing.
+   * @param string $nivol nivol to check
+   * @throws UserAlreadyExistsException if at least one active user exist on the whole system
+   */
+  public function checkExistingUserWithNivol(string $nivol)
+  {
+    $sql = "
+select u.*, q.* 
+from users u, queteur q
+where u.nivol like :nivol
+AND u.active = 1
+AND u.queteur_id = q.id";
+
+
+    $parameters = ["nivol"=>$nivol];
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+
+    $results = [];
+    $i = 0;
+    while ($row = $stmt->fetch())
+    {
+      $results[$i++] = $row;
+    }
+
+    $stmt->closeCursor();
+
+    if($i>0)
+    {
+      $exception = new UserAlreadyExistsException($i. " utilisateurs actifs RCQ existent déjà avec ce nivol: '$nivol'.\nVeuillez contacter l'administrateur RCQ sur slack ou support@redcrossquest.com");
+      $exception->users = $results;
+      throw $exception;
+    }
+  }
+
 
 
   /**
@@ -18,9 +60,13 @@ class UserDBService extends DBService
    * @param int    $queteurId : queteurId of the user
    * @return int the primary key of the new user
    * @throws PDOException if the query fails to execute on the server
+   * @throws UserAlreadyExistsException if at least one active user exist on the whole system
    */
   public function insert(string $nivol, int $queteurId)
   {
+
+    $this->checkExistingUserWithNivol($nivol);
+
     $sql = "
 INSERT INTO `users`
 (
@@ -235,7 +281,7 @@ LIMIT 1
     $sql = "
 SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
        u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
-       u.init_passwd_date, u.active, u.created, u.updated, q.first_name, q.last_name
+       u.init_passwd_date, u.active, u.created, u.updated, u.nivol, q.first_name, q.last_name
 FROM   users u, queteur q
 WHERE  u.id = :id
 AND    q.id = u.queteur_id
@@ -464,9 +510,19 @@ WHERE   id                       = :id
    * @param int         $roleId the RoleID of the person performing the action
    * @return boolean true if query is successful, false otherwise
    * @throws PDOException if the query fails to execute on the server
+   * @throws UserAlreadyExistsException if the active state change from false to true and than another users is already active with the same nivol
    */
   public function updateActiveAndRole(UserEntity $userEntity, int $ulId, int $roleId)
   {
+
+    $oldUser = $this->getUserInfoWithUserId($userEntity->id, $ulId, $roleId);
+    
+    if( $oldUser->active != $userEntity->active && $userEntity->active == 1 )
+    {
+      $this->checkExistingUserWithNivol($oldUser->nivol);
+    }
+
+
     $sql = "
 UPDATE        `users`    u
   INNER JOIN  `queteur`  q
