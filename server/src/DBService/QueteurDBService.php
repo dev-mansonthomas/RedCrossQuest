@@ -546,6 +546,7 @@ AND
         SELECT tqq.id 
         FROM  tronc_queteur tqq
         WHERE tqq.queteur_id = q.id
+        AND   tqq.deleted    = 0
         ORDER BY tqq.depart_theorique DESC
         LIMIT 1
     )
@@ -602,8 +603,9 @@ AND    tq.deleted = 0
 AND    tq.id      = (  
       SELECT tqq.id 
       FROM  tronc_queteur tqq
-      WHERE tqq.queteur_id = q.id
-      AND   tqq.depart IS NULL
+      WHERE tqq.queteur_id  = q.id
+      AND   tqq.depart      IS NULL
+      AND   tqq.deleted     = 0
       ORDER BY depart_theorique DESC
       LIMIT 1
     )
@@ -653,9 +655,10 @@ AND    tq.id      = (
       SELECT tqq.id
       FROM  tronc_queteur tqq
       WHERE tqq.queteur_id = q.id
-      AND   depart IS NOT NULL
-      AND   retour IS     NULL
-      ORDER BY depart_theorique DESC
+      AND   tqq.deleted    = 0
+      AND   tqq.depart     IS NOT NULL
+      AND   tqq.retour     IS     NULL
+      ORDER BY tqq.depart_theorique DESC
       LIMIT 1
     )
 ORDER BY q.last_name ASC
