@@ -63,10 +63,25 @@
 
 
   <div class="container" style="text-align: left">
-
+    
     <div class="panel panel-primary no-print">
-      <div class="panel-heading">QR Code des Troncs ACTIF</div>
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>QR Code des Troncs ACTIF</h5>
+          </div>
+          <div class="col-md-3 col-md-offset-5">
+            <a href="/#!/troncs/edit" class="btn btn-info">
+              Créer de nouveaux troncs
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
+
+
+
+
 
     <div class="alert alert-danger" style="background-color:red;color:black;font-size:36px;text-align:center;" ng-show="qrcTroncs.deploymentType!='P'"><strong>⛔️ ATTENTION ⛔️</strong> <br/>NE PAS DIFFUSER - CE N'EST PAS LA PRODUCTION</div>
 
