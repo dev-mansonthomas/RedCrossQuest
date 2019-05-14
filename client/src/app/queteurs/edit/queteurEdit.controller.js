@@ -406,18 +406,19 @@
         return vm.errorWhileSavingUserFunction(user.error);
       }
 
-      vm.current.initPasswordEmailSent = !vm.current.user.id;
-
       vm.current.user=user;
       vm.current.userSavedSuccessfully=true;
+      vm.current.saveInProgress=false;
       $timeout(function () { vm.savedSuccessfully=false; }, 5000);
     };
 
     vm.errorWhileSavingUserFunction=function(error)
     {
-      vm.current.saveInProgress=false;
-      vm.current.userErrorWhileSaving=true;
-      vm.current.userErrorWhileSavingDetails=error;
+      vm.current.saveInProgress             = false;
+      vm.current.userErrorWhileSaving       = true;
+      vm.current.userErrorWhileSavingDetails= error;
+      vm.current.initPasswordEmailSent      = false;
+      vm.current.reinitPasswordEmailSent    = false;
     };
 
     vm.createUser=function()
@@ -430,6 +431,11 @@
       vm.current.userSavedSuccessfully      = false;
       vm.current.userErrorWhileSaving       = false;
       vm.current.userErrorWhileSavingDetails= '';
+
+      //assume that the operation will go successfull.
+      //in the error function, it's set to false
+      vm.current.initPasswordEmailSent = true;
+
 
       vm.current.user.$save(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };
@@ -460,6 +466,8 @@
       vm.current.userSavedSuccessfully      = false;
       vm.current.userErrorWhileSaving       = false;
       vm.current.userErrorWhileSavingDetails= '';
+
+      vm.current.reinitPasswordEmailSent = true;
 
       user.$reInitPassword(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };

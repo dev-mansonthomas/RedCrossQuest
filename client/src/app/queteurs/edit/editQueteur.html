@@ -215,7 +215,7 @@
                     class="form-control"
                      type="email"
                  ng-model="queteur.current.email"
-               ng-pattern="queteur.current.user.id>0 && queteur.current.user.active?'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$':''"
+               ng-pattern="queteur.current.user.id>0 && queteur.current.user.active?'^[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+@croix-rouge.fr$':''"
                 required
                 autocomplete="email"/>
             </div>
@@ -399,9 +399,9 @@
                     <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="queteur.current.userSavedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
                       <strong>Bravo!</strong> L'utilisateur a été sauvegardé avec succès!
-                      <div ng-show="queteur.current.user.initPasswordEmailSent">
+                      <div ng-show="queteur.current.initPasswordEmailSent || queteur.current.reinitPasswordEmailSent">
                         Un email contenant un lien permettant d'initialiser le mot de passe vient d'être envoyé.<br/>
-                        <small>Le lien est valide 48h à compter de maintenant</small>
+                        <small>Le lien est valide 4{{queteur.current.initPasswordEmailSent?'8':''}}h à compter de maintenant</small>
                       </div>
                     </div>
                   </div>
