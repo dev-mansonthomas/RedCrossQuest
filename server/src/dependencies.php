@@ -53,7 +53,7 @@ $container['renderer'] = function (\Slim\Container $c)
  */
 $container['RCQVersion'] = function (\Slim\Container $c)
 {
-  return "2019.1";
+  return "2019.2";
 };
 
 /**
