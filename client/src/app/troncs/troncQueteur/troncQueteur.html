@@ -600,7 +600,7 @@
           <div class="row" style="height:115px;">
 
             <div class="form-group col-md-4">
-              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledBillToZero();" ng-if="!tq.current.readOnlyView" ng-cloak>
+              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledBillToZero();" ng-if="!tq.current.readOnlyView || tq.current.adminEditMode" ng-cloak>
                 Mettre à zéro les champs billets non remplis
               </button>
             </div>
@@ -745,7 +745,7 @@
 
           <div class="row" style="">
             <div class="form-group col-md-4">
-              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledCoinToZero();" ng-if="!tq.current.readOnlyView" ng-cloak>
+              <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setNonFilledCoinToZero();" ng-if="!tq.current.readOnlyView || tq.current.adminEditMode" ng-cloak>
                 Mettre à zéro les champs pièces non remplis
               </button>
             </div>
@@ -918,7 +918,7 @@
             alors inscrivez sur chaque sac un identifiant unique et reportez cet identifiant dans les cases ci-dessous.
             Un onglet des graphiques pour le compteur vous donnera le détail par sac (nombre de pièces, montant, poids)
             <br/>
-            <b>Ex: 2018-PIECE-001, 2018-BILLET-001</b>
+            <b>Ex: {{tq.currentYear}}-PIECE-001, {{tq.currentYear}}-BILLET-001</b>
           </span>
           </div>
         </div>

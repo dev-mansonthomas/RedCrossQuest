@@ -330,14 +330,14 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
       <table style=\"width:100%;padding:0; margin:0;\" >
         <tr>
           <td style=\"font-family: Helvetica; font-size: 24px;font-weight: bolder;padding:8px;\">
-            <div style='background-color: #222222;'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/RedCrossQuestLogo.png\" style=\"height: 50px;\"/></div>
+            <div style='background-color: #222222;'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/RedCrossQuestLogo.png\" style=\"height: 50px;\" height='50'/></div>
           </td>
           <!-- 
           //TODO 
           https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/logoCRF.png
           http://mansonthomas.com/CRF/Paris1erEt2eme/logoCRF.png
           -->
-          <td style=\"text-align: right;\"><img src=\"http://mansonthomas.com/CRF/Paris1erEt2eme/logoCRF.png\" alt=\"Croix Rouge Française\" style=\"height: 90px;\"/></td>
+          <td style=\"text-align: right;\"><img src=\"http://mansonthomas.com/CRF/Paris1erEt2eme/logoCRF.png\" alt=\"Croix Rouge Française\" style=\"height: 90px;\" height='90'/></td>
         </tr>
       </table>
     </td>

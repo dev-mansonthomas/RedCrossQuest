@@ -30,6 +30,7 @@
     vm.last_name      = $localStorage.guiSettings.user.last_name;
 
     vm.currentDate    = new Date();
+    vm.currentYear    = new Date().getFullYear();
 
     var tronc_queteur_id = $routeParams.id;
 
