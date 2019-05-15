@@ -215,11 +215,12 @@
                     class="form-control"
                      type="email"
                  ng-model="queteur.current.email"
-               ng-pattern="queteur.current.user.id>0 && queteur.current.user.active?'^[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+@croix-rouge.fr$':''"
                 required
                 autocomplete="email"/>
+
+              <!--  ng-pattern="queteur.current.user.id>0 && queteur.current.user.active?'^[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+@croix-rouge.fr$':''" -->
             </div>
-            <span class="help-block" ng-show="queteurForm.email.$invalid">L'email est obligatoire.<br/> <strong>Si</strong> le Quêteur va être aussi un utilisateur de l'application RedCrossQuest, il doit utiliser leur email croix rouge personnel : <strong>prenom.nom@croix-rouge.fr</strong></span>
+            <span class="help-block" ng-show="queteurForm.email.$invalid">L'email est obligatoire.<!-- br/> <strong>Si</strong> le Quêteur va être aussi un utilisateur de l'application RedCrossQuest, il doit utiliser leur email croix rouge personnel : <strong>prenom.nom@croix-rouge.fr</strong --></span>
           </div>
         </div>
         <div class="col-md-4">

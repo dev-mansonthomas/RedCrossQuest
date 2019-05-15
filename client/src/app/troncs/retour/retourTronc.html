@@ -143,12 +143,19 @@
 
                 <div class="form-group" ng-class="{'has-error':retourTroncForm.depart.$invalid}">
                   <label for="depart" class="control-label">Horaire Départ Réelle</label>
+
+                  <!-- pas de
+
+                  ng-min="rt.current.tronc_queteur.depart_theorique"
+
+                  car on peut préparer le tronc pour 10h et le gars se pointe à 9h et veut partir tout de suite.
+
+                  -->
                   <input name="depart"
                            id="depart"
                          type="datetime-local"
                         class="form-control"
                      ng-model="rt.current.tronc_queteur.depart"
-                       ng-min="rt.current.tronc_queteur.depart_theorique"
                        ng-max="rt.current.tronc_queteur.retour"
                   ng-required="rt.current.tronc_queteur.dateDepartIsMissing === true"/>
 
