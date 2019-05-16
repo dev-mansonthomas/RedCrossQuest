@@ -6,7 +6,7 @@ angular
   .module('redCrossQuestClient')
   .factory('PointQueteService', PointQueteService);
 
-function PointQueteService ($localStorage, PointQueteResource)
+function PointQueteService ($localStorage, PointQueteResource, moment)
 {
   var service = {};
 
@@ -16,20 +16,32 @@ function PointQueteService ($localStorage, PointQueteResource)
 
   function loadPointQuete(callback)
   {
-    PointQueteResource.
-    query().
-    $promise.
-    then(function success(pointQueteList)
+    //refresh the cache every minute max
+    if(
+      angular.isUndefined($localStorage.pointQueteLastUpdate) ||
+      moment().diff($localStorage.pointQueteLastUpdate, 'seconds') <= 60
+    )
+    {
+      PointQueteResource.
+      query().
+      $promise.
+      then(function success(pointQueteList)
       {
-        $localStorage.pointQuete=pointQueteList;
-
-        $localStorage.pointsQueteHash = [];
-        pointQueteList.forEach(function(onePointQuete){
-          $localStorage.pointsQueteHash[onePointQuete.id]=onePointQuete;
-        });
+        updateCache(pointQueteList);
+        $localStorage.pointQueteLastUpdate = moment();
         if(callback)
           callback();
       });
+    }
+  }
+  
+  function updateCache(pointQueteList)
+  {
+    $localStorage.pointQuete=pointQueteList;
 
+    $localStorage.pointsQueteHash = [];
+    pointQueteList.forEach(function(onePointQuete){
+      $localStorage.pointsQueteHash[onePointQuete.id]=onePointQuete;
+    });
   }
 }
