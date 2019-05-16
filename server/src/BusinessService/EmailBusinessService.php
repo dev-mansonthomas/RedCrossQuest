@@ -523,7 +523,7 @@ Si vous pensez qu'il y a une erreur, veuillez contacter votre Unité Locale.
       $queteur->last_name,
       $this->getMailHeader($title, $queteur->first_name, true).
       $message
-      .$this->getMailFooter($uniteLocaleEntity, false, $queteur));
+      .$this->getMailFooter($uniteLocaleEntity, false, $queteur, true));
 
   }
 
