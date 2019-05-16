@@ -308,9 +308,10 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
   /**
    * @param string $title the title of the email
    * @param string $bonjour the text that will be displayed after the "Bonjour word
+   * @param bool $RedQuest if true, mailing for RedQuest, then we use the RedQuest logo instead of RedCrossQuest
    * @return string return the html of the mail header
    */
-  public function getMailHeader(string $title, string $bonjour)
+  public function getMailHeader(string $title, string $bonjour, bool $RedQuest=false)
   {
     return "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
@@ -320,24 +321,15 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
   <title>[RedCrossQuest] $title</title>
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>
 <body>
-
-
-
-
   <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"500\">
   <tr>
     <td style=\"background-color:#FFFFFF;\">
       <table style=\"width:100%;padding:0; margin:0;\" >
         <tr>
           <td style=\"font-family: Helvetica; font-size: 24px;font-weight: bolder;padding:8px;\">
-            <div style='background-color: #222222;'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/RedCrossQuestLogo.png\" style=\"height: 50px;\" height='50'/></div>
+            <div style='background-color: ".($RedQuest?"#FFFFFF":"#222222").";'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/Red".($RedQuest?"":"Cross")."QuestLogo.png\" style=\"height: 50px;\" height='50'/></div>
           </td>
-          <!-- 
-          //TODO 
-          https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/logoCRF.png
-          http://mansonthomas.com/CRF/Paris1erEt2eme/logoCRF.png
-          -->
-          <td style=\"text-align: right;\"><img src=\"http://mansonthomas.com/CRF/Paris1erEt2eme/logoCRF.png\" alt=\"Croix Rouge Française\" style=\"height: 90px;\" height='90'/></td>
+          <td style=\"text-align: right;\"><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/logoCRF.png\" alt=\"Croix Rouge Française\" style=\"height: 90px;\" height='90'/></td>
         </tr>
       </table>
     </td>
@@ -364,9 +356,10 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
    * @param UniteLocaleEntity $uniteLocaleEntity UL info
    * @param bool $isNewsletter : if true, the wording of the footer is slightly different
    * @param mixed $queteurInfo : QueteurEntity or MailingInfoEntity : an object with the info of the queteur.
+   * @param bool $RedQuest if true, mailing for RedQuest, then we use the term RedQuest instead of RedCrossQuest
    * @return string return the html of the mail header
    */
-  public function getMailFooter(UniteLocaleEntity $uniteLocaleEntity, bool $isNewsletter, $queteurInfo)
+  public function getMailFooter(UniteLocaleEntity $uniteLocaleEntity, bool $isNewsletter, $queteurInfo, bool $RedQuest=false)
   {
     $startValidityDateCarbon = new Carbon();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
@@ -378,7 +371,7 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
     $emailContact = urlencode($this->getDeploymentType()."
 Bonjour la Croix Rouge de ".$uniteLocaleEntity->name.",
 
-J'ai une demande en relation avec $text3 mes données personnelles et l'application RedCrossQuest:
+J'ai une demande en relation avec $text3 mes données personnelles et l'application Red".($RedQuest?"":"Cross")."Quest:
 Note: cet email est à transférer au responsable de la quête, au trésorier ou au président de l'UL
 
 ------------------
@@ -401,18 +394,18 @@ L'Unité Locale de ".$uniteLocaleEntity->name.",<br/>
 ".$uniteLocaleEntity->phone."<br/>
 ".$uniteLocaleEntity->email."<br/>
 ".$uniteLocaleEntity->address.", ".$uniteLocaleEntity->postal_code.", ".$uniteLocaleEntity->city."<br/>
-Via l'application RedCrossQuest.
+Via l'application Red".($RedQuest?"":"Cross")."Quest.
         </span>
       </p>
     </td>
   </tr>
   <tr>
     <td style=\"background-color:azure; color:silver;text-align: justify;\">
-Cet email est envoyé depuis la plateforme RedCrossQuest qui permet aux unités locales de gérer les Journées Nationales.<br/>
+Cet email est envoyé depuis la plateforme Red".($RedQuest?"":"Cross")."Quest qui permet aux unités locales de gérer les Journées Nationales.<br/>
 Vos données ne sont utilisées que pour la gestion des Journées Nationales et ne sont pas partagées avec un tiers.<br/>
 Notre politique de protection des données conforme à la RGPD est <a href=\"".$this->appSettings['RGPD']."\" target='_blank' style='color:grey;'>disponible ici</a>.<br/>
 Vous pouvez demander à $text1 corriger / anonymiser vos données par email<br/>
-<a href=\"mailto:".$uniteLocaleEntity->email."?subject=".$this->getDeploymentType()."[RedCrossQuest]$text2&body=$emailContact\" style='color:grey;'>Contactez votre unité locale ici</a><br/>
+<a href=\"mailto:".$uniteLocaleEntity->email."?subject=".$this->getDeploymentType()."[Red".($RedQuest?"":"Cross")."Quest]$text2&body=$emailContact\" style='color:grey;'>Contactez votre unité locale ici</a><br/>
 <br/>
 email envoyé le $startValidityDateString<br/>
     </td>
@@ -460,6 +453,78 @@ email envoyé le $startValidityDateString<br/>
       $deployment='[Site de TEST]';
     }
     return $deployment;
+  }
+
+
+
+
+  //RedQuest Mailing
+
+
+
+  /**
+   *
+   * Send the Queteur an email to notify him of the approval decision
+   *
+   * @param QueteurEntity $queteur information about the user
+   * @param bool $decision decision about the approval
+   * @param string $rejectMessage reject message in case of refusal
+   *
+   * @throws \Exception if the mail fails to be sent
+   *
+   */
+  public function sendRedQuestApprovalDecision(QueteurEntity $queteur, bool $decision, string $rejectMessage="")
+  {
+    $this->logger->info("sendRedQuestApprovalDecision:'".$queteur->email."'");
+
+    $url="https://".$this->appSettings['RedQuestDomain']."/login";
+
+    $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
+
+    $title="Votre inscription à RedQuest a été ".($decision?"approuvée":"refusée");
+
+    if($decision)
+    {
+      $message = "
+<br/>
+ Votre inscription a été validée : Bienvenue sur RedQuest et encore merci pour votre participation à la quête de la Croix Rouge !<br/>
+ <br/>
+ Vous pouvez maintenant vous connecter à RedCQuest et profiter de toutes ses fonctionnalités :<br/>
+<br/> 
+ <a href='".$url."' target='_blank'>".$url."</a><br/>
+<br/> 
+
+<span style='color:white; font-size: 1px;'>queteur id : ".$queteur->id.", registration_id:".$queteur->registration_id.", queteur_registration_token:".$queteur->queteur_registration_token.", ul_registration_token:".$queteur->ul_registration_token.", </span>
+";
+    }
+    else
+    {
+      $message = "
+<br/>
+ Ohoh... Nous sommes désolé, votre inscription à RedQuest a été refusée avec le message suivant : 
+ 
+ <hr>
+ $rejectMessage
+ <hr>
+
+Si vous pensez qu'il y a une erreur, veuillez contacter votre Unité Locale.  
+";
+    }
+
+
+
+
+    $this->mailService->sendMail(
+      "RedQuest",
+      "sendRedQuestApprovalDecision",
+      $title,
+      $queteur->email,
+      $queteur->first_name,
+      $queteur->last_name,
+      $this->getMailHeader($title, $queteur->first_name, true).
+      $message
+      .$this->getMailFooter($uniteLocaleEntity, false, $queteur));
+
   }
 
 }

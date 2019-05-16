@@ -189,9 +189,9 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($re
   {
     $ulId   = $decodedToken->getUlId  ();
     $roleId = $decodedToken->getRoleId();
-    $userId = $decodedToken->getUid();
+    $userId = $decodedToken->getUid   ();
     $params = $request->getQueryParams();
-    $input  = $request->getParsedBody();
+    $input  = $request->getParsedBody ();
 
     $queteurEntity = new QueteurEntity($input, $this->logger);
 
@@ -233,6 +233,9 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($re
 
       try
       {
+
+        $this->mailer->sendRedQuestApprovalDecision($queteurEntity, $queteurEntity->registration_approved);
+
         $this->PubSub->publish(
           $this->settings['PubSub']['queteur_approval_topic'],
           $queteurEntity,
@@ -240,7 +243,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($re
           true,
           true);
       }
-      catch(Exception $exception)
+      catch(\Exception $exception)
       {
         $this->logger->error("error while publishing registration approval - associateRegistrationWithExistingQueteur", array("messageProperties"=> $messageProperties,
           "queteurEntity"    => $queteurEntity,
@@ -296,14 +299,17 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($reques
       {
         $queteurEntity->referent_volunteer = 0;
         $queteurId = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
-        $this->queteurDBService->updateQueteurRegistration($queteurEntity, $queteurId, $userId);
 
+        $this->queteurDBService->updateQueteurRegistration($queteurEntity, $queteurId, $userId);
         //update the entity with the new ID
         $queteurEntity->id = $queteurId;
+
+        $this->mailer->sendRedQuestApprovalDecision($queteurEntity, $queteurEntity->registration_approved);
       }
       else
       {//reject
         $this->queteurDBService->updateQueteurRegistration($queteurEntity, 0, $userId);
+        $this->mailer->sendRedQuestApprovalDecision($queteurEntity, $queteurEntity->registration_approved, $queteurEntity->reject_reason);
         $queteurEntity->id = -1;
       }
 

@@ -176,7 +176,6 @@
         else
         {
           //to help the operator to see if the registration is not a duplicate of an existing user.
-          //TODO:  in case of duplicate, offer a button to attach the registration to the existing user
           //in RedQuest : it means attaching the authentication mode to the existing queteur instead of the registration
           vm.searchSimilar();
         }
