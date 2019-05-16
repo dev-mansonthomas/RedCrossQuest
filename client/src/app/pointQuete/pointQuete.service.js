@@ -14,7 +14,7 @@ function PointQueteService ($localStorage, PointQueteResource)
 
   return service;
 
-  function loadPointQuete()
+  function loadPointQuete(callback)
   {
     PointQueteResource.
     query().
@@ -27,6 +27,8 @@ function PointQueteService ($localStorage, PointQueteResource)
         pointQueteList.forEach(function(onePointQuete){
           $localStorage.pointsQueteHash[onePointQuete.id]=onePointQuete;
         });
+        if(callback)
+          callback();
       });
 
   }

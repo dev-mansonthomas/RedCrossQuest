@@ -11,7 +11,7 @@
 
   /** @ngInject */
   function EditPointQueteController($rootScope, $log, $localStorage, $routeParams, $timeout, $location,
-                                    PointQueteResource, DateTimeHandlingService, GeoCoder)
+                                    PointQueteResource, PointQueteService, DateTimeHandlingService, GeoCoder)
   {
     var vm = this;
 
@@ -40,10 +40,10 @@
 
     vm.createNewPointQuete=function()
     {
-      vm.current          = new PointQueteResource();
-      vm.current.ul_id    = $localStorage.currentUser.ulId;
-      vm.current.ul_name  = $localStorage.currentUser.ulName;
-      vm.current.enabled  = true;
+      vm.current             = new PointQueteResource();
+      vm.current.ul_id       = $localStorage.currentUser.ulId;
+      vm.current.ul_name     = $localStorage.currentUser.ulName;
+      vm.current.enabled     = true;
       vm.current.address     = $localStorage.guiSettings.ul.address;
       vm.current.postal_code = $localStorage.guiSettings.ul.postal_code;
       vm.current.city        = $localStorage.guiSettings.ul.city;
@@ -71,7 +71,11 @@
     {
       if(response && typeof response.pointQueteId ==='number')
       {
-        vm.goToPointQuete(response.pointQueteId);
+        //reload the list so that the local cache is up to date.
+        PointQueteService.loadPointQuete(function(){
+          vm.goToPointQuete(response.pointQueteId);
+        }
+      );
       }
       vm.savedSuccessfully= true;
       vm.errorWhileSaving = false;
