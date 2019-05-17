@@ -196,6 +196,7 @@ AND qr.`registration_approved` is null
   public function updateQueteurRegistration(QueteurEntity $queteur, int $queteurId, int $userId)
   {
 
+
     $sql = "
 UPDATE `queteur_registration`
 SET
@@ -215,10 +216,10 @@ AND   ul_registration_token = :ul_registration_token
       "id"                     => $queteur->registration_id,
       "ul_registration_token"  => $queteur->ul_registration_token
     ];
-
+    
+    $this->logger->debug("updateQueteurRegistration", array("ul_registration_token"=> $queteur->ul_registration_token,"parameters"=>$parameters));
 
     $stmt = $this->db->prepare($sql);
-    $this->logger->error("updating", array("parameters"=>$parameters));
     $stmt->execute($parameters);
 
     $stmt->closeCursor();
@@ -277,7 +278,7 @@ AND   ul_id   = :ul_id
     $stmt2->execute($parameters2);
     $stmt2->closeCursor();
 
-    $this->logger->debug("Associating registration with existing queteur, and set this last as active", array("parameters"=>$parameters, "parameters2"=>$parameters2));
+    $this->logger->debug("associateRegistrationWithExistingQueteur : Associating registration with existing queteur, and set this last as active", array("parameters"=>$parameters, "parameters2"=>$parameters2));
 
   }
 
@@ -468,22 +469,11 @@ AND q.id IN (
         $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL);
     }
 
-
-    $this->logger->info("Querying queteurs",
-                           array("sql"          => $sql          ,
-                                 "query"        => $query        ,
-                                 "searchType"   => $searchType   ,
-                                 "secteur"      => $secteur      ,
-                                 "ulId"         => $ulId         ,
-                                 "active"       => $active       ,
-                                 "benevoleOnly" => $benevoleOnly ,
-                                 "rcqUser"      => $rcqUser      ,
-                                 "rcqUserActif" => $rcqUserActif ,
-                                 "queteurIds"   => $queteurIds   ,
-                                 "QRSearchType" => $QRSearchType
-                           ));
-    $stmt   = $this->db->prepare($sql);
     $parameters["active"] = $active;
+
+    $this->logger->debug("Querying queteurs", array_merge(["sql" => $sql ], $parameters));
+    $stmt   = $this->db->prepare($sql);
+
 
     $stmt->execute($parameters);
 
@@ -796,7 +786,6 @@ AND    q.ul_id   = u.id
   public function update(QueteurEntity $queteur, int $ulId, int $roleId)
   {
 
-    $this->logger->error("queteur->birthdate:".$queteur->birthdate);
     $sql = "
 UPDATE `queteur`
 SET

@@ -9,6 +9,8 @@
 require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\TroncEntity;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 /********************************* TRONC ****************************************/
 
@@ -19,9 +21,11 @@ use \RedCrossQuest\Entity\TroncEntity;
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId();
+
     $params = $request->getQueryParams();
     $active = $this->clientInputValidator->validateBoolean("active", getParam($params,'active'), false, true);
 
@@ -64,10 +68,11 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/troncs', function ($request, 
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
+
   try
   {
     $ulId = $decodedToken->getUlId();
-
 
     $troncId = $this->clientInputValidator->validateInteger('id', $args['id'], 1000000, true);
 
@@ -93,6 +98,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', function ($requ
 $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId = $decodedToken->getUlId();
@@ -121,6 +127,7 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}', function ($requ
 $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/troncs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId = $decodedToken->getUlId();

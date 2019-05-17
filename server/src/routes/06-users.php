@@ -9,6 +9,8 @@
 require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\UserEntity;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 /********************************* QUETEUR ****************************************/
 
@@ -21,6 +23,7 @@ use \RedCrossQuest\Entity\UserEntity;
 $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -42,8 +45,6 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($reque
           $this->logger->info("Connected user is trying to grand higher privilege than his to someone else", array("decodedToken"=>$decodedToken, "updatedUser" => $userEntity));
           throw new \Exception("PDOException(code: 42000): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 14 at /app/src/DBService/UsersDBService.php:47");
         }
-
-
 
         try
         {
@@ -86,6 +87,7 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}', function ($reque
 $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();

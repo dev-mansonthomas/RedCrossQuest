@@ -268,7 +268,7 @@ AND   `ul_id` = :ul_id
    */
   public function confirmRead(string $guid)
   {
-    $this->logger->info("$guid to update");
+    $this->logger->info("Updating spotfire_open to 1 for queteur", ["guid"=>$guid]);
 
     $queryData = [
       'guid'                   => $guid

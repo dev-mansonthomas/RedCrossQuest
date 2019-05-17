@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use \RedCrossQuest\Entity\TroncQueteurEntity;
 use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 /********************************* TRONC_QUETEUR ****************************************/
 
@@ -21,6 +23,7 @@ use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 $app->delete(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId = $decodedToken->getUlId();
@@ -47,6 +50,7 @@ $app->delete(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', funct
 $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId      = $decodedToken->getUlId       ();
@@ -155,6 +159,7 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}', functio
 $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken ->getUlId       ();
@@ -262,6 +267,7 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($r
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId       = $decodedToken->getUlId();
@@ -329,6 +335,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($re
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();

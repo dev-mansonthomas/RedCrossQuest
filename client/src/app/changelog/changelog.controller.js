@@ -10,9 +10,17 @@
     .controller('ChangelogController', ChangelogController);
 
   /** @ngInject */
-  function ChangelogController($rootScope)
+  function ChangelogController($rootScope, $localStorage)
   {
+    var vm = this;
+    
     $rootScope.$emit('title-updated', 'Changelog');
+
+    vm.username       = $localStorage.currentUser.username;
+    vm.ulName         = $localStorage.currentUser.ulName;
+    vm.ulId           = $localStorage.currentUser.ulId;
+    vm.id             = $localStorage.currentUser.id;
+    vm.currentUserRole= $localStorage.currentUser.roleId;
   }
 })();
 

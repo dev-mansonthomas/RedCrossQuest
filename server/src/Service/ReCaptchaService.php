@@ -14,14 +14,14 @@ use \ReCaptcha\ReCaptcha;
 class ReCaptchaService
 {
 
-  /** @var \Google\Cloud\Logging\PsrLogger */
+  /** @var Logger */
   protected $logger;
 
   protected $secretKey;
   protected $redCrossQuestHost;
   protected $lowestAcceptableScore;
 
-  public function __construct($settings, $logger)
+  public function __construct($settings, Logger $logger)
   {
     $this->logger                 = $logger;
 

@@ -9,8 +9,8 @@
 namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
-use Google\Cloud\Logging\PsrLogger;
 use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\Logger;
 
 class Entity
 {
@@ -20,7 +20,7 @@ class Entity
    */
   protected $_fieldList
 ;
-  public function __construct(PsrLogger $logger)
+  public function __construct(Logger $logger)
   {
     $this->logger               = $logger;
     $this->clientInputValidator = new ClientInputValidator($logger);

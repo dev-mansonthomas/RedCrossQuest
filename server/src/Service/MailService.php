@@ -10,11 +10,10 @@ namespace RedCrossQuest\Service;
 
 use SendGrid;
 use SendGrid\Mail\Mail;
-use \Google\Cloud\Logging\PsrLogger;
 
 class MailService
 {
-  /** @var \Google\Cloud\Logging\PsrLogger */
+  /** @var Logger */
   protected $logger;
 
   protected $sendgridAPIKey;
@@ -22,12 +21,12 @@ class MailService
   protected $deploymentType;
 
   /**
-   * @param \Google\Cloud\Logging\PsrLogger $logger          Logger instance
+   * @param Logger $logger          Logger instance
    * @param string $sendgridAPIKey  The SendGrid API
    * @param string $sendgridSender  The sender email address
    * @param string $deploymentType  The deploymentType
    */
-  public function __construct($logger, $sendgridAPIKey, $sendgridSender, $deploymentType)
+  public function __construct(Logger $logger, $sendgridAPIKey, $sendgridSender, $deploymentType)
   {
     $this->logger         = $logger;
     $this->sendgridAPIKey = $sendgridAPIKey;

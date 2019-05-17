@@ -3,8 +3,6 @@
 namespace RedCrossQuest\BusinessService;
 
 
-use Google\Cloud\Logging\LoggingClient;
-use Google\Cloud\Logging\PsrLogger;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\DBService\MailingDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
@@ -12,6 +10,7 @@ use RedCrossQuest\Entity\MailingInfoEntity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
 
+use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\MailService;
 
 use Carbon\Carbon;
@@ -20,7 +19,7 @@ use Carbon\Carbon;
 class EmailBusinessService
 {
   /**
-   * @var PsrLogger
+   * @var Logger
    */
   protected $logger;
 
@@ -41,7 +40,7 @@ class EmailBusinessService
   protected $mailService;
 
 
-  public function __construct(PsrLogger             $logger,
+  public function __construct(Logger                $logger,
                               MailService           $mailService,
                               MailingDBService      $mailingDBService,
                               UniteLocaleDBService  $uniteLocaleDBService,
@@ -65,8 +64,6 @@ class EmailBusinessService
    */
   public function sendInitEmail(QueteurEntity $queteur, string $uuid, bool $firstInit = false)
   {
-    $this->logger->info("sendInitEmail:'".$queteur->email."'");
-
     $url        = $this->appSettings['appUrl'].$this->appSettings['resetPwdPath'].$uuid;
 
     $startValidityDateCarbon = new Carbon();
@@ -79,6 +76,8 @@ class EmailBusinessService
     else
       $mailTTL = "4  heures";
 
+    $this->logger->debug("sending Mail to init password", ["mail"=>$queteur->email, 'url'=> $url, "mailTTL"=>$mailTTL]);
+    
     $title = "Réinitialisation de votre mot de passe";
 
     $this->mailService->sendMail(
@@ -116,7 +115,7 @@ class EmailBusinessService
    */
   public function sendResetPasswordEmailConfirmation(QueteurEntity $queteur)
   {
-    $this->logger->info("sendResetPasswordEmailConfirmation:'".$queteur->email."'");
+    $this->logger->info("sendResetPasswordEmailConfirmation:'", ['email' =>$queteur->email]);
 
     $url=$this->appSettings['appUrl'];
 
@@ -158,7 +157,7 @@ class EmailBusinessService
    */
   public function sendAnonymizationEmail(QueteurEntity $queteur, string $token)
   {
-    $this->logger->info("sendAnonymizationEmail:'".$queteur->email."'");
+    $this->logger->info("sendAnonymizationEmail:'", ["email"=>$queteur->email]);
 
     $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
 
@@ -475,7 +474,7 @@ email envoyé le $startValidityDateString<br/>
    */
   public function sendRedQuestApprovalDecision(QueteurEntity $queteur, bool $decision, string $rejectMessage="")
   {
-    $this->logger->info("sendRedQuestApprovalDecision:'".$queteur->email."'");
+    $this->logger->info("sendRedQuestApprovalDecision", ["email" => $queteur->email, "decision"=> $decision, "reject_reason"=> $rejectMessage]);
 
     $url="https://".$this->appSettings['RedQuestDomain']."/login";
 

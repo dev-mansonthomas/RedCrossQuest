@@ -331,17 +331,22 @@ class DecodedToken
 
   public function __toString()
   {
-    return json_encode([  "authenticated" => $this->authenticated ,
-                          "errorCode"     => $this->errorCode     ,
-                          "username"      => $this->username      ,
-                          "uid"           => $this->uid           ,
-                          "ulId"          => $this->ulId          ,
-                          "ulName"        => $this->ulName        ,
-                          "ulMode"        => $this->ulMode        ,
-                          "queteurId"     => $this->queteurId     ,
-                          "roleId"        => $this->roleId        ,
-                          "d"             => $this->d
-                       ]);
+    return json_encode($this->toArray());
+  }
+
+  public function toArray()
+  {
+    return [  "authenticated" => $this->authenticated ,
+      "errorCode"     => $this->errorCode     ,
+      "username"      => $this->username      ,
+      "uid"           => $this->uid           ,
+      "ulId"          => $this->ulId          ,
+      "ulName"        => $this->ulName        ,
+      "ulMode"        => $this->ulMode        ,
+      "queteurId"     => $this->queteurId     ,
+      "roleId"        => $this->roleId        ,
+      "d"             => $this->d
+    ];
   }
 
 

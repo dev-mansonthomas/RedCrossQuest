@@ -9,6 +9,8 @@
 require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 /********************************* QUETEUR ****************************************/
 
@@ -21,6 +23,7 @@ use \RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
 $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -63,6 +66,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($reque
 $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId                         = $decodedToken->getUlId ();
@@ -85,6 +89,7 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', function ($
 $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId  = $decodedToken->getUlId ();

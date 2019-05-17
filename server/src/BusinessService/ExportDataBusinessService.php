@@ -155,7 +155,7 @@ class ExportDataBusinessService
     }
     catch(\Exception $e)
     {
-      $this->logger->error("UL_ID : $ulId, YEAR: $year",$e);
+      $this->logger->error("Error while Exporting Data", ["YEAR" => $year, "Exception" => $e]);
       throw $e;
     }
 

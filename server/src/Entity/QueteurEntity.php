@@ -1,7 +1,8 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-use Google\Cloud\Logging\PsrLogger;
+
+use RedCrossQuest\Service\Logger;
 
 /**
  * @property \RedCrossQuest\Entity\UserEntity user
@@ -72,10 +73,10 @@ class QueteurEntity  extends Entity
    * and create the class
    *
    * @param array $data The data to use to create
-   * @param PsrLogger $logger the logger instance
+   * @param Logger $logger the logger instance
    * @throws \Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data, PsrLogger $logger)
+  public function __construct(array $data, Logger $logger)
   {
     parent::__construct($logger);
 

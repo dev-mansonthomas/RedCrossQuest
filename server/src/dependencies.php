@@ -8,7 +8,8 @@ use Google\Cloud\Storage\Bucket;
 use \RedCrossQuest\Service\PubSubService;
 use \RedCrossQuest\Service\ReCaptchaService;
 use \RedCrossQuest\Service\MailService;
-use RedCrossQuest\Service\ClientInputValidator;
+use \RedCrossQuest\Service\ClientInputValidator;
+use \RedCrossQuest\Service\Logger;
 
 use \RedCrossQuest\DBService\UserDBService;
 use \RedCrossQuest\DBService\QueteurDBService;
@@ -19,7 +20,7 @@ use \RedCrossQuest\DBService\TroncQueteurDBService;
 use \RedCrossQuest\DBService\PointQueteDBService  ;
 use \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use \RedCrossQuest\DBService\NamedDonationDBService;
-use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
+use \RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 
 use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 use \RedCrossQuest\BusinessService\SettingsBusinessService;
@@ -65,7 +66,7 @@ $container['RCQVersion'] = function (\Slim\Container $c)
  * @param \Slim\Container $c
  * @return PsrLogger
  */
-$container['logger'] = function (\Slim\Container $c)
+$container['googleLogger'] = function (\Slim\Container $c)
 {
   $settings = $c->get('settings')['logger'];
 
@@ -78,6 +79,20 @@ $container['logger'] = function (\Slim\Container $c)
   ]);
 
 
+  return $logger;
+};
+
+
+/**
+ * Custom Logger that automatically add context data to each log entries.
+ *
+ * @property Logger    $logger
+ * @param \Slim\Container $c
+ * @return Logger
+ */
+$container['logger'] = function (\Slim\Container $c)
+{
+  $logger = new Logger($c->googleLogger, $c->RCQVersion, $c->get('settings')['appSettings']['deploymentType']);
   return $logger;
 };
 
@@ -169,7 +184,7 @@ $c['errorHandler'] = function (\Slim\Container $c) {
   {
     $logger = $c->get('logger');
 
-    $logger->error("An Error Occured",
+    $logger->error("errorHandler: An Error Occured",
       array(
         'URI'     => $request->getUri(),
         'headers' => $request->getHeaders(),

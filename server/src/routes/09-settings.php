@@ -6,6 +6,8 @@ use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use \RedCrossQuest\Entity\UniteLocaleEntity;
 
 require '../../vendor/autoload.php';
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 
 
@@ -16,6 +18,7 @@ require '../../vendor/autoload.php';
 $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $params = $request->getQueryParams();
@@ -77,6 +80,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request
 $app->put(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
 
   $params = $request->getQueryParams();
   $ulId   = $decodedToken->getUlId  ();

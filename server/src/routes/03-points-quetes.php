@@ -9,7 +9,8 @@
 require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\PointQueteEntity;
-
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 /********************************* POINT_QUETE ****************************************/
 
 /**
@@ -18,6 +19,7 @@ use \RedCrossQuest\Entity\PointQueteEntity;
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
 
   $ulId   = $decodedToken->getUlId  ();
   $roleId = $decodedToken->getRoleId();
@@ -48,6 +50,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', function (
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
 
  try
   {
@@ -97,6 +100,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', function ($requ
 $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -123,6 +127,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', function (
 $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId                = $decodedToken->getUlId  ();

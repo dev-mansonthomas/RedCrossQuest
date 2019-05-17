@@ -1,7 +1,8 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-use Google\Cloud\Logging\PsrLogger;
+
+use RedCrossQuest\Service\Logger;
 
 class MailingSummaryEntity extends Entity
 {
@@ -14,9 +15,9 @@ class MailingSummaryEntity extends Entity
    * and create the class
    *
    * @param array $data The data to use to create
-   * @param PsrLogger $logger
+   * @param Logger $logger
    */
-  public function __construct(array $data, PsrLogger $logger)
+  public function __construct(array $data, Logger $logger)
   {
     parent::__construct($logger);
 

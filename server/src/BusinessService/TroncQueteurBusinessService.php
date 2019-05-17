@@ -1,7 +1,6 @@
 <?php
 namespace RedCrossQuest\BusinessService;
 use Carbon\Carbon;
-use Google\Cloud\Logging\PsrLogger;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 
 /**
@@ -66,7 +65,7 @@ class TroncQueteurBusinessService
    * Other env : it returns always true to be able to test the application
    * @param string $deployment the current deployment value
    * @param Carbon $dateToCheck  preparation date
-   * @param $logger PsrLogger logger
+   * @param $logger Logger logger
    * @return bool true if the quete has already started (or it's not production)
    * @throws \Exception
    */
@@ -79,11 +78,15 @@ class TroncQueteurBusinessService
 
     if($deployment !== "P")
       return true;
-    
+
+    /*
+    $logger->debug("checking preparation date",["preparationData"=>$dateToCheck, "startOfQuete"=> DailyStatsBeforeRCQDBService::getCurrentQueteStartDate(),
+      "resultOfCheck"=>$dateToCheck ->gte(Carbon::createFromFormat("Y-m-d", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()))]);
+      */
     return
       $dateToCheck == null ?
-        Carbon::now()->gte(Carbon::createFromFormat("Y-m-d", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate())):
-        $dateToCheck ->gte(Carbon::createFromFormat("Y-m-d", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()));
+        Carbon::now()->gte(Carbon::createFromFormat("Y-m-d H:i:s", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()."00:00:00")):
+        $dateToCheck ->gte(Carbon::createFromFormat("Y-m-d H:i:s", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()."00:00:00"));
   }
 
 }

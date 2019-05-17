@@ -10,6 +10,8 @@ require '../../vendor/autoload.php';
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use \RedCrossQuest\Entity\UserEntity;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 use RedCrossQuest\Service\ClientInputValidator;
 
@@ -31,32 +33,31 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
   {
     $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true );
     $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
-
-    $this->logger->info("Route : authenticate: $username");
     $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
-    $this->logger->info("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
+
+    Logger::dataForLogging(new LoggingEntity(null,  ["username"=>$username]));
+
+    $this->logger->debug("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
 
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
 
     if($reCaptchaResponseCode > 0)
     {// error
+
+      $this->logger->error("authenticate: ReCaptcha error ", array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
+
       $response401 = $response->withStatus(401);
       $response401->getBody()->write(json_encode(["error" =>"An error occurred - ReCode $reCaptchaResponseCode"]));
 
       return $response401;
     }
 
-    //$this->logger->info("getUserInfoWithNivol");
     $user           = $this->userDBService->getUserInfoWithNivol($username);
-
-    // $this->logger->debug("User Entity for user id='".$user->id."' nivol='".$username."'".print_r($user, true));
 
     if($user instanceof UserEntity &&
       password_verify($password, $user->password))
     {
-      //$this->logger->info("getQueteurById");
       $queteur = $this->queteurDBService    ->getQueteurById    ($user   ->queteur_id);
-      //$this->logger->info("getUniteLocaleById");
       $ul      = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
 
       $signer = new Sha256();
@@ -103,7 +104,7 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
     else if($user instanceof UserEntity)
     {//we found the user, but password is not good
 
-      $this->logger->error("Authentication failed, wrong password, for user id='".$user->id."' nivol='".$username."'");
+      $this->logger->error("Authentication failed, wrong password", array("user_id"=> $user->id, "nivol" =>$username));
       $this->userDBService->registerFailedLogin($user->id);
 
       $response401 = $response->withStatus(401);
@@ -113,7 +114,7 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
     }
     else
     {
-      $this->logger->error("Authentication failed, wrong password, for user nivol='".$username."', response is not a UserEntity : ".print_r($user,true));
+      $this->logger->error("Authentication failed, response is not an UserEntity ", array("username" => $username, "user" => $user));
       $this->userDBService->registerFailedLogin($user->id);
 
       $response401 = $response->withStatus(401);
@@ -124,7 +125,7 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
   }
   catch(\Exception $e)
   {
-    $this->logger->error("unexpected exception during authentication", array("Exception"=>$e));
+    $this->logger->error("unexpected exception during authentication", array("Exception"=>$e,  	"username" =>	$username, "password" => $password, token => $token  ));
 
     $response401 = $response->withStatus(401);
     $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 3.', "ex"=>json_encode($e)]));
@@ -145,16 +146,17 @@ $app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($
   try
   {
     $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true);
-    $this->logger->info("Route : sendInit: $username");
-    
-
     $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true);
 
-
+    Logger::dataForLogging(new LoggingEntity(null , ["username"=>$username]));
+    
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/sendInit", $username);
 
     if($reCaptchaResponseCode > 0)
     {// error
+
+      $this->logger->error("sendInit: ReCaptcha error ", array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
+
       $response401 = $response->withStatus(401);
       $response401->getBody()->write(json_encode(["error" =>'an error occurred. Code $reCaptchaResponseCode']));
 
@@ -166,17 +168,17 @@ $app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($
     if($uuid != null)
     {
       $queteur = $this->queteurDBService->getQueteurByNivol($username);
-      //$this->logger->debug(print_r($queteur,true));
       $this->mailer->sendInitEmail($queteur, $uuid);
 
       //protect email address
-      $email = substr($queteur->email, 0, 1)."...@...".substr($queteur->email,-5, 5);
+      $email = substr($queteur->email, 0, 2)."...@...".substr($queteur->email,-6, 6);
       $response->getBody()->write(json_encode(["success"=>true,"email"=>$email]));
       return $response;
 
     }
     else
     {//the user do not have an account
+      $this->logger->error("sendInit: user do not have an account ", array('username' => $username));
       $response->getBody()->write(json_encode(["success"=>false]));
       return $response;
     }
@@ -204,6 +206,8 @@ $app->get(getPrefix().'/getInfoFromUUID', function ($request, $response, $args) 
   {
     $uuid     = $this->clientInputValidator->validateString("uuid"    , $request->getParam("uuid"     ), 36  , true, ClientInputValidator::$UUID_VALIDATION);
     $token    = $this->clientInputValidator->validateString("token"   , $request->getParam("token"    ), 500 , true );
+
+    Logger::dataForLogging(new LoggingEntity(null, ["uuid"=>$uuid]));
 
     $appUrl = $this->get('settings')['appSettings']['appUrl'];
     if($appUrl == "http://localhost:3000/")
@@ -267,6 +271,8 @@ $app->post(getPrefix().'/resetPassword', function ($request, $response, $args) u
     $uuid     = $this->clientInputValidator->validateString("uuid"    , $request->getParsedBodyParam("uuid"     ), 36  , true, ClientInputValidator::$UUID_VALIDATION);
     $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
     $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
+
+    Logger::dataForLogging(new LoggingEntity(null, ["uuid"=>$uuid]));
 
     $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/resetPassword", "getInfoFromUUID");
 

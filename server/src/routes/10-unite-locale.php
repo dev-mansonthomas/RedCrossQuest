@@ -4,6 +4,8 @@
 
 require '../../vendor/autoload.php';
 
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 /**
  * Search for Unité Locale.
  * Only for super admin
@@ -11,6 +13,7 @@ require '../../vendor/autoload.php';
 $app->get(getPrefix().'/{role-id:[9]}/ul', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $roleId = $decodedToken->getRoleId();

@@ -28,7 +28,7 @@ class NamedDonationDBService extends DBService
     $parameters = ["ul_id"   => $ulId,
                    "deleted" => $deleted?1:0];
 
-    $this->logger->info("searching named donation", $parameters);
+    $this->logger->debug("searching named donation", $parameters);
 
     $searchSQL = "";
     $yearSQL   = "";

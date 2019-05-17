@@ -9,6 +9,8 @@
 require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\YearlyGoalEntity;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 /********************************* QUETEUR ****************************************/
 
@@ -21,6 +23,7 @@ use \RedCrossQuest\Entity\YearlyGoalEntity;
 $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -63,6 +66,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($requ
 $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId             = $decodedToken->getUlId  ();
@@ -87,6 +91,7 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', function (
 $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();

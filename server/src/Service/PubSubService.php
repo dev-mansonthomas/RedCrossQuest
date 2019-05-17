@@ -18,12 +18,12 @@ use Google\Cloud\PubSub\PubSubClient;
 class PubSubService
 {
   protected $settings;
-  /** @var PsrLogger */
+  /** @var Logger */
   protected $logger;
   /** @var PubSubClient */
   protected $pubSub;
 
-  public function __construct($settings, $logger)
+  public function __construct($settings, Logger $logger)
   {
     $this->settings  = $settings;
     $this->logger    = $logger;

@@ -8,7 +8,8 @@
 
 require '../../vendor/autoload.php';
 
-
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 
 
@@ -20,6 +21,7 @@ require '../../vendor/autoload.php';
 $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId     = $decodedToken->getUlId  ();

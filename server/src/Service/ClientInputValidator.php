@@ -25,7 +25,7 @@ class ClientInputValidator
   public static $EMAIL_VALIDATION="email";
   public static $UUID_VALIDATION="uuid";
 
-  /** @var \Google\Cloud\Logging\PsrLogger */
+  /** @var Logger */
   protected $logger;
 
   public function __construct($logger)

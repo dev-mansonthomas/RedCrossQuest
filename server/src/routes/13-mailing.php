@@ -8,7 +8,9 @@
 
 require '../../vendor/autoload.php';
 
-use RedCrossQuest\Service\ClientInputValidator;
+use \RedCrossQuest\Service\ClientInputValidator;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 /**
  * Get summary info about mailing
@@ -18,6 +20,7 @@ use RedCrossQuest\Service\ClientInputValidator;
 $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -43,6 +46,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request,
 $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/mailing', function ($request, $response, $args)
 {
   $decodedToken         = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   $namedDonationEntity  = null;
   try
   {
@@ -71,6 +75,7 @@ $app->post(getPrefix().'/thanks_mailing/{guid}', function ($request, $response, 
   try
   {
     $guid   = $this->clientInputValidator->validateString("guid"    , $args['guid'], 36  , true, ClientInputValidator::$UUID_VALIDATION);
+    Logger::dataForLogging(new LoggingEntity(null, ["guid"=>$guid]));
 
     $this->mailingDBService->confirmRead($guid);
 

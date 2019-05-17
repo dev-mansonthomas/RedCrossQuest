@@ -10,6 +10,8 @@ require '../../vendor/autoload.php';
 
 
 use \RedCrossQuest\Entity\NamedDonationEntity;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 
 
 /**
@@ -20,6 +22,7 @@ use \RedCrossQuest\Entity\NamedDonationEntity;
 $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -63,6 +66,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', functio
 {
   $namedDonationEntity  = null;
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -89,6 +93,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', functio
 $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', function ($request, $response, $args)
 {
   $decodedToken         = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   $namedDonationEntity  = null;
   try
   {
@@ -116,6 +121,7 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', functio
 $app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations', function ($request, $response, $args)
 {
   $decodedToken         = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   $namedDonationEntity  = null;
   try
   {

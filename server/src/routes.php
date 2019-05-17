@@ -42,7 +42,6 @@ function isGAE()
   return array_key_exists('GAE_RUNTIME', $_SERVER );
 }
 
-
 // Routes
 include_once("../../src/routes/00-authentication.php");
 include_once("../../src/routes/01-troncs.php");

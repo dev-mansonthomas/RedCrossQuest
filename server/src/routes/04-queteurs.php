@@ -9,8 +9,9 @@
 require '../../vendor/autoload.php';
 
 use \RedCrossQuest\Entity\QueteurEntity;
-use RedCrossQuest\Service\ClientInputValidator;
-
+use \RedCrossQuest\Service\ClientInputValidator;
+use \RedCrossQuest\Service\Logger;
+use \RedCrossQuest\Entity\LoggingEntity;
 /********************************* QUETEUR ****************************************/
 
 /**
@@ -21,12 +22,13 @@ use RedCrossQuest\Service\ClientInputValidator;
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
 
   $params = $request->getQueryParams();
   $ulId   = $decodedToken->getUlId  ();
   $roleId = $decodedToken->getRoleId();
 
-  $this->logger->info( "search queteur with roleId", array("roleId"=>$roleId, "admin_ul_id exists  "=>array_key_exists('admin_ul_id',$params)));
+  $this->logger->debug( "search queteur with roleId", array("roleId"=>$roleId, "admin_ul_id exists  "=> array_key_exists('admin_ul_id',$params)));
 
   $action = $this->clientInputValidator->validateString("action", getParam($params,'action'), 31 , false );
 
@@ -74,7 +76,6 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request
       if(array_key_exists('admin_ul_id',$params) && $roleId == 9)
       {
         $ulId = $this->clientInputValidator->validateInteger('admin_ul_id', $params['admin_ul_id'], 1000, true);
-        //$this->logger->info("Queteur list - UL ID:'".$decodedToken->getUlId  ()."' is overridden by superadmin to UL-ID: '$adminUlId' role ID:$roleId", array('decodedToken'=>$decodedToken));
       }
 
       $query        = $this->clientInputValidator->validateString ("q"               , getParam($params,'q'               ), 100  , false );
@@ -94,7 +95,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request
     }
     catch(\Exception $e)
     {
-      $this->logger->error("error while fetching queteur with the following parameters query=$query, searchType=$searchType, secteur=$secteur, ulId=$ulId, active=$active, benevoleOnly=$benevoleOnly", array('decodedToken'=>$decodedToken, "Exception"=>$e));
+      $this->logger->error("error while fetching queteur", ["query"=>$query, "searchType"=>$searchType, "secteur"=>$secteur, "ulId"=>$ulId, "active"=>$active, "benevoleOnly"=>$benevoleOnly, "Exception"=>$e]);
       throw $e;
     }
   }
@@ -109,6 +110,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs', function ($request
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId       = $decodedToken->getUlId  ();
@@ -157,6 +159,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}', function ($re
 $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -185,6 +188,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request
 $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId  ();
@@ -200,7 +204,9 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($re
       $queteurOriginalData   = $this->queteurDBService->getQueteurById($queteurEntity->id);
       $token                 = $this->queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId, $userId);
 
-      $this->mailer->sendAnonymizationEmail($queteurOriginalData, $token);
+      if(isset($queteurOriginalData->email))
+        $this->mailer->sendAnonymizationEmail($queteurOriginalData, $token);
+
       $queteurAnonymizedData = $this->queteurDBService->getQueteurById($queteurEntity->id);
 
       return $response->getBody()->write(json_encode($queteurAnonymizedData));
@@ -276,6 +282,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}', function ($re
 $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs', function ($request, $response, $args)
 {
   $decodedToken = $request->getAttribute('decodedJWT');
+  Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
     $ulId   = $decodedToken->getUlId       ();
