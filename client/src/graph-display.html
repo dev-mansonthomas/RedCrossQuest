@@ -22,8 +22,13 @@
 
   <script type="text/javascript" src="https://spotfire-next.cloud.tibco.com/spotfire/js-api/loader.js"></script>
   <script>
-    reloadEnabled = true;
-    myTimeoutId   = null ;
+    var reloadEnabled = true;
+    var myTimeoutId   = null ;
+    var refreshDelay = window.localStorage.getItem('refreshDelay');
+    if(refreshDelay == null)
+    {
+      refreshDelay = 5;
+    }
     function parseQuery(qstr) {
       var query = {};
       var a = (qstr[0] === '?' ? qstr.substr(1) : qstr).split('&');
@@ -140,12 +145,7 @@
         onCreateLoginElement
       );
 
-
-
-
-
-
-      myTimeoutId = setTimeout(reload,6*60*1000);
+      myTimeoutId = setTimeout(reload,refreshDelay*60*1000);
     };
 
     function enable()
@@ -162,7 +162,9 @@
       }
       clearTimeout(myTimeoutId);
       myTimeoutId = setTimeout(reload, refreshDelayInt*60*1000);
-      console.log("enabling auto reload");
+      console.log("enabling auto reload with delay : "+refreshDelayInt+" min");
+
+      window.localStorage.setItem('refreshDelay', refreshDelayInt);
     }
 
     function disable()
@@ -186,8 +188,8 @@
     <div class="col-md-3 col-md-offset-4" style="padding-top: 2px;">
       <span style="color:white">Mise-à-jour automatique ?</span>
       <div class="btn-group btn-group-xs" role="group" aria-label="...">
-        <button type="button" id="actif"   onclick="enable() " class="btn btn-default">Actif</button>
-        <button type="button" id="inactif" onclick="disable()" class="btn btn-default active">Inactif</button>
+        <button type="button" id="actif"   onclick="enable() " class="btn btn-default active">Actif</button>
+        <button type="button" id="inactif" onclick="disable()" class="btn btn-default">Inactif</button>
       </div>
     </div>
     <div class="col-md-1">
@@ -196,7 +198,7 @@
     <div class="col-md-2">
       <div class="input-group input-group-sm">
         <span class="input-group-addon glyphicon glyphicon-time" style="top:0px;" id="basic-addon2"></span>
-        <input id="refresh_delay" class="form-control" placeholder="délai en min" aria-describedby="basic-addon2" value="5">
+        <input id="refresh_delay" class="form-control" placeholder="délai en minutes (min 5m)" aria-describedby="basic-addon2" value="5">
         <span class="input-group-btn">
           <button class="btn btn-default" type="button" onclick="enable()">Save</button>
       </span>

@@ -401,8 +401,10 @@ AND q.`secteur` = :secteur
 
     if($benevoleOnly == 1)
     {// only secours/social/ former volunteer
+      //TODO : recherche manuelle de queteur pour préparation, on ne trouve pas les types 5 : commercant
+      //bénévoleOnly : pour la recherche de référent.
       $benevoleOnlySQL="
-AND q.`secteur` IN (1,2,4)
+AND q.`secteur` IN (1,2,4,5)
 ";
     }
 
