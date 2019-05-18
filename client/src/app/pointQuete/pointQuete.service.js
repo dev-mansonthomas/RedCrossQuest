@@ -17,11 +17,11 @@ function PointQueteService ($localStorage, PointQueteResource, moment)
   function loadPointQuete(callback)
   {
     //refresh the cache every minute max
-    if(
-      angular.isUndefined($localStorage.pointQueteLastUpdate) ||
-      moment().diff($localStorage.pointQueteLastUpdate, 'seconds') <= 60
-    )
-    {
+    //if(
+    //  angular.isUndefined($localStorage.pointQueteLastUpdate) ||
+    //  moment().diff($localStorage.pointQueteLastUpdate, 'seconds') <= 60
+    //)
+    // {
       PointQueteResource.
       query().
       $promise.
@@ -32,7 +32,7 @@ function PointQueteService ($localStorage, PointQueteResource, moment)
         if(callback)
           callback();
       });
-    }
+    //}
   }
   
   function updateCache(pointQueteList)

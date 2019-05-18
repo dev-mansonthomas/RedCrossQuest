@@ -153,7 +153,7 @@
                 placeholder="Rechercher le point de quête"
                 uib-typeahead="pq as pt.getTypeLabel(pq.type)+' - '+ (pq.code!= '' ? pq.code+' - ': '')+pq.name
                       for
-                      pq in pt.pointsQuete"
+                      pq in pt.pointsQuete | filter: $viewValue"
                 typeahead-loading="loadingTroncs"
                 typeahead-no-results="noTroncsResults"
                 typeahead-wait-ms="20"

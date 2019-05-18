@@ -243,7 +243,7 @@
       if(vm.current.lieuDeQuete == null)
         return true;
       
-      return vm.pointsQueteHash[vm.current.lieuDeQuete].minor_allowed === true;
+      return vm.pointsQueteHash[vm.current.lieuDeQuete.id].minor_allowed === true;
     };
 
     /**
