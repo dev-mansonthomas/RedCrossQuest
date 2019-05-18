@@ -362,6 +362,7 @@ AND
    * @param boolean $rcqUser      return only RCQ users
    * @param string  $queteurIds   IDs of queteurs separated by comma to search
    * @param int     $QRSearchType Type of QRCode Search :  0 all, 1: Printed, 2: Not printed
+   * @param bool    $rcqUserActif Recheque que les utilisateurs actifs
    * @return QueteurEntity[] list of Queteurs
    * @throws PDOException if the query fails to execute on the server
    * @throws \Exception in other situations
@@ -385,7 +386,7 @@ AND
 (       UPPER(q.`first_name`) like concat('%', UPPER(:query), '%')
   OR    UPPER(q.`last_name` ) like concat('%', UPPER(:query), '%')
   OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:query), '%')
-  OR    CONVERT(q.`id`, CHAR)     like concat(:query,'%')
+  OR    CONVERT(q.`id`, CHAR) like concat(           :query , '%')
 )
 ";
       $parameters["query"]=$query;
@@ -401,10 +402,8 @@ AND q.`secteur` = :secteur
 
     if($benevoleOnly == 1)
     {// only secours/social/ former volunteer
-      //TODO : recherche manuelle de queteur pour préparation, on ne trouve pas les types 5 : commercant
-      //bénévoleOnly : pour la recherche de référent.
       $benevoleOnlySQL="
-AND q.`secteur` IN (1,2,4,5)
+AND q.`secteur` IN (1,2,4)
 ";
     }
 
@@ -467,13 +466,17 @@ AND q.id IN (
       case 2:
         $sql = $this->getSearchNotReturnedQuery ($querySQL, $secteurSQL, $rcqUserSQL);
         break;
+      case 3: //search queteur when preparing a tronc-queteur
+        $sql = $this->getSearchSimpleQuery      ($querySQL);
+        break;
+
       default:
         $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL);
     }
 
     $parameters["active"] = $active;
 
-    $this->logger->debug("Querying queteurs", array_merge(["sql" => $sql ], $parameters));
+    $this->logger->debug("Querying queteurs", array_merge(["sql" => $sql, "searchType" => $searchType], $parameters));
     $stmt   = $this->db->prepare($sql);
 
 
@@ -487,6 +490,34 @@ AND q.id IN (
     }
     $stmt->closeCursor();
     return $results;
+  }
+
+
+  private function getSearchSimpleQuery($querySQL)
+  {
+
+    return "
+SELECT  q.`id`,
+        q.`email`,
+        q.`first_name`,
+        q.`last_name`,
+        q.`secteur`,
+        q.`nivol`,
+        q.`mobile`,
+        q.`created`,
+        q.`updated`,
+        q.`ul_id`,
+        q.`notes`,
+        q.`active`,
+        q.`man`,
+        q.`birthdate`,
+        q.`qr_code_printed`
+FROM  queteur     AS q
+WHERE  q.ul_id = :ul_id
+AND    q.active= :active
+$querySQL 
+ORDER BY q.last_name ASC
+";
   }
 
   private function getSearchAllQuery($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL)

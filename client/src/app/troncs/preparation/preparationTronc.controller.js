@@ -194,7 +194,7 @@
     vm.searchQueteur=function(queryString)
     {
       $log.info("Queteur : Manual Search for '"+queryString+"'");
-      return QueteurResource.query({"q":queryString}).$promise.then(function success(response)
+      return QueteurResource.query({"q":queryString, "searchType":3}).$promise.then(function success(response)
       {
         return response.map(function(queteur)
         {
