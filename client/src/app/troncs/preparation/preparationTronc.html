@@ -1,4 +1,4 @@
-<acme-navbar></acme-navbar>
+<acme-navbar xmlns="http://www.w3.org/1999/html"></acme-navbar>
 <div class="container">
 
   <style>.troncInUse-modal-dialog .modal-dialog {width: 90%;} </style>
@@ -197,7 +197,22 @@
           <div class="col-md-8 col-md-offset-2">
             <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="pt.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
-              <strong>Bravo!</strong> La préparation a été sauvegardée avec succès!
+              <strong>Bravo!</strong> La préparation a été sauvegardée avec succès!  <br/>
+
+
+              <a href="/#!/tronc_queteur/edit/{{pt.previous.id}}"><strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> ID {{pt.previous.id}}</a> - 
+              <a href="/#!/queteurs/edit/{{pt.previous.queteur.id         }}">Queteur N°
+              {{pt.previous.queteur.id         }} -
+              {{pt.previous.queteur.first_name }}
+              {{pt.previous.queteur.last_name  }}</a>
+              avec <a href="/#!/troncs/edit/{{pt.previous.tronc.id           }}">le tronc N°
+              {{pt.previous.tronc.id           }}</a>   <br/>
+              Sur le <a href="/#!/pointsQuetes/edit/{{pt.previous.lieuDeQuete.id  }}">point de Quete N° {{pt.previous.lieuDeQuete.id     }}
+              {{pt.previous.lieuDeQuete.name   }}</a>
+
+
+
+
             </div>
           </div>
         </div>

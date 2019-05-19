@@ -22,6 +22,10 @@
 
     vm.initForm = function()
     {
+      if(vm.current)
+      {
+        vm.previous = vm.current;
+      }
       vm.current = {};
     };
     vm.initForm();

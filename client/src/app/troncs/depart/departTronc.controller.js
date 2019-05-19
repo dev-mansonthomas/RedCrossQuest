@@ -30,7 +30,8 @@
 
     vm.initForm=function()
     {
-      vm.current = {};
+      vm.current  = {};
+      vm.previous = {};
       vm.current.ul_id=$localStorage.currentUser.ulId;
     };
     vm.initForm();
@@ -72,13 +73,13 @@
 
         if(tronc_queteur.troncQueteurIsInAnIncorrectState !== true && tronc_queteur.queteHasNotStartedYet !== true)
         {
-          vm.savedSuccessfully=true;
-
+          vm.savedSuccessfully= true;
+          vm.previous         = vm.current;
           $timeout(function ()
           {
             vm.savedSuccessfully=false;
             vm.initForm();
-          }, 20000);
+          }, 30000);
         }
         else
         {
@@ -183,7 +184,7 @@
 
         var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
         {
-          alert("Vous n'êtes pas autorisé à effectuer cette action") ;
+          alert("Vous n'êtes pas autorisé à effectuer cette action, tronc d'une autre UL ou QRCode de TEST ?") ;
           $log.debug(JSON.stringify(reason) +' ' + troncId+' '+ulId);
 
         };

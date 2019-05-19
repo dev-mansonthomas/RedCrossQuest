@@ -98,7 +98,17 @@
             <div class="col-md-8 col-md-offset-2">
               <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rt.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
-                <strong>Bravo!</strong> L'horaire de retour a été sauvegardé avec succès!
+                <strong>Bravo!</strong> L'horaire de retour a été sauvegardé avec succès!  <br/>
+
+                <a href="/#!/tronc_queteur/edit/{{rt.previous.tronc_queteur.id}}"><strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> ID {{rt.previous.tronc_queteur.id}}</a> -
+                <a href="/#!/queteurs/edit/{{rt.previous.queteur.id         }}">Queteur N°
+                  {{rt.previous.tronc_queteur.queteur_id         }} -
+                  {{rt.previous.tronc_queteur.queteur.first_name }}
+                  {{rt.previous.tronc_queteur.queteur.last_name  }}</a>
+                avec <a href="/#!/troncs/edit/{{rt.previous.tronc_queteur.tronc_id           }}">le tronc N°
+                {{rt.previous.tronc_queteur.tronc_id           }}</a>     <br/>
+                Sur le <a href="/#!/pointsQuetes/edit/{{rt.previous.tronc_queteur.point_quete.id  }}">point de Quete N° {{rt.previous.tronc_queteur.point_quete.id     }}
+                {{rt.previous.tronc_queteur.point_quete.name   }}</a>
               </div>
             </div>
           </div>

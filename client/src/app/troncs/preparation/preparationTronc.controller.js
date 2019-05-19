@@ -45,7 +45,6 @@
     }
 
     vm.firstDay       = moment($localStorage.guiSettings.FirstDay);
-
     vm.firstDayStr    = vm.firstDay.format("DD/MM/YYYY HH:mm:ss");
 
     //return true if the current time is before the first day of quete and the current deployement is production
@@ -54,11 +53,17 @@
       return vm.deploymentType === 'P' && vm.firstDay.diff(moment(), 'secondes')>=0;
     };
 
-    vm.initData = function()
+    vm.initData = function(lastInsertedId)
     {
-      vm.current = {};
-      vm.current.saveInProgress=false;
-      vm.current.ul_id=$localStorage.currentUser.ulId;
+      if(vm.current)
+      {
+        vm.previous     = vm.current;
+        vm.previous.id  = lastInsertedId;
+      }
+
+      vm.current                = {};
+      vm.current.saveInProgress = false;
+      vm.current.ul_id          = $localStorage.currentUser.ulId;
 
       vm.current.horaireDepartTheorique           = new Date();
       vm.current.horaireDepartTheoriqueNotBefore  = vm.current.horaireDepartTheorique  ;
@@ -144,7 +149,7 @@
       }
       else
       {
-        vm.initData();
+        vm.initData(returnData.lastInsertId);
         vm.savedSuccessfully=true;
         $timeout(function () { vm.savedSuccessfully=false; }, 10000);
       }
