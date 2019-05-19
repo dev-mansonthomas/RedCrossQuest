@@ -619,11 +619,26 @@
           </div>
           <div class="row">
             <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
-              <strong>PIÈCES</strong>
+              <div class="row">
+                <div class="col-md-2">
+                  <strong>PIÈCES</strong>
+                </div>
+                <div class="col-md-4 col-md-offset-6"style="font-size:small">
+                  <div class="form-group">
+                    <label for="coins_order1" class="control-label">Ordre des pièces &nbsp;&nbsp;&nbsp;</label>
+                    <label class="radio-inline">
+                      <input type="radio" name="active" id="coins_order1" ng-model="tq.coins_order" ng-value="1" required ng-click="tq.setCoinsOrderInLocalCache(1)"> Par taille
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="active" id="coins_order2" ng-model="tq.coins_order" ng-value="2" required ng-click="tq.setCoinsOrderInLocalCache(2)"> Par valeur
+                    </label>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div class="row" style="height:115px;">
+          <div ng-cloak ng-if="tq.coins_order == 1">
+            <div class="row" style="height:115px;">
             <div class="form-group  col-md-2 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.euro2.$invalid}">
               <label for="euro2" class="control-label">Nombre de 2€</label>
               <input type="number"
@@ -681,7 +696,7 @@
             </div>
 
           </div>
-          <div class="row" style="height:115px;">
+            <div class="row" style="height:115px;">
 
             <div class="form-group  col-md-2  col-md-offset-2" ng-class="{'has-error':troncQueteurForm.cents05.$invalid}">
               <label for="cents05" class="control-label">Nombre de 5 cents</label>
@@ -741,6 +756,128 @@
               <span class="help-block" ng-show="tq.current.tronc_queteur.cent1">Montant : {{(tq.current.tronc_queteur.cent1*0.01).toFixed(2)}} €</span>
             </div>
 
+          </div>
+          </div>
+          <div ng-cloak ng-if="tq.coins_order == 2">
+            <div class="row" style="height:115px;">
+              <div class="form-group  col-md-2 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.euro2valueSorted.$invalid}">
+                <label for="euro2valueSorted" class="control-label">Nombre de 2€</label>
+                <input type="number"
+                       ng-pattern="tq.onlyNumbers"
+                       min="0"
+                       name="euro2valueSorted"
+                       id="euro2valueSorted"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.euro2"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                <span class="help-block" ng-show="tq.current.tronc_queteur.euro2">Montant : {{tq.current.tronc_queteur.euro2*2}} €</span>
+              </div>
+
+              <div class="form-group  col-md-2" ng-class="{'has-error':troncQueteurForm.euro1valueSorted.$invalid}">
+                <label for="euro1" class="control-label">Nombre de 1€</label>
+                <input type="number"
+                       ng-pattern="tq.onlyNumbers"
+                       min="0"
+                       name="euro1valueSorted"
+                       id="euro1valueSorted"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.euro1"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                <span class="help-block" ng-show="tq.current.tronc_queteur.euro1">Montant : {{tq.current.tronc_queteur.euro1*1}} €</span>
+              </div>
+
+              <div class="form-group  col-md-2" ng-class="{'has-error':troncQueteurForm.cents50valueSorted.$invalid}">
+                <label for="cents50valueSorted" class="control-label">Nombre de 50 cents</label>
+                <input type="number"
+                       ng-pattern="tq.onlyNumbers"
+                       min="0"
+                       name="cents50valueSorted"
+                       id="cents50valueSorted"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.cents50"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                <span class="help-block" ng-show="tq.current.tronc_queteur.cents50">Montant : {{(tq.current.tronc_queteur.cents50*0.5).toFixed(2)}} €</span>
+              </div>
+
+              <div class="form-group  col-md-2" ng-class="{'has-error':troncQueteurForm.cents20valueSorted.$invalid}">
+                <label for="cents20" class="control-label">Nombre de 20 cents</label>
+                <input type="number"
+                       ng-pattern="tq.onlyNumbers"
+                       min="0"
+                       name="cents20valueSorted"
+                       id="cents20valueSorted"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.cents20"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                <span class="help-block" ng-show="tq.current.tronc_queteur.cents20">Montant : {{(tq.current.tronc_queteur.cents20*0.2).toFixed(2)}} €</span>
+              </div>
+
+            </div>
+            <div class="row" style="height:115px;">
+
+              <div class="form-group  col-md-2  col-md-offset-2néeA" ng-class="{'has-error':troncQueteurForm.cents10valueSorted.$invalid}">
+                <label for="cents10valueSorted" class="control-label">Nombre de 10 cents</label>
+                <input type="number"
+                       ng-pattern="tq.onlyNumbers"
+                       min="0"
+                       name="cents10valueSorted"
+                       id="cents10valueSorted"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.cents10"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                <span class="help-block" ng-show="tq.current.tronc_queteur.cents10">Montant : {{(tq.current.tronc_queteur.cents10*0.1).toFixed(2)}} €</span>
+              </div>
+
+
+              <div class="form-group  col-md-2 " ng-class="{'has-error':troncQueteurForm.cents05valueSorted.$invalid}">
+                <label for="cents05valueSorted" class="control-label">Nombre de 5 cents</label>
+                <input type="number"
+                       ng-pattern="tq.onlyNumbers"
+                       min="0"
+                       name="cents05valueSorted"
+                       id="cents05valueSorted"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.cents5"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                <span class="help-block" ng-show="tq.current.tronc_queteur.cents5">Montant : {{(tq.current.tronc_queteur.cents5*0.05).toFixed(2)}} €</span>
+              </div>
+
+              <div class="form-group  col-md-2" ng-class="{'has-error': troncQueteurForm.cents02valueSorted.$invalid}">
+                <label for="cents02valueSorted" class="control-label">Nombre de 2 cents</label>
+                <input type="number"
+                       ng-pattern="tq.onlyNumbers"
+                       min="0"
+                       name="cents02valueSorted"
+                       id="cents02valueSorted"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.cents2"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                <span class="help-block" ng-show="tq.current.tronc_queteur.cents2">Montant : {{(tq.current.tronc_queteur.cents2*0.02).toFixed(2)}} €</span>
+              </div>
+
+              <div class="form-group  col-md-2" ng-class="{'has-error':troncQueteurForm.cents01valueSorted.$invalid}">
+                <label for="cents01valueSorted" class="control-label">Nombre de 1 cent</label>
+                <input type="number"
+                       ng-pattern="tq.onlyNumbers"
+                       min="0"
+                       name="cents01valueSorted"
+                       id="cents01valueSorted"
+                       class="form-control input-fix-mousewheel"
+                       ng-model="tq.current.tronc_queteur.cent1"
+                       ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"
+                />
+                <span class="help-block" ng-show="tq.current.tronc_queteur.cent1">Montant : {{(tq.current.tronc_queteur.cent1*0.01).toFixed(2)}} €</span>
+              </div>
+
+            </div>
           </div>
 
           <div class="row" style="">

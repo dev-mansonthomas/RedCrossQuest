@@ -500,6 +500,19 @@
       vm.current.$anonymize(vm.handleQueteur, vm.errorWhileSavingFunction);
     };
 
+    vm.isEqual = function(string1, string2)
+    {
+      if(string1)
+        string1=string1.toUpperCase();
+
+      if(string2)
+        string2=string2.toUpperCase();
+
+      return  string1 === string2;
+
+    };
+
+
   }
 })();
 

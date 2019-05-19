@@ -22,6 +22,17 @@
     vm.onlyNumbers    = /^[0-9]{1,3}$/;
     vm.cbFormat       = /^[0-9]+(\.[0-9]{1,2})?$/;
 
+    vm.coins_order    = $localStorage.guiSettings.coins_order;
+    if(!vm.coins_order)
+    {//coins ordered by size by default
+      vm.coins_order = 1;
+    }
+
+    vm.setCoinsOrderInLocalCache=function(coins_order)
+    {
+      $localStorage.guiSettings.coins_order = coins_order;
+    };
+
     vm.currentUserRole= $localStorage.currentUser.roleId;
     vm.currentUlMode  = $localStorage.currentUser.ulMode;
     vm.ulName         = $localStorage.currentUser.ulName;

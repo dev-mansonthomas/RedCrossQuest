@@ -158,9 +158,9 @@
             <tbody>
               <tr ng-repeat="sim in queteur.current.similarQueteurs" ng-click="queteur.isRegistration?null:queteur.goToQueteur(sim.id);">
                 <th scope="row">{{sim.id}}</th>
-                <td style="{{sim.first_name==queteur.current.first_name?'background-color:#FFFF00':''}}">{{sim.first_name}}</td>
-                <td style="{{sim.last_name==queteur.current.last_name  ?'background-color:#FFFF00':''}}">{{sim.last_name}}</td>
-                <td style="{{sim.nivol==queteur.current.nivol          ?'background-color:#FFFF00':''}}">{{sim.nivol}}</td>
+                <td style="{{queteur.isEqual(sim.first_name, queteur.current.first_name)?'background-color:#FFFF00':''}}">{{sim.first_name}}</td>
+                <td style="{{queteur.isEqual(sim.last_name , queteur.current.last_name )?'background-color:#FFFF00':''}}">{{sim.last_name}}</td>
+                <td style="{{queteur.isEqual(sim.nivol     , queteur.current.nivol     )?'background-color:#FFFF00':''}}">{{sim.nivol}}</td>
                 <td>{{sim.mobile}}</td>
                 <td>{{sim.email}}</td>
                 <td>{{sim.active == 1 ? 'Oui':'Non'}}</td>
