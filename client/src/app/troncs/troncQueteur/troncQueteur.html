@@ -1289,7 +1289,7 @@
           <div class="col-md-2">
             <a ng-click="tq.back();" class="btn btn-link" ng-if="tq.current.tronc_queteur.id > 0" ng-cloak>Annuler</a>
           </div>
-          <div class="col-md-2 col-md-offset-6">
+          <div class="col-md-1 col-md-offset-3">
             <button
               type="button"
               class="btn btn-info"
@@ -1300,7 +1300,10 @@
            ng-cloak
             >Imprimer</button>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-4" style="text-align: center;">
+            <p class="text-info">Pensez à <strong>SAUVEGARDER</strong> après avoir <strong>imprimer !</strong></p>
+          </div>
+          <div class="col-md-1">
             <button type="button"
                    class="btn btn-primary"
                    ng-disabled="troncQueteurForm.$invalid"
