@@ -488,7 +488,7 @@ email envoyé le $startValidityDateString<br/>
 <br/>
  Votre inscription a été validée : Bienvenue sur RedQuest et encore merci pour votre participation à la quête de la Croix Rouge !<br/>
  <br/>
- Vous pouvez maintenant vous connecter à RedCQuest et profiter de toutes ses fonctionnalités :<br/>
+ Vous pouvez maintenant vous connecter à RedQuest et profiter de toutes ses fonctionnalités :<br/>
 <br/> 
  <a href='".$url."' target='_blank'>".$url."</a><br/>
 <br/> 
