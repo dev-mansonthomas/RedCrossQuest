@@ -6,6 +6,8 @@ require '../../vendor/autoload.php';
 
 use Carbon\Carbon;
 
+use RedCrossQuest\Entity\BillsMoneyBagSummaryEntity;
+use RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity;
 use RedCrossQuest\Entity\TroncInUseEntity;
 use \RedCrossQuest\Entity\TroncQueteurEntity;
 use PDOException;
@@ -1116,6 +1118,154 @@ order by tq.id asc
       $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
     }
     return $results;
+  }
+
+
+
+  /**
+   * Get the details of coins money bag : total amount, weight, per coins count & total
+   *
+   * @param int $ulId the id of the unite locale
+   * @param string $coinsMoneyBagId The id of the coins bag
+   * @return CoinsMoneyBagSummaryEntity  The tronc
+   * @throws \Exception if some parsing fails
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getCoinsMoneyBagDetails(int $ulId, string $coinsMoneyBagId)
+  {
+    $parameters = [
+      "ul_id"              => $ulId,
+      "coins_money_bag_id" => $coinsMoneyBagId
+    ];
+
+
+    $sql = "
+SELECT tq.coins_money_bag_id,
+    SUM(
+        tq.euro2   * 2     +
+        tq.euro1   * 1     +
+        tq.cents50 * 0.5   +
+        tq.cents20 * 0.2   +
+        tq.cents10 * 0.1   +
+        tq.cents5  * 0.05  +
+        tq.cents2  * 0.02  +
+        tq.cent1   * 0.01
+    ) as amount,
+SUM(tq.euro2    *2   ) as  total_euro2  ,
+SUM(tq.euro1    *1   ) as  total_euro1  ,
+SUM(tq.cents50  *0.5 ) as  total_cents50,
+SUM(tq.cents20  *0.2 ) as  total_cents20,
+SUM(tq.cents10  *0.1 ) as  total_cents10,
+SUM(tq.cents5   *0.05) as  total_cents5 ,
+SUM(tq.cents2   *0.02) as  total_cents2 ,
+SUM(tq.cent1    *0.01) as  total_cent1  ,
+SUM(tq.euro2  ) as  count_euro2         ,
+SUM(tq.euro1  ) as  count_euro1         ,
+SUM(tq.cents50) as  count_cents50       ,
+SUM(tq.cents20) as  count_cents20       ,
+SUM(tq.cents10) as  count_cents10       ,
+SUM(tq.cents5 ) as  count_cents5        ,
+SUM(tq.cents2 ) as  count_cents2        ,
+SUM(tq.cent1  ) as  count_cent1         ,
+    SUM(
+     tq.euro2    * 8.5  +
+     tq.euro1    * 7.5  +
+     tq.cents50  * 7.8  +
+     tq.cents20  * 5.74 +
+     tq.cents10  * 4.1  +
+     tq.cents5   * 3.92 +
+     tq.cents2   * 3.06 +
+     tq.cent1    * 2.3
+    ) as weight
+  FROM tronc_queteur as tq
+  WHERE tq.ul_id              = :ul_id
+  AND   tq.coins_money_bag_id = :coins_money_bag_id
+  AND   tq.deleted            = 0;
+
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute($parameters);
+    if($row = $stmt->fetch())
+    {
+      return  new CoinsMoneyBagSummaryEntity($row, $this->logger);
+    }
+
+    return null;
+
+  }
+
+
+
+  /**
+   * Get the details of coins money bag : total amount, weight, per coins count & total
+   *
+   * @param int $ulId the id of the unite locale
+   * @param string $billsMoneyBagId The id of the bills bag
+   * @return BillsMoneyBagSummaryEntity  The tronc
+   * @throws \Exception if some parsing fails
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getBillsMoneyBagDetails(int $ulId, string $billsMoneyBagId)
+  {
+    $parameters = [
+      "ul_id"              => $ulId,
+      "bills_money_bag_id" => $billsMoneyBagId
+    ];
+
+
+    $sql = "
+SELECT tq.bills_money_bag_id,
+       SUM(
+        tq.euro5    *5   +
+        tq.euro10   *10  +
+        tq.euro20   *20  +
+        tq.euro50   *50  +
+        tq.euro100  *100 +
+        tq.euro200  *200 +
+        tq.euro500  *500
+    ) as amount,
+SUM(tq.euro5    *5   ) as  total_euro5  ,
+SUM(tq.euro10   *10  ) as  total_euro10 ,
+SUM(tq.euro20   *20  ) as  total_euro20 ,
+SUM(tq.euro50   *50  ) as  total_euro50 ,
+SUM(tq.euro100  *100 ) as  total_euro100,
+SUM(tq.euro200  *200 ) as  total_euro200,
+SUM(tq.euro500  *500 ) as  total_euro500,
+
+SUM(tq.euro5  ) as  count_euro5         ,
+SUM(tq.euro10 ) as  count_euro10        ,
+SUM(tq.euro20 ) as  count_euro20        ,
+SUM(tq.euro50 ) as  count_euro50        ,
+SUM(tq.euro100) as  count_euro100       ,
+SUM(tq.euro200) as  count_euro200       ,
+SUM(tq.euro500) as  count_euro500       ,
+
+    SUM(
+     tq.euro500  * 1.1  +
+     tq.euro200  * 1.1  +
+     tq.euro100  * 1    +
+     tq.euro50   * 0.9  +
+     tq.euro20   * 0.8  +
+     tq.euro10   * 0.7  +
+     tq.euro5    * 0.6
+    ) as weight
+  FROM tronc_queteur as tq
+  WHERE tq.ul_id              = :ul_id
+  AND   tq.bills_money_bag_id = :bills_money_bag_id
+  AND   tq.deleted            = 0
+
+";
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute($parameters);
+
+    if($row = $stmt->fetch())
+      return new BillsMoneyBagSummaryEntity($row, $this->logger);
+
+    return null;
   }
 
 

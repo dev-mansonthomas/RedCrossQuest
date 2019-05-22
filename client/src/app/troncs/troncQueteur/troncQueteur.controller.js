@@ -599,7 +599,6 @@
       {
         return response.map(function(oneResponse)
           {
-
             return oneResponse;
           },
           function error(reason)
@@ -608,6 +607,21 @@
           });
       });
     };
+
+    vm.getBagDetails = function($item, $model, $label, $event, coins)
+    {
+      //$log.error(JSON.stringify([$item, $model, $label, $event, coins]));
+      if(coins)
+      {
+        vm.current.coinsMoneyBagDetails = TroncQueteurResource.moneyBagDetails({'moneyBagId':$item, 'coin':true});
+      }
+      else
+      {
+        vm.current.billsMoneyBagDetails = TroncQueteurResource.moneyBagDetails({'moneyBagId':$item, 'coin':false});
+      }
+
+    };
+
 
   }
 })();

@@ -314,6 +314,24 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur', function ($re
 
         return $response->getBody()->write(json_encode($moneyBagIds));
       }
+      else if ($action == "moneyBagDetails")
+      {
+        $bagId   = $this->clientInputValidator->validateString ('moneyBagId' , getParam($params,'moneyBagId'), 20, true);
+        $coin    = $this->clientInputValidator->validateBoolean('coin'       , getParam($params,'coin'      ), true);
+
+        $this->logger->info("moneyBagDetails",["bagId"=>$bagId, "coin"=>$coin]);
+        if($coin)
+        {
+          $bagData = $this->troncQueteurDBService->getCoinsMoneyBagDetails($ulId, $bagId);
+        }
+        else
+        {
+          $bagData = $this->troncQueteurDBService->getBillsMoneyBagDetails($ulId, $bagId);
+        }
+
+        return $response->getBody()->write(json_encode($bagData));
+
+      }
     }
 
   }
@@ -353,6 +371,10 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', function
     throw $e;
   }
 });
+
+
+
+
 
 
 

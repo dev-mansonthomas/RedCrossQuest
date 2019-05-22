@@ -144,7 +144,7 @@ class ClientInputValidator
    * @param  bool   $defaultValueWhenNull If the value is null and it's allowed ($notNull=true), then the function will return this bool value instead of null
    * @return boolean true or false
    */
-  public function validateBoolean($parameterName, $inputValue, bool $notNull, ?bool $defaultValueWhenNull)
+  public function validateBoolean($parameterName, $inputValue, bool $notNull, bool $defaultValueWhenNull=null)
   {
 
     if(!$notNull && $defaultValueWhenNull === null)

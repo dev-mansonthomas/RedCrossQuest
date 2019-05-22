@@ -23,6 +23,13 @@ angular.module('redCrossQuestClient').factory('TroncQueteurResource', function (
           action: 'searchMoneyBagId'
         }
       },
+      moneyBagDetails:{
+        method: 'GET',
+        isArray: false,
+        params: {
+          action: 'moneyBagDetails'
+        }
+      },
       //get the last tronc_queteur
       getLastTroncQueteurFromTroncId: {
         method: 'GET',

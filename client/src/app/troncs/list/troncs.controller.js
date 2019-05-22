@@ -17,7 +17,7 @@
     vm.typeTroncList=[
       {id:0,label:'Tout type'},
       {id:1,label:'Tronc'},
-      {id:2,label:'Urne chez un commerçant'},
+      {id:2,label:'Tronc chez un commerçant'},
       {id:3,label:'Autre'}
     ];
 
