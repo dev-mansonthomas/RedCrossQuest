@@ -140,7 +140,7 @@
 
     vm.checkDeltaDepartRetourIsCorrect=function()
     {
-      if(vm.current.tronc_queteur && vm.current.tronc_queteur.retour != null)
+      if(vm.current.tronc_queteur && vm.current.tronc_queteur.retour != null && vm.current.tronc.type === 1 )
       {
         var retourMoment = moment(vm.current.tronc_queteur.retour);
         var departMoment = moment(vm.current.tronc_queteur.depart);
