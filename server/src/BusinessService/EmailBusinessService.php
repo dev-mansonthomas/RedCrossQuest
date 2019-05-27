@@ -99,10 +99,10 @@ class EmailBusinessService
  <a href='".$url."' target='_blank'>".$url."</a><br/>
  Ce lien est valide $mailTTL à compter du : ".$startValidityDateString."
 <br/> 
-<br/>".$this->getMailFooter($uniteLocaleEntity, false, $queteur));
+<br/>".$this->getMailFooter($uniteLocaleEntity, false, $queteur),
+      $uniteLocaleEntity->admin_email);
 
   }
-
 
   /**
    *
@@ -144,9 +144,56 @@ class EmailBusinessService
 <br/> 
  <a href='".$url."' target='_blank'>".$url."</a><br/>
 <br/> 
-".$this->getMailFooter($uniteLocaleEntity, false, $queteur));
+".$this->getMailFooter($uniteLocaleEntity, false, $queteur),
+      $uniteLocaleEntity->admin_email);
 
   }
+
+  
+
+  /**
+   * Send an email to the connected user with the data export of the UL
+   * @param QueteurEntity $queteur        The information of the connected user
+   * @param string        $zipFileName    The file name to attach to the email
+   * @return string                       The status code from Sendgrid
+   * @throws \Exception   if the email fails to be sent
+   */
+  public function sendExportDataUL(QueteurEntity $queteur, string $zipFileName)
+  {
+    $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
+
+    $title = "Export des données de votre Unité Locale";
+
+    return $this->mailService->sendMail(
+      "RedCrossQuest",
+      "exportDataUL",
+      "[Confidentiel] $title",
+      $queteur->email,
+      $queteur->first_name,
+      $queteur->last_name,
+      $this->getMailHeader($title, $queteur->first_name).
+      "
+<br/>
+ Cet email fait suite à votre demande d'export des données de votre Unité Locale.<br/>
+<br/>
+<strong>Attention :</strong> <br/>
+<ul>
+<li>Cette archive contient <strong>les données personnelles</strong> de vos bénévoles et bénévoles d'un jour</li>
+<li>Prenez toutes les précautions nécessaire pour que ces données ne soient pas diffusées en dehors du minimum de personnes ayant besoin d'avoir accès a ces informations.</li>
+<li>Ces données ont été collectés pour les Journées Nationale, n'utilisez pas ces données hors du cadre des Journées Nationales !</li>
+</ul>
+
+<br/>
+ L'archive est protégé par un mot de passe qui était affiché sur la page d'export des données.<br/>
+ Cette protection par mot de passe est faible et ne constitue qu'une protection très basique.<br/> 
+ <br/>
+ Sur Mac OS X, utilisez <a href='https://itunes.apple.com/us/app/the-unarchiver/id425424353?mt=12' target='_blank'>'The Unarchiver'</a> pour pouvoir décompresser cette archive protégée par un mot de passe.
+<br/>".$this->getMailFooter($uniteLocaleEntity, false, $queteur),
+      $uniteLocaleEntity->admin_email,
+      $zipFileName);
+
+  }
+
 
 
   /**

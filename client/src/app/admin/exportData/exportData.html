@@ -6,7 +6,7 @@
   </div>
 
   <div class="row" style="height:40px;">
-    <div class="col-md-2 col-md-offset-4">
+    <div class="col-md-4 col-md-offset-4">
       <button
         type="button"
         class="btn btn-primary"
@@ -14,7 +14,6 @@
         ng-show="!ed.running"
       >Démarrer l'export des données de l'Unité Locale</button>
 
-      <img src="assets/images/loading.gif" alt="Envoie en cours, veuillez patienter" ng-show="mc.running" width=""/>
     </div>
 
   </div>
@@ -28,7 +27,25 @@
              class="form-control"
              ng-model="ed.password"
              ng-readonly="true"/>
-      <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Required</span>
+
+      <span class="help-block">Pour stocker de manière sécurisée ce mot de passe, utilisez KeepassXC (opensource) : <a href="https://keepassxc.org" target="_blank">KeepassXC.org</a> </span>
+
+
+
+      <img src="assets/images/loading.gif" alt="Envoie en cours, veuillez patienter" ng-show="ed.running" width=""/>
+
+    </div>
+  </div>
+
+       <br/><br/>
+  <div class="row" ng-show="ed.status">
+    <div class="col-md-8 col-md-offset-2">
+      <pre>
+Status      : {{ed.status}}
+Email       : {{ed.email}}
+Fichier     : {{ed.fileName}}
+Nb de Ligne : {{ed.numberOfRows}}
+      </pre>
     </div>
   </div>
 

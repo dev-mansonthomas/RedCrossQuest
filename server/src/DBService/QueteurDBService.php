@@ -332,7 +332,7 @@ AND
     }
 
     $stmt = $this->db->prepare($sql);
-    $stmt->execute();
+    $stmt->execute($parameters);
 
 
     $results = [];

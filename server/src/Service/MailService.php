@@ -46,6 +46,8 @@ class MailService
    * @param string $recipientFirstName    Recipient First Name
    * @param string $recipientLastName     Recipient Last Name
    * @param string $content               Email html content
+   * @param string $fileName              The filename that will be attached to the email. The file will be read from /tmp/ and removed after the mail is sent
+   * @param string $bcc                   The BCC email
    * @return int Mail status code
    * @throws \Exception                   when sending the email fails
    */
@@ -55,7 +57,9 @@ class MailService
                            $recipientEmail,
                            $recipientFirstName,
                            $recipientLastName,
-                           $content)
+                           $content,
+                           $bcc=null,
+                           $fileName=null)
   {
     $deployment        = self::getDeploymentInfo();
     $deploymentLogging = $deployment == '' ? "*PROD*": $deployment;
@@ -66,9 +70,22 @@ class MailService
       $email->setFrom   ($this->sendgridSender,"$application");
       $email->setSubject("[$application]".$deployment.$subject);
       $email->addTo     ($recipientEmail, $recipientFirstName.' '.$recipientLastName);
+      if($bcc != null)
+        $email->addBcc    ($bcc);
       $email->addContent("text/html", ($deployment!=''?$deployment.'<br/>':'').$content);
 
+      if($fileName != null)
+      {
+        $email->addAttachment(new SendGrid\Mail\Attachment(base64_encode (file_get_contents("/tmp/".$fileName)),"application/zip", "$fileName"));
+      }
+
+
       $response = (new SendGrid($this->sendgridAPIKey))->send($email);
+
+      if($fileName != null)
+      {
+        unlink("/tmp/" . $fileName);
+      }
 
       $this->logger->info("Sending email successfully",
         array(

@@ -24,19 +24,21 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($reque
   Logger::dataForLogging(new LoggingEntity($decodedToken));
   try
   {
+    $params   = $request->getQueryParams();
     $ulId     = $decodedToken->getUlId  ();
-    $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password"), 40 , true );
+    $queteurId= $decodedToken->getQueteurId();
+    $password = $this->clientInputValidator->validateString("password", getParam($params,'password'), 40 , true );
 
+    $queteurEntity = $this->queteurDBService->getQueteurById($queteurId, $ulId);
+    $exportReport  = $this->exportDataBusinessService->exportData($password, $ulId, null);
 
-    $zipFileName = $this->exportDataBusinessService->exportData($password, $ulId, null);
+    $status = $this->mailer->sendExportDataUL($queteurEntity, $exportReport['fileName']);
+
+    return $response->getBody()->write(json_encode(["status"=>$status, "email" => $queteurEntity->email, "fileName"=>$exportReport['fileName'], "numberOfRows" => $exportReport['numberOfRows']]));
+    /*  envoie bien le fichier comme il faut, mais ne fonctionne pas en rest
 
     $fh = fopen("/tmp/".$zipFileName, 'r  ');
-
-    //$stream = new \Slim\Http\Stream($fh);
-
-
-    return $response->getBody()->write(json_encode([]));
-/*
+    $stream = new \Slim\Http\Stream($fh);
     return $response->withHeader('Content-Type', 'application/force-download')
       ->withHeader('Content-Type', 'application/octet-stream')
       ->withHeader('Content-Type', 'application/download')
@@ -46,8 +48,8 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/exportData', function ($reque
       ->withHeader('Expires', '0')
       ->withHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
       ->withHeader('Pragma', 'public')
-      ->withBody($stream);*/
-
+      ->withBody($stream);
+      */
 
   }
   catch(\Exception $e)

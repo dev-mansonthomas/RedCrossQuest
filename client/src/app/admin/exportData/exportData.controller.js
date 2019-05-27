@@ -23,11 +23,15 @@
     $rootScope.$emit('title-updated', 'Export des données de l\'Unité Locale');
 
 
-    vm.exportDataSuccess = function(numberOfRowsExported)
+    vm.exportDataSuccess = function(response)
     {
-      vm.running              = false;
-      vm.numberOfRowsExported = numberOfRowsExported;
-      vm.errorWhileSending    = null;
+      vm.running           = false;
+      vm.errorWhileSending = null;
+
+      vm.status        = response.status;
+      vm.email         = response.email;
+      vm.fileName      = response.fileName;
+      vm.numberOfRows  = response.numberOfRows;
     };
 
 
@@ -39,9 +43,10 @@
 
     vm.send = function()
     {
-      vm.running = true;
+      vm.running  = true;
+      vm.status   = null;
       vm.password = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-      ExportDataResource.get({'password':vm.password});//.$promise.then(vm.exportDataSuccess, vm.exportDataError);
+      ExportDataResource.get({'password':vm.password}).$promise.then(vm.exportDataSuccess, vm.exportDataError);
 
 
 /*

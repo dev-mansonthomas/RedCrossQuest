@@ -26,6 +26,7 @@
         "google/cloud-pubsub": "^1.7",
         "google/cloud-storage": "^1.10",
         "google/recaptcha": "^1.2",
+        "ext-zip" : "^7.2",
         "ext-bz2" : "^7.2",
         "ext-PDO" : "^7.2",
         "ext-json": "^1.6",

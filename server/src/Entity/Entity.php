@@ -36,7 +36,16 @@ class Entity
     $csvRow="";
     foreach($this->_fieldList as $field)
     {
-      $csvRow.= $this->{$field}.";";
+      $value = $this->{$field};
+      if(gettype($value) ==='boolean')
+      {
+        $csvRow.= ($value?1:0).";";
+      }
+      else
+      {
+        $csvRow.= $value.";";
+      }
+
     }
     return $csvRow."\n";
   }
