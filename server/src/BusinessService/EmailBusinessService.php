@@ -320,7 +320,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
         $mailingInfoEntity->last_name,
         $this->getMailHeader($title, $mailingInfoEntity->first_name)."
 <br/>
-Encore une fois nous tenions à te remercier pour ta participation aux journées nationales ".(new Carbon())->year()." de la Croix-Rouge française !<br/>
+Encore une fois nous tenions à te remercier pour ta participation aux journées nationales ".(new Carbon())->year." de la Croix-Rouge française !<br/>
 <br/>
 Nous t'avons préparé un petit résumé de ce que ta participation représente pour l'unité locale de ".$uniteLocaleEntity->name.". <br/>
 Tu y trouveras également un message de remerciement de son Président. <br/>
