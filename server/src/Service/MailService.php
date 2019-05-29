@@ -70,13 +70,13 @@ class MailService
       $email->setFrom   ($this->sendgridSender,"$application");
       $email->setSubject("[$application]".$deployment.$subject);
       $email->addTo     ($recipientEmail, $recipientFirstName.' '.$recipientLastName);
-      if($bcc != null)
+      if($bcc != null && strtolower($bcc) != strtolower($recipientEmail))
         $email->addBcc    ($bcc);
       $email->addContent("text/html", ($deployment!=''?$deployment.'<br/>':'').$content);
 
       if($fileName != null)
       {
-        $email->addAttachment(new SendGrid\Mail\Attachment(base64_encode (file_get_contents(sys_get_temp_dir().$fileName)),"application/zip", "$fileName"));
+        $email->addAttachment(new SendGrid\Mail\Attachment(base64_encode (file_get_contents(sys_get_temp_dir()."/".$fileName)),"application/zip", "$fileName"));
       }
 
 
@@ -84,7 +84,7 @@ class MailService
 
       if($fileName != null)
       {
-        unlink(sys_get_temp_dir(). $fileName);
+        unlink(sys_get_temp_dir(). "/".$fileName);
       }
 
       $this->logger->info("Sending email successfully",

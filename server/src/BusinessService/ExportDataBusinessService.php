@@ -116,9 +116,11 @@ class ExportDataBusinessService
         $nbOfLine++;
       }
 
-      $this->logger->info("generating file ".sys_get_temp_dir()."$ulId-".$tableName.".csv  $nbOfLine");
-      file_put_contents(sys_get_temp_dir()."$ulId-".$tableName.".csv",
+      $this->logger->info("generating file ".sys_get_temp_dir()."/$ulId-".$tableName.".csv  $nbOfLine");
+      file_put_contents(sys_get_temp_dir()."/$ulId-".$tableName.".csv",
         mb_convert_encoding($fileContent, "ISO-8859-1" , "ASCII, UTF-8" ));
+
+      $this->logger->info("file  generated with stats ".sys_get_temp_dir()."/$ulId-".$tableName.".csv  $nbOfLine",["fileInfo"=>stat (sys_get_temp_dir()."/$ulId-".$tableName.".csv")]);
     }
 
     try
@@ -133,7 +135,7 @@ class ExportDataBusinessService
 
       $zipFileName = "$dateTime-RedCrossQuest-DataExport-UL-$ulId".($year!= null? $year.'':'')."-".$ulNameForFileName.".zip";
 
-      $zipFilePath = sys_get_temp_dir().$zipFileName;
+      $zipFilePath = sys_get_temp_dir()."/".$zipFileName;
       $z = new \ZipArchive();
       $zipFileOpen = ($z->open($zipFilePath, \ZipArchive::CREATE));
       if(true === $zipFileOpen)
@@ -145,16 +147,18 @@ class ExportDataBusinessService
         foreach ($exportData as $tableName => $oneDataTable)
         {
           $filename = $ulId."-".$tableName.".csv";
-          $z->addFile(sys_get_temp_dir()."$filename", $filename);
+          $z->addFile(sys_get_temp_dir()."/$filename", $filename);
           //$z->setEncryptionName($filename,  \ZipArchive::EM_AES_256 , $password);
         }
         //csv files must not be deleted before closing the zip, otherwise we get file not found. as if the zip file is built on the close command
         $z->close();
 
+        $this->logger->info("zip file generated with stats $zipFilePath",["fileInfo"=>stat ($zipFilePath)]);
+
         foreach ($exportData as $tableName => $oneDataTable)
         {
           $filename = $ulId."-".$tableName.".csv";
-          unlink(sys_get_temp_dir()."$filename");
+          unlink(sys_get_temp_dir()."/$filename");
         }
       }
       else
