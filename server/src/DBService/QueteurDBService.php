@@ -743,9 +743,12 @@ AND  u.id = :ul_id
     $stmt = $this->db->prepare($sql);
 
     $stmt->execute($parameters);
-
-    $queteur = new QueteurEntity($stmt->fetch(), $this->logger);
+    if($row = $stmt->fetch())
+      $queteur = new QueteurEntity($row, $this->logger);
     $stmt->closeCursor();
+
+    if(!$row)
+      throw new \Exception("queteur not found. id='".$queteur_id."'");
 
     if($queteur->referent_volunteer > 0)
     {

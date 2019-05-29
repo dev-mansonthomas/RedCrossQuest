@@ -46,7 +46,7 @@ class MailService
    * @param string $recipientFirstName    Recipient First Name
    * @param string $recipientLastName     Recipient Last Name
    * @param string $content               Email html content
-   * @param string $fileName              The filename that will be attached to the email. The file will be read from /tmp/ and removed after the mail is sent
+   * @param string $fileName              The filename that will be attached to the email. The file will be read from sys_get_temp_dir() and removed after the mail is sent
    * @param string $bcc                   The BCC email
    * @return int Mail status code
    * @throws \Exception                   when sending the email fails
@@ -76,7 +76,7 @@ class MailService
 
       if($fileName != null)
       {
-        $email->addAttachment(new SendGrid\Mail\Attachment(base64_encode (file_get_contents("/tmp/".$fileName)),"application/zip", "$fileName"));
+        $email->addAttachment(new SendGrid\Mail\Attachment(base64_encode (file_get_contents(sys_get_temp_dir().$fileName)),"application/zip", "$fileName"));
       }
 
 
@@ -84,7 +84,7 @@ class MailService
 
       if($fileName != null)
       {
-        unlink("/tmp/" . $fileName);
+        unlink(sys_get_temp_dir(). $fileName);
       }
 
       $this->logger->info("Sending email successfully",
