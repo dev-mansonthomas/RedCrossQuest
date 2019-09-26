@@ -12,10 +12,37 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use \RedCrossQuest\Entity\UserEntity;
 use \RedCrossQuest\Service\Logger;
 use \RedCrossQuest\Entity\LoggingEntity;
+use Firebase\Auth\Token\Exception\InvalidToken;
 
 use RedCrossQuest\Service\ClientInputValidator;
 
 /********************************* Authentication ****************************************/
+
+$app->post(getPrefix().'/firebase-authenticate', function($request, $response, $args) use ($app)
+{
+  $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 1500 , true );
+  $username = "";
+  Logger::dataForLogging(new LoggingEntity(null,  ["username"=>$username]));
+
+  try
+  {
+    $verifiedIdToken = $this->firebase->getAuth()->verifyIdToken($token);
+  }
+  catch (InvalidToken $e)
+  {
+    $response401 = $response->withStatus(401);
+    $response401->getBody()->write(json_encode(["error" =>"Authentication error"]));
+
+    $this->logger->error("Firebase authentication error", array('username' => $username, 'token' => $token));
+
+    return $response401;
+  }
+  $uid  = $verifiedIdToken->getClaim('sub');
+  $user = $this->firebase->getAuth()->getUser($uid);
+
+
+  $this->logger->debug("Firebase JWT checked successfully", array('uid' => $uid,'user' => $user));
+});
 
 
 /**

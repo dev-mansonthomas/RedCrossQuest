@@ -164,13 +164,14 @@ class AuthorisationMiddleware
 
       //public path that must not go through authentication check
       if($path == getPrefix(true).'authenticate'      ||
+         $path == getPrefix(true).'firebase-authenticate'      ||
          $path == getPrefix(true).'sendInit'          ||
          $path == getPrefix(true).'resetPassword'     ||
          $path == getPrefix(true).'getInfoFromUUID'   ||
          strpos($path,getPrefix(true).'thanks_mailing/') === 0 ||
          strpos($path,getPrefix(true).'redQuest/'      ) === 0   )
       {
-        $this->logger->error("Non authenticate route : $path - $uuid");
+        $this->logger->info("Non authenticate route : $path - $uuid - ".getPrefix(true));
         return $next($request, $response);
       }
       //$this->logger->error("authenticated route : $path");

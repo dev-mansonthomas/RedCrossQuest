@@ -45,7 +45,6 @@
       <path value="$PROJECT_DIR$/server/vendor/google/grpc-gcp" />
       <path value="$PROJECT_DIR$/server/vendor/google/protobuf" />
       <path value="$PROJECT_DIR$/server/vendor/google/gax" />
-      <path value="$PROJECT_DIR$/server/vendor/symfony/contracts" />
       <path value="$PROJECT_DIR$/server/vendor/ralouphie/getallheaders" />
       <path value="$PROJECT_DIR$/server/vendor/cakephp/collection" />
       <path value="$PROJECT_DIR$/server/vendor/cakephp/datasource" />
@@ -60,6 +59,22 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/validator" />
       <path value="$PROJECT_DIR$/server/vendor/doctrine/lexer" />
       <path value="$PROJECT_DIR$/server/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/server/vendor/kylekatarnls/update-helper" />
+      <path value="$PROJECT_DIR$/server/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/server/vendor/superbalist/flysystem-google-storage" />
+      <path value="$PROJECT_DIR$/server/vendor/giggsey/locale" />
+      <path value="$PROJECT_DIR$/server/vendor/giggsey/libphonenumber-for-php" />
+      <path value="$PROJECT_DIR$/server/vendor/riverline/multipart-parser" />
+      <path value="$PROJECT_DIR$/server/vendor/kreait/firebase-tokens" />
+      <path value="$PROJECT_DIR$/server/vendor/kreait/gcp-metadata" />
+      <path value="$PROJECT_DIR$/server/vendor/kreait/firebase-php" />
+      <path value="$PROJECT_DIR$/server/vendor/kreait/clock" />
+      <path value="$PROJECT_DIR$/server/vendor/league/flysystem" />
+      <path value="$PROJECT_DIR$/server/vendor/fig/http-message-util" />
+      <path value="$PROJECT_DIR$/server/vendor/mtdowling/jmespath.php" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

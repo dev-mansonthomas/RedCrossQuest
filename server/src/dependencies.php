@@ -1,5 +1,6 @@
 <?php
 
+
 use \RedCrossQuest\BusinessService\EmailBusinessService;
 use \RedCrossQuest\DBService\MailingDBService;
 use Google\Cloud\Storage\StorageClient;
@@ -30,6 +31,10 @@ use \RedCrossQuest\DBService\YearlyGoalDBService;
 use Google\Cloud\Logging\LoggingClient;
 
 use Google\Cloud\Logging\PsrLogger;
+use Kreait\Firebase;
+use Kreait\Firebase\Factory;
+
+
 
 // DIC configuration
 $container = $app->getContainer();
@@ -385,4 +390,18 @@ $container['exportDataBusinessService'] = function (\Slim\Container $c)
 $container['clientInputValidator'] = function (\Slim\Container $c)
 {
   return new ClientInputValidator($c->logger);
+};
+
+
+
+/**
+ * Used to authenticate a firebase user, from it's Firebase JWT
+ * @property Firebase $firebase
+ * @param    \Slim\Container $c
+ * @return   Firebase
+ */
+$container['firebase'] = function (\Slim\Container $c)
+{
+  $firebase = (new Factory)->create();
+  return $firebase;
 };
