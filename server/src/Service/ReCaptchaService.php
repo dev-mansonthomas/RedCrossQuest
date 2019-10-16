@@ -82,7 +82,7 @@ class ReCaptchaService
     //discard token that are too long, null or empty
     if( $token         == null ||
         strlen($token) == 0    ||
-        strlen($token) >  500  )
+        strlen($token) >  1500  )
     {
       $this->logger->error(
         "ReCaptcha Token is too long",
