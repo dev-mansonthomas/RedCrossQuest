@@ -122,12 +122,50 @@ NULL
 
 
 
+  /***
+   * This function is used by the firebase-authenticate route, to get the user info from its email.
+   * Can't be restricted by ULID since the UL is not known at this point.
+   *
+   * @param string $email The email passed at login
+   * @return UserEntity An instance of UserEntity, null if nothing is found
+   * @throws \Exception in case of incorrect number of rows updated
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getUserInfoWithEmail(string $email)
+  {
+    $sql = "
+SELECT u.id, u.queteur_id, u.password, u.role, u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date 
+FROM   users u, queteur q
+WHERE  upper(q.email) = upper(?)
+AND    q.id = u.queteur_id
+AND    u.active = 1
+LIMIT 1
+";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([$email]);
+
+    $count = $stmt->rowCount();
+
+    if($count == 1)
+    {
+      $result = new UserEntity($stmt->fetch(), $this->logger);
+      $stmt->closeCursor();
+      return $result;
+    }
+    else
+    {
+      $stmt->closeCursor();
+      throw new \Exception ("Update didn't update the correct number of rows($count) for nivol: $email");
+    }
+  }
+
 
 
 
 
   /***
-   * This function is used by the authenticate method, to get the user info from its nivol.
+   * This function is used by the authenticate method (prior to firebase), to get the user info from its nivol.
    * Can't be restricted by ULID since the UL is not known.
    *
    * @param string $nivol string The Nivol passed at login
@@ -165,45 +203,6 @@ LIMIT 1
 
 
 
-  /***
-   * This function is used by dataExport
-   *
-   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @return UserEntity[] array of users of  the UnitéLocale
-   * @throws \Exception in case of incorrect number of rows updated
-   * @throws PDOException if the query fails to execute on the server
-   */
-  public function getULUsers(int $ulId)
-  {
-
-    $sql = "
-SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
-       u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
-       u.init_passwd_date, u.active, u.created, u.updated, q.first_name, q.last_name
-FROM   users u, queteur q
-WHERE  u.queteur_id = q.id
-AND    q.ul_id      = :ul_id
-
-LIMIT 1
-";
-
-    $parameters = ["ul_id"=>$ulId];
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new UserEntity($row, $this->logger);
-    }
-
-    $stmt->closeCursor();
-
-    return $results;
-
-  }
 
 
   /***
@@ -356,6 +355,47 @@ LIMIT 1
 
   }
 
+
+
+  /***
+   * This function is used by dataExport
+   *
+   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return UserEntity[] array of users of  the UnitéLocale
+   * @throws \Exception in case of incorrect number of rows updated
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getULUsers(int $ulId)
+  {
+
+    $sql = "
+SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
+       u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
+       u.init_passwd_date, u.active, u.created, u.updated, q.first_name, q.last_name
+FROM   users u, queteur q
+WHERE  u.queteur_id = q.id
+AND    q.ul_id      = :ul_id
+
+LIMIT 1
+";
+
+    $parameters = ["ul_id"=>$ulId];
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($parameters);
+
+    $results = [];
+    $i = 0;
+    while ($row = $stmt->fetch())
+    {
+      $results[$i++] = new UserEntity($row, $this->logger);
+    }
+
+    $stmt->closeCursor();
+
+    return $results;
+
+  }
 
   /**
    * update the user with the init uuid (generated buy this method) and the time until the uuid is valid (now+one hour)
