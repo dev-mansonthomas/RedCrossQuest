@@ -29,7 +29,7 @@ class AuthorisationMiddleware
   private static $errorMessage = [
     '0001' => "Rejecting non https (%s) connection on '%s'",
     '0002' => "Rejecting request as \$authorizations is empty (so no token)",
-    '0003' => "Rejecting request, fails to decode Token or Authentication fails: %s, path: %s, \$_SERVER: %s",
+    '0003' => "Rejecting request, fails to decode Token or Authentication fails: %s, path: %s",
     '0004' => "Rejecting request, failed to parse roleId from roleIdStr (%s) in Path: '%s' decoded token:%s",
     '0005' => "Rejecting request, retrieving the roleId : explode function fails to return 2 elements array as expected for Path: '%s', explodedPath: %s DecodedToken: %s",
     '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: Path: '%s', \$roleIdStr:'%s',  \$roleId:'%s', \$decodedToken->getRoleId():'%s', DecodedToken: %s",
