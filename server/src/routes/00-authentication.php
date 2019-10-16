@@ -8,7 +8,10 @@
 require '../../vendor/autoload.php';
 
 use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
+use RedCrossQuest\Entity\QueteurEntity;
+use RedCrossQuest\Entity\UniteLocaleEntity;
 use \RedCrossQuest\Entity\UserEntity;
 use \RedCrossQuest\Service\Logger;
 use \RedCrossQuest\Entity\LoggingEntity;
@@ -20,9 +23,27 @@ use RedCrossQuest\Service\ClientInputValidator;
 
 $app->post(getPrefix().'/firebase-authenticate', function($request, $response, $args) use ($app)
 {
-  $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 1500 , true );
-  $username = "";
-  Logger::dataForLogging(new LoggingEntity(null,  ["username"=>$username]));
+
+  //TODO enable recaptcha
+/*
+  $this->logger->debug("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
+  $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
+  if($reCaptchaResponseCode > 0)
+  {// error
+
+    $this->logger->error("authenticate: ReCaptcha error ", array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
+
+    $response401 = $response->withStatus(401);
+    $response401->getBody()->write(json_encode(["error" =>"An error occurred - ReCode $reCaptchaResponseCode"]));
+
+    return $response401;
+  }
+*/
+
+  $token = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 1500 , true );
+  //email max size : https://www.rfc-editor.org/errata_search.php?eid=1690
+  $email = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("email"    ), 256 , true );
+  Logger::dataForLogging(new LoggingEntity(null,  ["email"=>$email]));
 
   try
   {
@@ -33,16 +54,84 @@ $app->post(getPrefix().'/firebase-authenticate', function($request, $response, $
     $response401 = $response->withStatus(401);
     $response401->getBody()->write(json_encode(["error" =>"Authentication error"]));
 
-    $this->logger->error("Firebase authentication error", array('username' => $username, 'token' => $token));
+    $this->logger->error("Firebase authentication error", array('email' => $email, 'token' => $token, 'exception' => $e));
 
     return $response401;
   }
-  $uid  = $verifiedIdToken->getClaim('sub');
-  $user = $this->firebase->getAuth()->getUser($uid);
+  $uid    = $verifiedIdToken->getClaim('sub');
+  $email  = $verifiedIdToken->getClaim('email');
+
+  //$firebaseUser = $this->firebase->getAuth()->getUser($uid);
+  $this->logger->debug("Firebase JWT checked successfully", array('uid' => $uid, 'verifiedIdToken'=>$verifiedIdToken));
+
+  $user           = $this->userDBService->getUserInfoWithEmail($email);
+
+  if($user instanceof UserEntity)
+  {
+
+    $queteur = $this->queteurDBService->getQueteurById($user->queteur_id);
+    $ul = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
+    $settings = $this->get('settings');
+
+    $jwtToken = getToken($settings, $queteur, $ul, $user);
 
 
-  $this->logger->debug("Firebase JWT checked successfully", array('uid' => $uid,'user' => $user));
+    $response->getBody()->write(json_encode(["token" => $jwtToken->__toString()]));
+
+    $this->userDBService->registerSuccessfulLogin($user->id);
+
+    //generate a spotfire token at the same time
+    //Token will be retrieved by client on a separate REST Call
+    $this->spotfireAccessDBService->grantAccess($user->id, $queteur->ul_id, $settings['appSettings']['sessionLength']);
+
+    return $response;
+  }
+  else
+  {
+    $this->logger->error("Authentication failed, user is not registered in RCQ or not active", array("user_id"=> $user->id, "email" =>$email));
+    $this->userDBService->registerFailedLogin($user->id);
+
+    $response401 = $response->withStatus(401);
+    $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.1']));
+
+    return $response401;
+  }
+
+
+
+
 });
+
+//generate a JWT for a user
+function getToken($settings, QueteurEntity $queteur, UniteLocaleEntity $ul, UserEntity $user)
+{
+  $jwtSecret      = $settings['jwt'        ]['secret'        ];
+  $issuer         = $settings['jwt'        ]['issuer'        ];
+  $audience       = $settings['jwt'        ]['audience'      ];
+  $deploymentType = $settings['appSettings']['deploymentType'];
+  $sessionLength  = $settings['appSettings']['sessionLength' ];
+
+  $signer   = new Sha256();
+  $issuedAt =   time() ;
+
+  $jwtToken = (new Builder())
+    ->issuedBy          ($issuer  ) // Configures the issuer (iss claim)
+    ->permittedFor      ($audience)
+    ->issuedAt          ($issuedAt)
+    ->canOnlyBeUsedAfter($issuedAt)
+    ->expiresAt         (time() + $sessionLength * 3600)
+    ->withClaim         ('username' , $queteur->nivol)
+    ->withClaim         ('id'       , $user->id      )
+    ->withClaim         ('ulId'     , $queteur->ul_id)
+    ->withClaim         ('ulName'   , $ul->name      )
+    ->withClaim         ('ulMode'   , $ul->mode      )
+    ->withClaim         ('queteurId', $queteur->id   )
+    ->withClaim         ('roleId'   , $user->role    )
+    ->withClaim         ('d'        , $deploymentType)
+    ->getToken          ($signer          , new Key($jwtSecret));
+  return $jwtToken;
+}
+
 
 
 /**
@@ -53,14 +142,13 @@ $app->post(getPrefix().'/firebase-authenticate', function($request, $response, $
  * Build the JWT Token with id, username, ulId, queteurId, roleId inside it.
  *
  */
-
 $app->post(getPrefix().'/authenticate', function($request, $response, $args) use ($app)
 {
   try
   {
     $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true );
     $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
-    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
+    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 1500 , true );
 
     Logger::dataForLogging(new LoggingEntity(null,  ["username"=>$username]));
 
@@ -86,45 +174,18 @@ $app->post(getPrefix().'/authenticate', function($request, $response, $args) use
     {
       $queteur = $this->queteurDBService    ->getQueteurById    ($user   ->queteur_id);
       $ul      = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
+      $settings= $this->get('settings');
 
-      $signer = new Sha256();
+      $jwtToken = getToken($settings, $queteur, $ul, $user);
 
-      $settings       = $this->get('settings');
-
-      $jwtSecret      = $settings['jwt'        ]['secret'        ];
-      $issuer         = $settings['jwt'        ]['issuer'        ];
-      $audience       = $settings['jwt'        ]['audience'      ];
-      $deploymentType = $settings['appSettings']['deploymentType'];
-      $sessionLength  = $settings['appSettings']['sessionLength' ];
-
-      $jwtToken = (new Builder())
-        ->setIssuer    ($issuer       ) // Configures the issuer (iss claim)
-        ->setAudience  ($audience     ) // Configures the audience (aud claim)
-        ->setIssuedAt  (time()        ) // Configures the time that the token was issue (iat claim)
-        ->setNotBefore (time()        ) // Configures the time that the token can be used (nbf claim)
-        ->setExpiration(time() + $sessionLength * 3600 ) // Configures the expiration time of the token (nbf claim)
-        //Business Payload
-        ->set          ('username' , $username      )
-        ->set          ('id'       , $user->id      )
-        ->set          ('ulId'     , $queteur->ul_id)
-        ->set          ('ulName'   , $ul->name      )
-        ->set          ('ulMode'   , $ul->mode      )
-        ->set          ('queteurId', $queteur->id   )
-        ->set          ('roleId'   , $user->role    )
-        ->set          ('d'        , $deploymentType)
-
-        ->sign         ($signer    , $jwtSecret     ) // Sign the token
-        ->getToken     ();                           // Retrieves the generated token (it's an object with __toString() implemented
-
-
-
+     
       $response->getBody()->write(json_encode(["token"=>$jwtToken->__toString()]));
 
       $this->userDBService->registerSuccessfulLogin($user->id);
 
       //generate a spotfire token at the same time
       //Token will be retrieved by client on a separate REST Call
-      $this->spotfireAccessDBService->grantAccess($user->id , $queteur->ul_id,   $sessionLength);
+      $this->spotfireAccessDBService->grantAccess($user->id , $queteur->ul_id,   $settings['appSettings']['sessionLength' ]);
 
       return $response;
     }
