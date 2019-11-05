@@ -333,7 +333,7 @@ SET    `depart`             = :depart,
 WHERE tq.`id`               = :id
 AND   tq.ul_id              = :ul_id
 ";
-    $currentDate = new Carbon();
+    $currentDate = Carbon::now();
     $currentDate->tz='UTC';
 
     $stmt = $this->db->prepare($sql);
@@ -480,7 +480,7 @@ SET    `retour`               = :retour,
 WHERE tq.`id`                 = :id
 AND   tq.ul_id                = :ul_id
 ";
-    $currentDate = new Carbon();
+    $currentDate = Carbon::now();
     $stmt        = $this->db->prepare($sql);
     $stmt->execute([
       "retour"            => $tq->retour->format('Y-m-d H:i:s'),
