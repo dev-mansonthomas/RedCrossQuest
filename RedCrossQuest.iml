@@ -44,7 +44,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/firebase-php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/firebase-tokens" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/gcp-metadata" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/kylekatarnls/update-helper" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/jwt" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/league/flysystem" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/monolog/monolog" />

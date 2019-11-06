@@ -1,54 +1,18 @@
-api_version: 1
-
-runtime: php
-env: flex
-
-#entrypoint: serve public_html/rest/index.php
-skip_files:
-  - ^db$
-  - ^vendor$
-  - ^Spotfire$
-  - ^complete-sync\.sh$
-  - ^phinx\.yml$
-  - ^phinx-template\.yml$
-  - ^selective-sync\.sh$
-
-
-
-runtime_config:
-  document_root: public_html
-  front_controller_file: public_html/rest/index.php
-  enable_stackdriver_integration: true
-
-  #
-  #¤MYSQL_INSTANCE¤ : gcp_deploy.sh replace this token by the value from MYSQL_INSTANCE variable in rcq-fr-test-db-setup.properties
-  #
-
-beta_settings:
-    cloud_sql_instances: "instance_name"
+runtime: php73
+entrypoint: serve public/rest/index.php
 
 env_variables:
-    # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
-    # values obtained when configuring your Cloud SQL instance.
-    MYSQL_USER: user
-    MYSQL_PASSWORD: password
-    MYSQL_DSN: mysql:dbname=dbname;unix_socket=/cloudsql/instance_name;charset=utf8
-    SENDGRID_API_KEY: API_KEY
-    SENDGRID_SENDER: sender@domain.com
-    JWT_SECRET: SECRET
-    JWT_ISSUER: https://rcq.host.com
-    RECAPTCHA_SECRET: SECRET
-    APP_URL: https://rcq.host.com/
-    GOOGLE_MAPS_API: SECRET
-    APP_ENV: D    # D:Dev, T:Testing, P:Production,
-
-# This sample incurs costs to run on the App Engine flexible environment.
-# The settings below are to reduce costs during testing and are not appropriate
-# for production use. For more information, see:
-# https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
-manual_scaling:
-  instances: 1
-resources:
-  cpu: 1
-  memory_gb: 0.5
-  disk_size_gb: 10
+  # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the
+  # values obtained when configuring your Cloud SQL instance.
+  MYSQL_USER: ¤MYSQL_USER¤
+  MYSQL_PASSWORD: ¤MYSQL_PASSWORD¤
+  MYSQL_DSN: mysql:dbname=¤MYSQL_DB¤;unix_socket=/cloudsql/rcq-¤COUNTRY¤-¤ENV¤:europe-west1:¤MYSQL_INSTANCE¤;charset=utf8
+  SENDGRID_API_KEY: SENDGRID_API_KEY
+  SENDGRID_SENDER: SENDGRID_SENDER
+  JWT_SECRET: JWT_SECRET
+  JWT_ISSUER: JWT_ISSUER
+  RECAPTCHA_SECRET: RECAPTCHA_SECRET
+  APP_URL: https://APP_URL/
+  REDQUEST_DOMAIN: REDQUEST_DOMAIN
+  GOOGLE_MAPS_API: GOOGLE_MAPS_API
+  APP_ENV: D

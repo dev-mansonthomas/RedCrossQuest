@@ -84,7 +84,7 @@ VALUES
 
     $stmt->closeCursor();
 
-    $currentDate = new Carbon();
+    $currentDate = Carbon::now();
     $currentDate->setTimezone("Europe/Paris");
 
     return (object)["creationTime"=>$currentDate, "token"=>$token];

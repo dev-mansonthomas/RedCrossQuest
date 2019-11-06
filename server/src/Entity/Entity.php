@@ -186,9 +186,9 @@ class Entity
       {
         $stringValue = $data[$key];
 
-        if(strlen($stringValue) > 25)
+        if(strlen($stringValue) > 27)
         {
-          throw new \InvalidArgumentException("Invalid DATE value, length higher than the max permitted size " .json_encode(['key'=>$key, 'value'=>$stringValue, 'maxSize'=>25]) );
+          throw new \InvalidArgumentException("Invalid DATE value, length higher than the max permitted size " .json_encode(['key'=>$key, 'value'=>$stringValue, 'maxSize'=>27]) );
         }
 
         if($stringValue != null)
@@ -196,6 +196,7 @@ class Entity
           if(strpos($stringValue, 'T') !== false)
           {
             //json javascript date : "2017-06-04T23:00:00.000Z"
+            //                        2019-11-05T21:51:21.000000Z
             //$this->logger->error("json javascript ".$stringValue);
             try
             {

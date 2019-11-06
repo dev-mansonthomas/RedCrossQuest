@@ -66,7 +66,7 @@ class EmailBusinessService
   {
     $url        = $this->appSettings['appUrl'].$this->appSettings['resetPwdPath'].$uuid;
 
-    $startValidityDateCarbon = new Carbon();
+    $startValidityDateCarbon = Carbon::now();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
     $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
@@ -121,7 +121,7 @@ class EmailBusinessService
 
     $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
 
-    $changePasswordDate = new Carbon();
+    $changePasswordDate = Carbon::now();
     $changePasswordDateString = $changePasswordDate->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
     $title="Votre mot de passe a été changé";
@@ -208,7 +208,7 @@ class EmailBusinessService
 
     $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
 
-    $anonymiseDateCarbon = new Carbon();
+    $anonymiseDateCarbon = Carbon::now();
     $anonymiseDateString = $anonymiseDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
     $title = "Suite à votre demande, vos données viennent d'être anonymisées";
@@ -320,7 +320,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
         $mailingInfoEntity->last_name,
         $this->getMailHeader($title, $mailingInfoEntity->first_name)."
 <br/>
-Encore une fois nous tenions à te remercier pour ta participation aux journées nationales ".(new Carbon())->year." de la Croix-Rouge française !<br/>
+Encore une fois nous tenions à te remercier pour ta participation aux journées nationales ".(Carbon::now())->year." de la Croix-Rouge française !<br/>
 <br/>
 Nous t'avons préparé un petit résumé de ce que ta participation représente pour l'unité locale de ".$uniteLocaleEntity->name.". <br/>
 Tu y trouveras également un message de remerciement de son Président. <br/>
@@ -407,7 +407,7 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
    */
   public function getMailFooter(UniteLocaleEntity $uniteLocaleEntity, bool $isNewsletter, $queteurInfo, bool $RedQuest=false)
   {
-    $startValidityDateCarbon = new Carbon();
+    $startValidityDateCarbon = Carbon::now();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
     $text1 = $isNewsletter ? "ne plus recevoir d'email de la platforme ou à" : "" ;

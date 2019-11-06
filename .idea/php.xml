@@ -59,7 +59,6 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/validator" />
       <path value="$PROJECT_DIR$/server/vendor/doctrine/lexer" />
       <path value="$PROJECT_DIR$/server/vendor/egulias/email-validator" />
-      <path value="$PROJECT_DIR$/server/vendor/kylekatarnls/update-helper" />
       <path value="$PROJECT_DIR$/server/vendor/psr/simple-cache" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/service-contracts" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/translation-contracts" />
@@ -77,7 +76,7 @@
       <path value="$PROJECT_DIR$/server/vendor/mtdowling/jmespath.php" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
   <component name="PhpUnit">
     <phpunit_settings>
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/server/vendor/autoload.php" />

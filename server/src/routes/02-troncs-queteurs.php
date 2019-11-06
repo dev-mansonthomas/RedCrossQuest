@@ -177,7 +177,7 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur', function ($r
         $this->logger->warning("TroncQueteur POST DEPART");
         $tq = $this->troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
 
-        if($tq->depart_theorique->year != (new Carbon())->year)
+        if($tq->depart_theorique->year != (Carbon::now())->year)
         {
           $tq->troncFromPreviousYear=true;
         }
