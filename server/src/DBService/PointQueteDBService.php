@@ -4,8 +4,8 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
-use \RedCrossQuest\Entity\PointQueteEntity;
 use PDOException;
+use RedCrossQuest\Entity\PointQueteEntity;
 
 class PointQueteDBService extends DBService
 {

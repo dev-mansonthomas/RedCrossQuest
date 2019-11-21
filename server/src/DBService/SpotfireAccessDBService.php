@@ -4,13 +4,12 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
-use Ramsey\Uuid\Uuid;
-
-use DateTime;
-use DateInterval;
 use Carbon\Carbon;
-use RedCrossQuest\Entity\SpotfireAccessEntity;
+use DateInterval;
+use DateTime;
 use PDOException;
+use Ramsey\Uuid\Uuid;
+use RedCrossQuest\Entity\SpotfireAccessEntity;
 
 
 class SpotfireAccessDBService extends DBService

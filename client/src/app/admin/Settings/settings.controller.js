@@ -11,7 +11,7 @@
 
   /** @ngInject */
   function SettingsController($rootScope, $log, $localStorage, $routeParams, $timeout, $location,
-    SettingsResource, DateTimeHandlingService, GeoCoder)
+    SettingsResource, DateTimeHandlingService, GeoCoder, UniteLocaleResource)
   {
     var vm = this;
     vm.currentUserRole=$localStorage.currentUser.roleId;
@@ -29,7 +29,7 @@
 
     vm.reload=function()
     {
-      SettingsResource.query().$promise.then(handleResult);
+      UniteLocaleResource.query().$promise.then(handleResult);
       SettingsResource.getULSettings().$promise.then(handleResultAppSettings);
     };
 
@@ -42,9 +42,9 @@
       vm.settings.applicationSettings = settings;
     }
 
-    function handleResult (settings)
+    function handleResult (uniteLocalDetails)
     {
-      vm.settings = settings;
+      vm.settings = uniteLocalDetails;
       vm.settings.date_demarrage_rcq=DateTimeHandlingService.handleServerDate(vm.settings.date_demarrage_rcq).stringVersion;
 
       /*

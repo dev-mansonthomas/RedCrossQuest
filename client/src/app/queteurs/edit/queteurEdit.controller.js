@@ -129,7 +129,7 @@
 
         if(angular.isDefined(vm.current.birthdate))
         {
-          var birthdate = vm.current.birthdate.date.toLocaleString().substr(0,10);
+          var birthdate = vm.current.birthdate.substr(0,10);
 
           if(birthdate === '1922-12-22' || birthdate === '2007-07-07')
           {
@@ -137,7 +137,7 @@
           }
           else
           {
-            vm.current.birthdate = moment( queteur.birthdate.date.substring(0, queteur.birthdate.date.length -16 ),"YYYY-MM-DD").toDate();
+            vm.current.birthdate = moment( queteur.birthdate.substring(0, queteur.birthdate.length -16 ),"YYYY-MM-DD").toDate();
             vm.computeAge();
           }
         }
@@ -273,7 +273,7 @@
             vm.current.registration_id = vm.current.id;
             delete vm.current.id;
           }
-          vm.current.$save  (vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
+          vm.current.approveQueteurRegistration(vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
         }
       }
     };

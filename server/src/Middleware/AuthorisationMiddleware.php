@@ -6,16 +6,20 @@ namespace RedCrossQuest\Middleware;
 
 require '../../vendor/autoload.php';
 
+use DI\Container;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\ValidationData;
-
-
-use \Psr\Http\Message\ServerRequestInterface;
-use \Psr\Http\Message\ResponseInterface;
-
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
-use \Slim\App;
+use Slim\Psr7\Response;
+
+
+;
 
 
 /**
@@ -24,7 +28,7 @@ use \Slim\App;
  * @property string bearer
  * @property int bearerStrLen
  */
-class AuthorisationMiddleware
+class AuthorisationMiddleware implements MiddlewareInterface
 {
   private static $errorMessage = [
     '0001' => "Rejecting non https (%s) connection on '%s'",
@@ -44,18 +48,20 @@ class AuthorisationMiddleware
 
   /**
    * init of the constructor
-   * @param App $app the Slim Application instance
+   * @param Container $container the container
+   * @throws \DI\DependencyException
+   * @throws \DI\NotFoundException
    */
-  public function __construct(App $app)
+  public function __construct(Container $container)
   {
     //Define the urls that you want to exclude from Authentication, aka public urls
     $this->whiteList = array('\/authenticate');
-    $this->logger    = $app->getContainer()->get('logger');
+    $this->logger    = $container->get(LoggerInterface::class );
 
     $this->bearer      = "Bearer ";
     $this->bearerStrLen=strlen($this->bearer);
 
-    $this->jwtSettings =  $app->getContainer()->get('settings')['jwt'];
+    $this->jwtSettings =  $container->get('settings')['jwt'];
 
     //$this->logger->info("__construct finished");
   }
@@ -133,19 +139,22 @@ class AuthorisationMiddleware
 
 
   /**
-   * Example middleware invokable class
    *
-   * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-   * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-   * @param  callable                                 $next     Next middleware
    *
-   * @return \Psr\Http\Message\ResponseInterface
+   * @param  ServerRequestInterface  $request PSR-7 request
+   * @param  RequestHandlerInterface $handler PSR-15 request handler
+   *
+   * @return ResponseInterface
+   *
+   * @throws \Exception
    */
-  public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+  //public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+
+  public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
   {
     $path  = "";
     $start =  0;
-    $uuid = Uuid::uuid4();
+    $uuid  = Uuid::uuid4();
     try
     {
       $path   = $request->getUri()->getPath   ();
@@ -157,13 +166,14 @@ class AuthorisationMiddleware
       if($scheme!="https" && $host != "localhost" && $host != "127.0.0.1" && $host != "rcq" )
       {//must be https except on localhost
         $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0001'], $scheme, $host));
-        return $this->denyRequest($response, "0001");
+        return $this->denyRequest("0001");
       }
 
-      //$this->logger->error("$path");
-
+      $this->logger->error("$path");
+      $this->logger->error("getPrefix(true)='".getPrefix(true)."'");
+      $this->logger->error("isGAE()='".isGAE()."'");
       //public path that must not go through authentication check
-      if($path == getPrefix(true).'authenticate'      ||
+      if($path == getPrefix(true).'/rest/authenticate'      ||
          $path == getPrefix(true).'firebase-authenticate'      ||
          $path == getPrefix(true).'sendInit'          ||
          $path == getPrefix(true).'resetPassword'     ||
@@ -172,7 +182,7 @@ class AuthorisationMiddleware
          strpos($path,getPrefix(true).'redQuest/'      ) === 0   )
       {
         $this->logger->info("Non authenticate route : $path - $uuid - ".getPrefix(true));
-        return $next($request, $response);
+        return $handler->handle($request);
       }
       //$this->logger->error("authenticated route : $path");
       $authorizations = $request->getHeader('Authorization');
@@ -180,7 +190,7 @@ class AuthorisationMiddleware
       if(count($authorizations) == 0)
       {
         $this->logger->error(AuthorisationMiddleware::$errorMessage['0002']);
-        return $this->denyRequest($response, '0002');
+        return $this->denyRequest('0002');
       }
       $authorization = $authorizations[0];
       $tokenStr      = substr($authorization, $this->bearerStrLen, strlen($authorization) - $this->bearerStrLen);
@@ -191,12 +201,12 @@ class AuthorisationMiddleware
       if($decodedToken->getAuthenticated() === false)
       {//token invalid
         $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true), $path));
-        return $this->denyRequest($response, sprintf('0003'.'.%s - %s', $decodedToken->getErrorCode(), $path));
+        return $this->denyRequest(sprintf('0003'.'.%s - %s', $decodedToken->getErrorCode(), $path));
       }
       
       //check if the roleId in the URL match the one in the JWT Token (user might have changed the URL)
       $path         = $request->getUri()->getPath();
-      $explodedPath = explode("/",  isGAE() ? substr($path, strlen('/rest/')):$path,2);
+      $explodedPath = explode("/",  substr($path, strlen('/rest/')),2); //isGAE() ? substr($path, strlen('/rest/')):$path
 
       //$this->logger->error("path info", array("path"=>$path, "explodedPath"=>$explodedPath, "\$_SERVER"=>$_SERVER));
 
@@ -207,7 +217,7 @@ class AuthorisationMiddleware
         if(!is_scalar($roleIdStr))
         {
           $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, print_r($decodedToken, true)));
-          return $this->denyRequest($response, '0004');
+          return $this->denyRequest('0004');
         }
 
         $roleId = intval($roleIdStr);
@@ -215,13 +225,13 @@ class AuthorisationMiddleware
       else
       {
         $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0005'], $path, print_r($explodedPath, true), print_r($decodedToken, true)));
-        return $this->denyRequest($response, '0005');
+        return $this->denyRequest('0005');
       }
 
       if($decodedToken->getRoleId() != $roleId)
       {
         $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0006'], $path, $roleIdStr, $roleId, $decodedToken->getRoleId(), print_r($decodedToken, true)));
-        return $this->denyRequest($response, '0006');
+        return $this->denyRequest('0006');
       }
 
       //add the decoded JWT Token so that it can be used by routes. (ex: spotfire requires userId, roleId, UlID from the user)
@@ -231,13 +241,13 @@ class AuthorisationMiddleware
       $start    = microtime(true);
       try
       {
-        $response = $next($request, $response);
+        $response = $handler->handle($request);
       }
       catch(\Exception $applicationError)
       {
         $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError, "request" => $request));
 
-        $response500 = $response->withStatus(500);
+        $response500 = (new Response())->withStatus(500);
         $response500->getBody()->write(json_encode(array("exception"=>$applicationError, "error" => "application error")));
 
         return $response500;
@@ -252,17 +262,17 @@ class AuthorisationMiddleware
     {
       $this->logger->debug("[PERF];".(microtime(true)-$start).";true;".$path);
       $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$error));
-      return $this->denyRequest($response, '0007');
+      return $this->denyRequest('0007');
     }
 
   }
   /**
    * @param string $errorCode the error code to send back to the frontend
-   * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-   * @return \Psr\Http\Message\ResponseInterface      the modified response
+   * @return ResponseInterface      the modified response
    */
-  private function denyRequest($response, $errorCode)
+  private function denyRequest($errorCode) : ResponseInterface
   {
+    $response = new Response();
     $response401 = $response->withStatus(401);
     $response401->getBody()->write(json_encode("{error:'authentication fails - $errorCode'}"));
     return $response401;

@@ -7,397 +7,41 @@
  */
 require '../../vendor/autoload.php';
 
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use RedCrossQuest\Entity\QueteurEntity;
-use RedCrossQuest\Entity\UniteLocaleEntity;
-use \RedCrossQuest\Entity\UserEntity;
-use \RedCrossQuest\Service\Logger;
-use \RedCrossQuest\Entity\LoggingEntity;
-use Firebase\Auth\Token\Exception\InvalidToken;
-
-use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\routes\routesActions\authentication\AuthenticateAction;
+use RedCrossQuest\routes\routesActions\authentication\FirebaseAuthenticateAction;
+use RedCrossQuest\routes\routesActions\authentication\GetUserInfoFromUUIDAction;
+use RedCrossQuest\routes\routesActions\authentication\ListTroncs;
+use RedCrossQuest\routes\routesActions\authentication\ResetPassword;
+use RedCrossQuest\routes\routesActions\authentication\SendPasswordInitializationMailAction;
 
 /********************************* Authentication ****************************************/
 
-$app->post(getPrefix().'/firebase-authenticate', function($request, $response, $args) use ($app)
-{
-
-  //TODO enable recaptcha
-/*
-  $this->logger->debug("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
-  $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
-  if($reCaptchaResponseCode > 0)
-  {// error
-
-    $this->logger->error("authenticate: ReCaptcha error ", array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
-
-    $response401 = $response->withStatus(401);
-    $response401->getBody()->write(json_encode(["error" =>"An error occurred - ReCode $reCaptchaResponseCode"]));
-
-    return $response401;
-  }
-*/
-
-  $token = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 1500 , true );
-  //email max size : https://www.rfc-editor.org/errata_search.php?eid=1690
-  $email = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("email"    ), 256 , true );
-  Logger::dataForLogging(new LoggingEntity(null,  ["email"=>$email]));
-
-  try
-  {
-    $verifiedIdToken = $this->firebase->getAuth()->verifyIdToken($token);
-  }
-  catch (InvalidToken $e)
-  {
-    $response401 = $response->withStatus(401);
-    $response401->getBody()->write(json_encode(["error" =>"Authentication error"]));
-
-    $this->logger->error("Firebase authentication error", array('email' => $email, 'token' => $token, 'exception' => $e));
-
-    return $response401;
-  }
-  $uid    = $verifiedIdToken->getClaim('sub');
-  $email  = $verifiedIdToken->getClaim('email');
-
-  //$firebaseUser = $this->firebase->getAuth()->getUser($uid);
-  $this->logger->debug("Firebase JWT checked successfully", array('uid' => $uid, 'verifiedIdToken'=>$verifiedIdToken));
-
-  $user           = $this->userDBService->getUserInfoWithEmail($email);
-
-  if($user instanceof UserEntity)
-  {
-
-    $queteur = $this->queteurDBService->getQueteurById($user->queteur_id);
-    $ul = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
-    $settings = $this->get('settings');
-
-    $jwtToken = getToken($settings, $queteur, $ul, $user);
-
-
-    $response->getBody()->write(json_encode(["token" => $jwtToken->__toString()]));
-
-    $this->userDBService->registerSuccessfulLogin($user->id);
-
-    //generate a spotfire token at the same time
-    //Token will be retrieved by client on a separate REST Call
-    $this->spotfireAccessDBService->grantAccess($user->id, $queteur->ul_id, $settings['appSettings']['sessionLength']);
-
-    return $response;
-  }
-  else
-  {
-    $this->logger->error("Authentication failed, user is not registered in RCQ or not active", array("user_id"=> $user->id, "email" =>$email));
-    $this->userDBService->registerFailedLogin($user->id);
-
-    $response401 = $response->withStatus(401);
-    $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.1']));
-
-    return $response401;
-  }
-
-
-
-
-});
-
-//generate a JWT for a user
-function getToken($settings, QueteurEntity $queteur, UniteLocaleEntity $ul, UserEntity $user)
-{
-  $jwtSecret      = $settings['jwt'        ]['secret'        ];
-  $issuer         = $settings['jwt'        ]['issuer'        ];
-  $audience       = $settings['jwt'        ]['audience'      ];
-  $deploymentType = $settings['appSettings']['deploymentType'];
-  $sessionLength  = $settings['appSettings']['sessionLength' ];
-
-  $signer   = new Sha256();
-  $issuedAt =   time() ;
-
-  $jwtToken = (new Builder())
-    ->issuedBy          ($issuer  ) // Configures the issuer (iss claim)
-    ->permittedFor      ($audience)
-    ->issuedAt          ($issuedAt)
-    ->canOnlyBeUsedAfter($issuedAt)
-    ->expiresAt         (time() + $sessionLength * 3600)
-    ->withClaim         ('username' , $queteur->nivol)
-    ->withClaim         ('id'       , $user->id      )
-    ->withClaim         ('ulId'     , $queteur->ul_id)
-    ->withClaim         ('ulName'   , $ul->name      )
-    ->withClaim         ('ulMode'   , $ul->mode      )
-    ->withClaim         ('queteurId', $queteur->id   )
-    ->withClaim         ('roleId'   , $user->role    )
-    ->withClaim         ('d'        , $deploymentType)
-    ->getToken          ($signer          , new Key($jwtSecret));
-  return $jwtToken;
-}
-
-
+/**
+ * Authenticate from Firebase with a JWT token from firebase.
+ * This token is then checked and on success, the method will retrieve the info about the user and generate a RCQ JWT
+ */
+$app->post(getPrefix().'/firebase-authenticate', FirebaseAuthenticateAction::class);
 
 /**
- * Get username/password from request, trim it.
- * If size is above 10 for username or 20 for the password  ==> authentication error
- * Then get the user object from username and check the passwords
- * if authentication succeed, get the Queteur object
- * Build the JWT Token with id, username, ulId, queteurId, roleId inside it.
- *
+ * Authenticate from AngularJS old front-end with username/password against internal DB
+ * and generate a RCQ JWT
  */
-$app->post(getPrefix().'/authenticate', function($request, $response, $args) use ($app)
-{
-  try
-  {
-    $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true );
-    $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
-    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 1500 , true );
-
-    Logger::dataForLogging(new LoggingEntity(null,  ["username"=>$username]));
-
-    $this->logger->debug("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
-
-    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/login", $username);
-
-    if($reCaptchaResponseCode > 0)
-    {// error
-
-      $this->logger->error("authenticate: ReCaptcha error ", array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
-
-      $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>"An error occurred - ReCode $reCaptchaResponseCode"]));
-
-      return $response401;
-    }
-
-    $user           = $this->userDBService->getUserInfoWithNivol($username);
-
-    if($user instanceof UserEntity &&
-      password_verify($password, $user->password))
-    {
-      $queteur = $this->queteurDBService    ->getQueteurById    ($user   ->queteur_id);
-      $ul      = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
-      $settings= $this->get('settings');
-
-      $jwtToken = getToken($settings, $queteur, $ul, $user);
-
-     
-      $response->getBody()->write(json_encode(["token"=>$jwtToken->__toString()]));
-
-      $this->userDBService->registerSuccessfulLogin($user->id);
-
-      //generate a spotfire token at the same time
-      //Token will be retrieved by client on a separate REST Call
-      $this->spotfireAccessDBService->grantAccess($user->id , $queteur->ul_id,   $settings['appSettings']['sessionLength' ]);
-
-      return $response;
-    }
-    else if($user instanceof UserEntity)
-    {//we found the user, but password is not good
-
-      $this->logger->error("Authentication failed, wrong password", array("user_id"=> $user->id, "nivol" =>$username));
-      $this->userDBService->registerFailedLogin($user->id);
-
-      $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.1']));
-
-      return $response401;
-    }
-    else
-    {
-      $this->logger->error("Authentication failed, response is not an UserEntity ", array("username" => $username, "user" => $user));
-      $this->userDBService->registerFailedLogin($user->id);
-
-      $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.2']));
-
-      return $response401;
-    }
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->error("unexpected exception during authentication", array("Exception"=>$e,  	"username" =>	$username, "password" => $password, token => $token  ));
-
-    $response401 = $response->withStatus(401);
-    $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 3.', "ex"=>json_encode($e)]));
-    return $response401;
-  }
-});
-
+$app->post(getPrefix().'/authenticate'         , AuthenticateAction::class);
 
 /**
  * for the user with the specified nivol, update the 'init_passwd_uuid' and 'init_passwd_date' field in DB
  * and send the user an email with a link, to reach the reset password form
  *
  */
-
-$app->post(getPrefix().'/sendInit', function ($request, $response, $args) use ($app)
-{
-  $username = "";
-  try
-  {
-    $username = $this->clientInputValidator->validateString("username", $request->getParsedBodyParam("username" ), 20  , true);
-    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true);
-
-    Logger::dataForLogging(new LoggingEntity(null , ["username"=>$username]));
-    
-    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/sendInit", $username);
-
-    if($reCaptchaResponseCode > 0)
-    {// error
-
-      $this->logger->error("sendInit: ReCaptcha error ", array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
-
-      $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>'an error occurred. Code $reCaptchaResponseCode']));
-
-      return $response401;
-    }
-
-    $uuid          = $this->userDBService->sendInit($username);
-
-    if($uuid != null)
-    {
-      $queteur = $this->queteurDBService->getQueteurByNivol($username);
-      $this->mailer->sendInitEmail($queteur, $uuid);
-
-      //protect email address
-      $email = substr($queteur->email, 0, 2)."...@...".substr($queteur->email,-6, 6);
-      $response->getBody()->write(json_encode(["success"=>true,"email"=>$email]));
-      return $response;
-
-    }
-    else
-    {//the user do not have an account
-      $this->logger->error("sendInit: user do not have an account ", array('username' => $username));
-      $response->getBody()->write(json_encode(["success"=>false]));
-      return $response;
-    }
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->error("unexpected exception during sendInit", array("username"=>$username, "Exception"=>$e));
-    //TODO remove exception
-    $response->getBody()->write(json_encode(["success"=>false, "ex"=>$e]));
-    return $response;
-  }
-
-});
-
+$app->post(getPrefix().'/sendInit', SendPasswordInitializationMailAction::class);
 
 /**
  * Get user information from the UUID
  * Used in the reinit password process
- *
  */
-$app->get(getPrefix().'/getInfoFromUUID', function ($request, $response, $args) use ($app)
-{
-  $uuid ="";
-  try
-  {
-    $uuid     = $this->clientInputValidator->validateString("uuid"    , $request->getParam("uuid"     ), 36  , true, ClientInputValidator::$UUID_VALIDATION);
-    $token    = $this->clientInputValidator->validateString("token"   , $request->getParam("token"    ), 500 , true );
-
-    Logger::dataForLogging(new LoggingEntity(null, ["uuid"=>$uuid]));
-
-    $appUrl = $this->get('settings')['appSettings']['appUrl'];
-    if($appUrl == "http://localhost:3000/")
-    {//ReCaptcha fails systematically for localhost ==> disable
-      $reCaptchaResponseCode = 0;
-    }
-    else
-    {
-      $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/getUserInfoWithUUID", "getInfoFromUUID");
-    }
-
-
-    if($reCaptchaResponseCode > 0)
-    {// error
-      $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>"an error occurred. Code $reCaptchaResponseCode"]));
-
-      return $response401;
-    }
-
-    if (strlen($uuid) != 36)
-    {
-      $response->getBody()->write(json_encode(["success"=>false]));
-      return $response;
-    }
-
-    $user = $this->userDBService->getUserInfoWithUUID($uuid);
-    if ($uuid != null)
-    {
-      $queteur = $this->queteurDBService->getQueteurById($user->queteur_id);
-
-      $response->getBody()->write(json_encode([
-        "success"       => true,
-        "nivol"         => $queteur->nivol ]));
-
-      return $response;
-
-    }
-    else
-    {//the user do not have an account
-      $response->getBody()->write(json_encode(["success"=>false]));
-      return $response;
-    }
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->error("unexpected exception during getInfoFromUUID", array("uuid"=>$uuid, "Exception"=>$e));
-
-    $response->getBody()->write(json_encode(["success"=>false]));
-    return $response;
-  }
-});
+$app->get(getPrefix().'/getInfoFromUUID', GetUserInfoFromUUIDAction::class);
 
 /**
  * save new password of user
  */
-$app->post(getPrefix().'/resetPassword', function ($request, $response, $args) use ($app)
-{
-  try
-  {
-    $uuid     = $this->clientInputValidator->validateString("uuid"    , $request->getParsedBodyParam("uuid"     ), 36  , true, ClientInputValidator::$UUID_VALIDATION);
-    $password = $this->clientInputValidator->validateString("password", $request->getParsedBodyParam("password" ), 60  , true );
-    $token    = $this->clientInputValidator->validateString("token"   , $request->getParsedBodyParam("token"    ), 500 , true );
-
-    Logger::dataForLogging(new LoggingEntity(null, ["uuid"=>$uuid]));
-
-    $reCaptchaResponseCode = $this->reCaptcha->verify($token, "rcq/resetPassword", "getInfoFromUUID");
-
-    if($reCaptchaResponseCode > 0)
-    {// error
-      $response401 = $response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>"an error occurred. Code $reCaptchaResponseCode"]));
-
-      return $response401;
-    }
-
-    $user          = $this->userDBService->getUserInfoWithUUID($uuid);
-
-    if($user instanceof UserEntity)
-    {
-      $success = $this->userDBService->resetPassword($uuid, $password);
-
-      if($success)
-      {
-        $queteur          = $this->queteurDBService->getQueteurById($user->queteur_id);
-
-        $this->mailer->sendResetPasswordEmailConfirmation($queteur);
-
-        $response->getBody()->write(json_encode(["success"=>true, "email" => $queteur->email]));
-        return $response;
-      }
-    }
-
-    //the user do not have an account
-    $response->getBody()->write(json_encode(["success"=>false]));
-    return $response;
-
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->error("unexpected exception during resetPassword", array("uuid"=>$uuid, "Exception"=>$e));
-    $response->getBody()->write(json_encode(["success"=>false]));
-    return $response;
-  }
-});
+$app->post(getPrefix().'/resetPassword', ResetPassword::class);

@@ -1,7 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-use RedCrossQuest\Service\Logger;
+use Psr\Log\LoggerInterface;
 
 class NamedDonationEntity extends Entity
 {
@@ -58,10 +58,10 @@ class NamedDonationEntity extends Entity
      * and create the class
      *
      * @param array $data The data to use to create
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      * @throws \Exception if a parse Date or JSON fails
      */
-    public function __construct(array $data, Logger $logger)
+    public function __construct(array $data, LoggerInterface $logger)
     {
       parent::__construct($logger);
 

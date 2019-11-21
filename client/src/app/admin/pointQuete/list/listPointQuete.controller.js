@@ -37,7 +37,7 @@
         searchParams['admin_ul_id']=vm.admin_ul_id;
       }
 
-      vm.pointsQuete = PointQueteResource.query(searchParams).$promise.then(handleResult);
+      vm.pointsQuete = PointQueteResource.search(searchParams).$promise.then(handleResult);
 
     };
 

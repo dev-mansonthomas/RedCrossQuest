@@ -2,7 +2,8 @@
 namespace RedCrossQuest\Entity;
 
 
-use RedCrossQuest\Service\Logger;
+use Carbon\Carbon;
+use Psr\Log\LoggerInterface;
 
 class TroncQueteurEntity extends Entity
 {
@@ -17,21 +18,28 @@ class TroncQueteurEntity extends Entity
   public $queteur_id       ;
   /**
    * Full queteur object, initialized by $routes.php under some circumstances
+   * @var QueteurEntity
    */
   public $queteur;
 
   /**
    * Full point_quete object, initialized by $routes.php under some circumstances
+   * @var PointQueteEntity
    */
   public $point_quete;
 
   public $point_quete_id   ;
   public $tronc_id         ;
 
+  /** @var Carbon */
   public $depart_theorique ;
+  /** @var Carbon */
   public $depart           ;
+  /** @var Carbon */
   public $retour           ;
+  /** @var Carbon */
   public $comptage         ;
+  /** @var Carbon */
   public $last_update      ;
 
   public $last_update_user_id;
@@ -86,18 +94,24 @@ class TroncQueteurEntity extends Entity
   public $weight;
   public $time_spent_in_hours;
 
+  //when searching for a tronc on Depart screen
+  public $troncFromPreviousYear;
+  public $troncQueteurIsInAnIncorrectState;
+  public $queteHasNotStartedYet;
+  public $departAlreadyRegistered;
 
-  protected $_fieldList = ['id','queteur_id','queteur','point_quete','point_quete_id','tronc_id','depart_theorique','depart','retour','comptage','last_update','last_update_user_id','euro500','euro200','euro100','euro50','euro20','euro10','euro5','euro2','euro1','cents50','cents20','cents10','cents5','cents2','cent1','don_cheque','don_creditcard','foreign_coins','foreign_banknote','notes_depart_theorique','notes_retour','notes_retour_comptage_pieces','notes_update','last_name','first_name','deleted','tronc_queteur_id','insert_date','preparationAndDepart','coins_money_bag_id','bills_money_bag_id','don_cb_total_number','don_cheque_number','amount','weight','time_spent_in_hours'];
+
+  protected $_fieldList = ['id','queteur_id','queteur','point_quete','point_quete_id','tronc_id','depart_theorique','depart','retour','comptage','last_update','last_update_user_id','euro500','euro200','euro100','euro50','euro20','euro10','euro5','euro2','euro1','cents50','cents20','cents10','cents5','cents2','cent1','don_cheque','don_creditcard','foreign_coins','foreign_banknote','notes_depart_theorique','notes_retour','notes_retour_comptage_pieces','notes_update','last_name','first_name','deleted','tronc_queteur_id','insert_date','preparationAndDepart','coins_money_bag_id','bills_money_bag_id','don_cb_total_number','don_cheque_number','amount','weight','time_spent_in_hours', 'troncFromPreviousYear', 'troncQueteurIsInAnIncorrectState', 'queteHasNotStartedYet','departAlreadyRegistered'];
 
    /**
     * Accept an array of data matching properties of this class
     * and create the class
     *
     * @param array $data The data to use to create
-    * @param Logger $logger
+    * @param LoggerInterface $logger
     * @throws \Exception if a parse Date or JSON fails
     */
-    public function __construct(array $data, Logger $logger)
+    public function __construct(array $data, LoggerInterface $logger)
     {
       parent::__construct($logger);
 
@@ -231,8 +245,11 @@ class TroncQueteurEntity extends Entity
       unset($this->first_name           );
       unset($this->last_name            );
       unset($this->clientInputValidator );
-
-
+      unset($this->troncFromPreviousYear);
+      unset($this->troncQueteurIsInAnIncorrectState );
+      unset($this->queteHasNotStartedYet            );
+      unset($this->departAlreadyRegistered          );
+      
       return $this;
     }
 }

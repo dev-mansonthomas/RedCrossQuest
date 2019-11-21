@@ -4,9 +4,8 @@
 namespace RedCrossQuest\Service;
 
 
-use Google\Cloud\Logging\PsrLogger;
 use Psr\Log\LoggerInterface;
-use \RedCrossQuest\Entity\LoggingEntity;
+use RedCrossQuest\Entity\LoggingEntity;
 
 class Logger implements LoggerInterface
 {
@@ -14,7 +13,7 @@ class Logger implements LoggerInterface
   private $psrLogger;
   private $rcqInfo;
 
-  public function __construct(PsrLogger $psrLogger, string $rcqVersion, string $rcqEnv)
+  public function __construct(LoggerInterface $psrLogger, string $rcqVersion, string $rcqEnv)
   {
     $this->psrLogger  = $psrLogger  ;
     $this->rcqInfo    = ["rcqVersion" => $rcqVersion, "rcqEnv" =>  $rcqEnv];

@@ -3,17 +3,15 @@
 namespace RedCrossQuest\BusinessService;
 
 
+use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\DBService\MailingDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\Entity\MailingInfoEntity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
-
 use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\MailService;
-
-use Carbon\Carbon;
 
 
 class EmailBusinessService

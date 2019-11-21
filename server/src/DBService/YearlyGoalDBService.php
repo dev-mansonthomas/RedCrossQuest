@@ -3,8 +3,8 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
-use \RedCrossQuest\Entity\YearlyGoalEntity;
 use PDOException;
+use RedCrossQuest\Entity\YearlyGoalEntity;
 
 class YearlyGoalDBService extends DBService
 {

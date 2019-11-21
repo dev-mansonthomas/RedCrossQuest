@@ -4,8 +4,8 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
-use \RedCrossQuest\Entity\UniteLocaleEntity;
 use PDOException;
+use RedCrossQuest\Entity\UniteLocaleEntity;
 
 class UniteLocaleDBService extends DBService
 {

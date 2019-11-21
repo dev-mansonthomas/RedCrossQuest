@@ -3,8 +3,8 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
-use \RedCrossQuest\Entity\TroncEntity;
 use PDOException;
+use RedCrossQuest\Entity\TroncEntity;
 
 class TroncDBService extends DBService
 {
@@ -12,7 +12,7 @@ class TroncDBService extends DBService
   /**
    * search all tronc, that are enabled, if query is specified, search on the ID
    * @param string  $query    search query
-   * @param boolean $active   search active or incative troncs
+   * @param boolean $active   search active or incative troncs, if null, all troncs are returned
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $type  Id of the type of tronc, if null, search all types.
    * @return TroncEntity[] list of troncs
@@ -20,11 +20,10 @@ class TroncDBService extends DBService
    * @throws \Exception in other situations, possibly : parsing error in the entity
    *
    */
-    public function getTroncs(string $query=null, int $ulId, bool $active, ?int $type )
+    public function getTroncs(?string $query, int $ulId, ?bool $active, ?int $type )
     {
 
-      $parameters = ["ul_id"  => $ulId,
-                     'enabled'=> $active===true?"1":"0" ];
+      $parameters = ["ul_id"  => $ulId];
       $sql = "
 SELECT `id`,
        `ul_id`,
@@ -33,14 +32,22 @@ SELECT `id`,
        `notes`,
        `type`
 FROM   `tronc` as t
-WHERE enabled = :enabled
-AND   t.ul_id = :ul_id
+WHERE  t.ul_id = :ul_id
 ";
+
+      if($active != null)
+      {
+        $parameters[ "enabled"] = $active===true?"1":"0";
+        $sql .="
+        AND    enabled = :enabled
+";
+      }
+
       if($query != null)
       {
         $parameters[ "query"] =$query;
         $sql .="
-AND CONVERT(id, CHAR) like concat(:query,'%')
+        AND CONVERT(id, CHAR) like concat(:query,'%')
 ";
       }
 
@@ -48,7 +55,7 @@ AND CONVERT(id, CHAR) like concat(:query,'%')
       {
         $parameters[ "type"] =$type;
         $sql .="
-AND `type` = :type
+        AND `type` = :type
 ";
       }
 
@@ -72,69 +79,7 @@ AND `type` = :type
       return $results;
     }
 
-
-/**
- * search all tronc according to a query type
- *
- * @param int $searchType
- * 0 : All troncs
- * 1 : enabled troncs
- * 2 : disabled troncs
- *
- * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
- *
- * @return TroncEntity[] array of troncs
- * @throws PDOException if the query fails to execute on the server
- * @throws \Exception in other situations, possibly : parsing error in the entity
- */
-  public function getTroncsBySearchType(int $searchType, int $ulId)
-  {
-
-    $sql = "
-SELECT 	`id`,
-        `ul_id`,
-        `created`,
-        `enabled`,
-        `notes`,
-        `type`
-FROM    `tronc` as t
-WHERE  t.ul_id = :ul_id
-";
-
-    if($searchType == "1")
-    {
-      $sql .= "
-AND t.enabled = 1
-";
-    }
-    else
-    {
-      $sql .= "
-AND t.enabled = 0
-";
-
-    }
-
-    $sql .="
-ORDER BY id ASC
-    ";
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["ul_id" => $ulId]);
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new TroncEntity($row, $this->logger);
-    }
-
-    $stmt->closeCursor();
-    return $results;
-  }
-
-
-
+    
     /**
      * Get one tronc by its ID
      *

@@ -3,10 +3,10 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
-use \RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
-use DateTime;
 use DateInterval;
+use DateTime;
 use PDOException;
+use RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
 
 class DailyStatsBeforeRCQDBService extends DBService
 {

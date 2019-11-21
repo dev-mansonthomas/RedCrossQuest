@@ -4,7 +4,7 @@
 
 angular.module('redCrossQuestClient').factory('QueteurResource', function ($resource, $localStorage)
 {
-  return $resource('/rest/:roleId/ul/:ulId/queteurs/:id',
+  return $resource('/rest/:roleId/ul/:ulId/queteurs/:id/:action',
     {
       roleId: function () { return $localStorage.currentUser.roleId},
       ulId  : function () { return $localStorage.currentUser.ulId  },
@@ -77,6 +77,14 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
           params:
             {
               action: 'listPendingQueteurRegistration'
+            }
+        },
+      approveQueteurRegistration:
+        {
+          method:'POST',
+          params:
+            {
+              action:'approveQueteurRegistration'
             }
         }
     });

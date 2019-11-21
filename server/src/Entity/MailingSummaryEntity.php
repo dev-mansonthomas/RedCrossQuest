@@ -2,7 +2,7 @@
 namespace RedCrossQuest\Entity;
 
 
-use RedCrossQuest\Service\Logger;
+use Psr\Log\LoggerInterface;
 
 class MailingSummaryEntity extends Entity
 {
@@ -15,9 +15,9 @@ class MailingSummaryEntity extends Entity
    * and create the class
    *
    * @param array $data The data to use to create
-   * @param Logger $logger
+   * @param LoggerInterface $logger
    */
-  public function __construct(array $data, Logger $logger)
+  public function __construct(array $data, LoggerInterface $logger)
   {
     parent::__construct($logger);
 

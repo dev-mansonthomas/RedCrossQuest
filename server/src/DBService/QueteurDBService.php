@@ -4,9 +4,9 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
-use RedCrossQuest\Entity\QueteurEntity;
 use PDOException;
 use Ramsey\Uuid\Uuid;
+use RedCrossQuest\Entity\QueteurEntity;
 
 
 class QueteurDBService extends DBService

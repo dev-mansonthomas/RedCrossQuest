@@ -5,12 +5,11 @@ require '../../vendor/autoload.php';
 
 
 use Carbon\Carbon;
-
+use PDOException;
 use RedCrossQuest\Entity\BillsMoneyBagSummaryEntity;
 use RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity;
 use RedCrossQuest\Entity\TroncInUseEntity;
-use \RedCrossQuest\Entity\TroncQueteurEntity;
-use PDOException;
+use RedCrossQuest\Entity\TroncQueteurEntity;
 
 
 class TroncQueteurDBService extends DBService

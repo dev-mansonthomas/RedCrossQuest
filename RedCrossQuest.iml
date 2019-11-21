@@ -18,6 +18,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/cakephp/utility" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/container-interop/container-interop" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/doctrine/lexer" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/egulias/email-validator" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/fig/http-message-util" />
@@ -40,6 +41,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/guzzlehttp/guzzle" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/jeremeamia/superclosure" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/clock" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/firebase-php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/firebase-tokens" />
@@ -50,13 +52,20 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/mtdowling/jmespath.php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/nesbot/carbon" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/nikic/fast-route" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/nikic/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/invoker" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/php-di" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/phpdoc-reader" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/phpmailer/phpmailer" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/phpseclib/phpseclib" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/pimple/pimple" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-server-handler" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-server-middleware" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/simple-cache" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/ralouphie/getallheaders" />
@@ -67,6 +76,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/sendgrid/php-http-client" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/sendgrid/sendgrid" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/slim/php-view" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/slim/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/slim/slim" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/superbalist/flysystem-google-storage" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/config" />
@@ -74,7 +84,9 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/filesystem" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php56" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php73" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-util" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/service-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/translation-contracts" />

@@ -3,7 +3,7 @@
  */
 
 angular.module('redCrossQuestClient').factory('TroncQueteurResource', function ($resource, $localStorage) {
-  return $resource('/rest/:roleId/ul/:ulId/tronc_queteur/:id',
+  return $resource('/rest/:roleId/ul/:ulId/tronc_queteur/:id/:action',
     {
       roleId: function () { return $localStorage.currentUser.roleId},
       ulId  : function () { return $localStorage.currentUser.ulId  },

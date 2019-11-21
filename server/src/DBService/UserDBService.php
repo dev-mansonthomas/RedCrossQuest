@@ -3,9 +3,9 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
+use PDOException;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\Entity\UserEntity;
-use PDOException;
 use RedCrossQuest\Exception\UserAlreadyExistsException;
 
 class UserDBService extends DBService
