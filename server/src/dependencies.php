@@ -340,30 +340,5 @@ $c->get(YearlyGoalDBService::class)
 
 };//END RETURN FUNCTION
 
-// DIC configuration
-$container = $app->getContainer();
 
 
-
-
-$c['errorHandler'] = function (\Slim\Container $c) {
-  return function (\Psr\Http\Message\ServerRequestInterface $request,
-                   \Psr\Http\Message\ResponseInterface $response,
-                   \Exception $exception) use ($c)
-  {
-    $logger = $c->get('logger');
-
-    $logger->error("errorHandler: An Error Occurred",
-      array(
-        'URI'      => $request->getUri    (),
-        'headers'  => $request->getHeaders(),
-        'body'     => $request->getBody   ()->getContents(),
-        'exception'=> $exception)
-    );
-
-
-    return $c['response']->withStatus(500)
-      ->withHeader('Content-Type', 'text/html')
-      ->write('Something went wrong! - '.$exception->getMessage());
-  };
-};
