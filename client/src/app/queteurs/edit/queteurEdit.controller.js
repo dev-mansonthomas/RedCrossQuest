@@ -272,8 +272,13 @@
             //otherwise Angular make a post on queteur/id, which match the update queteur( put))
             vm.current.registration_id = vm.current.id;
             delete vm.current.id;
+            vm.current.$approveQueteurRegistration(vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
           }
-          vm.current.approveQueteurRegistration(vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
+          else
+          {
+            vm.current.$save(vm.savedSuccessfullyFunction, vm.errorWhileSavingFunction);
+          }
+
         }
       }
     };
