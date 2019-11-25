@@ -8,16 +8,11 @@
 
 require '../../vendor/autoload.php';
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use RedCrossQuest\Entity\LoggingEntity;
-use RedCrossQuest\Entity\PointQueteEntity;
 use RedCrossQuest\routes\routesActions\pointsQuetes\CreatePointQuete;
 use RedCrossQuest\routes\routesActions\pointsQuetes\GetPointQuete;
 use RedCrossQuest\routes\routesActions\pointsQuetes\ListPointsQuetes;
 use RedCrossQuest\routes\routesActions\pointsQuetes\SearchPointsQuetes;
 use RedCrossQuest\routes\routesActions\pointsQuetes\UpdatePointQuete;
-use RedCrossQuest\Service\Logger;
 
 /********************************* POINT_QUETE ****************************************/
 
