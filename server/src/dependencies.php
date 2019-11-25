@@ -247,8 +247,9 @@ return function (ContainerBuilder $containerBuilder)
      */
     MailService::class => function (ContainerInterface $c)
     {
-      $settings =  $c->get('settings')['appSettings']['email'];
-      return new MailService($c->get(LoggerInterface::class),  $settings['sendgrid.api_key'], $settings['sendgrid.sender'], $c['settings']['appSettings']['deploymentType']);
+      $settings       = $c->get('settings')['appSettings']['email'];
+      $deploymentType = $c->get('settings')['appSettings']['deploymentType'];
+      return new MailService($c->get(LoggerInterface::class),  $settings['sendgrid.api_key'], $settings['sendgrid.sender'], $deploymentType);
     },
 
     /**
