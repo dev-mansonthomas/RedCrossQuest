@@ -19,7 +19,7 @@ use RedCrossQuest\routes\routesActions\pointsQuetes\UpdatePointQuete;
 /**
  * fetch point de quete for an UL
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id}', GetPointQuete::class);
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id:\d+}', GetPointQuete::class);
 
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', ListPointsQuetes::class);
 
