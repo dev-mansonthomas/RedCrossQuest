@@ -47,7 +47,7 @@ class CreateYearOfDailyStats extends Action
 
     $ulId = $this->decodedToken->getUlId();
     $this->validateSentData([
-      ClientInputValidatorSpecs::withInteger('year', $this->getParam('year'), 2050, false)
+      ClientInputValidatorSpecs::withInteger('year', $this->parsedBody['year'], 2050, false)
     ]);
 
     $year  = $this->validatedData["year"];
