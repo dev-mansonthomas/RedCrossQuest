@@ -44,11 +44,6 @@ class AuthenticateAction extends AuthenticateAbstractAction
    */
   private $spotfireAccessDBService;
 
-  /**
-   * @var SpotfireAccessDBService
-   */
-  private $firebase;
-
 
   /**
    * @param LoggerInterface $logger
@@ -66,8 +61,7 @@ class AuthenticateAction extends AuthenticateAbstractAction
                               UserDBService           $userDBService,
                               QueteurDBService        $queteurDBService,
                               UniteLocaleDBService    $uniteLocaleDBService,
-                              SpotfireAccessDBService $spotfireAccessDBService,
-                              Firebase                $firebase)
+                              SpotfireAccessDBService $spotfireAccessDBService)
   {
     parent::__construct($logger, $clientInputValidator);
     
@@ -76,8 +70,6 @@ class AuthenticateAction extends AuthenticateAbstractAction
     $this->queteurDBService       = $queteurDBService;
     $this->uniteLocaleDBService   = $uniteLocaleDBService;
     $this->spotfireAccessDBService= $spotfireAccessDBService;
-    $this->firebase               = $firebase;
-
   }
 
   /**

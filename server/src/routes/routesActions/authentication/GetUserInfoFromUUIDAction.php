@@ -33,7 +33,11 @@ class GetUserInfoFromUUIDAction extends Action
    */
   private $queteurDBService;
 
-
+  /**
+   * @Inject("settings")
+   * @var array settings
+   */
+  protected $settings;
 
 
 
@@ -66,8 +70,8 @@ class GetUserInfoFromUUIDAction extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("uuid"    , $this->parsedBody["uuid"     ], 36   , true, ClientInputValidator::$UUID_VALIDATION),
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody["token"    ], 1500 , true),
+        ClientInputValidatorSpecs::withString("uuid"    , $this->getParam("uuid" ), 36   , true, ClientInputValidator::$UUID_VALIDATION),
+        ClientInputValidatorSpecs::withString("token"   , $this->getParam("token"), 1500 , true),
       ]);
 
     $uuid  = $this->validatedData["uuid"];

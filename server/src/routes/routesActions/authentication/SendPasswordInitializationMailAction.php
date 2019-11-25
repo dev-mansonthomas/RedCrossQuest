@@ -64,6 +64,7 @@ class SendPasswordInitializationMailAction extends Action
   /**
    * @return Response
    * @throws \Exception
+   *
    */
   protected function action(): Response
   {

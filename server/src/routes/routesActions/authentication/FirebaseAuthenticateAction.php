@@ -4,6 +4,8 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use Firebase\Auth\Token\Exception\InvalidToken;
+use Kreait\Firebase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -38,10 +40,17 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
    * @var UniteLocaleDBService
    */
   private $uniteLocaleDBService;
+
   /**
    * @var SpotfireAccessDBService
    */
   private $spotfireAccessDBService;
+  
+  /**
+   * @var Firebase                $firebase
+   */
+  private $firebase;
+
 
   /**
    * @param LoggerInterface $logger
@@ -50,7 +59,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
    * @param UserDBService $userDBService
    * @param QueteurDBService $queteurDBService
    * @param UniteLocaleDBService $uniteLocaleDBService
-   * @param SpotfireAccessDBService $spotfireAccessDBService
+   * @param Firebase                $firebase
    *
    */
   public function __construct(LoggerInterface         $logger,
@@ -59,7 +68,8 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
                               UserDBService           $userDBService,
                               QueteurDBService        $queteurDBService,
                               UniteLocaleDBService    $uniteLocaleDBService,
-                              SpotfireAccessDBService $spotfireAccessDBService)
+                              SpotfireAccessDBService $spotfireAccessDBService,
+                              Firebase                $firebase)
   {
     parent::__construct($logger, $clientInputValidator);
     
@@ -68,11 +78,14 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
     $this->queteurDBService       = $queteurDBService;
     $this->uniteLocaleDBService   = $uniteLocaleDBService;
     $this->spotfireAccessDBService= $spotfireAccessDBService;
+    $this->firebase               = $firebase;
 
   }
 
   /**
    * @return Response
+   * @throws Firebase\Exception\AuthException
+   * @throws Firebase\Exception\FirebaseException
    * @throws \Exception
    */
   protected function action(): Response
@@ -114,7 +127,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
       $response401 = $this->response->withStatus(401);
       $response401->getBody()->write(json_encode(["error" =>"Authentication error"]));
 
-      $this->get(LoggerInterface::class)->error("Firebase authentication error", array('email' => $email, 'token' => $token, 'exception' => $e));
+      $this->logger->error("Firebase authentication error", array('email' => $email, 'token' => $token, 'exception' => $e));
 
       return $response401;
     }
