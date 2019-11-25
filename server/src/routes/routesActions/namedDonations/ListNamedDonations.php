@@ -44,7 +44,7 @@ class ListNamedDonations extends Action
   {
     Logger::dataForLogging(new LoggingEntity($this->decodedToken));
 
-    $ulId     = $this->decodedToken->getUlId();
+    $ulId   = $this->decodedToken->getUlId();
     $roleId = $this->decodedToken->getRoleId();
 
 
@@ -64,7 +64,11 @@ class ListNamedDonations extends Action
     $query     = $this->validatedData["q"];
     $deleted   = $this->validatedData["deleted"];
     $year      = $this->validatedData["year"];
-    $adminUlId = $this->validatedData["admin_ul_id"];
+    $adminUlId = null;
+    if(array_key_exists('admin_ul_id',$this->queryParams) && $roleId == 9)
+    {
+      $adminUlId = $this->validatedData["admin_ul_id"];
+    }
 
     $this->logger->info("searching named donation", array('q'=>$query, 'deleted'=>$deleted, 'year'=>$year, 'admin_ul_id'=>$adminUlId));
     $namedDonations = $this->namedDonationDBService->getNamedDonations($query, $deleted, $year, $adminUlId!= null && $roleId == 9? $adminUlId : $ulId);
