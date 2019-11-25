@@ -20,7 +20,7 @@ return function (ContainerInterface $c, App $app) {
 
     $logger = $c->get(LoggerInterface::class);
 
-    $logger->error("errorHandler: An Error Occurred",
+    $logger->error("Generic Error Handler - Untrapped exception reached this error handler",
       array(
         'URI'      => $request->getUri    (),
         'headers'  => $request->getHeaders(),
@@ -30,7 +30,7 @@ return function (ContainerInterface $c, App $app) {
 
     $payload = ['error' => $exception->getMessage()];
 
-    $response = $app->getResponseFactory()->createResponse();
+    $response = $app->getResponseFactory()->createResponse(500);
     $response->getBody()->write(
       json_encode($payload, JSON_UNESCAPED_UNICODE)
     );
