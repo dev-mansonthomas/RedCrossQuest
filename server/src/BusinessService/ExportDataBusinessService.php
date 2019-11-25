@@ -3,6 +3,7 @@
 namespace RedCrossQuest\BusinessService;
 
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\NamedDonationDBService;
@@ -14,6 +15,7 @@ use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\DBService\YearlyGoalDBService;
+use ZipArchive;
 
 class ExportDataBusinessService
 {
@@ -83,7 +85,7 @@ class ExportDataBusinessService
    * @param string $year  if 0, export all data, if not, export data from the specified year if applicable
    * @return array filename of the generated file, and the number of lines exported
    *
-   * @throws \Exception   if something wrong happen
+   * @throws Exception   if something wrong happen
    */
   public function exportData(string $password, int $ulId, ?string $year)
   {
@@ -148,8 +150,8 @@ class ExportDataBusinessService
       $zipFileName = "$dateTime-RedCrossQuest-DataExport-UL-$ulId".($year!= null? $year.'':'')."-".$ulNameForFileName.".zip";
 
       $zipFilePath = sys_get_temp_dir()."/".$zipFileName;
-      $z = new \ZipArchive();
-      $zipFileOpen = ($z->open($zipFilePath, \ZipArchive::CREATE));
+      $z = new ZipArchive();
+      $zipFileOpen = ($z->open($zipFilePath, ZipArchive::CREATE));
       if(true === $zipFileOpen)
       {
         $z->setPassword($password);
@@ -160,7 +162,7 @@ class ExportDataBusinessService
         {
           $filename = $ulId."-".$tableName.".csv";
           $z->addFile(sys_get_temp_dir()."/$filename", $filename);
-          $z->setEncryptionName($filename,  \ZipArchive::EM_AES_256 , $password);
+          $z->setEncryptionName($filename,  ZipArchive::EM_AES_256 , $password);
         }
         //csv files must not be deleted before closing the zip, otherwise we get file not found. as if the zip file is built on the close command
         $z->close();
@@ -178,7 +180,7 @@ class ExportDataBusinessService
         $this->logger->info("failed opening Zip",["zipFileOpen"=>$zipFileOpen]);
       }
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       $this->logger->error("Error while Exporting Data", ["YEAR" => $year, "Exception" => $e]);
       throw $e;
