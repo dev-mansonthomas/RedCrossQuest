@@ -7,6 +7,8 @@ namespace RedCrossQuest\Middleware;
 require '../../vendor/autoload.php';
 
 use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\ValidationData;
@@ -17,10 +19,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Slim\Psr7\Response;
-
-
-;
-
 
 /**
  * @property array whiteList
@@ -49,8 +47,8 @@ class AuthorisationMiddleware implements MiddlewareInterface
   /**
    * init of the constructor
    * @param Container $container the container
-   * @throws \DI\DependencyException
-   * @throws \DI\NotFoundException
+   * @throws DependencyException
+   * @throws NotFoundException
    */
   public function __construct(Container $container)
   {
@@ -174,12 +172,12 @@ class AuthorisationMiddleware implements MiddlewareInterface
       $this->logger->error("isGAE()='".isGAE()."'");
       //public path that must not go through authentication check
       if($path == getPrefix(true).'/rest/authenticate'      ||
-         $path == getPrefix(true).'firebase-authenticate'      ||
-         $path == getPrefix(true).'sendInit'          ||
-         $path == getPrefix(true).'resetPassword'     ||
-         $path == getPrefix(true).'getInfoFromUUID'   ||
-         strpos($path,getPrefix(true).'thanks_mailing/') === 0 ||
-         strpos($path,getPrefix(true).'redQuest/'      ) === 0   )
+         $path == getPrefix(true).'/rest/firebase-authenticate'      ||
+         $path == getPrefix(true).'/rest/sendInit'          ||
+         $path == getPrefix(true).'/rest/resetPassword'     ||
+         $path == getPrefix(true).'/rest/getInfoFromUUID'   ||
+         strpos($path,getPrefix(true).'/rest/thanks_mailing/') === 0 ||
+         strpos($path,getPrefix(true).'/rest/redQuest/'      ) === 0   )
       {
         $this->logger->info("Non authenticate route : $path - $uuid - ".getPrefix(true));
         return $handler->handle($request);
@@ -299,7 +297,7 @@ class DecodedToken
    * Init teh DecodedToken as an authentication failure (this->authenticated=false) with an error code
    * @param string $errorCode  the error code associated with the failed authentication request
    */
-  public function __construct( $errorCode)
+  public function __construct($errorCode)
   {
     $this->authenticated = false;
     $this->errorCode     = $errorCode;
@@ -307,16 +305,16 @@ class DecodedToken
 
   /**
    * init the DecodedToken with data decoded from the token... ;)
-   * @param boolean $authenticated  true if the token is considered as valid, false otherwise
-   * @param string  $errorCode      the string representing the error code '0004' for ex.
-   * @param string  $username       the nivol of the user
-   * @param string  $uid            the id of the user
-   * @param string  $ulId           the id of the unite local to which the user belong to
-   * @param string  $ulName         the name of the unite locale to which the user belong to
-   * @param string  $queteurId      the id in the queteur table of the user
-   * @param string  $roleId         the role id of the user (what can he do in the application)
-   * @param string  $ulMode         How the UniteLocal manage the quete (like Paris, like Marseille, like small city)
-   * @param string  $deploymentType How the application is currently deployed: test/uat/production
+   * @param boolean $authenticated true if the token is considered as valid, false otherwise
+   * @param string $errorCode the string representing the error code '0004' for ex.
+   * @param string $username the nivol of the user
+   * @param string $uid the id of the user
+   * @param string $ulId the id of the unite local to which the user belong to
+   * @param string $ulName the name of the unite locale to which the user belong to
+   * @param string $ulMode How the UniteLocal manage the quete (like Paris, like Marseille, like small city)
+   * @param string $queteurId the id in the queteur table of the user
+   * @param string $roleId the role id of the user (what can he do in the application)
+   * @param string $deploymentType How the application is currently deployed: test/uat/production
    * @return DecodedToken an instance
    */
   public static function withData(bool    $authenticated, string $errorCode,
@@ -521,5 +519,4 @@ class DecodedToken
     $this->d = $d;
   }
 }
-
 
