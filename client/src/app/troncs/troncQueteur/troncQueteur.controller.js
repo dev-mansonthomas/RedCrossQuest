@@ -174,11 +174,11 @@
 
     vm.doCancelDepart=function()
     {
-      vm.current.tronc_queteur.$cancelDepart(handleTroncQueteur, onSaveError);
+      vm.current.tronc_queteur.$cancelDepart(function(){vm.loadData(tronc_queteur_id);}, onSaveError);
     };
     vm.doCancelRetour=function()
     {
-      vm.current.tronc_queteur.$cancelRetour(handleTroncQueteur, onSaveError);
+      vm.current.tronc_queteur.$cancelRetour(function(){vm.loadData(tronc_queteur_id);}, onSaveError);
     };
 
     vm.cancelRetour=function()
