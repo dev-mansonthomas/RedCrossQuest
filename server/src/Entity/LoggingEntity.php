@@ -17,18 +17,12 @@ class LoggingEntity
    * @property array Other information
    */
   private $otherData;
-
-  /**
-   * @property string path of the request
-   */
-  private $url;
-
-
+  
   public function __construct(DecodedToken $decodedToken = null, array $otherData = array())
   {
     $this->decodedToken = isset($decodedToken) ? $decodedToken->toArray() : [];
     $this->otherData    = $otherData;
-    $this->url          = $_SERVER["REQUEST_URI"];
+
   }
   //return this class as an associative array, otherData added if exists.
   public function loggingInfoArray()
