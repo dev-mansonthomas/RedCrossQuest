@@ -16,7 +16,13 @@ class Logger implements LoggerInterface
   public function __construct(LoggerInterface $psrLogger, string $rcqVersion, string $rcqEnv)
   {
     $this->psrLogger  = $psrLogger  ;
-    $this->rcqInfo    = ["rcqVersion" => $rcqVersion, "rcqEnv" =>  $rcqEnv];
+    $this->rcqInfo    =
+      [
+        "rcqVersion" => $rcqVersion,
+        "rcqEnv"     => $rcqEnv,
+        "uri"        =>$_SERVER["REQUEST_URI"],
+        "httpVerb"   =>$_SERVER["REQUEST_METHOD"]
+      ];
   }
 
   /**
