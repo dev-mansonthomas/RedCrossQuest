@@ -44,7 +44,7 @@ class GetTroncQueteur extends Action
    */
   protected function action(): Response
   {
-      Logger::dataForLogging(new LoggingEntity($this->decodedToken));
+    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
 
     $this->validateSentData(
       [
