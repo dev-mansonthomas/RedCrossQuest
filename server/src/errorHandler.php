@@ -22,10 +22,11 @@ return function (ContainerInterface $c, App $app) {
 
     $logger->error("Generic Error Handler - Untrapped exception reached this error handler",
       array(
-        'URI'      => $request->getUri    (),
-        'headers'  => $request->getHeaders(),
-        'body'     => $request->getBody   ()->getContents(),
-        'exception'=> $exception));
+        'URI'       => $request->getUri    (),
+        'httpMethod'=> $request->getMethod (),
+        'headers'   => $request->getHeaders(),
+        'body'      => $request->getBody   ()->getContents(),
+        'exception' => $exception));
 
 
     $payload = ['error' => $exception->getMessage()];
