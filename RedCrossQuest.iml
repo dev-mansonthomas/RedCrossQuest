@@ -17,7 +17,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/cakephp/log" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/cakephp/utility" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/container-interop/container-interop" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/doctrine/lexer" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/egulias/email-validator" />
@@ -33,6 +32,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud-pubsub" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/cloud-storage" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/common-protos" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/crc32" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/gax" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/grpc-gcp" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/protobuf" />
@@ -59,7 +59,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/phpdoc-reader" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/phpmailer/phpmailer" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/phpseclib/phpseclib" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/pimple/pimple" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/container" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-factory" />

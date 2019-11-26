@@ -4,10 +4,8 @@
     <include_path>
       <path value="$PROJECT_DIR$/server/vendor/psr/container" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/yaml" />
-      <path value="$PROJECT_DIR$/server/vendor/container-interop/container-interop" />
       <path value="$PROJECT_DIR$/server/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/server/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/server/vendor/pimple/pimple" />
       <path value="$PROJECT_DIR$/server/vendor/phpmailer/phpmailer" />
       <path value="$PROJECT_DIR$/server/vendor/slim/php-view" />
       <path value="$PROJECT_DIR$/server/vendor/slim/slim" />
@@ -86,6 +84,7 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php56" />
       <path value="$PROJECT_DIR$/server/vendor/slim/psr7" />
       <path value="$PROJECT_DIR$/server/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/server/vendor/google/crc32" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
