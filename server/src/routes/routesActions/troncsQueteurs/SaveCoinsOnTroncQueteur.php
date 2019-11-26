@@ -51,7 +51,7 @@ class SaveCoinsOnTroncQueteur extends Action
   {
     parent::__construct($logger, $clientInputValidator);
     $this->troncQueteurDBService = $troncQueteurDBService;
-
+    $this->pubSubService         = $pubSubService;
   }
 
   /**
