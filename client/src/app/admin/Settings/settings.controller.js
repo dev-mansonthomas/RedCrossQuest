@@ -29,7 +29,7 @@
 
     vm.reload=function()
     {
-      UniteLocaleResource.query().$promise.then(handleResult);
+      UniteLocaleResource.query({id:$localStorage.guiSettings.ul.id}).$promise.then(handleResult);
       SettingsResource.getULSettings().$promise.then(handleResultAppSettings);
     };
 
@@ -75,7 +75,7 @@
       vm.savedSuccessfully= true;
       vm.errorWhileSaving = false;
       $timeout(function () { vm.savedSuccessfully=false; }, 5000);
-      SettingsResource.query().$promise.then(function(ulSettings)
+      UniteLocaleResource.query({id:$localStorage.guiSettings.ul.id}).$promise.then(function(ulSettings)
         {
           $localStorage.guiSettings.ul = ulSettings;
         });

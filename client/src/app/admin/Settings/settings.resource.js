@@ -34,10 +34,7 @@ angular.module('redCrossQuestClient').factory('SettingsResource', function ($res
       },
       //Get the application settings
       getULSettings: {
-        method: 'GET',
-        params: {
-          action: 'getULSettings'
-        }
+        method: 'GET'
       },
       createYear: {
         method: 'POST'
