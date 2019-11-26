@@ -3,7 +3,7 @@
  */
 
 angular.module('redCrossQuestClient').factory('PointQueteResource', function($resource, $localStorage) {
-  return $resource('/rest/:roleId/ul/:ulId/pointQuetes/:id',
+  return $resource('/rest/:roleId/ul/:ulId/pointQuetes/:id/:action',
     {
       roleId: function () { return $localStorage.currentUser.roleId},
       ulId  : function () { return $localStorage.currentUser.ulId  },
@@ -11,6 +11,13 @@ angular.module('redCrossQuestClient').factory('PointQueteResource', function($re
     }, {
     update: {
       method: 'PUT' // this method issues a PUT request
-    }
+    },
+    search:{
+        method: 'GET',
+        isArray: true,
+        params: {
+          action: 'search'
+        }
+      }
   });
 });

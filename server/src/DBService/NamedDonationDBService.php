@@ -3,8 +3,8 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
-use \RedCrossQuest\Entity\NamedDonationEntity;
 use PDOException;
+use RedCrossQuest\Entity\NamedDonationEntity;
 
 
 class NamedDonationDBService extends DBService

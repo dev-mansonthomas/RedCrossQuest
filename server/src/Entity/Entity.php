@@ -9,18 +9,27 @@
 namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
+use Psr\Log\LoggerInterface;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 class Entity
 {
+  /**
+   * @var LoggerInterface
+   */
   protected $logger;
+  /**
+   * @var ClientInputValidator
+   */
+  protected $clientInputValidator;
+
+
   /***
     @var string[]
    */
   protected $_fieldList
 ;
-  public function __construct(Logger $logger)
+  public function __construct(LoggerInterface $logger)
   {
     $this->logger               = $logger;
     $this->clientInputValidator = new ClientInputValidator($logger);

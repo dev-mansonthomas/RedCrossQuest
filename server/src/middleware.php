@@ -1,13 +1,10 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: tmanson
- * Date: 03/04/2017
- * Time: 11:32
- */
-
+declare(strict_types=1);
 require '../../vendor/autoload.php';
 
-use \RedCrossQuest\Middleware\AuthorisationMiddleware;
+use RedCrossQuest\Middleware\AuthorisationMiddleware;
+use Slim\App;
 
-$app->add( new AuthorisationMiddleware($app) );
+return function (App $app) {
+  $app->add(AuthorisationMiddleware::class);
+};

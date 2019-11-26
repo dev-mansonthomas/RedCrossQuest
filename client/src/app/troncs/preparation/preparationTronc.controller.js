@@ -247,7 +247,7 @@
 
       if(vm.current.lieuDeQuete == null)
         return true;
-      
+
       return vm.pointsQueteHash[vm.current.lieuDeQuete.id].minor_allowed === true;
     };
 
@@ -359,10 +359,20 @@
                 TroncQueteurResource, errorOnSave, troncId, saveFunction, DateTimeHandlingService)
   {
 
+    //this can be triggered because the current tronc is already setted to someone else
+    //or the queteur already has a tronc setted. ==>  queteurHasAnotherTronc is here to check that and set the list of tronc_id in an array
+    // it's likely that there's only one, so we delete the first of the array
+    var queteurHasAnotherTronc=false;
+    var otherTroncs=[];
     for(var i=0, counti=errorOnSave.length;i<counti;i++)
     {
       errorOnSave[i].depart           = DateTimeHandlingService.handleServerDate(errorOnSave[i].depart          ).stringVersion;
       errorOnSave[i].depart_theorique = DateTimeHandlingService.handleServerDate(errorOnSave[i].depart_theorique).stringVersion;
+      if(errorOnSave[i].tronc_id !== troncId)
+      {
+        queteurHasAnotherTronc=true;
+        otherTroncs[otherTroncs.length]= errorOnSave[i].tronc_id;
+      }
     }
 
     $scope.troncInfos=errorOnSave;
@@ -370,7 +380,7 @@
 
     $scope.deleteNonReturnedTronc = function ()
     {
-      TroncQueteurResource.deleteNonReturnedTroncQueteur({'id':troncId}, function()
+      TroncQueteurResource.deleteNonReturnedTroncQueteur({'id':queteurHasAnotherTronc?otherTroncs[0]:troncId}, function()
       {
         saveFunction();
         $uibModalInstance.close();

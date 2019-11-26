@@ -5,18 +5,19 @@
 angular.module('redCrossQuestClient').factory('SettingsResource', function ($resource, $localStorage)
 {
   return $resource(
-    '/rest/:roleId/settings/ul/:id',
+    '/rest/:roleId/settings/ul/:id/:action',
     {
       roleId: function () {return $localStorage.currentUser.roleId},
       id    : function () {return $localStorage.currentUser.ulId  }
     },
     {
-      //get the UL name, address, contact details etc...
-      query:
-        {
-          method: 'GET',
-          isArray: false
-        },
+//move to UniteLocale
+//get the UL name, address, contact details etc...
+//      query:
+//        {
+//          method: 'GET',
+//          isArray: false
+//        },
       //get setup info to determine if the administator has do to something
       getSetupStatus: {
         method: 'GET',
@@ -33,10 +34,7 @@ angular.module('redCrossQuestClient').factory('SettingsResource', function ($res
       },
       //Get the application settings
       getULSettings: {
-        method: 'GET',
-        params: {
-          action: 'getULSettings'
-        }
+        method: 'GET'
       },
       createYear: {
         method: 'POST'

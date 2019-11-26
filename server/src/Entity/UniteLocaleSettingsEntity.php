@@ -1,7 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-use RedCrossQuest\Service\Logger;
+use Psr\Log\LoggerInterface;
 
 class UniteLocaleSettingsEntity  extends Entity
 {
@@ -20,10 +20,10 @@ class UniteLocaleSettingsEntity  extends Entity
    * Accept an array of data matching properties of this class
    * and create the class
    * @param array $data The data to use to create
-   * @param Logger $logger
+   * @param LoggerInterface $logger
    * @throws \Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data, Logger $logger)
+  public function __construct(array $data, LoggerInterface $logger)
   {
     parent::__construct($logger);
     $this->getInteger ('id'                      , $data);

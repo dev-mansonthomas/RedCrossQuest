@@ -1,138 +1,20 @@
 <?php
 
 /********************************* Application Settings Exposed to GUI ****************************************/
-
-use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
-use \RedCrossQuest\Entity\UniteLocaleEntity;
-
 require '../../vendor/autoload.php';
-use \RedCrossQuest\Service\Logger;
-use \RedCrossQuest\Entity\LoggingEntity;
+
+use RedCrossQuest\routes\routesActions\settings\GetAllULSettings;
+use RedCrossQuest\routes\routesActions\settings\GetULSettings;
+use RedCrossQuest\routes\routesActions\settings\GetULSetupStatus;
+use RedCrossQuest\routes\routesActions\settings\UpdateRedQuestSettings;
+use RedCrossQuest\routes\routesActions\settings\UpdateULSettings;
 
 
+$app->get(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}', GetULSettings::class);
 
+$app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getSetupStatus', GetULSetupStatus::class);
 
-/**
- * get the application settings
- */
-$app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response, $args)
-{
-  $decodedToken = $request->getAttribute('decodedJWT');
-  Logger::dataForLogging(new LoggingEntity($decodedToken));
-  try
-  {
-    $params = $request->getQueryParams();
-    $ulId   = $decodedToken->getUlId  ();
-    $roleId = $decodedToken->getRoleId();
-    $userId = $decodedToken->getUid   ();
+$app->get(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/getAllSettings', GetAllULSettings::class);
 
-    if(array_key_exists('action', $params))
-    {
-      $action   = $this->clientInputValidator->validateString("action", $params['action'], 20 , false );
-
-      if($action == "getSetupStatus")
-      {
-        return $response->getBody()->write(json_encode($this->settingsBusinessService->getSetupStatus($ulId)));
-      }
-      else if($action == "getAllSettings")
-      {
-        $this->logger->error("1");
-        $guiSettings['mapKey'        ] = $this->settings['appSettings']['gmapAPIKey'     ];
-        $guiSettings['RGPDVideo'     ] = $this->settings['appSettings']['RGPDVideo'      ];
-        $guiSettings['RedQuestDomain'] = $this->settings['appSettings']['RedQuestDomain' ];
-
-        $this->logger->error("2");
-        $guiSettings['ul'            ] = $this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId);
-        $this->logger->error("3");
-        $guiSettings['ul_settings'   ] = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
-        $this->logger->error("4");
-        $guiSettings['user'          ] = $this->userDBService                ->getUserInfoWithUserId($userId, $ulId, $roleId);
-        $this->logger->error("5");
-        $guiSettings['RCQVersion'    ] = $this->RCQVersion;
-        $guiSettings['FirstDay'      ] = DailyStatsBeforeRCQDBService::getCurrentQueteStartDate();
-        $this->logger->error("6");
-
-        return $response->getBody()->write(json_encode($guiSettings));
-      }
-      else if($action == "getULSettings")
-      {
-        $guiSettings['ul_settings'   ] = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
-
-        return $response->getBody()->write(json_encode($guiSettings));
-      }
-    }
-    else
-    {
-      return $response->getBody()->write(json_encode($this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId)));
-    }
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->error("Error while getting settings", array('decodedToken'=>$decodedToken, "Exception"=>$e));
-    throw $e;
-  }
-});
-
-
-/**
- *Update the UL data
- */
-$app->put(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}', function ($request, $response, $args)
-{
-  $decodedToken = $request->getAttribute('decodedJWT');
-  Logger::dataForLogging(new LoggingEntity($decodedToken));
-
-  $params = $request->getQueryParams();
-  $ulId   = $decodedToken->getUlId  ();
-  $roleId = $decodedToken->getRoleId();
-  $userId = $decodedToken->getUid   ();
-  $input  = $request->getParsedBody ();
-
-  if($roleId < 4)
-  {
-    $response500 = $response->withStatus(500);
-    $response500->getBody()->write(json_encode(["error"=>'internal error']));
-    return $response500;
-  }
-
-  try
-  {
-    if(array_key_exists('action', $params))
-    {
-      $action = $this->clientInputValidator->validateString("action", $params['action'], 22, false);
-
-      if ($action == "updateUL")
-      {
-        $ulEntity = new UniteLocaleEntity($input, $this->logger);
-        $this->uniteLocaleDBService->updateUL($ulEntity, $ulId, $userId);
-      }
-      else if($action == "updateRedQuestSettings")
-      {
-
-        $AutonomousDepartAndReturn = $this->clientInputValidator->validateBoolean('AutonomousDepartAndReturn', $input['applicationSettings']['redquest']['AutonomousDepartAndReturn'], true, false);
-
-        //recupère les settings exitants
-        
-        $ulSettings = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
-
-        if(isset($ulSettings['redquest']))
-        {
-          $ulSettings['redquest']['AutonomousDepartAndReturn']=$AutonomousDepartAndReturn;
-        }
-        else
-        {
-          $ulSettings['redquest']=[];
-          $ulSettings['redquest']['AutonomousDepartAndReturn']=$AutonomousDepartAndReturn;
-        }
-      }
-    }
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->error("Error while updating settings", array('decodedToken'=>$decodedToken, "Exception"=>$e));
-    throw $e;
-  }
-});
-
-
+$app->put(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedQuestSettings',  UpdateRedQuestSettings::class);
 

@@ -7,8 +7,7 @@
  */
 
 namespace RedCrossQuest\Service;
-use \ReCaptcha\ReCaptcha;
-
+use ReCaptcha\ReCaptcha;
 
 
 class ReCaptchaService

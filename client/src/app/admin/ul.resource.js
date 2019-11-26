@@ -10,6 +10,9 @@ angular.module('redCrossQuestClient').factory('UniteLocaleResource', function($r
     }, {
     update: {
       method: 'PUT',
-    }
+    },
+      query:{
+        isArray: false
+      }
   });
 });

@@ -13,14 +13,16 @@ class LoggingEntity
    */
   private $decodedToken;
 
-
+  /**
+   * @property array Other information
+   */
   private $otherData;
-
-
+  
   public function __construct(DecodedToken $decodedToken = null, array $otherData = array())
   {
     $this->decodedToken = isset($decodedToken) ? $decodedToken->toArray() : [];
     $this->otherData    = $otherData;
+
   }
   //return this class as an associative array, otherData added if exists.
   public function loggingInfoArray()

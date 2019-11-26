@@ -4,36 +4,32 @@
 
 angular.module('redCrossQuestClient').factory('QueteurResource', function ($resource, $localStorage)
 {
-  return $resource('/rest/:roleId/ul/:ulId/queteurs/:id',
+  return $resource('/rest/:roleId/ul/:ulId/queteurs/:id/:action',
     {
       roleId: function () { return $localStorage.currentUser.roleId},
       ulId  : function () { return $localStorage.currentUser.ulId  },
       id: '@id'
     },
     {
-      update: {
+    update: {
+      method: 'PUT'
+    },
+    anonymize:
+      {
         method: 'PUT',
         params:
           {
-            action: 'update'
+            action: 'anonymize'
           }
       },
-      anonymize:
-        {
-          method: 'PUT',
-          params:
-            {
-              action: 'anonymize'
-            }
-        },
-      associateRegistrationWithExistingQueteur:
-       {
-         method: 'PUT',
-         params:
-           {
-             action: 'associateRegistrationWithExistingQueteur'
-           }
-       },
+    associateRegistrationWithExistingQueteur:
+     {
+       method: 'PUT',
+       params:
+         {
+           action: 'associateRegistrationWithExistingQueteur'
+         }
+     },
 
      markAllAsPrinted: {
         method: 'PUT',
@@ -42,42 +38,50 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
         }
       },
 
-      searchSimilarQueteurs:
-        {
-          method: 'GET',
-          isArray: true,
-          params:
-            {
-              action: 'searchSimilarQueteurs',
-              tronc_id: '@tronc_id'
-            }
-        },
-      getQueteurRegistration:
+    searchSimilarQueteurs:
+      {
+        method: 'GET',
+        isArray: true,
+        params:
+          {
+            action: 'searchSimilarQueteurs',
+            tronc_id: '@tronc_id'
+          }
+      },
+    getQueteurRegistration:
+    {
+      method: 'GET',
+      params:
+      {
+        action: 'getQueteurRegistration'
+      }
+    }
+    ,
+    countPendingQueteurRegistration:
       {
         method: 'GET',
         params:
-        {
-          action: 'getQueteurRegistration'
-        }
+          {
+            action: 'countPendingQueteurRegistration'
+          }
       }
-      ,
-      countPendingQueteurRegistration:
+    ,
+    listPendingQueteurRegistration:
+    {
+      method: 'GET',
+      isArray: true,
+      params:
         {
-          method: 'GET',
-          params:
-            {
-              action: 'countPendingQueteurRegistration'
-            }
+          action: 'listPendingQueteurRegistration'
         }
-      ,
-      listPendingQueteurRegistration:
-        {
-          method: 'GET',
-          isArray: true,
-          params:
-            {
-              action: 'listPendingQueteurRegistration'
-            }
-        }
-    });
+    },
+    approveQueteurRegistration:
+      {
+        method:'POST',
+        params:
+          {
+            action:'approveQueteurRegistration'
+          }
+      }
+  });
 });

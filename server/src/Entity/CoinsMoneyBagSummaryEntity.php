@@ -2,7 +2,7 @@
 namespace RedCrossQuest\Entity;
 
 
-use RedCrossQuest\Service\Logger;
+use Psr\Log\LoggerInterface;
 
 class CoinsMoneyBagSummaryEntity extends Entity
 {
@@ -56,10 +56,10 @@ class CoinsMoneyBagSummaryEntity extends Entity
     * and create the class
     *
     * @param array $data The data to use to create
-    * @param Logger $logger
+    * @param LoggerInterface $logger
     * @throws \Exception if a parse Date or JSON fails
     */
-    public function __construct(array $data, Logger $logger)
+    public function __construct(array $data, LoggerInterface $logger)
     {
       parent::__construct($logger);
 

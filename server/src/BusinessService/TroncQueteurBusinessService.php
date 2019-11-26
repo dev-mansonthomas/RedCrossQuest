@@ -1,7 +1,13 @@
 <?php
 namespace RedCrossQuest\BusinessService;
 use Carbon\Carbon;
+use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
+use RedCrossQuest\DBService\PointQueteDBService;
+use RedCrossQuest\DBService\QueteurDBService;
+use RedCrossQuest\DBService\TroncDBService;
+use RedCrossQuest\DBService\TroncQueteurDBService;
+use RedCrossQuest\Entity\TroncQueteurEntity;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,21 +22,37 @@ use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 
 class TroncQueteurBusinessService
 {
+  /** @var LoggerInterface $logger*/
   protected $logger;
+  /** @var TroncQueteurDBService $troncQueteurDBService*/
   protected $troncQueteurDBService;
+  /** @var QueteurDBService $queteurDBService*/
   protected $queteurDBService     ;
+  /** @var PointQueteDBService $pointQueteDBService*/
   protected $pointQueteDBService  ;
+  /** @var TroncDBService $troncDBService*/
   protected $troncDBService       ;
 
-  public function __construct(\Slim\Container $c)
+  public function __construct(LoggerInterface         $logger,
+                              TroncQueteurDBService   $troncQueteurDBService,
+                              QueteurDBService        $queteurDBService,
+                              PointQueteDBService     $pointQueteDBService,
+                              TroncDBService          $troncDBService)
   {
-    $this->logger                = $c->logger;
-    $this->troncQueteurDBService = $c->troncQueteurDBService;
-    $this->queteurDBService      = $c->queteurDBService;
-    $this->pointQueteDBService   = $c->pointQueteDBService;
-    $this->troncDBService        = $c->troncDBService;
+    $this->logger                = $logger;
+    $this->troncQueteurDBService = $troncQueteurDBService;
+    $this->queteurDBService      = $queteurDBService;
+    $this->pointQueteDBService   = $pointQueteDBService;
+    $this->troncDBService        = $troncDBService;
   }
-  
+
+  /***
+   * @param int $tronc_id
+   * @param int $ulId
+   * @param int $roleId
+   * @return TroncQueteurEntity
+   * @throws \Exception
+   */
   public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId)
   {
     $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId, $roleId);
@@ -48,13 +70,19 @@ class TroncQueteurBusinessService
     return  $troncQueteur;
   }
 
-
+  /***
+   * @param int $tronc_queteur_id
+   * @param int $ulId
+   * @param int $roleId
+   * @return TroncQueteurEntity
+   * @throws \Exception
+   */
   public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId, int $roleId)
   {
-    $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId, $roleId);
+    $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId);
     $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $roleId ==9 ? null: $ulId);
     $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById  ($troncQueteur->point_quete_id, $ulId, $roleId);
-    $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId, $roleId);
+    $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId);
 
     return  $troncQueteur;
   }
@@ -65,11 +93,11 @@ class TroncQueteurBusinessService
    * Other env : it returns always true to be able to test the application
    * @param string $deployment the current deployment value
    * @param Carbon $dateToCheck  preparation date
-   * @param $logger Logger logger
+   * @param $logger LoggerInterface logger
    * @return bool true if the quete has already started (or it's not production)
    * @throws \Exception
    */
-  public static function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null, $logger)
+  public static function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null, LoggerInterface $logger)
   {
     if(strlen($deployment) !=1)
     {

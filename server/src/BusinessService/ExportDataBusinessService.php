@@ -3,6 +3,8 @@
 namespace RedCrossQuest\BusinessService;
 
 
+use Exception;
+use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\NamedDonationDBService;
 use RedCrossQuest\DBService\PointQueteDBService;
@@ -13,30 +15,31 @@ use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\DBService\YearlyGoalDBService;
+use ZipArchive;
 
 class ExportDataBusinessService
 {
+  /** @var LoggerInterface $logger */
   protected $logger;
-  /** @var QueteurDBService */
+  /** @var QueteurDBService $queteurDBService*/
   protected $queteurDBService;
-  /** @var PointQueteDBService */
+  /** @var PointQueteDBService $pointQueteDBService*/
   protected $pointQueteDBService;
-  /** @var UserDBService */
+  /** @var UserDBService $userDBService*/
   protected $userDBService;
-  /** @var DailyStatsBeforeRCQDBService */
+  /** @var DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService*/
   protected $dailyStatsBeforeRCQDBService;
-  /** @var TroncDBService */
+  /** @var TroncDBService $troncDBService*/
   protected $troncDBService;
-  /** @var NamedDonationDBService */
+  /** @var NamedDonationDBService $namedDonationDBService*/
   protected $namedDonationDBService;
-
-  /** @var TroncQueteurDBService */
+  /** @var TroncQueteurDBService $troncQueteurDBService */
   protected $troncQueteurDBService;
-  /** @var UniteLocaleDBService */
+  /** @var UniteLocaleDBService $uniteLocaleDBService*/
   protected $uniteLocaleDBService;
-  /** @var UniteLocaleSettingsDBService */
+  /** @var UniteLocaleSettingsDBService $uniteLocaleSettingsDBService*/
   protected $uniteLocaleSettingsDBService;
-  /** @var YearlyGoalDBService */
+  /** @var YearlyGoalDBService $yearlyGoalDBService*/
   protected $yearlyGoalDBService;
 
 
@@ -47,19 +50,30 @@ class ExportDataBusinessService
                                         'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y' , 'þ'=>'b', 'ÿ'=>'y', '/'=>'-', ':'=>'-', '?'=>' ' );
 
 
-  public function __construct(\Slim\Container $c)
+  public function __construct(  LoggerInterface $logger ,
+                                QueteurDBService $queteurDBService,
+                                PointQueteDBService $pointQueteDBService,
+                                UserDBService $userDBService,
+                                DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService,
+                                TroncDBService $troncDBService,
+                                NamedDonationDBService $namedDonationDBService,
+                                TroncQueteurDBService $troncQueteurDBService ,
+                                UniteLocaleDBService $uniteLocaleDBService,
+                                UniteLocaleSettingsDBService $uniteLocaleSettingsDBService,
+                                YearlyGoalDBService $yearlyGoalDBService
+  )
   {
-    $this->logger                       = $c->logger                       ;
-    $this->queteurDBService             = $c->queteurDBService             ;
-    $this->userDBService                = $c->userDBService                ;
-    $this->pointQueteDBService          = $c->pointQueteDBService          ;
-    $this->dailyStatsBeforeRCQDBService = $c->dailyStatsBeforeRCQDBService ;
-    $this->troncDBService               = $c->troncDBService               ;
-    $this->namedDonationDBService       = $c->namedDonationDBService       ;
-    $this->troncQueteurDBService        = $c->troncQueteurDBService        ;
-    $this->uniteLocaleDBService         = $c->uniteLocaleDBService         ;
-    $this->uniteLocaleSettingsDBService = $c->uniteLocaleSettingsDBService ;
-    $this->yearlyGoalDBService          = $c->yearlyGoalDBService          ;
+    $this->logger                       = $logger                       ;
+    $this->queteurDBService             = $queteurDBService             ;
+    $this->userDBService                = $userDBService                ;
+    $this->pointQueteDBService          = $pointQueteDBService          ;
+    $this->dailyStatsBeforeRCQDBService = $dailyStatsBeforeRCQDBService ;
+    $this->troncDBService               = $troncDBService               ;
+    $this->namedDonationDBService       = $namedDonationDBService       ;
+    $this->troncQueteurDBService        = $troncQueteurDBService        ;
+    $this->uniteLocaleDBService         = $uniteLocaleDBService         ;
+    $this->uniteLocaleSettingsDBService = $uniteLocaleSettingsDBService ;
+    $this->yearlyGoalDBService          = $yearlyGoalDBService          ;
   }
 
 
@@ -71,7 +85,7 @@ class ExportDataBusinessService
    * @param string $year  if 0, export all data, if not, export data from the specified year if applicable
    * @return array filename of the generated file, and the number of lines exported
    *
-   * @throws \Exception   if something wrong happen
+   * @throws Exception   if something wrong happen
    */
   public function exportData(string $password, int $ulId, ?string $year)
   {
@@ -136,11 +150,11 @@ class ExportDataBusinessService
       $zipFileName = "$dateTime-RedCrossQuest-DataExport-UL-$ulId".($year!= null? $year.'':'')."-".$ulNameForFileName.".zip";
 
       $zipFilePath = sys_get_temp_dir()."/".$zipFileName;
-      $z = new \ZipArchive();
-      $zipFileOpen = ($z->open($zipFilePath, \ZipArchive::CREATE));
+      $z = new ZipArchive();
+      $zipFileOpen = ($z->open($zipFilePath, ZipArchive::CREATE));
       if(true === $zipFileOpen)
       {
-        //$z->setPassword($password);
+        $z->setPassword($password);
         $archiveComment = strtr( 'RedCrossQuest Data Export - '.$dateTime .' for UL - '.$ulId.' - '.$exportData['ul']->name.($year!= null? ' for year :'.$year.'':''), $this->unwanted_array );
         $z->setArchiveComment($archiveComment );
 
@@ -148,7 +162,7 @@ class ExportDataBusinessService
         {
           $filename = $ulId."-".$tableName.".csv";
           $z->addFile(sys_get_temp_dir()."/$filename", $filename);
-          //$z->setEncryptionName($filename,  \ZipArchive::EM_AES_256 , $password);
+          $z->setEncryptionName($filename,  ZipArchive::EM_AES_256 , $password);
         }
         //csv files must not be deleted before closing the zip, otherwise we get file not found. as if the zip file is built on the close command
         $z->close();
@@ -166,7 +180,7 @@ class ExportDataBusinessService
         $this->logger->info("failed opening Zip",["zipFileOpen"=>$zipFileOpen]);
       }
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       $this->logger->error("Error while Exporting Data", ["YEAR" => $year, "Exception" => $e]);
       throw $e;

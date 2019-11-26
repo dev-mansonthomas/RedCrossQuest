@@ -7,8 +7,8 @@
  */
 
 require '../../vendor/autoload.php';
-use \RedCrossQuest\Service\Logger;
-use \RedCrossQuest\Entity\LoggingEntity;
+
+use RedCrossQuest\routes\routesActions\troncQueteurHistory\GetTroncQueteurHistoryFromTQID;
 
 
 /********************************* TRONC_QUETEUR ****************************************/
@@ -18,26 +18,8 @@ use \RedCrossQuest\Entity\LoggingEntity;
  * récupère l'historique d'un tronc_queteur par son id
  *
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', function ($request, $response, $args)
-{
-  $decodedToken = $request->getAttribute('decodedJWT');
-  Logger::dataForLogging(new LoggingEntity($decodedToken));
-  try
-  {
-    $ulId           = $decodedToken->getUlId  ();
-    $params         = $request->getQueryParams();
-    $troncQueteurId = $this->clientInputValidator->validateInteger('tronc_queteur_id', getParam($params,'tronc_queteur_id'), 1000000, true);
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', GetTroncQueteurHistoryFromTQID::class);
 
-    $troncQueteurs = $this->troncQueteurDBService->getTroncQueteurHistoryById($troncQueteurId, $ulId);
-
-    return $response->getBody()->write(json_encode($troncQueteurs));
-  }
-  catch(\Exception $e)
-  {
-    $this->logger->error("Error while fetching the error history of a tronc_queteur($troncQueteurId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
-    throw $e;
-  }
-});
 
 
 

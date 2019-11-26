@@ -7,34 +7,13 @@
  */
 
 require '../../vendor/autoload.php';
-use \RedCrossQuest\Service\Logger;
-use \RedCrossQuest\Entity\LoggingEntity;
+
+use RedCrossQuest\routes\routesActions\spotfire\GetSpotfireAccessToken;
 
 /**
  * fetch an existing token for the user
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/graph', function ($request, $response, $args)
-{
-  $decodedToken = $request->getAttribute('decodedJWT');
-  Logger::dataForLogging(new LoggingEntity($decodedToken));
-  //$this->logger->debug("generating spotfire access for ");
-  try
-  {
-    $ulId   = $decodedToken->getUlId  ();
-    $userId = $decodedToken->getUid   ();
-
-    $validToken = $this->spotfireAccessDBService->getValidToken($userId, $ulId);
-
-    return $response->getBody()->write(json_encode($validToken));
-  }
-  catch(\Exception $e)
-  {
-      $this->logger->error("Error while getting current Token for user ($userId)", array('decodedToken'=>$decodedToken, "Exception"=>$e));
-      throw $e;
-  }
-});
-
-
+$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/graph', GetSpotfireAccessToken::class);
 
 
 /*

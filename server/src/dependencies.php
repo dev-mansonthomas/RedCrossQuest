@@ -1,407 +1,344 @@
 <?php
+declare(strict_types=1);
 
-
-use \RedCrossQuest\BusinessService\EmailBusinessService;
-use \RedCrossQuest\DBService\MailingDBService;
-use Google\Cloud\Storage\StorageClient;
-use Google\Cloud\Storage\Bucket;
-
-use \RedCrossQuest\Service\PubSubService;
-use \RedCrossQuest\Service\ReCaptchaService;
-use \RedCrossQuest\Service\MailService;
-use \RedCrossQuest\Service\ClientInputValidator;
-use \RedCrossQuest\Service\Logger;
-
-use \RedCrossQuest\DBService\UserDBService;
-use \RedCrossQuest\DBService\QueteurDBService;
-use \RedCrossQuest\DBService\UniteLocaleDBService;
-use \RedCrossQuest\DBService\SpotfireAccessDBService;
-use \RedCrossQuest\DBService\TroncDBService;
-use \RedCrossQuest\DBService\TroncQueteurDBService;
-use \RedCrossQuest\DBService\PointQueteDBService  ;
-use \RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
-use \RedCrossQuest\DBService\NamedDonationDBService;
-use \RedCrossQuest\DBService\UniteLocaleSettingsDBService;
-
-use \RedCrossQuest\BusinessService\TroncQueteurBusinessService;
-use \RedCrossQuest\BusinessService\SettingsBusinessService;
-use \RedCrossQuest\BusinessService\ExportDataBusinessService;
-use \RedCrossQuest\DBService\YearlyGoalDBService;
-
+use DI\ContainerBuilder;
 use Google\Cloud\Logging\LoggingClient;
-
-use Google\Cloud\Logging\PsrLogger;
+use Google\Cloud\Storage\Bucket;
+use Google\Cloud\Storage\StorageClient;
 use Kreait\Firebase;
 use Kreait\Firebase\Factory;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use RedCrossQuest\BusinessService\EmailBusinessService;
+use RedCrossQuest\BusinessService\ExportDataBusinessService;
+use RedCrossQuest\BusinessService\SettingsBusinessService;
+use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
+use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
+use RedCrossQuest\DBService\MailingDBService;
+use RedCrossQuest\DBService\NamedDonationDBService;
+use RedCrossQuest\DBService\PointQueteDBService;
+use RedCrossQuest\DBService\QueteurDBService;
+use RedCrossQuest\DBService\SpotfireAccessDBService;
+use RedCrossQuest\DBService\TroncDBService;
+use RedCrossQuest\DBService\TroncQueteurDBService;
+use RedCrossQuest\DBService\UniteLocaleDBService;
+use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
+use RedCrossQuest\DBService\UserDBService;
+use RedCrossQuest\DBService\YearlyGoalDBService;
+use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\Logger;
+use RedCrossQuest\Service\MailService;
+use RedCrossQuest\Service\PubSubService;
+use RedCrossQuest\Service\ReCaptchaService;
 
 
-
-// DIC configuration
-$container = $app->getContainer();
-
-// view renderer
-/**
- * @property \Slim\Views\PhpRenderer $renderer
- * @param    \Slim\Container $c
- * @return   \Slim\Views\PhpRenderer
- */
-$container['renderer'] = function (\Slim\Container $c)
+return function (ContainerBuilder $containerBuilder)
 {
-  $settings = $c->get('settings')['renderer'];
-  return new \Slim\Views\PhpRenderer($settings['template_path']);
-};
+  $containerBuilder->addDefinitions([
+
+    /**
+     * Logger 'googleLogger'
+     * pecl install grpc
+     * pecl install protobuf
+     *
+     */
+
+    "googleLogger" => function (ContainerInterface $c) {
+      $settings = $c->get('settings')['logger'];
+
+      $logger = LoggingClient::psrBatchLogger(
+        $settings['name'], [
+        'resource'=>[
+          'type'=>'gae_app'
+        ],
+        'labels'  =>null
+      ]);
+
+      return $logger;
+    },
+
+    /**
+     * Version of RedCrossQuest
+     */
+    "RCQVersion" => function (ContainerInterface $c) {
+      //TODO move to settings ?
+      return "2019.2";
+    },
+    /**
+     * Custom Logger that automatically add context data to each log entries.
+     * logger
+     */
+    LoggerInterface::class => function (ContainerInterface $c)
+    {
+      return new Logger($c->get("googleLogger"), (string)$c->get("RCQVersion"), $c->get('settings')['appSettings']['deploymentType']);
+    },
+
+    /**
+     * 'db'
+     * DB connection
+     */
+    PDO::class => function (ContainerInterface $c)
+    {
+      $db = $c->get('settings')['db'];
+
+      try
+      {
+        $pdo = new PDO( $db['dsn'], $db['user'], $db['pwd']);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE           , PDO::ERRMODE_EXCEPTION );
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC       );
+        return $pdo;
+
+      }
+      catch(\Exception $e)
+      {
+        $logger = $c->get(LoggerInterface::class);
+        $logger->error("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($db['pwd']), 'exception'=>$e));
+        throw $e;
+      }
+    },
+
+    /**
+     * 'PubSub'
+     * Google PubSub service
+     */
+    PubSubService::class => function (ContainerInterface $c)
+    {
+      $settings = $c->get('settings')['PubSub'];
+      return new PubSubService($settings, $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'reCaptcha'
+     * Google ReCaptcha v3
+     */
+    ReCaptchaService::class => function (ContainerInterface $c)
+    {
+      return new ReCaptchaService($c->get('settings'), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'bucket'
+     * Google Storage Bucket
+     */
+    Bucket::class => function (ContainerInterface $c)
+    {
+      $appSettings = $c->get('settings')['appSettings'];
+
+      $country        = $appSettings['country'         ];
+      $env            = strtolower($appSettings['deploymentType'  ]);
+      $bucketTemplate = $appSettings['exportDataBucket'];
+
+      $envLabel=[];
+      $envLabel['D'] = "dev";
+      $envLabel['T'] = "test";
+      $envLabel['P'] = "prod";
+
+      $gcpBucket  = str_replace("_country_", $country, str_replace("_env_", $env           , $bucketTemplate));
+      $project_id = str_replace("_country_", $country, str_replace("_env_", $envLabel[$env], "redcrossquest-_country_-_env_"));
+
+      //documentation : https://cloud.google.com/storage/docs/reference/libraries
+      //https://github.com/googleapis/google-cloud-php
+      $storage = new StorageClient([
+        'projectId' => $project_id
+      ]);
+
+      return $storage->bucket($gcpBucket);
+    },
+
+    /**
+     * 'userDBService'
+     */
+    UserDBService::class => function (ContainerInterface $c)
+    {
+      return new UserDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'spotfireAccessDBService'
+     */
+    SpotfireAccessDBService::class => function (ContainerInterface $c)
+    {
+      return new SpotfireAccessDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'queteurDBService'
+     */
+    QueteurDBService::class => function (ContainerInterface $c)
+    {
+      return new QueteurDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'uniteLocaleDBService'
+     */
+    UniteLocaleDBService::class => function (ContainerInterface $c)
+    {
+      return new UniteLocaleDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'uniteLocaleSettingsDBService'
+     */
+    UniteLocaleSettingsDBService::class => function (ContainerInterface $c)
+    {
+      return new UniteLocaleSettingsDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'troncDBService'
+     */
+    TroncDBService::class => function (ContainerInterface $c)
+    {
+      return new TroncDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'troncQueteurDBService'
+     */
+    TroncQueteurDBService::class => function (ContainerInterface $c)
+    {
+      return new TroncQueteurDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'pointQueteDBService'
+     */
+    PointQueteDBService::class => function (ContainerInterface $c)
+    {
+      return new PointQueteDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'dailyStatsBeforeRCQDBService'
+     */
+    DailyStatsBeforeRCQDBService::class => function (ContainerInterface $c)
+    {
+      return new DailyStatsBeforeRCQDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
 
 
-/**
- * @property string $RCQVersion
- * @param    \Slim\Container $c
- * @return   string version of RedCrossQuest
- */
-$container['RCQVersion'] = function (\Slim\Container $c)
-{
-  return "2019.2";
-};
+    /**
+     * 'namedDonationDBService'
+     */
+    NamedDonationDBService::class => function (ContainerInterface $c)
+    {
+      return new NamedDonationDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
 
-/**
- *
- * pecl install grpc
- * pecl install protobuf
- *
- * @property PsrLogger    $logger
- * @param \Slim\Container $c
- * @return PsrLogger
- */
-$container['googleLogger'] = function (\Slim\Container $c)
-{
-  $settings = $c->get('settings')['logger'];
+    /**
+     * 'yearlyGoalDBService'
+     */
+    YearlyGoalDBService::class => function (ContainerInterface $c)
+    {
+      return new YearlyGoalDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
 
-  $logger = LoggingClient::psrBatchLogger(
-    $settings['name'], [
-    'resource'=>[
-      'type'=>'gae_app'
-    ],
-    'labels'  =>null
-  ]);
+    /**
+     * 'mailingDBService'
+     */
+    MailingDBService::class => function (ContainerInterface $c)
+    {
+      return new MailingDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
 
+    /**
+     * 'mailService'
+     */
+    MailService::class => function (ContainerInterface $c)
+    {
+      $settings       = $c->get('settings')['appSettings']['email'];
+      $deploymentType = $c->get('settings')['appSettings']['deploymentType'];
+      return new MailService($c->get(LoggerInterface::class),  $settings['sendgrid.api_key'], $settings['sendgrid.sender'], $deploymentType);
+    },
 
-  return $logger;
-};
-
-
-/**
- * Custom Logger that automatically add context data to each log entries.
- *
- * @property Logger    $logger
- * @param \Slim\Container $c
- * @return Logger
- */
-$container['logger'] = function (\Slim\Container $c)
-{
-  $logger = new Logger($c->googleLogger, $c->RCQVersion, $c->get('settings')['appSettings']['deploymentType']);
-  return $logger;
-};
-
-// DB connection
-/**
- * @property PDO $db
- * @param \Slim\Container $c
- * @return PDO
- */
-$container['db'] = function (\Slim\Container $c)
-{
-  $db = $c['settings']['db'];
-
-  try
-  {
-    $pdo = new PDO( $db['dsn'], $db['user'], $db['pwd']);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE           , PDO::ERRMODE_EXCEPTION );
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC       );
-    return $pdo;
-
-  }
-  catch(\Exception $e)
-  {
-    $logger = $c->get('logger');
-    $logger->error("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($db['pwd']), 'exception'=>$e));
-    throw $e;
-  }
-};
+    /**
+     * 'mailer'
+     */
+    EmailBusinessService::class => function (ContainerInterface $c)
+    {
+      return new EmailBusinessService(
+        $c->get(LoggerInterface::class),
+        $c->get(MailService::class),
+        $c->get(MailingDBService::class),
+        $c->get(UniteLocaleDBService::class),
+        $c->get('settings')['appSettings']);
+    },
 
 
-//PubSub
-/**
- * @property PubSubService $PubSub
- * @param \Slim\Container $c
- * @return PubSubService
- */
-$container['PubSub'] = function (\Slim\Container $c)
-{
-  $settings = $c['settings']['PubSub'];
-  return new PubSubService($settings, $c->logger);
-};
+    /* ********************
+     *  BUSINESS SERVICES *
+     * ********************
+     */
 
-//Google ReCaptcha v3
-/**
- * @property ReCaptchaService $reCaptcha
- * @param \Slim\Container $c
- * @return ReCaptchaService
- */
-$container['reCaptcha'] = function (\Slim\Container $c)
-{
-  return new ReCaptchaService($c['settings'], $c->logger);
-};
+    /**
+     * 'troncQueteurBusinessService'
+     */
+    TroncQueteurBusinessService::class => function (ContainerInterface $c)
+    {
+      return new TroncQueteurBusinessService(
+        $c->get(LoggerInterface::class),
+        $c->get(TroncQueteurDBService::class),
+        $c->get(QueteurDBService::class),
+        $c->get(PointQueteDBService::class),
+        $c->get(TroncDBService::class)
+      );
+    },
 
+    /**
+     * 'settingsBusinessService'
+     */
+    SettingsBusinessService::class => function (ContainerInterface $c)
+    {
+      return new SettingsBusinessService(
+        $c->get(LoggerInterface::class),
+        $c->get(QueteurDBService::class) ,
+        $c->get(UserDBService::class) ,
+        $c->get(PointQueteDBService::class) ,
+        $c->get(DailyStatsBeforeRCQDBService::class) ,
+        $c->get(TroncDBService::class) );
+    },
 
-/**
- * @property Bucket $bucket
- *
- * @param \Slim\Container $c
- * @return Bucket
- */
-$container['bucket'] = function (\Slim\Container $c)
-{
-  $appSettings = $c['settings']['appSettings'];
+    /**
+     * 'exportDataBusinessService'
+     */
+    ExportDataBusinessService::class => function (ContainerInterface $c)
+    {
+      return new ExportDataBusinessService(
+$c->get(LoggerInterface::class),
+$c->get(QueteurDBService::class),
+$c->get(PointQueteDBService::class),
+$c->get(UserDBService::class),
+$c->get(DailyStatsBeforeRCQDBService::class),
+$c->get(TroncDBService::class),
+$c->get(NamedDonationDBService::class),
+$c->get(TroncQueteurDBService::class),
+$c->get(UniteLocaleDBService::class),
+$c->get(UniteLocaleSettingsDBService::class),
+$c->get(YearlyGoalDBService::class)
+      );
+    },
 
-  $country        = $appSettings['country'         ];
-  $env            = strtolower($appSettings['deploymentType'  ]);
-  $bucketTemplate = $appSettings['exportDataBucket'];
+    /**
+     * 'clientInputValidator'
+     */
+    ClientInputValidator::class => function (ContainerInterface $c)
+    {
+      return new ClientInputValidator($c->get(LoggerInterface::class));
+    },
 
-  $envLabel=[];
-  $envLabel['D'] = "dev";
-  $envLabel['T'] = "test";
-  $envLabel['P'] = "prod";
+    /**
+     * 'firebase'
+     */
+    Firebase::class => function (ContainerInterface $c)
+    {
+      return (new Factory)->create();
+    },
 
-  $gcpBucket  = str_replace("_country_", $country, str_replace("_env_", $env           , $bucketTemplate));
-  $project_id = str_replace("_country_", $country, str_replace("_env_", $envLabel[$env], "redcrossquest-_country_-_env_"));
-
-  //documentation : https://cloud.google.com/storage/docs/reference/libraries
-  //https://github.com/googleapis/google-cloud-php
-  $storage = new StorageClient([
-    'projectId' => $project_id
-  ]);
-
-  return $storage->bucket($gcpBucket);
-
-};
-
-$c['errorHandler'] = function (\Slim\Container $c) {
-  return function (\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response, \Exception $exception) use ($c)
-  {
-    $logger = $c->get('logger');
-
-    $logger->error("errorHandler: An Error Occured",
-      array(
-        'URI'     => $request->getUri(),
-        'headers' => $request->getHeaders(),
-        'body'    => $request->getBody()->getContents(),
-        'exception'=>$exception)
-    );
-
-
-    return $c['response']->withStatus(500)
-      ->withHeader('Content-Type', 'text/html')
-      ->write('Something went wrong! - '.$exception->getMessage());
-  };
-};
-/**
- * @property UserDBService $UserDBService
- * @param \Slim\Container $c
- * @return UserDBService
- */
-$container['userDBService'] = function (\Slim\Container $c)
-{
-  return new UserDBService($c->db, $c->logger);
-};
-/**
- * @property SpotfireAccessDBService $SpotfireAccessDBService
- * @param \Slim\Container $c
- * @return SpotfireAccessDBService
- */
-$container['spotfireAccessDBService'] = function (\Slim\Container $c)
-{
-  return new SpotfireAccessDBService($c->db, $c->logger);
-};
-/**
- * @property QueteurDBService $queteurDBService
- * @param \Slim\Container $c
- * @return QueteurDBService
- */
-$container['queteurDBService'] = function (\Slim\Container $c)
-{
-  return new QueteurDBService($c->db, $c->logger);
-};
-/**
- * @property UniteLocaleDBService $uniteLocaleDBService
- * @param \Slim\Container $c
- * @return UniteLocaleDBService
- */
-$container['uniteLocaleDBService'] = function (\Slim\Container $c)
-{
-  return new UniteLocaleDBService($c->db, $c->logger);
-};
+  ]);// END addDefinitions()
 
 
-/**
- * @property UniteLocaleSettingsDBService $uniteLocaleSettingsDBService
- * @param \Slim\Container $c
- * @return UniteLocaleSettingsDBService
- */
-$container['uniteLocaleSettingsDBService'] = function (\Slim\Container $c)
-{
-  return new UniteLocaleSettingsDBService($c->db, $c->logger);
-};
-
-
-
-
-/**
- * @property TroncDBService $troncDBService
- * @param \Slim\Container $c
- * @return TroncDBService
- */
-$container['troncDBService'] = function (\Slim\Container $c)
-{
-  return new TroncDBService($c->db, $c->logger);
-};
-/**
- * @property TroncQueteurDBService $troncQueteurDBService
- * @param \Slim\Container $c
- * @return TroncQueteurDBService
- */
-$container['troncQueteurDBService'] = function (\Slim\Container $c)
-{
-  return new TroncQueteurDBService($c->db, $c->logger);
-};
-/**
- * @property PointQueteDBService $pointQueteDBService
- * @param \Slim\Container $c
- * @return PointQueteDBService
- */
-$container['pointQueteDBService'] = function (\Slim\Container $c)
-{
-  return new PointQueteDBService($c->db, $c->logger);
-};
-/**
- * @property DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService
- * @param \Slim\Container $c
- * @return DailyStatsBeforeRCQDBService
- */
-$container['dailyStatsBeforeRCQDBService'] = function (\Slim\Container $c)
-{
-  return new DailyStatsBeforeRCQDBService($c->db, $c->logger);
-};
-/**
- * @property NamedDonationDBService $namedDonationDBService
- * @param \Slim\Container $c
- * @return NamedDonationDBService
- */
-$container['namedDonationDBService'] = function (\Slim\Container $c)
-{
-  return new NamedDonationDBService($c->db, $c->logger);
-};
-
-/**
- * @property YearlyGoalDBService $yearlyGoalDBService
- * @param \Slim\Container $c
- * @return YearlyGoalDBService
- */
-$container['yearlyGoalDBService'] = function (\Slim\Container $c)
-{
-  return new YearlyGoalDBService($c->db, $c->logger);
-};
-
-/**
- * @property MailingDBService $mailingDBService
- * @param \Slim\Container $c
- * @return MailingDBService
- */
-$container['mailingDBService'] = function (\Slim\Container $c)
-{
-  return new MailingDBService($c->db, $c->logger);
-};
-
-
-/**
- * @property MailService $mailService
- * @param \Slim\Container $c
- * @return MailService
- */
-$container['mailService'] = function (\Slim\Container $c)
-{
-  $settings =  $c['settings']['appSettings']['email'];
-
-  return new MailService($c->logger,  $settings['sendgrid.api_key'], $settings['sendgrid.sender'], $c['settings']['appSettings']['deploymentType']);
-};
-
-
-/**
- * @property EmailBusinessService $mailer
- * @param \Slim\Container $c
- * @return EmailBusinessService
- */
-$container['mailer'] = function (\Slim\Container $c)
-{
-  return new EmailBusinessService(
-    $c->logger,
-    $c->mailService,
-    $c->mailingDBService,
-    $c->uniteLocaleDBService,
-    $c['settings']['appSettings']);
-};
-
-/* **********
- * SERVICES *
- * **********
- */
-
-/**
- * @property TroncQueteurBusinessService $troncQueteurBusinessService
- * @param \Slim\Container $c
- * @return TroncQueteurBusinessService
- */
-$container['troncQueteurBusinessService'] = function (\Slim\Container $c)
-{
-  return new TroncQueteurBusinessService( $c);
-};
-/**
- * @property SettingsBusinessService $settingsBusinessService
- * @param \Slim\Container $c
- * @return SettingsBusinessService
- */
-$container['settingsBusinessService'] = function (\Slim\Container $c)
-{
-  return new SettingsBusinessService($c);
-};
-/**
- * @property ExportDataBusinessService $exportDataBusinessService
- * @param \Slim\Container $c
- * @return ExportDataBusinessService
- */
-$container['exportDataBusinessService'] = function (\Slim\Container $c)
-{
-  return new ExportDataBusinessService($c);
-};
-
-/**
- * @property ClientInputValidator $clientInputValidator
- * @param \Slim\Container $c
- * @return ClientInputValidator
- */
-$container['clientInputValidator'] = function (\Slim\Container $c)
-{
-  return new ClientInputValidator($c->logger);
-};
+};//END RETURN FUNCTION
 
 
 
-/**
- * Used to authenticate a firebase user, from it's Firebase JWT
- * @property Firebase $firebase
- * @param    \Slim\Container $c
- * @return   Firebase
- */
-$container['firebase'] = function (\Slim\Container $c)
-{
-  $firebase = (new Factory)->create();
-  return $firebase;
-};

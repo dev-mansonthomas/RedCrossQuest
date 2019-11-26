@@ -44,7 +44,7 @@
         for(var i=0; i<mylist.length; i++)
         {//orinal date format : 2013-06-09 00:00:00.000000
           //  console.log(mylist[i].date.date.substring(0, mylist[i].date.date.length -16 ));
-          mylist[i].date   = moment( mylist[i].date.date.substring(0, mylist[i].date.date.length -16 ),"YYYY-MM-DD").toDate();
+          mylist[i].date   = moment( mylist[i].date.substring(0, mylist[i].date.length -16 ),"YYYY-MM-DD").toDate();
           mylist[i].amount = parseFloat(mylist[i].amount);
         }
 

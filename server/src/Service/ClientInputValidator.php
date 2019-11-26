@@ -8,27 +8,36 @@
 
 namespace RedCrossQuest\Service;
 
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Uuid;
-use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Range;
-
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Uuid;
+use Symfony\Component\Validator\Validation;
 
 
 class ClientInputValidator
 {
-
+  /** @var string */
   public static $EMAIL_VALIDATION="email";
+  /** @var string */
   public static $UUID_VALIDATION="uuid";
 
-  /** @var Logger */
+  /** @var string */
+  public static $STRING_VALIDATION ="validateString";
+  /** @var string */
+  public static $INTEGER_VALIDATION="validateInteger";
+  /** @var string */
+  public static $BOOLEAN_VALIDATION="validateBoolean";
+
+
+  /** @var LoggerInterface */
   protected $logger;
 
-  public function __construct($logger)
+  public function __construct(LoggerInterface $logger)
   {
     $this->logger         = $logger;
   }
@@ -138,20 +147,16 @@ class ClientInputValidator
 
 
   /**
-   * @param  string $parameterName        the name of the input param (for logging purpose)
-   * @param  string $inputValue           the value to validate
-   * @param  bool   $notNull              If true, the value can't be null
-   * @param  bool   $defaultValueWhenNull If the value is null and it's allowed ($notNull=true), then the function will return this bool value instead of null
+   * @param  string $parameterName  the name of the input param (for logging purpose)
+   * @param  string $inputValue     the value to validate
+   * @param  bool   $notNull        If true, the value can't be null
+   * @param  bool   $defaultValue   If the value is null and it's allowed ($notNull=true), then the function will return this bool value instead of null
    * @return boolean true or false
    */
-  public function validateBoolean($parameterName, $inputValue, bool $notNull, bool $defaultValueWhenNull=null)
+  public function validateBoolean($parameterName, $inputValue, bool $notNull, bool $defaultValue=null)
   {
-
-    if(!$notNull && $defaultValueWhenNull === null)
-      throw new \InvalidArgumentException("Coding error, value can be null, but no default value is given. parameterName='$parameterName', inputValue='$inputValue', notNull='$notNull' defaultValueWhenNull='$defaultValueWhenNull'");
-
     if(!$notNull && $inputValue == null)
-      return (bool)$defaultValueWhenNull;
+      return (bool)$defaultValue;
 
     if($inputValue === "1" || $inputValue === 1)
     {
@@ -198,4 +203,27 @@ class ClientInputValidator
 
   }
 
+
+  public function validate(ClientInputValidatorSpecs $clientInputValidatorInput)
+  {
+    $methodName = $clientInputValidatorInput->methodName;
+
+    if($methodName != ClientInputValidator::$STRING_VALIDATION  &&
+       $methodName != ClientInputValidator::$INTEGER_VALIDATION &&
+       $methodName != ClientInputValidator::$BOOLEAN_VALIDATION )
+    {
+      $this->logger->error("Run check fails, invalid method name", array("methodName" => $methodName));
+      throw new \InvalidArgumentException("Run check fails, invalid method name");
+    }
+
+    switch ($methodName)
+    {
+      case ClientInputValidator::$STRING_VALIDATION  :
+        return $this->validateString ($clientInputValidatorInput->parameterName, $clientInputValidatorInput->inputValue, $clientInputValidatorInput->maxLength, $clientInputValidatorInput->notNull, $clientInputValidatorInput->validationType);
+      case  ClientInputValidator::$INTEGER_VALIDATION:
+        return $this->validateInteger($clientInputValidatorInput->parameterName, $clientInputValidatorInput->inputValue, $clientInputValidatorInput->maxValue , $clientInputValidatorInput->notNull, $clientInputValidatorInput->defaultValue);
+      case ClientInputValidator::$BOOLEAN_VALIDATION :
+        return $this->validateBoolean($clientInputValidatorInput->parameterName, $clientInputValidatorInput->inputValue, $clientInputValidatorInput->notNull, $clientInputValidatorInput->defaultValue);
+    }
+  }
 }

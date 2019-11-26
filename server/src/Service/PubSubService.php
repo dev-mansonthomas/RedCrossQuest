@@ -7,7 +7,6 @@ require '../../vendor/autoload.php';
 use Google\Cloud\PubSub\PubSubClient;
 
 
-
 /**
  * Created by IntelliJ IDEA.
  * User: thomas
