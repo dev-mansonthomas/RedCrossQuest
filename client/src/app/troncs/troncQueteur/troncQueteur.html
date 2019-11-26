@@ -1381,16 +1381,16 @@
         <tr ng-repeat="tqh in tq.current.tronc_queteur_history">
           <td>{{$index}}</td>
           <td>{{::tqh.id                         }}</td>
-          <td>{{::tqh.insert_date                }}</td>
+          <td>{{::tqh.insert_date | date:'short'               }}</td>
           <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].tronc_queteur_id            != tqh.tronc_queteur_id           }">{{::tqh.tronc_queteur_id           }}</td>
           <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].queteur_id                  != tqh.queteur_id                 }">{{::tqh.queteur_id                 }}</td>
           <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].point_quete_id              != tqh.point_quete_id             }">{{::tqh.point_quete_id             }}</td>
           <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].tronc_id                    != tqh.tronc_id                   }">{{::tqh.tronc_id                   }}</td>
-          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].depart_theorique            != tqh.depart_theorique           }">{{::tqh.depart_theorique           }}</td>
-          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].depart                      != tqh.depart                     }">{{::tqh.depart                     }}</td>
-          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].retour                      != tqh.retour                     }">{{::tqh.retour                     }}</td>
-          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].comptage                    != tqh.comptage                   }">{{::tqh.comptage                   }}</td>
-          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].last_update                 != tqh.last_update                }">{{::tqh.last_update                }}</td>
+          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].depart_theorique            != tqh.depart_theorique           }">{{::tqh.depart_theorique | date:'short'}}</td>
+          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].depart                      != tqh.depart                     }">{{::tqh.depart  | date:'short'     }}</td>
+          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].retour                      != tqh.retour                     }">{{::tqh.retour  | date:'short'     }}</td>
+          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].comptage                    != tqh.comptage                   }">{{::tqh.comptage| date:'short'     }}</td>
+          <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].last_update                 != tqh.last_update                }">{{::tqh.last_update| date:'short'  }}</td>
           <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].last_update_user_id         != tqh.last_update_user_id        }">{{::tqh.last_update_user_id        }}</td>
           <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].euro500                     != tqh.euro500                    }">{{::tqh.euro500                    }}</td>
           <td ng-class="{'warning':$last == false && tq.current.tronc_queteur_history[$index+1].euro200                     != tqh.euro200                    }">{{::tqh.euro200                    }}</td>
