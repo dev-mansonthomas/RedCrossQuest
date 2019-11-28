@@ -30,7 +30,7 @@ angular
         return {
           dateInLocalTimeZone       : moment(serverDate).toDate(),
           dateInLocalTimeZoneMoment : moment(serverDate),
-          stringVersion             : serverDate
+          stringVersion             : moment(serverDate).format('YYYY-MM-DD HH:mm:ss')
         };
       }
 

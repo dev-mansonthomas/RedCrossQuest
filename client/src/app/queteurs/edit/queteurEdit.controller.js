@@ -70,7 +70,10 @@
 
     vm.handleDate = function (theDate)
     {
-      return DateTimeHandlingService.handleServerDate(theDate).stringVersion;
+      if(angular.isDefined(theDate))
+        return DateTimeHandlingService.handleServerDate(theDate).stringVersion;
+      else
+        return "";
     };
 
     vm.handleQueteur = function(queteur)
@@ -91,14 +94,8 @@
         }
 
 
-        if(angular.isDefined(vm.current.created))
-        {
-          vm.current.created = vm.handleDate(vm.current.created);
-        }
-        if(angular.isDefined(vm.current.updated))
-        {
-          vm.current.updated = vm.handleDate(vm.current.updated);
-        }
+        vm.current.created = vm.handleDate(vm.current.created);
+        vm.current.updated = vm.handleDate(vm.current.updated);
 
         vm.current.ul_id=vm.current.ul_id+"";// otherwise the generated select is ? number(348) ?
 
@@ -142,9 +139,14 @@
           }
         }
 
-        if(angular.isDefined(vm.current.anonymization_date))
+        vm.current.anonymization_date = vm.handleDate(vm.current.anonymization_date);
+
+        if(angular.isDefined(vm.current.user))
         {
-          vm.current.anonymization_date = vm.handleDate(vm.current.anonymization_date);
+          vm.current.user.created = vm.handleDate(vm.current.user.created);
+          vm.current.user.updated = vm.handleDate(vm.current.user.updated);
+          vm.current.user.last_failure_login_date    = vm.handleDate(vm.current.user.last_failure_login_date);
+          vm.current.user.last_successful_login_date = vm.handleDate(vm.current.user.last_successful_login_date);
         }
 
         if(!vm.isRegistration)

@@ -10,7 +10,7 @@
   "dependencies": {
     "latest-version": "^5.0.0",
     "natives": "^1.1.6",
-    "npm": "^6.9.0"
+    "npm": "^6.13.1"
   },
   "scripts": {
     "test": "gulp test"
@@ -53,8 +53,8 @@
     "karma-ng-html2js-preprocessor": "~1.0.0",
     "karma-phantomjs-launcher": "~1.0.2",
     "libcipm": "^2.0.2",
-    "lodash": "^4.17.11",
-    "main-bower-files": "~2.13.1",
+    "lodash": "^4.17.15",
+    "main-bower-files": "^2.13.3",
     "phantomjs": "~2.1.7",
     "uglify-save-license": "~0.4.1",
     "wiredep": "~4.0.0",

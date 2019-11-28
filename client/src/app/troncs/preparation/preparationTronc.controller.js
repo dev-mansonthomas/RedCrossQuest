@@ -242,10 +242,10 @@
       if(!vm.current.queteur.birthdate)
         return true;
 
-      if(moment().diff(vm.current.queteur.birthdate.date, 'years')>=18)
+      if(moment().diff(vm.current.queteur.birthdate, 'years')>=18)
         return true;
 
-      if(vm.current.lieuDeQuete == null)
+      if(vm.current.lieuDeQuete == null || typeof vm.current.lieuDeQuete != 'object')
         return true;
 
       return vm.pointsQueteHash[vm.current.lieuDeQuete.id].minor_allowed === true;
