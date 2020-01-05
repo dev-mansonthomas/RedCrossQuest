@@ -36,6 +36,12 @@ class GetAllULSettings extends Action
   private $userDBService;
 
   /**
+   * @var DailyStatsBeforeRCQDBService                 $dailyStatsBeforeRCQDBService
+   */
+  private $dailyStatsBeforeRCQDBService;
+
+
+  /**
    * @Inject("settings")
    * @var array settings
    */
@@ -58,12 +64,14 @@ class GetAllULSettings extends Action
                               ClientInputValidator          $clientInputValidator,
                               UniteLocaleSettingsDBService  $uniteLocaleSettingsDBService,
                               UniteLocaleDBService          $uniteLocaleDBService,
-                              UserDBService                 $userDBService)
+                              UserDBService                 $userDBService,
+                              DailyStatsBeforeRCQDBService  $dailyStatsBeforeRCQDBService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->uniteLocaleSettingsDBService = $uniteLocaleSettingsDBService;
     $this->uniteLocaleDBService         = $uniteLocaleDBService;
     $this->userDBService                = $userDBService;
+    $this->dailyStatsBeforeRCQDBService = $dailyStatsBeforeRCQDBService;
 
   }
 
@@ -88,7 +96,7 @@ class GetAllULSettings extends Action
     $guiSettings['ul_settings'   ] = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
     $guiSettings['user'          ] = $this->userDBService                ->getUserInfoWithUserId($userId, $ulId, $roleId);
     $guiSettings['RCQVersion'    ] = $this->RCQVersion;
-    $guiSettings['FirstDay'      ] = DailyStatsBeforeRCQDBService::getCurrentQueteStartDate();
+    $guiSettings['FirstDay'      ] = $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate();
 
     $this->response->getBody()->write(json_encode($guiSettings));
 

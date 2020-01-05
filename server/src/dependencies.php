@@ -214,7 +214,7 @@ return function (ContainerBuilder $containerBuilder)
      */
     DailyStatsBeforeRCQDBService::class => function (ContainerInterface $c)
     {
-      return new DailyStatsBeforeRCQDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+      return new DailyStatsBeforeRCQDBService($c->get('settings')['queteDates'], $c->get(PDO::class), $c->get(LoggerInterface::class));
     },
 
 

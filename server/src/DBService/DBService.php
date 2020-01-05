@@ -12,7 +12,7 @@ abstract class DBService
   /** @var Logger */
   protected $logger;
 
-  public function __construct($db, $logger)
+  public function __construct(\PDO $db, Logger $logger)
   {
     $this->db     = $db;
     $this->logger = $logger;
