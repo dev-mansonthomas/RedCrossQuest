@@ -114,9 +114,8 @@ class AuthenticateAction extends AuthenticateAbstractAction
       $queteur = $this->queteurDBService    ->getQueteurById    ($user   ->queteur_id);
       $ul      = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
       $jwtToken = $this->getToken($queteur, $ul, $user);
-
-
-      $this->response->getBody()->write(json_encode(["token"=>$jwtToken->__toString()]));
+      
+      $this->response->getBody()->write(json_encode( new AuthenticationResponse($jwtToken->__toString())));
 
       $this->userDBService->registerSuccessfulLogin($user->id);
 

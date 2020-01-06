@@ -79,7 +79,7 @@ class CreateQueteur extends Action
 
     $this->logger->info("queteur creation", array("queteur"=>$queteurEntity));
     $queteurId  = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
-    $this->response->getBody()->write(json_encode(array('queteurId' => $queteurId), JSON_NUMERIC_CHECK));
+    $this->response->getBody()->write(json_encode(new CreateQueteurResponse($queteurId)));
 
     return $this->response;
   }

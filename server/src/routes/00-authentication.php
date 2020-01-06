@@ -14,12 +14,40 @@ use RedCrossQuest\routes\routesActions\authentication\ListTroncs;
 use RedCrossQuest\routes\routesActions\authentication\ResetPassword;
 use RedCrossQuest\routes\routesActions\authentication\SendPasswordInitializationMailAction;
 
+
 /********************************* Authentication ****************************************/
 
 /**
  * Authenticate from Firebase with a JWT token from firebase.
  * This token is then checked and on success, the method will retrieve the info about the user and generate a RCQ JWT
  */
+
+
+/**
+ * @OA\Post(
+ *     path="/firebase-authenticate",
+ *     summary="Returns a JWT Token for RedCrossQuest API if the firebase JWT is validated",
+ *     description="In the context of a firebase application, this method validate the firebase JWT and genenrate an RCQ JWT",
+ *     @OA\RequestBody(
+ *         description="Client side search object",
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="application/json",
+ *         @OA\Schema(ref="#/components/schemas/SearchObject")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *     @OA\Schema(ref="#/components/schemas/SearchResultObject)
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Could Not Find Resource"
+ *     )
+ * )
+ */
+
 $app->post(getPrefix().'/firebase-authenticate', FirebaseAuthenticateAction::class);
 
 /**

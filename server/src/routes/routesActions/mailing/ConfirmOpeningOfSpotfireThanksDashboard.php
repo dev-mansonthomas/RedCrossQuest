@@ -51,8 +51,7 @@ class ConfirmOpeningOfSpotfireThanksDashboard extends Action
     Logger::dataForLogging(new LoggingEntity(null, ["guid"=>$guid]));
 
     $this->mailingDBService->confirmRead($guid);
-
-    $this->response->getBody()->write(json_encode($guid));
+    
     return $this->response;
   }
 }

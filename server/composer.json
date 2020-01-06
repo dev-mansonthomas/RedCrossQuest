@@ -34,7 +34,8 @@
         "slim/psr7": "^0.6.0",
         "slim/slim": "^4.3.0",
         "symfony/validator": "^4.3.8",
-        "doctrine/annotations": "^1.8"
+        "doctrine/annotations": "^1.8",
+        "zircote/swagger-php": "^3.0"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}

@@ -42,7 +42,7 @@
 
 
       QueteurResource.countPendingQueteurRegistration().$promise.then(function(result){
-        vm.pendingQueteurRegistrationCount = result[0];
+        vm.pendingQueteurRegistrationCount = result.count;
       });
 
 
