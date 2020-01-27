@@ -38,7 +38,9 @@
         vm.current.created = DateTimeHandlingService.handleServerDate(vm.current.created).stringVersion;
         vm.current.saveInProgress=false;
         loadTroncQueteurForTronc();
-      });
+      }).catch(function(e){
+         $log.error("error searching for Tronc", e);
+       });
 
       $rootScope.$emit('title-updated', 'Edition du tronc - '+troncId);
     }

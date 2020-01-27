@@ -51,6 +51,8 @@
         vm.searchedYear = vm.selectedYear;
 
         $rootScope.$emit('title-updated', 'Stats Avant RCQ - Année '+vm.selectedYear);
+      }).catch(function(e){
+        $log.error("error searching for DailyStats", e);
       });
     };
 

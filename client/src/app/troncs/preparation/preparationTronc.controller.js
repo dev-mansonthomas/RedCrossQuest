@@ -210,6 +210,8 @@
         {
           $log.debug("error while searching for queteur with query='"+queryString+"' with reason='"+reason+"'");
         });
+      }).catch(function(e){
+        $log.error("error searching for Queteur", e);
       });
     };
 
@@ -231,6 +233,8 @@
       function error(reason)
       {
         $log.debug("error while searching for tronc with query='"+queryString+"' with reason='"+reason+"'");
+      }).catch(function(e){
+        $log.error("error searching for Tronc", e);
       });
     };
 

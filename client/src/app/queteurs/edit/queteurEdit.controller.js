@@ -194,11 +194,15 @@
     {
       if(vm.isRegistration)
       {
-        QueteurResource.getQueteurRegistration({ 'id': queteurId }).$promise.then(vm.handleQueteur);
+        QueteurResource.getQueteurRegistration({ 'id': queteurId }).$promise.then(vm.handleQueteur).catch(function(e){
+          $log.error("error searching for QueteurRegistration", e);
+        });
       }
       else
       {
-        QueteurResource.get({ 'id': queteurId }).$promise.then(vm.handleQueteur);
+        QueteurResource.get({ 'id': queteurId }).$promise.then(vm.handleQueteur).catch(function(e){
+          $log.error("error searching for Queteur", e);
+        });
       }
     }
     else
@@ -488,6 +492,8 @@
         QueteurResource.searchSimilarQueteurs({ 'first_name': vm.current.first_name,'last_name': vm.current.last_name,'nivol': vm.current.nivol }).$promise.then(function(queteurs)
         {
           vm.current.similarQueteurs = queteurs;
+        }).catch(function(e){
+          $log.error("error searching for searchSimilarQueteur", e);
         });
       }
     };

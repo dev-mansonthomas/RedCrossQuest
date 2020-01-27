@@ -26,12 +26,14 @@
 
     vm.registrationStatus = 0;
 
-    vm.registrations = QueteurResource.listPendingQueteurRegistration({'registration_status':vm.registrationStatus}).$promise.then(handleResult);
-
     vm.doSearch=function()
     {
-      vm.registrations = QueteurResource.listPendingQueteurRegistration({'registration_status':vm.registrationStatus}).$promise.then(handleResult);
+      vm.registrations = QueteurResource.listPendingQueteurRegistration({'registration_status':vm.registrationStatus}).$promise.then(handleResult).catch(function(e){
+        $log.error("error searching listPendingQueteurRegistration", e);
+      });
     };
+
+    vm.doSearch();
 
 
     function handleResult (registrations)

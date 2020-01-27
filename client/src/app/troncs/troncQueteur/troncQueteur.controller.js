@@ -55,7 +55,9 @@
       if (angular.isDefined(tronc_queteur_id) &&  tronc_queteur_id !== 0)
       {
         $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
-        TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
+        TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur).catch(function(e){
+          $log.error("error searching for TroncQueteur", e);
+        });
       }
     };
     vm.loadData(tronc_queteur_id);
@@ -86,6 +88,8 @@
       pointQueteList.forEach(function(onePointQuete){
         vm.pointsQueteHash[onePointQuete.id]=onePointQuete;
       });
+    }).catch(function(e){
+      $log.error("error searching for PointQuete", e);
     });
 
 
@@ -353,7 +357,9 @@
 
 
 
-      TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur.id}).$promise.then(handleTroncQueteurHistory);
+      TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur.id}).$promise.then(handleTroncQueteurHistory).catch(function(e){
+        $log.error("error searching for TroncQueteurHistoryForTroncQueteurId", e);
+      });
     }
 
 
@@ -410,7 +416,9 @@
         function(reason)
         {
           $log.debug("error while searching for tronc with query='"+queryString+"' with reason='"+reason+"'");
-        });
+        }).catch(function(e){
+        $log.error("error searching for Tronc", e);
+      });
     };
 
 
@@ -605,6 +613,8 @@
           {
             $log.debug("error while searching for moneybagId query='"+searchedString+"' with reason='"+reason+"'");
           });
+      }).catch(function(e){
+        $log.error("error searching for MoneyBag", e);
       });
     };
 

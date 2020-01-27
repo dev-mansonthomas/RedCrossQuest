@@ -23,7 +23,7 @@
     vm.selectedYear = vm.currentYear;
     vm.years = [];
 
-    for(var i=2004;i<=vm.currentYear; i++)
+    for(let i=2004;i<=vm.currentYear; i++)
       vm.years[vm.years.length]=i;
 
     vm.doSearch=function()
@@ -34,6 +34,8 @@
         vm.yearlyGoal   = yearlyGoal;
         vm.searchedYear = vm.selectedYear;
         $rootScope.$emit('title-updated', 'Objectifs de quête pour l\'année '+vm.searchedYear);
+      }).catch(function(e){
+        $log.error("error searching for YearlyGoals", e);
       });
     };
 

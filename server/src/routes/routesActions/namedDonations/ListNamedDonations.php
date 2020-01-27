@@ -56,7 +56,7 @@ class ListNamedDonations extends Action
 
     if(array_key_exists('admin_ul_id',$this->queryParams) && $roleId == 9)
     {
-      $validations [] = ClientInputValidatorSpecs::withBoolean('admin_ul_id', $this->args['admin_ul_id'], 1000, true);
+      $validations [] = ClientInputValidatorSpecs::withInteger('admin_ul_id',$this->getParam('admin_ul_id'), 1000, true);
     }
 
     $this->validateSentData($validations);

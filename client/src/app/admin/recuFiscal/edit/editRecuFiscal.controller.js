@@ -60,7 +60,9 @@
       if (angular.isDefined(recu_fiscal_id) &&  recu_fiscal_id !== 0)
       {
         $log.debug("loading data for named_donation with ID='"+recu_fiscal_id+"' ");
-        RecuFiscalResource.get({id:recu_fiscal_id}).$promise.then(handleRecuFiscal);
+        RecuFiscalResource.get({id:recu_fiscal_id}).$promise.then(handleRecuFiscal).catch(function(e){
+          $log.error("error searching for RecuFiscal", e);
+        });
       }
       else
       {
@@ -315,6 +317,8 @@
           {
             $log.debug("error while searching for moneybagId query='"+searchedString+"' with reason='"+reason+"'");
           });
+      }).catch(function(e){
+        $log.error("error searching for TroncQueteur", e);
       });
     };
 

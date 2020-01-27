@@ -37,7 +37,9 @@
     };
 
 
-    MailingResource.get().$promise.then(vm.handleMailingSummaryResponse);
+    MailingResource.get().$promise.then(vm.handleMailingSummaryResponse).catch(function(e){
+      $log.error("error searching for MailingResource", e);
+    });
 
 
     vm.stopProcessing=function()
@@ -55,7 +57,9 @@
         vm.running = false;
       }
       //recompute statistics
-      MailingResource.get().$promise.then(vm.handleMailingSummaryResponse);
+      MailingResource.get().$promise.then(vm.handleMailingSummaryResponse).catch(function(e){
+        $log.error("error searching for MailingResource", e);
+      });
       if(vm.stop !== true)
       {
         $timeout(function () {vm.send(); }, 2000);
