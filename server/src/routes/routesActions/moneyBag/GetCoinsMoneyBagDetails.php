@@ -1,10 +1,5 @@
 <?php
-
-
-
-
-namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
-
+namespace RedCrossQuest\routes\routesActions\moneyBag;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -15,8 +10,7 @@ use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
 
-
-class SearchMoneyBagId extends Action
+class GetCoinsMoneyBagDetails extends Action
 {
   /**
    * @var TroncQueteurDBService          $troncQueteurDBService
@@ -48,17 +42,17 @@ class SearchMoneyBagId extends Action
 
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("q"   , $this->getParam('q'   ), 30 , true),
-        ClientInputValidatorSpecs::withString("type", $this->getParam('type'),  4 , true)
+        ClientInputValidatorSpecs::withString ('id' ,  $this->args['id'], 20, true)
       ]);
 
-    $query         = $this->validatedData["q"   ];
-    $type          = $this->validatedData["type"];
-    $ulId          = $this->decodedToken->getUlId ();
+    $bagId = $this->validatedData["id"];
+    $ulId  = $this->decodedToken->getUlId ();
 
-    $moneyBagIds = $this->troncQueteurDBService->searchMoneyBagId($query, $type, $ulId);
+    $this->logger->info("Get Coins moneyBagDetails",["bagId"=>$bagId]);
 
-    $this->response->getBody()->write(json_encode($moneyBagIds));
+    $bagData = $this->troncQueteurDBService->getCoinsMoneyBagDetails($ulId, $bagId);
+
+    $this->response->getBody()->write(json_encode($bagData));
 
     return $this->response;
   }

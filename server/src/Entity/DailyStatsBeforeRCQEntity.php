@@ -1,14 +1,33 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-
+use Carbon\Carbon;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @OA\Schema(schema="DailyStatsBeforeRCQEntity", required={"id", "ul_id", "date", "amount"})
+ */
 class DailyStatsBeforeRCQEntity  extends Entity
 {
+  /**
+   * @OA\Property()
+   * @var integer $id Id of the stat
+   */
   public $id           ;
+  /**
+   * @OA\Property()
+   * @var integer $ul_id UL ID of the stat
+   */
   public $ul_id        ;
+  /**
+   * @OA\Property()
+   * @var Carbon $date The day of the stats
+   */
   public $date         ;
+  /**
+   * @OA\Property()
+   * @var float $amount total amount of money collected on that day
+   */
   public $amount       ;
 
   protected $_fieldList = ['id', 'ul_id', 'date', 'amount'];

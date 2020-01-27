@@ -1,8 +1,4 @@
 <?php
-
-
-
-
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
@@ -24,7 +20,10 @@ class PrepareTroncQueteur extends Action
    */
   private $troncQueteurDBService;
 
-
+  /**
+   * @var TroncQueteurBusinessService   $troncQueteurBusinessService
+   */
+  private $troncQueteurBusinessService;
 
   /**
    * @Inject("settings")
@@ -36,13 +35,16 @@ class PrepareTroncQueteur extends Action
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
    * @param TroncQueteurDBService $troncQueteurDBService
+   * @param TroncQueteurBusinessService   $troncQueteurBusinessService
    */
   public function __construct(LoggerInterface             $logger,
                               ClientInputValidator        $clientInputValidator,
-                              TroncQueteurDBService       $troncQueteurDBService)
+                              TroncQueteurDBService       $troncQueteurDBService,
+                              TroncQueteurBusinessService $troncQueteurBusinessService)
   {
     parent::__construct($logger, $clientInputValidator);
-    $this->troncQueteurDBService = $troncQueteurDBService;
+    $this->troncQueteurDBService       = $troncQueteurDBService;
+    $this->troncQueteurBusinessService = $troncQueteurBusinessService;
 
   }
 
@@ -60,14 +62,15 @@ class PrepareTroncQueteur extends Action
     $this->logger->warning("TroncQueteur POST PREPARATION");
 
     $tq    = new TroncQueteurEntity($this->parsedBody, $this->logger);
-    $hasQueteAlreadyStarted = TroncQueteurBusinessService::hasQueteAlreadyStarted($this->settings['appSettings']['deploymentType'], $tq->depart_theorique , $this->logger);
+    $hasQueteAlreadyStarted = $this->troncQueteurBusinessService->hasQueteAlreadyStarted($this->settings['appSettings']['deploymentType'], $tq->depart_theorique , $this->logger);
 
     if(!$hasQueteAlreadyStarted)
     {//enforce policy :  can't prepare or depart tronc before the start of the quête
-      $this->response->getBody()->write(json_encode((object) ['queteHasNotStartedYet'     => true]));
+      $this->response->getBody()->write(json_encode(new PrepareTroncQueteurQueteNotStartedResponse()));
       return $this->response;
     }
 
+    /** @var PrepareTroncQueteurResponse $insertResponse */
     $insertResponse = $this->troncQueteurDBService->insert($tq, $ulId, $userId);
 
     if($insertResponse->troncInUse != true)

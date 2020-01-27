@@ -18,8 +18,6 @@ use RedCrossQuest\Service\ReCaptchaService;
 
 class GetUserInfoFromUUIDAction extends Action
 {
-
-
   /**
    * @var ReCaptchaService
    */
@@ -32,14 +30,11 @@ class GetUserInfoFromUUIDAction extends Action
    * @var QueteurDBService
    */
   private $queteurDBService;
-
   /**
    * @Inject("settings")
    * @var array settings
    */
   protected $settings;
-
-
 
   /**
    * @param LoggerInterface $logger
@@ -100,7 +95,7 @@ class GetUserInfoFromUUIDAction extends Action
 
     if (strlen($uuid) != 36)
     {
-      $this->response->getBody()->write(json_encode(["success"=>false]));
+      $this->response->getBody()->write(json_encode(new GetUserInfoFromUUIDResponse(false)));
       return $this->response;
     }
 
@@ -109,16 +104,14 @@ class GetUserInfoFromUUIDAction extends Action
     {
       $queteur = $this->queteurDBService->getQueteurById($user->queteur_id);
 
-      $this->response->getBody()->write(json_encode([
-        "success"       => true,
-        "nivol"         => $queteur->nivol ]));
-
+      $this->response->getBody()->write(json_encode(new GetUserInfoFromUUIDResponse(true, $queteur->nivol)));
+      
       return $this->response;
 
     }
     else
     {//the user do not have an account
-      $this->response->getBody()->write(json_encode(["success"=>false]));
+      $this->response->getBody()->write(json_encode(new GetUserInfoFromUUIDResponse(false)));
       return $this->response;
     }
 

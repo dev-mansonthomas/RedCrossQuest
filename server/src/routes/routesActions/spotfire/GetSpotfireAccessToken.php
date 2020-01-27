@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\SpotfireAccessDBService;
 use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
+use RedCrossQuest\routes\routesActions\queteurs\GetSpotfireTokenResponse;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
 
@@ -50,7 +51,7 @@ class GetSpotfireAccessToken extends Action
 
     $validToken = $this->spotfireAccessDBService->getValidToken($userId, $ulId);
 
-    $this->response->getBody()->write(json_encode($validToken));
+    $this->response->getBody()->write(json_encode(new GetSpotfireTokenResponse($validToken)));
 
     return $this->response;
   }

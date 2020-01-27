@@ -1,8 +1,4 @@
 <?php
-
-
-
-
 namespace RedCrossQuest\routes\routesActions\namedDonations;
 
 
@@ -49,7 +45,7 @@ class CreateNamedDonation extends Action
 
     $namedDonationEntity    = new NamedDonationEntity($this->parsedBody, $this->logger);
     $namedDonationId        = $this->namedDonationDBService->insert($namedDonationEntity, $ulId, $userId);
-    $this->response->getBody()->write(json_encode(array("namedDonationId"=>$namedDonationId), JSON_NUMERIC_CHECK));
+    $this->response->getBody()->write(json_encode(new CreateNamedDonationResponse($namedDonationId)));
 
     return $this->response;
   }

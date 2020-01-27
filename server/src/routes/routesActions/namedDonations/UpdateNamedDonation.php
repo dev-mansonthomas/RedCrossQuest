@@ -44,10 +44,10 @@ class UpdateNamedDonation extends Action
   {
     Logger::dataForLogging(new LoggingEntity($this->decodedToken));
 
-    $ulId     = $this->decodedToken->getUlId();
-    $userId = $this->decodedToken->getUid();
+    $ulId   = $this->decodedToken->getUlId();
+    $userId = $this->decodedToken->getUid ();
 
-    $namedDonationEntity    = new NamedDonationEntity($this->parsedBody, $this->logger);
+    $namedDonationEntity = new NamedDonationEntity($this->parsedBody, $this->logger);
 
     $this->namedDonationDBService->update($namedDonationEntity, $ulId, $userId);
 

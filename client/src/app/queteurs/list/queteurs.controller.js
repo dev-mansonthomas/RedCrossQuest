@@ -49,7 +49,9 @@
     }
 
     //initial search with type 0 (all queteur)
-    QueteurResource.query({'searchType':0}).$promise.then(handleSearchResults);
+    QueteurResource.query({'searchType':0}).$promise.then(handleSearchResults).catch(function(e){
+      $log.error("error searching for Queteur", e);
+    });
 
     vm.doSearch=function()
     {
@@ -70,7 +72,9 @@
         searchParams['admin_ul_id']=vm.admin_ul_id;
       }
 
-      QueteurResource.query(searchParams).$promise.then(handleSearchResults);
+      QueteurResource.query(searchParams).$promise.then(handleSearchResults).catch(function(e){
+        $log.error("error searching for Queteur", e);
+      });
     };
 
 

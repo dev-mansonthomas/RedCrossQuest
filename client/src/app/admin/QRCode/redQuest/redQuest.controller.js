@@ -25,7 +25,9 @@
 
     vm.reload=function()
     {
-      SettingsResource.query().$promise.then(handleResult);
+      SettingsResource.query().$promise.then(handleResult).catch(function(e){
+        $log.error("error searching for Settings", e);
+      });
       computeURL();
     };
 

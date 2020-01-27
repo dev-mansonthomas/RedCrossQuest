@@ -104,14 +104,14 @@ class SendPasswordInitializationMailAction extends Action
 
       //protect email address
       $email = substr($queteur->email, 0, 2)."...@...".substr($queteur->email,-6, 6);
-      $this->response->getBody()->write(json_encode(["success"=>true,"email"=>$email]));
+      $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true, $email)));
       return $this->response;
 
     }
     else
     {//the user do not have an account
       $this->logger->error("sendInit: user do not have an account ", array('username' => $username));
-      $this->response->getBody()->write(json_encode(["success"=>false]));
+      $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true)));
       return $this->response;
     }
   }

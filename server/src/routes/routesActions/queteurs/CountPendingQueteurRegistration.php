@@ -47,7 +47,7 @@ class CountPendingQueteurRegistration extends Action
     $ulId     = $this->decodedToken->getUlId();
 
     $count = $this->queteurDBService->countPendingQueteurRegistration($ulId);
-    $this->response->getBody()->write(json_encode($count));
+    $this->response->getBody()->write(json_encode(new CountPendingRegistrationResponse($count)));
 
     return $this->response;
   }

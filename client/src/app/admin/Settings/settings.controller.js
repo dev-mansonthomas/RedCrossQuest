@@ -29,8 +29,12 @@
 
     vm.reload=function()
     {
-      UniteLocaleResource.query({id:$localStorage.guiSettings.ul.id}).$promise.then(handleResult);
-      SettingsResource.getULSettings().$promise.then(handleResultAppSettings);
+      UniteLocaleResource.query({id:$localStorage.guiSettings.ul.id}).$promise.then(handleResult).catch(function(e){
+        $log.error("error searching for UL", e);
+      });
+      SettingsResource.getULSettings().$promise.then(handleResultAppSettings).catch(function(e){
+        $log.error("error searching for Settings", e);
+      });
     };
 
     vm.reload();
@@ -78,7 +82,9 @@
       UniteLocaleResource.query({id:$localStorage.guiSettings.ul.id}).$promise.then(function(ulSettings)
         {
           $localStorage.guiSettings.ul = ulSettings;
-        });
+        }).catch(function(e){
+        $log.error("error searching for UL", e);
+      });
     }
 
     function errorWhileSaving(error)

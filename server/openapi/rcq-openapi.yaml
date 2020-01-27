@@ -1,0 +1,3868 @@
+openapi: 3.0.0
+info:
+  title: 'RedCrossQuest API'
+  description: 'API for the angular application RedCrossQuest'
+  contact:
+    name: cv@mansonthomas.com
+  license:
+    name: GPLv3
+  version: 1.0.0
+servers:
+  -
+    url: redcrossquest.com
+    description: 'RedCrossQuest API'
+paths:
+  /firebase-authenticate:
+    post:
+      tags:
+        - Authentication
+      summary: 'Returns a JWT Token for RedCrossQuest API if the firebase JWT is validated'
+      description: 'In the context of a firebase application, this method validate the firebase JWT and genenrate an RCQ JWT'
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                email:
+                  description: 'email of the person being authenticated'
+                  type: string
+                token:
+                  description: 'firebase JWT'
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        '401':
+          description: 'Authorisation denied'
+  /authenticate:
+    post:
+      tags:
+        - Authentication
+      summary: 'Authenticate a RCQ user'
+      description: 'Returns a JWT Token for RedCrossQuest API if the credentials are validated & the reCapcha  is validated'
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                username:
+                  description: 'user''s nivol'
+                  type: string
+                password:
+                  description: 'user''s password'
+                  type: string
+                token:
+                  description: 'ReCapcha Token to be validated'
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        '401':
+          description: 'Authorisation denied'
+  /sendInit:
+    post:
+      tags:
+        - Authentication
+      summary: 'user''s password reinitialization'
+      description: 'Send an email to the user with a link to reinitialize his password'
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                username:
+                  description: 'user''s nivol'
+                  type: string
+                token:
+                  description: 'ReCapcha Token to be validated'
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendPasswordInitializationMailResponse'
+        '401':
+          description: 'Authorisation denied - recaptcha validation fails'
+  /getInfoFromUUID:
+    get:
+      tags:
+        - Authentication
+      summary: 'fetch user info from UUID for password reinitialisation'
+      description: 'When a user click on the link in the email to reinitialize its email, there''s a UUID passed in the URL. From it, the process of reinitialization is validated and the username of the user is fetch'
+      parameters:
+        -
+          name: uuid
+          in: query
+          description: 'The UUID'
+          required: true
+          schema:
+            type: string
+        -
+          name: token
+          in: query
+          description: 'recaptcha token'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserInfoFromUUIDResponse'
+        '401':
+          description: 'Authorisation denied - recaptcha validation fails'
+  /resetPassword:
+    post:
+      tags:
+        - Authentication
+      summary: 'save the new password of the user'
+      description: 'Check ReCaptcha and save the new password for the user'
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              properties:
+                uuid:
+                  description: 'user''s UUID for password reset request (recieved by email)'
+                  type: string
+                password:
+                  description: 'the new password'
+                  type: string
+                token:
+                  description: 'ReCapcha Token to be validated'
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetPasswordResponse'
+        '401':
+          description: 'Authorisation denied - recaptcha validation fails'
+  '/{role-id:[1-9]}/ul/{ul-id}/troncs':
+    get:
+      tags:
+        - Troncs
+      summary: 'Fetch the list of tronc with search criteria'
+      description: 'List all tronc by default. If filters are specified, the list can be filter by type, active state, and tronc id'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: active
+          in: query
+          description: 'filter tronc by active criteria (boolean)'
+          required: false
+          schema:
+            type: boolean
+        -
+          name: type
+          in: query
+          description: 'filter by type of tronc : {id:1,label:''Tronc''},{id:2,label:''Tronc chez un commerçant''},{id:3,label:''Autre''}'
+          required: false
+          schema:
+            type: string
+        -
+          name: q
+          in: query
+          description: 'Filter by tronc id. Only one tronc id value is supported. The query is implemented this way : AND CONVERT(id, CHAR) like concat(:query,''%'')'
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TroncEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}':
+    get:
+      tags:
+        - Troncs
+      summary: 'Get a specific Tronc'
+      description: 'When a user click on the link in the email to reinitialize its email, there''s a UUID passed in the URL. From it, the process of reinitialization is validated and the username of the user is fetch'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'the id of the tronc you''re trying to get'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TroncEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/troncs/{id}':
+    put:
+      tags:
+        - Troncs
+      summary: 'Update a tronc, only for admin role (4)'
+      description: 'Update type, notes, enabled status'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'the id of the tronc you''re trying to update'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TroncEntity'
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/troncs':
+    post:
+      tags:
+        - Troncs
+      summary: 'Insert new TroncS'
+      description: 'Only for admin role (4). Insert X troncs in the DB, where X=nombreTronc in TroncEntity'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'the id of the tronc you''re trying to update'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TroncEntity'
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/nonReturnedTroncQueteur/{tronc_id}':
+    delete:
+      tags:
+        - TroncsQueteurs
+      summary: 'Mark as deleted unused tronc_queteur that is linked to the {tronc_id}'
+      description: 'When doing a preparation, a check is done, to see if the queteur is not already linked to another tronc_id or the tronc_id to another queteur in a tronc_queteur row, and that tronc_queteur has depart or retour = null. If it''s the case, a popup is shown offering to mark the existing tronc_queteur as deleted. The deletion is performed by this method, on the specified tronc_id'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: tronc_id
+          in: path
+          description: 'The ID of the Tronc, used as search criteria on TroncQueteur that have retour or depart = null, to set them as deleted'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}/saveReturnDate':
+    patch:
+      tags:
+        - TroncsQueteurs
+      summary: 'Update the TroncQueteur with money details'
+      description: 'Update TroncQueteur with coins, bills, credit card, bank notes details, set the ''comptage'' date and publish a message on PubSub'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the TroncQueteur'
+          required: true
+          schema:
+            type: integer
+        -
+          name: dateDepartIsMissing
+          in: query
+          description: 'When scanning a Tronc for a ''Retour'' and the Depart date is missing, the user can fill the missing departure date and record the return date at the same time. If so, we add a parameter dateDepartIsMissing=true to notify backend that the depart must be updated'
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}/saveCoins':
+    patch:
+      tags:
+        - TroncsQueteurs
+      summary: 'Update the TroncQueteur with money details'
+      description: 'Update TroncQueteur with coins, bills, credit card, bank notes details, set the ''comptage'' date and publish a message on PubSub'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the TroncQueteur'
+          required: true
+          schema:
+            type: integer
+        -
+          name: adminMode
+          in: query
+          description: 'If set to true, the comptage date is not updated to now'
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}/saveAsAdmin':
+    patch:
+      tags:
+        - TroncsQueteurs
+      summary: 'Update the TroncQueteur as admin'
+      description: 'Outside of the normal lifecycle, edit the TroncQueteur to correct dates, money etc...'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the TroncQueteur'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}/cancelDepart':
+    patch:
+      tags:
+        - TroncsQueteurs
+      summary: 'Cancel the ''Depart'''
+      description: 'Cancel the Depart (Volunteer start collecting money) by setting the ''depart'' date to null'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the TroncQueteur'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/{id}/cancelRetour':
+    patch:
+      tags:
+        - TroncsQueteurs
+      summary: 'Cancel the ''Retour'''
+      description: 'Cancel the Retour (Return of the volunteer) by setting the ''retour'' date to null'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the TroncQueteur'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/getTroncQueteurForTroncIdAndSetDepart':
+    patch:
+      tags:
+        - TroncsQueteurs
+      summary: 'Record Depart (start of collecting money) for a tronc ID'
+      description: 'Retrieve the correct TroncQueteur from the Tronc ID (decoded from the QRCode) and record the depart'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: tronc_id
+          in: query
+          description: 'The ID of the Tronc (scan with QRCode or hand typed)'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TroncQueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur':
+    post:
+      tags:
+        - TroncsQueteurs
+      summary: 'Record a preparation or preparation and departure'
+      description: 'Record the fact that queteur queteur_id=X will use the Tronc tronc_id=Y at a specific time (preparation date) and place (PointQueteId). The departure can be recorded with this operation as well if Troncqueteur->preparationAndDepart is set to true'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TroncQueteurEntity'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/PrepareTroncQueteurResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/getLastTroncQueteurFromTroncId':
+    get:
+      tags:
+        - TroncsQueteurs
+      summary: 'Get the last recored TroncQueteur linked to the passed TroncID'
+      description: 'Get the last recored TroncQueteur linked to the passed TroncID. Queteur and PointQuete object are fully retrieved. If not found, empty TroncQueteur is returned with numRows=0, and tronc_id = value passed'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: tronc_id
+          in: query
+          description: 'The ID of the Tronc'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TroncQueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/getTroncsQueteurForTroncId':
+    get:
+      tags:
+        - TroncsQueteurs
+      summary: 'Get all the TroncQueteur linked to a Tronc'
+      description: 'Get the last recored TroncQueteur linked to the passed TroncID. Queteur and PointQuete object are fully retrieved. If not found, empty TroncQueteur is returned with numRows=0, and tronc_id = value passed'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: tronc_id
+          in: query
+          description: 'The ID of the Tronc'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TroncQueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/getTroncsOfQueteur':
+    get:
+      tags:
+        - TroncsQueteurs
+      summary: 'Get all the TroncQueteur linked to a Queteur'
+      description: 'Get the last recored TroncQueteur linked to the passed QueteurID. Queteur and PointQuete object are fully retrieved. If not found, empty TroncQueteur is returned with numRows=0, and tronc_id = value passed'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: queteur_id
+          in: query
+          description: 'The ID of the Queteur'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TroncQueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}':
+    get:
+      tags:
+        - TroncsQueteurs
+      summary: 'Get a TroncQueteur from its ID '
+      description: 'Get A TroncQueteur from its ID (TroncQueteur->id) and get the full objects for Queteur, Tronc, PointQuete'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the TroncQueteur'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TroncQueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id:\d+}':
+    get:
+      tags:
+        - PointQuete
+      summary: 'Get a specific PointDeQuete'
+      description: 'Get a specific PointDeQuete (Geographical location where Queteur ask for money)'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the PointDeQuete'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/PointQueteEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/pointQuetes':
+    get:
+      tags:
+        - PointQuete
+      summary: 'Get the list of PointDeQuete of an UL (the full list)'
+      description: 'Get the full list of PointDeQuete of an UL. Used by the frontend to put it in cache and a dropdown with local autocomplete'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PointQueteEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/search':
+    get:
+      tags:
+        - PointQuete
+      summary: 'Search PointDeQuete of an UL'
+      description: 'Search Point de Quete. The Query string (q) is match against name, code, adress, city. Filter by type & active state. Search in the current UL, except for the super admin that can override the ULID'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: q
+          in: query
+          description: 'The string that is searched'
+          required: true
+          schema:
+            type: string
+        -
+          name: point_quete_type
+          in: query
+          description: 'The type of point de quete {id:1,label:''Voie Publique / Feux Rouge''},{id:2,label:''Piéton''},{id:3,label:''Commerçant''},{id:4,label:''Base UL''},{id:5,label:''Autre''}'
+          required: true
+          schema:
+            type: integer
+        -
+          name: active
+          in: query
+          description: 'Search of active/inactive pointDeQuete'
+          required: true
+          schema:
+            type: boolean
+        -
+          name: admin_ul_id
+          in: query
+          description: 'Search a specific ULID. Available only for super admin'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PointQueteEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}':
+    post:
+      tags:
+        - PointQuete
+      summary: 'Record a preparation or preparation and departure'
+      description: 'Record the fact that queteur queteur_id=X will use the Tronc tronc_id=Y at a specific time (preparation date) and place (PointQueteId). The departure can be recorded with this operation as well if Troncqueteur->preparationAndDepart is set to true'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Id of the Point de Quete we want to update'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PointQueteEntity'
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/pointQuetes':
+    post:
+      tags:
+        - PointQuete
+      summary: 'Create a pointDeQuete'
+      description: 'Create a pointDeQuete :  ie a specific location where queteur go asking for money'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PointQueteEntity'
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/schemas/CreatePointQueteResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/queteurs':
+    get:
+      tags:
+        - Quêteurs
+      summary: 'Search the Queteur of an UL'
+      description: 'Multiple type of search are available. If anonymization_token is present, only search for queteur matching this token. Some queries are fundRaising Related and return extra info, like where should the queteur go, how much time he is out. There''s a simple search used for autocomplete search.'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: q
+          in: query
+          description: 'The string that is searched. It''s matched against NIVOL, first name, last name, and id (queteur primary key)'
+          required: false
+          schema:
+            type: string
+        -
+          name: searchType
+          in: query
+          description: 'The type of query that is being made : {0: ''search all queteur'', 1: ''Search Queteur that have a TroncQueteur Prepared but have not yet left (preparation is not null and depart is null)'', 2:''Search Queteur currently on the street asking for money (retour is null)'', 3:''Simple search for autocomplete search}'
+          required: false
+          schema:
+            type: integer
+        -
+          name: secteur
+          in: query
+          description: 'Search a specific type of queteur : {id:1,label:''Action Sociale''},{id:2,label:''Secours''},{id:3,label:''Bénévole d\''un Jour''},{id:4,label:''Ancien Bénévole, Inactif ou Adhérent''},{id:5,label:''Commerçant''},{id:6,label:''Spécial''}'
+          required: false
+          schema:
+            type: integer
+        -
+          name: admin_ul_id
+          in: query
+          description: 'Search a specific ULID. Available only for super admin'
+          required: false
+          schema:
+            type: integer
+        -
+          name: active
+          in: query
+          description: 'Search only for active/inactive queteurs'
+          required: false
+          schema:
+            type: boolean
+        -
+          name: rcqUser
+          in: query
+          description: 'Search only for Queteur that are also RedCrossQuest users'
+          required: false
+          schema:
+            type: boolean
+        -
+          name: rcqUserActif
+          in: query
+          description: 'if rcqUser=true, search for RCQUser depending on their active status'
+          required: false
+          schema:
+            type: boolean
+        -
+          name: benevoleOnly
+          in: query
+          description: 'Search for queteur that are registered volunteers'
+          required: false
+          schema:
+            type: boolean
+        -
+          name: queteurIds
+          in: query
+          description: 'Search of queteur matching this ID list'
+          required: false
+          schema:
+            type: string
+        -
+          name: QRSearchType
+          in: query
+          description: 'Search of queteur where the QRCode has been printed or not'
+          required: false
+          schema:
+            type: integer
+        -
+          name: anonymization_token
+          in: query
+          description: 'If this argument is present other search field are ignored. Only queteur rows that match this token will be returned'
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/queteurs/countPendingQueteurRegistration':
+    get:
+      tags:
+        - Quêteurs
+      summary: 'Count pending registration (via RedQuest)'
+      description: 'Count pending registration (via RedQuest)'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/CountPendingRegistrationResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/queteurs/listPendingQueteurRegistration':
+    get:
+      tags:
+        - Quêteurs
+      summary: 'List pending registration'
+      description: 'List pending registration (where validation has not been made) or list the one that have been accepted or refused.'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: registration_status
+          in: path
+          description: 'If registration_status is null or 0, list all registration that has not validation (granted/refused), registration_status=1 : list approved registration, registration_status:2 list refused registration'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/queteurs/searchSimilarQueteurs':
+    get:
+      tags:
+        - Quêteurs
+      summary: 'Search Similar Queteur'
+      description: 'Search Queteur that have a first name, last name, nivol that are like what has been typed. At least one parameter must be given. If mutliple argument is given, the search is done with an ''OR'''
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: first_name
+          in: query
+          description: 'Search for matching first name'
+          required: false
+          schema:
+            type: string
+        -
+          name: last_name
+          in: query
+          description: 'Search for matching last name'
+          required: false
+          schema:
+            type: string
+        -
+          name: first_name
+          in: query
+          description: 'Search for matching nivol'
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}':
+    get:
+      tags:
+        - Quêteurs
+      summary: 'Get a Queteur by its ID'
+      description: 'The queteur must belong to the RCQ user''s UL (except for super admin). If the current RCQ User is admin, the queteur''s user details is also fetched.'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'ID of the queteur'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/QueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}/getQueteurRegistration':
+    get:
+      tags:
+        - Quêteurs
+      summary: 'Get a Queteur Registration by its registration ID'
+      description: 'Get a Queteur Registration by its ID, and if the registration_approved is null and from the same UL as the connected user.'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'ID of the queteur registration'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/QueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    put:
+      tags:
+        - Quêteurs
+      summary: 'Get a Queteur Registration by its registration ID'
+      description: 'Get a Queteur Registration by its ID, and if the registration_approved is null and from the same UL as the connected user.'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'ID of the queteur'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QueteurEntity'
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/queteurs/markAllAsPrinted':
+    put:
+      tags:
+        - Quêteurs
+      summary: 'Mark all QRCode as printed'
+      description: 'Mark all QRCode as printed for the user''s UL'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/anonymize':
+    put:
+      tags:
+        - Quêteurs
+      summary: 'Anonymize a queteur and send the queteur an email'
+      description: 'This method retrieve the current queteur data, anonymize the queteur data in DB and set a GUID token on that row. Then the queteur is sent an email with the token. If the queteur return the next year with that token, his queteur row can be re-valueated with nomminative data. His previous fundraising details can be retrieved and used in gamification. The anonymized data is returned for display'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'ID of the queteur'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QueteurEntity'
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/schemas/QueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/associateRegistrationWithExistingQueteur':
+    put:
+      tags:
+        - Quêteurs
+      summary: 'Associate an existing queteur with a queteur registration'
+      description: 'If an existing queteur wants to use RedQuest, he must register to RedQuest, and this registration must be approved and do not generate a duplicate. When the registration is opened, a searchSimilarQueteur is performed, and similar queteur are displayed. The user have a button to associate the registration to the existing RCQ Queteur. This button call this function, and pass the queteurEntity. But before that : the queteur registration id, must be copied in queteur->registration_id, and the  selected QueteurId must be set in queteur->id. ul_registration_token is validated. A confirmation email is sent, and a pub_sub message is sent to RedQuest.'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'ID of the queteur (the existing one in RCQ)'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'The queteur Entity that contains the registration_id (the primary key of queteur_registration table)'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QueteurEntity'
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/schemas/AssociateRegistrationWithExistingQueteurResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/queteurs':
+    post:
+      tags:
+        - Quêteurs
+      summary: 'Create a new Queteur'
+      description: 'Create a queteur in current queteur''s UL. Super admin can create queteur on other Uls (for first RCQ User or debug)'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'The queteur Entity that contains queteur''s info except id. User is created later with another method'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QueteurEntity'
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/schemas/CreateQueteurResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[2-9]}/ul/{ul-id}/queteurs/approveQueteurRegistration':
+    post:
+      tags:
+        - Quêteurs
+      summary: 'Accept or refuse a queteur registration.'
+      description: 'ul_registration_token is validated. Create a new Queteur from a Registration and send an email if the registration is approved, or send an email to inform of the refusal. QueteurRegistration is updated and linked to the queteur if approved. A message is also sent to RedQuest via pubSub'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'The queteur Entity that contains queteur''s info except id. User is created later with another method'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QueteurEntity'
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/schemas/ApproveQueteurRegistrationResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/dailyStats':
+    get:
+      tags:
+        - DailyStatsBeforeRCQ
+      summary: 'Get the daily stats of a specific year'
+      description: 'Get the daily stats of a specific year. That is the amount of money collected on each day of the fundraising of that year'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: year
+          in: query
+          description: 'The year we want the daily stats'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/DailyStatsBeforeRCQEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      tags:
+        - DailyStatsBeforeRCQ
+      summary: 'Create the rows of stats for a specific year'
+      description: 'Insert a row per day of fundraising on that specific year. Amount is set to 0. Dates per year is configured on the server side configuration'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: year
+          in: query
+          description: 'Year to be created'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}':
+    put:
+      tags:
+        - DailyStatsBeforeRCQ
+      summary: 'Get the daily stats of a specific year'
+      description: 'Get the daily stats of a specific year. That is the amount of money collected on each day of the fundraising of that year'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'ID of the stat to update'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DailyStatsBeforeRCQEntity'
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/users/{id}':
+    put:
+      tags:
+        - Users
+      summary: 'Update the active/inactive status and role of the user'
+      description: 'Before reactivating a user that was previously disabled, a check is done to see if an active user already exists with that nivol, whatever the UL. If it''s the case, and error is raised.'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Id of the user'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserEntity'
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/schemas/UserEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/users/{id}/reInitPassword':
+    put:
+      tags:
+        - Users
+      summary: 'Initiate the reset password procedure'
+      description: 'Generate a GUID with an expiry date of 48h for the first init, 4h for subsequent init and send an email to the user (it''s email is taken from the corresponding queteur object) and return the updated UserEntityObject'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Id of the user'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserEntity'
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/schemas/UserEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/users':
+    put:
+      tags:
+        - Users
+      summary: 'Create a user'
+      description: 'Create a new User. Check that NIVOL or UL_ID is not changed. Check if an active user with that NIVOL exists in any UL, if so it raises an error. '
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'Id of the user'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserEntity'
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/schemas/UserEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/graph':
+    get:
+      tags:
+        - SpotfireAccess
+      summary: 'Get the users its spotfire token'
+      description: 'Check if a valid spotfire token exist. If so it returns it. if not it creates a new one. The Spotfire Access Token is a GUID that allow to display the appropriate data in spotfire graphs'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SpotfireAccessEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history':
+    get:
+      tags:
+        - TroncsQueteurs
+      summary: 'Get the history of modification of a TroncQueteur'
+      description: 'Get the history of modification of a TroncQueteur. it''s ordered by id desc'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: tronc_queteur_id
+          in: query
+          description: 'The ID of the TroncQueteur'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TroncQueteurEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/settings/ul/{ul-id}':
+    get:
+      tags:
+        - RCQSettings
+      summary: 'Get the UL details'
+      description: 'Get the UL details'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/GetULSettingsResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/settings/ul/{ul-id}/getSetupStatus':
+    get:
+      tags:
+        - RCQSettings
+      summary: 'Get the UL Setup Status'
+      description: 'Get the UL Setup Status'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/GetULSetupStatusResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/settings/ul/{ul-id}/getAllSettings':
+    get:
+      tags:
+        - RCQSettings
+      summary: 'Get All the UL settings'
+      description: 'Get All the UL settings'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/GetAllULSettingsResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    put:
+      tags:
+        - RCQSettings
+      summary: 'Get All the UL settings'
+      description: 'Get All the UL settings'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/GetAllULSettingsResponse'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{id}':
+    get:
+      tags:
+        - UnitéLocale
+      summary: 'Get the UL details'
+      description: 'Get the UL details'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/UniteLocaleEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[9]}/ul':
+    get:
+      tags:
+        - UnitéLocale
+      summary: 'Search for UL'
+      description: 'Search for UL against those fields : against `name`, `postal_code`, `city`, `president_first_name`, `president_last_name`, `admin_first_name`, `admin_last_name`, `tresorier_first_name`, `tresorier_last_name`. only for super admin.'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: q
+          in: query
+          description: 'String to search '
+          required: true
+          schema:
+            type: String
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UniteLocaleEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}':
+    put:
+      tags:
+        - UnitéLocale
+      summary: 'Update Unité Locale Settings'
+      description: 'Update Unité Locale Settings'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UniteLocaleEntity'
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals':
+    get:
+      tags:
+        - YearlyGoals
+      summary: 'Get the list of YearlyGoals'
+      description: 'Get the list of YearlyGoals of an UL for a specific year. '
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: year
+          in: query
+          description: 'The year which we want to get'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/YearlyGoalEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      tags:
+        - YearlyGoals
+      summary: 'Create goals for a year'
+      description: 'Update FundRaising goals in € and the percentage split over each days'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Only the year is required, other fields are ignored'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}':
+    put:
+      tags:
+        - YearlyGoals
+      summary: 'Update the yearly goals'
+      description: 'Update FundRaising goals in € and the percentage split over each days'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the yearly goal (row primary key, not the year)'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/YearlyGoalEntity'
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/namedDonations':
+    get:
+      tags:
+        - NamedDonation
+      summary: 'Get the list of NamedDonation of an UL (the full list)'
+      description: 'Get the full list of NamedDonation of an UL. Used by the frontend to put it in cache and a dropdown with local autocomplete'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: q
+          in: query
+          description: 'Searched String. Matched against these fields : `first_name`, `last_name`, `email`, `phone`, `ref_recu_fiscal`'
+          required: true
+          schema:
+            type: string
+        -
+          name: deleted
+          in: query
+          description: 'Search for deleted named donation'
+          required: true
+          schema:
+            type: boolean
+        -
+          name: year
+          in: query
+          description: 'Search NamedDonation of a specific year'
+          required: true
+          schema:
+            type: integer
+        -
+          name: admin_ul_id
+          in: query
+          description: 'For super admin, search named donation for other UL'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedDonationEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      tags:
+        - NamedDonation
+      summary: 'Create one specific NamedDonation'
+      description: 'Create one specific NamedDonation'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NamedDonationEntity'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/NamedDonationEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}':
+    get:
+      tags:
+        - NamedDonation
+      summary: 'Get one specific NamedDonation'
+      description: 'Get one specific NamedDonation'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the Name Parameter'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/NamedDonationEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    put:
+      tags:
+        - NamedDonation
+      summary: 'Update one specific NamedDonation'
+      description: 'Update one specific NamedDonation'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the Name Parameter'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: 'Input data format'
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NamedDonationEntity'
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[4-9]}/ul/{ul-id}/exportData':
+    get:
+      tags:
+        - ExportData
+      summary: 'Export UL''s data'
+      description: 'Export UL''s data as several CSV files, packed in a zip file protected by password'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: password
+          in: query
+          description: 'Password of the file'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/NamedDonationEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/moneyBag':
+    get:
+      tags:
+        - MoneyBag
+      summary: 'Search for existing money bag IDs'
+      description: 'Search money bag IDs by type (coins, bills) and a query string'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: q
+          in: query
+          description: 'The searched string'
+          required: true
+          schema:
+            type: string
+        -
+          name: type
+          in: query
+          description: 'Type of Moneybag Id search :  ''bill'' or ''coin'''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/moneyBag/coins/{id}':
+    get:
+      tags:
+        - MoneyBag
+      summary: 'Get Bank Bag details '
+      description: 'Get Bank Bag details (current amount and weight, coins count)'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the Bank Bag'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/CoinsMoneyBagSummaryEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  '/{role-id:[1-9]}/ul/{ul-id}/moneyBag/bills/{id}':
+    get:
+      tags:
+        - MoneyBag
+      summary: 'Get Bank Bag details '
+      description: 'Get Bank Bag details (current amount and weight, coins count)'
+      parameters:
+        -
+          name: role-id
+          in: path
+          description: 'Current User Role'
+          required: true
+          schema:
+            type: integer
+        -
+          name: ul-id
+          in: path
+          description: 'User''s Unite Locale ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: id
+          in: path
+          description: 'The ID of the Bank Bag'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/BillsMoneyBagSummaryEntity'
+        '500':
+          description: 'General Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+components:
+  schemas:
+    BillsMoneyBagSummaryEntity:
+      required:
+        - type
+      properties:
+        amount:
+          description: '$amount total amount of money in the bag'
+          type: number
+          format: float
+        weight:
+          description: '$weight total weight of money in the bag'
+          type: number
+          format: float
+        total_euro5:
+          description: '$total_euro2 Sum in € of coins of 5€'
+          type: integer
+        total_euro10:
+          description: '$total_euro10 Sum in € of coins of 10€'
+          type: integer
+        total_euro20:
+          description: '$total_euro20 Sum in € of coins of 20€'
+          type: integer
+        total_euro50:
+          description: '$total_euro50 Sum in € of coins of 50€'
+          type: integer
+        total_euro100:
+          description: '$total_euro100 Sum in € of coins of 100€'
+          type: integer
+        total_euro200:
+          description: '$total_euro200 Sum in € of coins of 200€'
+          type: integer
+        total_euro500:
+          description: '$total_euro500 Sum in € of coins of 500€'
+          type: integer
+        count_euro5:
+          description: '$count_euro5 Count of bills of 5€'
+          type: integer
+        count_euro10:
+          description: '$count_euro10 Count of bills of 10€'
+          type: integer
+        count_euro20:
+          description: '$count_euro20 Count of bills of 20€'
+          type: integer
+        count_euro50:
+          description: '$count_euro50 Count of bills of 50€'
+          type: integer
+        count_euro100:
+          description: '$count_euro100 Count of bills of 100€'
+          type: integer
+        count_euro200:
+          description: '$count_euro200 Count of bills of 200€'
+          type: integer
+        count_euro500:
+          description: '$count_euro500 Count of bills of 500€'
+          type: integer
+        bills_money_bag_id:
+          description: '$bills_money_bag_id The ID of the MoneyBag'
+          type: string
+      type: object
+    CoinsMoneyBagSummaryEntity:
+      required:
+        - type
+      properties:
+        amount:
+          description: '$amount total amount of money in the bag'
+          type: number
+          format: float
+        weight:
+          description: '$weight total weight of money in the bag'
+          type: number
+          format: float
+        total_euro2:
+          description: '$total_euro2 Sum in € of coins of 2€'
+          type: number
+          format: float
+        total_euro1:
+          description: '$total_euro1 Sum in € of coins of 1€'
+          type: number
+          format: float
+        total_cents50:
+          description: '$total_cents50 Sum in € of coins of 50cts'
+          type: number
+          format: float
+        total_cents20:
+          description: '$total_cents20 Sum in € of coins of 20cts'
+          type: number
+          format: float
+        total_cents10:
+          description: '$total_cents10 Sum in € of coins of 10cts'
+          type: number
+          format: float
+        total_cents5:
+          description: '$total_cents5 Sum in € of coins of 5cts'
+          type: number
+          format: float
+        total_cents2:
+          description: '$total_cents2 Sum in € of coins of 2cts'
+          type: number
+          format: float
+        total_cent1:
+          description: '$total_cent1 Sum in € of coins of 1ct'
+          type: number
+          format: float
+        count_euro2:
+          description: '$count_euro2 Number of coins of 2€'
+          type: integer
+        count_euro1:
+          description: '$count_euro1 Number of coins of 1€'
+          type: integer
+        count_cents50:
+          description: '$count_cents50 Number of coins of 50cts'
+          type: integer
+        count_cents20:
+          description: '$count_cents20 Number of coins of 20cts'
+          type: integer
+        count_cents10:
+          description: '$count_cents10 Number of coins of 10cts'
+          type: integer
+        count_cents5:
+          description: '$count_cents5 Number of coins of 5cts'
+          type: integer
+        count_cents2:
+          description: '$count_cents2 Number of coins of 2cts'
+          type: integer
+        count_cent1:
+          description: '$count_cent1 Number of coins of 1ct'
+          type: integer
+        coins_money_bag_id:
+          description: '$coins_money_bag_id The ID of the MoneyBag'
+          type: string
+      type: object
+    DailyStatsBeforeRCQEntity:
+      required:
+        - id
+        - ul_id
+        - date
+        - amount
+      properties:
+        id:
+          description: '$id Id of the stat'
+          type: integer
+        ul_id:
+          description: '$ul_id UL ID of the stat'
+          type: integer
+        date:
+          description: '$date The day of the stats'
+        amount:
+          description: '$amount total amount of money collected on that day'
+          type: number
+          format: float
+      type: object
+    NamedDonationEntity:
+      required:
+        - ul_id
+        - first_name
+        - last_name
+        - address
+        - postal_code
+        - city
+        - type
+        - forme
+      properties:
+        id:
+          description: '$id NamedDonation ID'
+          type: integer
+        ul_id:
+          description: '$ul_id UL ID'
+          type: integer
+        ref_recu_fiscal:
+          description: '$ref_recu_fiscal The business ID of the NamedDonation. It''s the official id from the RedCross, used as reference for tax deduction'
+          type: string
+        first_name:
+          description: '$first_name Donor first name'
+          type: string
+        last_name:
+          description: '$first_name Donor last name'
+          type: string
+        donation_date:
+          description: '$first_name Donation date'
+          type: string
+        address:
+          description: '$first_name Donor address'
+          type: string
+        postal_code:
+          description: '$first_name Donor postal code'
+          type: string
+        city:
+          description: '$first_name Donor city'
+          type: string
+        phone:
+          description: '$first_name Donor Phone'
+          type: string
+        email:
+          description: '$first_name Donor email'
+          type: string
+        euro500:
+          description: '$euro500 Number of 500€ bills'
+          type: integer
+        euro200:
+          description: '$euro200 Number of 200€ bills'
+          type: integer
+        euro100:
+          description: '$euro100 Number of 100€ bills'
+          type: integer
+        euro50:
+          description: '$euro50 Number of 50€ bills'
+          type: integer
+        euro20:
+          description: '$euro20 Number of 20€ bills'
+          type: integer
+        euro10:
+          description: '$euro10 Number of 10€ bills'
+          type: integer
+        euro5:
+          description: '$euro5 Number of 5€ bills'
+          type: integer
+        euro2:
+          description: '$euro2 Number of 2€ coins'
+          type: integer
+        euro1:
+          description: '$euro1 Number of 1€ coins'
+          type: integer
+        cents50:
+          description: '$cents50 Number of 50cts coins'
+          type: integer
+        cents20:
+          description: '$cents20 Number of 20cts coins'
+          type: integer
+        cents10:
+          description: '$cents10 Number of 10cts coins'
+          type: integer
+        cents5:
+          description: '$cents5 Number of 5cts coins'
+          type: integer
+        cents2:
+          description: '$cents2 Number of 2cts coins'
+          type: integer
+        cent1:
+          description: '$cent1 Number of 1ct coins'
+          type: integer
+        don_cheque:
+          description: '$don_cheque total amount of bank note collected'
+          type: number
+          format: float
+        don_creditcard:
+          description: '$don_cheque total amount of credit card payment collected'
+          type: number
+          format: float
+        notes:
+          description: '$notes notes about the donation'
+          type: string
+        type:
+          description: '$type {id:1,label:''Espèce''}, {id:2,label:''Chèque''}, {id:3,label:''Virement, Prélèvement, Carte Bancaire''}'
+          type: string
+        forme:
+          description: '$forme {id:1,label:''Déclaration de don manuel''},{id:2,label:''Acte sous seing privé''}'
+          type: string
+        deleted:
+          description: '$deleted if the NamedDonation is marked as deleted or not'
+          type: boolean
+        coins_money_bag_id:
+          description: '$coins_money_bag_id Identifier of the bag that contains the coins of this troncQueteur. It''s used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.'
+          type: string
+        bills_money_bag_id:
+          description: '$bills_money_bag_id Identifier of the bag that contains the bills of this troncQueteur. It''s used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.'
+          type: string
+        last_update:
+          description: '$last_update Last time the NamedDonation row is updated'
+        last_update_user_id:
+          description: '$last_update_user_id UserId of the user that performed the last update on this NamedDonation'
+          type: integer
+      type: object
+    PointQueteEntity:
+      required:
+        - name
+        - latitude
+        - longitude
+        - address
+        - postal_code
+        - city
+        - minor_allowed
+        - enabled
+        - type
+      properties:
+        id:
+          description: '$id pointQuete Id'
+          type: integer
+        ul_id:
+          description: '$ul_id UniteLocal ID'
+          type: integer
+        code:
+          description: '$code Code for the point de Quete: short string'
+          type: string
+        name:
+          description: '$name Name identifying the point de Quete'
+          type: string
+        latitude:
+          description: '$latitude GPS latitude (get from google maps API)'
+          type: number
+          format: float
+        longitude:
+          description: '$id GPS longitude (get from google maps API)'
+          type: number
+          format: float
+        address:
+          description: '$address Street number and name of the address'
+          type: string
+        postal_code:
+          description: '$postal_code Postal code part of the address'
+          type: string
+        city:
+          description: '$city City part of the address'
+          type: string
+        max_people:
+          description: '$max_people Maximum number of people advised to go on PointDeQuete.(no control are done on this, it''s advisory)'
+          type: integer
+        advice:
+          description: '$advice Advise on the PointDeQuete'
+          type: string
+        localization:
+          description: '$localization notes on how to reach the PointDeQuete location'
+          type: string
+        minor_allowed:
+          description: '$minor_allowed are underage'
+          type: boolean
+        created:
+          description: '$created when was the pointDeQuete created'
+        enabled:
+          description: '$enabled Is the pointDeQuete enabled or not'
+          type: boolean
+        type:
+          description: '$type id of the type of PointQuete        {id:1,label:''Voie Publique / Feux Rouge''},{id:2,label:''Piéton''},{id:3,label:''Commerçant''},{id:4,label:''Base UL''},{id:5,label:''Autre''}'
+          type: integer
+        time_to_reach:
+          description: '$time_to_reach number of minutes required to reached the pointDeQuete'
+          type: integer
+        transport_to_reach:
+          description: '$transport_to_reach id of the transport type  {id:1,label:''A Pied''},{id:2,label:''Voiture''}{id:3,label:''Vélo''},{id:4,label:''Train/Tram''},{id:5,label:''Autre''}'
+          type: integer
+      type: object
+    QueteurEntity:
+      required:
+        - email
+        - first_name
+        - last_name
+        - secteur
+        - mobile
+        - created
+        - ul_id
+        - active
+        - man
+        - birthdate
+      properties:
+        id:
+          description: '$id queteur Id'
+          type: integer
+        email:
+          description: '$email email of the queteur'
+          type: string
+        first_name:
+          description: '$first_name first name of the queteur'
+          type: string
+        last_name:
+          description: '$last_name last name of the queteur'
+          type: string
+        secteur:
+          description: '$secteur id of the secteur : "1">Action Sociale  "2">Secours "3">Non Bénévole "4">Ancien Bénévole, Inactif ou Adhérent "5">Commerçant "6">Special'
+          type: integer
+        nivol:
+          description: '$nivol NIVOL of the queteur (Business ID for red cross volunteer)'
+          type: string
+        mobile:
+          description: '$mobile mobile phone of the queteur (starts with 336 or 337)'
+          type: string
+        created:
+          description: '$created queteur creation date'
+        updated:
+          description: '$updated queteur last update date'
+        notes:
+          description: '$notes notes about the queteur (deprecated). Originally target to describe food allergy, and specifics about the queteur. But the RGPD risk (health data, bad usage of free text field), made the Red Cross to ask to remove this field.'
+          type: string
+        ul_id:
+          description: '$ul_id Id of the UL to which the queteur belongs'
+          type: integer
+        ul_name:
+          description: '$ul_name Name of the UL to which the queteur belongs'
+          type: string
+        ul_longitude:
+          description: '$ul_longitude Longitude of the UL'
+          type: number
+          format: float
+        ul_latitude:
+          description: '$ul_latitude Latitude of the UL'
+          type: number
+          format: float
+        point_quete_id:
+          description: '$point_quete_id Current Point De Quete ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))'
+          type: integer
+        point_quete_name:
+          description: '$point_quete_name  Current Point De Quete name   (when searching queteur, search can be perform by status (about to leave, on the street, returned))'
+          type: string
+        depart_theorique:
+          description: '$depart_theorique Theoretical Start date of going on the streets    (when searching queteur, search can be perform by status (about to leave, on the street, returned))'
+        depart:
+          description: '$depart Real start date of going on the streets.  (when searching queteur, search can be perform by status (about to leave, on the street, returned))'
+        retour:
+          description: '$retour Return date from the streets.      (when searching queteur, search can be perform by status (about to leave, on the street, returned))'
+        active:
+          description: '$active Is the queteur still marked as active'
+          type: boolean
+        man:
+          description: '$man Is the queteur a man'
+          type: boolean
+        birthdate:
+          description: '$birthdate Queteur Birthdate. It''s used to determine if the queteur is underage or not. Some PointDeQuete a restricted to adults.'
+        qr_code_printed:
+          description: '$qr_code_printed Is the Queteur QRCode printed or not'
+          type: boolean
+        referent_volunteer:
+          description: '$referent_volunteer Who has referred the queteur (non red cross volunteer helping for the fund raising)'
+          type: string
+        referent_volunteer_entity: {  }
+        user:
+          $ref: '#/components/schemas/UserEntity'
+        anonymization_token: {  }
+        anonymization_date: {  }
+        ul_registration_token: {  }
+        queteur_registration_token: {  }
+        registration_approved: {  }
+        reject_reason: {  }
+        queteur_id: {  }
+        registration_id: {  }
+      type: object
+    SpotfireAccessEntity:
+      required:
+        - id
+        - token
+        - token_expiration
+        - ul_id
+        - user_id
+      properties:
+        id:
+          description: '$id the SpotfireAccess ID'
+          type: integer
+        token:
+          description: '$token the token'
+          type: string
+        token_expiration:
+          description: '$token_expiration the token expiration date'
+        ul_id:
+          description: '$ul_id the current user''s UL ID'
+          type: integer
+        user_id:
+          description: '$user_id the current user''s ID'
+          type: integer
+      type: object
+    TroncEntity:
+      required:
+        - type
+      properties:
+        id:
+          description: '$id tronc ID'
+          type: integer
+        ul_id:
+          description: '$ul_id unite local ID'
+          type: integer
+        created:
+          description: '$created Time of creation of the tronc'
+        enabled:
+          description: '$enabled Tronc is enabled or not'
+          type: boolean
+        notes:
+          description: '$notes textual notes about the tronc'
+          type: string
+        type:
+          description: '$type Type of tronc {id:1,label:''Tronc''},{id:2,label:''Tronc chez un commerçant''},{id:3,label:''Autre''}'
+          type: integer
+        nombreTronc:
+          description: '$nombreTronc Used at creation only, specify the number of tronc to create'
+          type: integer
+      type: object
+    TroncInUseEntity:
+      required:
+        - id
+        - depart_theorique
+        - queteur_id
+        - tronc_id
+        - first_name
+        - last_name
+        - email
+        - mobile
+        - nivol
+        - status
+      properties:
+        id:
+          description: '$id TroncQueteur ID'
+          type: integer
+        queteur_id:
+          description: '$queteur_id queteur ID'
+          type: integer
+        tronc_id:
+          description: '$tronc_id Tronc ID'
+          type: integer
+        first_name:
+          description: '$first_name Queteur First Name'
+          type: string
+        last_name:
+          description: '$last_name Queteur Last Name'
+          type: string
+        email:
+          description: '$email Queteur email'
+          type: string
+        mobile:
+          description: '$mobile Queteur mobile'
+          type: string
+        nivol:
+          description: '$nivol Queteur Nivol'
+          type: string
+        status:
+          description: '$status Status of the check : TRONC_IN_USE (other people have this tronc assigned (and depart or retour is null, deleted=false)) or QUETEUR_HAS_ALREADY_HAS_A_TRONC (a tronc_queteur row exist and have the queteur_id)'
+          type: string
+      type: object
+    TroncQueteurEntity:
+      required:
+        - ul_id
+      properties:
+        id:
+          description: '$id TroncQueteur ID'
+          type: integer
+        ul_id:
+          description: '$ul_id UL ID'
+          type: integer
+        queteur_id:
+          description: '$queteur_id queteur ID'
+          type: integer
+        queteur:
+          $ref: '#/components/schemas/QueteurEntity'
+        point_quete:
+          $ref: '#/components/schemas/PointQueteEntity'
+        point_quete_id:
+          description: '$point_quete_id Point de Quete ID'
+          type: integer
+        tronc_id:
+          description: '$tronc_id Tronc ID'
+          type: integer
+        depart_theorique:
+          description: '$depart_theorique theoretical Departure Date of the volunteer'
+        depart:
+          description: '$depart Real departure date'
+        retour:
+          description: '$retour Return date'
+        comptage:
+          description: '$comptage Coins & Bills counting date'
+        last_update:
+          description: '$last_update Last time the TroncQueteur row is updated'
+        last_update_user_id:
+          description: '$last_update_user_id UserId of the user that performed the last update on this object'
+          type: integer
+        euro500:
+          description: '$euro500 Number of 500€ bills'
+          type: integer
+        euro200:
+          description: '$euro200 Number of 200€ bills'
+          type: integer
+        euro100:
+          description: '$euro100 Number of 100€ bills'
+          type: integer
+        euro50:
+          description: '$euro50 Number of 50€ bills'
+          type: integer
+        euro20:
+          description: '$euro20 Number of 20€ bills'
+          type: integer
+        euro10:
+          description: '$euro10 Number of 10€ bills'
+          type: integer
+        euro5:
+          description: '$euro5 Number of 5€ bills'
+          type: integer
+        euro2:
+          description: '$euro2 Number of 2€ coins'
+          type: integer
+        euro1:
+          description: '$euro1 Number of 1€ coins'
+          type: integer
+        cents50:
+          description: '$cents50 Number of 50cts coins'
+          type: integer
+        cents20:
+          description: '$cents20 Number of 20cts coins'
+          type: integer
+        cents10:
+          description: '$cents10 Number of 10cts coins'
+          type: integer
+        cents5:
+          description: '$cents5 Number of 5cts coins'
+          type: integer
+        cents2:
+          description: '$cents2 Number of 2cts coins'
+          type: integer
+        cent1:
+          description: '$cent1 Number of 1ct coins'
+          type: integer
+        don_cheque:
+          description: '$don_cheque total amount of bank note collected'
+          type: number
+          format: float
+        don_creditcard:
+          description: '$don_cheque total amount of credit card payment collected'
+          type: number
+          format: float
+        foreign_coins:
+          description: '$foreign_coins Number of foreign coins'
+          type: integer
+          deprecated: true
+        foreign_banknote:
+          description: '$foreign_banknote Number of foreign bills'
+          type: integer
+          deprecated: true
+        notes_depart_theorique:
+          description: '$notes_depart_theorique Textual notes about the start'
+          type: string
+        notes_retour:
+          description: '$notes_depart_theorique Textual notes about the return'
+          type: string
+        notes_retour_comptage_pieces:
+          description: '$notes_retour_comptage_pieces Textual notes about the counting of money'
+          type: string
+        notes_update:
+          description: '$notes_update Textual notes about the update of a tronc'
+          type: string
+        last_name:
+          description: '$last_name Queteur Last Name  (only used when getting tronc_queteur for a tronc)'
+          type: string
+        first_name:
+          description: '$first_name Queteur first name  (only used when getting tronc_queteur for a tronc)'
+          type: string
+        deleted:
+          description: '$deleted if true, the troncQueteur is marked as deleted and does not count in the stats.'
+          type: boolean
+        tronc_queteur_id:
+          description: '$tronc_queteur_id TroncQueteur ID (when this object is used to retrieve data from tronc_queteur_historique, this ID refers to the current row in tronc_queteur table)'
+          type: integer
+        insert_date:
+          description: '$insert_date When this historic version of the TroncQueteur has been inserted (when this object is used to retrieve data from tronc_queteur_historique)'
+        preparationAndDepart:
+          description: '$preparationAndDepart If it''s a preparation and depart (that is: the troncqueteur is stored and the depart is right now) this property must be set to true.'
+          type: boolean
+        coins_money_bag_id:
+          description: '$coins_money_bag_id Identifier of the bag that contains the coins of this troncQueteur. It''s used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.'
+          type: string
+        bills_money_bag_id:
+          description: '$bills_money_bag_id Identifier of the bag that contains the bills of this troncQueteur. It''s used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.'
+          type: string
+        don_cb_total_number:
+          description: '$don_cb_total_number Number of donation per credit card'
+          type: integer
+        don_cheque_number:
+          description: '$don_cheque_number Number of donation per bank note'
+          type: integer
+        amount:
+          description: '$amount Sum in € of coins, bill, credit card & bank note. Used when Extracting Data of an UL.'
+          type: number
+          format: float
+        weight:
+          description: '$weight Sum in kg of coins, bill. Used when Extracting Data of an UL. Used when Extracting Data of an UL.'
+          type: number
+          format: float
+        time_spent_in_hours:
+          description: '$time_spent_in_hours number of hours spent on the street collecting money. Used when Extracting Data of an UL.'
+          type: number
+          format: float
+        troncFromPreviousYear:
+          description: '$troncFromPreviousYear if true, the troncQueteur retrieved by the scan of the Tronc QRCode (or tronc id input) retrieve a tronc from the previous year.when searching for a tronc on Depart screen'
+          type: boolean
+        troncQueteurIsInAnIncorrectState:
+          description: '$troncQueteurIsInAnIncorrectState  the current state of the tronc is not compatible with a Depart. when searching for a tronc on Depart screen'
+          type: boolean
+        queteHasNotStartedYet:
+          description: '$queteHasNotStartedYet Flag set to true if a user tries to prepare a tronc for a date that is before the official start of the quête.'
+          type: boolean
+        departAlreadyRegistered:
+          description: '$departAlreadyRegistered the depart has already been recorded. The QRCode scan multiple time per second (sometime with incorrect reading, so we can''t slow it down)'
+          type: boolean
+      type: object
+    UniteLocaleEntity:
+      required:
+        - name
+        - phone
+        - latitude
+        - longitude
+        - address
+        - postal_code
+        - city
+        - external_id
+        - email
+        - id_structure_rattachement
+        - date_demarrage_activite
+      properties:
+        id:
+          description: '$id UL ID'
+          type: integer
+        name:
+          description: '$name Name of the UL'
+          type: string
+        phone:
+          description: '$phone phone to contact the UL'
+          type: string
+        latitude:
+          description: '$latitude latitude of the base of the UL'
+          type: number
+          format: float
+        longitude:
+          description: '$longitude Longitude of the base of UL'
+          type: number
+          format: float
+        address:
+          description: '$address Street number and name of the UL'
+          type: string
+        postal_code:
+          description: '$postal_code Postal code of the UL'
+          type: string
+        city:
+          description: '$city City of the UL'
+          type: string
+        external_id:
+          description: '$external_id Id of the UL in the RedCross Ref'
+          type: integer
+        email:
+          description: '$email email to contact the UL'
+          type: string
+        id_structure_rattachement:
+          description: '$id_structure_rattachement ID of the parent structure of the UL'
+          type: integer
+        date_demarrage_activite:
+          description: '$date_demarrage_activite Date of creation of the UL'
+        date_demarrage_rcq:
+          description: '$date_demarrage_rcq Date of the first use of RCQ'
+        mode:
+          description: '$mode Mode of use of RCQ. Might be deprecated.'
+          type: integer
+        publicDashboard:
+          description: '$publicDashboard Which Spotfire public Dashboard is used. The one with the total amount (RCQ-Public-MontantsVisibles) or without (RCQ-Public-MontantsCachés)'
+          type: string
+        president_man:
+          description: '$president_man Is the President a Man'
+          type: boolean
+        president_nivol:
+          description: '$president_nivol Nivol of the president'
+          type: string
+        president_first_name:
+          description: '$president_first_name first name of the President'
+          type: string
+        president_last_name:
+          description: '$president_last_name last name of the President'
+          type: string
+        president_email:
+          description: '$president_email email of the President'
+          type: string
+        president_mobile:
+          description: '$president_mobile mobile of the President'
+          type: string
+        tresorier_man:
+          description: '$tresorier_man Is the Treasurer a Man'
+          type: boolean
+        tresorier_nivol:
+          description: '$tresorier_nivol Nivol of the treasurer'
+          type: string
+        tresorier_first_name:
+          description: '$tresorier_first_name first name of the Treasurer'
+          type: string
+        tresorier_last_name:
+          description: '$tresorier_last_name last name of the Treasurer'
+          type: string
+        tresorier_email:
+          description: '$tresorier_email email of the Treasurer'
+          type: string
+        tresorier_mobile:
+          description: '$tresorier_mobile mobile of the Treasurer'
+          type: string
+        admin_man:
+          description: '$admin_man Is the Admin a Man'
+          type: boolean
+        admin_nivol:
+          description: '$admin_nivol Nivol of the admin'
+          type: string
+        admin_first_name:
+          description: '$admin_first_name first name of the Admin'
+          type: string
+        admin_last_name:
+          description: '$admin_last_name last name of the Admin'
+          type: string
+        admin_email:
+          description: '$admin_email email of the Admin'
+          type: string
+        admin_mobile:
+          description: '$admin_mobile mobile of the Admin'
+          type: string
+      type: object
+    UserEntity:
+      required:
+        - nivol
+        - queteur_id
+        - password_defined
+        - role
+        - created
+        - active
+        - nb_of_failure
+      properties:
+        id:
+          description: '$id user Id'
+          type: integer
+        nivol:
+          description: '$nivol nivol of the user that is used as login with angularjs app. (Angular 8+ will use firebase and email)'
+          type: string
+        queteur_id:
+          description: '$queteur_id Queteur ID (where name, email, mobile is stored)'
+          type: integer
+        password:
+          description: '$password hash of the use password'
+          type: integer
+        password_defined:
+          description: '$password_defined true if the password has been defined. when we don''t need the password, but just to know if it''s defined (queteurEdit)'
+          type: boolean
+        role:
+          description: '$role Role of the user : {id:1,label:''Lecture Seule'' },{id:2,label:''Opérateur''},{id:3,label:''Compteur''},{id:4,label:''Administrateur''}'
+          type: integer
+        created:
+          description: '$created user creation date'
+        updated:
+          description: '$updated user last update date'
+        active:
+          description: '$active is the user active or not'
+          type: boolean
+        last_failure_login_date:
+          description: '$last_failure_login_date last login failure'
+        nb_of_failure:
+          description: '$nb_of_failure number of failure since last login'
+          type: integer
+        last_successful_login_date:
+          description: '$last_successful_login_date last successfull login date'
+        init_password_date:
+          description: '$init_password_date when the password was last reinitiated'
+          type: integer
+        first_name:
+          description: '$first_name first name of the user'
+          type: string
+        last_name:
+          description: '$last_name last name of the user'
+          type: string
+      type: object
+    YearlyGoalEntity:
+      required:
+        - id
+        - ul_id
+        - year
+        - amount
+        - day_1_percentage
+        - day_2_percentage
+        - day_3_percentage
+        - day_4_percentage
+        - day_5_percentage
+        - day_6_percentage
+        - day_7_percentage
+        - day_8_percentage
+        - day_9_percentage
+      properties:
+        id:
+          description: '$id user Id'
+          type: integer
+        ul_id:
+          description: '$ul_id Yearly Goals UL''s id'
+          type: integer
+        year:
+          description: '$year The year of this goals'
+          type: integer
+        amount:
+          description: '$amount The total amount of money that is targeted to be raised'
+          type: number
+          format: float
+        day_1_percentage:
+          description: '$day_1_percentage percentage of the total amount of money that should be raised on day 1'
+          type: integer
+        day_2_percentage:
+          description: '$day_2_percentage percentage of the total amount of money that should be raised on day 2'
+          type: integer
+        day_3_percentage:
+          description: '$day_3_percentage percentage of the total amount of money that should be raised on day 3'
+          type: integer
+        day_4_percentage:
+          description: '$day_4_percentage percentage of the total amount of money that should be raised on day 4'
+          type: integer
+        day_5_percentage:
+          description: '$day_5_percentage percentage of the total amount of money that should be raised on day 5'
+          type: integer
+        day_6_percentage:
+          description: '$day_6_percentage percentage of the total amount of money that should be raised on day 6'
+          type: integer
+        day_7_percentage:
+          description: '$day_7_percentage percentage of the total amount of money that should be raised on day 7'
+          type: integer
+        day_8_percentage:
+          description: '$day_8_percentage percentage of the total amount of money that should be raised on day 8'
+          type: integer
+        day_9_percentage:
+          description: '$day_9_percentage percentage of the total amount of money that should be raised on day 9'
+          type: integer
+      type: object
+    ErrorModel:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      type: object
+    AuthenticationResponse:
+      required:
+        - token
+      properties:
+        token:
+          description: 'token  JWT'
+          type: string
+      type: object
+    GetUserInfoFromUUIDResponse:
+      required:
+        - success
+      properties:
+        success:
+          description: '$success the action did succeed or not'
+          type: boolean
+        nivol:
+          description: '$nivol The nivol corresponding to the UUID'
+          type: string
+      type: object
+    ResetPasswordResponse:
+      required:
+        - success
+      properties:
+        success:
+          description: '$success the action did succeed or not'
+          type: boolean
+        email:
+          description: '$email The email of the resetted password'
+          type: string
+      type: object
+    SendPasswordInitializationMailResponse:
+      required:
+        - success
+      properties:
+        success:
+          description: '$success the action did succeed or not'
+          type: boolean
+        email:
+          description: '$email The email of the resetted password'
+          type: string
+      type: object
+    ExportDataResponse:
+      required:
+        - status
+        - email
+        - fileName
+        - numberOfRows
+      properties:
+        status:
+          description: '$status mail api status code'
+          type: integer
+        email:
+          description: '$email The email where the export has been sent'
+          type: string
+        fileName:
+          description: '$fileName the name of the export file'
+          type: string
+        numberOfRows:
+          description: '$numberOfRows The email where the export has been sent'
+          type: integer
+      type: object
+    CreatePointQueteResponse:
+      required:
+        - pointQueteId
+      properties:
+        pointQueteId:
+          description: '$pointQueteId the id of the newly created pointQuete'
+          type: integer
+      type: object
+    ApproveQueteurRegistrationResponse:
+      required:
+        - queteurId
+      properties:
+        queteurId:
+          description: '$queteurId the id of the newly created pointQuete'
+          type: integer
+      type: object
+    AssociateRegistrationWithExistingQueteurResponse:
+      required:
+        - queteurId
+      properties:
+        queteurId:
+          description: '$queteurId the id of the newly created pointQuete'
+          type: integer
+      type: object
+    CountPendingRegistrationResponse:
+      required:
+        - count
+      properties:
+        count:
+          description: '$count the count of pending registration'
+          type: integer
+      type: object
+    CreateQueteurResponse:
+      required:
+        - queteurId
+      properties:
+        queteurId:
+          description: '$queteurId the id of the newly created queteur'
+          type: integer
+      type: object
+    GetAllULSettingsResponse:
+      required:
+        - mapKey
+        - RGPDVideo
+        - RedQuestDomain
+        - RCQVersion
+        - FirstDay
+        - ul
+        - ul_settings
+        - user
+      properties:
+        mapKey:
+          description: '$mapKey Google Maps API Key'
+          type: string
+        RGPDVideo:
+          description: '$RGPDVideo Link to the RGPD Vidéo'
+          type: string
+        RedQuestDomain:
+          description: '$RedQuestDomain Domain name of the RedQuest application'
+          type: string
+        RCQVersion:
+          description: '$RCQVersion Version of RCQ Backend'
+          type: string
+        FirstDay:
+          description: '$FirstDay date of the first day of the fundraising of this year. Format YYYY-MM-DD.'
+          type: string
+        ul:
+          $ref: '#/components/schemas/UniteLocaleEntity'
+        ul_settings:
+          description: '$ul_settings Settings of user''s UL'
+        user:
+          $ref: '#/components/schemas/UserEntity'
+      type: object
+    GetULSettingsResponse:
+      required:
+        - mapKey
+        - RGPDVideo
+        - RedQuestDomain
+        - RCQVersion
+        - FirstDay
+        - ul
+        - ul_settings
+        - user
+      properties:
+        ul_settings:
+          description: '$ul_settings Settings of user''s UL'
+      type: object
+    GetULSetupStatusResponse:
+      required:
+        - mapKey
+        - RGPDVideo
+        - RedQuestDomain
+        - RCQVersion
+        - FirstDay
+        - ul
+        - ul_settings
+        - user
+      properties:
+        numberOfQueteur:
+          description: '$numberOfQueteur Number of Queteur currently in DB'
+          type: integer
+        numberOfUser:
+          description: '$numberOfUser Number of User currently in DB'
+          type: integer
+        numberOfPointQuete:
+          description: '$numberOfPointQuete Number of PointQuete currently in DB'
+          type: integer
+        numberOfDailyStats:
+          description: '$numberOfDailyStats Number of DailyStats currently in DB'
+          type: integer
+        numberOfTroncs:
+          description: '$numberOfTroncs Number of Troncs currently in DB'
+          type: integer
+        queteurIncomplete:
+          description: '$queteurIncomplete Is setup of Queteur considered as completed'
+          type: boolean
+        userIncomplete:
+          description: '$userIncomplete Is setup of User considered as completed'
+          type: boolean
+        pointQueteIncomplete:
+          description: '$pointQueteIncomplete Is setup of PointQuete considered as completed'
+          type: boolean
+        dailyStatsIncomplete:
+          description: '$dailyStatsIncomplete Is setup of dailyStats considered as completed'
+          type: boolean
+        troncsIncomplete:
+          description: '$troncsIncomplete Is setup of Troncs considered as completed'
+          type: boolean
+        BasePointQueteCreated:
+          description: '$BasePointQueteCreated Has the Base being automatically created as a ''Point de Quete'''
+          type: boolean
+      type: object
+    PrepareTroncQueteurResponse:
+      required:
+        - troncInUse
+      properties:
+        troncInUse:
+          description: '$troncInUse set to true if a tronc_id is already linked to a tronc_queteur row that has retour or depart set to null and not marked as deleted'
+          type: boolean
+        troncInUseInfo:
+          description: '$troncInUseInfo An array of TroncInUse objects'
+          type: array
+          items:
+            $ref: '#/components/schemas/TroncInUseEntity'
+        lastInsertId:
+          description: '$lastInsertId the id of the last inserted TroncQueteur'
+          type: integer
+      type: object
+tags:
+  -
+    name: Authentication
+    description: 'Authentication related API.'
+  -
+    name: Troncs
+    description: 'Methods that apply to a Tronc. Tronc is a french word for a sealed metal box used to collect money (collection box). (it has also other meaning).'
+  -
+    name: TroncsQueteurs
+    description: 'Methods that apply to the TroncQueteur object. Which hold the information of Who(Queteur) goes where, at what time and with What(Tronc).'
+  -
+    name: PointQuete
+    description: 'PointQuete is the location where people go ask money on the street.'
+  -
+    name: Quêteurs
+    description: 'Queteur is the person who goes asking money on the streets.'
+  -
+    name: DailyStatsBeforeRCQ
+    description: 'Methods that store/retrieve/update daily collection figures of previous years, so UL new to RCQ can compare the current year with the past'
+  -
+    name: Users
+    description: 'Users of RCQ. The ''Get'' is automatically done if the queteur is also a user of RCQ'
+  -
+    name: SpotfireAccess
+    description: 'TIBCO Spotfire is a Business Intelligence cloud solution used by RCQ to analyse the data.'
+  -
+    name: RCQSettings
+    description: 'Methods related to the settings of one UniteLocal in RCQ.'
+  -
+    name: UnitéLocale
+    description: 'UniteLocale is the smallest structure in the RedCross. There''s usually one Unit per city or District of big city.'
+  -
+    name: YearlyGoals
+    description: 'Each year, each UnitéLocale must define a budget in which the fundraising objective is set. The data is used in Spotfire graphs.'
+  -
+    name: NamedDonation
+    description: 'When a person give some money and ask for a fiscal receipt, it''s stored here. It''s usually larger amount.'
+  -
+    name: ThanksMailing
+    description: 'Once the fundraising is done, a Thank You mailing is sent. This methods starts the mailing and monitor its progress. A method tracks if the graph has been seen or not'
+  -
+    name: ExportData
+    description: 'The UL can export all its data in CSV format.'
+  -
+    name: MoneyBag
+    description: 'Methods related to Bank Bags that holds coins or bills.'

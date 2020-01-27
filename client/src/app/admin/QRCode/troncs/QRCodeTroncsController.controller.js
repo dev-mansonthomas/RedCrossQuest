@@ -41,6 +41,8 @@
 
       $log.debug("There is "+vm.list.length+" troncs, "+Math.ceil(vm.list.length/32)+" tableaux") ;
       vm.draw();
+    }).catch(function(e){
+      $log.error("error searching for Troncs", e);
     });
 
     vm.draw=function()

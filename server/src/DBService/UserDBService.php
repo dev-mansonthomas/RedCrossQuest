@@ -13,7 +13,7 @@ class UserDBService extends DBService
 
 
   /**
-   * Check if at least one active user exist on the system with the passed nivol.
+   * Check if at least one >active< user exist on the system with the passed nivol. (a NIVOL currently disabled that the admin tries to activate)
    * If so, it throws an exception with the data of the users.
    * if not, do nothing.
    * @param string $nivol nivol to check

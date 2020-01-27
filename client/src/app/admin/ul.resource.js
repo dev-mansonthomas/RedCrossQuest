@@ -12,7 +12,7 @@ angular.module('redCrossQuestClient').factory('UniteLocaleResource', function($r
       method: 'PUT',
     },
       query:{
-        isArray: false
+        isArray: true
       }
   });
 });

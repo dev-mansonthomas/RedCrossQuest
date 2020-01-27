@@ -59,8 +59,8 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
    * @param UserDBService $userDBService
    * @param QueteurDBService $queteurDBService
    * @param UniteLocaleDBService $uniteLocaleDBService
-   * @param Firebase                $firebase
-   *
+   * @param SpotfireAccessDBService $spotfireAccessDBService
+   * @param Firebase $firebase
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
@@ -148,7 +148,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
       $jwtToken = $this->getToken($queteur, $ul, $user);
 
 
-      $this->response->getBody()->write(json_encode(["token" => $jwtToken->__toString()]));
+      $this->response->getBody()->write(json_encode( new AuthenticationResponse($jwtToken->__toString())));
 
       $this->userDBService->registerSuccessfulLogin($user->id);
 

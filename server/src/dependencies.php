@@ -214,7 +214,7 @@ return function (ContainerBuilder $containerBuilder)
      */
     DailyStatsBeforeRCQDBService::class => function (ContainerInterface $c)
     {
-      return new DailyStatsBeforeRCQDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+      return new DailyStatsBeforeRCQDBService($c->get('settings')['queteDates'], $c->get(PDO::class), $c->get(LoggerInterface::class));
     },
 
 
@@ -281,7 +281,8 @@ return function (ContainerBuilder $containerBuilder)
         $c->get(TroncQueteurDBService::class),
         $c->get(QueteurDBService::class),
         $c->get(PointQueteDBService::class),
-        $c->get(TroncDBService::class)
+        $c->get(TroncDBService::class),
+        $c->get(DailyStatsBeforeRCQDBService::class)
       );
     },
 

@@ -27,6 +27,8 @@
       vm.showGraphs     = true;
       vm.tokenAndExpirationDate.token_expiration_local = DateTimeHandlingService.handleServerDate(data.token_expiration).stringVersion;
       vm.token = data.token;
+    }).catch(function(e){
+      $log.error("error searching for Graph", e);
     });
   }
 })();

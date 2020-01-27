@@ -31,10 +31,12 @@ function PointQueteService ($localStorage, PointQueteResource, moment)
         $localStorage.pointQueteLastUpdate = moment();
         if(callback)
           callback();
+      }).catch(function(e){
+        $log.error("error searching for PointQuete", e);
       });
     //}
   }
-  
+
   function updateCache(pointQueteList)
   {
     $localStorage.pointQuete=pointQueteList;

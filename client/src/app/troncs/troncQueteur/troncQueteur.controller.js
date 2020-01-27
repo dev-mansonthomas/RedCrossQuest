@@ -12,7 +12,7 @@
   /** @ngInject */
   function TroncQueteurController($rootScope, $scope, $log, $routeParams, $timeout, $localStorage, // $anchorScroll, $location,
                                   TroncResource, TroncQueteurResource, TroncQueteurHistoryResource, PointQueteResource,
-                                  QRDecodeService, moment,
+                                  QRDecodeService, moment, MoneyBagResource,
                                   DateTimeHandlingService)
   {
     var vm = this;
@@ -55,7 +55,9 @@
       if (angular.isDefined(tronc_queteur_id) &&  tronc_queteur_id !== 0)
       {
         $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
-        TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
+        TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur).catch(function(e){
+          $log.error("error searching for TroncQueteur", e);
+        });
       }
     };
     vm.loadData(tronc_queteur_id);
@@ -86,6 +88,8 @@
       pointQueteList.forEach(function(onePointQuete){
         vm.pointsQueteHash[onePointQuete.id]=onePointQuete;
       });
+    }).catch(function(e){
+      $log.error("error searching for PointQuete", e);
     });
 
 
@@ -353,7 +357,9 @@
 
 
 
-      TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur.id}).$promise.then(handleTroncQueteurHistory);
+      TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur.id}).$promise.then(handleTroncQueteurHistory).catch(function(e){
+        $log.error("error searching for TroncQueteurHistoryForTroncQueteurId", e);
+      });
     }
 
 
@@ -410,7 +416,9 @@
         function(reason)
         {
           $log.debug("error while searching for tronc with query='"+queryString+"' with reason='"+reason+"'");
-        });
+        }).catch(function(e){
+        $log.error("error searching for Tronc", e);
+      });
     };
 
 
@@ -595,7 +603,7 @@
 
     vm.searchMoneyBagId=function(searchedString, type)
     {
-      return TroncQueteurResource.searchMoneyBagId({'q':searchedString, 'type':type}).$promise.then(function success(response)
+      return MoneyBagResource.searchMoneyBagId({'q':searchedString, 'type':type}).$promise.then(function success(response)
       {
         return response.map(function(oneResponse)
           {
@@ -605,6 +613,8 @@
           {
             $log.debug("error while searching for moneybagId query='"+searchedString+"' with reason='"+reason+"'");
           });
+      }).catch(function(e){
+        $log.error("error searching for MoneyBag", e);
       });
     };
 
@@ -613,16 +623,13 @@
       //$log.error(JSON.stringify([$item, $model, $label, $event, coins]));
       if(coins)
       {
-        vm.current.coinsMoneyBagDetails = TroncQueteurResource.moneyBagDetails({'moneyBagId':$item, 'coin':true});
+        vm.current.coinsMoneyBagDetails = MoneyBagResource.coinsMoneyBagDetails({'id':$item});
       }
       else
       {
-        vm.current.billsMoneyBagDetails = TroncQueteurResource.moneyBagDetails({'moneyBagId':$item, 'coin':false});
+        vm.current.billsMoneyBagDetails = MoneyBagResource.billsMoneyBagDetails({'id':$item});
       }
-
     };
-
-
   }
 })();
 

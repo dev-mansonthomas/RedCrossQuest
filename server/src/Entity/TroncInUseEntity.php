@@ -2,19 +2,57 @@
 namespace RedCrossQuest\Entity;
 use Psr\Log\LoggerInterface;
 
-
+/**
+ * @OA\Schema(schema="TroncInUseEntity", required={"id", "depart_theorique","queteur_id","tronc_id","first_name","last_name","email","mobile","nivol","status"})
+ */
 class TroncInUseEntity  extends Entity
 {
+  /**
+   * @OA\Property()
+   * @var int $id TroncQueteur ID
+   */
   public $id;
   public $depart_theorique;
   public $depart;
+  /**
+   * @OA\Property()
+   * @var int $queteur_id queteur ID
+   */
   public $queteur_id;
+  /**
+   * @OA\Property()
+   * @var int $tronc_id Tronc ID
+   */
   public $tronc_id;
+  /**
+   * @OA\Property()
+   * @var string $first_name Queteur First Name
+   */
   public $first_name;
+  /**
+   * @OA\Property()
+   * @var string $last_name Queteur Last Name
+   */
   public $last_name;
+  /**
+   * @OA\Property()
+   * @var string $email Queteur email
+   */
   public $email;
+  /**
+   * @OA\Property()
+   * @var string $mobile Queteur mobile
+   */
   public $mobile;
+  /**
+   * @OA\Property()
+   * @var string $nivol Queteur Nivol
+   */
   public $nivol;
+  /**
+   * @OA\Property()
+   * @var string $status Status of the check : TRONC_IN_USE (other people have this tronc assigned (and depart or retour is null, deleted=false)) or QUETEUR_HAS_ALREADY_HAS_A_TRONC (a tronc_queteur row exist and have the queteur_id)
+   */
   public $status;
 
   protected $_fieldList = ['id','depart_theorique','depart','queteur_id','tronc_id','first_name','last_name','email','mobile','nivol', 'status'];

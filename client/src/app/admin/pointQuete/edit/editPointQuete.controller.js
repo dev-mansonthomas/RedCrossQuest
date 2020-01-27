@@ -60,6 +60,8 @@
         vm.current = pointQuete;
         vm.current.created      = DateTimeHandlingService.handleServerDate(vm.current.created).stringVersion;
         $rootScope.$emit('title-updated', 'Point de quête - '+JSON.stringify(vm.current.name).slice(1, -1));
+      }).catch(function(e){
+        $log.error("error searching for PointQuete", e);
       });
     }
     else

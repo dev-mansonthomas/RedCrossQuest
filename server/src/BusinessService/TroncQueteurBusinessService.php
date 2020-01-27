@@ -33,17 +33,22 @@ class TroncQueteurBusinessService
   /** @var TroncDBService $troncDBService*/
   protected $troncDBService       ;
 
+  /** @var DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService */
+  protected $dailyStatsBeforeRCQDBService;
+  
   public function __construct(LoggerInterface         $logger,
                               TroncQueteurDBService   $troncQueteurDBService,
                               QueteurDBService        $queteurDBService,
                               PointQueteDBService     $pointQueteDBService,
-                              TroncDBService          $troncDBService)
+                              TroncDBService          $troncDBService,
+                              DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService)
   {
     $this->logger                = $logger;
     $this->troncQueteurDBService = $troncQueteurDBService;
     $this->queteurDBService      = $queteurDBService;
     $this->pointQueteDBService   = $pointQueteDBService;
     $this->troncDBService        = $troncDBService;
+    $this->dailyStatsBeforeRCQDBService = $dailyStatsBeforeRCQDBService;
   }
 
   /***
@@ -97,7 +102,7 @@ class TroncQueteurBusinessService
    * @return bool true if the quete has already started (or it's not production)
    * @throws \Exception
    */
-  public static function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null, LoggerInterface $logger)
+  public function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null, LoggerInterface $logger)
   {
     if(strlen($deployment) !=1)
     {
@@ -113,8 +118,8 @@ class TroncQueteurBusinessService
       */
     return
       $dateToCheck == null ?
-        Carbon::now()->gte(Carbon::createFromFormat("Y-m-d H:i:s", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()."00:00:00")):
-        $dateToCheck ->gte(Carbon::createFromFormat("Y-m-d H:i:s", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()."00:00:00"));
+        Carbon::now()->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00")):
+        $dateToCheck ->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00"));
   }
 
 }

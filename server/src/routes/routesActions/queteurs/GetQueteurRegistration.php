@@ -45,7 +45,8 @@ class GetQueteurRegistration extends Action
   {
     Logger::dataForLogging(new LoggingEntity($this->decodedToken));
 
-    $ulId     = $this->decodedToken->getUlId();
+    $ulId   = $this->decodedToken->getUlId  ();
+    $roleId = $this->decodedToken->getRoleId();
 
     $this->validateSentData([
       ClientInputValidatorSpecs::withInteger("id", $this->args['id'], 1000000 , false, 0)
@@ -53,8 +54,15 @@ class GetQueteurRegistration extends Action
 
     $queteurId  = $this->validatedData["id"];
 
-    
-    $queteur          = $this->queteurDBService->getQueteurRegistration($ulId, $queteurId);
+    $queteur    = $this->queteurDBService->getQueteurRegistration($ulId, $queteurId);
+
+    if($queteur->ul_id != $ulId && $roleId != 9)
+    {
+      $response401 = $this->response->withStatus(401);
+      $response401->getBody()->write(json_encode(["error"=>'permission denied']));
+      return $response401;
+    }
+
     //so that it's preset to active. No point of accepting a registration of an inactive queteur
     $queteur->active = true;
     //unset the decision to not pre select any answer

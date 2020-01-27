@@ -51,8 +51,7 @@ class GetLastTroncQueteurFromTroncId extends Action
         ClientInputValidatorSpecs::withInteger('tronc_id', $this->getParam('tronc_id'), 1000000, true)
       ]);
 
-    $tronc_id           = $this->validatedData["tronc_id"];
-
+    $tronc_id  = $this->validatedData["tronc_id"];
     $ulId      = $this->decodedToken->getUlId       ();
     $roleId    = $this->decodedToken->getRoleId     ();
 

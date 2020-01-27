@@ -105,13 +105,13 @@ class ResetPassword extends Action
 
         $this->logger->error("sendResetPasswordEmailConfirmation");
 
-        $this->response->getBody()->write(json_encode(["success"=>true, "email" => $queteur->email]));
+        $this->response->getBody()->write(json_encode( new ResetPasswordResponse(true, $queteur->email)));
         return $this->response;
       }
     }
 
     //the user do not have an account
-    $this->response->getBody()->write(json_encode(["success"=>false]));
+    $this->response->getBody()->write(json_encode(new ResetPasswordResponse(false)));
     return $this->response;
 
   }

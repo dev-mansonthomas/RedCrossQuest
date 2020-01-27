@@ -75,7 +75,8 @@ class ExportData extends Action
 
     $status = $this->emailBusinessService->sendExportDataUL($queteurEntity, $exportReport['fileName']);
 
-    $this->response->getBody()->write(json_encode(["status"=>$status, "email" => $queteurEntity->email, "fileName"=>$exportReport['fileName'], "numberOfRows" => $exportReport['numberOfRows']]));
+    $this->response->getBody()->write(json_encode(new ExportDataResponse($status, $queteurEntity->email, $exportReport['fileName'],$exportReport['numberOfRows'])));
+
     /*  envoie bien le fichier comme il faut, mais ne fonctionne pas en rest
 
     $fh = fopen("/tmp/".$zipFileName, 'r  ');

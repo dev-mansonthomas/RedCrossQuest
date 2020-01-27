@@ -1,8 +1,4 @@
 <?php
-
-
-
-
 namespace RedCrossQuest\routes\routesActions\pointsQuetes;
 
 
@@ -50,7 +46,7 @@ class CreatePointQuete extends Action
     $pointQueteEntity    = new PointQueteEntity($this->parsedBody, $this->logger);
 
     $pointQueteId = $this->pointQueteDBService->insert            ($pointQueteEntity, $ulId);
-    $this->response->getBody()->write(json_encode(array('pointQueteId' =>$pointQueteId), JSON_NUMERIC_CHECK));
+    $this->response->getBody()->write(json_encode(new CreatePointQueteResponse($pointQueteId)));
 
     return $this->response;
   }

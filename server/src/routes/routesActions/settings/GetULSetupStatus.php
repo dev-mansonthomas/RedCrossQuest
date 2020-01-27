@@ -1,10 +1,5 @@
 <?php
-
-
-
-
 namespace RedCrossQuest\routes\routesActions\settings;
-
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -13,7 +8,6 @@ use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
-
 
 class GetULSetupStatus extends Action
 {

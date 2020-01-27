@@ -26,7 +26,9 @@
       {id:5,label:'Autre'}
     ];
 
-    vm.pointsQuete = PointQueteResource.query().$promise.then(handleResult);
+    vm.pointsQuete = PointQueteResource.query().$promise.then(handleResult).catch(function(e){
+      $log.error("error searching for PointQuete", e);
+    });
 
     vm.doSearch=function()
     {
@@ -37,7 +39,9 @@
         searchParams['admin_ul_id']=vm.admin_ul_id;
       }
 
-      vm.pointsQuete = PointQueteResource.search(searchParams).$promise.then(handleResult);
+      vm.pointsQuete = PointQueteResource.search(searchParams).$promise.then(handleResult).catch(function(e){
+        $log.error("error searching for PointQuete", e);
+      });
 
     };
 
@@ -79,6 +83,8 @@
           {
             $log.debug("error while searching for ul with query='"+queryString+"' with reason='"+reason+"'");
           });
+      }).catch(function(e){
+        $log.error("error searching for UL", e);
       });
     };
 

@@ -1,6 +1,5 @@
 <?php
 
-use Slim\App;
 use Slim\Factory\AppFactory;
 
 if (PHP_SAPI == 'cli-server') {

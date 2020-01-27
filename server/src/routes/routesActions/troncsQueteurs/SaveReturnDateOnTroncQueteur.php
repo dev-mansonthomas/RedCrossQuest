@@ -48,7 +48,6 @@ class SaveReturnDateOnTroncQueteur extends Action
 
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("adminMode"          , $this->getParam('adminMode'          ), false, false),
         ClientInputValidatorSpecs::withBoolean("dateDepartIsMissing", $this->getParam('dateDepartIsMissing'), false, false)
       ]);
 
@@ -60,7 +59,8 @@ class SaveReturnDateOnTroncQueteur extends Action
     /** @var TroncQueteurEntity */
     $tq = new TroncQueteurEntity($this->parsedBody, $this->logger);
 
-    // if the depart Date was missing, we make mandatory for the user to fill one.
+    // When scanning a Tronc for a 'Retour' and the Depart date is missing, the user can fill the missing departure date and record the return date at the same time.
+    // If so, we add a parameter dateDepartIsMissing=true to notify backend that the depart must be updated
     if($dateDepartIsMissing)
     {
       $this->logger->info("Setting date depart that was missing for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart));

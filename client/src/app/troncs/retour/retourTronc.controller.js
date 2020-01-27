@@ -35,7 +35,9 @@
     if (angular.isDefined(tronc_queteur_id))
     {
       $log.debug("loading data for Tronc Queteur with ID='"+tronc_queteur_id+"' ");
-      TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur);
+      TroncQueteurResource.get({id:tronc_queteur_id}).$promise.then(handleTroncQueteur).catch(function(e){
+        $log.error("error searching for TroncQueteur", e);
+      });
     }
 
 
@@ -187,7 +189,9 @@
         function(reason)
         {
           $log.debug("error while searching for tronc with query='"+queryString+"' with reason='"+reason+"'");
-        });
+        }).catch(function(e){
+        $log.error("error searching for Tronc", e);
+      });
     };
 
     vm.save = function save()

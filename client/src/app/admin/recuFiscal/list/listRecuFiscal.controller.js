@@ -39,7 +39,9 @@
         searchParams['admin_ul_id']=vm.admin_ul_id;
       }
 
-      vm.recuFiscal = RecuFiscalResource.query(searchParams).$promise.then(handleResult);
+      vm.recuFiscal = RecuFiscalResource.query(searchParams).$promise.then(handleResult).catch(function(e){
+        $log.error("error searching for RecuFiscal", e);
+      });
 
     };
 
@@ -103,6 +105,8 @@
           {
             $log.debug("error while searching for ul with query='"+queryString+"' with reason='"+reason+"'");
           });
+      }).catch(function(e){
+        $log.error("error searching for UL", e);
       });
     };
 
