@@ -11,7 +11,52 @@ require '../../vendor/autoload.php';
 use RedCrossQuest\routes\routesActions\spotfire\GetSpotfireAccessToken;
 
 /**
- * fetch an existing token for the user
+ * @OA\Tag(
+ *   name="SpotfireAccess",
+ *   description="TIBCO Spotfire is a Business Intelligence cloud solution used by RCQ to analyse the data."
+ * )
+ */
+
+
+/**
+ *
+ * @OA\Get(
+ *     path="/{role-id:[1-9]}/ul/{ul-id}/graph",
+ *     tags={"SpotfireAccess"},
+ *     summary="Get the users its spotfire token",
+ *     description="Check if a valid spotfire token exist. If so it returns it. if not it creates a new one. The Spotfire Access Token is a GUID that allow to display the appropriate data in spotfire graphs",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *         @OA\JsonContent(
+ *          type="object",
+ *          ref="#/components/schemas/SpotfireAccessEntity",
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
  */
 $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/graph', GetSpotfireAccessToken::class);
 

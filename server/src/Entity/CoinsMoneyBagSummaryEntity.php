@@ -1,31 +1,109 @@
 <?php
 namespace RedCrossQuest\Entity;
 
-
 use Psr\Log\LoggerInterface;
 
+/**
+ * @OA\Schema(schema="CoinsMoneyBagSummaryEntity", required={"type"})
+ */
 class CoinsMoneyBagSummaryEntity extends Entity
 {
 
+  /**
+   * @OA\Property()
+   * @var float $amount total amount of money in the bag
+   */
   public $amount       ;
+  /**
+   * @OA\Property()
+   * @var float $weight total weight of money in the bag
+   */
   public $weight       ;
+  /**
+   * @OA\Property()
+   * @var float $total_euro2 Sum in € of coins of 2€
+   */
   public $total_euro2  ;
+  /**
+   * @OA\Property()
+   * @var float $total_euro1 Sum in € of coins of 1€
+   */
   public $total_euro1  ;
+  /**
+   * @OA\Property()
+   * @var float $total_cents50 Sum in € of coins of 50cts
+   */
   public $total_cents50;
+  /**
+   * @OA\Property()
+   * @var float $total_cents20 Sum in € of coins of 20cts
+   */
   public $total_cents20;
+  /**
+   * @OA\Property()
+   * @var float $total_cents10 Sum in € of coins of 10cts
+   */
   public $total_cents10;
+  /**
+   * @OA\Property()
+   * @var float $total_cents5 Sum in € of coins of 5cts
+   */
   public $total_cents5 ;
+  /**
+   * @OA\Property()
+   * @var float $total_cents2 Sum in € of coins of 2cts
+   */
   public $total_cents2 ;
+  /**
+   * @OA\Property()
+   * @var float $total_cent1 Sum in € of coins of 1ct
+   */
   public $total_cent1  ;
+  /**
+   * @OA\Property()
+   * @var int $count_euro2 Number of coins of 2€
+   */
   public $count_euro2  ;
+  /**
+   * @OA\Property()
+   * @var int $count_euro1 Number of coins of 1€
+   */
   public $count_euro1  ;
+  /**
+   * @OA\Property()
+   * @var int $count_cents50 Number of coins of 50cts
+   */
   public $count_cents50;
+  /**
+   * @OA\Property()
+   * @var int $count_cents20 Number of coins of 20cts
+   */
   public $count_cents20;
+  /**
+   * @OA\Property()
+   * @var int $count_cents10 Number of coins of 10cts
+   */
   public $count_cents10;
+  /**
+   * @OA\Property()
+   * @var int $count_cents5 Number of coins of 5cts
+   */
   public $count_cents5 ;
+  /**
+   * @OA\Property()
+   * @var int $count_cents2 Number of coins of 2cts
+   */
   public $count_cents2 ;
+  /**
+   * @OA\Property()
+   * @var int $count_cent1 Number of coins of 1ct
+   */
   public $count_cent1 ;
 
+  /**
+   * @OA\Property()
+   * @var string $coins_money_bag_id The ID of the MoneyBag
+   */
   public $coins_money_bag_id;
 
 

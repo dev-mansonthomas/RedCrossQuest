@@ -50,7 +50,7 @@ class GetPointQuete extends Action
         ClientInputValidatorSpecs::withInteger('id', $this->args['id'], 1000000, true)
       ]);
 
-    $id = $this->validatedData["id"];
+    $id     = $this->validatedData["id"];
     $ulId   = $this->decodedToken->getUlId  ();
     $roleId = $this->decodedToken->getRoleId();
 

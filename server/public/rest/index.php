@@ -2,10 +2,6 @@
 
 use Slim\Factory\AppFactory;
 
-/**
- * @OA\Info(title="RCQ API", version="1.0.0")
- */
-
 if (PHP_SAPI == 'cli-server') {
     // To help the built-in PHP dev server, check if the request was actually for
     // something which should probably be served as a static file

@@ -12,7 +12,7 @@
   /** @ngInject */
   function TroncQueteurController($rootScope, $scope, $log, $routeParams, $timeout, $localStorage, // $anchorScroll, $location,
                                   TroncResource, TroncQueteurResource, TroncQueteurHistoryResource, PointQueteResource,
-                                  QRDecodeService, moment,
+                                  QRDecodeService, moment, MoneyBagResource,
                                   DateTimeHandlingService)
   {
     var vm = this;
@@ -595,7 +595,7 @@
 
     vm.searchMoneyBagId=function(searchedString, type)
     {
-      return TroncQueteurResource.searchMoneyBagId({'q':searchedString, 'type':type}).$promise.then(function success(response)
+      return MoneyBagResource.searchMoneyBagId({'q':searchedString, 'type':type}).$promise.then(function success(response)
       {
         return response.map(function(oneResponse)
           {
@@ -613,16 +613,13 @@
       //$log.error(JSON.stringify([$item, $model, $label, $event, coins]));
       if(coins)
       {
-        vm.current.coinsMoneyBagDetails = TroncQueteurResource.moneyBagDetails({'moneyBagId':$item, 'coin':true});
+        vm.current.coinsMoneyBagDetails = MoneyBagResource.coinsMoneyBagDetails({'id':$item});
       }
       else
       {
-        vm.current.billsMoneyBagDetails = TroncQueteurResource.moneyBagDetails({'moneyBagId':$item, 'coin':false});
+        vm.current.billsMoneyBagDetails = MoneyBagResource.billsMoneyBagDetails({'id':$item});
       }
-
     };
-
-
   }
 })();
 

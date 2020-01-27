@@ -16,7 +16,7 @@ use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
 
 
-class DeleteTroncQueteur extends Action
+class DeleteNonReturnedTroncQueteur extends Action
 {
   /**
    * @var TroncQueteurDBService          $troncQueteurDBService
@@ -38,6 +38,11 @@ class DeleteTroncQueteur extends Action
   }
 
   /**
+   * Either :  This queteur has been affected another tronc (A) that the one being scanned (B). => mark the tronc_queteur with tronc (A) one as deleted
+   * otherwise : mark the tronc_queteur with the scanned tronc as deleted (so other people had a tronc_queteur prepared this tronc, and they are marked as deleted)
+   * Mark as deleted occurs only on tronc_queteur that have retour or depart set to null.
+   *
+   *
    * @return Response
    * @throws \Exception
    */
@@ -47,11 +52,10 @@ class DeleteTroncQueteur extends Action
 
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('id', $this->args['id'], 1000000, true)
+        ClientInputValidatorSpecs::withInteger('tronc_id', $this->args['tronc_id'], 1000000, true)
       ]);
 
-    //c'est bien le troncId qu'on passe ici, on va supprimer tout les tronc_queteur qui ont ce tronc_id et départ ou retour à nulle
-    $troncId = $this->validatedData["id"];
+    $troncId = $this->validatedData["tronc_id"];
 
     $ulId   = $this->decodedToken->getUlId();
     $userId = $this->decodedToken->getUid ();

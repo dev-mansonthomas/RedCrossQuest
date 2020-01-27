@@ -59,6 +59,7 @@ class GetAllULSettings extends Action
    * @param UniteLocaleSettingsDBService $uniteLocaleSettingsDBService
    * @param UniteLocaleDBService $uniteLocaleDBService
    * @param UserDBService $userDBService
+   * @param DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService
    */
   public function __construct(LoggerInterface               $logger,
                               ClientInputValidator          $clientInputValidator,
@@ -68,11 +69,11 @@ class GetAllULSettings extends Action
                               DailyStatsBeforeRCQDBService  $dailyStatsBeforeRCQDBService)
   {
     parent::__construct($logger, $clientInputValidator);
+
     $this->uniteLocaleSettingsDBService = $uniteLocaleSettingsDBService;
     $this->uniteLocaleDBService         = $uniteLocaleDBService;
     $this->userDBService                = $userDBService;
     $this->dailyStatsBeforeRCQDBService = $dailyStatsBeforeRCQDBService;
-
   }
 
   /**
@@ -87,16 +88,17 @@ class GetAllULSettings extends Action
     $roleId = $this->decodedToken->getRoleId();
     $userId = $this->decodedToken->getUid   ();
 
-    $guiSettings =[];
-    $guiSettings['mapKey'        ] = $this->settings['appSettings']['gmapAPIKey'     ];
-    $guiSettings['RGPDVideo'     ] = $this->settings['appSettings']['RGPDVideo'      ];
-    $guiSettings['RedQuestDomain'] = $this->settings['appSettings']['RedQuestDomain' ];
+    $guiSettings = new GetAllULSettingsResponse(
+      $this->settings['appSettings']['gmapAPIKey'     ],
+      $this->settings['appSettings']['RGPDVideo'      ],
+      $this->settings['appSettings']['RedQuestDomain' ],
+      $this->RCQVersion,
+      $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()
+    );
 
-    $guiSettings['ul'            ] = $this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId);
-    $guiSettings['ul_settings'   ] = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
-    $guiSettings['user'          ] = $this->userDBService                ->getUserInfoWithUserId($userId, $ulId, $roleId);
-    $guiSettings['RCQVersion'    ] = $this->RCQVersion;
-    $guiSettings['FirstDay'      ] = $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate();
+    $guiSettings->ul          = $this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId);
+    $guiSettings->ul_settings = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
+    $guiSettings->user        = $this->userDBService                ->getUserInfoWithUserId($userId, $ulId, $roleId);
 
     $this->response->getBody()->write(json_encode($guiSettings));
 

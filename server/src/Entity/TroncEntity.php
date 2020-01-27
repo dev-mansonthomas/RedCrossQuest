@@ -1,16 +1,52 @@
 <?php
 namespace RedCrossQuest\Entity;
+use Carbon\Carbon;
 use Psr\Log\LoggerInterface;
+
+/**
+ * @OA\Schema(schema="TroncEntity", required={"type"})
+ */
 
 class TroncEntity extends Entity
 {
+  /**
+   * @OA\Property()
+   * @var int $id tronc ID
+   */
   public $id      ;
+
+  /**
+   * @OA\Property()
+   * @var int $ul_id unite local ID
+   */
   public $ul_id   ;
+
+  /**
+   * @OA\Property()
+   * @var Carbon $created Time of creation of the tronc
+   */
   public $created ;
+  /**
+   * @OA\Property()
+   * @var boolean $enabled Tronc is enabled or not
+   */
   public $enabled ;
+  /**
+   * @OA\Property()
+   * @var string $notes textual notes about the tronc
+   */
   public $notes   ;
+
+  /**
+   *
+   * @OA\Property()
+   * @var integer $type Type of tronc {id:1,label:'Tronc'},{id:2,label:'Tronc chez un commerçant'},{id:3,label:'Autre'}
+   */
   public $type    ;
-  /** utiliser seulement à la création*/
+  /**
+   * @OA\Property()
+   * @var integer $nombreTronc Used at creation only, specify the number of tronc to create
+   */
   public $nombreTronc;
 
   protected $_fieldList = ['id','ul_id','created','enabled','notes','nombreTronc'];

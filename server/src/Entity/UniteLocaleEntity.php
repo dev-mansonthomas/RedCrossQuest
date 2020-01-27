@@ -2,43 +2,182 @@
 namespace RedCrossQuest\Entity;
 
 
+use Carbon\Carbon;
 use Psr\Log\LoggerInterface;
+
+/**
+ * @OA\Schema(schema="UniteLocaleEntity", required={"name","phone","latitude","longitude","address","postal_code","city","external_id","email","id_structure_rattachement","date_demarrage_activite",})
+ */
 
 class UniteLocaleEntity  extends Entity
 {
+  /**
+   * @OA\Property()
+   * @var int $id UL ID
+   */
   public $id;
+  /**
+   * @OA\Property()
+   * @var string $name Name of the UL
+   */
   public $name;
-  public $phone;
-  public $latitude;
-  public $longitude;
-  public $address;
-  public $postal_code;
-  public $city;
-  public $external_id;
-  public $email;
-  public $id_structure_rattachement;
-  public $date_demarrage_activite;
-  public $date_demarrage_rcq;
-  public $mode;
-  public $publicDashboard;
 
+  /**
+   * @OA\Property()
+   * @var string $phone phone to contact the UL
+   */
+  public $phone;
+
+  /**
+   * @OA\Property()
+   * @var float $latitude latitude of the base of the UL
+   */
+  public $latitude;
+
+  /**
+   * @OA\Property()
+   * @var float $longitude Longitude of the base of UL
+   */
+  public $longitude;
+  /**
+   * @OA\Property()
+   * @var string $address Street number and name of the UL
+   */
+  public $address;
+  /**
+   * @OA\Property()
+   * @var string $postal_code Postal code of the UL
+   */
+  public $postal_code;
+  /**
+   * @OA\Property()
+   * @var string $city City of the UL
+   */
+  public $city;
+  /**
+   * @OA\Property()
+   * @var integer $external_id Id of the UL in the RedCross Ref
+   */
+  public $external_id;
+  /**
+   * @OA\Property()
+   * @var string $email email to contact the UL
+   */
+  public $email;
+  /**
+   * @OA\Property()
+   * @var integer $id_structure_rattachement ID of the parent structure of the UL
+   */
+  public $id_structure_rattachement;
+  /**
+   * @OA\Property()
+   * @var Carbon $date_demarrage_activite Date of creation of the UL
+   */
+  public $date_demarrage_activite;
+  /**
+   * @OA\Property()
+   * @var Carbon $date_demarrage_rcq Date of the first use of RCQ
+   */
+  public $date_demarrage_rcq;
+  /**
+   * @OA\Property()
+   * @var integer $mode Mode of use of RCQ. Might be deprecated.
+   */
+  public $mode;
+  /**
+   * @OA\Property()
+   * @var string $publicDashboard Which Spotfire public Dashboard is used. The one with the total amount (RCQ-Public-MontantsVisibles) or without (RCQ-Public-MontantsCachés)
+   */
+  public $publicDashboard;
+  /**
+   * @OA\Property()
+   * @var boolean $president_man Is the President a Man
+   */
   public $president_man;
+  /**
+   * @OA\Property()
+   * @var string $president_nivol Nivol of the president
+   */
   public $president_nivol;
+  /**
+   * @OA\Property()
+   * @var string $president_first_name first name of the President
+   */
   public $president_first_name;
+  /**
+   * @OA\Property()
+   * @var string $president_last_name last name of the President
+   */
   public $president_last_name;
+  /**
+   * @OA\Property()
+   * @var string $president_email email of the President
+   */
   public $president_email;
+  /**
+   * @OA\Property()
+   * @var string $president_mobile mobile of the President
+   */
   public $president_mobile;
+  /**
+   * @OA\Property()
+   * @var boolean $tresorier_man Is the Treasurer a Man
+   */
   public $tresorier_man;
+  /**
+   * @OA\Property()
+   * @var string $tresorier_nivol Nivol of the treasurer
+   */
   public $tresorier_nivol;
+  /**
+   * @OA\Property()
+   * @var string $tresorier_first_name first name of the Treasurer
+   */
   public $tresorier_first_name;
+  /**
+   * @OA\Property()
+   * @var string $tresorier_last_name last name of the Treasurer
+   */
   public $tresorier_last_name;
+  /**
+   * @OA\Property()
+   * @var string $tresorier_email email of the Treasurer
+   */
   public $tresorier_email;
+  /**
+   * @OA\Property()
+   * @var string $tresorier_mobile mobile of the Treasurer
+   */
   public $tresorier_mobile;
+  /**
+   * @OA\Property()
+   * @var boolean $admin_man Is the Admin a Man
+   */
   public $admin_man;
+  /**
+   * @OA\Property()
+   * @var string $admin_nivol Nivol of the admin
+   */
   public $admin_nivol;
+  /**
+   * @OA\Property()
+   * @var string $admin_first_name first name of the Admin
+   */
   public $admin_first_name;
+  /**
+   * @OA\Property()
+   * @var string $admin_last_name last name of the Admin
+   */
   public $admin_last_name;
+  /**
+   * @OA\Property()
+   * @var string $admin_email email of the Admin
+   */
   public $admin_email;
+  /**
+   * @OA\Property()
+   * @var string $admin_mobile mobile of the Admin
+   */
   public $admin_mobile;
 
   protected $_fieldList = ['id','name','phone','latitude','longitude','address','postal_code','city','external_id','email','id_structure_rattachement','date_demarrage_activite','date_demarrage_rcq','mode','publicDashboard',

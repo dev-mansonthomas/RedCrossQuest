@@ -119,7 +119,7 @@ class AssociateRegistrationWithExistingQueteur extends Action
       //do not rethrow
     }
 
-    $this->response->getBody()->write(json_encode( $queteurEntity->id));
+    $this->response->getBody()->write(json_encode( new AssociateRegistrationWithExistingQueteurResponse($queteurEntity->id)));
     return $this->response;
   }
 }

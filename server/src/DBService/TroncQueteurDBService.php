@@ -10,6 +10,7 @@ use RedCrossQuest\Entity\BillsMoneyBagSummaryEntity;
 use RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity;
 use RedCrossQuest\Entity\TroncInUseEntity;
 use RedCrossQuest\Entity\TroncQueteurEntity;
+use RedCrossQuest\routes\routesActions\troncsQueteurs\PrepareTroncQueteurResponse;
 
 
 class TroncQueteurDBService extends DBService
@@ -655,17 +656,15 @@ AND   tq.ul_id         = :ul_id
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
    * @throws \Exception if the query fails
-   * @return object check the code ;)
+   * @return PrepareTroncQueteurResponse Object containing the last insertedId or info about existing troncQueteur row already using the tronc_id (with depar or retour null and deleted=false)
    * @throws PDOException if the query fails to execute on the server
    * @throws \Exception if the tronc is already in use
    */
   public function insert(TroncQueteurEntity $tq, int $ulId, int $userId)
   {
     $checkTroncResult = $this->checkTroncNotAlreadyInUse($tq->tronc_id, $tq->queteur_id,$ulId);
-    $returnInfo = (object) [
-      'troncInUse'     => $checkTroncResult!= null,
-      'troncInUseInfo' => $checkTroncResult
-    ];
+
+    $prepareTroncQueteurResponse = new PrepareTroncQueteurResponse($checkTroncResult!= null,$checkTroncResult);
 
     if($checkTroncResult == null)
     {
@@ -731,11 +730,11 @@ $departTheoriqueQuery
 
       $stmt->closeCursor();
       $this->db->commit();
-      $returnInfo->lastInsertId=$lastInsertId;
+      $prepareTroncQueteurResponse->lastInsertId=$lastInsertId;
     }
 
 
-    return $returnInfo;
+    return $prepareTroncQueteurResponse;
   }
 
 
@@ -764,7 +763,7 @@ q.last_name,
 q.email, 
 q.mobile, 
 q.nivol,
-'tronc utilisé' as status
+'TRONC_IN_USE' as status
 FROM  tronc_queteur tq,
       queteur        q
 WHERE    q.ul_id      = :ul_id
@@ -789,7 +788,7 @@ q.last_name,
 q.email, 
 q.mobile, 
 q.nivol,
-'quêteur à déjà un tronc' as status
+'QUETEUR_HAS_ALREADY_HAS_A_TRONC' as status
 FROM  tronc_queteur tq,
       queteur        q
 WHERE    q.ul_id      = :ul_id
@@ -897,7 +896,7 @@ AND  (tq.depart IS NULL OR
     $sql = "
 SELECT 
 t.`id`                        ,
-t.`ul_id`                     a,
+t.`ul_id`                     ,
 `insert_date`                 ,
 `tronc_queteur_id`            ,
 `queteur_id`                  ,
@@ -1010,7 +1009,7 @@ ORDER BY t.money_bag_id DESC
 
 
   /**
-   * Get all tronc_queteur for an UniteLocale (for the specified year)
+   * Get all tronc_queteur for an UniteLocale (for the specified year) when extracting data from an UL
    *
    * @param int $ulId the id of the unite locale  (join with queteur table)
    * @param string $year extract for the specified year. If null, all years.

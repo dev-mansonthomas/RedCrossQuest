@@ -40,7 +40,8 @@
     vm.natureDonList=[
       {id:1,label:'Espèce'},
       {id:2,label:'Chèque'},
-      {id:3,label:'Virement, Prélèvement, Carte Bancaire'}/*,
+      {id:3,label:'Virement, Prélèvement, Carte Bancaire'}
+      /*,
       {id:4,label:'Don en matériel'},
       {id:5,label:'Don en préstation'}*/
     ];

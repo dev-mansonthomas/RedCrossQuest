@@ -51,7 +51,7 @@ class GetTroncQueteurHistoryFromTQID extends Action
       ]);
 
     $troncQueteurId  = $this->validatedData["tronc_queteur_id"];
-    $ulId           = $this->decodedToken->getUlId  ();
+    $ulId            = $this->decodedToken->getUlId  ();
 
     $troncQueteurHistory = $this->troncQueteurDBService->getTroncQueteurHistoryById($troncQueteurId, $ulId);
 

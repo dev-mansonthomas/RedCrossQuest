@@ -153,10 +153,10 @@ SELECT qr.`id`,
        u.`longitude` as ul_longitude,
        u.`latitude`  as ul_latitude
 FROM `queteur_registration` qr, 
-            `ul_settings` us,
-            `ul` u
+            `ul_settings`   us,
+            `ul`            u
 where us.`ul_id` = :ul_id
-AND us.`ul_id` = u.`id`
+AND   us.`ul_id` = u.`id`
 AND 
 (
   qr.`ul_registration_token` = us.`token_benevole`

@@ -2,60 +2,195 @@
 namespace RedCrossQuest\Entity;
 
 
+use Carbon\Carbon;
 use Psr\Log\LoggerInterface;
 
 /**
- * @property \RedCrossQuest\Entity\UserEntity user
- * @property string referent_volunteerQueteur
+ * @OA\Schema(schema="QueteurEntity", required={"email","first_name","last_name","secteur","mobile","created","ul_id","active","man","birthdate"})
  */
 class QueteurEntity  extends Entity
 {
+  /**
+   * @OA\Property()
+   * @var int $id queteur Id
+   */
   public $id;
+  /**
+   * @OA\Property()
+   * @var string $email email of the queteur
+   */
   public $email                       ;
+  /**
+   * @OA\Property()
+   * @var string $first_name first name of the queteur
+   */
   public $first_name                  ;
+  /**
+   * @OA\Property()
+   * @var string $last_name last name of the queteur
+   */
   public $last_name                   ;
-/**
-"1">Action Sociale
-"2">Secours
-"3">Non Bénévole
-"4">Ancien Bénévole, Inactif ou Adhérent
-"5">Commerçant
-"6">Special
- */
+
+  /**
+   * @OA\Property()
+   * @var int $secteur id of the secteur : "1">Action Sociale  "2">Secours "3">Non Bénévole "4">Ancien Bénévole, Inactif ou Adhérent "5">Commerçant "6">Special
+   */
   public $secteur                     ;
+  /**
+   * @OA\Property()
+   * @var string $nivol NIVOL of the queteur (Business ID for red cross volunteer)
+   */
   public $nivol                       ;
+  /**
+   * @OA\Property()
+   * @var string $mobile mobile phone of the queteur (starts with 336 or 337)
+   */
   public $mobile                      ;
+  /**
+   * @OA\Property()
+   * @var Carbon $created queteur creation date
+   */
   public $created                     ;
+  /**
+   * @OA\Property()
+   * @var Carbon $updated queteur last update date
+   */
   public $updated                     ;
+  /**
+   * @OA\Property()
+   * @deprecated
+   * @var string $notes notes about the queteur (deprecated). Originally target to describe food allergy, and specifics about the queteur. But the RGPD risk (health data, bad usage of free text field), made the Red Cross to ask to remove this field.
+   */
   public $notes                       ;
+  /**
+   * @OA\Property()
+   * @var int $ul_id Id of the UL to which the queteur belongs
+   */
   public $ul_id                       ;
+  /**
+   * @OA\Property()
+   * @var string $ul_name Name of the UL to which the queteur belongs
+   */
   public $ul_name                     ;
+  /**
+   * @OA\Property()
+   * @var float $ul_longitude Longitude of the UL
+   */
   public $ul_longitude                ;
+  /**
+   * @OA\Property()
+   * @var float $ul_latitude Latitude of the UL
+   */
   public $ul_latitude                 ;
 
+  /**
+   * @OA\Property()
+   * @var int $point_quete_id Current Point De Quete ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   */
   public $point_quete_id              ;
+  /**
+   * @OA\Property()
+   * @var string $point_quete_name  Current Point De Quete name   (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   */
   public $point_quete_name            ;
+  /**
+   * @OA\Property()
+   * @var Carbon $depart_theorique Theoretical Start date of going on the streets    (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   */
   public $depart_theorique            ;
+  /**
+   * @OA\Property()
+   * @var Carbon $depart Real start date of going on the streets.  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   */
   public $depart                      ;
+  /**
+   * @OA\Property()
+   * @var Carbon $retour Return date from the streets.      (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   */
   public $retour                      ;
 
+  /**
+   * @OA\Property()
+   * @var boolean $active Is the queteur still marked as active
+   */
   public $active                      ;
+  /**
+   * @OA\Property()
+   * @var boolean $man Is the queteur a man
+   */
   public $man                         ;
+  /**
+   * @OA\Property()
+   * @var Carbon $birthdate Queteur Birthdate. It's used to determine if the queteur is underage or not. Some PointDeQuete a restricted to adults.
+   */
   public $birthdate                   ;
+  /**
+   * @OA\Property()
+   * @var boolean $qr_code_printed Is the Queteur QRCode printed or not
+   */
   public $qr_code_printed             ;
+  /**
+   * @OA\Property()
+   * @var string $referent_volunteer Who has referred the queteur (non red cross volunteer helping for the fund raising)
+   */
   public $referent_volunteer          ;
+  /**
+   * @OA\Property()
+   * @property  $referent_volunteer_entity
+   */
   public $referent_volunteer_entity   ;
 
+  /**
+   * @OA\Property(
+   *     property="user",
+   *          ref="#/components/schemas/UserEntity"
+   * )
+   * @property UserEntity $user   if the Queteur is also a user of RedCrossQuest, this object is initialised
+   */
+  public $user;
+
+  /**
+   * @OA\Property()
+   * @property string $anonymization_token if the queteur data has been anonymised, A GUID is sent to the queteur, so that he can revalue the data the next year and keep it scores.
+   */
   public $anonymization_token         ;
+  /**
+   * @OA\Property()
+   * @property Carbon $anonymization_date the date of the anonimisation
+   */
   public $anonymization_date          ;
 
 
   //registration_queteur specific fields
+  /**
+   * @OA\Property()
+   * @property string $ul_registration_token  Token used for registration
+   */
   public $ul_registration_token       ;
+  /**
+   * @OA\Property()
+   * @property string $queteur_registration_token  not sure it's used
+   */
   public $queteur_registration_token  ;
+  /**
+   * @OA\Property()
+   * @property boolean $registration_approved  has the registration been approved (can be null, true, false)
+   */
   public $registration_approved       ;
+  /**
+   * @OA\Property()
+   * @property string $reject_reason    in case of rejection, the reason
+   */
   public $reject_reason               ;
+  /**
+   * @OA\Property()
+   * @property int $queteur_id    When this object represent a registration, and a queteur is created or linked, the id of the created/linked queteur
+   */
   public $queteur_id                  ;
+  /**
+   * @OA\Property()
+   * @property int $registration_id   When this object represent a registration, the id of the registration
+   */
   public $registration_id             ;
 
 

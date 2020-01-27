@@ -9,6 +9,7 @@ use RedCrossQuest\DBService\PointQueteDBService;
 use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\DBService\TroncDBService;
 use RedCrossQuest\DBService\UserDBService;
+use RedCrossQuest\routes\routesActions\settings\GetULSetupStatusResponse;
 
 class SettingsBusinessService
 {
@@ -45,44 +46,44 @@ class SettingsBusinessService
    *  Number of PointQuete
    *  => if 0, it creates the Base one with the data contained in UL table
    * @param integer $ulId  The ID of the Unité Locale
-   * @return array an associative array with the informations.
+   * @return GetULSetupStatusResponse Setup info
    * @throws \Exception   if something wrong happen
    */
   public function getSetupStatus(int $ulId)
   {
 
-    $setupStatus = [];
+    $setupStatus = new GetULSetupStatusResponse();
 
-    $setupStatus["numberOfQueteur"   ] = $this->queteurDBService            ->getNumberOfQueteur    ($ulId);
-    $setupStatus["numberOfUser"      ] = $this->userDBService               ->getNumberOfUser       ($ulId);
-    $setupStatus["numberOfPointQuete"] = $this->pointQueteDBService         ->getNumberOfPointQuete ($ulId);
-    $setupStatus["numberOfDailyStats"] = $this->dailyStatsBeforeRCQDBService->getNumberOfDailyStats ($ulId);
-    $setupStatus["numberOfTroncs"    ] = $this->troncDBService              ->getNumberOfTroncs     ($ulId);
+    $setupStatus->numberOfQueteur    = $this->queteurDBService            ->getNumberOfQueteur    ($ulId);
+    $setupStatus->numberOfUser       = $this->userDBService               ->getNumberOfUser       ($ulId);
+    $setupStatus->numberOfPointQuete = $this->pointQueteDBService         ->getNumberOfPointQuete ($ulId);
+    $setupStatus->numberOfDailyStats = $this->dailyStatsBeforeRCQDBService->getNumberOfDailyStats ($ulId);
+    $setupStatus->numberOfTroncs     = $this->troncDBService              ->getNumberOfTroncs     ($ulId);
 
-    if($setupStatus["numberOfQueteur"       ] <=10)
+    if($setupStatus->numberOfQueteur          <=10)
     {
-      $setupStatus ["queteurIncomplete"     ]=true;
+      $setupStatus ->queteurIncomplete       = true;
     }
-    if($setupStatus["numberOfUser"          ] == 1)
+    if($setupStatus->numberOfUser             == 1)
     {
-      $setupStatus ["userIncomplete"        ]=true;
+      $setupStatus ->userIncomplete          = true;
     }
-    if($setupStatus["numberOfPointQuete"    ] <=10)
+    if($setupStatus->numberOfPointQuete       <=10)
     {
-      $setupStatus ["pointQueteIncomplete"  ]=true;
+      $setupStatus ->pointQueteIncomplete    = true;
     }
-    if($setupStatus["numberOfDailyStats"    ] <=17)
+    if($setupStatus->numberOfDailyStats       <=17)
     {
-      $setupStatus ["dailyStatsIncomplete"  ]=true;
+      $setupStatus ->dailyStatsIncomplete    =true;
     }
-    if($setupStatus["numberOfTroncs"        ] <=5)
+    if($setupStatus->numberOfTroncs           <=5)
     {
-      $setupStatus ["troncsIncomplete"      ]=true;
+      $setupStatus ->troncsIncomplete        =true;
     }
-    if($setupStatus["numberOfPointQuete"    ] == 0)
+    if($setupStatus->numberOfPointQuete       == 0)
     {
       $this->pointQueteDBService->initBasePointQuete($ulId);
-      $setupStatus ["BasePointQueteCreated" ] = 1;
+      $setupStatus ->BasePointQueteCreated    = 1;
     }
 
   return $setupStatus;

@@ -1,11 +1,14 @@
 <?php
 namespace RedCrossQuest\routes\routesActions\authentication;
 
-
+/**
+ * @OA\Schema(schema="AuthenticationResponse", required={"token"})
+ */
 
 class AuthenticationResponse
 {
   /**
+   * @OA\Property()
    * @var string token  JWT
    */
   public $token;

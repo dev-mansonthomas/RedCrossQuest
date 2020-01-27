@@ -67,7 +67,7 @@ class SaveCoinsOnTroncQueteur extends Action
         ClientInputValidatorSpecs::withBoolean("adminMode"          , $this->getParam('adminMode'          ), false, false)
       ]);
 
-    //c'est bien le troncId qu'on passe ici, on va supprimer tout les tronc_queteur qui ont ce tronc_id et départ ou retour à nulle
+    //if admin mode: the comptage date is not updated
     $adminMode           = $this->validatedData["adminMode"];
 
     $ulId      = $this->decodedToken->getUlId       ();

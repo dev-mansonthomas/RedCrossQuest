@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
+use RedCrossQuest\routes\routesActions\pointsQuetes\GetULSettingsResponse;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
 
@@ -45,8 +46,8 @@ class GetULSettings extends Action
     Logger::dataForLogging(new LoggingEntity($this->decodedToken));
     $ulId    = $this->decodedToken->getUlId();
 
-    $guiSettings =[];
-    $guiSettings['ul_settings'   ] = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
+    $guiSettings = new GetULSettingsResponse();
+    $guiSettings->ul_settings = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
 
     $this->response->getBody()->write(json_encode($guiSettings));
 

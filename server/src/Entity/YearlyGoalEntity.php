@@ -2,21 +2,75 @@
 namespace RedCrossQuest\Entity;
 
 use Psr\Log\LoggerInterface;
-
+/**
+ * @OA\Schema(schema="YearlyGoalEntity", required={"id","ul_id","year","amount","day_1_percentage","day_2_percentage","day_3_percentage","day_4_percentage","day_5_percentage","day_6_percentage","day_7_percentage","day_8_percentage","day_9_percentage"})
+ */
 class YearlyGoalEntity  extends Entity
 {
+  /**
+   * @OA\Property()
+   * @var int $id user Id
+   */
   public $id           ;
+  /**
+   * @OA\Property()
+   * @var int $ul_id Yearly Goals UL's id
+   */
   public $ul_id        ;
+  /**
+   * @OA\Property()
+   * @var int $year The year of this goals
+   */
   public $year         ;
+  /**
+   * @OA\Property()
+   * @var float $amount The total amount of money that is targeted to be raised
+   */
   public $amount       ;
+  /**
+   * @OA\Property()
+   * @var int $day_1_percentage percentage of the total amount of money that should be raised on day 1
+   */
   public $day_1_percentage;
+  /**
+   * @OA\Property()
+   * @var int $day_2_percentage percentage of the total amount of money that should be raised on day 2
+   */
   public $day_2_percentage;
+  /**
+   * @OA\Property()
+   * @var int $day_3_percentage percentage of the total amount of money that should be raised on day 3
+   */
   public $day_3_percentage;
+  /**
+   * @OA\Property()
+   * @var int $day_4_percentage percentage of the total amount of money that should be raised on day 4
+   */
   public $day_4_percentage;
+  /**
+   * @OA\Property()
+   * @var int $day_5_percentage percentage of the total amount of money that should be raised on day 5
+   */
   public $day_5_percentage;
+  /**
+   * @OA\Property()
+   * @var int $day_6_percentage percentage of the total amount of money that should be raised on day 6
+   */
   public $day_6_percentage;
+  /**
+   * @OA\Property()
+   * @var int $day_7_percentage percentage of the total amount of money that should be raised on day 7
+   */
   public $day_7_percentage;
+  /**
+   * @OA\Property()
+   * @var int $day_8_percentage percentage of the total amount of money that should be raised on day 8
+   */
   public $day_8_percentage;
+  /**
+   * @OA\Property()
+   * @var int $day_9_percentage percentage of the total amount of money that should be raised on day 9
+   */
   public $day_9_percentage;
 
   protected $_fieldList = ['id','ul_id','year','amount','day_1_percentage','day_2_percentage','day_3_percentage','day_4_percentage','day_5_percentage','day_6_percentage','day_7_percentage','day_8_percentage','day_9_percentage'];

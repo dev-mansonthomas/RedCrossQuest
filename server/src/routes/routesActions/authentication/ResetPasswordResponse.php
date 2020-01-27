@@ -2,15 +2,19 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
-
+/**
+ * @OA\Schema(schema="ResetPasswordResponse", required={"success"})
+ */
 class ResetPasswordResponse
 {
   /**
+   * @OA\Property()
    * @var bool $success the action did succeed or not
    */
   public $success;
 
   /**
+   * @OA\Property()
    * @var string  $email The email of the resetted password
    */
   public $email;

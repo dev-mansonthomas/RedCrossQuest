@@ -87,7 +87,7 @@ class GetAndSetDepartOnTroncQueteur extends Action
         if($tq->depart == null)
         {
 
-          if(!TroncQueteurBusinessService::hasQueteAlreadyStarted($this->settings['appSettings']['deploymentType'], null, $this->logger))
+          if(!$this->troncQueteurBusinessService->hasQueteAlreadyStarted($this->settings['appSettings']['deploymentType'], null, $this->logger))
           {//enforce policy :  can't prepare or depart tronc before the start of the quête
             $tq->queteHasNotStartedYet=true;
           }

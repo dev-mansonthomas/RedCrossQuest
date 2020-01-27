@@ -3,7 +3,7 @@
  */
 
 angular.module('redCrossQuestClient').factory('TroncQueteurResource', function ($resource, $localStorage) {
-  return $resource('/rest/:roleId/ul/:ulId/tronc_queteur/:id/:action',
+  return $resource('/rest/:roleId/ul/:ulId/tronc_queteur/:id/:action/:subId',
     {
       roleId: function () { return $localStorage.currentUser.roleId},
       ulId  : function () { return $localStorage.currentUser.ulId  },
@@ -14,7 +14,10 @@ angular.module('redCrossQuestClient').factory('TroncQueteurResource', function (
       },
       deleteNonReturnedTroncQueteur: {
         method: 'DELETE',
-        params: {id: '@id'}
+        params: {
+          action: 'nonReturnedTroncQueteur',
+          subId:'@subId'
+        }
       },
       searchMoneyBagId:{
         method: 'GET',
@@ -48,45 +51,45 @@ angular.module('redCrossQuestClient').factory('TroncQueteurResource', function (
         }
       },
       getTroncQueteurForTroncIdAndSetDepart: {
-        method: 'POST',
+        method: 'PATCH',
         params: {
           action: 'getTroncQueteurForTroncIdAndSetDepart',
           tronc_id: '@tronc_id'
         }
       },
       saveReturnDate: {
-        method: 'POST',
+        method: 'PATCH',
         params: {
           action: 'saveReturnDate'
         }
       },
       saveCoins: {
-        method: 'POST',
+        method: 'PATCH',
         params: {
           action: 'saveCoins'
         }
       },
       saveCoinsAsAdmin: {
-        method: 'POST',
+        method: 'PATCH',
         params: {
           action: 'saveCoins',
           adminMode: true
         }
       },
       saveAsAdmin: {
-        method: 'POST',
+        method: 'PATCH',
         params: {
           action: 'saveAsAdmin'
         }
       },
       cancelRetour: {
-        method: 'POST',
+        method: 'PATCH',
         params: {
           action: 'cancelRetour'
         }
       },
       cancelDepart: {
-        method: 'POST',
+        method: 'PATCH',
         params: {
           action: 'cancelDepart'
         }

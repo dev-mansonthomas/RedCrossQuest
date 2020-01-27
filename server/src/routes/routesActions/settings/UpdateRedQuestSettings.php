@@ -69,7 +69,7 @@ class UpdateRedQuestSettings extends Action
       $ulSettings['redquest']['AutonomousDepartAndReturn']=$AutonomousDepartAndReturn;
     }
 
-    //TODO finish implementation
+    //TODO finish implementation with firestore
 
     return $this->response;
   }

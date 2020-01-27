@@ -72,7 +72,7 @@ sed -i '' "s/__env__/${ENV}/g"         graph-display.html
 echo "***** editing ReCaptCha key *****"
 #Updating Google reCaptcha public ID
 #hardcoded value that works for dev env.
-sed -i '' "s/6Lfb2sQUAAAAAAsQXbGiTLHUGgdelZ9-T53_WFfB/${GOOGLE_RECAPTCHA_KEY}/g"         index.html
+sed -i '' "s/6Lckj9EUAAAAAN1apUxCdkjZRwaj1UTnYRy-I3uj/${GOOGLE_RECAPTCHA_KEY}/g"         index.html
 
 echo "***** fixing bower libraries *****"
 # TODO see how to fix this in GULP

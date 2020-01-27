@@ -380,7 +380,10 @@
 
     $scope.deleteNonReturnedTronc = function ()
     {
-      TroncQueteurResource.deleteNonReturnedTroncQueteur({'id':queteurHasAnotherTronc?otherTroncs[0]:troncId}, function()
+      //queteurHasAnotherTronc :  This queteur has been affected another tronc (A) that the one being scanned (B). => mark the tronc_queteur with tronc (A) one as deleted
+      //otherwise : mark the tronc_queteur with the scanned tronc as deleted (so other people had a tronc_queteur prepared this tronc, and they are marked as deleted)
+      // Mark as deleted occurs only on troncqueteur that have retour or depart set to null.
+      TroncQueteurResource.deleteNonReturnedTroncQueteur({'subId':queteurHasAnotherTronc?otherTroncs[0]:troncId}, function()
       {
         saveFunction();
         $uibModalInstance.close();

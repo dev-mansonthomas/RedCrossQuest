@@ -2,10 +2,13 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
-
+/**
+ * @OA\Schema(schema="ApproveQueteurRegistrationResponse", required={"queteurId"})
+ */
 class ApproveQueteurRegistrationResponse
 {
   /**
+   * @OA\Property()
    * @var int $queteurId the id of the newly created pointQuete
    */
   public $queteurId;

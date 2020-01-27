@@ -79,6 +79,8 @@
           {
             $log.debug("error while searching for ul with query='"+queryString+"' with reason='"+reason+"'");
           });
+      }).catch(function(e){
+        $log.error("error searching for UL", e);
       });
     };
 
