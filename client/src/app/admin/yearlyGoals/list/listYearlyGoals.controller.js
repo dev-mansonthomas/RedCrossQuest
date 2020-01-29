@@ -23,7 +23,7 @@
     vm.selectedYear = vm.currentYear;
     vm.years = [];
 
-    for(let i=2004;i<=vm.currentYear; i++)
+    for(var i=2004;i<=vm.currentYear; i++)
       vm.years[vm.years.length]=i;
 
     vm.doSearch=function()

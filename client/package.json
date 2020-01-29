@@ -10,7 +10,7 @@
   "dependencies": {
     "latest-version": "^5.0.0",
     "natives": "^1.1.6",
-    "npm": "^6.13.6"
+    "npm": "^6.13.7"
   },
   "scripts": {
     "test": "gulp test"

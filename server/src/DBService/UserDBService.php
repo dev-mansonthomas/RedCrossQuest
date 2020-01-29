@@ -441,11 +441,8 @@ AND     role             != 9
     {
       return $uuid;
     }
-    else
-    {
-      throw new \Exception ("Update didn't update the correct number of rows($count) for $username");
-    }
-
+    
+    throw new \Exception ("Update didn't update the correct number of rows($count) for $username");
   }
 
   /**

@@ -21,7 +21,7 @@
     return directive;
 
     /** @ngInject */
-    function NavbarController($localStorage,  $location,
+    function NavbarController($localStorage,  $location, $log,
                               moment, AuthenticationService, QueteurResource)
     {
       var vm = this;
