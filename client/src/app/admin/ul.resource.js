@@ -13,6 +13,9 @@ angular.module('redCrossQuestClient').factory('UniteLocaleResource', function($r
     },
       query:{
         isArray: true
+      },
+      get:{
+        isArray: false
       }
   });
 });
