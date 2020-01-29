@@ -95,7 +95,8 @@ class AuthenticateAction extends AuthenticateAbstractAction
 
     $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/login", $username);
 
-    if($reCaptchaResponseCode > 0)
+    //TODO re-enable recaptcha
+    if($reCaptchaResponseCode > 0 && false)
     {// error
 
       $this->logger->error("authenticate: ReCaptcha error ", array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
