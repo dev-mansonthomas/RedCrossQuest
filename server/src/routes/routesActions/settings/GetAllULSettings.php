@@ -89,15 +89,15 @@ class GetAllULSettings extends Action
     $userId = $this->decodedToken->getUid   ();
 
     $guiSettings = new GetAllULSettingsResponse(
-      $this->settings['appSettings']['gmapAPIKey'     ],
+      $roleId == 1 ? "" : $this->settings['appSettings']['gmapAPIKey'     ],
       $this->settings['appSettings']['RGPDVideo'      ],
-      $this->settings['appSettings']['RedQuestDomain' ],
+      $roleId == 1 ? "" : $this->settings['appSettings']['RedQuestDomain' ],
       $this->RCQVersion,
       $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()
     );
 
-    $guiSettings->ul          = $this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId);
-    $guiSettings->ul_settings = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
+    $guiSettings->ul          = $roleId == 1 ? "" : $this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId);
+    $guiSettings->ul_settings = $roleId == 1 ? "" : $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
     $guiSettings->user        = $this->userDBService                ->getUserInfoWithUserId($userId, $ulId, $roleId);
 
     $this->response->getBody()->write(json_encode($guiSettings));

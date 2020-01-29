@@ -142,7 +142,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getSetupStatus', Get
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/getAllSettings', GetAllULSettings::class);
+$app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getAllSettings', GetAllULSettings::class);
 
 /**
  *
