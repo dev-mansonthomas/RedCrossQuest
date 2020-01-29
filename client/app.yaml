@@ -15,5 +15,7 @@ handlers:
   - url: /
     static_files: dist/index.html
     upload: dist/index.html
+    http_headers:
+      X-Frame-Options: DENY
   - url: /
     static_dir: dist

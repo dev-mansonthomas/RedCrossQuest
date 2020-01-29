@@ -14,7 +14,7 @@ angular.module('redCrossQuestClient').factory('ExportDataResource', function($re
     },
       save:{
         method:'POST',
-        isArray: true
+        isArray: false
       }
   });
 });

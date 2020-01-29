@@ -63,15 +63,16 @@ class ExportData extends Action
     Logger::dataForLogging(new LoggingEntity($this->decodedToken));
 
     $ulId     = $this->decodedToken->getUlId();
-
+   /*
     $this->validateSentData([
       ClientInputValidatorSpecs::withString("password", $this->getParam('password'), 40 , true )
     ]);
+   $password      = $this->validatedData["password"];
+   */
 
-    $password      = $this->validatedData["password"];
     $queteurId     = $this->decodedToken->getQueteurId();
     $queteurEntity = $this->queteurDBService->getQueteurById($queteurId, $ulId);
-    $exportReport  = $this->exportDataBusinessService->exportData($password, $ulId, null);
+    $exportReport  = $this->exportDataBusinessService->exportData($ulId, null);
 
     $status = $this->emailBusinessService->sendExportDataUL($queteurEntity, $exportReport['fileName']);
 

@@ -80,14 +80,13 @@ class ExportDataBusinessService
   /**
    * Export UL data
    *
-   * @param string password the password for the archive
    * @param integer $ulId  The ID of the Unité Locale
    * @param string $year  if 0, export all data, if not, export data from the specified year if applicable
    * @return array filename of the generated file, and the number of lines exported
    *
    * @throws Exception   if something wrong happen
    */
-  public function exportData(string $password, int $ulId, ?string $year)
+  public function exportData(int $ulId, ?string $year)
   {
 
 /**

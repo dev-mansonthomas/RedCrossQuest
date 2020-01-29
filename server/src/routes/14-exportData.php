@@ -71,9 +71,7 @@ use RedCrossQuest\routes\routesActions\exportData\ExportData;
  *     )
  * )
  */
-
-//TODO switch to POST because of the password. (if password is working on GAE)
-$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/exportData', ExportData::class);
+$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/exportData', ExportData::class);
 
 
 
