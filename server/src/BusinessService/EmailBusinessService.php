@@ -359,7 +359,7 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
   {
     return "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\" lang='fr'>
 <head>
   <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>
   <title>[RedCrossQuest] $title</title>
@@ -370,18 +370,19 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
     <td style=\"background-color:#FFFFFF;\">
       <table style=\"width:100%;padding:0; margin:0;\" >
         <tr>
-          <td style=\"font-family: Helvetica; font-size: 24px;font-weight: bolder;padding:8px;\">
-            <div style='background-color: ".($RedQuest?"#FFFFFF":"#222222").";'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/Red".($RedQuest?"":"Cross")."QuestLogo.png\" style=\"height: 50px;\" height='50'/></div>
+          <td style=\"font-family: Helvetica, Arial, sans-serif; font-size: 24px;font-weight: bolder;padding:8px;\">
+            <div style='background-color: ".($RedQuest?"#FFFFFF":"#222222").";'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/Red".($RedQuest?"":"Cross")."QuestLogo.png\" style=\"height: 50px;\" height='50' alt='logo'/></div>
           </td>
           <td style=\"text-align: right;\"><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/logoCRF.png\" alt=\"Croix Rouge Française\" style=\"height: 90px;\" height='90'/></td>
         </tr>
       </table>
     </td>
   </tr>
-
-  <td style=\"background-color:#e3001b;padding-top:4px;padding-bottom:4px;text-align: center;vertical-align: top;\">
-    &nbsp;
-  </td>
+  <tr>
+    <td style=\"background-color:#e3001b;padding-top:4px;padding-bottom:4px;text-align: center;vertical-align: top;\">
+      &nbsp;
+    </td>
+  </tr>
   <tr>
     <td style=\"padding-top:20px;padding-bottom: 20px;text-align: center;\"><strong style=\"color:#054752;font-family: Arial, sans-serif;text-decoration:none;font-size:20px;line-height:18px;\"
     > $title </strong></td>

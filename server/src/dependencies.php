@@ -330,10 +330,11 @@ $c->get(YearlyGoalDBService::class)
 
     /**
      * 'firebase'
+     * used to validate a firebase JWT
      */
-    Firebase::class => function (ContainerInterface $c)
+    Firebase\Auth::class => function (ContainerInterface $c)
     {
-      return (new Factory)->create();
+      return (new Factory)->createAuth();
     },
 
   ]);// END addDefinitions()

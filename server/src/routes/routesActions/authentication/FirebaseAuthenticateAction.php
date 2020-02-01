@@ -47,9 +47,9 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
   private $spotfireAccessDBService;
   
   /**
-   * @var Firebase                $firebase
+   * @var Firebase\Auth  $firebaseAuth
    */
-  private $firebase;
+  private $firebaseAuth;
 
 
   /**
@@ -60,7 +60,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
    * @param QueteurDBService $queteurDBService
    * @param UniteLocaleDBService $uniteLocaleDBService
    * @param SpotfireAccessDBService $spotfireAccessDBService
-   * @param Firebase $firebase
+   * @param Firebase\Auth $firebaseAuth
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
@@ -69,7 +69,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
                               QueteurDBService        $queteurDBService,
                               UniteLocaleDBService    $uniteLocaleDBService,
                               SpotfireAccessDBService $spotfireAccessDBService,
-                              Firebase                $firebase)
+                              Firebase\Auth           $firebaseAuth)
   {
     parent::__construct($logger, $clientInputValidator);
     
@@ -78,7 +78,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
     $this->queteurDBService       = $queteurDBService;
     $this->uniteLocaleDBService   = $uniteLocaleDBService;
     $this->spotfireAccessDBService= $spotfireAccessDBService;
-    $this->firebase               = $firebase;
+    $this->firebaseAuth           = $firebaseAuth;
 
   }
 
@@ -120,7 +120,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
 
     try
     {
-      $verifiedIdToken = $this->firebase->getAuth()->verifyIdToken($token);
+      $verifiedIdToken = $this->firebaseAuth->verifyIdToken($token);
     }
     catch (InvalidToken $e)
     {
@@ -141,15 +141,12 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
 
     if($user instanceof UserEntity)
     {
-
       $queteur  = $this->queteurDBService->getQueteurById($user->queteur_id);
       $ul       = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
 
       $jwtToken = $this->getToken($queteur, $ul, $user);
 
-
       $this->response->getBody()->write(json_encode( new AuthenticationResponse($jwtToken->__toString())));
-
       $this->userDBService->registerSuccessfulLogin($user->id);
 
       //generate a spotfire token at the same time

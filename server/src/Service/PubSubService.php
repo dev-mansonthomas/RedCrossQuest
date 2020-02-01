@@ -64,6 +64,7 @@ class PubSubService
       {
         throw $exception;
       }
+      return [];
     }
   }
 }

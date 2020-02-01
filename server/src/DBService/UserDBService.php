@@ -266,7 +266,7 @@ LIMIT 1
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
    * @return UserEntity an instance of UserEntity, null if nothing is found
-   * @throws \Exception in case of incorrect number of rows updated
+   * @throws \Exception In case a validation is failing while creating  the user entity.
    * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithUserId(int $userId, int $ulId, int $roleId)
@@ -546,6 +546,7 @@ WHERE   id                       = :id
    * @param int         $ulId   the UL ID  of the person performing the action
    * @param int         $roleId the RoleID of the person performing the action
    * @return boolean true if query is successful, false otherwise
+   * @throws \Exception if a validation fails while creating the Entities
    * @throws PDOException if the query fails to execute on the server
    * @throws UserAlreadyExistsException if the active state change from false to true and than another users is already active with the same nivol
    */

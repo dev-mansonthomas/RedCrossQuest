@@ -2,12 +2,10 @@
 namespace RedCrossQuest\routes\routesActions\settings;
 
 
-use RedCrossQuest\Entity\UniteLocaleEntity;
 use RedCrossQuest\Entity\UniteLocaleSettingsEntity;
-use RedCrossQuest\Entity\UserEntity;
 
 /**
- * @OA\Schema(schema="GetULSettingsResponse", required={"mapKey", "RGPDVideo", "RedQuestDomain","RCQVersion", "FirstDay","ul", "ul_settings", "user"})
+ * @OA\Schema(schema="GetULSettingsResponse", required={"ul_settings"})
  */
 class GetULSettingsResponse
 {

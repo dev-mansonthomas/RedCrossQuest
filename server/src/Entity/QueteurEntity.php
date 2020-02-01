@@ -134,6 +134,12 @@ class QueteurEntity  extends Entity
    * @var string $referent_volunteer Who has referred the queteur (non red cross volunteer helping for the fund raising)
    */
   public $referent_volunteer          ;
+
+  /**
+   * @OA\Property()
+   * @var string $referent_volunteerQueteur Concatenation of first name, last_name and nivol
+   */
+  public $referent_volunteerQueteur;
   /**
    * @OA\Property()
    * @property  $referent_volunteer_entity

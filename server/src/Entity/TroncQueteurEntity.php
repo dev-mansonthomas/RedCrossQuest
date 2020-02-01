@@ -53,6 +53,15 @@ class TroncQueteurEntity extends Entity
   public $point_quete;
 
   /**
+   * @OA\Property(
+   *     property="tronc",
+   *          ref="#/components/schemas/TroncEntity"
+   * )
+   * @var TroncEntity $tronc Full tronc object, initialized by $routes.php under some circumstances
+   */
+  public $tronc;
+
+  /**
    * @OA\Property()
    * @var int $point_quete_id Point de Quete ID
    */

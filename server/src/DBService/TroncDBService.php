@@ -161,6 +161,7 @@ AND   `ul_id`       = :ul_id
    */
   public function insert(TroncEntity $tronc, int $ulId)
   {
+    /** @noinspection SyntaxError */
     $sql = "
 INSERT INTO `tronc`
 (

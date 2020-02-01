@@ -192,9 +192,6 @@ WHERE   UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
 
 
 ";
-
-
-
     $stmt = $this->db->prepare($sql);
     if ($query !== null)
     {
@@ -212,8 +209,6 @@ WHERE   UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
       $stmt->closeCursor();
       return $results;
     }
+    return [];
   }
-
-
-
 }
