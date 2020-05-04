@@ -935,9 +935,8 @@
               </div>
 
               <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cb_total_number.$invalid}">
-                <label for="don_cb_total_number" class="control-label">Nombre total de dons</label>
+                <label for="don_cb_total_number" class="control-label">Nombre total de dons CB</label>
                 <div class="input-group">
-
                   <input type="number"
                          min="0"
                          name="don_cb_total_number"
@@ -945,7 +944,7 @@
                          class="form-control"
                          ng-model="tq.current.tronc_queteur.don_cb_total_number"
                          ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                         ng-required="tq.current.fillTronc && tq.current.tronc_queteur.don_creditcard > 0"/>
+                         ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_creditcard != null"/>
                   <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
                 </div>
                 <span class="help-block">Saisir le nombre de dons en CB sur le créneau de quête</span>
@@ -990,10 +989,9 @@
                 Pour ces derniers, utilisez l'écran de saisie des dons avec recu fiscaux</span>
             </div>
 
-            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cheque.$invalid}">
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cheque_number.$invalid}">
               <label for="don_cheque_number" class="control-label">Nombre de Chèques</label>
               <div class="input-group">
-
                 <input type="number"
                        min="0"
                        name="don_cheque_number"
@@ -1001,7 +999,7 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.don_cheque_number"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_cheque > 0"
+                       ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_cheque != null"
                 />
                 <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
