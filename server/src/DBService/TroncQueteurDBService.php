@@ -71,6 +71,7 @@ SELECT
 FROM  `tronc_queteur` as t
 WHERE  t.tronc_id   = :tronc_id
 AND    t.ul_id      = :ul_id
+AND    t.deleted    = 0
 ORDER BY id DESC
 LIMIT 1
 ";
