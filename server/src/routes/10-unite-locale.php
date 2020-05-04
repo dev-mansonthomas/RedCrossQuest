@@ -5,8 +5,8 @@
 require '../../vendor/autoload.php';
 
 use RedCrossQuest\routes\routesActions\settings\UpdateULSettings;
-use RedCrossQuest\routes\routesActions\uniteLocale\GetUniteLocale;
-use RedCrossQuest\routes\routesActions\uniteLocale\ListUniteLocale;
+use RedCrossQuest\routes\routesActions\unitesLocales\GetUniteLocale;
+use RedCrossQuest\routes\routesActions\unitesLocales\ListUniteLocale;
 
 /**
  * @OA\Tag(

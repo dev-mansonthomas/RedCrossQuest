@@ -16,6 +16,7 @@ then
 fi
 
 #load properties
+# shellcheck source=/Users/thomasmanson/.cred/
 . ~/.cred/rcq-${COUNTRY}-${ENV}.properties
 
 

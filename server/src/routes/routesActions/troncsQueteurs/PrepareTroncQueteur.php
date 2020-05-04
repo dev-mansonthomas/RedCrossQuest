@@ -62,7 +62,7 @@ class PrepareTroncQueteur extends Action
     $this->logger->warning("TroncQueteur POST PREPARATION");
 
     $tq    = new TroncQueteurEntity($this->parsedBody, $this->logger);
-    $hasQueteAlreadyStarted = $this->troncQueteurBusinessService->hasQueteAlreadyStarted($this->settings['appSettings']['deploymentType'], $tq->depart_theorique , $this->logger);
+    $hasQueteAlreadyStarted = $this->troncQueteurBusinessService->hasQueteAlreadyStarted($this->settings['appSettings']['deploymentType'], $tq->depart_theorique);
 
     if(!$hasQueteAlreadyStarted)
     {//enforce policy :  can't prepare or depart tronc before the start of the quête

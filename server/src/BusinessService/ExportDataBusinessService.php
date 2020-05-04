@@ -80,14 +80,13 @@ class ExportDataBusinessService
   /**
    * Export UL data
    *
-   * @param string password the password for the archive
    * @param integer $ulId  The ID of the Unité Locale
    * @param string $year  if 0, export all data, if not, export data from the specified year if applicable
    * @return array filename of the generated file, and the number of lines exported
    *
    * @throws Exception   if something wrong happen
    */
-  public function exportData(string $password, int $ulId, ?string $year)
+  public function exportData(int $ulId, ?string $year)
   {
 
 /**
@@ -154,7 +153,7 @@ class ExportDataBusinessService
       $zipFileOpen = ($z->open($zipFilePath, ZipArchive::CREATE));
       if(true === $zipFileOpen)
       {
-        $z->setPassword($password);
+        //$z->setPassword($password);
         $archiveComment = strtr( 'RedCrossQuest Data Export - '.$dateTime .' for UL - '.$ulId.' - '.$exportData['ul']->name.($year!= null? ' for year :'.$year.'':''), $this->unwanted_array );
         $z->setArchiveComment($archiveComment );
 
@@ -162,7 +161,7 @@ class ExportDataBusinessService
         {
           $filename = $ulId."-".$tableName.".csv";
           $z->addFile(sys_get_temp_dir()."/$filename", $filename);
-          $z->setEncryptionName($filename,  ZipArchive::EM_AES_256 , $password);
+          //$z->setEncryptionName($filename,  ZipArchive::EM_AES_256 , $password);
         }
         //csv files must not be deleted before closing the zip, otherwise we get file not found. as if the zip file is built on the close command
         $z->close();

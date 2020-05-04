@@ -53,9 +53,11 @@
         <div ng-if="vm.timeout" class="alert alert-danger" >Le serveur ne répond pas</div>
         <div ng-if="vm.error"   class="alert alert-danger" >{{vm.errorStr}}</div>
         <div ng-if="vm.success" class="alert alert-success">
-          Un email vient de vous être envoyé ({{vm.email}}) avec un lien pour réinitialiser votre mot de passe.<br/>
-          Ce lien est valable <b>quatre heures</b> !<br/>
+          Si votre compte existe, un email va vous être envoyé avec un lien pour réinitialiser votre mot de passe.<br/>
+          Ce lien est valable <strong>quatre heures</strong> !<br/>
           L'email va arriver dans une minute !<br/>
+          <br/>
+          <strong>Si vous ne recevez pas d'email, contactez l'administrateur de votre Unité Locale</strong>
         </div>
       </form>
 

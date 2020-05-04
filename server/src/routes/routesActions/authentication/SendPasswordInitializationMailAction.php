@@ -94,23 +94,31 @@ class SendPasswordInitializationMailAction extends Action
       return $response401;
     }
 
-    $uuid          = $this->userDBService->sendInit($username);
+    try
+    {
+      $uuid          = $this->userDBService->sendInit($username);
+    }
+    catch(\Exception $e)
+    {
+      $this->logger->error("sendInit : Error while setting UUID for user with specified username", array("exception"=>$e, "passedLogin"=>$username));
+      //No rethrow, response from server must be identical whether a user exist or not.
+    }
 
-    if($uuid != null)
+
+    if(isset($uuid) && $uuid!==null)
     {
       $queteur = $this->queteurDBService->getQueteurByNivol($username);
       $this->emailBusinessService->sendInitEmail($queteur, $uuid);
       $this->logger->error("sendInit: mail with uuid sent ", array('username' => $username, 'uuid'=>$uuid));
 
-      //protect email address
-      $email = substr($queteur->email, 0, 2)."...@...".substr($queteur->email,-6, 6);
-      $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true, $email)));
+      $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true)));
       return $this->response;
 
     }
     else
     {//the user do not have an account
       $this->logger->error("sendInit: user do not have an account ", array('username' => $username));
+      //Send identical response
       $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true)));
       return $this->response;
     }

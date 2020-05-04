@@ -11,8 +11,7 @@
 
   /** @ngInject */
   function ExportDataController($rootScope, $log, $localStorage, $http,
-                                $timeout,
-                             ExportDataResource)
+                                $timeout, ExportDataResource)
   {
     var vm = this;
     vm.currentUserRole = $localStorage.currentUser.roleId;
@@ -32,6 +31,7 @@
       vm.email         = response.email;
       vm.fileName      = response.fileName;
       vm.numberOfRows  = response.numberOfRows;
+      vm.exportInProgress = false;
     };
 
 
@@ -39,27 +39,16 @@
     {
       vm.errorWhileSending = error;
       vm.running           = false;
+      vm.exportInProgress = false;
     };
 
     vm.send = function()
     {
       vm.running  = true;
       vm.status   = null;
-      vm.password = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-      ExportDataResource.get({'password':vm.password}).$promise.then(vm.exportDataSuccess, vm.exportDataError);
-
-
-/*
-      $http.post('/rest/'+vm.currentUserRole+'/ul/'+vm.ulId+'/exportData', { 'password': vm.password, 'year': '' })
-        .then(function successCallback(response)
-          {
-            $log.error('response');
-          },
-          function errorCallBack(error){
-            $log.error(error);
-          });
-*/
-
+      //vm.password = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      vm.exportInProgress = true;
+      ExportDataResource.save().$promise.then(vm.exportDataSuccess, vm.exportDataError);
     };
 
   }

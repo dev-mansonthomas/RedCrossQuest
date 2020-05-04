@@ -225,5 +225,7 @@ class ClientInputValidator
       case ClientInputValidator::$BOOLEAN_VALIDATION :
         return $this->validateBoolean($clientInputValidatorInput->parameterName, $clientInputValidatorInput->inputValue, $clientInputValidatorInput->notNull, $clientInputValidatorInput->defaultValue);
     }
+
+    throw new \InvalidArgumentException("Incorrect method name : '$methodName' see static attribute of class ClientInputValidator");
   }
 }

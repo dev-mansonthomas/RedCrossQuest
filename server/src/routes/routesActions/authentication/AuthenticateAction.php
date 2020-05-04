@@ -4,7 +4,6 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
-use Kreait\Firebase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;

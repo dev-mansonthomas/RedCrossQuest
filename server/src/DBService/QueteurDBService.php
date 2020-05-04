@@ -744,18 +744,21 @@ AND  u.id = :ul_id
 
     $stmt->execute($parameters);
     if($row = $stmt->fetch())
+    {
       $queteur = new QueteurEntity($row, $this->logger);
+      if($queteur->referent_volunteer > 0)
+      {
+        $referent         = $this->getQueteurById($queteur->referent_volunteer, $ul_id);
+        $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
+        $queteur->referent_volunteerQueteur = $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
+      }
+    }
     $stmt->closeCursor();
 
     if(!$row)
       throw new \Exception("queteur not found. id='".$queteur_id."'");
 
-    if($queteur->referent_volunteer > 0)
-    {
-      $referent         = $this->getQueteurById($queteur->referent_volunteer, $ul_id);
-      $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
-      $queteur->referent_volunteerQueteur = $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
-    }
+
 
     return $queteur;
 
@@ -830,7 +833,6 @@ SET
   `nivol`               = :nivol,
   `mobile`              = :mobile,
   `updated`             = NOW(),
-  `notes`               = :notes,
   `birthdate`           = :birthdate,
   `man`                 = :man,
   `active`              = :active,
@@ -847,7 +849,6 @@ WHERE `id`              = :id
       "secteur"             => $queteur->secteur,
       "nivol"               => ltrim($queteur->nivol, '0'),
       "mobile"              => $queteur->mobile,
-      "notes"               => $queteur->notes,
       "birthdate"           => $queteur->birthdate,
       "man"                 => $queteur->man===true?"1":"0",
       "active"              => $queteur->active===true?"1":"0",
@@ -892,7 +893,6 @@ INSERT INTO `queteur`
   `mobile`,
   `created`,
   `updated`,
-  `notes`,
   `ul_id`,
   `birthdate`,
   `man`,
@@ -910,7 +910,6 @@ VALUES
   :mobile,
   NOW(),
   NOW(),
-  :notes,
   :ul_id,
   :birthdate,
   :man,
@@ -931,7 +930,6 @@ VALUES
       "secteur"            => $queteur->secteur,
       "nivol"              => ltrim($queteur->nivol, '0'),
       "mobile"             => $queteur->mobile,
-      "notes"              => $queteur->notes,
       "ul_id"              => $roleId == 9? $queteur->ul_id : $ulId,  //this ulId is safer, checked with JWT Token. if superAdmin, we take the ul_id value of queteur, than can be different from the ulId of the superAdmin
       "birthdate"          => $queteur->birthdate,
       "man"                => $queteur->man===true?"1":"0",

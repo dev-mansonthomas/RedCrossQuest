@@ -25,7 +25,7 @@ class TroncQueteurDBService extends DBService
    * @throws \Exception if tronc not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId, $roleId)
+  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId)
   {
     $sql = "
 SELECT 

@@ -54,7 +54,7 @@ class UpdateUser extends Action
 
     if($userEntity->role > $this->decodedToken->getRoleId() || $userEntity->role <= 0)
     {
-      $this->get(LoggerInterface::class)->info("Connected user is trying to grand higher privilege than his to someone else", array("decodedToken"=>$this->decodedToken, "updatedUser" => $userEntity));
+      $this->logger->info("Connected user is trying to grand higher privilege than his to someone else", array("decodedToken"=>$this->decodedToken, "updatedUser" => $userEntity));
       throw new \Exception("PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error near ) at line 14 at /application/src/DB/DBService/UserManagementDBService.php:67");
     }
 
@@ -64,7 +64,7 @@ class UpdateUser extends Action
     }
     catch(UserAlreadyExistsException $exception)
     {
-      $this->get(LoggerInterface::class)->error($exception->getMessage(), [$exception->users, $exception]);
+      $this->logger->error($exception->getMessage(), [$exception->users, $exception]);
       $this->response->getBody()->write(json_encode(["error" =>$exception->getMessage()]));
       return $this->response;
     }

@@ -44,7 +44,7 @@ AND q.id IN (
   and deleted = 0
 )
 group by secteur 
-order by secteur asc";
+order by secteur";
 
 
     $stmt = $this->db->prepare($sql);
@@ -80,7 +80,7 @@ AND q.id IN (
   and deleted = 0
 )
 group by secteur
-order by secteur asc";
+order by secteur";
 
 
     $stmt = $this->db->prepare($sql);
@@ -116,7 +116,7 @@ and q.id IN (
   and deleted = 0
 )
 group by secteur
-order by secteur asc";
+order by secteur";
 
 
     $stmt = $this->db->prepare($sql);
@@ -172,7 +172,7 @@ AND q.id IN
   and    deleted = 0
 )
 -- benevole first, if there is an error, it's less a problem
-order by q.secteur asc, q.id asc
+order by q.secteur, q.id
 LIMIT 0, $pagingSize";
 
 

@@ -3,7 +3,7 @@
 
 
 
-namespace RedCrossQuest\routes\routesActions\uniteLocale;
+namespace RedCrossQuest\routes\routesActions\unitesLocales;
 
 
 use Psr\Http\Message\ResponseInterface as Response;

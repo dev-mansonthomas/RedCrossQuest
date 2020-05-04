@@ -41,35 +41,35 @@
       var doLogin = function(token) {
 
         AuthenticationService.login(vm.username, vm.password, token,
-                                    function success(result)
-                                    {
-                                      if (result === true)
-                                      {
-                                        $timeout.cancel(loginTimeout);
-                                        $location.path('/');
-                                      }
-                                      else if (result === false)
-                                      {
-                                        vm.errorStr = 'Login ou mot de passe incorrect';
-                                        vm.error    = true;
-                                        vm.loading  = false;
-                                      }
-                                      else
-                                      {
-                                        vm.errorStr = JSON.stringify(result);
-                                        vm.error    = true;
-                                        vm.loading  = false;
-                                      }
-                                      $timeout.cancel(loginTimeout);
-                                    },
-                                    function error(message)
-                                    {
-                                      $timeout.cancel(loginTimeout);
-                                      vm.error    = true;
-                                      vm.errorStr = 'Service Indisponible - '+JSON.stringify(message.data.error);
-                                      vm.loading  = false;
+          function success(result)
+          {
+            if (result === true)
+            {
+              $timeout.cancel(loginTimeout);
+              $location.path('/');
+            }
+            else if (result === false)
+            {
+              vm.errorStr = 'Login ou mot de passe incorrect';
+              vm.error    = true;
+              vm.loading  = false;
+            }
+            else
+            {
+              vm.errorStr = JSON.stringify(result);
+              vm.error    = true;
+              vm.loading  = false;
+            }
+            $timeout.cancel(loginTimeout);
+          },
+          function error(message)
+          {
+            $timeout.cancel(loginTimeout);
+            vm.error    = true;
+            vm.errorStr = 'Un erreur s\'est produite: '+JSON.stringify(message.data.error);
+            vm.loading  = false;
 
-                                    }
+          }
         );
 
       };
@@ -77,7 +77,7 @@
     //recaptchaKey is defined in index.html
     grecaptcha.execute(recaptchaKey, {action: 'rcq/login'})
       .then(doLogin);
-    
+
 
 
     };

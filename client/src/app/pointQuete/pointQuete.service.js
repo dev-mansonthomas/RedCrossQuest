@@ -6,7 +6,7 @@ angular
   .module('redCrossQuestClient')
   .factory('PointQueteService', PointQueteService);
 
-function PointQueteService ($localStorage, PointQueteResource, moment)
+function PointQueteService ($localStorage,$log, PointQueteResource, moment)
 {
   var service = {};
 

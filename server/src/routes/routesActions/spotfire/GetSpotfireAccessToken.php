@@ -11,7 +11,6 @@ use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\SpotfireAccessDBService;
 use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
-use RedCrossQuest\routes\routesActions\queteurs\GetSpotfireTokenResponse;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
 

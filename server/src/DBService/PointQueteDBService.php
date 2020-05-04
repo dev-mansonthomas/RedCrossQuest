@@ -45,7 +45,7 @@ FROM `point_quete` AS pq
 WHERE pq.id > 0
 AND pq.ul_id = :ul_id
 AND pq.enabled = 1
-ORDER BY type ASC, name ASC
+ORDER BY type, name
 ";
 
 
@@ -157,6 +157,7 @@ ORDER BY type ASC, name ASC
    *
    * @param int $point_quete_id The ID of the point_quete
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId the role of the user. If super user, can search other UL
    * @return PointQueteEntity  The point quete info
    * @throws PDOException if the query fails to execute on the server
    * @throws \Exception in other situations, possibly : parsing error in the entity

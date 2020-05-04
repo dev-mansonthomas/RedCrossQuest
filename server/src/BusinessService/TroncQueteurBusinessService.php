@@ -60,7 +60,7 @@ class TroncQueteurBusinessService
    */
   public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId)
   {
-    $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId, $roleId);
+    $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId);
 
     //if no tronc_queteur is found, a troncQueteur is still return with "rowCount"=0, and the tronc_id
     if($troncQueteur->queteur_id)
@@ -98,11 +98,10 @@ class TroncQueteurBusinessService
    * Other env : it returns always true to be able to test the application
    * @param string $deployment the current deployment value
    * @param Carbon $dateToCheck  preparation date
-   * @param $logger LoggerInterface logger
    * @return bool true if the quete has already started (or it's not production)
    * @throws \Exception
    */
-  public function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null, LoggerInterface $logger)
+  public function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null)
   {
     if(strlen($deployment) !=1)
     {
