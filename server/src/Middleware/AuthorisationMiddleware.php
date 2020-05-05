@@ -19,6 +19,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
+use RedCrossQuest\Entity\LoggingEntity;
+use RedCrossQuest\Service\Logger;
 use Slim\Psr7\Response;
 
 /**
@@ -202,6 +204,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
         $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true), $path));
         return $this->denyRequest(sprintf('0003'.'.%s - %s', $decodedToken->getErrorCode(), $path));
       }
+      Logger::dataForLogging(new LoggingEntity($decodedToken));
       
       //check if the roleId in the URL match the one in the JWT Token (user might have changed the URL)
       $path         = $request->getUri()->getPath();
@@ -244,7 +247,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       }
       catch(Exception $applicationError)
       {
-        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError, "request" => $request));
+        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError));
 
         return (new Response())->withStatus(500);
       }

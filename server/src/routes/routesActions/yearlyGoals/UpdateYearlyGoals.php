@@ -43,8 +43,6 @@ class UpdateYearlyGoals extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $ulId     = $this->decodedToken->getUlId();
 
     $yearlyGoalEntity = new YearlyGoalEntity($this->parsedBody, $this->logger);

@@ -43,8 +43,6 @@ class InsertTronc extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $ulId             = $this->decodedToken->getUlId();
     $troncEntity      = new TroncEntity($this->parsedBody, $this->logger);
     $this->troncDBService->insert($troncEntity, $ulId);

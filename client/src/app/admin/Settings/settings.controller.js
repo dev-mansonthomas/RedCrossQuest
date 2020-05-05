@@ -39,8 +39,6 @@
 
     vm.reload();
 
-
-
     function handleResultAppSettings(settings)
     {
       vm.settings.applicationSettings = settings;
@@ -71,7 +69,14 @@
 
     vm.updateRedQuestSettings = function()
     {
-      vm.settings.$updateRedQuestSettings(savedSuccessfully, errorWhileSaving);
+      vm.settings.applicationSettings.$updateRedQuestSettings(savedSuccessfully, errorWhileSaving);
+      $localStorage.guiSettings.ul_settings = vm.settings.applicationSettings;
+    };
+
+    vm.updateRedCrossQuestSettings = function()
+    {
+      vm.settings.applicationSettings.$updateRedCrossQuestSettings(savedSuccessfully, errorWhileSaving);
+      $localStorage.guiSettings.ul_settings = vm.settings.applicationSettings;
     };
 
     function savedSuccessfully()

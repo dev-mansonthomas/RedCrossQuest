@@ -2,6 +2,7 @@
 namespace RedCrossQuest\routes\routesActions\settings;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
+use RedCrossQuest\DBService\ULPreferencesFirestoreDBService;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
@@ -11,21 +12,21 @@ use RedCrossQuest\Service\Logger;
 class GetULSettings extends Action
 {
   /**
-   * @var UniteLocaleSettingsDBService  $uniteLocaleSettingsDBService
+   * @var ULPreferencesFirestoreDBService  $ULPreferencesFirestoreDBService
    */
-  private $uniteLocaleSettingsDBService;
+  private $ULPreferencesFirestoreDBService;
 
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param UniteLocaleSettingsDBService  $uniteLocaleSettingsDBService
+   * @param ULPreferencesFirestoreDBService $ULPreferencesFirestoreDBService
    */
-  public function __construct(LoggerInterface               $logger,
-                              ClientInputValidator          $clientInputValidator,
-                              UniteLocaleSettingsDBService  $uniteLocaleSettingsDBService)
+  public function __construct(LoggerInterface                 $logger,
+                              ClientInputValidator            $clientInputValidator,
+                              ULPreferencesFirestoreDBService $ULPreferencesFirestoreDBService)
   {
     parent::__construct($logger, $clientInputValidator);
-    $this->uniteLocaleSettingsDBService = $uniteLocaleSettingsDBService;
+    $this->ULPreferencesFirestoreDBService = $ULPreferencesFirestoreDBService;
 
   }
 
@@ -35,13 +36,15 @@ class GetULSettings extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-    $ulId    = $this->decodedToken->getUlId();
+    $ulId        = $this->decodedToken->getUlId();
+    $ul_settings = $this->ULPreferencesFirestoreDBService ->getULPrefs($ulId);
 
-    $guiSettings = new GetULSettingsResponse();
-    $guiSettings->ul_settings = $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
+    if($ul_settings)
+    {
+      unset($ul_settings->FIRESTORE_DOC_ID);
+    }
 
-    $this->response->getBody()->write(json_encode($guiSettings));
+    $this->response->getBody()->write(json_encode($ul_settings));
 
     return $this->response;
   }

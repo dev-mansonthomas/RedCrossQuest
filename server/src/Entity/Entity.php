@@ -61,6 +61,21 @@ class Entity
     return $csvRow."\n";
   }
 
+  /**
+   * @return array an associative array, with the field name as key and its value as value
+   */
+  public function prepareDataForFirestoreUpdate()
+  {
+    $data = [];
+
+    foreach($this->_fieldList as $key)
+    {
+      $data[$key]=$this->$key;
+    }
+
+    return $data;
+
+  }
 
   /**
    * set on this object the property named $this->$key,  $data[$key] as an integer value

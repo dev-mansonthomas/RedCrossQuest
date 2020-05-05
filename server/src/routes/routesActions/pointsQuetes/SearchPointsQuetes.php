@@ -43,8 +43,6 @@ class SearchPointsQuetes extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $this->validateSentData(
       [
         ClientInputValidatorSpecs::withString ("q"               , $this->getParam('q'               ), 40  , false    ),

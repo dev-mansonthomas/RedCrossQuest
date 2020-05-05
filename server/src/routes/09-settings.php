@@ -6,6 +6,7 @@ require '../../vendor/autoload.php';
 use RedCrossQuest\routes\routesActions\settings\GetAllULSettings;
 use RedCrossQuest\routes\routesActions\settings\GetULSettings;
 use RedCrossQuest\routes\routesActions\settings\GetULSetupStatus;
+use RedCrossQuest\routes\routesActions\settings\UpdateRedCrossQuestSettings;
 use RedCrossQuest\routes\routesActions\settings\UpdateRedQuestSettings;
 
 
@@ -145,10 +146,50 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getAllSettings', Get
 /**
  *
  * @OA\Put(
- *     path="/{role-id:[4-9]}/settings/ul/{ul-id}/getAllSettings",
+ *     path="/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedQuestSettings",
  *     tags={"RCQSettings"},
- *     summary="Get All the UL settings",
- *     description="Get All the UL settings",
+ *     summary="Update RedQuest Settings",
+ *     description="Update RedQuest Settings",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->put(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedQuestSettings',  UpdateRedQuestSettings::class);
+
+
+
+/**
+ *
+ * @OA\Put(
+ *     path="/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedCrossQuestSettings",
+ *     tags={"RCQSettings"},
+ *     summary="Update RedCrossQuest Settings",
+ *     description="Update RedCrossQuest Settings",
  *    @OA\Parameter(
  *         name="role-id",
  *         in="path",
@@ -170,10 +211,6 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getAllSettings', Get
  *     @OA\Response(
  *         response=200,
  *         description="Success",
- *         @OA\JsonContent(
- *          type="object",
- *          ref="#/components/schemas/GetAllULSettingsResponse",
- *         ),
  *     ),
  *     @OA\Response(
  *         response=500,
@@ -182,5 +219,4 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getAllSettings', Get
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedQuestSettings',  UpdateRedQuestSettings::class);
-
+$app->put(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedCrossQuestSettings',  UpdateRedCrossQuestSettings::class);

@@ -40,6 +40,8 @@
     vm.first_name     = $localStorage.guiSettings.user.first_name;
     vm.last_name      = $localStorage.guiSettings.user.last_name;
 
+    vm.use_bank_bag   = $localStorage.guiSettings.ul_settings.use_bank_bag;
+
     vm.currentDate    = new Date();
     vm.currentYear    = new Date().getFullYear();
 
@@ -120,6 +122,19 @@
       vm.current.tronc_queteur.cent1    = vm.isEmpty(vm.current.tronc_queteur.cent1   );
 
     };
+
+    vm.setCBToZero=function()
+    {
+      vm.current.tronc_queteur.don_creditcard      = vm.isEmpty(vm.current.tronc_queteur.don_creditcard       );
+      vm.current.tronc_queteur.don_cb_total_number = vm.isEmpty(vm.current.tronc_queteur.don_cb_total_number  );
+    };
+
+    vm.setChequeToZero=function()
+    {
+      vm.current.tronc_queteur.don_cheque        = vm.isEmpty(vm.current.tronc_queteur.don_cheque       );
+      vm.current.tronc_queteur.don_cheque_number = vm.isEmpty(vm.current.tronc_queteur.don_cheque_number);
+    };
+
     vm.setNonFilledBillToZero=function()
     {
 

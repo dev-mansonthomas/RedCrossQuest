@@ -39,10 +39,10 @@ class Logger implements LoggerInterface
 
   private function getDataForLogging(array $dataToLog = array())
   {
-    $dataForLogging = [];
-
     if(isset($_REQUEST['ESSENTIAL_LOGGING_INFO']))
       $dataForLogging = $_REQUEST['ESSENTIAL_LOGGING_INFO']->loggingInfoArray();
+    else
+      $dataForLogging = ['ESSENTIAL_LOGGING_INFO_NOT_SET'=>true];
 
     return array_merge($this->rcqInfo, $dataForLogging, $dataToLog);
   }

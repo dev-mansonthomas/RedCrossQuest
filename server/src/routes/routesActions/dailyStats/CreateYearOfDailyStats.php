@@ -43,8 +43,6 @@ class CreateYearOfDailyStats extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $ulId = $this->decodedToken->getUlId();
     $this->validateSentData([
       ClientInputValidatorSpecs::withInteger('year', $this->parsedBody['year'], 2050, false)

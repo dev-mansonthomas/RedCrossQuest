@@ -43,8 +43,6 @@ class GetPointQuete extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $this->validateSentData(
       [
         ClientInputValidatorSpecs::withInteger('id', $this->args['id'], 1000000, true)
