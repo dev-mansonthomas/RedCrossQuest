@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
+use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
@@ -21,6 +22,7 @@ use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\DBService\SpotfireAccessDBService;
 use RedCrossQuest\DBService\TroncDBService;
 use RedCrossQuest\DBService\TroncQueteurDBService;
+use RedCrossQuest\DBService\ULPreferencesFirestoreDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
@@ -96,7 +98,10 @@ return function (ContainerBuilder $containerBuilder)
         throw $e;
       }
     },
-
+    FirestoreClient::class => function(ContainerInterface $c)
+    {
+      return new FirestoreClient();
+    },
     /**
      * 'PubSub'
      * Google PubSub service
@@ -143,6 +148,15 @@ return function (ContainerBuilder $containerBuilder)
       ]);
 
       return $storage->bucket($gcpBucket);
+    },
+
+
+    /**
+     *
+     */
+    ULPreferencesFirestoreDBService::class => function (ContainerInterface $c)
+    {
+      return new ULPreferencesFirestoreDBService($c->get(FirestoreClient::class), $c->get(LoggerInterface::class));
     },
 
     /**

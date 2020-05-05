@@ -9,6 +9,7 @@ require '../../vendor/autoload.php';
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Exception;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\ValidationData;
@@ -18,6 +19,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
+use RedCrossQuest\Entity\LoggingEntity;
+use RedCrossQuest\Service\Logger;
 use Slim\Psr7\Response;
 
 /**
@@ -35,7 +38,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
     '0004' => "Rejecting request, failed to parse roleId from roleIdStr (%s) in Path: '%s' decoded token:%s",
     '0005' => "Rejecting request, retrieving the roleId : explode function fails to return 2 elements array as expected for Path: '%s', explodedPath: %s DecodedToken: %s",
     '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: Path: '%s', \$roleIdStr:'%s',  \$roleId:'%s', \$decodedToken->getRoleId():'%s', DecodedToken: %s",
-    '0007' => "General Error while authenticating the request",
+    '0007' => "General Error while executing the request",
     '0008' => "wrong format for a jwt token (should have exactly 2 '.')  '%s'",
     '0009' => "rejecting token, signature verification fails. Token : '%s'",
     '0010' => "JWT Validation fails: %s",
@@ -70,7 +73,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
    *
    * @param string $tokenStr
    * @return DecodedToken
-   * @throws \Exception exception
+   * @throws Exception exception
    */
   public function authenticate(string $tokenStr) : DecodedToken
   {
@@ -125,7 +128,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       );
 
     }
-    catch(\Exception $error)
+    catch(Exception $error)
     { //getClaim can raise exception if the claim is not here
       $this->logger->error(AuthorisationMiddleware::$errorMessage['0011'], array("exception"=>$error));
       throw $error;
@@ -144,7 +147,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
    *
    * @return ResponseInterface
    *
-   * @throws \Exception
+   * @throws Exception
    */
   //public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
 
@@ -167,9 +170,9 @@ class AuthorisationMiddleware implements MiddlewareInterface
         return $this->denyRequest("0001");
       }
 
-      $this->logger->error("$path");
-      $this->logger->error("getPrefix(true)='".getPrefix(true)."'");
-      $this->logger->error("isGAE()='".isGAE()."'");
+      //$this->logger->error("$path");
+      //$this->logger->error("getPrefix(true)='".getPrefix(true)."'");
+      //$this->logger->error("isGAE()='".isGAE()."'");
       //public path that must not go through authentication check
       if($path == getPrefix(true).'/rest/authenticate'      ||
          $path == getPrefix(true).'/rest/firebase-authenticate'      ||
@@ -179,7 +182,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
          strpos($path,getPrefix(true).'/rest/thanks_mailing/') === 0 ||
          strpos($path,getPrefix(true).'/rest/redQuest/'      ) === 0   )
       {
-        $this->logger->info("Non authenticate route : $path - $uuid - ".getPrefix(true));
+        $this->logger->info("Non authenticate route", array("prefix"=>getPrefix(true), "path"=>$path, "uuid"=>$uuid));
         return $handler->handle($request);
       }
       //$this->logger->error("authenticated route : $path");
@@ -201,6 +204,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
         $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true), $path));
         return $this->denyRequest(sprintf('0003'.'.%s - %s', $decodedToken->getErrorCode(), $path));
       }
+      Logger::dataForLogging(new LoggingEntity($decodedToken));
       
       //check if the roleId in the URL match the one in the JWT Token (user might have changed the URL)
       $path         = $request->getUri()->getPath();
@@ -241,22 +245,18 @@ class AuthorisationMiddleware implements MiddlewareInterface
       {
         $response = $handler->handle($request);
       }
-      catch(\Exception $applicationError)
+      catch(Exception $applicationError)
       {
-        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError, "request" => $request));
+        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError));
 
-        $response500 = (new Response())->withStatus(500);
-        $response500->getBody()->write(json_encode(array("exception"=>$applicationError, "error" => "application error")));
-
-        return $response500;
-
+        return (new Response())->withStatus(500);
       }
       //log execution time in milliseconds; error(true/false);request path
       $this->logger->debug("[PERF];".(microtime(true)-$start).";false;".$path);
 
       return $response;
     }
-    catch(\Exception $error)
+    catch(Exception $error)
     {
       $this->logger->debug("[PERF];".(microtime(true)-$start).";true;".$path);
       $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$error));

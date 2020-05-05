@@ -3,6 +3,7 @@
 
 namespace RedCrossQuest\routes\routesActions;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
@@ -78,7 +79,7 @@ abstract class Action
    * @param Response $response
    * @param array    $args
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   public function __invoke(Request $request, Response $response, $args): Response
   {
@@ -93,11 +94,11 @@ abstract class Action
     {
       return $this->action();
     }
-    catch (\Exception $e)
+    catch (Exception $e)
     {
       //protect password from being dumped in the logs.
       $validatedData = $this->validatedData;
-      if(key_exists("password", $validatedData))
+      if( $validatedData !== null && key_exists("password", $validatedData))
       {
         $validatedData["password"] = strlen($validatedData["password"]);
       }
@@ -109,7 +110,7 @@ abstract class Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   abstract protected function action(): Response;
 

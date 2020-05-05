@@ -9,6 +9,8 @@
 namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
+use Exception;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\Service\ClientInputValidator;
 
@@ -59,6 +61,21 @@ class Entity
     return $csvRow."\n";
   }
 
+  /**
+   * @return array an associative array, with the field name as key and its value as value
+   */
+  public function prepareDataForFirestoreUpdate()
+  {
+    $data = [];
+
+    foreach($this->_fieldList as $key)
+    {
+      $data[$key]=$this->$key;
+    }
+
+    return $data;
+
+  }
 
   /**
    * set on this object the property named $this->$key,  $data[$key] as an integer value
@@ -88,7 +105,7 @@ class Entity
       $value = $data[$key];
       if(strlen($value) > 20)  // latitude, longitude(18,15) note: 12345.678, you will set the Datatype to DOUBLE(8, 3) where 8 is the total no. of digits excluding the decimal point, and 3 is the no. of digits to follow the decimal.
       {
-        throw new \InvalidArgumentException("Invalid float value" .json_encode(['key'=>$key, 'value'=>$value]) );
+        throw new InvalidArgumentException("Invalid float value" .json_encode(['key'=>$key, 'value'=>$value]) );
       }
 
       $this->$key = $data[$key] === null ? null : (float) $data[$key];
@@ -121,7 +138,7 @@ class Entity
   {
     if(array_key_exists($key, $data))
     {
-      $this->$key = $this->clientInputValidator->validateString($key, $data[$key], 100 , false , ClientInputValidator::$EMAIL_VALIDATION);
+      $this->$key = $this->clientInputValidator->validateString($key, $data[$key], 255 , false , ClientInputValidator::$EMAIL_VALIDATION);
     }
   }
 
@@ -132,7 +149,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    * @param int    $maxSize   the max acceptable length of the string
-   * @throws \Exception if json_decode throws an error
+   * @throws Exception if json_decode throws an error
    */
   protected function getJson(string $key, array $data, int $maxSize)
   {
@@ -144,7 +161,7 @@ class Entity
       {
         $this->$key = json_decode($value, true);
       }
-      catch(\Exception $e)
+      catch(Exception $e)
       {
         $this->logger->error("Error while decoding json for key '$key'", array("exception"=> $e, "data"=>$data));
         throw $e;
@@ -169,7 +186,7 @@ class Entity
    * set on this object the property named $this->$key,  $data[$key] as a date value
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
-   * @throws \Exception when failing to parse date
+   * @throws Exception when failing to parse date
    */
   protected function getDate(string $key, array $data)
   {
@@ -185,7 +202,7 @@ class Entity
           $this->$key = Carbon::createFromFormat("Y-m-d H:i:s.u", $array['date'], $array['timezone']);
           $this->$key->setTimezone("UTC");
         }
-        catch(\Exception $e)
+        catch(Exception $e)
         {
           $this->logger->error("Error while decoding date (from momentjs date) for key '$key'", array("exception"=> $e, "data"=>$data));
           throw $e;
@@ -197,7 +214,7 @@ class Entity
 
         if(strlen($stringValue) > 27)
         {
-          throw new \InvalidArgumentException("Invalid DATE value, length higher than the max permitted size " .json_encode(['key'=>$key, 'value'=>$stringValue, 'maxSize'=>27]) );
+          throw new InvalidArgumentException("Invalid DATE value, length higher than the max permitted size " .json_encode(['key'=>$key, 'value'=>$stringValue, 'maxSize'=>27]) );
         }
 
         if($stringValue != null)
@@ -212,7 +229,7 @@ class Entity
               $this->$key = Carbon::parse($stringValue);
               //$this->logger->error("json javascript parsed : ".$this->$key);
             }
-            catch(\Exception $e)
+            catch(Exception $e)
             {
               $this->logger->error("Error while decoding date (from js date) for key '$key'", array("exception"=> $e, "data"=>$data));
               throw $e;
@@ -231,7 +248,7 @@ class Entity
 
              // $this->logger->error("DB date Carbon : ".$this->$key);
             }
-            catch(\Exception $e)
+            catch(Exception $e)
             {
               $this->logger->error("Error while decoding date (from DB date) for key '$key'", array("exception"=> $e, "data"=>$data));
               throw $e;

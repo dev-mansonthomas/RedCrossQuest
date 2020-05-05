@@ -43,8 +43,6 @@ class UpdateDailyStats extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $ulId                         = $this->decodedToken->getUlId();
     $dailyStatsBeforeRCQEntity    = new DailyStatsBeforeRCQEntity($this->parsedBody, $this->logger);
 

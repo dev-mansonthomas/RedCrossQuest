@@ -39,13 +39,11 @@ class CreatePointQuete extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
+    $ulId = $this->decodedToken->getUlId  ();
 
-    $ulId   = $this->decodedToken->getUlId  ();
+    $pointQueteEntity = new PointQueteEntity($this->parsedBody, $this->logger);
 
-    $pointQueteEntity    = new PointQueteEntity($this->parsedBody, $this->logger);
-
-    $pointQueteId = $this->pointQueteDBService->insert            ($pointQueteEntity, $ulId);
+    $pointQueteId     = $this->pointQueteDBService->insert            ($pointQueteEntity, $ulId);
     $this->response->getBody()->write(json_encode(new CreatePointQueteResponse($pointQueteId)));
 
     return $this->response;

@@ -43,8 +43,6 @@ class ListDailyStats extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $ulId     = $this->decodedToken->getUlId();
 
     $this->validateSentData([

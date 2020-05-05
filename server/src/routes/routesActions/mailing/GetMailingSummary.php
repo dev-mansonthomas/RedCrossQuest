@@ -41,8 +41,6 @@ class GetMailingSummary extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $ulId     = $this->decodedToken->getUlId();
     
     $mailingSummary = $this->mailingDBService->getMailingSummary($ulId);

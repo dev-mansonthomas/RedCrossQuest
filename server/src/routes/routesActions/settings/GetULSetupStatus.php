@@ -36,8 +36,6 @@ class GetULSetupStatus extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-    
     $ulId    = $this->decodedToken->getUlId();
 
     $this->response->getBody()->write(json_encode($this->settingsBusinessService->getSetupStatus($ulId)));

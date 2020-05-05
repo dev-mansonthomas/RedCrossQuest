@@ -50,6 +50,12 @@ angular.module('redCrossQuestClient').factory('SettingsResource', function ($res
         params: {
           action: 'updateRedQuestSettings'
         }
+      },
+      updateRedCrossQuestSettings: {
+        method: 'PUT', // this method issues a PUT request
+        params: {
+          action: 'updateRedCrossQuestSettings'
+        }
       }
     });
 });

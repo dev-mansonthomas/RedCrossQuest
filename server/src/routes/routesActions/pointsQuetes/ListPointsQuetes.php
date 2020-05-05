@@ -42,8 +42,6 @@ class ListPointsQuetes extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $ulId   = $this->decodedToken->getUlId  ();
 
     $pointQuetes = $this->pointQueteDBService->getPointQuetes($ulId);

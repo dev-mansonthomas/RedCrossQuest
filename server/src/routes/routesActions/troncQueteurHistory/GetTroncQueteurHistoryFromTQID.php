@@ -43,8 +43,6 @@ class GetTroncQueteurHistoryFromTQID extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $this->validateSentData(
       [
         ClientInputValidatorSpecs::withInteger('tronc_queteur_id', $this->getParam('tronc_queteur_id'), 1000000, true)

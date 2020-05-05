@@ -9,6 +9,7 @@ namespace RedCrossQuest\routes\routesActions\settings;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
+use RedCrossQuest\DBService\ULPreferencesFirestoreDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
@@ -21,9 +22,9 @@ use RedCrossQuest\Service\Logger;
 class GetAllULSettings extends Action
 {
   /**
-   * @var UniteLocaleSettingsDBService  $uniteLocaleSettingsDBService
+   * @var ULPreferencesFirestoreDBService $uniteLocalePrefsFirestoreService,
    */
-  private $uniteLocaleSettingsDBService;
+  private $uniteLocalePrefsFirestoreService;
 
   /**
    * @var UniteLocaleDBService          $uniteLocaleDBService
@@ -56,24 +57,24 @@ class GetAllULSettings extends Action
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param UniteLocaleSettingsDBService $uniteLocaleSettingsDBService
+   * @param ULPreferencesFirestoreDBService $uniteLocalePrefsFirestoreService
    * @param UniteLocaleDBService $uniteLocaleDBService
    * @param UserDBService $userDBService
    * @param DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService
    */
-  public function __construct(LoggerInterface               $logger,
-                              ClientInputValidator          $clientInputValidator,
-                              UniteLocaleSettingsDBService  $uniteLocaleSettingsDBService,
-                              UniteLocaleDBService          $uniteLocaleDBService,
-                              UserDBService                 $userDBService,
-                              DailyStatsBeforeRCQDBService  $dailyStatsBeforeRCQDBService)
+  public function __construct(LoggerInterface                 $logger,
+                              ClientInputValidator            $clientInputValidator,
+                              ULPreferencesFirestoreDBService $uniteLocalePrefsFirestoreService,
+                              UniteLocaleDBService            $uniteLocaleDBService,
+                              UserDBService                   $userDBService,
+                              DailyStatsBeforeRCQDBService    $dailyStatsBeforeRCQDBService)
   {
     parent::__construct($logger, $clientInputValidator);
 
-    $this->uniteLocaleSettingsDBService = $uniteLocaleSettingsDBService;
-    $this->uniteLocaleDBService         = $uniteLocaleDBService;
-    $this->userDBService                = $userDBService;
-    $this->dailyStatsBeforeRCQDBService = $dailyStatsBeforeRCQDBService;
+    $this->uniteLocalePrefsFirestoreService = $uniteLocalePrefsFirestoreService;
+    $this->uniteLocaleDBService             = $uniteLocaleDBService;
+    $this->userDBService                    = $userDBService;
+    $this->dailyStatsBeforeRCQDBService     = $dailyStatsBeforeRCQDBService;
   }
 
   /**
@@ -82,8 +83,6 @@ class GetAllULSettings extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-    
     $ulId   = $this->decodedToken->getUlId  ();
     $roleId = $this->decodedToken->getRoleId();
     $userId = $this->decodedToken->getUid   ();
@@ -96,9 +95,11 @@ class GetAllULSettings extends Action
       $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()
     );
 
-    $guiSettings->ul          = $roleId == 1 ? "" : $this->uniteLocaleDBService         ->getUniteLocaleById   ($ulId);
-    $guiSettings->ul_settings = $roleId == 1 ? "" : $this->uniteLocaleSettingsDBService ->getUniteLocaleById   ($ulId);
-    $guiSettings->user        = $this->userDBService                ->getUserInfoWithUserId($userId, $ulId, $roleId);
+    $guiSettings->ul          = $roleId == 1 ? "" : $this->uniteLocaleDBService             ->getUniteLocaleById   ($ulId);
+    $guiSettings->ul_settings = $roleId == 1 ? "" : $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
+    if(isset($guiSettings->ul_settings))
+      unset($guiSettings->ul_settings->FIRESTORE_DOC_ID);
+    $guiSettings->user        = $this->userDBService->getUserInfoWithUserId($userId, $ulId, $roleId);
 
     $this->response->getBody()->write(json_encode($guiSettings));
 

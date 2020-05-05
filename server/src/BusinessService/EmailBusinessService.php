@@ -423,7 +423,7 @@ Note: cet email est à transférer au responsable de la quête, au trésorier ou
 Votre demande ici
 ------------------
 
-https://".$this->getDeploymentInfo()."redcrossquest.com/#!/queteurs/edit/\".$queteurInfo->id
+https://".$this->getDeploymentInfo()."redcrossquest.com/#!/queteurs/edit/$queteurInfo->id\"
 
 En vous remerciant,
 ".$queteurInfo->first_name." ".$queteurInfo->last_name.", 

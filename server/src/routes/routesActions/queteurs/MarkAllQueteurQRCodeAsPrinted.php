@@ -42,7 +42,6 @@ class MarkAllQueteurQRCodeAsPrinted extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
     $ulId     = $this->decodedToken->getUlId();
 
     $this->queteurDBService->markAllAsPrinted($ulId);

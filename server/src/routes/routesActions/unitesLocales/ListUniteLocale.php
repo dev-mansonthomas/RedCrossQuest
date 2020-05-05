@@ -45,8 +45,6 @@ class ListUniteLocale extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-    
     $roleId = $this->decodedToken->getRoleId();
 
     if(array_key_exists('q', $this->queryParams) && $roleId == 9)

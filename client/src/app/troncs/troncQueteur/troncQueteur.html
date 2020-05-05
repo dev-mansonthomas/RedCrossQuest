@@ -916,7 +916,13 @@
             </div>
 
             <div class="row">
-              <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_creditcard.$invalid}">
+              <div class="form-group col-md-2">
+                <label for="don_cheque_cb" class="control-label" style="color:#F5F5F5;">Mettre à Zéro</label>
+                <button id="don_cheque_cb" type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setCBToZero();" ng-if="!tq.current.readOnlyView || tq.current.adminEditMode" ng-cloak>
+                  Mettre à zéro
+                </button>
+              </div>
+              <div class="form-group  col-md-4" ng-class="{'has-error':troncQueteurForm.don_creditcard.$invalid}">
                 <label for="don_creditcard" class="control-label">Total des dons CB en €</label>
                 <div class="input-group">
 
@@ -935,9 +941,8 @@
               </div>
 
               <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cb_total_number.$invalid}">
-                <label for="don_cb_total_number" class="control-label">Nombre total de dons</label>
+                <label for="don_cb_total_number" class="control-label">Nombre total de dons CB</label>
                 <div class="input-group">
-
                   <input type="number"
                          min="0"
                          name="don_cb_total_number"
@@ -945,12 +950,13 @@
                          class="form-control"
                          ng-model="tq.current.tronc_queteur.don_cb_total_number"
                          ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                         ng-required="tq.current.fillTronc && tq.current.tronc_queteur.don_creditcard > 0"/>
+                         ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_creditcard != null"/>
                   <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
                 </div>
                 <span class="help-block">Saisir le nombre de dons en CB sur le créneau de quête</span>
               </div>
             </div>
+
           </div>
           <!-- FIN TERMINAL CB -->
 
@@ -971,7 +977,14 @@
           </div>
 
           <div class="row" ng-show="tq.current.fillTronc" ng-cloak>
-            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cheque.$invalid}">
+            <div class="form-group col-md-2">
+              <label for="don_cheque_maz" class="control-label" style="color:#F5F5F5;">Mettre à Zéro</label>
+              <button id="don_cheque_maz" type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setChequeToZero();" ng-if="!tq.current.readOnlyView || tq.current.adminEditMode" ng-cloak>
+                Mettre à zéro
+              </button>
+            </div>
+
+            <div class="form-group  col-md-4" ng-class="{'has-error':troncQueteurForm.don_cheque.$invalid}">
               <label for="don_cheque" class="control-label">Total des dons en Chèque</label>
               <div class="input-group">
 
@@ -990,10 +1003,9 @@
                 Pour ces derniers, utilisez l'écran de saisie des dons avec recu fiscaux</span>
             </div>
 
-            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cheque.$invalid}">
+            <div class="form-group  col-md-4 col-md-offset-2" ng-class="{'has-error':troncQueteurForm.don_cheque_number.$invalid}">
               <label for="don_cheque_number" class="control-label">Nombre de Chèques</label>
               <div class="input-group">
-
                 <input type="number"
                        min="0"
                        name="don_cheque_number"
@@ -1001,13 +1013,12 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.don_cheque_number"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_cheque > 0"
+                       ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_cheque != null"
                 />
                 <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
               <span class="help-block">Saisir le <b>nombre</b> de cheque</span>
             </div>
-
 
           </div>
           <!-- FIN Cheque -->
@@ -1067,6 +1078,7 @@
 
               <input
                 id="coins_money_bag_id"
+                name="coins_money_bag_id"
                 type="text"
                 ng-model="tq.current.tronc_queteur.coins_money_bag_id"
                 placeholder="Rechercher un identifiant de sac à pièces existant"
@@ -1077,7 +1089,7 @@
                 typeahead-on-select="tq.getBagDetails($item, $model, $label, $event, true)"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                ng-required
+                ng-required="tq.use_bank_bag"
                 autocomplete="off">
               <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-coins" aria-hidden="true" style="top:0px;">&nbsp;</span>
@@ -1094,6 +1106,7 @@
 
               <input
                 id="bills_money_bag_id"
+                name="bills_money_bag_id"
                 type="text"
                 ng-model="tq.current.tronc_queteur.bills_money_bag_id"
                 placeholder="Rechercher un identifiant de sac à billets existant"
@@ -1104,7 +1117,7 @@
                 typeahead-on-select="tq.getBagDetails($item, $model, $label, $event, false)"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                ng-required
+                ng-required="tq.use_bank_bag"
                 autocomplete="off">
               <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-money" aria-hidden="true" style="top:0px;">&nbsp;</span>

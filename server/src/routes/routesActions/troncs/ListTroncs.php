@@ -43,8 +43,6 @@ class ListTroncs extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $this->validateSentData(
       [
         ClientInputValidatorSpecs::withBoolean("active", $this->getParam('active'), false     , null),

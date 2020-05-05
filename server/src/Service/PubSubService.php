@@ -4,6 +4,7 @@ namespace RedCrossQuest\Service;
 
 require '../../vendor/autoload.php';
 
+use Exception;
 use Google\Cloud\PubSub\PubSubClient;
 
 
@@ -28,7 +29,7 @@ class PubSubService
     $this->logger    = $logger;
 
     $this->logger->info("Creating PubSubClient() with projectId", array("projectId" => $this->settings));
-    $this->pubSub    = new PubSubClient();//["projectId" => $this->settings['gcp']['projectId']]
+    $this->pubSub    = new PubSubClient();
   }
 
   /**
@@ -39,7 +40,7 @@ class PubSubService
    * @param bool $jsonEncodeData : should the $data be passed to json_encode before sending it
    * @param bool $raiseExceptionInCaseOfError : if true, if an exception occurs rethrow the error.
    * @return array A list of message IDs
-   * @throws \Exception
+   * @throws Exception
    */
   public function publish(string $topicName, $data, array $attributes, bool $jsonEncodeData=true, bool $raiseExceptionInCaseOfError=false)
   {
@@ -56,7 +57,7 @@ class PubSubService
         'attributes' => $attributes
       ]);
     }
-    catch(\Exception $exception)
+    catch(Exception $exception)
     {
       $this->logger->error("Error while publishing message on topic", ['topicName'=>$topicName, 'attributes'=>$attributes, 'jsonEncodeData'=>$jsonEncodeData, 'raiseExceptionInCaseOfError'=>$raiseExceptionInCaseOfError, 'data'=> $data, "exception"=>$exception] );
 

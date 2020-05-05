@@ -18,7 +18,7 @@ use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
 
 
-class UpdateRedQuestSettings extends Action
+class UpdateRedCrossQuestSettings extends Action
 {
 
   /**
@@ -48,16 +48,10 @@ class UpdateRedQuestSettings extends Action
    */
   protected function action(): Response
   {
-    $this->logger->debug("parsed body", [$this->parsedBody]);
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("rq_autonomous_depart_and_return" , $this->parsedBody['rq_autonomous_depart_and_return']===true?1:0, true, false),
-        ClientInputValidatorSpecs::withBoolean("rq_display_daily_stats"          , $this->parsedBody['rq_display_daily_stats'         ]===true?1:0, true, false),
-        ClientInputValidatorSpecs::withString ("rq_display_queteur_ranking"      , $this->parsedBody['rq_display_queteur_ranking'     ], 8,      true),
+        ClientInputValidatorSpecs::withBoolean("use_bank_bag" , $this->parsedBody['use_bank_bag']===true?1:0, true, false),
       ]);
-
-
-
 
 
     $ulId   = $this->decodedToken->getUlId();
@@ -69,18 +63,14 @@ class UpdateRedQuestSettings extends Action
     {//does not exist in firestore
       $data = [];
 
-      $data['rq_autonomous_depart_and_return'] = $this->validatedData["rq_autonomous_depart_and_return"];
-      $data['rq_display_daily_stats'         ] = $this->validatedData["rq_display_daily_stats"];
-      $data['rq_display_queteur_ranking'     ] = $this->validatedData["rq_display_queteur_ranking"];
-      $data['ul_id'                          ] = $ulId;
+      $data['use_bank_bag'] = $this->validatedData["use_bank_bag"];
+      $data['ul_id'       ] = $ulId;
 
       $ulPreferenceEntity = ULPreferencesEntity::withArray($data, $this->logger);
     }
     else
     {
-      $ulPreferenceEntity->rq_autonomous_depart_and_return = $this->validatedData["rq_autonomous_depart_and_return"];
-      $ulPreferenceEntity->rq_display_daily_stats          = $this->validatedData["rq_display_daily_stats"];
-      $ulPreferenceEntity->rq_display_queteur_ranking      = $this->validatedData["rq_display_queteur_ranking"];
+      $ulPreferenceEntity->use_bank_bag = $this->validatedData["use_bank_bag"];
     }
 
     $this->ULPreferencesFirestoreDBService ->updateUlPrefs($ulId, $ulPreferenceEntity);

@@ -6,6 +6,7 @@
 namespace RedCrossQuest\routes\routesActions\namedDonations;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\NamedDonationDBService;
@@ -38,12 +39,10 @@ class GetNamedDonation extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $ulId   = $this->decodedToken->getUlId();
     $roleId = $this->decodedToken->getRoleId();
 

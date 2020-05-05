@@ -60,8 +60,6 @@ class SaveCoinsOnTroncQueteur extends Action
    */
   protected function action(): Response
   {
-    Logger::dataForLogging(new LoggingEntity($this->decodedToken));
-
     $this->validateSentData(
       [
         ClientInputValidatorSpecs::withBoolean("adminMode"          , $this->getParam('adminMode'          ), false, false)
