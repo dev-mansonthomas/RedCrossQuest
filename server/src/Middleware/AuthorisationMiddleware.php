@@ -93,11 +93,10 @@ class AuthorisationMiddleware implements MiddlewareInterface
     $signer = new Sha256();
 
 
-    $jwtSecret = $this->jwtSettings['secret'  ];
     $issuer    = $this->jwtSettings['issuer'  ];
     $audience  = $this->jwtSettings['audience'];
 
-    if(!$token->verify($signer, $jwtSecret))
+    if(!$token->verify($signer, $this->jwtSecret))
     {
       $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
       return new DecodedToken( '0009');

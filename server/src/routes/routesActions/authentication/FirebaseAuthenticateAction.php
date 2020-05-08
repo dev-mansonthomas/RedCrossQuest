@@ -18,6 +18,7 @@ use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\ReCaptchaService;
+use RedCrossQuest\Service\SecretManagerService;
 
 
 class FirebaseAuthenticateAction extends AuthenticateAbstractAction
@@ -55,6 +56,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
+   * @param SecretManagerService $secretManagerService,
    * @param ReCaptchaService $reCaptchaService
    * @param UserDBService $userDBService
    * @param QueteurDBService $queteurDBService
@@ -64,6 +66,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
+                              SecretManagerService    $secretManagerService,
                               ReCaptchaService        $reCaptchaService,
                               UserDBService           $userDBService,
                               QueteurDBService        $queteurDBService,
@@ -71,7 +74,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
                               SpotfireAccessDBService $spotfireAccessDBService,
                               Firebase\Auth           $firebaseAuth)
   {
-    parent::__construct($logger, $clientInputValidator);
+    parent::__construct($logger, $clientInputValidator, $secretManagerService);
     
     $this->reCaptchaService       = $reCaptchaService;
     $this->userDBService          = $userDBService;

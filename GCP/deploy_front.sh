@@ -37,12 +37,12 @@ setProject "rcq-${COUNTRY}-${ENV}"
 
 echo "***** client build *****"
 #Build the AngularJS frontend
-cd client
+cd client  || exit 1
 ./build.sh
-cd -
+cd -  || exit 1
 
 echo "***** renaming index.html *****"
-cd client/dist
+cd client/dist  || exit 1
 mv index-*.html index.html
 
 echo "***** renaming graph-display and reference to it *****"
@@ -81,7 +81,7 @@ cp ../../client/bower_components/angular-i18n/angular-locale_fr-fr.js    bower_c
 cp ../../client/bower_components/zxcvbn/dist/zxcvbn.js                   bower_components/zxcvbn/dist/zxcvbn.js
 cp ../../client/bower_components/bootstrap-sass/assets/fonts/bootstrap/* bower_components/bootstrap-sass/assets/fonts/bootstrap/
 
-cd -
+cd - || exit 1
 
 echo "***** deploying service *****"
 gcloud app deploy client/app.yaml -q #--verbosity=debug
