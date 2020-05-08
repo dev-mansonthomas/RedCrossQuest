@@ -13,6 +13,7 @@
 #
 #
 # it uses ~/.cred/rcq-fr-test-db-setup.properties  (country and env taken from command line arguments)
+# it uses ~/.cred/rcq-fr-test.properties  (to get the MySQL password for the non-root user)
 # it also uses ~/.cred/.my.cnf-${COUNTRY}-${ENV}  to connect to the proper instance (through a cloud_sql_proxy)
 #
 #MYSQL_DB_VERSION=MYSQL_5_7
@@ -56,6 +57,7 @@ setProject "rcq-${COUNTRY}-${ENV}"
 mkdir -p logs tmp
 
 . ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
+. ~/.cred/rcq-${COUNTRY}-${ENV}.properties
 
 if [[ "${MYSQL_BACKUP}1" = "on1" ]]
 then

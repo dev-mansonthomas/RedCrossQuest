@@ -20,11 +20,11 @@ class ReCaptchaService
   protected $redCrossQuestHost;
   protected $lowestAcceptableScore;
 
-  public function __construct($settings, Logger $logger)
+  public function __construct($settings, Logger $logger, string $recaptchaSecret)
   {
     $this->logger                 = $logger;
 
-    $this->secretKey              = $settings['ReCaptcha'  ]['secret'];
+    $this->secretKey              = $recaptchaSecret;
     $this->lowestAcceptableScore  = $settings['ReCaptcha'  ]['lowestAcceptableScore'];
     $appUrl                       = $settings['appSettings']['appUrl'];
 

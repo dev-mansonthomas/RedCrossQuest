@@ -21,6 +21,7 @@ use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Service\Logger;
+use RedCrossQuest\Service\SecretManagerService;
 use Slim\Psr7\Response;
 
 /**
@@ -46,12 +47,14 @@ class AuthorisationMiddleware implements MiddlewareInterface
   ];
 
   private $jwtSettings;
+  private $jwtSecret;
 
   /**
    * init of the constructor
    * @param Container $container the container
    * @throws DependencyException
    * @throws NotFoundException
+   * @throws \Google\ApiCore\ApiException
    */
   public function __construct(Container $container)
   {
@@ -62,8 +65,9 @@ class AuthorisationMiddleware implements MiddlewareInterface
     $this->bearer      = "Bearer ";
     $this->bearerStrLen=strlen($this->bearer);
 
-    $this->jwtSettings =  $container->get('settings')['jwt'];
+    $this->jwtSettings = $container->get('settings')['jwt'];
 
+    $this->jwtSecret   = $container->get(SecretManagerService::class)->getSecret(SecretManagerService::$JWT_SECRET);
     //$this->logger->info("__construct finished");
   }
 

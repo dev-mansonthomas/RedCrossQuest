@@ -27,8 +27,6 @@ class PubSubService
   {
     $this->settings  = $settings;
     $this->logger    = $logger;
-
-    $this->logger->info("Creating PubSubClient() with projectId", array("projectId" => $this->settings));
     $this->pubSub    = new PubSubClient();
   }
 

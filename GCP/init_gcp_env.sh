@@ -33,6 +33,7 @@ setProject ${PROJECT_ID}
 ./init_lib/create_scheduler.sh
 ./init_lib/create_topics.sh
 ./init_lib/init_api.sh
+./init_lib/init_secret.sh
 
 #init RedQuest API as well
 PROJECT_ID="rq-${COUNTRY}-${ENV}"

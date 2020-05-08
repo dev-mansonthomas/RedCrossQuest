@@ -2,6 +2,7 @@
 return [
   'settings' => [
     'displayErrorDetails' => true, // set to false in production
+    'online'              => true, //determine if secrets are fetch locally or from Google Secret Manager and if logging is done locally or
     // Renderer settings
     'renderer'            => [
       'template_path' => __DIR__ . '/../templates/',
