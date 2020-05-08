@@ -4,14 +4,18 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use Google\ApiCore\ApiException;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Token;
+use Psr\Log\LoggerInterface;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
 use RedCrossQuest\Entity\UserEntity;
 use RedCrossQuest\routes\routesActions\Action;
+use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\SecretManagerService;
 
 
 abstract class AuthenticateAbstractAction extends Action
@@ -21,20 +25,45 @@ abstract class AuthenticateAbstractAction extends Action
    * @var array settings
    */
   protected $settings;
+  /** @var SecretManagerService    $secretManagerService*/
+  private $secretManagerService;
+
+
+  /**
+   * @param LoggerInterface $logger
+   * @param ClientInputValidator $clientInputValidator
+   * @param SecretManagerService $secretManagerService
+   */
+  public function __construct(LoggerInterface         $logger,
+                              ClientInputValidator    $clientInputValidator,
+                              SecretManagerService    $secretManagerService)
+  {
+    parent::__construct($logger, $clientInputValidator);
+    $this->secretManagerService = $secretManagerService;
+  }
+
 
   //generate a JWT for a user
+
+  /**
+   * @param QueteurEntity $queteur
+   * @param UniteLocaleEntity $ul
+   * @param UserEntity $user
+   * @return Token
+   * @throws ApiException
+   */
   protected function getToken(QueteurEntity $queteur, UniteLocaleEntity $ul, UserEntity $user) : Token
   {
-    $jwtSecret      = $this->settings['jwt'        ]['secret'        ];
+    $jwtSecret      = $this->secretManagerService->getSecret(SecretManagerService::$JWT_SECRET);
     $issuer         = $this->settings['jwt'        ]['issuer'        ];
     $audience       = $this->settings['jwt'        ]['audience'      ];
     $deploymentType = $this->settings['appSettings']['deploymentType'];
     $sessionLength  = $this->settings['appSettings']['sessionLength' ];
 
     $signer   = new Sha256();
-    $issuedAt =   time() ;
+    $issuedAt =     time  ();
 
-    $jwtToken = (new Builder())
+    return (new Builder())
       ->issuedBy          ($issuer  ) // Configures the issuer (iss claim)
       ->permittedFor      ($audience)
       ->issuedAt          ($issuedAt)
@@ -49,6 +78,5 @@ abstract class AuthenticateAbstractAction extends Action
       ->withClaim         ('roleId'   , $user->role    )
       ->withClaim         ('d'        , $deploymentType)
       ->getToken          ($signer          , new Key($jwtSecret));
-    return $jwtToken;
   }
 }

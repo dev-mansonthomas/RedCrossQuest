@@ -6,6 +6,7 @@
 namespace RedCrossQuest\routes\routesActions\settings;
 
 
+use DI\Annotation\Inject;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
@@ -17,6 +18,7 @@ use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
+use RedCrossQuest\Service\SecretManagerService;
 
 
 class GetAllULSettings extends Action
@@ -44,15 +46,21 @@ class GetAllULSettings extends Action
 
   /**
    * @Inject("settings")
-   * @var array settings
+   * @var array $settings
    */
   protected $settings;
 
   /**
    * @Inject("RCQVersion")
-   * @var string RCQVersion
+   * @var string $RCQVersion
    */
   protected $RCQVersion;
+
+  /**
+   * @Inject("googleMapsApiKey")
+   * @var string $googleMapsApiKey
+   */
+  private $googleMapsApiKey;
 
   /**
    * @param LoggerInterface $logger
@@ -88,7 +96,7 @@ class GetAllULSettings extends Action
     $userId = $this->decodedToken->getUid   ();
 
     $guiSettings = new GetAllULSettingsResponse(
-      $roleId == 1 ? "" : $this->settings['appSettings']['gmapAPIKey'     ],
+      $roleId == 1 ? "" : $this->googleMapsApiKey,
       $this->settings['appSettings']['RGPDVideo'      ],
       $roleId == 1 ? "" : $this->settings['appSettings']['RedQuestDomain' ],
       $this->RCQVersion,

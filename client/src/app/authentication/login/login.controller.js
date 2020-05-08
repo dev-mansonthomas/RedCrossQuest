@@ -53,12 +53,14 @@
               vm.errorStr = 'Login ou mot de passe incorrect';
               vm.error    = true;
               vm.loading  = false;
+              vm.success  = null;
             }
             else
             {
               vm.errorStr = JSON.stringify(result);
               vm.error    = true;
               vm.loading  = false;
+              vm.success  = null;
             }
             $timeout.cancel(loginTimeout);
           },
@@ -66,17 +68,28 @@
           {
             $timeout.cancel(loginTimeout);
             vm.error    = true;
-            vm.errorStr = 'Un erreur s\'est produite: '+JSON.stringify(message.data.error);
+            vm.errorStr = 'Un erreur s\'est produite: '+JSON.stringify(message.data.error?message.data.error:message.data);
             vm.loading  = false;
-
+            vm.success  = null;
           }
         );
 
       };
 
     //recaptchaKey is defined in index.html
-    grecaptcha.execute(recaptchaKey, {action: 'rcq/login'})
-      .then(doLogin);
+      try
+      {
+        grecaptcha.execute(recaptchaKey, {action: 'rcq/login'})
+          .then(doLogin);
+      }
+      catch(Exception)
+      {
+        vm.error    = true;
+        vm.errorStr = 'Un erreur s\'est produite: '+JSON.stringify(Exception.message);
+        vm.loading  = false;
+        vm.success  = null;
+        $timeout.cancel(loginTimeout);
+      }
 
 
 
@@ -122,9 +135,19 @@
         );
       };
 
-      //recaptchaKey is defined in index.html
-      grecaptcha.execute(recaptchaKey, {action: 'rcq/sendInit'})
-      .then(doSendInit);
+      try
+      {
+        //recaptchaKey is defined in index.html
+        grecaptcha.execute(recaptchaKey, {action: 'rcq/sendInit'})
+          .then(doSendInit);
+      }
+      catch(Exception)
+      {
+        vm.error    = true;
+        vm.errorStr = 'Un erreur s\'est produite: '+JSON.stringify(Exception.message);
+        vm.loading  = false;
+        vm.success=null;
+      }
     };
   }
 })();

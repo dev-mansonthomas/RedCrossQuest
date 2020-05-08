@@ -32,6 +32,7 @@ use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\MailService;
 use RedCrossQuest\Service\PubSubService;
 use RedCrossQuest\Service\ReCaptchaService;
+use RedCrossQuest\Service\SecretManagerService;
 
 
 return function (ContainerBuilder $containerBuilder)
@@ -45,7 +46,8 @@ return function (ContainerBuilder $containerBuilder)
      *
      */
 
-    "googleLogger" => function (ContainerInterface $c) {
+    "googleLogger" => function (ContainerInterface $c)
+    {
       $settings = $c->get('settings')['logger'];
 
       $logger = LoggingClient::psrBatchLogger(
@@ -62,7 +64,8 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * Version of RedCrossQuest
      */
-    "RCQVersion" => function (ContainerInterface $c) {
+    "RCQVersion" => function (ContainerInterface $c)
+    {
       //TODO move to settings ?
       return "2019.2";
     },
@@ -72,7 +75,17 @@ return function (ContainerBuilder $containerBuilder)
      */
     LoggerInterface::class => function (ContainerInterface $c)
     {
-      return new Logger($c->get("googleLogger"), (string)$c->get("RCQVersion"), $c->get('settings')['appSettings']['deploymentType']);
+      return new Logger($c->get("googleLogger"), (string)$c->get("RCQVersion"), $c->get('settings')['appSettings']['deploymentType'], $c->get('settings')['online']);
+    },
+
+    SecretManagerService::class => function (ContainerInterface $c)
+    {
+      return new SecretManagerService($c->get('settings'), $c->get(LoggerInterface::class));
+    },
+    
+    "googleMapsApiKey" => function (ContainerInterface $c)
+    {
+      return $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$GOOGLE_MAPS_API_KEY);
     },
 
     /**
@@ -83,9 +96,10 @@ return function (ContainerBuilder $containerBuilder)
     {
       $db = $c->get('settings')['db'];
 
+      $dbPwd = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$MYSQL_PASSWORD);
       try
       {
-        $pdo = new PDO( $db['dsn'], $db['user'], $db['pwd']);
+        $pdo = new PDO( $db['dsn'], $db['user'], $dbPwd);
         $pdo->setAttribute(PDO::ATTR_ERRMODE           , PDO::ERRMODE_EXCEPTION );
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC       );
         return $pdo;
@@ -94,7 +108,7 @@ return function (ContainerBuilder $containerBuilder)
       catch(\Exception $e)
       {
         $logger = $c->get(LoggerInterface::class);
-        $logger->error("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($db['pwd']), 'exception'=>$e));
+        $logger->critical("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($dbPwd), 'exception'=>$e));
         throw $e;
       }
     },
@@ -118,7 +132,8 @@ return function (ContainerBuilder $containerBuilder)
      */
     ReCaptchaService::class => function (ContainerInterface $c)
     {
-      return new ReCaptchaService($c->get('settings'), $c->get(LoggerInterface::class));
+      $recaptchaSecret = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$RECAPTCHA_SECRET);
+      return new ReCaptchaService($c->get('settings'), $c->get(LoggerInterface::class), $recaptchaSecret);
     },
 
     /**
@@ -128,10 +143,10 @@ return function (ContainerBuilder $containerBuilder)
     Bucket::class => function (ContainerInterface $c)
     {
       $appSettings = $c->get('settings')['appSettings'];
-
+      //TODO country is missing from settings
       $country        = $appSettings['country'         ];
-      $env            = strtolower($appSettings['deploymentType'  ]);
       $bucketTemplate = $appSettings['exportDataBucket'];
+      $env            = strtolower($appSettings['deploymentType'  ]);
 
       $envLabel=[];
       $envLabel['D'] = "dev";
@@ -140,7 +155,7 @@ return function (ContainerBuilder $containerBuilder)
 
       $gcpBucket  = str_replace("_country_", $country, str_replace("_env_", $env           , $bucketTemplate));
       $project_id = str_replace("_country_", $country, str_replace("_env_", $envLabel[$env], "redcrossquest-_country_-_env_"));
-
+      //TODO: check if projectID is mandatory, it shouldn't be
       //documentation : https://cloud.google.com/storage/docs/reference/libraries
       //https://github.com/googleapis/google-cloud-php
       $storage = new StorageClient([
@@ -263,7 +278,10 @@ return function (ContainerBuilder $containerBuilder)
     {
       $settings       = $c->get('settings')['appSettings']['email'];
       $deploymentType = $c->get('settings')['appSettings']['deploymentType'];
-      return new MailService($c->get(LoggerInterface::class),  $settings['sendgrid.api_key'], $settings['sendgrid.sender'], $deploymentType);
+
+      $sendgridApiKey = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$SENDGRID_API_KEY);
+
+      return new MailService($c->get(LoggerInterface::class),  $sendgridApiKey, $settings['sendgrid.sender'], $deploymentType);
     },
 
     /**

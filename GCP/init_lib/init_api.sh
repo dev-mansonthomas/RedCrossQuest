@@ -12,3 +12,42 @@ gcloud services enable geocoding-backend.googleapis.com
 #Google Cloud firestore API (to access RedQuest Firestore)
 echo "gcloud services enable firestore.googleapis.com"
 gcloud services enable firestore.googleapis.com
+
+#secret manager
+#in Google Cloud Console
+#Products->Security->Secret Manager
+
+#Secret Manager setup
+echo "gcloud services enable secretmanager.googleapis.com"
+gcloud services enable secretmanager.googleapis.com
+
+GCP_PROJECT_NAME="${PROJECT_ID}"
+SECRET_MANAGER_ADMIN="mt@mansonthomas.com"
+SECRET_MANAGER_ADMIN_ROLE="roles/secretmanager.admin"
+SECRET_MANAGER_ACCESSOR_ROLE="roles/secretmanager.secretAccessor"
+
+#gcloud projects add-iam-policy-binding rcq-fr-dev --member "user:mt@mansonthomas.com" --role "roles/secretmanager.admin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_NAME}" \
+  --member "user:${SECRET_MANAGER_ADMIN}" \
+  --role "${SECRET_MANAGER_ADMIN_ROLE}"
+
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_NAME}" \
+  --member "serviceAccount:${GCP_PROJECT_NAME}@appspot.gserviceaccount.com" \
+  --role "${SECRET_MANAGER_ACCESSOR_ROLE}"
+
+
+if [[ "${ENV}1" == "dev1" ]]
+then
+  echo "enable accessor role for local dev service account"
+  #access for local development plateform
+  gcloud projects add-iam-policy-binding "${GCP_PROJECT_NAME}" \
+    --member "serviceAccount:thomas-dev@rcq-fr-dev.iam.gserviceaccount.com" \
+    --role "${SECRET_MANAGER_ACCESSOR_ROLE}"
+fi
+
+
+#Create a new secret named 'my-secret' in 'us-central1' and 'us-east1' with
+#the value "s3cr3t":
+
+#$ echo "s3cr3t" | gcloud secrets create my-secret --data-file=-
+

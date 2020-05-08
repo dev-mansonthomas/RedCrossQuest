@@ -100,9 +100,9 @@ function generateEnvFile
     ENV_VAR="--env-vars-file=${YAML_FILE_NAME}"
     echo "generating env_var yaml file for ${FUNCTION_NAME}"
     #regenerate the yaml file from properties
-    cd ~/.cred/functionsEnvVar/
+    cd ~/.cred/functionsEnvVar/  || exit 1
     ${BASH_FILE_NAME} "${COUNTRY}" "${ENV}"
-    cd -
+    cd - || exit 1
 
     RETURN_VALUE=${ENV_VAR}
   else
@@ -122,7 +122,7 @@ function deployHttpFunction
   if [[ "${PROJECT_NAME}1" == "1" ]]
   then
     echo "${FUNCTION_NAME} is not configured in associative array FUNCTIONS_PROJECT_PREFIX "
-    exit
+    exit 1
   fi
 
 
@@ -139,12 +139,12 @@ function deployHttpFunction
   generateEnvFile "${FUNCTION_NAME}"
   ENV_VAR="${RETURN_VALUE}"
 
-  setProject ${PROJECT_ID}
+  setProject "${PROJECT_ID}"
 
   DEPLOY_CMD="gcloud functions deploy ${FUNCTION_NAME} --source ${SOURCE} --runtime ${RUNTIME} --trigger-http --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS}"
   echo
   echo
-  echo ${DEPLOY_CMD}
+  echo "${DEPLOY_CMD}"
   echo
   echo
   ${DEPLOY_CMD}
@@ -190,7 +190,7 @@ function deployPubSubFunction
   DEPLOY_CMD="gcloud functions deploy ${FUNCTION_NAME} --source ${SOURCE} --runtime ${RUNTIME} --trigger-topic ${FUNCTION_TOPIC} --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS}"
   echo
   echo
-  echo ${DEPLOY_CMD}
+  echo "${DEPLOY_CMD}"
   echo
   echo
 

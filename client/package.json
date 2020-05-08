@@ -10,7 +10,7 @@
   "dependencies": {
     "latest-version": "^5.0.0",
     "natives": "^1.1.6",
-    "npm": "^6.13.7"
+    "npm": "^6.14.5"
   },
   "scripts": {
     "test": "gulp test"
@@ -28,7 +28,7 @@
     "gulp-autoprefixer": "~4.1.0",
     "gulp-eslint": "^4.0.2",
     "gulp-filter": "^5.1.0",
-    "gulp-flatten": "~0.3.1",
+    "gulp-flatten": "^0.4.0",
     "gulp-inject": "^4.3.2",
     "gulp-load-plugins": "^1.6.0",
     "gulp-minify-css": "~1.2.4",

@@ -9,13 +9,19 @@ use RedCrossQuest\Entity\LoggingEntity;
 
 class Logger implements LoggerInterface
 {
-
+  /** @var LoggerInterface $psrLogger*/
   private $psrLogger;
+  /** @var string $rcqInfo*/
   private $rcqInfo;
+  /** @var bool $online*/
+  private $online;
+  /** @var string $localLogFile*/
+  private $localLogFile;
 
-  public function __construct(LoggerInterface $psrLogger, string $rcqVersion, string $rcqEnv)
+  public function __construct(LoggerInterface $psrLogger, string $rcqVersion, string $rcqEnv, bool $online)
   {
-    $this->psrLogger  = $psrLogger  ;
+    $this->online     = $online;
+    $this->psrLogger  = $psrLogger;
     $this->rcqInfo    =
       [
         "rcqVersion" => $rcqVersion,
@@ -23,6 +29,15 @@ class Logger implements LoggerInterface
         "uri"        =>$_SERVER["REQUEST_URI"],
         "httpVerb"   =>$_SERVER["REQUEST_METHOD"]
       ];
+
+    if(!$this->online)
+    {
+      $documentRoot = $_SERVER['DOCUMENT_ROOT'];
+      $home = substr($documentRoot, 0, strpos($documentRoot, '/', 9));
+
+      $this->localLogFile = "$home/RedCrossQuest/server/logs/local-logs.log";
+    }
+
   }
 
   /**
@@ -62,7 +77,14 @@ class Logger implements LoggerInterface
    */
   public function emergency($message, array $context = array())
   {
-    $this->psrLogger->emergency($message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->emergency($message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      error_log("[EMERGENCY] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+    }
   }
 
   /**
@@ -79,7 +101,14 @@ class Logger implements LoggerInterface
    */
   public function alert($message, array $context = array())
   {
-    $this->psrLogger->alert($message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->alert($message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      error_log("[ALERT] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+    }
   }
 
   /**
@@ -96,7 +125,14 @@ class Logger implements LoggerInterface
    */
   public function critical($message, array $context = array())
   {
-    $this->psrLogger->critical($message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->critical($message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      error_log("[CRITICAL] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+    }
   }
 
   /**
@@ -113,7 +149,14 @@ class Logger implements LoggerInterface
    */
   public function error($message, array $context = array())
   {
-    $this->psrLogger->error($message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->error($message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      error_log("[ERROR] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+    }
   }
   /**
    * Log a warning entry.
@@ -129,7 +172,14 @@ class Logger implements LoggerInterface
    */
   public function warning($message, array $context = array())
   {
-    $this->psrLogger->warning($message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->warning($message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      error_log("[WARN] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+    }
   }
   /**
    * Log a notice entry.
@@ -145,7 +195,14 @@ class Logger implements LoggerInterface
    */
   public function notice($message, array $context = array())
   {
-    $this->psrLogger->notice($message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->notice($message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      error_log("[NOTICE] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+    }
   }
   /**
    * Log an info entry.
@@ -161,7 +218,14 @@ class Logger implements LoggerInterface
    */
   public function info($message, array $context = array())
   {
-    $this->psrLogger->info($message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->info($message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      error_log("[INFO] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+    }
   }
   /**
    * Log a debug entry.
@@ -177,7 +241,14 @@ class Logger implements LoggerInterface
    */
   public function debug($message, array $context = array())
   {
-    $this->psrLogger->debug($message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->debug($message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      error_log("[DEBUG] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+    }
   }
 
   /**
@@ -189,6 +260,19 @@ class Logger implements LoggerInterface
    */
   public function log($level, $message, array $context = array())
   {
-    $this->psrLogger->log($level, $message, $this->getDataForLogging($context));
+    if($this->online)
+    {
+      $this->psrLogger->log($level, $message, $this->getDataForLogging($context));
+    }
+    else
+    {
+      $array="";
+      if(array_count_values($context)>0)
+      {
+        $array=print_r($context, true);
+      }
+      error_log(date("Y-m-d H:i:s")." [".strtoupper($level)."] ".$message." - ".$array, 3, $this->localLogFile);
+    }
+
   }
 }
