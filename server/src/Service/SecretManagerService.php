@@ -39,6 +39,12 @@ class SecretManagerService
   /** @var string $secretNamePrefix on dev local dev environment, secret key names are prefixed by local- */
   private $secretNamePrefix="";
 
+  private $envs=[
+     "d" => "dev" ,
+     "t" => "test",
+     "p" => "prod"
+    ];
+
   public function __construct($settings, Logger $logger)
   {
     $this->settings  = $settings;
@@ -52,7 +58,7 @@ class SecretManagerService
       $this->secretNamePrefix="local-";
     }
 
-    $PROJECT_ID = "rcq-fr-".$env."ev";
+    $PROJECT_ID = "rcq-fr-".$this->envs[$env];
 
 //projects/$PROJECT_ID/secrets/&#42;/versions/*
     $this->SECRET_NAME_ID_MAPPING = [
