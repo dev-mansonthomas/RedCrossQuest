@@ -4,7 +4,16 @@ declare -A PROPERTIES
 unset KEY
 KEY=()
 
-LOCALDEV=$1
+
+ENV=$1
+if  [[ "${ENV}1" != "dev1" ]] && [[ "${ENV}1" != "test1" ]] && [[ "${ENV}1" != "prod1" ]]
+then
+  echo "'${ENV}' is not a valid environment. 'dev' (add 'local' for local secret) 'test' & 'prod' are allowed"
+  exit 1
+fi
+
+
+LOCALDEV=$2
 
 if [[ "${LOCALDEV}1" == "local1" ]]
 then

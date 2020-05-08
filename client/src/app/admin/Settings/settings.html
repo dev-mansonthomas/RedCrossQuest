@@ -460,10 +460,10 @@
             <div class="form-group" ng-class="{'has-error':ulRedCrossQuestSettingsForm.UseBankBag.$invalid}">
               <label for="UseBankBagRadio1" class="control-label">Utilisation des sacs de banques ?</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="UseBankBag" id="UseBankBagRadio1" ng-model="s.settings.applicationSettings.use_bank_bag" ng-value="true"  ng-required> Oui
+                <input type="radio" name="UseBankBag" id="UseBankBagRadio1" ng-model="s.applicationSettings.use_bank_bag" ng-value="true"  ng-required> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="UseBankBag" id="UseBankBagRadio2" ng-model="s.settings.applicationSettings.use_bank_bag" ng-value="false" ng-required> Non
+                <input type="radio" name="UseBankBag" id="UseBankBagRadio2" ng-model="s.applicationSettings.use_bank_bag" ng-value="false" ng-required> Non
               </label>
               <span class="help-block">Cette option, lorsqu'elle est activée rend obligatoire la saisie de sac de banque</span>
             </div>
@@ -485,10 +485,10 @@
             <div class="form-group" ng-class="{'has-error':ulRedQuestSettingsForm.AutonomousDepartAndReturn.$invalid}">
               <label for="AutonomousDepartAndReturnRadio1" class="control-label">Queteur Autonome sur les départs/retours</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="AutonomousDepartAndReturn" id="AutonomousDepartAndReturnRadio1" ng-model="s.settings.applicationSettings.rq_autonomous_depart_and_return" ng-value="true"  ng-required> Oui
+                <input type="radio" name="AutonomousDepartAndReturn" id="AutonomousDepartAndReturnRadio1" ng-model="s.applicationSettings.rq_autonomous_depart_and_return" ng-value="true"  ng-required> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="AutonomousDepartAndReturn" id="AutonomousDepartAndReturnRadio2" ng-model="s.settings.applicationSettings.rq_autonomous_depart_and_return" ng-value="false" ng-required> Non
+                <input type="radio" name="AutonomousDepartAndReturn" id="AutonomousDepartAndReturnRadio2" ng-model="s.applicationSettings.rq_autonomous_depart_and_return" ng-value="false" ng-required> Non
               </label>
               <span class="help-block">Cette option, lorsqu'elle est activée permet aux queteur d'enregistrer son départ et son retour de tronc</span>
             </div>
@@ -498,10 +498,10 @@
             <div class="form-group" ng-class="{'has-error':ulRedQuestSettingsForm.DisplayDailyStats.$invalid}">
               <label for="DisplayDailyStatsRadio1" class="control-label">Afficher les stats journalières dans RQ</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="DisplayDailyStats" id="DisplayDailyStatsRadio1" ng-model="s.settings.applicationSettings.rq_display_daily_stats" ng-value="true"  ng-required> Oui
+                <input type="radio" name="DisplayDailyStats" id="DisplayDailyStatsRadio1" ng-model="s.applicationSettings.rq_display_daily_stats" ng-value="true"  ng-required> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="DisplayDailyStats" id="DisplayDailyStatsRadio2" ng-model="s.settings.applicationSettings.rq_display_daily_stats" ng-value="false" ng-required> Non
+                <input type="radio" name="DisplayDailyStats" id="DisplayDailyStatsRadio2" ng-model="s.applicationSettings.rq_display_daily_stats" ng-value="false" ng-required> Non
               </label>
               <span class="help-block">Cette option, lorsqu'elle est activée affiche les stats de la journée (montant etc...)</span>
             </div>
@@ -511,13 +511,13 @@
             <div class="form-group" ng-class="{'has-error':ulRedQuestSettingsForm.DisplayQueteurRanking.$invalid}">
               <label for="DisplayQueteurRankingRadio1" class="control-label">Classement des quêteurs : Affichage ?</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="DisplayQueteurRanking" id="DisplayQueteurRankingRadio1" ng-model="s.settings.applicationSettings.rq_display_queteur_ranking" ng-value="'NON'"      ng-required> Non
+                <input type="radio" name="DisplayQueteurRanking" id="DisplayQueteurRankingRadio1" ng-model="s.applicationSettings.rq_display_queteur_ranking" ng-value="'NON'"      ng-required> Non
               </label>
               <label class="radio-inline">
-                <input type="radio" name="DisplayQueteurRanking" id="DisplayQueteurRankingRadio2" ng-model="s.settings.applicationSettings.rq_display_queteur_ranking" ng-value="'1ST_PAGE'" ng-required> 1ère Page
+                <input type="radio" name="DisplayQueteurRanking" id="DisplayQueteurRankingRadio2" ng-model="s.applicationSettings.rq_display_queteur_ranking" ng-value="'1ST_PAGE'" ng-required> 1ère Page
               </label>
               <label class="radio-inline">
-                <input type="radio" name="DisplayQueteurRanking" id="DisplayQueteurRankingRadio3" ng-model="s.settings.applicationSettings.rq_display_queteur_ranking" ng-value="'ALL'"      ng-required> Toutes les pages
+                <input type="radio" name="DisplayQueteurRanking" id="DisplayQueteurRankingRadio3" ng-model="s.applicationSettings.rq_display_queteur_ranking" ng-value="'ALL'"      ng-required> Toutes les pages
               </label>
               <span class="help-block">Cette option, permet de cacher, d'afficher la première page (10 résultats), ou toutes les pages du classement des quêteurs</span>
             </div>

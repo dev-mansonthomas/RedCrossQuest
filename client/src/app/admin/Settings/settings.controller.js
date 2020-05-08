@@ -41,7 +41,7 @@
 
     function handleResultAppSettings(settings)
     {
-      vm.settings.applicationSettings = settings;
+      vm.applicationSettings = settings;
     }
 
     function handleResult (uniteLocalDetails)
@@ -67,16 +67,26 @@
       vm.settings.$update(savedSuccessfully, errorWhileSaving);
     };
 
+    vm.initApplicationSettings=function()
+    {
+      if(!vm.applicationSettings.$updateRedQuestSettings)
+      {
+        vm.applicationSettings = new SettingsResource({'ul_id':vm.settings.id});
+      }
+    };
+
     vm.updateRedQuestSettings = function()
     {
-      vm.settings.applicationSettings.$updateRedQuestSettings(savedSuccessfully, errorWhileSaving);
-      $localStorage.guiSettings.ul_settings = vm.settings.applicationSettings;
+      vm.initApplicationSettings();
+      vm.applicationSettings.$updateRedQuestSettings(savedSuccessfully, errorWhileSaving);
+      $localStorage.guiSettings.ul_settings = vm.applicationSettings;
     };
 
     vm.updateRedCrossQuestSettings = function()
     {
-      vm.settings.applicationSettings.$updateRedCrossQuestSettings(savedSuccessfully, errorWhileSaving);
-      $localStorage.guiSettings.ul_settings = vm.settings.applicationSettings;
+      vm.initApplicationSettings();
+      vm.applicationSettings.$updateRedCrossQuestSettings(savedSuccessfully, errorWhileSaving);
+      $localStorage.guiSettings.ul_settings = vm.applicationSettings;
     };
 
     function savedSuccessfully()
@@ -84,7 +94,7 @@
       vm.savedSuccessfully= true;
       vm.errorWhileSaving = false;
       $timeout(function () { vm.savedSuccessfully=false; }, 5000);
-      UniteLocaleResource.query({id:$localStorage.guiSettings.ul.id}).$promise.then(function(ulSettings)
+      UniteLocaleResource.get({id:$localStorage.guiSettings.ul.id}).$promise.then(function(ulSettings)
         {
           $localStorage.guiSettings.ul = ulSettings;
         }).catch(function(e){
