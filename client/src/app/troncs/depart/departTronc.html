@@ -13,6 +13,7 @@
           <div class="col-md-4" style="text-align:center;">
 
             <qr-scanner-u
+                      id="camera"
               ng-success="dt.qrCodeScanOnSuccess(data)"
                 ng-error="dt.qrCodeScanOnError(error)"
           ng-video-error="dt.qrCodeScanOnVideoError(error)"
@@ -42,7 +43,6 @@
               <div ng-show="noTroncResults">
                 <i class="glyphicon glyphicon-remove"></i> Aucun Tronc trouvé
               </div>
-
               <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
             </div>
             <div class="form-group" ng-show="dt.current.tronc_queteur.id>0">

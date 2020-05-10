@@ -2,7 +2,7 @@
 /**
 * @OA\OpenApi(
 *     @OA\Server(
-*         url="redcrossquest.com",
+*         url="redcrossquest.croix-rouge.fr",
 *         description="RedCrossQuest API"
 *     ),
 *     @OA\Info(

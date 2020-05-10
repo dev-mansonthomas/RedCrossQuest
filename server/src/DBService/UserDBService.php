@@ -3,6 +3,7 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
+use Exception;
 use PDOException;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\Entity\UserEntity;
@@ -45,7 +46,7 @@ AND u.queteur_id = q.id";
 
     if($i>0)
     {
-      $exception = new UserAlreadyExistsException($i. " utilisateurs actifs RCQ existent déjà avec ce nivol: '$nivol'.\nVeuillez contacter l'administrateur RCQ sur slack ou support@redcrossquest.com");
+      $exception = new UserAlreadyExistsException($i. " utilisateurs actifs RCQ existent déjà avec ce nivol: '$nivol'.\nVeuillez contacter l'administrateur RCQ sur slack ou support.redcrossquest@croix-rouge.fr");
       $exception->users = $results;
       throw $exception;
     }
@@ -128,7 +129,7 @@ NULL
    *
    * @param string $email The email passed at login
    * @return UserEntity An instance of UserEntity, null if nothing is found
-   * @throws \Exception in case of incorrect number of rows updated
+   * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithEmail(string $email)
@@ -156,7 +157,7 @@ LIMIT 1
     else
     {
       $stmt->closeCursor();
-      throw new \Exception ("Update didn't update the correct number of rows($count) for nivol: $email");
+      throw new Exception ("Update didn't update the correct number of rows($count) for nivol: $email");
     }
   }
 
@@ -170,7 +171,7 @@ LIMIT 1
    *
    * @param string $nivol string The Nivol passed at login
    * @return UserEntity An instance of UserEntity, null if nothing is found
-   * @throws \Exception in case of incorrect number of rows updated
+   * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithNivol(string $nivol)
@@ -197,7 +198,7 @@ LIMIT 1
     else
     {
       $stmt->closeCursor();
-      throw new \Exception ("Update didn't update the correct number of rows($count) for nivol: $nivol");
+      throw new Exception ("Update didn't update the correct number of rows($count) for nivol: $nivol");
     }
   }
 
@@ -212,7 +213,7 @@ LIMIT 1
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
    * @return UserEntity an instance of UserEntity, null if nothing is found
-   * @throws \Exception in case of incorrect number of rows updated
+   * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithQueteurId(int $queteurId, int $ulId, int $roleId)
@@ -266,7 +267,7 @@ LIMIT 1
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
    * @return UserEntity an instance of UserEntity, null if nothing is found
-   * @throws \Exception In case a validation is failing while creating  the user entity.
+   * @throws Exception In case a validation is failing while creating  the user entity.
    * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithUserId(int $userId, int $ulId, int $roleId)
@@ -319,7 +320,7 @@ LIMIT 1
    * get user info for UUID if the init_passwd_date is after current time.
    * @param string $uuid the UUID to retrieve the user info
    * @return USerEntity the info of the user
-   * @throws \Exception in case of incorrect number of rows updated
+   * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
   public function getUserInfoWithUUID(string $uuid)
@@ -350,7 +351,7 @@ LIMIT 1
     else
     {
       $stmt->closeCursor();
-      throw new \Exception ("Update didn't update the correct number of rows($count) for '$uuid' ");
+      throw new Exception ("Update didn't update the correct number of rows($count) for '$uuid' ");
     }
 
   }
@@ -362,7 +363,7 @@ LIMIT 1
    *
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return UserEntity[] array of users of  the UnitéLocale
-   * @throws \Exception in case of incorrect number of rows updated
+   * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
   public function getULUsers(int $ulId)
@@ -403,7 +404,7 @@ LIMIT 1
    * @param string $username the nivol of the user who want to init its password
    * @param bool          $firstInit  If it's the first init, the TTL of the link is 48h, otherwise 4h
    * @return string the generated uuid
-   * @throws \Exception in case of incorrect number of rows updated
+   * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
   public function sendInit(string $username, bool $firstInit = false)
@@ -442,7 +443,7 @@ AND     role             != 9
       return $uuid;
     }
     
-    throw new \Exception ("Update didn't update the correct number of rows($count) for $username");
+    throw new Exception ("Update didn't update the correct number of rows($count) for $username");
   }
 
   /**
@@ -546,7 +547,7 @@ WHERE   id                       = :id
    * @param int         $ulId   the UL ID  of the person performing the action
    * @param int         $roleId the RoleID of the person performing the action
    * @return boolean true if query is successful, false otherwise
-   * @throws \Exception if a validation fails while creating the Entities
+   * @throws Exception if a validation fails while creating the Entities
    * @throws PDOException if the query fails to execute on the server
    * @throws UserAlreadyExistsException if the active state change from false to true and than another users is already active with the same nivol
    */

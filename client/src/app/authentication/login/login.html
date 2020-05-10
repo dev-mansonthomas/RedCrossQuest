@@ -1,8 +1,8 @@
-<nav class="navbar navbar-static-top navbar-inverse">
+<nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" ng-href="#/">
-        <span class="glyphicon glyphicon-plus" style="color:#E3001B;"></span> RedCrossQuest
+      <a class="navbar-brand" ng-href="#/" style="color:#5AADBB;">
+        <span class="glyphicon glyphicon-plus" style="font-weight:bolder;color:#E3001B;"></span> RedCrossQuest
       </a>
     </div>
   </div>
@@ -49,7 +49,7 @@
         </div>
         <div class="form-group">
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-6" style="margin-bottom: 10px;">
               <button
                 ng-disabled="vm.loading"
                       class="btn btn-default"
@@ -58,7 +58,7 @@
                    tabindex="4"
               >Réinitialiser mon mot de passe</button>
             </div>
-            <div class="col-md-2 col-md-offset-7">
+            <div class="col-md-2 col-md-offset-4">
               <button
                 ng-disabled="vm.loading || form.$invalid"
                       class="btn btn-primary"

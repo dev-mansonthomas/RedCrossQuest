@@ -56,6 +56,7 @@ class SecretManagerService
                        strpos(strtolower($this->settings['appSettings']['appUrl']), 'rcq'      ) > 0))
     {
       $this->secretNamePrefix="local-";
+      $this->logger->warning("using local mode for secret names");
     }
 
     $PROJECT_ID = "rcq-fr-".$this->envs[$env];

@@ -35,6 +35,11 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
   background-color: #f7e741;
 }
 
+.nav-active a, .nav-active a span
+{
+  font-weight: bold;
+  color: #07d2be !important;
+}
 
 .histo tbody td
 {

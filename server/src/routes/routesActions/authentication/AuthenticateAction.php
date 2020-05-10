@@ -88,7 +88,7 @@ class AuthenticateAction extends AuthenticateAbstractAction
 
     $username = $this->validatedData["username"];
     $password = $this->validatedData["password"];
-    $token    = $this->validatedData["token"];
+    $token    = $this->validatedData["token"   ];
 
     Logger::dataForLogging(new LoggingEntity(null,  ["username"=>$username]));
 

@@ -66,8 +66,8 @@ return function (ContainerBuilder $containerBuilder)
      */
     "RCQVersion" => function (ContainerInterface $c)
     {
-      //TODO move to settings ?
-      return "2019.2";
+      //version stays here, so that I don't have to update all the settings files
+      return "2020.0";
     },
     /**
      * Custom Logger that automatically add context data to each log entries.
@@ -105,7 +105,7 @@ return function (ContainerBuilder $containerBuilder)
         return $pdo;
 
       }
-      catch(\Exception $e)
+      catch(Exception $e)
       {
         $logger = $c->get(LoggerInterface::class);
         $logger->critical("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($dbPwd), 'exception'=>$e));

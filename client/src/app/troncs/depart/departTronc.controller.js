@@ -10,7 +10,7 @@
     .controller('DepartTroncController', DepartTroncController);
 
   /** @ngInject */
-  function DepartTroncController($rootScope, $scope, $log, $timeout, $localStorage, $location,
+  function DepartTroncController($window, $rootScope, $scope, $log, $timeout, $localStorage, $location,
                                  PointQueteResource  , moment,
                                  TroncResource  , TroncQueteurResource,
                                  QRDecodeService, DateTimeHandlingService)
@@ -23,10 +23,9 @@
       $location.path('/').replace();
       return;
     }
-    
+
     vm.firstDay       = moment($localStorage.guiSettings.FirstDay);
     vm.firstDayStr    = vm.firstDay.format("DD/MM/YYYY HH:mm:ss");
-
 
     vm.initForm=function()
     {
@@ -210,7 +209,6 @@
     {
       $log.debug(error);
     };
-
   }
 
 })();

@@ -9,7 +9,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: redcrossquest.com
+    url: redcrossquest.croix-rouge.fr
     description: 'RedCrossQuest API'
 paths:
   /firebase-authenticate:
