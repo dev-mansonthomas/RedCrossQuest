@@ -10,6 +10,7 @@ use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use Google\ApiCore\ApiException;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\ValidationData;
@@ -54,7 +55,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
    * @param Container $container the container
    * @throws DependencyException
    * @throws NotFoundException
-   * @throws \Google\ApiCore\ApiException
+   * @throws ApiException
    */
   public function __construct(Container $container)
   {

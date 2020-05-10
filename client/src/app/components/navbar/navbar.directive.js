@@ -30,6 +30,7 @@
       vm.currentUlMode  = $localStorage.currentUser.ulMode;
       vm.deploymentType = $localStorage.currentUser.d;
       vm.pendingQueteurRegistrationCount = 0;
+      vm.currentPath    = $location.path();
 
       if($localStorage.guiSettings)
       {//first display guiSettings is not yet available.

@@ -7,6 +7,7 @@
  */
 
 namespace RedCrossQuest\Service;
+use Exception;
 use ReCaptcha\ReCaptcha;
 
 
@@ -97,7 +98,7 @@ class ReCaptchaService
 
     try
     {
-      //if the URL entered by the client has www. then we check the domain against www.$this->redCrossQuestHost (ex: www.redcrossquest.com)
+      //if the URL entered by the client has www. then we check the domain against www.$this->redCrossQuestHost (ex: www.redcrossquest.croix-rouge.fr)
       $hasWWW = strtolower(substr( $_SERVER['HTTP_HOST'], 0, 4 )) === "www.";
       $resp = (new ReCaptcha($this->secretKey))->setExpectedHostname(($hasWWW?"www.":"").$this->redCrossQuestHost)->verify($token, $remoteIP);
 
@@ -158,7 +159,7 @@ class ReCaptchaService
         return 4;
       }
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       $this->logger->error(
         "Exception occurred during ReCaptcha Validation",

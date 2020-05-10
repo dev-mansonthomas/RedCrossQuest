@@ -4,6 +4,7 @@ namespace RedCrossQuest\BusinessService;
 
 
 use Carbon\Carbon;
+use Exception;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\DBService\MailingDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
@@ -58,7 +59,7 @@ class EmailBusinessService
    * @param QueteurEntity $queteur    The information of the user
    * @param string        $uuid       The uuid to be inserted in the email
    * @param bool          $firstInit  If it's the first init, the TTL of the link is 48h, otherwise 4h
-   * @throws \Exception   if the email fails to be sent
+   * @throws Exception   if the email fails to be sent
    */
   public function sendInitEmail(QueteurEntity $queteur, string $uuid, bool $firstInit = false)
   {
@@ -108,7 +109,7 @@ class EmailBusinessService
    *
    * @param QueteurEntity $queteur information about the user
    *
-   * @throws \Exception if the mail fails to be sent
+   * @throws Exception if the mail fails to be sent
    *
    */
   public function sendResetPasswordEmailConfirmation(QueteurEntity $queteur)
@@ -154,7 +155,7 @@ class EmailBusinessService
    * @param QueteurEntity $queteur        The information of the connected user
    * @param string        $zipFileName    The file name to attach to the email
    * @return string                       The status code from Sendgrid
-   * @throws \Exception   if the email fails to be sent
+   * @throws Exception   if the email fails to be sent
    */
   public function sendExportDataUL(QueteurEntity $queteur, string $zipFileName)
   {
@@ -198,7 +199,7 @@ class EmailBusinessService
    * Send an email that inform the queteur its data has been anonymised
    * @param QueteurEntity $queteur  The information of the user
    * @param string        $token     The uuid to be inserted in the email
-   * @throws \Exception   if the email fails to be sent
+   * @throws Exception   if the email fails to be sent
    */
   public function sendAnonymizationEmail(QueteurEntity $queteur, string $token)
   {
@@ -269,7 +270,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
    * @param int $ul_id id of the UL
    * @param UniteLocaleEntity $uniteLocaleEntity s
    * @return MailingInfoEntity[] Mailing information with status
-   * @throws \Exception when things goes wrong
+   * @throws Exception when things goes wrong
    */
   public function sendThanksEmailBatch(int $ul_id, UniteLocaleEntity $uniteLocaleEntity)
   {
@@ -292,7 +293,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
    * @param MailingInfoEntity $mailingInfoEntity  Info for the mailing
    * @param UniteLocaleEntity $uniteLocaleEntity  Info about the UL
    * @return MailingInfoEntity updated with token and status
-   * @throws \Exception if mailing has an issue
+   * @throws Exception if mailing has an issue
    */
   public function sendThanksEmail(MailingInfoEntity $mailingInfoEntity, UniteLocaleEntity $uniteLocaleEntity)
   {
@@ -325,7 +326,7 @@ Tu y trouveras également un message de remerciement de son Président. <br/>
 <br/>
 Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
 <a href='$url' target='_blank'>
-<img src='https://www.redcrossquest.com/assets/images/RedCrossQuest-Merci.jpg' alt='Cliquez ICI'>
+<img src='https://redcrossquest.croix-rouge.fr/assets/images/RedCrossQuest-Merci.jpg' alt='Cliquez ICI'>
 </a><br/>
 <small style='color:silver;'>ou recopie l'addresse suivante dans ton navigateur:<br/>
 <a href='$url' style='color:grey;'>$url</a>
@@ -338,7 +339,7 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
       $mailingInfoEntity->status = $statusCode;
       $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       $mailingInfoEntity->status = substr($e->getMessage()."", 0,200);
       $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
@@ -371,9 +372,9 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
       <table style=\"width:100%;padding:0; margin:0;\" >
         <tr>
           <td style=\"font-family: Helvetica, Arial, sans-serif; font-size: 24px;font-weight: bolder;padding:8px;\">
-            <div style='background-color: ".($RedQuest?"#FFFFFF":"#222222").";'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/Red".($RedQuest?"":"Cross")."QuestLogo.png\" style=\"height: 50px;\" height='50' alt='logo'/></div>
+            <div style='background-color:#FFFFFF;'><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.croix-rouge.fr/assets/images/Red".($RedQuest?"":"Cross")."QuestLogo.png\" style=\"height:60px;\" height='60' alt='logo'/></div>
           </td>
-          <td style=\"text-align: right;\"><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.com/assets/images/logoCRF.png\" alt=\"Croix Rouge Française\" style=\"height: 90px;\" height='90'/></td>
+          <td style=\"text-align: right;\"><img src=\"https://".$this->getDeploymentInfo()."redcrossquest.croix-rouge.fr/assets/images/logoCRF.png\" alt=\"Croix Rouge Française\" style=\"height: 90px;\" height='90'/></td>
         </tr>
       </table>
     </td>
@@ -423,7 +424,7 @@ Note: cet email est à transférer au responsable de la quête, au trésorier ou
 Votre demande ici
 ------------------
 
-https://".$this->getDeploymentInfo()."redcrossquest.com/#!/queteurs/edit/$queteurInfo->id\"
+https://".$this->getDeploymentInfo()."redcrossquest.croix-rouge.fr/#!/queteurs/edit/$queteurInfo->id\"
 
 En vous remerciant,
 ".$queteurInfo->first_name." ".$queteurInfo->last_name.", 
@@ -515,7 +516,7 @@ email envoyé le $startValidityDateString<br/>
    * @param bool $decision decision about the approval
    * @param string $rejectMessage reject message in case of refusal
    *
-   * @throws \Exception if the mail fails to be sent
+   * @throws Exception if the mail fails to be sent
    *
    */
   public function sendRedQuestApprovalDecision(QueteurEntity $queteur, bool $decision, string $rejectMessage="")

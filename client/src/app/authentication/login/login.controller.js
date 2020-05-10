@@ -11,7 +11,9 @@
     var vm       = this;
     var forceSSL = function ()
     {
-      if($location.host() !=='localhost' && $location.host() !=='rcq' && $location.protocol() !== 'https')
+      if($location.protocol() !== 'https' &&
+         $location.host() !=='localhost'  &&
+         $location.host() !=='rcq'        )
       {
         $window.location.href = $location.absUrl().replace('http', 'https');
       }
@@ -34,6 +36,12 @@
 
     vm.login=function()
     {
+      if(!vm.username ||  !vm.password || vm.username.trim() ==='' ||vm.password.trim() ==='')
+      {
+        vm.errorStr = 'Login ou mot de passe incorrect';
+        vm.error    = true;
+        return;
+      }
       vm.loading = true;
       var loginTimeout = $timeout(function () {vm.loading=false;vm.timeout=true; }, 10000);
 
@@ -121,7 +129,7 @@
                                          else
                                          {
                                            vm.error = true;
-                                           vm.errorStr='Une erreur est survenue. Veuillez contacter support@redcrossquest.com';
+                                           vm.errorStr='Une erreur est survenue. Veuillez contacter support.redcrossquest@croix-rouge.fr';
                                            vm.success=null;
                                            vm.loading=false;
                                          }
