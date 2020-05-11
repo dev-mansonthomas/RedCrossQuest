@@ -1,13 +1,12 @@
 <?php
 namespace RedCrossQuest\routes\routesActions\settings;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\SettingsBusinessService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 class GetULSetupStatus extends Action
 {
@@ -32,7 +31,7 @@ class GetULSetupStatus extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

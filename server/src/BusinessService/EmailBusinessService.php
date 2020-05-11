@@ -61,7 +61,7 @@ class EmailBusinessService
    * @param bool          $firstInit  If it's the first init, the TTL of the link is 48h, otherwise 4h
    * @throws Exception   if the email fails to be sent
    */
-  public function sendInitEmail(QueteurEntity $queteur, string $uuid, bool $firstInit = false)
+  public function sendInitEmail(QueteurEntity $queteur, string $uuid, bool $firstInit = false): void
   {
     $url        = $this->appSettings['appUrl'].$this->appSettings['resetPwdPath'].$uuid;
 
@@ -112,7 +112,7 @@ class EmailBusinessService
    * @throws Exception if the mail fails to be sent
    *
    */
-  public function sendResetPasswordEmailConfirmation(QueteurEntity $queteur)
+  public function sendResetPasswordEmailConfirmation(QueteurEntity $queteur): void
   {
     $this->logger->info("sendResetPasswordEmailConfirmation:'", ['email' =>$queteur->email]);
 
@@ -157,7 +157,7 @@ class EmailBusinessService
    * @return string                       The status code from Sendgrid
    * @throws Exception   if the email fails to be sent
    */
-  public function sendExportDataUL(QueteurEntity $queteur, string $zipFileName)
+  public function sendExportDataUL(QueteurEntity $queteur, string $zipFileName):string
   {
     $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
 
@@ -201,7 +201,7 @@ class EmailBusinessService
    * @param string        $token     The uuid to be inserted in the email
    * @throws Exception   if the email fails to be sent
    */
-  public function sendAnonymizationEmail(QueteurEntity $queteur, string $token)
+  public function sendAnonymizationEmail(QueteurEntity $queteur, string $token): void
   {
     $this->logger->info("sendAnonymizationEmail:'", ["email"=>$queteur->email]);
 
@@ -272,7 +272,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
    * @return MailingInfoEntity[] Mailing information with status
    * @throws Exception when things goes wrong
    */
-  public function sendThanksEmailBatch(int $ul_id, UniteLocaleEntity $uniteLocaleEntity)
+  public function sendThanksEmailBatch(int $ul_id, UniteLocaleEntity $uniteLocaleEntity):array
   {
     $mailInfoEntity = $this->mailingDBService->getMailingInfo($ul_id, $this->appSettings['email']['thanksMailBatchSize']);
 
@@ -295,7 +295,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
    * @return MailingInfoEntity updated with token and status
    * @throws Exception if mailing has an issue
    */
-  public function sendThanksEmail(MailingInfoEntity $mailingInfoEntity, UniteLocaleEntity $uniteLocaleEntity)
+  public function sendThanksEmail(MailingInfoEntity $mailingInfoEntity, UniteLocaleEntity $uniteLocaleEntity): MailingInfoEntity
   {
     //if spotfire_access_token not generated, generate it and store it
     if($mailingInfoEntity->spotfire_access_token == null || strlen($mailingInfoEntity->spotfire_access_token) != 36)
@@ -304,7 +304,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
       $this->mailingDBService->updateQueteurWithSpotfireAccessToken($mailingInfoEntity->spotfire_access_token, $mailingInfoEntity->id, $uniteLocaleEntity->id);
     }
 
-    $url        = $this->appSettings['appUrl'].$this->appSettings['graphPath']."?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
+    $url = $this->appSettings['appUrl'].$this->appSettings['graphPath']."?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
 
     try
     {
@@ -356,7 +356,7 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
    * @param bool $RedQuest if true, mailing for RedQuest, then we use the RedQuest logo instead of RedCrossQuest
    * @return string return the html of the mail header
    */
-  public function getMailHeader(string $title, string $bonjour, bool $RedQuest=false)
+  public function getMailHeader(string $title, string $bonjour, bool $RedQuest=false): string
   {
     return "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
@@ -405,7 +405,7 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
    * @param bool $RedQuest if true, mailing for RedQuest, then we use the term RedQuest instead of RedCrossQuest
    * @return string return the html of the mail header
    */
-  public function getMailFooter(UniteLocaleEntity $uniteLocaleEntity, bool $isNewsletter, $queteurInfo, bool $RedQuest=false)
+  public function getMailFooter(UniteLocaleEntity $uniteLocaleEntity, bool $isNewsletter, $queteurInfo, bool $RedQuest=false): string
   {
     $startValidityDateCarbon = Carbon::now();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
@@ -424,7 +424,7 @@ Note: cet email est à transférer au responsable de la quête, au trésorier ou
 Votre demande ici
 ------------------
 
-https://".$this->getDeploymentInfo()."redcrossquest.croix-rouge.fr/#!/queteurs/edit/$queteurInfo->id\"
+https://".$this->getDeploymentInfo()."redcrossquest.croix-rouge.fr/#!/queteurs/edit/$queteurInfo->id
 
 En vous remerciant,
 ".$queteurInfo->first_name." ".$queteurInfo->last_name.", 
@@ -469,7 +469,7 @@ email envoyé le $startValidityDateString<br/>
    * Return the subdomain for links to RCQ depending on the current environment
    * @return string 'www.' for production, 'dev.' for D, 'test.' for T
    */
-  private function getDeploymentInfo()
+  private function getDeploymentInfo():string
   {
     $deployment='www.';
     if($this->appSettings['deploymentType'] == 'D')
@@ -487,7 +487,7 @@ email envoyé le $startValidityDateString<br/>
    * Return a string to be put in the email subjects
    * @return string nothing for production, [Site de DEV] for D, [Site de TEST] for T
    */
-  private function getDeploymentType()
+  private function getDeploymentType():string
   {
     $deployment='';
     if($this->appSettings['deploymentType'] == 'D')
@@ -519,7 +519,7 @@ email envoyé le $startValidityDateString<br/>
    * @throws Exception if the mail fails to be sent
    *
    */
-  public function sendRedQuestApprovalDecision(QueteurEntity $queteur, bool $decision, string $rejectMessage="")
+  public function sendRedQuestApprovalDecision(QueteurEntity $queteur, bool $decision, string $rejectMessage=""):void
   {
     $this->logger->info("sendRedQuestApprovalDecision", ["email" => $queteur->email, "decision"=> $decision, "reject_reason"=> $rejectMessage]);
 
@@ -557,9 +557,6 @@ Si vous pensez qu'il y a une erreur, veuillez contacter votre Unité Locale.
 ";
     }
 
-
-
-
     $this->mailService->sendMail(
       "RedQuest",
       "sendRedQuestApprovalDecision",
@@ -570,7 +567,5 @@ Si vous pensez qu'il y a une erreur, veuillez contacter votre Unité Locale.
       $this->getMailHeader($title, $queteur->first_name, true).
       $message
       .$this->getMailFooter($uniteLocaleEntity, false, $queteur, true));
-
   }
-
 }

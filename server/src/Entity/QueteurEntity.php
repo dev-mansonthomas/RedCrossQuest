@@ -3,6 +3,7 @@ namespace RedCrossQuest\Entity;
 
 
 use Carbon\Carbon;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -215,7 +216,7 @@ class QueteurEntity  extends Entity
    *
    * @param array $data The data to use to create
    * @param LoggerInterface $logger the logger instance
-   * @throws \Exception if a parse Date or JSON fails
+   * @throws Exception if a parse Date or JSON fails
    */
   public function __construct(array $data, LoggerInterface $logger)
   {

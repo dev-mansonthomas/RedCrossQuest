@@ -71,7 +71,7 @@ use RedCrossQuest\routes\routesActions\dailyStats\UpdateDailyStats;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats', ListDailyStats::class);
+$app->get('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', ListDailyStats::class);
 
 
 /**
@@ -126,7 +126,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats', ListDailyStats::
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', UpdateDailyStats::class);
+$app->put('/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', UpdateDailyStats::class);
 
 /**
  *
@@ -173,7 +173,7 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats/{id}', UpdateDaily
  *     )
  * )
  */
-$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/dailyStats', CreateYearOfDailyStats::class);
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/dailyStats', CreateYearOfDailyStats::class);
 
 
 

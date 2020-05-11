@@ -2,15 +2,15 @@
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
+use DI\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 use RedCrossQuest\DBService\TroncQueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\TroncQueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class PrepareTroncQueteur extends Action
@@ -50,7 +50,7 @@ class PrepareTroncQueteur extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
@@ -68,7 +68,6 @@ class PrepareTroncQueteur extends Action
       return $this->response;
     }
 
-    /** @var PrepareTroncQueteurResponse $insertResponse */
     $insertResponse = $this->troncQueteurDBService->insert($tq, $ulId, $userId);
 
     if($insertResponse->troncInUse != true)

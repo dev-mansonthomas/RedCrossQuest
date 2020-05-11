@@ -12,7 +12,6 @@ use RedCrossQuest\routes\routesActions\queteurs\AnonymizeQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\ApproveQueteurRegistration;
 use RedCrossQuest\routes\routesActions\queteurs\AssociateRegistrationWithExistingQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\CountPendingQueteurRegistration;
-use RedCrossQuest\routes\routesActions\queteurs\CountPendingRegistrationResponse;
 use RedCrossQuest\routes\routesActions\queteurs\CreateQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\GetQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\GetQueteurRegistration;
@@ -170,7 +169,7 @@ use RedCrossQuest\routes\routesActions\queteurs\UpdateQueteur;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs'                                , ListQueteurs::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs'                                , ListQueteurs::class);
 /**
  *
  * @OA\Get(
@@ -211,7 +210,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs'                    
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/countPendingQueteurRegistration', CountPendingQueteurRegistration::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/countPendingQueteurRegistration', CountPendingQueteurRegistration::class);
 /**
  *
  * @OA\Get(
@@ -261,7 +260,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/countPendingQueteurR
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/listPendingQueteurRegistration' , ListPendingQueteurRegistration::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/listPendingQueteurRegistration' , ListPendingQueteurRegistration::class);
 /**
  *
  * @OA\Get(
@@ -329,7 +328,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/listPendingQueteurRe
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/searchSimilarQueteurs'          , SearchSimilarQueteurs::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/searchSimilarQueteurs'          , SearchSimilarQueteurs::class);
 /**
  *
  * @OA\Get(
@@ -379,7 +378,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/searchSimilarQueteur
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}'                           , GetQueteur::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}'                           , GetQueteur::class);
 /**
  *
  * @OA\Get(
@@ -429,7 +428,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}'               
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}/getQueteurRegistration'    , GetQueteurRegistration::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}/getQueteurRegistration'    , GetQueteurRegistration::class);
 
 /**
  *
@@ -467,7 +466,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}/getQueteurRegis
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/markAllAsPrinted'                             , MarkAllQueteurQRCodeAsPrinted::class);
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/markAllAsPrinted'                             , MarkAllQueteurQRCodeAsPrinted::class);
 /**
  *
  * @OA\Put(
@@ -520,7 +519,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/markAllAsPrinted'   
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}'                                         , UpdateQueteur::class);
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}'                                         , UpdateQueteur::class);
 /**
  *
  * @OA\Put(
@@ -574,7 +573,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}'               
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/anonymize'                               , AnonymizeQueteur::class);
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/anonymize'                               , AnonymizeQueteur::class);
 /**
  *
  * @OA\Put(
@@ -628,7 +627,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/anonymize'     
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/associateRegistrationWithExistingQueteur', AssociateRegistrationWithExistingQueteur::class);
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/associateRegistrationWithExistingQueteur', AssociateRegistrationWithExistingQueteur::class);
 
 /**
  *
@@ -674,7 +673,7 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/associateRegist
  *     )
  * )
  */
-$app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs'                                             , CreateQueteur::class);
+$app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs'                                             , CreateQueteur::class);
 /**
  *
  * @OA\Post(
@@ -719,7 +718,7 @@ $app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs'                   
  *     )
  * )
  */
-$app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/queteurs/approveQueteurRegistration'                  , ApproveQueteurRegistration::class);
+$app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs/approveQueteurRegistration'                  , ApproveQueteurRegistration::class);
 
 
 

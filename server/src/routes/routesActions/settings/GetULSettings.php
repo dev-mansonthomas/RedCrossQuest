@@ -1,13 +1,11 @@
 <?php
 namespace RedCrossQuest\routes\routesActions\settings;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\ULPreferencesFirestoreDBService;
-use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 class GetULSettings extends Action
 {
@@ -32,7 +30,7 @@ class GetULSettings extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

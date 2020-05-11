@@ -56,7 +56,7 @@ class ULPreferencesEntity extends Entity
    * @return ULPreferencesEntity
    * @throws Exception if a parse Date or JSON fails
    */
-  public static function withFirestoreDocument(DocumentSnapshot $documentSnapshot, LoggerInterface $logger)
+  public static function withFirestoreDocument(DocumentSnapshot $documentSnapshot, LoggerInterface $logger):ULPreferencesEntity
   {
     $instance = new ULPreferencesEntity($documentSnapshot->data(), $logger);
     $instance->FIRESTORE_DOC_ID = $documentSnapshot->reference()->id();
@@ -71,7 +71,7 @@ class ULPreferencesEntity extends Entity
    * @param LoggerInterface $logger
    * @return ULPreferencesEntity
    */
-  public static function withArray(array $data, LoggerInterface $logger)
+  public static function withArray(array $data, LoggerInterface $logger):ULPreferencesEntity
   {
     $instance = new ULPreferencesEntity($data, $logger);
     $instance->FIRESTORE_DOC_ID = null;

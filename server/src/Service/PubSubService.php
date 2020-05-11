@@ -40,7 +40,7 @@ class PubSubService
    * @return array A list of message IDs
    * @throws Exception
    */
-  public function publish(string $topicName, $data, array $attributes, bool $jsonEncodeData=true, bool $raiseExceptionInCaseOfError=false)
+  public function publish(string $topicName, $data, array $attributes, bool $jsonEncodeData=true, bool $raiseExceptionInCaseOfError=false):array
   {
     try
     {

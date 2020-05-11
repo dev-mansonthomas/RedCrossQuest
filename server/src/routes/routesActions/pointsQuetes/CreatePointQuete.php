@@ -2,14 +2,13 @@
 namespace RedCrossQuest\routes\routesActions\pointsQuetes;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\PointQueteDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\PointQueteEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class CreatePointQuete extends Action
@@ -35,7 +34,7 @@ class CreatePointQuete extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

@@ -86,7 +86,7 @@ class ExportDataBusinessService
    *
    * @throws Exception   if something wrong happen
    */
-  public function exportData(int $ulId, ?string $year)
+  public function exportData(int $ulId, ?string $year):array
   {
 
 /**

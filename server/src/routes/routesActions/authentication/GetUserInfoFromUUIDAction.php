@@ -4,6 +4,8 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use DI\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -59,7 +61,7 @@ class GetUserInfoFromUUIDAction extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

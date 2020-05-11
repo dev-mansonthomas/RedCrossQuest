@@ -2,15 +2,15 @@
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 use Carbon\Carbon;
+use DI\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 use RedCrossQuest\DBService\TroncQueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 class GetAndSetDepartOnTroncQueteur extends Action
 {
@@ -50,7 +50,7 @@ class GetAndSetDepartOnTroncQueteur extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

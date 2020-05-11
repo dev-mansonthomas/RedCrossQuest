@@ -71,7 +71,7 @@ use RedCrossQuest\routes\routesActions\exportData\ExportData;
  *     )
  * )
  */
-$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/exportData', ExportData::class);
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/exportData', ExportData::class);
 
 
 

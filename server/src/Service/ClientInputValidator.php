@@ -8,6 +8,7 @@
 
 namespace RedCrossQuest\Service;
 
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
@@ -51,7 +52,7 @@ class ClientInputValidator
    * @return string The trimmed value
    */
 
-  public function validateString(string $parameterName, ?string $inputValue, int $maxLength, bool $notNull, $validationType=null)
+  public function validateString(string $parameterName, ?string $inputValue, int $maxLength, bool $notNull, $validationType=null):?string
   {
 
     if(!$notNull && $inputValue == null)
@@ -89,7 +90,7 @@ class ClientInputValidator
         "validationType"=> $validationType,
         "violations"    => $violations,
         "inputValue"    => $inputValue));
-      throw new \InvalidArgumentException("Input value fails string validations. parameterName='$parameterName', inputValue='$inputValue'" );
+      throw new InvalidArgumentException("Input value fails string validations. parameterName='$parameterName', inputValue='$inputValue'" );
     }
 //trim(htmlentities($inputValue, ENT_QUOTES | ENT_HTML5, "UTF-8"));
     //issue with email address where it breaks the validation.
@@ -102,9 +103,9 @@ class ClientInputValidator
    * @param  int    $maxValue        the max value for the input
    * @param  bool   $notNull         Is the value allowed to be null or not
    * @param  int    $defaultValue    If the value is null, return this value instead.
-   * @return int The passed value casted to int
+   * @return int|null The passed value casted to int
    */
-  public function validateInteger($parameterName, $inputValue, $maxValue=0, $notNull=true, $defaultValue=0)
+  public function validateInteger($parameterName, $inputValue, $maxValue=0, $notNull=true, $defaultValue=0):?int
   {
     if(!$notNull && $inputValue == null)
       return $defaultValue;
@@ -140,7 +141,7 @@ class ClientInputValidator
         "notNull"       => $notNull,
         "violations"    => $violations,
         "inputValue"    => $inputValue));
-      throw new \InvalidArgumentException("Input value fails int validations");
+      throw new InvalidArgumentException("Input value fails int validations");
     }
     return (int) $inputValue;
   }
@@ -153,7 +154,7 @@ class ClientInputValidator
    * @param  bool   $defaultValue   If the value is null and it's allowed ($notNull=true), then the function will return this bool value instead of null
    * @return boolean true or false
    */
-  public function validateBoolean($parameterName, $inputValue, bool $notNull, bool $defaultValue=null)
+  public function validateBoolean($parameterName, $inputValue, bool $notNull, bool $defaultValue=null):?bool
   {
     if(!$notNull && $inputValue == null)
       return (bool)$defaultValue;
@@ -199,11 +200,15 @@ class ClientInputValidator
       "parameterName" => $parameterName,
       "violations"    => $violations,
       "inputValue"    => $inputValue));
-    throw new \InvalidArgumentException("Input value fails int validations");
+    throw new InvalidArgumentException("Input value fails int validations");
 
   }
 
-
+  /**
+   * Perform the validation of the data according ot the $clientInputValidatorInput
+   * @param ClientInputValidatorSpecs $clientInputValidatorInput
+   * @return bool|int|string
+   */
   public function validate(ClientInputValidatorSpecs $clientInputValidatorInput)
   {
     $methodName = $clientInputValidatorInput->methodName;
@@ -213,7 +218,7 @@ class ClientInputValidator
        $methodName != ClientInputValidator::$BOOLEAN_VALIDATION )
     {
       $this->logger->error("Run check fails, invalid method name", array("methodName" => $methodName));
-      throw new \InvalidArgumentException("Run check fails, invalid method name");
+      throw new InvalidArgumentException("Run check fails, invalid method name");
     }
 
     switch ($methodName)
@@ -226,6 +231,6 @@ class ClientInputValidator
         return $this->validateBoolean($clientInputValidatorInput->parameterName, $clientInputValidatorInput->inputValue, $clientInputValidatorInput->notNull, $clientInputValidatorInput->defaultValue);
     }
 
-    throw new \InvalidArgumentException("Incorrect method name : '$methodName' see static attribute of class ClientInputValidator");
+    throw new InvalidArgumentException("Incorrect method name : '$methodName' see static attribute of class ClientInputValidator");
   }
 }

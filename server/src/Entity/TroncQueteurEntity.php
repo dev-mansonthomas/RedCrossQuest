@@ -3,6 +3,7 @@ namespace RedCrossQuest\Entity;
 
 
 use Carbon\Carbon;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 
@@ -318,7 +319,7 @@ class TroncQueteurEntity extends Entity
     *
     * @param array $data The data to use to create
     * @param LoggerInterface $logger
-    * @throws \Exception if a parse Date or JSON fails
+    * @throws Exception if a parse Date or JSON fails
     */
     public function __construct(array $data, LoggerInterface $logger)
     {
@@ -395,7 +396,7 @@ class TroncQueteurEntity extends Entity
    * check if some money information has been filled
    * @return bool true if at least one bill or one coin or don_cheque or don_cb is > 0
    */
-    function isMoneyFilled()
+    function isMoneyFilled():bool
     {
       return
         $this->checkPositive($this->euro500       ) ||
@@ -423,7 +424,7 @@ class TroncQueteurEntity extends Entity
    * @param $value float the value to check
    * @return bool true if the value is > 0
    */
-    function checkPositive($value)
+    function checkPositive($value):bool
     {
       return $value != null && $value > 0;
     }
@@ -435,7 +436,7 @@ class TroncQueteurEntity extends Entity
      *
      * @return TroncQueteurEntity the object itself
      */
-    function prepareForPublish()
+    function prepareForPublish():TroncQueteurEntity
     {
       $this->depart_theorique = $this->depart_theorique != null ? $this->depart_theorique ->toDateTimeString() : null;
       $this->depart           = $this->depart           != null ? $this->depart           ->toDateTimeString() : null;

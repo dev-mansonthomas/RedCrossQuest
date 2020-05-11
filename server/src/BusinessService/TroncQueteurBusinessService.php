@@ -1,6 +1,7 @@
 <?php
 namespace RedCrossQuest\BusinessService;
 use Carbon\Carbon;
+use Exception;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\PointQueteDBService;
@@ -56,9 +57,9 @@ class TroncQueteurBusinessService
    * @param int $ulId
    * @param int $roleId
    * @return TroncQueteurEntity
-   * @throws \Exception
+   * @throws Exception
    */
-  public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId)
+  public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId):TroncQueteurEntity
   {
     $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId);
 
@@ -80,9 +81,9 @@ class TroncQueteurBusinessService
    * @param int $ulId
    * @param int $roleId
    * @return TroncQueteurEntity
-   * @throws \Exception
+   * @throws Exception
    */
-  public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId, int $roleId)
+  public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId, int $roleId):TroncQueteurEntity
   {
     $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId);
     $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $roleId ==9 ? null: $ulId);
@@ -99,13 +100,13 @@ class TroncQueteurBusinessService
    * @param string $deployment the current deployment value
    * @param Carbon $dateToCheck  preparation date
    * @return bool true if the quete has already started (or it's not production)
-   * @throws \Exception
+   * @throws Exception
    */
-  public function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null)
+  public function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null):bool
   {
     if(strlen($deployment) !=1)
     {
-      throw new \Exception("\$deployment has an incorrect value ($deployment)");
+      throw new Exception("\$deployment has an incorrect value ($deployment)");
     }
 
     if($deployment !== "P")

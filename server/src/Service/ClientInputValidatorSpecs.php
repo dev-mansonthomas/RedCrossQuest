@@ -48,7 +48,7 @@ class ClientInputValidatorSpecs
     $this->inputValue     = $inputValue;
   }
 
-  public static function withString(string $parameterName, ?string $inputValue, int $maxLength, bool $notNull, ?string $validationType=null)
+  public static function withString(string $parameterName, ?string $inputValue, int $maxLength, bool $notNull, ?string $validationType=null):ClientInputValidatorSpecs
   {
     $instance = new self(ClientInputValidator::$STRING_VALIDATION, $parameterName, $notNull, $inputValue);
     $instance->maxLength      = $maxLength;
@@ -56,7 +56,7 @@ class ClientInputValidatorSpecs
     return $instance;
   }
 
-  public static function withInteger(string $parameterName, ?string $inputValue, int $maxValue, bool $notNull,  ?int $defaultValue=null)
+  public static function withInteger(string $parameterName, ?string $inputValue, int $maxValue, bool $notNull,  ?int $defaultValue=null):ClientInputValidatorSpecs
   {
     $instance = new self(ClientInputValidator::$INTEGER_VALIDATION, $parameterName, $notNull, $inputValue);
     $instance->maxValue     = $maxValue;
@@ -64,7 +64,7 @@ class ClientInputValidatorSpecs
     return $instance;
   }
 
-  public static function withBoolean(string $parameterName, ?string $inputValue, bool $notNull,  ?bool $defaultValue=null)
+  public static function withBoolean(string $parameterName, ?string $inputValue, bool $notNull,  ?bool $defaultValue=null):ClientInputValidatorSpecs
   {
     $instance = new self(ClientInputValidator::$BOOLEAN_VALIDATION, $parameterName, $notNull, $inputValue);
     $instance->defaultValue = $defaultValue;

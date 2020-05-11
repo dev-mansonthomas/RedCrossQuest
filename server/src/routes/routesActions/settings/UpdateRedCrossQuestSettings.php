@@ -6,16 +6,14 @@
 namespace RedCrossQuest\routes\routesActions\settings;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\ULPreferencesFirestoreDBService;
-use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\ULPreferencesEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class UpdateRedCrossQuestSettings extends Action
@@ -44,7 +42,7 @@ class UpdateRedCrossQuestSettings extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
@@ -74,9 +72,6 @@ class UpdateRedCrossQuestSettings extends Action
     }
 
     $this->ULPreferencesFirestoreDBService ->updateUlPrefs($ulId, $ulPreferenceEntity);
-
-
-
     return $this->response;
   }
 }

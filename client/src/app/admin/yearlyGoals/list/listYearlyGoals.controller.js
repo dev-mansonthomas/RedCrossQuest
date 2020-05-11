@@ -51,7 +51,16 @@
     {
       vm.saveInProgress=true;
       var yearlyGoalsResource = new YearlyGoalsResource({year:year});
-      yearlyGoalsResource.$createYear(function(){vm.saveInProgress=false;vm.doSearch();}, function(error){vm.saveInProgress=false;$log.error(error);});
+      yearlyGoalsResource.$createYear(function()
+        {
+          vm.saveInProgress=false;
+          vm.doSearch();
+        },
+        function(error)
+        {
+          vm.saveInProgress=false;
+          $log.error(error);
+        });
     };
 
     vm.save=function()

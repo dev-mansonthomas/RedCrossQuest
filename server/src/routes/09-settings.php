@@ -57,7 +57,7 @@ use RedCrossQuest\routes\routesActions\settings\UpdateRedQuestSettings;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}', GetULSettings::class);
+$app->get('/{role-id:[4-9]}/settings/ul/{ul-id}', GetULSettings::class);
 
 /**
  *
@@ -99,7 +99,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}', GetULSettings::cla
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getSetupStatus', GetULSetupStatus::class);
+$app->get('/{role-id:[1-9]}/settings/ul/{ul-id}/getSetupStatus', GetULSetupStatus::class);
 
 /**
  *
@@ -141,7 +141,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getSetupStatus', Get
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getAllSettings', GetAllULSettings::class);
+$app->get('/{role-id:[1-9]}/settings/ul/{ul-id}/getAllSettings', GetAllULSettings::class);
 
 /**
  *
@@ -179,7 +179,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/settings/ul/{ul-id}/getAllSettings', Get
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedQuestSettings',  UpdateRedQuestSettings::class);
+$app->put('/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedQuestSettings',  UpdateRedQuestSettings::class);
 
 
 
@@ -219,4 +219,4 @@ $app->put(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedQuestSettin
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedCrossQuestSettings',  UpdateRedCrossQuestSettings::class);
+$app->put('/{role-id:[4-9]}/settings/ul/{ul-id}/updateRedCrossQuestSettings',  UpdateRedCrossQuestSettings::class);

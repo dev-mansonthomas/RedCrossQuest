@@ -4,9 +4,10 @@
 namespace RedCrossQuest\Exception;
 
 
+use Exception;
 use Throwable;
 
-class UserAlreadyExistsException extends \Exception
+class UserAlreadyExistsException extends Exception
 {
   public $users;
 

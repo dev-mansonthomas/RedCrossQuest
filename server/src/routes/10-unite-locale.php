@@ -55,7 +55,7 @@ use RedCrossQuest\routes\routesActions\unitesLocales\ListUniteLocale;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[4-9]}/ul/{id}', GetUniteLocale::class);
+$app->get('/{role-id:[4-9]}/ul/{id}', GetUniteLocale::class);
 
 /**
  *
@@ -106,7 +106,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{id}', GetUniteLocale::class);
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[9]}/ul', ListUniteLocale::class);
+$app->get('/{role-id:[9]}/ul', ListUniteLocale::class);
 
 
 
@@ -156,7 +156,7 @@ $app->get(getPrefix().'/{role-id:[9]}/ul', ListUniteLocale::class);
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}', UpdateULSettings::class);
+$app->put('/{role-id:[4-9]}/ul/{ul-id}', UpdateULSettings::class);
 
 
 

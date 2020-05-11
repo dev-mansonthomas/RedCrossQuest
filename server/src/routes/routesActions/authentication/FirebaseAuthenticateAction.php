@@ -4,6 +4,7 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use Exception;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Kreait\Firebase;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -87,9 +88,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
 
   /**
    * @return Response
-   * @throws Firebase\Exception\AuthException
-   * @throws Firebase\Exception\FirebaseException
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

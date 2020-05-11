@@ -5,6 +5,7 @@ require '../../vendor/autoload.php';
 
 
 use Carbon\Carbon;
+use Exception;
 use PDOException;
 use RedCrossQuest\Entity\BillsMoneyBagSummaryEntity;
 use RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity;
@@ -22,10 +23,10 @@ class TroncQueteurDBService extends DBService
    * @param int $tronc_id The ID of the tronc
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return TroncQueteurEntity  The tronc
-   * @throws \Exception if tronc not found
+   * @throws Exception if tronc not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId)
+  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId):TroncQueteurEntity
   {
     $sql = "
 SELECT 
@@ -99,10 +100,10 @@ LIMIT 1
    * @param int $tronc_id The ID of the tronc
    * @param int $ulId the id of the unite locale  (join with queteur table)
    * @return TroncQueteurEntity[]  The tronc
-   * @throws \Exception if tronc not found
+   * @throws Exception if tronc not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getTroncsQueteurByTroncId(int $tronc_id, int $ulId)
+  public function getTroncsQueteurByTroncId(int $tronc_id, int $ulId):array
   {
     $sql = "
 SELECT 
@@ -178,10 +179,10 @@ ORDER BY t.id DESC
    * @param int $id The ID of the tronc_quete row
    * @param int $ulId the Id of the Unite Local
    * @return TroncQueteurEntity  The tronc
-   * @throws \Exception if tronc_queteur not found
+   * @throws Exception if tronc_queteur not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getTroncQueteurById(int $id, int $ulId)
+  public function getTroncQueteurById(int $id, int $ulId):TroncQueteurEntity
   {
     $sql = "
 SELECT 
@@ -243,7 +244,7 @@ AND    t.ul_id      = :ul_id
     else
     {
       $stmt->closeCursor();
-      throw new \Exception("Tronc Queteur with ID:'".$id . "' not found");
+      throw new Exception("Tronc Queteur with ID:'".$id . "' not found");
     }
   }
 
@@ -254,9 +255,9 @@ AND    t.ul_id      = :ul_id
    * @param int $ulId the Id of the Unite Local
    * @return TroncQueteurEntity[] list of Tronc of the queteur
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getTroncsQueteur(int $queteur_id, int $ulId)
+  public function getTroncsQueteur(int $queteur_id, int $ulId):array
   {
     $sql = "
 SELECT 
@@ -324,7 +325,7 @@ ORDER BY t.id desc
    * @return Carbon the date that has been set to tronc_queteur.dateDepart
    * @throws PDOException if the query fails to execute on the server
    */
-  public function setDepartToNow(int $tronc_queteur_id, int $ulId, int $userId)
+  public function setDepartToNow(int $tronc_queteur_id, int $ulId, int $userId):Carbon
   {
     $sql = "
 UPDATE `tronc_queteur`           tq
@@ -361,7 +362,7 @@ AND   tq.ul_id              = :ul_id
    * @param  int $userId id of the user performing the operation
    * @throws PDOException if the query fails to execute on the server
    */
-  public function setDepartToCustomDate(TroncQueteurEntity $tq, int $ulId, int $userId)
+  public function setDepartToCustomDate(TroncQueteurEntity $tq, int $ulId, int $userId):void
   {
     $sql = "
 UPDATE `tronc_queteur`        tq
@@ -396,7 +397,7 @@ AND   tq.ul_id              = :ul_id
    * @return int the number of row updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function cancelDepart(TroncQueteurEntity $tq, int $ulId, int $userId)
+  public function cancelDepart(TroncQueteurEntity $tq, int $ulId, int $userId):int
   {
     $sql = "
 UPDATE `tronc_queteur`           tq
@@ -433,7 +434,7 @@ AND   tq.`ul_id`            = :ul_id
    * @return int the number of row updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function cancelRetour(TroncQueteurEntity $tq, int $ulId, int $userId)
+  public function cancelRetour(TroncQueteurEntity $tq, int $ulId, int $userId):int
   {
     $sql = "
 UPDATE `tronc_queteur`           tq
@@ -467,10 +468,10 @@ AND   tq.`ul_id`            = :ul_id
    * @param int $ulId the Id of the unite locale
    * @param int $userId id of the user performing the operation
    * @return Carbon the date of the udpate
-   * @throws \Exception if query fails
+   * @throws Exception if query fails
    * @throws PDOException if the query fails to execute on the server
    */
-  public function updateRetour(TroncQueteurEntity $tq, int $ulId, int $userId)
+  public function updateRetour(TroncQueteurEntity $tq, int $ulId, int $userId):Carbon
   {
     $sql = "
 UPDATE `tronc_queteur`            tq
@@ -504,10 +505,10 @@ AND   tq.ul_id                = :ul_id
    * @param boolean             $adminMode  If the user performing the action is administrator
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
-   * @throws \Exception if the query fails
+   * @throws Exception if the query fails
    * @throws PDOException if the query fails to execute on the server
    */
-  public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId)
+  public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId):void
   {
     $this->logger->info("Saving coins for tronc",array("tronc"=> $tq, "adminMode" => $adminMode, "ulId"=>$ulId, "userId"=> $userId));
 
@@ -610,10 +611,10 @@ AND   tq.ul_id                  = :ul_id
    * @param TroncQueteurEntity  $tq         The tronc to update
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
-   * @throws \Exception if the query fails
+   * @throws Exception if the query fails
    * @throws PDOException if the query fails to execute on the server
    */
-  public function updateTroncQueteurAsAdmin(TroncQueteurEntity $tq, int $ulId, int $userId)
+  public function updateTroncQueteurAsAdmin(TroncQueteurEntity $tq, int $ulId, int $userId):void
   {
 
     $sql = "
@@ -656,12 +657,12 @@ AND   tq.ul_id         = :ul_id
    * @param TroncQueteurEntity  $tq         The tronc to update
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
-   * @throws \Exception if the query fails
+   * @throws Exception if the query fails
    * @return PrepareTroncQueteurResponse Object containing the last insertedId or info about existing troncQueteur row already using the tronc_id (with depar or retour null and deleted=false)
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception if the tronc is already in use
+   * @throws Exception if the tronc is already in use
    */
-  public function insert(TroncQueteurEntity $tq, int $ulId, int $userId)
+  public function insert(TroncQueteurEntity $tq, int $ulId, int $userId):PrepareTroncQueteurResponse
   {
     $checkTroncResult = $this->checkTroncNotAlreadyInUse($tq->tronc_id, $tq->queteur_id,$ulId);
 
@@ -679,7 +680,7 @@ AND   tq.ul_id         = :ul_id
           "notes_depart_theorique"=> $tq->notes_depart_theorique
         ];
 
-      $departTheoriqueQuery = "";
+      $departTheoriqueQuery = null;
 
       if($tq->preparationAndDepart)
       {//if the user click on "Prepart And Depart", then depart_theorique is override by current date
@@ -745,11 +746,11 @@ $departTheoriqueQuery
    * @param int $troncId the Id of the tronc that we want to check
    * @param int $queteurId the Id of the queteur that we want to check
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @return array Array of TroncInUseEntity that contains informations of the existing use of the tronc
+   * @return TroncInUseEntity[] Array of TroncInUseEntity that contains informations of the existing use of the tronc
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function checkTroncNotAlreadyInUse(int $troncId, int $queteurId, int $ulId)
+  public function checkTroncNotAlreadyInUse(int $troncId, int $queteurId, int $ulId):?array
   {
     $sqlTronc = "
 SELECT  
@@ -856,7 +857,7 @@ AND    (tq.depart     is null OR
    * @throws PDOException if the query fails to execute on the server
    *
    */
-  public function deleteNonReturnedTroncQueteur(int $troncId, int $ulId, int $userId)
+  public function deleteNonReturnedTroncQueteur(int $troncId, int $ulId, int $userId):void
   {
 
     //update the tronc to deleted=1, limiting the update to the rows of the UL and set who is deleting the row
@@ -889,10 +890,10 @@ AND  (tq.depart IS NULL OR
    * @param int $id The ID of the tronc_quete for which we want the history
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return TroncQueteurEntity[]  list of tronc_queteur entity (history mode)
-   * @throws \Exception if tronc_queteur not found
+   * @throws Exception if tronc_queteur not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getTroncQueteurHistoryById(int $id, int $ulId)
+  public function getTroncQueteurHistoryById(int $id, int $ulId):array
   {
     $sql = "
 SELECT 
@@ -968,7 +969,7 @@ ORDER BY t.id DESC
    * @return string[]  list of money_bag_id that match the search
    * @throws PDOException if the query fails to execute on the server
    */
-  public function searchMoneyBagId(string $query, string $type, int $ulId)
+  public function searchMoneyBagId(string $query, string $type, int $ulId):array
   {
     $column = "coins_money_bag_id";
     if($type == "bill")
@@ -1015,10 +1016,10 @@ ORDER BY t.money_bag_id DESC
    * @param int $ulId the id of the unite locale  (join with queteur table)
    * @param string $year extract for the specified year. If null, all years.
    * @return TroncQueteurEntity[]  The tronc
-   * @throws \Exception if some parsing fails
+   * @throws Exception if some parsing fails
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getTroncsQueteurFromUL(int $ulId, ?string $year)
+  public function getTroncsQueteurFromUL(int $ulId, ?string $year):array
   {
     $parameters = ["ul_id" => $ulId];
     $yearSQL="";
@@ -1127,10 +1128,10 @@ order by tq.id asc
    * @param int $ulId the id of the unite locale
    * @param string $coinsMoneyBagId The id of the coins bag
    * @return CoinsMoneyBagSummaryEntity  The tronc
-   * @throws \Exception if some parsing fails
+   * @throws Exception if some parsing fails
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getCoinsMoneyBagDetails(int $ulId, string $coinsMoneyBagId)
+  public function getCoinsMoneyBagDetails(int $ulId, string $coinsMoneyBagId):?CoinsMoneyBagSummaryEntity
   {
     $parameters = [
       "ul_id"              => $ulId,
@@ -1203,10 +1204,10 @@ SUM(tq.cent1  ) as  count_cent1         ,
    * @param int $ulId the id of the unite locale
    * @param string $billsMoneyBagId The id of the bills bag
    * @return BillsMoneyBagSummaryEntity  The tronc
-   * @throws \Exception if some parsing fails
+   * @throws Exception if some parsing fails
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getBillsMoneyBagDetails(int $ulId, string $billsMoneyBagId)
+  public function getBillsMoneyBagDetails(int $ulId, string $billsMoneyBagId):?BillsMoneyBagSummaryEntity
   {
     $parameters = [
       "ul_id"              => $ulId,
@@ -1266,6 +1267,4 @@ SUM(tq.euro500) as  count_euro500       ,
 
     return null;
   }
-
-
 }

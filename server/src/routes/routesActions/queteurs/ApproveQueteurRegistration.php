@@ -2,16 +2,16 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
+use DI\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\PubSubService;
 
 
@@ -60,7 +60,7 @@ class ApproveQueteurRegistration extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
@@ -113,7 +113,7 @@ class ApproveQueteurRegistration extends Action
         true,
         true);
     }
-    catch(\Exception $exception)
+    catch(Exception $exception)
     {
       $this->logger->error("error while publishing registration approval", array("messageProperties"=> $messageProperties,
         "queteurEntity"    => $queteurEntity,

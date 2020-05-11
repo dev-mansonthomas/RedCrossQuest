@@ -37,12 +37,18 @@ class Entity
     $this->clientInputValidator = new ClientInputValidator($logger);
   }
 
-  public function generateCSVHeader()
+  /**
+   * @return string The CSV header based on the _fieldList array
+   */
+  public function generateCSVHeader():string
   {
     return implode(";", $this->_fieldList)."\n";
   }
 
-  public function generateCSVRow()
+  /**
+   * @return string The CSV row based on the _fieldList array
+   */
+  public function generateCSVRow():string
   {
     $csvRow="";
     foreach($this->_fieldList as $field)
@@ -64,7 +70,7 @@ class Entity
   /**
    * @return array an associative array, with the field name as key and its value as value
    */
-  public function prepareDataForFirestoreUpdate()
+  public function prepareDataForFirestoreUpdate():array
   {
     $data = [];
 
@@ -82,7 +88,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getInteger(string $key, array $data)
+  protected function getInteger(string $key, array $data):void
   {
     if(array_key_exists($key, $data))
     {
@@ -98,7 +104,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getFloat(string $key, array $data)
+  protected function getFloat(string $key, array $data):void
   {
     if(array_key_exists($key, $data))
     {
@@ -119,7 +125,7 @@ class Entity
    * @param array  $data      the associative array
    * @param int    $maxSize   the max acceptable length of the string
    */
-  protected function getString(string $key, array $data, int $maxSize)
+  protected function getString(string $key, array $data, int $maxSize):void
   {
     if(array_key_exists($key, $data))
     {
@@ -134,7 +140,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getEmail(string $key, array $data)
+  protected function getEmail(string $key, array $data):void
   {
     if(array_key_exists($key, $data))
     {
@@ -151,7 +157,7 @@ class Entity
    * @param int    $maxSize   the max acceptable length of the string
    * @throws Exception if json_decode throws an error
    */
-  protected function getJson(string $key, array $data, int $maxSize)
+  protected function getJson(string $key, array $data, int $maxSize):void
   {
     if(array_key_exists($key, $data))
     {
@@ -175,7 +181,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getBoolean(string $key, array $data)
+  protected function getBoolean(string $key, array $data):void
   {
     if(array_key_exists($key, $data))
     {
@@ -188,7 +194,7 @@ class Entity
    * @param array  $data the associative array
    * @throws Exception when failing to parse date
    */
-  protected function getDate(string $key, array $data)
+  protected function getDate(string $key, array $data):void
   {
     if(array_key_exists($key, $data))
     {

@@ -26,7 +26,7 @@ abstract class FirestoreDBService
     $this->logger         = $logger;
   }
 
-  public function initCollection()
+  public function initCollection():void
   {
     $this->firestoreCollection = $this->firestoreClient->collection($this->FIRESTORE_COLLECTION);
   }

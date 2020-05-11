@@ -3,6 +3,8 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
+use Exception;
+use InvalidArgumentException;
 use PDOException;
 use RedCrossQuest\Entity\TroncEntity;
 
@@ -17,10 +19,10 @@ class TroncDBService extends DBService
    * @param int $type  Id of the type of tronc, if null, search all types.
    * @return TroncEntity[] list of troncs
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    *
    */
-    public function getTroncs(?string $query, int $ulId, ?bool $active, ?int $type )
+    public function getTroncs(?string $query, int $ulId, ?bool $active, ?int $type ):array
     {
 
       $parameters = ["ul_id"  => $ulId];
@@ -86,10 +88,10 @@ WHERE  t.ul_id = :ul_id
      * @param int $tronc_id The ID of the tronc
      * @param int $ulId the ID of the UniteLocal
      * @return TroncEntity  The tronc
-     * @throws \Exception if the tronc is not found
+     * @throws Exception if the tronc is not found
      * @throws PDOException if the query fails to execute on the server
      */
-    public function getTroncById(int $tronc_id, int $ulId)
+    public function getTroncById(int $tronc_id, int $ulId):TroncEntity
     {
       $sql = "
 SELECT `id`,
@@ -115,7 +117,7 @@ AND    t.ul_id = :ul_id
       else
       {
         $stmt->closeCursor();
-        throw new \Exception("Tronc with ID:'".$tronc_id . "' for ul with id: $ulId not found");
+        throw new Exception("Tronc with ID:'".$tronc_id . "' for ul with id: $ulId not found");
       }
     }
 
@@ -127,7 +129,7 @@ AND    t.ul_id = :ul_id
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @throws PDOException if the query fails to execute on the server
    */
-    public function update(TroncEntity $tronc, int $ulId)
+    public function update(TroncEntity $tronc, int $ulId):void
     {
       $sql = "
 UPDATE `tronc`
@@ -159,7 +161,7 @@ AND   `ul_id`       = :ul_id
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @throws PDOException if the query fails to execute on the server
    */
-  public function insert(TroncEntity $tronc, int $ulId)
+  public function insert(TroncEntity $tronc, int $ulId):void
   {
     /** @noinspection SyntaxError */
     $sql = "
@@ -175,7 +177,7 @@ VALUES
 ";
     if($tronc->nombreTronc > 50 || !is_int($tronc->nombreTronc))
     {
-      throw new \InvalidArgumentException("Invalid number of tronc to be created ".$tronc->nombreTronc);
+      throw new InvalidArgumentException("Invalid number of tronc to be created ".$tronc->nombreTronc);
     }
     for($i=0;$i<$tronc->nombreTronc;$i++)
     {
@@ -202,7 +204,7 @@ VALUES
    * @return int the number of troncs
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getNumberOfTroncs(int $ulId)
+  public function getNumberOfTroncs(int $ulId):int
   {
     $sql="
     SELECT count(1) as cnt
@@ -222,7 +224,7 @@ VALUES
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @throws PDOException if the query fails to execute on the server
    */
-  public function markAllAsPrinted(int $ulId)
+  public function markAllAsPrinted(int $ulId):void
   {
 
     $sql = "

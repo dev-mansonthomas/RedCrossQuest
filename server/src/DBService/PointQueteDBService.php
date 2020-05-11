@@ -4,22 +4,21 @@ namespace RedCrossQuest\DBService;
 
 require '../../vendor/autoload.php';
 
+use Exception;
 use PDOException;
 use RedCrossQuest\Entity\PointQueteEntity;
 
 class PointQueteDBService extends DBService
 {
-
-
   /**
    * Get all pointQuete for UL $ulId
    *
    * @param int $ulId The ID of the Unite Locale
    * @return PointQueteEntity[]  The list of PointQuete
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getPointQuetes(int $ulId)
+  public function getPointQuetes(int $ulId):array
   {
 
     $sql = "
@@ -73,9 +72,9 @@ ORDER BY type, name
    * @param  int $ulId The ID of the Unite Locale
    * @return PointQueteEntity[]  The list of PointQuete
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function searchPointQuetes(?string $query, ?int $point_quete_type, bool $active, int $ulId)
+  public function searchPointQuetes(?string $query, ?int $point_quete_type, bool $active, int $ulId):array
   {
 
 
@@ -160,9 +159,9 @@ ORDER BY type ASC, name ASC
    * @param int $roleId the role of the user. If super user, can search other UL
    * @return PointQueteEntity  The point quete info
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getPointQueteById(int $point_quete_id, int $ulId, int $roleId)
+  public function getPointQueteById(int $point_quete_id, int $ulId, int $roleId):PointQueteEntity
   {
     $parameters = ["point_quete_id" => $point_quete_id];
     $ulRestriction="";
@@ -215,7 +214,7 @@ $ulRestriction
    * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
    */
-  public function update(PointQueteEntity $pointQuete, int $ulId, int $roleId)
+  public function update(PointQueteEntity $pointQuete, int $ulId, int $roleId):void
   {
     $sql = "
 UPDATE `point_quete`
@@ -279,8 +278,8 @@ AND   `ul_id`           = :ul_id
    * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the primary key of the new pointQuete
    */
-  public function insert(PointQueteEntity $pointQuete, int $ulId)
-  {
+  public function insert(PointQueteEntity $pointQuete, int $ulId):int
+  {  //TODO : check if we should use $ulID
     $sql = "
   INSERT INTO `point_quete`
   (
@@ -367,7 +366,7 @@ AND   `ul_id`           = :ul_id
    * @return int the number of point_quete
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getNumberOfPointQuete(int $ulId)
+  public function getNumberOfPointQuete(int $ulId):int
   {
     $sql="
     SELECT count(1) as cnt
@@ -383,7 +382,7 @@ AND   `ul_id`           = :ul_id
 
 
 
-  public function initBasePointQuete(int $ulId)
+  public function initBasePointQuete(int $ulId):void
   {
     $sql="
     INSERT INTO point_quete
@@ -392,16 +391,11 @@ AND   `ul_id`           = :ul_id
     FROM  ul u
     WHERE id = :id
     ";
-
-
     $stmt = $this->db->prepare($sql);
 
     $stmt->execute([
       "id"              => $ulId
     ]);
-
     $stmt->closeCursor();
-
-
   }
 }

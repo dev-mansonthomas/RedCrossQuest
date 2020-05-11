@@ -24,8 +24,10 @@ class LoggingEntity
     $this->otherData    = $otherData;
 
   }
-  //return this class as an associative array, otherData added if exists.
-  public function loggingInfoArray()
+  /**
+   * @return array : this class as an associative array, otherData added if exists.
+   */
+  public function loggingInfoArray():array
   {
     return array_merge( $this->decodedToken, $this->otherData);
   }

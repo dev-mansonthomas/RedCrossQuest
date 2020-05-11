@@ -72,7 +72,7 @@ use RedCrossQuest\routes\routesActions\pointsQuetes\UpdatePointQuete;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id:\d+}', GetPointQuete::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id:\d+}', GetPointQuete::class);
 /**
  *
  * @OA\Get(
@@ -113,7 +113,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id:\d+}', GetPoi
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', ListPointsQuetes::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', ListPointsQuetes::class);
 /**
  *
  * @OA\Get(
@@ -190,7 +190,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes', ListPointsQuete
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/search', SearchPointsQuetes::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/search', SearchPointsQuetes::class);
 
 
 
@@ -246,7 +246,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/search', SearchPo
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', UpdatePointQuete::class);
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', UpdatePointQuete::class);
 
 /**
  * @OA\Post(
@@ -291,4 +291,4 @@ $app->put(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/pointQuetes/{id}', UpdatePoin
  *     )
  * )
  */
-$app->post(getPrefix().'/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', CreatePointQuete::class);
+$app->post('/{role-id:[2-9]}/ul/{ul-id}/pointQuetes', CreatePointQuete::class);

@@ -1,12 +1,15 @@
 <?php
+error_reporting(E_ALL );
 
 use Slim\Factory\AppFactory;
 
-if (PHP_SAPI == 'cli-server') {
+if (PHP_SAPI == 'cli-server')
+{
     // To help the built-in PHP dev server, check if the request was actually for
     // something which should probably be served as a static file
     $file = __DIR__ . $_SERVER['REQUEST_URI'];
-    if (is_file($file)) {
+    if (is_file($file))
+    {
         return false;
     }
 }
@@ -23,10 +26,7 @@ $containerBuilder = new ContainerBuilder();
 // use annotation to inject settings
 $containerBuilder->useAnnotations(true);
 
-if (false) { // Should be set to true in production
-  //TODO: GAE check which dir is writable
-  $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
-}
+$containerBuilder->enableCompilation('/tmp/cache');
 
 // Set up settings
 $settings = require __DIR__ . '/../../src/settings.php';

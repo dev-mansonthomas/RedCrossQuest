@@ -5,6 +5,8 @@ require '../../vendor/autoload.php';
 
 use DateInterval;
 use DateTime;
+use Exception;
+use PDO;
 use PDOException;
 use RedCrossQuest\Entity\DailyStatsBeforeRCQEntity;
 use RedCrossQuest\Service\Logger;
@@ -15,7 +17,7 @@ class DailyStatsBeforeRCQDBService extends DBService
   private $queteDates;
 
 
-  public function __construct(array $queteDates, \PDO $db, Logger $logger)
+  public function __construct(array $queteDates, PDO $db, Logger $logger)
   {
     $this->queteDates = $queteDates;
     parent::__construct($db,$logger);
@@ -23,8 +25,9 @@ class DailyStatsBeforeRCQDBService extends DBService
 
   /**
    * return the date of the first day of the quete of the current year
+   * @return string the date of the first day of the quete with the following format YYYY-MM-DD
    */
-  public function getCurrentQueteStartDate()
+  public function getCurrentQueteStartDate():string
   {
     return $this->queteDates[date("Y")][0];
   }
@@ -37,9 +40,9 @@ class DailyStatsBeforeRCQDBService extends DBService
    * @param string  $year The year for which we wants the daily stats
    * @return DailyStatsBeforeRCQEntity[]  The PointQuete
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception if some parsing error occurs
+   * @throws Exception if some parsing error occurs
    */
-  public function getDailyStats(int $ulId, ?string $year)
+  public function getDailyStats(int $ulId, ?string $year):array
   {
 
     $parameters = ["ul_id" => $ulId];
@@ -85,7 +88,7 @@ ORDER BY d.date ASC
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @throws PDOException if the query fails to execute on the server
    */
-  public function update(DailyStatsBeforeRCQEntity $dailyStatsBeforeRCQEntity, int $ulId)
+  public function update(DailyStatsBeforeRCQEntity $dailyStatsBeforeRCQEntity, int $ulId):void
   {
     
     $sql ="
@@ -113,9 +116,9 @@ AND     `ul_id`   = :ulId
    * @param int    $ulId  Id of the UL for which we create the data
    * @param string $year  year to create
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception if something else fails
+   * @throws Exception if something else fails
    */
-  public function createYear(int $ulId, string $year)
+  public function createYear(int $ulId, string $year):void
   {
     $sql = "
 INSERT INTO `daily_stats_before_rcq`
@@ -162,7 +165,7 @@ VALUES
    * @return int the number of dailyStats
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getNumberOfDailyStats(int $ulId)
+  public function getNumberOfDailyStats(int $ulId):int
   {
     $sql="
     SELECT count(1) as cnt

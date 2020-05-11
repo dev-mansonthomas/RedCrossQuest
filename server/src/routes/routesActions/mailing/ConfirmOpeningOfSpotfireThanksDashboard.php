@@ -6,6 +6,7 @@
 namespace RedCrossQuest\routes\routesActions\mailing;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\MailingDBService;
@@ -38,7 +39,7 @@ class ConfirmOpeningOfSpotfireThanksDashboard extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

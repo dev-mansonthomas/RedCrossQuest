@@ -81,7 +81,7 @@ use RedCrossQuest\routes\routesActions\moneyBag\SearchMoneyBagId;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/moneyBag'              , SearchMoneyBagId::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/moneyBag'              , SearchMoneyBagId::class);
 
 
 /**
@@ -134,7 +134,7 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/moneyBag'              , Sear
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/moneyBag/coins/{id}'               , GetCoinsMoneyBagDetails::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/moneyBag/coins/{id}'               , GetCoinsMoneyBagDetails::class);
 
 /**
  * GetMoneyBag Details
@@ -186,4 +186,4 @@ $app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/moneyBag/coins/{id}'         
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/moneyBag/bills/{id}'               , GetCoinsMoneyBagDetails::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/moneyBag/bills/{id}'               , GetCoinsMoneyBagDetails::class);

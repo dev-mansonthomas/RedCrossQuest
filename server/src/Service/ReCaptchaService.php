@@ -63,7 +63,7 @@ class ReCaptchaService
    * @return                  int       0: Success, 1: token empty/null/too long, 2: wrong action, 3: score too low, 4: response is an error, 5: exception occurred while performing the check.
    *
    */
-  public function verify($token, $actionRequired, $username)
+  public function verify($token, $actionRequired, $username):int
   {
     //Google App Engine do not fill the REMOTE_ADDR, instead :
     /*

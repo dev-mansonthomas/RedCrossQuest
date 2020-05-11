@@ -120,7 +120,7 @@ abstract class Action
    * @param ClientInputValidatorSpecs[] $clientInputValidatorInputs
    *
    */
-  protected function validateSentData(array $clientInputValidatorInputs)
+  protected function validateSentData(array $clientInputValidatorInputs):void
   {
     $this->validatedData = [];
     
@@ -135,7 +135,7 @@ abstract class Action
    * @param string $key    the searched key
    * @return string the value or null if not found.
    */
-  protected function getParam(string $key)
+  protected function getParam(string $key):?string
   {
     if(array_key_exists($key, $this->queryParams))
       return $this->queryParams[$key];

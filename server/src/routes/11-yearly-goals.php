@@ -72,7 +72,7 @@ use RedCrossQuest\routes\routesActions\yearlyGoals\UpdateYearlyGoals;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', ListYearlyGoals::class);
+$app->get('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', ListYearlyGoals::class);
 
 /**
  *
@@ -132,7 +132,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', ListYearlyGoals
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', UpdateYearlyGoals::class);
+$app->put('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', UpdateYearlyGoals::class);
 
 
 /**
@@ -185,4 +185,4 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals/{id}', UpdateYear
  *     )
  * )
  */
-$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', CreateYearlyGoals::class);
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', CreateYearlyGoals::class);
