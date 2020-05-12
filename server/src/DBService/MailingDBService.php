@@ -64,12 +64,15 @@ from queteur q
 where q.ul_id = :ul_id
 AND q.anonymization_token is null
 AND q.mailing_preference = 1
-AND q.id IN ( 
+AND q.id IN 
+( 
   select queteur_id 
   from queteur_mailing_status 
   where year=year(now()) 
-  and status_code = '202')
-  AND q.id IN (
+  and status_code = '202'
+)
+AND q.id IN 
+(
   select queteur_id
   from tronc_queteur
   where year(comptage) = year(now())
@@ -100,12 +103,15 @@ from queteur q
 where q.ul_id = :ul_id
 AND q.anonymization_token is null
 AND q.mailing_preference = 1
-and q.id IN ( 
+and q.id IN 
+( 
   select queteur_id 
   from queteur_mailing_status 
   where year=year(now()) 
-  and status_code != '202')
-  AND q.id IN (
+  and status_code != '202'
+)
+AND q.id IN 
+(
   select queteur_id
   from tronc_queteur
   where year(comptage) = year(now())

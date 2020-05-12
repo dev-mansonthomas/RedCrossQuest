@@ -21,12 +21,29 @@ class UserDBService extends DBService
   public function checkExistingUserWithNivol(string $nivol):void
   {
     $sql = "
-select u.*, q.* 
+select  u.`id`        ,
+        u.`nivol`     ,
+        u.`queteur_id`,
+        u.`role`      ,
+        u.`created`   ,
+        u.`updated`   ,
+        u.`active`    ,
+        q.`first_name`,
+        q.`last_name` ,
+        q.`email`     ,
+        q.`secteur`   ,
+        q.`nivol`     ,
+        q.`mobile`    ,
+        q.`created`   ,
+        q.`updated`   ,
+        q.`ul_id`     ,
+        q.`man`       ,
+        q.`active`     
 from users u, queteur q
 where u.nivol like :nivol
 AND u.active = 1
-AND u.queteur_id = q.id";
-
+AND u.queteur_id = q.id
+";
 
     $parameters = ["nivol"=>$nivol];
 
@@ -379,7 +396,6 @@ SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role,
 FROM   users u, queteur q
 WHERE  u.queteur_id = q.id
 AND    q.ul_id      = :ul_id
-
 LIMIT 1
 ";
 
