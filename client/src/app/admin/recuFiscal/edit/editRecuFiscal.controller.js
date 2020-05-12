@@ -11,7 +11,7 @@
 
   /** @ngInject */
   function EditRecuFiscalController ($rootScope, $scope, $log, $routeParams, $timeout, $localStorage, $location,
-                                     RecuFiscalResource, TroncQueteurResource, moment, DateTimeHandlingService)
+                                     RecuFiscalResource, TroncQueteurResource, MoneyBagResource, moment, DateTimeHandlingService)
   {
     var vm = this;
 
@@ -27,7 +27,9 @@
     vm.first_name     = $localStorage.guiSettings.user.first_name;
     vm.last_name      = $localStorage.guiSettings.user.last_name;
 
+    vm.use_bank_bag   = $localStorage.guiSettings.ul_settings.use_bank_bag;
 
+    vm.currentYear    = new Date().getFullYear();
 
 
     vm.formDonList=[
@@ -306,11 +308,10 @@
 
     vm.searchMoneyBagId=function(searchedString, type)
     {
-      return TroncQueteurResource.searchMoneyBagId({'q':searchedString, 'type':type}).$promise.then(function success(response)
+      return MoneyBagResource.searchMoneyBagId({'q':searchedString, 'type':type}).$promise.then(function success(response)
       {
         return response.map(function(oneResponse)
           {
-
             return oneResponse;
           },
           function error(reason)
@@ -318,9 +319,22 @@
             $log.debug("error while searching for moneybagId query='"+searchedString+"' with reason='"+reason+"'");
           });
       }).catch(function(e){
-        $log.error("error searching for TroncQueteur", e);
+        $log.error("error searching for MoneyBag", e);
       });
     };
+
+    vm.getBagDetails = function($item, $model, $label, $event, coins)
+    {
+      //$log.error(JSON.stringify([$item, $model, $label, $event, coins]));
+      if(coins)
+      {
+        vm.current.coinsMoneyBagDetails = MoneyBagResource.coinsMoneyBagDetails({'id':$item});
+      }
+      else
+      {
+        vm.current.billsMoneyBagDetails = MoneyBagResource.billsMoneyBagDetails({'id':$item});
+      }
+    };;
 
 
     vm.fillEmptyValues = function()

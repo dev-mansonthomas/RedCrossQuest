@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\troncs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\TroncDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\TroncEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class InsertTronc extends Action
@@ -39,7 +38,7 @@ class InsertTronc extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

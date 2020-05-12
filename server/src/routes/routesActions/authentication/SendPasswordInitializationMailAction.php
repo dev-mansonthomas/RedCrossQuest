@@ -4,6 +4,7 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
@@ -63,7 +64,7 @@ class SendPasswordInitializationMailAction extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    *
    */
   protected function action(): Response
@@ -72,8 +73,8 @@ class SendPasswordInitializationMailAction extends Action
 
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("username", $parsedBody["username" ], 20   , true),
-        ClientInputValidatorSpecs::withString("token"   , $parsedBody["token"    ], 1500 , true),
+        ClientInputValidatorSpecs::withString("username", $parsedBody, 20   , true),
+        ClientInputValidatorSpecs::withString("token"   , $parsedBody, 1500 , true),
       ]);
 
     $username = $this->validatedData["username"];
@@ -98,7 +99,7 @@ class SendPasswordInitializationMailAction extends Action
     {
       $uuid          = $this->userDBService->sendInit($username);
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       $this->logger->error("sendInit : Error while setting UUID for user with specified username", array("exception"=>$e, "passedLogin"=>$username));
       //No rethrow, response from server must be identical whether a user exist or not.

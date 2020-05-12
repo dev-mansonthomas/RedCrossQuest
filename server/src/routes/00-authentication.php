@@ -1,12 +1,11 @@
-<?php
+<?php /** @noinspection SpellCheckingInspection */
+
 /**
  * Created by IntelliJ IDEA.
  * User: tmanson
  * Date: 06/03/4017
  * Time: 18:36
  */
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\authentication\AuthenticateAction;
 use RedCrossQuest\routes\routesActions\authentication\FirebaseAuthenticateAction;
 use RedCrossQuest\routes\routesActions\authentication\GetUserInfoFromUUIDAction;
@@ -65,7 +64,7 @@ use RedCrossQuest\routes\routesActions\authentication\SendPasswordInitialization
  * )
  */
 
-$app->post(getPrefix().'/firebase-authenticate', FirebaseAuthenticateAction::class);
+$app->post('/firebase-authenticate', FirebaseAuthenticateAction::class);
 
 /**
  * Authenticate from AngularJS old front-end with username/password against internal DB
@@ -111,7 +110,7 @@ $app->post(getPrefix().'/firebase-authenticate', FirebaseAuthenticateAction::cla
  *     )
  * )
  */
-$app->post(getPrefix().'/authenticate'         , AuthenticateAction::class);
+$app->post('/authenticate'         , AuthenticateAction::class);
 
 /**
  * for the user with the specified nivol, update the 'init_passwd_uuid' and 'init_passwd_date' field in DB
@@ -152,7 +151,7 @@ $app->post(getPrefix().'/authenticate'         , AuthenticateAction::class);
  *     )
  * )
  */
-$app->post(getPrefix().'/sendInit', SendPasswordInitializationMailAction::class);
+$app->post('/sendInit', SendPasswordInitializationMailAction::class);
 
 /**
  * Get user information from the UUID
@@ -192,7 +191,7 @@ $app->post(getPrefix().'/sendInit', SendPasswordInitializationMailAction::class)
  *     )
  * )
  */
-$app->get(getPrefix().'/getInfoFromUUID', GetUserInfoFromUUIDAction::class);
+$app->get('/getInfoFromUUID', GetUserInfoFromUUIDAction::class);
 
 /**
  * save new password of user
@@ -237,4 +236,4 @@ $app->get(getPrefix().'/getInfoFromUUID', GetUserInfoFromUUIDAction::class);
  *     )
  * )
  */
-$app->post(getPrefix().'/resetPassword', ResetPassword::class);
+$app->post('/resetPassword', ResetPassword::class);

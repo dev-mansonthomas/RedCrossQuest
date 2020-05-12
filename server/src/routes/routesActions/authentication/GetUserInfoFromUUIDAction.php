@@ -4,6 +4,8 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use DI\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -59,14 +61,15 @@ class GetUserInfoFromUUIDAction extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
+
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("uuid"    , $this->getParam("uuid" ), 36   , true, ClientInputValidator::$UUID_VALIDATION),
-        ClientInputValidatorSpecs::withString("token"   , $this->getParam("token"), 1500 , true),
+        ClientInputValidatorSpecs::withString("uuid"    , $this->queryParams, 36   , true, ClientInputValidator::$UUID_VALIDATION),
+        ClientInputValidatorSpecs::withString("token"   , $this->queryParams, 1500 , true),
       ]);
 
     $uuid  = $this->validatedData["uuid"];

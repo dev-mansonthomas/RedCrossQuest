@@ -2,16 +2,16 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
+use DI\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\PubSubService;
 
 
@@ -60,7 +60,7 @@ class ApproveQueteurRegistration extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
@@ -73,9 +73,10 @@ class ApproveQueteurRegistration extends Action
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
-    //validate the token, if validation fails, it throws an exception
+    //validate the token, if validation fails, it throws an exception  (tempArray because passing value by reference)
+    $tempArray = ['ul_registration_token'=>$queteurEntity->ul_registration_token];
     $this->validateSentData([
-      ClientInputValidatorSpecs::withString("ul_registration_token", $queteurEntity->ul_registration_token, 36 , true, ClientInputValidator::$UUID_VALIDATION)
+      ClientInputValidatorSpecs::withString("ul_registration_token", $tempArray, 36 , true, ClientInputValidator::$UUID_VALIDATION)
     ]);
     if($queteurEntity->registration_approved)
     {
@@ -113,7 +114,7 @@ class ApproveQueteurRegistration extends Action
         true,
         true);
     }
-    catch(\Exception $exception)
+    catch(Exception $exception)
     {
       $this->logger->error("error while publishing registration approval", array("messageProperties"=> $messageProperties,
         "queteurEntity"    => $queteurEntity,

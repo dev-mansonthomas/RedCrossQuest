@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\namedDonations;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\NamedDonationDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\NamedDonationEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class UpdateNamedDonation extends Action
@@ -38,7 +37,7 @@ class UpdateNamedDonation extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

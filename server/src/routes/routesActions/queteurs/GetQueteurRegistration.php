@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class GetQueteurRegistration extends Action
@@ -39,7 +38,7 @@ class GetQueteurRegistration extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
@@ -47,7 +46,7 @@ class GetQueteurRegistration extends Action
     $roleId = $this->decodedToken->getRoleId();
 
     $this->validateSentData([
-      ClientInputValidatorSpecs::withInteger("id", $this->args['id'], 1000000 , false, 0)
+      ClientInputValidatorSpecs::withInteger("id", $this->args, 1000000 , false, 0)
     ]);
 
     $queteurId  = $this->validatedData["id"];

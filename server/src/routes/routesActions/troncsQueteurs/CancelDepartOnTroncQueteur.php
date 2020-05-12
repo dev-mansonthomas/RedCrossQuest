@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\TroncQueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\TroncQueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class CancelDepartOnTroncQueteur extends Action
@@ -39,7 +38,7 @@ class CancelDepartOnTroncQueteur extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
@@ -53,7 +52,7 @@ class CancelDepartOnTroncQueteur extends Action
     if($numberOfRowUpdated != 1 )
     {
       $this->logger->error("numberOfRowUpdated != 1, likely that retour is not null", array("tronc_queteur"=>$tq->id, "numberOfRowUpdated"=>$numberOfRowUpdated));
-      throw new \Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null");
+      throw new Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null");
     }
 
     return $this->response;

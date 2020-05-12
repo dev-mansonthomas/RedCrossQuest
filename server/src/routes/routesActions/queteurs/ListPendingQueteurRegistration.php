@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class ListPendingQueteurRegistration extends Action
@@ -39,14 +38,14 @@ class ListPendingQueteurRegistration extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $ulId     = $this->decodedToken->getUlId();
 
     $this->validateSentData([
-      ClientInputValidatorSpecs::withInteger("registration_status", $this->getParam('registration_status'), 2 , false, 0)
+      ClientInputValidatorSpecs::withInteger("registration_status", $this->queryParams, 2 , false, 0)
     ]);
 
     $registrationStatus  = $this->validatedData["registration_status"];

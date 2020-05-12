@@ -6,15 +6,14 @@
 namespace RedCrossQuest\routes\routesActions\users;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\UserDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\UserEntity;
 use RedCrossQuest\Exception\UserAlreadyExistsException;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class UpdateUser extends Action
@@ -40,7 +39,7 @@ class UpdateUser extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
@@ -53,7 +52,7 @@ class UpdateUser extends Action
     if($userEntity->role > $this->decodedToken->getRoleId() || $userEntity->role <= 0)
     {
       $this->logger->info("Connected user is trying to grand higher privilege than his to someone else", array("decodedToken"=>$this->decodedToken, "updatedUser" => $userEntity));
-      throw new \Exception("PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error near ) at line 14 at /application/src/DB/DBService/UserManagementDBService.php:67");
+      throw new Exception("PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error near ) at line 14 at /application/src/DB/DBService/UserManagementDBService.php:67");
     }
 
     try

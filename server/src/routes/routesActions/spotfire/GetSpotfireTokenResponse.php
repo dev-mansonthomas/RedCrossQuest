@@ -2,10 +2,6 @@
 namespace RedCrossQuest\routes\routesActions\spotfire;
 
 
-use RedCrossQuest\Entity\UniteLocaleEntity;
-use RedCrossQuest\Entity\UniteLocaleSettingsEntity;
-use RedCrossQuest\Entity\UserEntity;
-
 /**
  * @OA\Schema(schema="GetSpotfireTokenResponse", required={"validToken"})
  */

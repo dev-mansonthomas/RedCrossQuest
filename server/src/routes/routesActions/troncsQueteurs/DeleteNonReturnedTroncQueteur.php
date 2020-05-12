@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\TroncQueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class DeleteNonReturnedTroncQueteur extends Action
@@ -44,13 +43,13 @@ class DeleteNonReturnedTroncQueteur extends Action
    *
    *
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('tronc_id', $this->args['tronc_id'], 1000000, true)
+        ClientInputValidatorSpecs::withInteger('tronc_id', $this->args, 1000000, true)
       ]);
 
     $troncId = $this->validatedData["tronc_id"];

@@ -1,17 +1,13 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
+use Exception;
 use PDOException;
 use RedCrossQuest\Entity\MailingInfoEntity;
 use RedCrossQuest\Entity\MailingSummaryEntity;
 
-
 class MailingDBService extends DBService
 {
-
-
   /**
    * Get stats about unsent, sent and sent with error emails per sectors.
    *
@@ -19,7 +15,7 @@ class MailingDBService extends DBService
    * @return MailingSummaryEntity[][] list of summaries
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getMailingSummary(int $ulId)
+  public function getMailingSummary(int $ulId):array
   {
     $parameters = ["ul_id" => $ulId];
 
@@ -142,11 +138,11 @@ order by secteur";
    *
    * @param int $ulId the Id of the Unite Local
    * @param int $pagingSize the number of email sent at once
-   * @return MailingSummaryEntity[][] list of summaries
+   * @return MailingInfoEntity[] list of summaries
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception if some parsing error occurs
+   * @throws Exception if some parsing error occurs
    */
-  public function getMailingInfo(int $ulId, int $pagingSize)
+  public function getMailingInfo(int $ulId, int $pagingSize):array
   {
     $parameters = ["ul_id" => $ulId];
 
@@ -197,7 +193,7 @@ LIMIT 0, $pagingSize";
    * @param string $status_code   Status code of the send email
    * @throws PDOException if the query fails to execute on the server
    */
-  public function insertQueteurMailingStatus(int $queteur_id, string $status_code)
+  public function insertQueteurMailingStatus(int $queteur_id, string $status_code):void
   {
 
     $queryData = [
@@ -237,7 +233,7 @@ NOW()
    * @param int    $queteurId     Id of the queteur
    * @throws PDOException if the query fails to execute on the server
    */
-  public function updateQueteurWithSpotfireAccessToken(string $spotfireAccessToken, int $queteurId, int $ulId)
+  public function updateQueteurWithSpotfireAccessToken(string $spotfireAccessToken, int $queteurId, int $ulId):void
   {
     $queryData = [
       'id'                   => $queteurId,
@@ -266,7 +262,7 @@ AND   `ul_id` = :ul_id
    * @param string $guid the GUID of the spotfire_access_token from queteur table
    * @throws PDOException if the query fails to execute on the server
    */
-  public function confirmRead(string $guid)
+  public function confirmRead(string $guid):void
   {
     $this->logger->info("Updating spotfire_open to 1 for queteur", ["guid"=>$guid]);
 
@@ -289,7 +285,4 @@ WHERE   q.`spotfire_access_token` = :guid
 
     $stmt->closeCursor();
   }
-
-
-
 }

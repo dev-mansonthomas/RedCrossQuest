@@ -2,6 +2,7 @@
 namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -74,7 +75,7 @@ class UserEntity extends Entity
   public $last_successful_login_date  ;
   /**
    * @OA\Property()
-   * @var int $init_password_date when the password was last reinitiated
+   * @var int $init_password_date when the password was last re initiated
    */
 
   public $init_password_date          ;
@@ -97,9 +98,9 @@ class UserEntity extends Entity
    *
    * @param array $data The data to use to create
    * @param LoggerInterface $logger
-   * @throws \Exception if a parse Date or JSON fails
+   * @throws Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data, LoggerInterface $logger)
+  public function __construct(array &$data, LoggerInterface $logger)
   {
     parent::__construct($logger);
     $this->getInteger('id'                        , $data);

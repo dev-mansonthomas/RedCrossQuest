@@ -13,32 +13,32 @@
         }
     ],
     "require": {
-        "egulias/email-validator": "^2.1.15",
+        "egulias/email-validator": "^2.1.17",
         "ext-bz2" : "*",
         "ext-PDO" : "*",
         "ext-json": "*",
         "ext-zip" : "*",
         "fzaninotto/faker": "^1.9.1",
-        "google/apiclient": "^2.4.0",
+        "google/apiclient": "^2.4.1",
         "google/cloud": "^0.123.0",
-        "google/recaptcha": "^1.2.3",
-        "kreait/firebase-php": "^4.39.0",
+        "google/recaptcha": "^1.2.4",
+        "kreait/firebase-php": "^4.41.0",
         "lcobucci/jwt": "^3.3.1",
-        "nesbot/carbon": "^2.29.1",
-        "php-di/php-di": "^6.0.11",
+        "nesbot/carbon": "^2.32.2",
+        "php-di/php-di": "^6.1.0",
         "php": "^7.3",
-        "phpmailer/phpmailer": "^6.1.4",
-        "ramsey/uuid": "^3.9.2",
-        "robmorgan/phinx": "^0.11.4",
-        "sendgrid/sendgrid": "^7.4.2",
+        "phpmailer/phpmailer": "^6.1.5",
+        "ramsey/uuid": "^3.9.3",
+        "robmorgan/phinx": "^0.11.6",
+        "sendgrid/sendgrid": "^7.5.0",
         "slim/php-view": "^2.2.1",
-        "slim/psr7": "^1.0.0",
-        "slim/slim": "^4.4.0",
-        "symfony/validator": "^5.0.3",
-        "doctrine/annotations": "^1.8.0",
-        "zircote/swagger-php": "^3.0.3",
+        "slim/psr7": "^1.1.0",
+        "slim/slim": "^4.5.0",
+        "symfony/validator": "^5.0.8",
+        "doctrine/annotations": "^1.10.2",
+        "zircote/swagger-php": "^3.0.4",
         "grpc/grpc": "^v1.27.0",
-        "google/protobuf": "^v3.3.0"
+        "google/protobuf": "^v3.11.4"
     },
     "autoload": {
       "psr-4": {"RedCrossQuest\\": "src/"}
@@ -46,6 +46,7 @@
 
     "config": {
         "optimize-autoloader": true,
+        "classmap-authoritative": true,
         "sort-packages": true,
         "preferred-install": {
             "*": "dist"

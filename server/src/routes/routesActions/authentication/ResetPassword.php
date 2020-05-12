@@ -4,6 +4,7 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
@@ -64,15 +65,15 @@ class ResetPassword extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("uuid"    , $this->parsedBody["uuid"     ], 36   , true, ClientInputValidator::$UUID_VALIDATION),
-        ClientInputValidatorSpecs::withString("password", $this->parsedBody["password" ], 60   , true),
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody["token"    ], 1500 , true),
+        ClientInputValidatorSpecs::withString("uuid"    , $this->parsedBody, 36   , true, ClientInputValidator::$UUID_VALIDATION),
+        ClientInputValidatorSpecs::withString("password", $this->parsedBody, 60   , true),
+        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
       ]);
 
     $uuid     = $this->validatedData["uuid"];

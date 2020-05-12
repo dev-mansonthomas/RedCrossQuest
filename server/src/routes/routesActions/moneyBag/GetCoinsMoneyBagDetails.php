@@ -1,46 +1,44 @@
 <?php
 namespace RedCrossQuest\routes\routesActions\moneyBag;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
-use RedCrossQuest\DBService\TroncQueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
+use RedCrossQuest\DBService\MoneyBagDBService;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 class GetCoinsMoneyBagDetails extends Action
 {
   /**
-   * @var TroncQueteurDBService          $troncQueteurDBService
+   * @var MoneyBagDBService           $moneyBagDBService
    */
-  private $troncQueteurDBService;
+  private $moneyBagDBService;
 
 
   /**
-   * @param LoggerInterface $logger
+   * @param LoggerInterface      $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param TroncQueteurDBService $troncQueteurDBService
+   * @param MoneyBagDBService    $moneyBagDBService
    */
   public function __construct(LoggerInterface             $logger,
                               ClientInputValidator        $clientInputValidator,
-                              TroncQueteurDBService       $troncQueteurDBService)
+                              MoneyBagDBService           $moneyBagDBService)
   {
     parent::__construct($logger, $clientInputValidator);
-    $this->troncQueteurDBService       = $troncQueteurDBService;
-
+    $this->moneyBagDBService = $moneyBagDBService;
   }
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString ('id' ,  $this->args['id'], 20, true)
+        ClientInputValidatorSpecs::withString ('id' ,  $this->args, 20, true)
       ]);
 
     $bagId = $this->validatedData["id"];
@@ -48,7 +46,7 @@ class GetCoinsMoneyBagDetails extends Action
 
     $this->logger->info("Get Coins moneyBagDetails",["bagId"=>$bagId]);
 
-    $bagData = $this->troncQueteurDBService->getCoinsMoneyBagDetails($ulId, $bagId);
+    $bagData = $this->moneyBagDBService->getCoinsMoneyBagDetails($ulId, $bagId);
 
     $this->response->getBody()->write(json_encode($bagData));
 

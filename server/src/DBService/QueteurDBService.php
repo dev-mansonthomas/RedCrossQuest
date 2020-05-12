@@ -2,8 +2,7 @@
 
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
+use Exception;
 use PDOException;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\Entity\QueteurEntity;
@@ -20,9 +19,9 @@ class QueteurDBService extends DBService
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the count of pending registration
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
-  public function countPendingQueteurRegistration(int $ulId)
+  public function countPendingQueteurRegistration(int $ulId):int
   {
 
     $sql = "
@@ -55,9 +54,9 @@ AND registration_approved is null
    *
    * @return QueteurEntity[]  the list of Queteurs
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
-  public function listPendingQueteurRegistration(int $ulId, int $registrationStatus)
+  public function listPendingQueteurRegistration(int $ulId, int $registrationStatus):array
   {
     $registrationStatusSQL = null;
 
@@ -128,9 +127,9 @@ ORDER BY created desc
    *
    * @return QueteurEntity  the Queteurs Registration
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
-  public function getQueteurRegistration(int $ulId, int $registrationId)
+  public function getQueteurRegistration(int $ulId, int $registrationId):QueteurEntity
   {
     $sql = "
 SELECT qr.`id`,
@@ -291,7 +290,7 @@ AND   ul_id   = :ul_id
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return QueteurEntity[]  the list of Queteurs
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
   public function getQueteurs(string $query, int $ulId)
   {
@@ -362,10 +361,10 @@ AND
    * @param boolean $rcqUser      return only RCQ users
    * @param string  $queteurIds   IDs of queteurs separated by comma to search
    * @param int     $QRSearchType Type of QRCode Search :  0 all, 1: Printed, 2: Not printed
-   * @param bool    $rcqUserActif Recheque que les utilisateurs actifs
+   * @param bool    $rcqUserActif Recherche que les utilisateurs actifs
    * @return QueteurEntity[] list of Queteurs
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
   public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId,
                                  bool $active, bool $benevoleOnly, bool $rcqUser, bool $rcqUserActif,
@@ -698,7 +697,7 @@ ORDER BY q.last_name ASC
    * @param int $ul_id Id of the UL that get the user
    * @return QueteurEntity  The queteur
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
   public function getQueteurById(int $queteur_id, int $ul_id=null)
   {
@@ -739,7 +738,7 @@ AND  u.id = :ul_id
 ";
       $parameters["ul_id"] = $ul_id;
     }
-
+    $queteur = null;
     $stmt = $this->db->prepare($sql);
 
     $stmt->execute($parameters);
@@ -756,12 +755,9 @@ AND  u.id = :ul_id
     $stmt->closeCursor();
 
     if(!$row)
-      throw new \Exception("queteur not found. id='".$queteur_id."'");
-
-
+      throw new Exception("queteur not found. id='".$queteur_id."'");
 
     return $queteur;
-
   }
 
 
@@ -771,7 +767,7 @@ AND  u.id = :ul_id
    * @param string $nivol The NIVOL of the queteur
    * @return QueteurEntity  The queteur
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
   public function getQueteurByNivol(string $nivol)
   {
@@ -806,7 +802,9 @@ AND    q.ul_id   = u.id
 
     $stmt->execute(["nivol" => $nivol]);
 
-    $queteur = new QueteurEntity($stmt->fetch(), $this->logger);
+    //temp var, because pass by reference
+    $row = $stmt->fetch();
+    $queteur = new QueteurEntity($row, $this->logger);
     $stmt->closeCursor();
     return $queteur;
   }
@@ -976,12 +974,12 @@ VALUES
   /***
    * Search for similar queteur as the user is currently typing while creating a new queteur
    * @param int $ulId id of the unite locale of the connected user
-   * @param string $firstName what's beeing typed in first_name field
-   * @param string $lastName what's beeing typed in last_name field
-   * @param string $nivol what's beeing typed in nivol field
+   * @param string $firstName what's being typed in first_name field
+   * @param string $lastName what's being typed in last_name field
+   * @param string $nivol what's being typed in nivol field
    * @throws PDOException if the query fails to execute on the server
    * @return QueteurEntity[]  the list of Queteurs matching the query
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
   public function searchSimilarQueteur(int $ulId, ?string $firstName, ?string $lastName, ?string $nivol)
   {
@@ -1016,7 +1014,6 @@ $OR q.`last_name` like :last_name
 ";
       $parameters["last_name"] = "%".$lastName."%";
       $numberOfParameters++;
-      $OR="";
     }
 
     if($nivol != null)
@@ -1033,8 +1030,6 @@ $OR q.`last_name` like :last_name
       $searchNivol = "
 $OR q.`nivol` like :nivol
 ";
-      $numberOfParameters++;
-      $OR="";
       $parameters["nivol"] = "%".$nivol."%";
     }
 
@@ -1078,7 +1073,7 @@ $searchNivol
    * @param int $userId id of the user performing the action.
    * @return string token associated with the queteur
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations
+   * @throws Exception in other situations
    */
   public function anonymize(int $queteurId, int $ulId, int $roleId, int $userId)
   {
@@ -1152,9 +1147,9 @@ WHERE  `ul_id`           = :ul_id
    * @param string $anonymization_token The anonymisation token
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
-   * @return QueteurEntity[]  One Queteur or 0, in an array for compatibilty with the search feature
+   * @return QueteurEntity[]  One Queteur or 0, in an array for compatibility with the search feature
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
   public function getQueteurByAnonymizationToken(string $anonymization_token, int $ulId, int $roleId)
   {

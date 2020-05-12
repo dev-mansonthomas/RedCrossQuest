@@ -1,9 +1,8 @@
-<?php
+<?php /** @noinspection SpellCheckingInspection */
 
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
+use Exception;
 use PDOException;
 use RedCrossQuest\Entity\UniteLocaleEntity;
 
@@ -16,9 +15,9 @@ class UniteLocaleDBService extends DBService
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return UniteLocaleEntity  The Unite Locale
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getUniteLocaleById(int $ulId)
+  public function getUniteLocaleById(int $ulId):UniteLocaleEntity
   {
     $sql = "
 SELECT  `ul`.`id`,
@@ -61,8 +60,9 @@ WHERE   `ul`.id    = :ul_id
     $stmt = $this->db->prepare($sql);
 
     $stmt->execute(["ul_id" => $ulId]);
-
-    $ul = new UniteLocaleEntity($stmt->fetch(), $this->logger);
+    //temp var, because pass by reference
+    $row = $stmt->fetch();
+    $ul = new UniteLocaleEntity($row, $this->logger);
     $stmt->closeCursor();
 
     return $ul;
@@ -78,7 +78,7 @@ WHERE   `ul`.id    = :ul_id
    * @param int           $userId the id of the person who approve or reject the registration
    * @throws PDOException if the query fails to execute on the server
    */
-  public function updateUL(UniteLocaleEntity $ul, int $ulId, int $userId)
+  public function updateUL(UniteLocaleEntity $ul, int $ulId, int $userId):void
   {
 
     $sql = "
@@ -158,9 +158,9 @@ WHERE `id`      = :id
    * @param string $query : the criteria to search UL on name postal code city and president, tresorier, admin first & last name
    * @return UniteLocaleEntity[]  the list of UniteLocale
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function searchUniteLocale(string $query)
+  public function searchUniteLocale(string $query):array
   {
 
     $sql = "

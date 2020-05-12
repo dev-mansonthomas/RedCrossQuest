@@ -276,7 +276,7 @@
               uib-typeahead="tronc as tronc.id for tronc in tq.searchTronc($viewValue)"
               typeahead-loading="loadingTroncs"
               typeahead-no-results="noTroncsResults"
-              typeahead-wait-ms="20"
+              typeahead-wait-ms="350"
               class="form-control"
               ng-required
               ng-disabled="tq.current.readOnlyView"
@@ -1083,15 +1083,15 @@
                 ng-model="tq.current.tronc_queteur.coins_money_bag_id"
                 placeholder="Rechercher un identifiant de sac à pièces existant"
                 uib-typeahead="moneyBagId as moneyBagId for moneyBagId in tq.searchCoinMoneyBagId($viewValue)"
-                typeahead-loading="loadingMoneyBagId"
+                typeahead-loading="loadingCoinMoneyBagId"
                 typeahead-no-results="noResultsCoins"
-                typeahead-wait-ms="20"
+                typeahead-wait-ms="350"
                 typeahead-on-select="tq.getBagDetails($item, $model, $label, $event, true)"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                 ng-required="tq.use_bank_bag"
                 autocomplete="off">
-              <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
+              <i   ng-show="loadingCoinMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-coins" aria-hidden="true" style="top:0px;">&nbsp;</span>
             </div>
             <div ng-show="noResultsCoins">
@@ -1111,15 +1111,15 @@
                 ng-model="tq.current.tronc_queteur.bills_money_bag_id"
                 placeholder="Rechercher un identifiant de sac à billets existant"
                 uib-typeahead="moneyBagId as moneyBagId for moneyBagId in tq.searchBillMoneyBagId($viewValue)"
-                typeahead-loading="loadingMoneyBagId"
+                typeahead-loading="loadingBillMoneyBagId"
                 typeahead-no-results="noResultsBills"
-                typeahead-wait-ms="20"
+                typeahead-wait-ms="350"
                 typeahead-on-select="tq.getBagDetails($item, $model, $label, $event, false)"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
                 ng-required="tq.use_bank_bag"
                 autocomplete="off">
-              <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
+              <i   ng-show="loadingBillMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-money" aria-hidden="true" style="top:0px;">&nbsp;</span>
             </div>
             <div ng-show="noResultsBills">

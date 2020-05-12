@@ -37,12 +37,18 @@ class Entity
     $this->clientInputValidator = new ClientInputValidator($logger);
   }
 
-  public function generateCSVHeader()
+  /**
+   * @return string The CSV header based on the _fieldList array
+   */
+  public function generateCSVHeader():string
   {
     return implode(";", $this->_fieldList)."\n";
   }
 
-  public function generateCSVRow()
+  /**
+   * @return string The CSV row based on the _fieldList array
+   */
+  public function generateCSVRow():string
   {
     $csvRow="";
     foreach($this->_fieldList as $field)
@@ -64,7 +70,7 @@ class Entity
   /**
    * @return array an associative array, with the field name as key and its value as value
    */
-  public function prepareDataForFirestoreUpdate()
+  public function prepareDataForFirestoreUpdate():array
   {
     $data = [];
 
@@ -82,15 +88,9 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getInteger(string $key, array $data)
+  protected function getInteger(string $key, ?array &$data):void
   {
-    if(array_key_exists($key, $data))
-    {
-      $value = $data[$key];
-      //$this->logger->error("integer '$key'=>'$value' ".gettype($data[$key]));
-
-      $this->$key = "$value"=="0"? 0 : $this->clientInputValidator->validateInteger($key, $data[$key], 100000000, false, null);
-    }
+    $this->$key = $this->clientInputValidator->validateInteger($key, $data, 100000000, false, null);
   }
 
   /**
@@ -98,9 +98,9 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getFloat(string $key, array $data)
+  protected function getFloat(string $key, ?array $data):void
   {
-    if(array_key_exists($key, $data))
+    if($data != null && array_key_exists($key, $data))
     {
       $value = $data[$key];
       if(strlen($value) > 20)  // latitude, longitude(18,15) note: 12345.678, you will set the Datatype to DOUBLE(8, 3) where 8 is the total no. of digits excluding the decimal point, and 3 is the no. of digits to follow the decimal.
@@ -119,13 +119,10 @@ class Entity
    * @param array  $data      the associative array
    * @param int    $maxSize   the max acceptable length of the string
    */
-  protected function getString(string $key, array $data, int $maxSize)
+  protected function getString(string $key, array &$data, int $maxSize):void
   {
-    if(array_key_exists($key, $data))
-    {
-      $value = $this->clientInputValidator->validateString($key, $data[$key], $maxSize , false );
-      $this->$key = $value == null ? '' : $value;
-    }
+    $value = $this->clientInputValidator->validateString($key, $data, $maxSize , false );
+    $this->$key = $value == null ? '' : $value;
   }
 
 
@@ -134,12 +131,9 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getEmail(string $key, array $data)
+  protected function getEmail(string $key, array &$data):void
   {
-    if(array_key_exists($key, $data))
-    {
-      $this->$key = $this->clientInputValidator->validateString($key, $data[$key], 255 , false , ClientInputValidator::$EMAIL_VALIDATION);
-    }
+    $this->$key = $this->clientInputValidator->validateString($key, $data, 255 , false , ClientInputValidator::$EMAIL_VALIDATION);
   }
 
   //
@@ -151,22 +145,17 @@ class Entity
    * @param int    $maxSize   the max acceptable length of the string
    * @throws Exception if json_decode throws an error
    */
-  protected function getJson(string $key, array $data, int $maxSize)
+  protected function getJson(string $key, array &$data, int $maxSize):void
   {
-    if(array_key_exists($key, $data))
+    $value = $this->clientInputValidator->validateString($key, $data, $maxSize , false );
+    try
     {
-      $value = $this->clientInputValidator->validateString($key, $data[$key], $maxSize , false );
-
-      try
-      {
-        $this->$key = json_decode($value, true);
-      }
-      catch(Exception $e)
-      {
-        $this->logger->error("Error while decoding json for key '$key'", array("exception"=> $e, "data"=>$data));
-        throw $e;
-      }
-
+      $this->$key = json_decode($value, true);
+    }
+    catch(Exception $e)
+    {
+      $this->logger->error("Error while decoding json for key '$key'", array("exception"=> $e, "data"=>$data));
+      throw $e;
     }
   }
 
@@ -175,12 +164,9 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getBoolean(string $key, array $data)
+  protected function getBoolean(string $key, array &$data):void
   {
-    if(array_key_exists($key, $data))
-    {
-      $this->$key = $this->clientInputValidator->validateBoolean($key, $data[$key]."", false, false );
-    }
+    $this->$key = $this->clientInputValidator->validateBoolean($key, $data, false, false );
   }
   /**
    * set on this object the property named $this->$key,  $data[$key] as a date value
@@ -188,7 +174,7 @@ class Entity
    * @param array  $data the associative array
    * @throws Exception when failing to parse date
    */
-  protected function getDate(string $key, array $data)
+  protected function getDate(string $key, array $data):void
   {
     if(array_key_exists($key, $data))
     {

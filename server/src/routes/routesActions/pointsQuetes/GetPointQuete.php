@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\pointsQuetes;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\PointQueteDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class GetPointQuete extends Action
@@ -39,13 +38,13 @@ class GetPointQuete extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('id', $this->args['id'], 1000000, true)
+        ClientInputValidatorSpecs::withInteger('id', $this->args, 1000000, true)
       ]);
 
     $id     = $this->validatedData["id"];

@@ -6,15 +6,14 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class AnonymizeQueteur extends Action
@@ -48,7 +47,7 @@ class AnonymizeQueteur extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

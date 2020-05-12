@@ -4,6 +4,7 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use Exception;
 use Firebase\Auth\Token\Exception\InvalidToken;
 use Kreait\Firebase;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -87,17 +88,15 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
 
   /**
    * @return Response
-   * @throws Firebase\Exception\AuthException
-   * @throws Firebase\Exception\FirebaseException
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     //email max size : https://www.rfc-editor.org/errata_search.php?eid=1690
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("email"   , $this->parsedBody["email"    ], 255  , true),
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody["token"    ], 1500 , true),
+        ClientInputValidatorSpecs::withString("email"   , $this->parsedBody, 255  , true),
+        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
       ]);
 
     $email    = $this->validatedData["email"];

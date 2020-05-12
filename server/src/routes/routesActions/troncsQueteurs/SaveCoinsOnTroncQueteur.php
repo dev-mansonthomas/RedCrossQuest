@@ -7,15 +7,15 @@ namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
 use Carbon\Carbon;
+use DI\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\TroncQueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\TroncQueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\PubSubService;
 
 
@@ -56,13 +56,13 @@ class SaveCoinsOnTroncQueteur extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("adminMode"          , $this->getParam('adminMode'          ), false, false)
+        ClientInputValidatorSpecs::withBoolean("adminMode", $this->queryParams, false, false)
       ]);
 
     //if admin mode: the comptage date is not updated
@@ -92,7 +92,7 @@ class SaveCoinsOnTroncQueteur extends Action
         true,
         true);
     }
-    catch(\Exception $exception)
+    catch(Exception $exception)
     {
       $this->logger->error("error while publishing on topic", array("messageProperties"=>$messageProperties,"exception"=>$exception));
       //do not rethrow

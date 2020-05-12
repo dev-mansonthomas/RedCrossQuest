@@ -42,17 +42,22 @@ class Logger implements LoggerInterface
 
   /**
    *
-   * store in the Request data that identify UL, User  or other data if thoses are not available (login process) + env & app version
+   * store in the Request data that identify UL, User  or other data if those are not available (login process) + env & app version
    *
    * @param LoggingEntity $loggingEntity an instance of LogEntity
    *
    */
-  public static function dataForLogging(LoggingEntity $loggingEntity)
+  public static function dataForLogging(LoggingEntity $loggingEntity):void
   {
     $_REQUEST['ESSENTIAL_LOGGING_INFO'] = $loggingEntity;
   }
 
-  private function getDataForLogging(array $dataToLog = array())
+  /**
+   * Return a merge array of the array stored in $_REQUEST and the array passed in parameter + a set of basic info(see __construct)
+   * @param array $dataToLog
+   * @return array
+   */
+  private function getDataForLogging(array $dataToLog = array()):array
   {
     if(isset($_REQUEST['ESSENTIAL_LOGGING_INFO']))
       $dataForLogging = $_REQUEST['ESSENTIAL_LOGGING_INFO']->loggingInfoArray();
@@ -72,10 +77,10 @@ class Logger implements LoggerInterface
    * ```
    *
    * @param string $message The message to log.
-   * @param array $context [optional] Please see {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context [optional] Please see {@see \Google\Cloud\Logging\PsrLogger::log()}
    *        for the available options.
    */
-  public function emergency($message, array $context = array())
+  public function emergency($message, array $context = array()):void
   {
     if($this->online)
     {
@@ -96,10 +101,10 @@ class Logger implements LoggerInterface
    * ```
    *
    * @param string $message The message to log.
-   * @param array $context [optional] Please see {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context [optional] Please see {@see \Google\Cloud\Logging\PsrLogger::log()}
    *        for the available options.
    */
-  public function alert($message, array $context = array())
+  public function alert($message, array $context = array()):void
   {
     if($this->online)
     {
@@ -120,10 +125,10 @@ class Logger implements LoggerInterface
    * ```
    *
    * @param string $message The message to log.
-   * @param array $context [optional] Please see {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context [optional] Please see {@see \Google\Cloud\Logging\PsrLogger::log()}
    *        for the available options.
    */
-  public function critical($message, array $context = array())
+  public function critical($message, array $context = array()):void
   {
     if($this->online)
     {
@@ -144,10 +149,10 @@ class Logger implements LoggerInterface
    * ```
    *
    * @param string $message The message to log.
-   * @param array $context [optional] Please see {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context [optional] Please see {@see \Google\Cloud\Logging\PsrLogger::log()}
    *        for the available options.
    */
-  public function error($message, array $context = array())
+  public function error($message, array $context = array()):void
   {
     if($this->online)
     {
@@ -167,10 +172,10 @@ class Logger implements LoggerInterface
    * ```
    *
    * @param string $message The message to log.
-   * @param array $context [optional] Please see {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context [optional] Please see {@see \Google\Cloud\Logging\PsrLogger::log()}
    *        for the available options.
    */
-  public function warning($message, array $context = array())
+  public function warning($message, array $context = array()):void
   {
     if($this->online)
     {
@@ -190,10 +195,10 @@ class Logger implements LoggerInterface
    * ```
    *
    * @param string $message The message to log.
-   * @param array $context [optional] Please see {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context [optional] Please see {@see \Google\Cloud\Logging\PsrLogger::log()}
    *        for the available options.
    */
-  public function notice($message, array $context = array())
+  public function notice($message, array $context = array()):void
   {
     if($this->online)
     {
@@ -213,10 +218,10 @@ class Logger implements LoggerInterface
    * ```
    *
    * @param string $message The message to log.
-   * @param array $context [optional] Please see {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context [optional] Please see {@see \Google\Cloud\Logging\PsrLogger::log()}
    *        for the available options.
    */
-  public function info($message, array $context = array())
+  public function info($message, array $context = array()):void
   {
     if($this->online)
     {
@@ -236,10 +241,10 @@ class Logger implements LoggerInterface
    * ```
    *
    * @param string $message The message to log.
-   * @param array $context [optional] Please see {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context [optional] Please see {@see \Google\Cloud\Logging\PsrLogger::log()}
    *        for the available options.
    */
-  public function debug($message, array $context = array())
+  public function debug($message, array $context = array()):void
   {
     if($this->online)
     {
@@ -252,13 +257,13 @@ class Logger implements LoggerInterface
   }
 
   /**
-    {@see Google\Cloud\Logging\PsrLogger::log()}
+   * {@see \Google\Cloud\Logging\PsrLogger::log()}
    *
    * @param string|int $level The severity of the log entry.
    * @param string $message The message to log.
-   * @param array $context   {@see Google\Cloud\Logging\PsrLogger::log()}
+   * @param array $context   {@see \Google\Cloud\Logging\PsrLogger::log()}
    */
-  public function log($level, $message, array $context = array())
+  public function log($level, $message, array $context = array()):void
   {
     if($this->online)
     {
@@ -273,6 +278,5 @@ class Logger implements LoggerInterface
       }
       error_log(date("Y-m-d H:i:s")." [".strtoupper($level)."] ".$message." - ".$array, 3, $this->localLogFile);
     }
-
   }
 }

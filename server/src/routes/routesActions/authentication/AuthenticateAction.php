@@ -4,6 +4,7 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -75,15 +76,15 @@ class AuthenticateAction extends AuthenticateAbstractAction
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("username", $this->parsedBody["username" ], 20   , true),
-        ClientInputValidatorSpecs::withString("password", $this->parsedBody["password" ], 60   , true),
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody["token"    ], 1500 , true),
+        ClientInputValidatorSpecs::withString("username", $this->parsedBody, 20   , true),
+        ClientInputValidatorSpecs::withString("password", $this->parsedBody, 60   , true),
+        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
     ]);
 
     $username = $this->validatedData["username"];

@@ -1,6 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 /**
  * @OA\Schema(schema="YearlyGoalEntity", required={"id","ul_id","year","amount","day_1_percentage","day_2_percentage","day_3_percentage","day_4_percentage","day_5_percentage","day_6_percentage","day_7_percentage","day_8_percentage","day_9_percentage"})
@@ -81,9 +82,9 @@ class YearlyGoalEntity  extends Entity
    *
    * @param array $data The data to use to create
    * @param LoggerInterface $logger
-   * @throws \Exception if a parse Date or JSON fails
+   * @throws Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data, LoggerInterface $logger)
+  public function __construct(array &$data, LoggerInterface $logger)
   {
     parent::__construct($logger);
     $this->getInteger('id'               , $data);
@@ -100,6 +101,5 @@ class YearlyGoalEntity  extends Entity
     $this->getInteger('day_7_percentage' , $data);
     $this->getInteger('day_8_percentage' , $data);
     $this->getInteger('day_9_percentage' , $data);
-
   }
 }

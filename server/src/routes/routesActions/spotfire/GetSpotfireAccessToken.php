@@ -6,13 +6,12 @@
 namespace RedCrossQuest\routes\routesActions\spotfire;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\SpotfireAccessDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class GetSpotfireAccessToken extends Action
@@ -38,7 +37,7 @@ class GetSpotfireAccessToken extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class SearchSimilarQueteurs extends Action
@@ -39,16 +38,16 @@ class SearchSimilarQueteurs extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $ulId     = $this->decodedToken->getUlId();
 
     $this->validateSentData([
-      ClientInputValidatorSpecs::withString("first_name", $this->getParam('first_name'), 100 , false),
-      ClientInputValidatorSpecs::withString("last_name" , $this->getParam('last_name' ), 100 , false),
-      ClientInputValidatorSpecs::withString("nivol"     , $this->getParam('nivol'     ), 15  , false)
+      ClientInputValidatorSpecs::withString("first_name", $this->queryParams, 100 , false),
+      ClientInputValidatorSpecs::withString("last_name" , $this->queryParams, 100 , false),
+      ClientInputValidatorSpecs::withString("nivol"     , $this->queryParams, 15  , false)
     ]);
 
     $firstName  = $this->validatedData["first_name"];

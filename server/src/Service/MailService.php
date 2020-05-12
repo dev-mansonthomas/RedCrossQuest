@@ -8,6 +8,7 @@
 
 namespace RedCrossQuest\Service;
 
+use Exception;
 use SendGrid;
 use SendGrid\Mail\Mail;
 
@@ -49,7 +50,7 @@ class MailService
    * @param string $fileName              The filename that will be attached to the email. The file will be read from sys_get_temp_dir() and removed after the mail is sent
    * @param string $bcc                   The BCC email
    * @return int Mail status code
-   * @throws \Exception                   when sending the email fails
+   * @throws Exception                   when sending the email fails
    */
   public function sendMail($application,
                            $mailType,
@@ -59,7 +60,7 @@ class MailService
                            $recipientLastName,
                            $content,
                            $bcc=null,
-                           $fileName=null)
+                           $fileName=null):int
   {
     $deployment        = self::getDeploymentInfo();
     $deploymentLogging = $deployment == '' ? "*PROD*": $deployment;
@@ -97,7 +98,7 @@ class MailService
       return $response->statusCode();
 
     }
-    catch(\Exception $e)
+    catch(Exception $e)
     {
       $this->logger->error("Error while sending email",
         array(
@@ -117,7 +118,7 @@ class MailService
    * Return a string to be put in the email subjects
    * @return string nothing for production, [Site de DEV] for D, [Site de TEST] for T
    */
-  private function getDeploymentInfo()
+  private function getDeploymentInfo():string
   {
     $deployment='';
     if($this->deploymentType == 'D')

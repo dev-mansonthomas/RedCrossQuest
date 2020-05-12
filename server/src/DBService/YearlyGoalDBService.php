@@ -1,8 +1,7 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
+use Exception;
 use PDOException;
 use RedCrossQuest\Entity\YearlyGoalEntity;
 
@@ -15,9 +14,9 @@ class YearlyGoalDBService extends DBService
    * @param string  $year The year for which we wants the yearly goals
    * @return YearlyGoalEntity  The YearlyGoalEntity
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getYearlyGoals(int $ulId, string $year)
+  public function getYearlyGoals(int $ulId, string $year):?YearlyGoalEntity
   {
     $sql = "
 SELECT  y.`id`,
@@ -48,9 +47,6 @@ ORDER BY y.year DESC
     {
       $yg= new YearlyGoalEntity($row, $this->logger);
     }
-
-
-
     $stmt->closeCursor();
     return $yg;
   }
@@ -61,7 +57,7 @@ ORDER BY y.year DESC
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @throws PDOException if the query fails to execute on the server
    */
-  public function update(YearlyGoalEntity $yearlyGoalEntity, int $ulId)
+  public function update(YearlyGoalEntity $yearlyGoalEntity, int $ulId):void
   {
     
     $sql ="
@@ -109,7 +105,7 @@ AND     `ul_id`    = :ulId
    * @param string $year  year to create
    * @throws PDOException if the query fails to execute on the server
    */
-  public function createYear(int $ulId, string $year)
+  public function createYear(int $ulId, string $year):void
   {
     $sql = "
 INSERT INTO `yearly_goal`
@@ -172,7 +168,7 @@ VALUES
    * @return int the number of dailyStats
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getNumberOfYearlyGoals(int $ulId)
+  public function getNumberOfYearlyGoals(int $ulId):int
   {
     $sql="
     SELECT count(1) as cnt
@@ -195,9 +191,9 @@ VALUES
    * @param string  $year The year for which we wants the yearly goals
    * @return YearlyGoalEntity[]  The YearlyGoalEntity
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getYearlyGoalsForExportData(int $ulId, ?string $year)
+  public function getYearlyGoalsForExportData(int $ulId, ?string $year):array
   {
     $parameters = ["ul_id" => $ulId];
     $yearSQL="";
@@ -239,5 +235,4 @@ ORDER BY y.id ASC
     }
     return $results;
   }
-
 }

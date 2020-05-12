@@ -6,9 +6,6 @@
  * Time: 18:38
  */
 
-require '../../vendor/autoload.php';
-
-
 use RedCrossQuest\routes\routesActions\namedDonations\CreateNamedDonation;
 use RedCrossQuest\routes\routesActions\namedDonations\GetNamedDonation;
 use RedCrossQuest\routes\routesActions\namedDonations\ListNamedDonations;
@@ -99,7 +96,7 @@ use RedCrossQuest\routes\routesActions\namedDonations\UpdateNamedDonation;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations', ListNamedDonations::class);
+$app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', ListNamedDonations::class);
 
 /**
  *
@@ -150,7 +147,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations', ListNamedDon
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', GetNamedDonation::class);
+$app->get('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', GetNamedDonation::class);
 
 /**
  *
@@ -204,7 +201,7 @@ $app->get(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', GetName
  *     )
  * )
  */
-$app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', UpdateNamedDonation::class);
+$app->put('/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', UpdateNamedDonation::class);
 
 
 /**
@@ -254,4 +251,4 @@ $app->put(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations/{id}', UpdateN
  *     )
  * )
  */
-$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/namedDonations', CreateNamedDonation::class);
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/namedDonations', CreateNamedDonation::class);

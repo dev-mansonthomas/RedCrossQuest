@@ -15,7 +15,7 @@ class ResetPasswordResponse
 
   /**
    * @OA\Property()
-   * @var string  $email The email of the resetted password
+   * @var string  $email The email of the reset password
    */
   public $email;
 

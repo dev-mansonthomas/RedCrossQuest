@@ -6,16 +6,14 @@
 namespace RedCrossQuest\routes\routesActions\settings;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\ULPreferencesFirestoreDBService;
-use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\ULPreferencesEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class UpdateRedCrossQuestSettings extends Action
@@ -44,19 +42,19 @@ class UpdateRedCrossQuestSettings extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("use_bank_bag" , $this->parsedBody['use_bank_bag']===true?1:0, true, false),
+        ClientInputValidatorSpecs::withBoolean("use_bank_bag" , $this->parsedBody, true, false),
       ]);
 
 
     $ulId   = $this->decodedToken->getUlId();
 
-    //recupère les settings exitants
+    //récupère les settings existants
     $ulPreferenceEntity = $this->ULPreferencesFirestoreDBService ->getULPrefs($ulId);
 
     if(!$ulPreferenceEntity)
@@ -74,9 +72,6 @@ class UpdateRedCrossQuestSettings extends Action
     }
 
     $this->ULPreferencesFirestoreDBService ->updateUlPrefs($ulId, $ulPreferenceEntity);
-
-
-
     return $this->response;
   }
 }

@@ -6,16 +6,15 @@
 namespace RedCrossQuest\routes\routesActions\users;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\DBService\UserDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\UserEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class ReInitUserPassword extends Action
@@ -58,7 +57,7 @@ class ReInitUserPassword extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

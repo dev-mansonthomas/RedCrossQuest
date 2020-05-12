@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\TroncQueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class GetTroncsQueteursOfQueteur extends Action
@@ -40,13 +39,13 @@ class GetTroncsQueteursOfQueteur extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('queteur_id', $this->getParam('queteur_id'), 1000000, true)
+        ClientInputValidatorSpecs::withInteger('queteur_id', $this->queryParams, 1000000, true)
       ]);
 
     $queteur_id    = $this->validatedData["queteur_id"];

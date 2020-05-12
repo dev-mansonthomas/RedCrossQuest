@@ -14,7 +14,5 @@ class PrepareTroncQueteurQueteNotStartedResponse
 
   public function __construct()
   {
-
-
   }
 }

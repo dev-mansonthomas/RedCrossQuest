@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\pointsQuetes;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\PointQueteDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class SearchPointsQuetes extends Action
@@ -39,16 +38,16 @@ class SearchPointsQuetes extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString ("q"               , $this->getParam('q'               ), 40  , false    ),
-        ClientInputValidatorSpecs::withInteger("point_quete_type", $this->getParam('point_quete_type'), 10   , false    ),
-        ClientInputValidatorSpecs::withBoolean("active"          , $this->getParam('active'          ), false  , true ),
-        ClientInputValidatorSpecs::withInteger('admin_ul_id'     , $this->getParam('admin_ul_id'     ), 1000 , false    )
+        ClientInputValidatorSpecs::withString ("q"               , $this->queryParams, 40  , false    ),
+        ClientInputValidatorSpecs::withInteger("point_quete_type", $this->queryParams, 10   , false    ),
+        ClientInputValidatorSpecs::withBoolean("active"          , $this->queryParams, false  , true ),
+        ClientInputValidatorSpecs::withInteger('admin_ul_id'     , $this->queryParams, 1000 , false    )
       ]);
 
     $query            = $this->validatedData["q"];

@@ -1,6 +1,7 @@
 <?php
 namespace RedCrossQuest\Entity;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -135,9 +136,9 @@ class CoinsMoneyBagSummaryEntity extends Entity
     *
     * @param array $data The data to use to create
     * @param LoggerInterface $logger
-    * @throws \Exception if a parse Date or JSON fails
+    * @throws Exception if a parse Date or JSON fails
     */
-    public function __construct(array $data, LoggerInterface $logger)
+    public function __construct(array &$data, LoggerInterface $logger)
     {
       parent::__construct($logger);
 

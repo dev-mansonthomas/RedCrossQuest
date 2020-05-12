@@ -6,8 +6,6 @@
  * Time: 18:38
  */
 
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\users\CreateUser;
 use RedCrossQuest\routes\routesActions\users\ReInitUserPassword;
 use RedCrossQuest\routes\routesActions\users\UpdateUser;
@@ -76,7 +74,7 @@ use RedCrossQuest\routes\routesActions\users\UpdateUser;
  *     )
  * )
  */
-$app->put (getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}'               , UpdateUser::class);
+$app->put ('/{role-id:[4-9]}/ul/{ul-id}/users/{id}'               , UpdateUser::class);
 /**
  *
  * @OA\Put(
@@ -130,7 +128,7 @@ $app->put (getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}'               , 
  *     )
  * )
  */
-$app->put (getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}/reInitPassword', ReInitUserPassword::class);
+$app->put ('/{role-id:[4-9]}/ul/{ul-id}/users/{id}/reInitPassword', ReInitUserPassword::class);
 /**
  *
  * @OA\Put(
@@ -184,4 +182,4 @@ $app->put (getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users/{id}/reInitPassword', 
  *     )
  * )
  */
-$app->post(getPrefix().'/{role-id:[4-9]}/ul/{ul-id}/users'                    , CreateUser::class);
+$app->post('/{role-id:[4-9]}/ul/{ul-id}/users'                    , CreateUser::class);

@@ -6,8 +6,6 @@
  * Time: 18:38
  */
 
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\spotfire\GetSpotfireAccessToken;
 
 /**
@@ -58,7 +56,7 @@ use RedCrossQuest\routes\routesActions\spotfire\GetSpotfireAccessToken;
  *     )
  * )
  */
-$app->get(getPrefix().'/{role-id:[1-9]}/ul/{ul-id}/graph', GetSpotfireAccessToken::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', GetSpotfireAccessToken::class);
 
 
 /*

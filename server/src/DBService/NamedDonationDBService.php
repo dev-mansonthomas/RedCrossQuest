@@ -1,8 +1,8 @@
-<?php
+<?php /** @noinspection ALL */
+
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
+use Exception;
 use PDOException;
 use RedCrossQuest\Entity\NamedDonationEntity;
 
@@ -20,9 +20,10 @@ class NamedDonationDBService extends DBService
    * @param int $ulId the Id of the Unite Local
    * @return NamedDonationEntity[] list of NamedDonationEntity
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception if parsing errors occurs
+   * @throws Exception if parsing errors occurs
+   * @noinspection SpellCheckingInspection
    */
-  public function getNamedDonations(?string $query, bool $deleted, ?string $year, int $ulId)
+  public function getNamedDonations(?string $query, bool $deleted, ?string $year, int $ulId):array
   {
 
     $parameters = ["ul_id"   => $ulId,
@@ -116,14 +117,14 @@ ORDER BY `id` DESC
   /**
    * Get One Named Donation
    *
-   * @param int $id id of the nameddonation row
+   * @param int $id id of the named donation row
    * @param int $ulId the Id of the Unite Local
    * @param int $roleId the Id of the role of the user. if 9, do not check for ulId
    * @return NamedDonationEntity The NamedDonationEntity
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getNamedDonationById(int $id, int $ulId, int $roleId)
+  public function getNamedDonationById(int $id, int $ulId, int $roleId):NamedDonationEntity
   {
     $parameters = ["id"=> $id];
 
@@ -180,7 +181,9 @@ $ulIdWhere
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);
 
-    $namedDonation = new NamedDonationEntity($stmt->fetch(), $this->logger);
+    //temp var, because pass by reference
+    $row = $stmt->fetch();
+    $namedDonation = new NamedDonationEntity($row, $this->logger);
 
     $stmt->closeCursor();
 
@@ -196,7 +199,7 @@ $ulIdWhere
    * @return int id of the new row
    * @throws PDOException if the query fails to execute on the server
    */
-  public function insert(NamedDonationEntity $namedDonation, int $ulId, int $userId)
+  public function insert(NamedDonationEntity $namedDonation, int $ulId, int $userId):int
   {
 
     $queryData = [
@@ -337,14 +340,14 @@ NOW()
 
 
   /**
-   * Insert one NamedDonation
+   * Update one NamedDonation
    *
    * @param NamedDonationEntity $namedDonation         The namedDonation to be inserted
    * @param int                 $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int                 $userId     id of the user performing the operation
    * @throws PDOException if the query fails to execute on the server
    */
-  public function update(NamedDonationEntity $namedDonation, int $ulId, int $userId)
+  public function update(NamedDonationEntity $namedDonation, int $ulId, int $userId):void
   {
 
     $queryData = [
@@ -434,7 +437,4 @@ AND   `ul_id` = :ul_id
 
     $stmt->closeCursor();
   }
-
-
-
 }

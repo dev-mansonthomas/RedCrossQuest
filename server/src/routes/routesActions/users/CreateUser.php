@@ -6,17 +6,16 @@
 namespace RedCrossQuest\routes\routesActions\users;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\DBService\UserDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Entity\UserEntity;
 use RedCrossQuest\Exception\UserAlreadyExistsException;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class CreateUser extends Action
@@ -59,7 +58,7 @@ class CreateUser extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
@@ -71,14 +70,14 @@ class CreateUser extends Action
     //check NIVOL has not been changed
     if($userEntity->nivol != $queteur->nivol)
     {
-      throw new \Exception("UserEntity NIVOL (from web form) & Queteur NIVOL (from DB) do not match ('".$userEntity->nivol."'!='".$queteur->nivol."')");
+      throw new Exception("UserEntity NIVOL (from web form) & Queteur NIVOL (from DB) do not match ('".$userEntity->nivol."'!='".$queteur->nivol."')");
     }
 
     if($queteur->ul_id != $ulId )
     {
       if($roleId != 9)
       {
-        throw new \Exception("current user is trying to create an RCQ user for another UL and is not super Admin");
+        throw new Exception("current user is trying to create an RCQ user for another UL and is not super Admin");
       }
       else
       {

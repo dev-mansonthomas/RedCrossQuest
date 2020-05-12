@@ -1,7 +1,9 @@
-<?php
+<?php /** @noinspection ALL */
+
 namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -208,9 +210,9 @@ class NamedDonationEntity extends Entity
      *
      * @param array $data The data to use to create
      * @param LoggerInterface $logger
-     * @throws \Exception if a parse Date or JSON fails
+     * @throws Exception if a parse Date or JSON fails
      */
-    public function __construct(array $data, LoggerInterface $logger)
+    public function __construct(array &$data, LoggerInterface $logger)
     {
       parent::__construct($logger);
 
@@ -265,7 +267,7 @@ class NamedDonationEntity extends Entity
    * check if some money information has been filled
    * @return bool true if at least one bill or one coin or don_cheque or don_cb is > 0
    */
-    function isMoneyFilled()
+    function isMoneyFilled():bool
     {
       return
         $this->checkPositive($this->euro500       ) ||
@@ -291,7 +293,7 @@ class NamedDonationEntity extends Entity
    * @param $value float the value to check
    * @return bool true if the value is > 0
    */
-    function checkPositive($value)
+    function checkPositive($value):bool
     {
       return $value != null && $value > 0;
     }

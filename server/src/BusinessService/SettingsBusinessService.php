@@ -3,6 +3,7 @@
 namespace RedCrossQuest\BusinessService;
 
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\PointQueteDBService;
@@ -47,9 +48,9 @@ class SettingsBusinessService
    *  => if 0, it creates the Base one with the data contained in UL table
    * @param integer $ulId  The ID of the Unité Locale
    * @return GetULSetupStatusResponse Setup info
-   * @throws \Exception   if something wrong happen
+   * @throws Exception   if something wrong happen
    */
-  public function getSetupStatus(int $ulId)
+  public function getSetupStatus(int $ulId):GetULSetupStatusResponse
   {
 
     $setupStatus = new GetULSetupStatusResponse();

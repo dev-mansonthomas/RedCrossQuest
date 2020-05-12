@@ -1,8 +1,6 @@
 <?php
 namespace RedCrossQuest\Service;
 
-require '../../vendor/autoload.php';
-
 use Google\ApiCore\ApiException;
 use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
 use InvalidArgumentException;
@@ -30,7 +28,7 @@ class SecretManagerService
   private $SECRET_NAME_ID_MAPPING;
 
   /** @var boolean if false, it's considered that it's on dev machine and offline or with poor internet connectivity */
-  private $online=false;
+  private $online;
 
   /** @var array */
   private $devSecret = null;
@@ -80,7 +78,7 @@ class SecretManagerService
    * @return string the secret value
    * @throws ApiException
    */
-  public function getSecret(string $secretName)
+  public function getSecret(string $secretName):string
   {
     //this will fault if the secretName is not know, so useful in the offline mode as well
     $secretId = $this->getSecretName($secretName);
@@ -113,7 +111,13 @@ class SecretManagerService
 
   }
 
-  private function getSecretName(string $secretName)
+  /**
+   *
+   *
+   * @param string $secretName Take a parameter name, as define in this class static variable
+   * @return string the formatted SecretManager name of the secret  (projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."JWT_SECRET/versions/latest)
+   */
+  private function getSecretName(string $secretName):string
   {
     if(!array_key_exists($secretName, $this->SECRET_NAME_ID_MAPPING))
     {
@@ -122,8 +126,12 @@ class SecretManagerService
     return $this->SECRET_NAME_ID_MAPPING[$secretName];
   }
 
-
-  private function getPropertiesFromFile($txtPropertiesPath)
+  /**
+   * This function is used in offline mode(setting.php), when the SecretManager is not accessible or with a lousy internet connection
+   * @param string $txtPropertiesPath file path of the properties file
+   * @return array an associative array of the local secret SECRET_NAME=>SECRET_VALUE
+   */
+  private function getPropertiesFromFile(string $txtPropertiesPath):array
   {
     if(($txtProperties = file_get_contents($txtPropertiesPath)) === false)
     {

@@ -1,13 +1,14 @@
-<?php
+<?php /** @noinspection PhpUnused */
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
 use Google\Cloud\Firestore\FirestoreClient;
 use Google\Cloud\Logging\LoggingClient;
+use Google\Cloud\Logging\PsrLogger;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
-use Kreait\Firebase;
 use Kreait\Firebase\Factory;
+use Kreait\Firebase\Auth;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
@@ -16,6 +17,7 @@ use RedCrossQuest\BusinessService\SettingsBusinessService;
 use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\MailingDBService;
+use RedCrossQuest\DBService\MoneyBagDBService;
 use RedCrossQuest\DBService\NamedDonationDBService;
 use RedCrossQuest\DBService\PointQueteDBService;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -46,25 +48,23 @@ return function (ContainerBuilder $containerBuilder)
      *
      */
 
-    "googleLogger" => function (ContainerInterface $c)
+    "googleLogger" => function (ContainerInterface $c):PsrLogger
     {
       $settings = $c->get('settings')['logger'];
 
-      $logger = LoggingClient::psrBatchLogger(
+      return LoggingClient::psrBatchLogger(
         $settings['name'], [
         'resource'=>[
           'type'=>'gae_app'
         ],
         'labels'  =>null
       ]);
-
-      return $logger;
     },
 
     /**
      * Version of RedCrossQuest
      */
-    "RCQVersion" => function (ContainerInterface $c)
+    "RCQVersion" => function ():string
     {
       //version stays here, so that I don't have to update all the settings files
       return "2020.0";
@@ -73,17 +73,17 @@ return function (ContainerBuilder $containerBuilder)
      * Custom Logger that automatically add context data to each log entries.
      * logger
      */
-    LoggerInterface::class => function (ContainerInterface $c)
+    LoggerInterface::class => function (ContainerInterface $c):LoggerInterface
     {
       return new Logger($c->get("googleLogger"), (string)$c->get("RCQVersion"), $c->get('settings')['appSettings']['deploymentType'], $c->get('settings')['online']);
     },
 
-    SecretManagerService::class => function (ContainerInterface $c)
+    SecretManagerService::class => function (ContainerInterface $c):SecretManagerService
     {
       return new SecretManagerService($c->get('settings'), $c->get(LoggerInterface::class));
     },
     
-    "googleMapsApiKey" => function (ContainerInterface $c)
+    "googleMapsApiKey" => function (ContainerInterface $c):string
     {
       return $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$GOOGLE_MAPS_API_KEY);
     },
@@ -92,7 +92,7 @@ return function (ContainerBuilder $containerBuilder)
      * 'db'
      * DB connection
      */
-    PDO::class => function (ContainerInterface $c)
+    PDO::class => function (ContainerInterface $c):PDO
     {
       $db = $c->get('settings')['db'];
 
@@ -112,7 +112,7 @@ return function (ContainerBuilder $containerBuilder)
         throw $e;
       }
     },
-    FirestoreClient::class => function(ContainerInterface $c)
+    FirestoreClient::class => function():FirestoreClient
     {
       return new FirestoreClient();
     },
@@ -120,7 +120,7 @@ return function (ContainerBuilder $containerBuilder)
      * 'PubSub'
      * Google PubSub service
      */
-    PubSubService::class => function (ContainerInterface $c)
+    PubSubService::class => function (ContainerInterface $c):PubSubService
     {
       $settings = $c->get('settings')['PubSub'];
       return new PubSubService($settings, $c->get(LoggerInterface::class));
@@ -130,7 +130,7 @@ return function (ContainerBuilder $containerBuilder)
      * 'reCaptcha'
      * Google ReCaptcha v3
      */
-    ReCaptchaService::class => function (ContainerInterface $c)
+    ReCaptchaService::class => function (ContainerInterface $c):ReCaptchaService
     {
       $recaptchaSecret = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$RECAPTCHA_SECRET);
       return new ReCaptchaService($c->get('settings'), $c->get(LoggerInterface::class), $recaptchaSecret);
@@ -140,7 +140,7 @@ return function (ContainerBuilder $containerBuilder)
      * 'bucket'
      * Google Storage Bucket
      */
-    Bucket::class => function (ContainerInterface $c)
+    Bucket::class => function (ContainerInterface $c):Bucket
     {
       $appSettings = $c->get('settings')['appSettings'];
       //TODO country is missing from settings
@@ -169,7 +169,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      *
      */
-    ULPreferencesFirestoreDBService::class => function (ContainerInterface $c)
+    ULPreferencesFirestoreDBService::class => function (ContainerInterface $c):ULPreferencesFirestoreDBService
     {
       return new ULPreferencesFirestoreDBService($c->get(FirestoreClient::class), $c->get(LoggerInterface::class));
     },
@@ -177,7 +177,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'userDBService'
      */
-    UserDBService::class => function (ContainerInterface $c)
+    UserDBService::class => function (ContainerInterface $c):UserDBService
     {
       return new UserDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -185,7 +185,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'spotfireAccessDBService'
      */
-    SpotfireAccessDBService::class => function (ContainerInterface $c)
+    SpotfireAccessDBService::class => function (ContainerInterface $c):SpotfireAccessDBService
     {
       return new SpotfireAccessDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -193,7 +193,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'queteurDBService'
      */
-    QueteurDBService::class => function (ContainerInterface $c)
+    QueteurDBService::class => function (ContainerInterface $c):QueteurDBService
     {
       return new QueteurDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -201,7 +201,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'uniteLocaleDBService'
      */
-    UniteLocaleDBService::class => function (ContainerInterface $c)
+    UniteLocaleDBService::class => function (ContainerInterface $c):UniteLocaleDBService
     {
       return new UniteLocaleDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -209,7 +209,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'uniteLocaleSettingsDBService'
      */
-    UniteLocaleSettingsDBService::class => function (ContainerInterface $c)
+    UniteLocaleSettingsDBService::class => function (ContainerInterface $c):UniteLocaleSettingsDBService
     {
       return new UniteLocaleSettingsDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -217,15 +217,22 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'troncDBService'
      */
-    TroncDBService::class => function (ContainerInterface $c)
+    TroncDBService::class => function (ContainerInterface $c):TroncDBService
     {
       return new TroncDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
 
     /**
+     * 'moneyBagDBService'
+     */
+    MoneyBagDBService::class => function (ContainerInterface $c): MoneyBagDBService
+    {
+      return new MoneyBagDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+    /**
      * 'troncQueteurDBService'
      */
-    TroncQueteurDBService::class => function (ContainerInterface $c)
+    TroncQueteurDBService::class => function (ContainerInterface $c):TroncQueteurDBService
     {
       return new TroncQueteurDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -233,7 +240,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'pointQueteDBService'
      */
-    PointQueteDBService::class => function (ContainerInterface $c)
+    PointQueteDBService::class => function (ContainerInterface $c):PointQueteDBService
     {
       return new PointQueteDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -241,7 +248,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'dailyStatsBeforeRCQDBService'
      */
-    DailyStatsBeforeRCQDBService::class => function (ContainerInterface $c)
+    DailyStatsBeforeRCQDBService::class => function (ContainerInterface $c):DailyStatsBeforeRCQDBService
     {
       return new DailyStatsBeforeRCQDBService($c->get('settings')['queteDates'], $c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -250,7 +257,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'namedDonationDBService'
      */
-    NamedDonationDBService::class => function (ContainerInterface $c)
+    NamedDonationDBService::class => function (ContainerInterface $c):NamedDonationDBService
     {
       return new NamedDonationDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -258,7 +265,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'yearlyGoalDBService'
      */
-    YearlyGoalDBService::class => function (ContainerInterface $c)
+    YearlyGoalDBService::class => function (ContainerInterface $c):YearlyGoalDBService
     {
       return new YearlyGoalDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -266,7 +273,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'mailingDBService'
      */
-    MailingDBService::class => function (ContainerInterface $c)
+    MailingDBService::class => function (ContainerInterface $c):MailingDBService
     {
       return new MailingDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
@@ -274,7 +281,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'mailService'
      */
-    MailService::class => function (ContainerInterface $c)
+    MailService::class => function (ContainerInterface $c):MailService
     {
       $settings       = $c->get('settings')['appSettings']['email'];
       $deploymentType = $c->get('settings')['appSettings']['deploymentType'];
@@ -284,10 +291,16 @@ return function (ContainerBuilder $containerBuilder)
       return new MailService($c->get(LoggerInterface::class),  $sendgridApiKey, $settings['sendgrid.sender'], $deploymentType);
     },
 
+
+    /* ********************
+     *  BUSINESS SERVICES *
+     * ********************
+     */
+
     /**
      * 'mailer'
      */
-    EmailBusinessService::class => function (ContainerInterface $c)
+    EmailBusinessService::class => function (ContainerInterface $c):EmailBusinessService
     {
       return new EmailBusinessService(
         $c->get(LoggerInterface::class),
@@ -297,16 +310,10 @@ return function (ContainerBuilder $containerBuilder)
         $c->get('settings')['appSettings']);
     },
 
-
-    /* ********************
-     *  BUSINESS SERVICES *
-     * ********************
-     */
-
     /**
      * 'troncQueteurBusinessService'
      */
-    TroncQueteurBusinessService::class => function (ContainerInterface $c)
+    TroncQueteurBusinessService::class => function (ContainerInterface $c):TroncQueteurBusinessService
     {
       return new TroncQueteurBusinessService(
         $c->get(LoggerInterface::class),
@@ -321,7 +328,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'settingsBusinessService'
      */
-    SettingsBusinessService::class => function (ContainerInterface $c)
+    SettingsBusinessService::class => function (ContainerInterface $c):SettingsBusinessService
     {
       return new SettingsBusinessService(
         $c->get(LoggerInterface::class),
@@ -335,27 +342,27 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * 'exportDataBusinessService'
      */
-    ExportDataBusinessService::class => function (ContainerInterface $c)
+    ExportDataBusinessService::class => function (ContainerInterface $c):ExportDataBusinessService
     {
       return new ExportDataBusinessService(
-$c->get(LoggerInterface::class),
-$c->get(QueteurDBService::class),
-$c->get(PointQueteDBService::class),
-$c->get(UserDBService::class),
-$c->get(DailyStatsBeforeRCQDBService::class),
-$c->get(TroncDBService::class),
-$c->get(NamedDonationDBService::class),
-$c->get(TroncQueteurDBService::class),
-$c->get(UniteLocaleDBService::class),
-$c->get(UniteLocaleSettingsDBService::class),
-$c->get(YearlyGoalDBService::class)
+        $c->get(LoggerInterface::class),
+        $c->get(QueteurDBService::class),
+        $c->get(PointQueteDBService::class),
+        $c->get(UserDBService::class),
+        $c->get(DailyStatsBeforeRCQDBService::class),
+        $c->get(TroncDBService::class),
+        $c->get(NamedDonationDBService::class),
+        $c->get(TroncQueteurDBService::class),
+        $c->get(UniteLocaleDBService::class),
+        $c->get(UniteLocaleSettingsDBService::class),
+        $c->get(YearlyGoalDBService::class)
       );
     },
 
     /**
      * 'clientInputValidator'
      */
-    ClientInputValidator::class => function (ContainerInterface $c)
+    ClientInputValidator::class => function (ContainerInterface $c):ClientInputValidator
     {
       return new ClientInputValidator($c->get(LoggerInterface::class));
     },
@@ -364,7 +371,7 @@ $c->get(YearlyGoalDBService::class)
      * 'firebase'
      * used to validate a firebase JWT
      */
-    Firebase\Auth::class => function (ContainerInterface $c)
+    Auth::class => function ():Auth
     {
       return (new Factory)->createAuth();
     },

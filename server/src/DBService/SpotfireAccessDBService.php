@@ -2,11 +2,10 @@
 
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Carbon\Carbon;
 use DateInterval;
 use DateTime;
+use Exception;
 use PDOException;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\Entity\SpotfireAccessEntity;
@@ -22,16 +21,16 @@ class SpotfireAccessDBService extends DBService
    * @param int $tokenTTL TimeToLive in Hours of the Token
    * @return Object the date right after insertion, so that the frontend can know how long to wait for the next update of Spotfire.
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function grantAccess(int $userId, int $ulId, int $tokenTTL)
+  public function grantAccess(int $userId, int $ulId, int $tokenTTL):object 
   {
     $token = Uuid::uuid4();
 
     $currentValidToken = $this->getValidToken($userId, $ulId);
 
     if($currentValidToken != null)
-    {//A valid Token exist, we don't overwrite it. (Otherwise the spotfire access keeps beeing disconnected)
+    {//A valid Token exist, we don't overwrite it. (Otherwise the spotfire access keeps being disconnected)
 
      // $this->logger->info('spotfireAccess Token:', [$currentValidToken->token]);
 
@@ -98,9 +97,9 @@ VALUES
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return SpotfireAccessEntity the info of the spotfire token
    * @throws PDOException if the query fails to execute on the server
-   * @throws \Exception in other situations, possibly : parsing error in the entity
+   * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getValidToken(int $userId, int $ulId)
+  public function getValidToken(int $userId, int $ulId):?SpotfireAccessEntity
   {
     $sql = "
     SELECT  token, token_expiration

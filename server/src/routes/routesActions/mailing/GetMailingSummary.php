@@ -6,13 +6,12 @@
 namespace RedCrossQuest\routes\routesActions\mailing;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\MailingDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\Logger;
 
 
 class GetMailingSummary extends Action
@@ -29,7 +28,7 @@ class GetMailingSummary extends Action
    */
   public function __construct(LoggerInterface               $logger,
                               ClientInputValidator          $clientInputValidator,
-                              MailingDBService               $mailingDBService)
+                              MailingDBService              $mailingDBService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->mailingDBService = $mailingDBService;
@@ -37,7 +36,7 @@ class GetMailingSummary extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {

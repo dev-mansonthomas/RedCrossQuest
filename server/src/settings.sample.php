@@ -1,4 +1,5 @@
 <?php
+/** @noinspection SpellCheckingInspection */
 return [
   'settings' => [
     'displayErrorDetails' => true, // set to false in production

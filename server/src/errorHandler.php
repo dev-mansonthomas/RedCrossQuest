@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -6,10 +6,9 @@ use Psr\Log\LoggerInterface;
 use Slim\App;
 
 
-return function (ContainerInterface $c, App $app) {
-
-
-  $customErrorHandler = function (
+return function (ContainerInterface $c, App $app)
+{
+  return function (
     ServerRequestInterface $request,
     Throwable $exception,
     bool $displayErrorDetails,
@@ -38,9 +37,6 @@ return function (ContainerInterface $c, App $app) {
 
     return $response;
   };
-
-
-  return $customErrorHandler;
 
 
 };

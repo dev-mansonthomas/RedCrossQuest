@@ -4,8 +4,6 @@
 
 namespace RedCrossQuest\Middleware;
 
-require '../../vendor/autoload.php';
-
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -93,7 +91,6 @@ class AuthorisationMiddleware implements MiddlewareInterface
     $token = (new Parser())->parse((string) $tokenStr);
     $signer = new Sha256();
 
-
     $issuer    = $this->jwtSettings['issuer'  ];
     $audience  = $this->jwtSettings['audience'];
 
@@ -137,9 +134,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       $this->logger->error(AuthorisationMiddleware::$errorMessage['0011'], array("exception"=>$error));
       throw $error;
     }
-
     return $decodedToken;
-
   }
 
 
@@ -175,18 +170,16 @@ class AuthorisationMiddleware implements MiddlewareInterface
       }
 
       //$this->logger->error("$path");
-      //$this->logger->error("getPrefix(true)='".getPrefix(true)."'");
-      //$this->logger->error("isGAE()='".isGAE()."'");
       //public path that must not go through authentication check
-      if($path == getPrefix(true).'/rest/authenticate'      ||
-         $path == getPrefix(true).'/rest/firebase-authenticate'      ||
-         $path == getPrefix(true).'/rest/sendInit'          ||
-         $path == getPrefix(true).'/rest/resetPassword'     ||
-         $path == getPrefix(true).'/rest/getInfoFromUUID'   ||
-         strpos($path,getPrefix(true).'/rest/thanks_mailing/') === 0 ||
-         strpos($path,getPrefix(true).'/rest/redQuest/'      ) === 0   )
+      if($path == '/rest/authenticate'      ||
+         $path == '/rest/firebase-authenticate'      ||
+         $path == '/rest/sendInit'          ||
+         $path == '/rest/resetPassword'     ||
+         $path == '/rest/getInfoFromUUID'   ||
+         strpos($path,'/rest/thanks_mailing/') === 0 ||
+         strpos($path,'/rest/redQuest/'      ) === 0   )
       {
-        $this->logger->info("Non authenticate route", array("prefix"=>getPrefix(true), "path"=>$path, "uuid"=>$uuid));
+        $this->logger->info("Non authenticate route", array( "path"=>$path, "uuid"=>$uuid));
         return $handler->handle($request);
       }
       //$this->logger->error("authenticated route : $path");
@@ -212,7 +205,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       
       //check if the roleId in the URL match the one in the JWT Token (user might have changed the URL)
       $path         = $request->getUri()->getPath();
-      $explodedPath = explode("/",  substr($path, strlen('/rest/')),2); //isGAE() ? substr($path, strlen('/rest/')):$path
+      $explodedPath = explode("/",  substr($path, strlen('/rest/')),2);
 
       //$this->logger->error("path info", array("path"=>$path, "explodedPath"=>$explodedPath, "\$_SERVER"=>$_SERVER));
 
@@ -281,246 +274,3 @@ class AuthorisationMiddleware implements MiddlewareInterface
   }
 
 }
-
-
-class DecodedToken
-{
-  private $authenticated ;
-  private $errorCode     ;
-  private $username      ;
-  private $uid           ;
-  private $ulId          ;
-  private $ulName        ;
-  private $ulMode        ;
-  private $queteurId     ;
-  private $roleId        ;
-  private $d             ;
-
-
-  /**
-   * Init teh DecodedToken as an authentication failure (this->authenticated=false) with an error code
-   * @param string $errorCode  the error code associated with the failed authentication request
-   */
-  public function __construct($errorCode)
-  {
-    $this->authenticated = false;
-    $this->errorCode     = $errorCode;
-  }
-
-  /**
-   * init the DecodedToken with data decoded from the token... ;)
-   * @param boolean $authenticated true if the token is considered as valid, false otherwise
-   * @param string $errorCode the string representing the error code '0004' for ex.
-   * @param string $username the nivol of the user
-   * @param string $uid the id of the user
-   * @param string $ulId the id of the unite local to which the user belong to
-   * @param string $ulName the name of the unite locale to which the user belong to
-   * @param string $ulMode How the UniteLocal manage the quete (like Paris, like Marseille, like small city)
-   * @param string $queteurId the id in the queteur table of the user
-   * @param string $roleId the role id of the user (what can he do in the application)
-   * @param string $deploymentType How the application is currently deployed: test/uat/production
-   * @return DecodedToken an instance
-   */
-  public static function withData(bool    $authenticated, string $errorCode,
-                                  string  $username     , string $uid      , string $ulId     ,
-                                  string  $ulName       , string $ulMode   , string $queteurId,
-                                  string  $roleId       , string $deploymentType)
-  {
-    $instance = new self($errorCode);
-
-    $instance->setAuthenticated ($authenticated    );
-    $instance->setUsername      ($username         );
-    $instance->setUid           (intval($uid)      );
-    $instance->setUlId          (intval($ulId)     );
-    $instance->setUlName        ($ulName           );
-    $instance->setUlMode        (intval($ulMode   ));
-    $instance->setQueteurId     (intVal($queteurId));
-    $instance->setRoleId        (intval($roleId)   );
-    $instance->setD             ($deploymentType   );
-
-
-    return $instance;
-  }
-
-  public function __toString()
-  {
-    return json_encode($this->toArray());
-  }
-
-  public function toArray()
-  {
-    return [  "authenticated" => $this->authenticated ,
-      "errorCode"     => $this->errorCode     ,
-      "username"      => $this->username      ,
-      "uid"           => $this->uid           ,
-      "ulId"          => $this->ulId          ,
-      "ulName"        => $this->ulName        ,
-      "ulMode"        => $this->ulMode        ,
-      "queteurId"     => $this->queteurId     ,
-      "roleId"        => $this->roleId        ,
-      "d"             => $this->d
-    ];
-  }
-
-
-  /**
-   * @return mixed
-   */
-  public function getUlName()
-  {
-    return $this->ulName;
-  }
-
-  /**
-   * @param mixed $authenticated
-   */
-  public function setAuthenticated($authenticated)
-  {
-    $this->authenticated = $authenticated;
-  }
-
-  /**
-   * @param mixed $errorCode
-   */
-  public function setErrorCode($errorCode)
-  {
-    $this->errorCode = $errorCode;
-  }
-
-  /**
-   * @param mixed $username
-   */
-  public function setUsername($username)
-  {
-    $this->username = $username;
-  }
-
-  /**
-   * @param mixed $uid
-   */
-  public function setUid($uid)
-  {
-    $this->uid = $uid;
-  }
-
-  /**
-   * @param mixed $ulId
-   */
-  public function setUlId($ulId)
-  {
-    $this->ulId = $ulId;
-  }
-
-  /**
-   * @param mixed $queteurId
-   */
-  public function setQueteurId($queteurId)
-  {
-    $this->queteurId = $queteurId;
-  }
-
-  /**
-   * @param mixed $roleId
-   */
-  public function setRoleId($roleId)
-  {
-    $this->roleId = $roleId;
-  }
-
-  /**
-   * @param mixed $ulName
-   */
-  public function setUlName($ulName)
-  {
-    $this->ulName = $ulName;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getErrorCode()
-  {
-    return $this->errorCode;
-  }
-
-  /**
-   * @return int
-   */
-  public function getQueteurId(): int
-  {
-    return $this->queteurId;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getAuthenticated()
-  {
-    return $this->authenticated;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getRoleId()
-  {
-    return $this->roleId;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getUid()
-  {
-    return $this->uid;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getUlId()
-  {
-    return $this->ulId;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getUsername()
-  {
-    return $this->username;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getUlMode()
-  {
-    return $this->ulMode;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getD()
-  {
-    return $this->d;
-  }
-
-  /**
-   * @param mixed $ulMode
-   */
-  public function setUlMode($ulMode)
-  {
-    $this->ulMode = $ulMode;
-  }
-
-  /**
-   * @param mixed $d
-   */
-  public function setD($d)
-  {
-    $this->d = $d;
-  }
-}
-

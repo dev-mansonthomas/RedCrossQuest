@@ -4,6 +4,7 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use DI\Annotation\Inject;
 use Google\ApiCore\ApiException;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;

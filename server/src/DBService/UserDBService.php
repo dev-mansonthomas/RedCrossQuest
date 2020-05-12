@@ -1,8 +1,6 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Exception;
 use PDOException;
 use Ramsey\Uuid\Uuid;
@@ -20,7 +18,7 @@ class UserDBService extends DBService
    * @param string $nivol nivol to check
    * @throws UserAlreadyExistsException if at least one active user exist on the whole system
    */
-  public function checkExistingUserWithNivol(string $nivol)
+  public function checkExistingUserWithNivol(string $nivol):void
   {
     $sql = "
 select u.*, q.* 
@@ -63,7 +61,7 @@ AND u.queteur_id = q.id";
    * @throws PDOException if the query fails to execute on the server
    * @throws UserAlreadyExistsException if at least one active user exist on the whole system
    */
-  public function insert(string $nivol, int $queteurId)
+  public function insert(string $nivol, int $queteurId):int
   {
 
     $this->checkExistingUserWithNivol($nivol);
@@ -103,7 +101,7 @@ NULL
     $stmt = $this->db->prepare($sql);
 
     $this->db->beginTransaction();
-    $result = $stmt->execute([
+    $stmt->execute([
       "nivol"       => ltrim($nivol, '0'),
       "queteur_id"  => $queteurId
     ]);
@@ -132,7 +130,7 @@ NULL
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getUserInfoWithEmail(string $email)
+  public function getUserInfoWithEmail(string $email):UserEntity
   {
     $sql = "
 SELECT u.id, u.queteur_id, u.password, u.role, u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date 
@@ -150,7 +148,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -160,11 +160,6 @@ LIMIT 1
       throw new Exception ("Update didn't update the correct number of rows($count) for nivol: $email");
     }
   }
-
-
-
-
-
   /***
    * This function is used by the authenticate method (prior to firebase), to get the user info from its nivol.
    * Can't be restricted by ULID since the UL is not known.
@@ -174,7 +169,7 @@ LIMIT 1
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getUserInfoWithNivol(string $nivol)
+  public function getUserInfoWithNivol(string $nivol):UserEntity
   {
     $sql = "
 SELECT id, queteur_id, password, role, nb_of_failure, last_failure_login_date, last_successful_login_date 
@@ -191,7 +186,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -216,7 +213,7 @@ LIMIT 1
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getUserInfoWithQueteurId(int $queteurId, int $ulId, int $roleId)
+  public function getUserInfoWithQueteurId(int $queteurId, int $ulId, int $roleId):?UserEntity
   {
     $limitQueryToUl="";
     if($roleId!=9)
@@ -250,7 +247,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -270,7 +269,7 @@ LIMIT 1
    * @throws Exception In case a validation is failing while creating  the user entity.
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getUserInfoWithUserId(int $userId, int $ulId, int $roleId)
+  public function getUserInfoWithUserId(int $userId, int $ulId, int $roleId):?UserEntity
   {
     $limitQueryToUl="";
     if($roleId!=9)
@@ -305,7 +304,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -323,7 +324,7 @@ LIMIT 1
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getUserInfoWithUUID(string $uuid)
+  public function getUserInfoWithUUID(string $uuid):UserEntity
   {
     $sql = "
 SELECT id, queteur_id, password, role, nb_of_failure, last_failure_login_date, last_successful_login_date 
@@ -344,7 +345,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -366,7 +369,7 @@ LIMIT 1
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getULUsers(int $ulId)
+  public function getULUsers(int $ulId):array
   {
 
     $sql = "
@@ -407,7 +410,7 @@ LIMIT 1
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function sendInit(string $username, bool $firstInit = false)
+  public function sendInit(string $username, bool $firstInit = false):string
   {
     $uuid = Uuid::uuid4();
 
@@ -450,10 +453,10 @@ AND     role             != 9
    * Save the new password for a user, from the UUID
    * @param string $uuid the uuid that identifiy the user that update his password
    * @param string $password the new password( clear text), stores it as a hash
-   * @return boolean true if the query is successfull, false otherwise
+   * @return bool true if the query is successfull, false otherwise
    * @throws PDOException if the query fails to execute on the server
    */
-  public function resetPassword(string $uuid, string $password)
+  public function resetPassword(string $uuid, string $password):bool
   {
     $sql = "
 UPDATE  `users`
@@ -487,10 +490,10 @@ AND     role  != 9
   /**
    * update last successful login date and reset the count of failed login
    * @param int $userId the id of the user that is connecting
-   * @return boolean true if query successful, false otherwise
+   * @return bool true if query successful, false otherwise
    * @throws PDOException if the query fails to execute on the server
    */
-  public function registerSuccessfulLogin(int $userId)
+  public function registerSuccessfulLogin(int $userId):bool
   {
     $sql = "
 UPDATE  `users`
@@ -518,7 +521,7 @@ WHERE   id                          = :id
    * @return boolean true if query successful, false otherwise
    * @throws PDOException if the query fails to execute on the server
    */
-  public function registerFailedLogin(int $userId)
+  public function registerFailedLogin(int $userId):bool
   {
     $sql = "
 UPDATE  `users`
@@ -546,12 +549,12 @@ WHERE   id                       = :id
    * @param UserEntity $userEntity the user info
    * @param int         $ulId   the UL ID  of the person performing the action
    * @param int         $roleId the RoleID of the person performing the action
-   * @return boolean true if query is successful, false otherwise
+   * @return bool true if query is successful, false otherwise
    * @throws Exception if a validation fails while creating the Entities
    * @throws PDOException if the query fails to execute on the server
    * @throws UserAlreadyExistsException if the active state change from false to true and than another users is already active with the same nivol
    */
-  public function updateActiveAndRole(UserEntity $userEntity, int $ulId, int $roleId)
+  public function updateActiveAndRole(UserEntity $userEntity, int $ulId, int $roleId):bool
   {
 
     $oldUser = $this->getUserInfoWithUserId($userEntity->id, $ulId, $roleId);
@@ -598,8 +601,6 @@ AND     q.ul_id = :ul_id
     return false;
   }
 
-
-
   /**
    * Get the current number of Users for the Unite Local
    *
@@ -607,7 +608,7 @@ AND     q.ul_id = :ul_id
    * @return int the number of users
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getNumberOfUser(int $ulId)
+  public function getNumberOfUser(int $ulId):int
   {
     $sql="
     SELECT count(1) as cnt
@@ -621,5 +622,4 @@ AND     q.ul_id = :ul_id
     $row = $stmt->fetch();
     return $row['cnt'];
   }
-
 }

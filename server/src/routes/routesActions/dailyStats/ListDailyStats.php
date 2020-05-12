@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\dailyStats;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class ListDailyStats extends Action
@@ -39,14 +38,14 @@ class ListDailyStats extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $ulId     = $this->decodedToken->getUlId();
 
     $this->validateSentData([
-      ClientInputValidatorSpecs::withInteger('year', $this->getParam('year'), 2050, false)
+      ClientInputValidatorSpecs::withInteger('year', $this->queryParams, 2050, false)
     ]);
 
     $year  = $this->validatedData["year"];

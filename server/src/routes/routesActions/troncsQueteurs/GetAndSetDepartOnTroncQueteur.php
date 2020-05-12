@@ -2,15 +2,15 @@
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 use Carbon\Carbon;
+use DI\Annotation\Inject;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 use RedCrossQuest\DBService\TroncQueteurDBService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 class GetAndSetDepartOnTroncQueteur extends Action
 {
@@ -50,13 +50,13 @@ class GetAndSetDepartOnTroncQueteur extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('tronc_id', $this->getParam('tronc_id'), 1000000, true)
+        ClientInputValidatorSpecs::withInteger('tronc_id', $this->queryParams, 1000000, true)
       ]);
 
     //c'est bien le troncId qu'on passe ici, on va supprimer tout les tronc_queteur qui ont ce tronc_id et départ ou retour à nulle

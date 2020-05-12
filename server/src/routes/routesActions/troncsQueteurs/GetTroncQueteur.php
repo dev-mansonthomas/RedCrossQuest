@@ -6,14 +6,13 @@
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
-use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
-use RedCrossQuest\Service\Logger;
 
 
 class GetTroncQueteur extends Action
@@ -40,19 +39,19 @@ class GetTroncQueteur extends Action
 
   /**
    * @return Response
-   * @throws \Exception
+   * @throws Exception
    */
   protected function action(): Response
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('id', $this->args['id'], 1000000, true)
+        ClientInputValidatorSpecs::withInteger('id', $this->args, 1000000, true)
       ]);
 
-    $troncQueteurId           = $this->validatedData["id"];
+    $troncQueteurId = $this->validatedData["id"];
 
-    $ulId      = $this->decodedToken->getUlId       ();
-    $roleId    = $this->decodedToken->getRoleId     ();
+    $ulId           = $this->decodedToken->getUlId       ();
+    $roleId         = $this->decodedToken->getRoleId     ();
 
     $troncQueteur   = $this->troncQueteurBusinessService->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId, $roleId);
 

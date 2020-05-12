@@ -1,8 +1,6 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Exception;
 use Google\Cloud\Firestore\DocumentSnapshot;
 use Google\Cloud\Firestore\FirestoreClient;
@@ -27,7 +25,7 @@ class ULPreferencesFirestoreDBService extends FirestoreDBService
    * @return ULPreferencesEntity|null
    * @throws Exception
    */
-  public function getULPrefs(int $ul_id)
+  public function getULPrefs(int $ul_id):?ULPreferencesEntity
   {
     $query     = $this->firestoreCollection->where('ul_id', '=', $ul_id);
     $documents = $query->documents();
@@ -48,7 +46,7 @@ class ULPreferencesFirestoreDBService extends FirestoreDBService
    * @param int $ul_id
    * @param ULPreferencesEntity $ulPrefs
    */
-  public function updateUlPrefs(int $ul_id, ULPreferencesEntity $ulPrefs)
+  public function updateUlPrefs(int $ul_id, ULPreferencesEntity $ulPrefs):void
   {
     $dataForFirestore = $ulPrefs->prepareDataForFirestoreUpdate();
 
