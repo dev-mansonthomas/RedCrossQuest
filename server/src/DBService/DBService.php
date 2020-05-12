@@ -4,8 +4,6 @@ namespace RedCrossQuest\DBService;
 use PDO;
 use RedCrossQuest\Service\Logger;
 
-require '../../vendor/autoload.php';
-
 abstract class DBService
 {
   /** @var PDO */

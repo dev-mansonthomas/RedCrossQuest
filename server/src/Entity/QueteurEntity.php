@@ -163,7 +163,7 @@ class QueteurEntity  extends Entity
   public $anonymization_token         ;
   /**
    * @OA\Property()
-   * @property Carbon $anonymization_date the date of the anonimisation
+   * @property Carbon $anonymization_date the date of the anonymization
    */
   public $anonymization_date          ;
 
@@ -218,7 +218,7 @@ class QueteurEntity  extends Entity
    * @param LoggerInterface $logger the logger instance
    * @throws Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data, LoggerInterface $logger)
+  public function __construct(array &$data, LoggerInterface $logger)
   {
     parent::__construct($logger);
 

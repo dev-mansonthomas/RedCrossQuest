@@ -65,10 +65,11 @@ class GetUserInfoFromUUIDAction extends Action
    */
   protected function action(): Response
   {
+
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("uuid"    , $this->getParam("uuid" ), 36   , true, ClientInputValidator::$UUID_VALIDATION),
-        ClientInputValidatorSpecs::withString("token"   , $this->getParam("token"), 1500 , true),
+        ClientInputValidatorSpecs::withString("uuid"    , $this->queryParams, 36   , true, ClientInputValidator::$UUID_VALIDATION),
+        ClientInputValidatorSpecs::withString("token"   , $this->queryParams, 1500 , true),
       ]);
 
     $uuid  = $this->validatedData["uuid"];

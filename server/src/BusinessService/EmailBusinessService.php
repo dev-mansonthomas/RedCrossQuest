@@ -223,12 +223,12 @@ class EmailBusinessService
 
 <p>
  Cet email fait suite à votre demande d'anonymisation de vos données personnelles de l'application RedCrossQuest, 
- l'outil de gestion opérationel de la quête de la Croix Rouge française.
+ l'outil de gestion opérationnel de la quête de la Croix Rouge française.
 </p>
 
 <p>Tout d'abord, la Croix Rouge française tient à vous remercier pour votre contribution à la quête de la Croix Rouge.<br/>
 Vous avez participé au financement des activités de premiers secours et d'actions sociales de l'unité locale de '".$queteur->ul_name."'<br/>
-Nous espèrons vous revoir bientôt à la quête ou en tant que bénévole!
+Nous espérons vous revoir bientôt à la quête ou en tant que bénévole!
 </p>
 
 <p>Conformément à votre demande, vos données personnelles ont été remplacées par les valeurs indiquées ci-après :
@@ -251,7 +251,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
 </p>TOKEN : '$token'</p>
  
 <p>
-  Si vous revenez preter main forte à l'unité locale de '".$queteur->ul_name."', vous pouvez communiquer ce Token à l'unité locale de '".$queteur->ul_name."'
+  Si vous revenez prêter main forte à l'unité locale de '".$queteur->ul_name."', vous pouvez communiquer ce Token à l'unité locale de '".$queteur->ul_name."'
   Il permettra de retrouver votre fiche anonymisée et de revaloriser votre fiche avec vos données pour une nouvelle participation à la quête!
   Vous retrouver ainsi vos statistiques des années passées.
   (ce token n'est valable que pour l'unité locale de '".$queteur->ul_name."', un nouveau compte sera créé si vous quêter avec une autre unité locale)
@@ -410,7 +410,7 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
     $startValidityDateCarbon = Carbon::now();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
 
-    $text1 = $isNewsletter ? "ne plus recevoir d'email de la platforme ou à" : "" ;
+    $text1 = $isNewsletter ? "ne plus recevoir d'email de la plateforme ou à" : "" ;
     $text2 = $isNewsletter ? "Newsletter ou données personnelles" : "Données personnelles" ;
     $text3 = $isNewsletter ? "la newsletter ou " : "" ;
 

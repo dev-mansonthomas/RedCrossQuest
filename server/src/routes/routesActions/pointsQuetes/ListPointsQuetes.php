@@ -22,9 +22,9 @@ class ListPointsQuetes extends Action
   private $pointQueteDBService;
 
   /**
-   * @param LoggerInterface $logger
+   * @param LoggerInterface      $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param PointQueteDBService     $pointQueteDBService
+   * @param PointQueteDBService  $pointQueteDBService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,

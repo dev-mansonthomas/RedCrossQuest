@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
@@ -17,6 +17,7 @@ use RedCrossQuest\BusinessService\SettingsBusinessService;
 use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\MailingDBService;
+use RedCrossQuest\DBService\MoneyBagDBService;
 use RedCrossQuest\DBService\NamedDonationDBService;
 use RedCrossQuest\DBService\PointQueteDBService;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -63,7 +64,7 @@ return function (ContainerBuilder $containerBuilder)
     /**
      * Version of RedCrossQuest
      */
-    "RCQVersion" => function (ContainerInterface $c):string
+    "RCQVersion" => function ():string
     {
       //version stays here, so that I don't have to update all the settings files
       return "2020.0";
@@ -111,7 +112,7 @@ return function (ContainerBuilder $containerBuilder)
         throw $e;
       }
     },
-    FirestoreClient::class => function(ContainerInterface $c):FirestoreClient
+    FirestoreClient::class => function():FirestoreClient
     {
       return new FirestoreClient();
     },
@@ -221,6 +222,13 @@ return function (ContainerBuilder $containerBuilder)
       return new TroncDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
 
+    /**
+     * 'moneyBagDBService'
+     */
+    MoneyBagDBService::class => function (ContainerInterface $c): MoneyBagDBService
+    {
+      return new MoneyBagDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
     /**
      * 'troncQueteurDBService'
      */
@@ -363,7 +371,7 @@ return function (ContainerBuilder $containerBuilder)
      * 'firebase'
      * used to validate a firebase JWT
      */
-    Auth::class => function (ContainerInterface $c):Auth
+    Auth::class => function ():Auth
     {
       return (new Factory)->createAuth();
     },

@@ -1,18 +1,13 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Exception;
 use PDOException;
 use RedCrossQuest\Entity\MailingInfoEntity;
 use RedCrossQuest\Entity\MailingSummaryEntity;
 
-
 class MailingDBService extends DBService
 {
-
-
   /**
    * Get stats about unsent, sent and sent with error emails per sectors.
    *

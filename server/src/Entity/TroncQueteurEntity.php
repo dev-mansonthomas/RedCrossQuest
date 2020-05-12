@@ -246,7 +246,7 @@ class TroncQueteurEntity extends Entity
   public $insert_date     ;
   /**
    * @OA\Property()
-   * @var boolean $preparationAndDepart If it's a preparation and depart (that is: the troncqueteur is stored and the depart is right now) this property must be set to true.
+   * @var boolean $preparationAndDepart If it's a preparation and depart (that is: the tronc_queteur is stored and the depart is right now) this property must be set to true.
    */
   public $preparationAndDepart;
   /**
@@ -321,7 +321,7 @@ class TroncQueteurEntity extends Entity
     * @param LoggerInterface $logger
     * @throws Exception if a parse Date or JSON fails
     */
-    public function __construct(array $data, LoggerInterface $logger)
+    public function __construct(array &$data, LoggerInterface $logger)
     {
       parent::__construct($logger);
 

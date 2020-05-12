@@ -44,7 +44,7 @@ class GetTroncQueteurHistoryFromTQID extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('tronc_queteur_id', $this->getParam('tronc_queteur_id'), 1000000, true)
+        ClientInputValidatorSpecs::withInteger('tronc_queteur_id', $this->queryParams, 1000000, true)
       ]);
 
     $troncQueteurId  = $this->validatedData["tronc_queteur_id"];

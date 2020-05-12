@@ -45,9 +45,9 @@ class SearchSimilarQueteurs extends Action
     $ulId     = $this->decodedToken->getUlId();
 
     $this->validateSentData([
-      ClientInputValidatorSpecs::withString("first_name", $this->getParam('first_name'), 100 , false),
-      ClientInputValidatorSpecs::withString("last_name" , $this->getParam('last_name' ), 100 , false),
-      ClientInputValidatorSpecs::withString("nivol"     , $this->getParam('nivol'     ), 15  , false)
+      ClientInputValidatorSpecs::withString("first_name", $this->queryParams, 100 , false),
+      ClientInputValidatorSpecs::withString("last_name" , $this->queryParams, 100 , false),
+      ClientInputValidatorSpecs::withString("nivol"     , $this->queryParams, 15  , false)
     ]);
 
     $firstName  = $this->validatedData["first_name"];

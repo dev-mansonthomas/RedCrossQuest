@@ -1,8 +1,6 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use DateInterval;
 use DateTime;
 use Exception;

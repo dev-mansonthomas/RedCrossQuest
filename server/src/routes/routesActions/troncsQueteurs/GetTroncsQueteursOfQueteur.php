@@ -45,7 +45,7 @@ class GetTroncsQueteursOfQueteur extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('queteur_id', $this->getParam('queteur_id'), 1000000, true)
+        ClientInputValidatorSpecs::withInteger('queteur_id', $this->queryParams, 1000000, true)
       ]);
 
     $queteur_id    = $this->validatedData["queteur_id"];

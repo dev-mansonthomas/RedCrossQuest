@@ -6,8 +6,6 @@
  * Time: 18:35
  */
 
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\troncQueteurHistory\GetTroncQueteurHistoryFromTQID;
 
 

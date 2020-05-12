@@ -2,8 +2,6 @@
 
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Carbon\Carbon;
 use DateInterval;
 use DateTime;
@@ -32,7 +30,7 @@ class SpotfireAccessDBService extends DBService
     $currentValidToken = $this->getValidToken($userId, $ulId);
 
     if($currentValidToken != null)
-    {//A valid Token exist, we don't overwrite it. (Otherwise the spotfire access keeps beeing disconnected)
+    {//A valid Token exist, we don't overwrite it. (Otherwise the spotfire access keeps being disconnected)
 
      // $this->logger->info('spotfireAccess Token:', [$currentValidToken->token]);
 
@@ -101,7 +99,7 @@ VALUES
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getValidToken(int $userId, int $ulId):SpotfireAccessEntity
+  public function getValidToken(int $userId, int $ulId):?SpotfireAccessEntity
   {
     $sql = "
     SELECT  token, token_expiration

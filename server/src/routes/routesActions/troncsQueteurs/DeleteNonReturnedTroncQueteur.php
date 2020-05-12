@@ -49,7 +49,7 @@ class DeleteNonReturnedTroncQueteur extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('tronc_id', $this->args['tronc_id'], 1000000, true)
+        ClientInputValidatorSpecs::withInteger('tronc_id', $this->args, 1000000, true)
       ]);
 
     $troncId = $this->validatedData["tronc_id"];

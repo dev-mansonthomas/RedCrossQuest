@@ -45,7 +45,7 @@ class ListPendingQueteurRegistration extends Action
     $ulId     = $this->decodedToken->getUlId();
 
     $this->validateSentData([
-      ClientInputValidatorSpecs::withInteger("registration_status", $this->getParam('registration_status'), 2 , false, 0)
+      ClientInputValidatorSpecs::withInteger("registration_status", $this->queryParams, 2 , false, 0)
     ]);
 
     $registrationStatus  = $this->validatedData["registration_status"];

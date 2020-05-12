@@ -6,8 +6,6 @@
  * Time: 18:36
  */
 
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\pointsQuetes\CreatePointQuete;
 use RedCrossQuest\routes\routesActions\pointsQuetes\GetPointQuete;
 use RedCrossQuest\routes\routesActions\pointsQuetes\ListPointsQuetes;

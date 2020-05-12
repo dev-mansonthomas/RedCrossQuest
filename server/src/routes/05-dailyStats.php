@@ -6,8 +6,6 @@
  * Time: 18:38
  */
 
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\dailyStats\CreateYearOfDailyStats;
 use RedCrossQuest\routes\routesActions\dailyStats\ListDailyStats;
 use RedCrossQuest\routes\routesActions\dailyStats\UpdateDailyStats;

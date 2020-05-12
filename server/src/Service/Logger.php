@@ -42,7 +42,7 @@ class Logger implements LoggerInterface
 
   /**
    *
-   * store in the Request data that identify UL, User  or other data if thoses are not available (login process) + env & app version
+   * store in the Request data that identify UL, User  or other data if those are not available (login process) + env & app version
    *
    * @param LoggingEntity $loggingEntity an instance of LogEntity
    *

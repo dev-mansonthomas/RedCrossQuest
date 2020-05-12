@@ -62,7 +62,7 @@ class SaveCoinsOnTroncQueteur extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("adminMode"          , $this->getParam('adminMode'          ), false, false)
+        ClientInputValidatorSpecs::withBoolean("adminMode", $this->queryParams, false, false)
       ]);
 
     //if admin mode: the comptage date is not updated

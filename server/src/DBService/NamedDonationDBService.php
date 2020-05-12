@@ -1,7 +1,6 @@
-<?php
-namespace RedCrossQuest\DBService;
+<?php /** @noinspection ALL */
 
-require '../../vendor/autoload.php';
+namespace RedCrossQuest\DBService;
 
 use Exception;
 use PDOException;
@@ -22,6 +21,7 @@ class NamedDonationDBService extends DBService
    * @return NamedDonationEntity[] list of NamedDonationEntity
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception if parsing errors occurs
+   * @noinspection SpellCheckingInspection
    */
   public function getNamedDonations(?string $query, bool $deleted, ?string $year, int $ulId):array
   {
@@ -117,7 +117,7 @@ ORDER BY `id` DESC
   /**
    * Get One Named Donation
    *
-   * @param int $id id of the nameddonation row
+   * @param int $id id of the named donation row
    * @param int $ulId the Id of the Unite Local
    * @param int $roleId the Id of the role of the user. if 9, do not check for ulId
    * @return NamedDonationEntity The NamedDonationEntity
@@ -181,7 +181,9 @@ $ulIdWhere
     $stmt = $this->db->prepare($sql);
     $stmt->execute($parameters);
 
-    $namedDonation = new NamedDonationEntity($stmt->fetch(), $this->logger);
+    //temp var, because pass by reference
+    $row = $stmt->fetch();
+    $namedDonation = new NamedDonationEntity($row, $this->logger);
 
     $stmt->closeCursor();
 

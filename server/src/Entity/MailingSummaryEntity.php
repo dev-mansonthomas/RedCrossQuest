@@ -28,7 +28,7 @@ class MailingSummaryEntity extends Entity
    * @param array $data The data to use to create
    * @param LoggerInterface $logger
    */
-  public function __construct(array $data, LoggerInterface $logger)
+  public function __construct(array &$data, LoggerInterface $logger)
   {
     parent::__construct($logger);
 

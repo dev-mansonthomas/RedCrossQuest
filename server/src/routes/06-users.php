@@ -6,8 +6,6 @@
  * Time: 18:38
  */
 
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\users\CreateUser;
 use RedCrossQuest\routes\routesActions\users\ReInitUserPassword;
 use RedCrossQuest\routes\routesActions\users\UpdateUser;

@@ -36,7 +36,7 @@ class ULPreferencesEntity extends Entity
    * @param array $data
    * @param LoggerInterface $logger
    */
-  public function __construct(array $data, LoggerInterface $logger)
+  public function __construct(array &$data, LoggerInterface $logger)
   {
     parent::__construct($logger);
 
@@ -58,7 +58,9 @@ class ULPreferencesEntity extends Entity
    */
   public static function withFirestoreDocument(DocumentSnapshot $documentSnapshot, LoggerInterface $logger):ULPreferencesEntity
   {
-    $instance = new ULPreferencesEntity($documentSnapshot->data(), $logger);
+    //temporary variable as only variable can be passed as reference
+    $data = $documentSnapshot->data();
+    $instance = new ULPreferencesEntity($data, $logger);
     $instance->FIRESTORE_DOC_ID = $documentSnapshot->reference()->id();
     return $instance;
   }
@@ -71,7 +73,7 @@ class ULPreferencesEntity extends Entity
    * @param LoggerInterface $logger
    * @return ULPreferencesEntity
    */
-  public static function withArray(array $data, LoggerInterface $logger):ULPreferencesEntity
+  public static function withArray(array &$data, LoggerInterface $logger):ULPreferencesEntity
   {
     $instance = new ULPreferencesEntity($data, $logger);
     $instance->FIRESTORE_DOC_ID = null;

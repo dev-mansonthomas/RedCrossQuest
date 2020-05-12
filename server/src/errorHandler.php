@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;

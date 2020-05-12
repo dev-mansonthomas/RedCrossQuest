@@ -205,7 +205,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       
       //check if the roleId in the URL match the one in the JWT Token (user might have changed the URL)
       $path         = $request->getUri()->getPath();
-      $explodedPath = explode("/",  substr($path, strlen('/rest/')),2); //isGAE() ? substr($path, strlen('/rest/')):$path
+      $explodedPath = explode("/",  substr($path, strlen('/rest/')),2);
 
       //$this->logger->error("path info", array("path"=>$path, "explodedPath"=>$explodedPath, "\$_SERVER"=>$_SERVER));
 

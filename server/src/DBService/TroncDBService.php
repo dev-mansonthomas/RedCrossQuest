@@ -1,8 +1,6 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Exception;
 use InvalidArgumentException;
 use PDOException;
@@ -110,7 +108,9 @@ AND    t.ul_id = :ul_id
 
       if($stmt->rowCount() == 1 )
       {
-        $tronc = new TroncEntity($stmt->fetch(), $this->logger);
+        //temp var, because pass by reference
+        $row = $stmt->fetch();
+        $tronc = new TroncEntity($row, $this->logger);
         $stmt->closeCursor();
         return $tronc;
       }

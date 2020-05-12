@@ -1,8 +1,6 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Exception;
 use PDOException;
 use RedCrossQuest\Entity\YearlyGoalEntity;

@@ -76,7 +76,7 @@
           {
             $timeout.cancel(loginTimeout);
             vm.error    = true;
-            vm.errorStr = 'Un erreur s\'est produite: '+JSON.stringify(message.data.error?message.data.error:message.data);
+            vm.errorStr = 'Un erreur s\'est produite: '+JSON.stringify(message);
             vm.loading  = false;
             vm.success  = null;
           }

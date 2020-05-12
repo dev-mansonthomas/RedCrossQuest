@@ -44,7 +44,7 @@ class GetTronc extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('id', $this->args['id'], 1000000, true)
+        ClientInputValidatorSpecs::withInteger('id', $this->args, 1000000, true)
       ]);
 
     $ulId    = $this->decodedToken->getUlId();

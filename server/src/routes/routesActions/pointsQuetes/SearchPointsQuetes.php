@@ -44,10 +44,10 @@ class SearchPointsQuetes extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString ("q"               , $this->getParam('q'               ), 40  , false    ),
-        ClientInputValidatorSpecs::withInteger("point_quete_type", $this->getParam('point_quete_type'), 10   , false    ),
-        ClientInputValidatorSpecs::withBoolean("active"          , $this->getParam('active'          ), false  , true ),
-        ClientInputValidatorSpecs::withInteger('admin_ul_id'     , $this->getParam('admin_ul_id'     ), 1000 , false    )
+        ClientInputValidatorSpecs::withString ("q"               , $this->queryParams, 40  , false    ),
+        ClientInputValidatorSpecs::withInteger("point_quete_type", $this->queryParams, 10   , false    ),
+        ClientInputValidatorSpecs::withBoolean("active"          , $this->queryParams, false  , true ),
+        ClientInputValidatorSpecs::withInteger('admin_ul_id'     , $this->queryParams, 1000 , false    )
       ]);
 
     $query            = $this->validatedData["q"];

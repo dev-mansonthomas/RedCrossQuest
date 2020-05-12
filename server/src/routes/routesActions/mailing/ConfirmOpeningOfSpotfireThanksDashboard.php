@@ -45,7 +45,7 @@ class ConfirmOpeningOfSpotfireThanksDashboard extends Action
   {
 
     $this->validateSentData([
-      ClientInputValidatorSpecs::withString("guid"    , $this->args['guid'], 36  , true, ClientInputValidator::$UUID_VALIDATION)
+      ClientInputValidatorSpecs::withString("guid"    , $this->args, 36  , true, ClientInputValidator::$UUID_VALIDATION)
     ]);
 
     $guid  = $this->validatedData["guid"];

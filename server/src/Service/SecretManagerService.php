@@ -1,8 +1,6 @@
 <?php
 namespace RedCrossQuest\Service;
 
-require '../../vendor/autoload.php';
-
 use Google\ApiCore\ApiException;
 use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
 use InvalidArgumentException;
@@ -129,7 +127,7 @@ class SecretManagerService
   }
 
   /**
-   * This function is used in offline mode(setting.php), when the SecretManager is not accessible or with a loosy internet connection
+   * This function is used in offline mode(setting.php), when the SecretManager is not accessible or with a lousy internet connection
    * @param string $txtPropertiesPath file path of the properties file
    * @return array an associative array of the local secret SECRET_NAME=>SECRET_VALUE
    */

@@ -1,6 +1,4 @@
-<?php
-
-
+<?php /** @noinspection SpellCheckingInspection */
 
 
 namespace RedCrossQuest\routes\routesActions\exportData;
@@ -61,7 +59,7 @@ class ExportData extends Action
     $ulId     = $this->decodedToken->getUlId();
    /*
     $this->validateSentData([
-      ClientInputValidatorSpecs::withString("password", $this->getParam('password'), 40 , true )
+      ClientInputValidatorSpecs::withString("password", $this->getParam, 40 , true )
     ]);
    $password      = $this->validatedData["password"];
    */

@@ -6,8 +6,6 @@
  * Time: 18:33
  */
 
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\troncs\GetTronc;
 use RedCrossQuest\routes\routesActions\troncs\InsertTronc;
 use RedCrossQuest\routes\routesActions\troncs\ListTroncs;

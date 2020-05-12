@@ -57,7 +57,7 @@ class ReCaptchaService
    *  * check that the score returned by ReCaptcha is greater than the one defined as the lowest acceptable value in the server configuration
    *
    * @param $token            string    the token sent by the client
-   * @param $actionRequired   string    what action is excpected by the server
+   * @param $actionRequired   string    what action is expected by the server
    * @param $username         string    the username of the client when applicable
    *
    * @return                  int       0: Success, 1: token empty/null/too long, 2: wrong action, 3: score too low, 4: response is an error, 5: exception occurred while performing the check.

@@ -56,7 +56,7 @@ class GetAndSetDepartOnTroncQueteur extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('tronc_id', $this->getParam('tronc_id'), 1000000, true)
+        ClientInputValidatorSpecs::withInteger('tronc_id', $this->queryParams, 1000000, true)
       ]);
 
     //c'est bien le troncId qu'on passe ici, on va supprimer tout les tronc_queteur qui ont ce tronc_id et départ ou retour à nulle

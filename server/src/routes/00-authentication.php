@@ -1,12 +1,11 @@
-<?php
+<?php /** @noinspection SpellCheckingInspection */
+
 /**
  * Created by IntelliJ IDEA.
  * User: tmanson
  * Date: 06/03/4017
  * Time: 18:36
  */
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\authentication\AuthenticateAction;
 use RedCrossQuest\routes\routesActions\authentication\FirebaseAuthenticateAction;
 use RedCrossQuest\routes\routesActions\authentication\GetUserInfoFromUUIDAction;

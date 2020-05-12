@@ -1,8 +1,6 @@
-<?php
+<?php /** @noinspection SpellCheckingInspection */
 
 namespace RedCrossQuest\DBService;
-
-require '../../vendor/autoload.php';
 
 use Exception;
 use PDOException;
@@ -62,8 +60,9 @@ WHERE   `ul`.id    = :ul_id
     $stmt = $this->db->prepare($sql);
 
     $stmt->execute(["ul_id" => $ulId]);
-
-    $ul = new UniteLocaleEntity($stmt->fetch(), $this->logger);
+    //temp var, because pass by reference
+    $row = $stmt->fetch();
+    $ul = new UniteLocaleEntity($row, $this->logger);
     $stmt->closeCursor();
 
     return $ul;

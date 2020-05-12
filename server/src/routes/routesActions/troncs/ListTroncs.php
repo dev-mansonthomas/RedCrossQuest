@@ -44,16 +44,16 @@ class ListTroncs extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("active", $this->getParam('active'), false     , null),
-        ClientInputValidatorSpecs::withInteger("type"  , $this->getParam('type'  ), 5       , false, null),
-        ClientInputValidatorSpecs::withInteger("q"     , $this->getParam('q'     ), 1000000 , false, null),
+        ClientInputValidatorSpecs::withBoolean("active", $this->queryParams, false     , null),
+        ClientInputValidatorSpecs::withInteger("type"  , $this->queryParams, 5       , false, null),
+        ClientInputValidatorSpecs::withInteger("q"     , $this->queryParams, 1000000 , false, null),
       ]);
 
     $active = $this->validatedData["active"];
-    $type   = $this->validatedData["type"];
-    $q      = $this->validatedData["q"];
+    $type   = $this->validatedData["type"  ];
+    $q      = $this->validatedData["q"     ];
 
-    $ulId   = $this->decodedToken->getUlId();
+    $ulId   = $this->decodedToken  ->getUlId  ();
     $troncs = $this->troncDBService->getTroncs($q, $ulId, $active, $type);
 
     $this->response->getBody()->write(json_encode($troncs));

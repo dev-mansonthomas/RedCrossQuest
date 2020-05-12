@@ -51,8 +51,7 @@ class SendABatchOfMailing extends Action
    */
   protected function action(): Response
   {
-    $ulId     = $this->decodedToken->getUlId();
-
+    $ulId              = $this->decodedToken->getUlId();
     $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($ulId);
     $mailingReport     = $this->emailBusinessService->sendThanksEmailBatch($ulId, $uniteLocaleEntity);
 

@@ -50,7 +50,7 @@ class ListUniteLocale extends Action
     {
       $this->validateSentData(
         [
-          ClientInputValidatorSpecs::withString("q", $this->getParam('q'), 50 , true)
+          ClientInputValidatorSpecs::withString("q", $this->queryParams, 50 , true)
         ]);
 
       $query  = $this->validatedData["q"];

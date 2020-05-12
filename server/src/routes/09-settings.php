@@ -1,8 +1,6 @@
 <?php
 
 /********************************* Application Settings Exposed to GUI ****************************************/
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\settings\GetAllULSettings;
 use RedCrossQuest\routes\routesActions\settings\GetULSettings;
 use RedCrossQuest\routes\routesActions\settings\GetULSetupStatus;

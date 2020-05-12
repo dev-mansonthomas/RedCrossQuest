@@ -6,12 +6,9 @@
  * Time: 18:35
  */
 
-require '../../vendor/autoload.php';
-
+use RedCrossQuest\routes\routesActions\moneyBag\GetBillsMoneyBagDetails;
 use RedCrossQuest\routes\routesActions\moneyBag\GetCoinsMoneyBagDetails;
 use RedCrossQuest\routes\routesActions\moneyBag\SearchMoneyBagId;
-
-
 
 /**
  * @OA\Tag(
@@ -23,7 +20,7 @@ use RedCrossQuest\routes\routesActions\moneyBag\SearchMoneyBagId;
 
 
 /**
- * GetMoneyBag Details
+ * Search for moneyBagId
  *
  * @OA\Get(
  *     path="/{role-id:[1-9]}/ul/{ul-id}/moneyBag",
@@ -186,4 +183,4 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/moneyBag/coins/{id}'               , GetC
  *     )
  * )
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/moneyBag/bills/{id}'               , GetCoinsMoneyBagDetails::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/moneyBag/bills/{id}'               , GetBillsMoneyBagDetails::class);

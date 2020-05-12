@@ -78,8 +78,9 @@ class AssociateRegistrationWithExistingQueteur extends Action
 
 
     //validate the token, if validation fails, it throws an exception
+    $tempArray = ['ul_registration_token'=>$queteurEntity->ul_registration_token];
     $this->validateSentData([
-      ClientInputValidatorSpecs::withString("ul_registration_token", $queteurEntity->ul_registration_token, 36 , true, ClientInputValidator::$UUID_VALIDATION)
+      ClientInputValidatorSpecs::withString("ul_registration_token", $tempArray, 36 , true, ClientInputValidator::$UUID_VALIDATION)
     ]);
 
     $queteurEntity->referent_volunteer = 0;

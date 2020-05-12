@@ -4,7 +4,7 @@ namespace RedCrossQuest\routes\routesActions\moneyBag;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
-use RedCrossQuest\DBService\TroncQueteurDBService;
+use RedCrossQuest\DBService\MoneyBagDBService;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
@@ -12,23 +12,22 @@ use RedCrossQuest\Service\ClientInputValidatorSpecs;
 class SearchMoneyBagId extends Action
 {
   /**
-   * @var TroncQueteurDBService          $troncQueteurDBService
+   * @var MoneyBagDBService           $moneyBagDBService
    */
-  private $troncQueteurDBService;
+  private $moneyBagDBService;
 
 
   /**
-   * @param LoggerInterface $logger
+   * @param LoggerInterface      $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param TroncQueteurDBService $troncQueteurDBService
+   * @param MoneyBagDBService    $moneyBagDBService
    */
   public function __construct(LoggerInterface             $logger,
                               ClientInputValidator        $clientInputValidator,
-                              TroncQueteurDBService       $troncQueteurDBService)
+                              MoneyBagDBService           $moneyBagDBService)
   {
     parent::__construct($logger, $clientInputValidator);
-    $this->troncQueteurDBService       = $troncQueteurDBService;
-
+    $this->moneyBagDBService = $moneyBagDBService;
   }
 
   /**
@@ -39,15 +38,15 @@ class SearchMoneyBagId extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("q"   , $this->getParam('q'   ), 30 , true),
-        ClientInputValidatorSpecs::withString("type", $this->getParam('type'),  4 , true)
+        ClientInputValidatorSpecs::withString("q"   , $this->queryParams, 30 , true),
+        ClientInputValidatorSpecs::withString("type", $this->queryParams,  4 , true)
       ]);
 
     $query         = $this->validatedData["q"   ];
     $type          = $this->validatedData["type"];
     $ulId          = $this->decodedToken->getUlId ();
 
-    $moneyBagIds = $this->troncQueteurDBService->searchMoneyBagId($query, $type, $ulId);
+    $moneyBagIds = $this->moneyBagDBService->searchMoneyBagId($query, $type, $ulId);
 
     $this->response->getBody()->write(json_encode($moneyBagIds));
 

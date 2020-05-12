@@ -48,13 +48,13 @@ class UpdateRedCrossQuestSettings extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("use_bank_bag" , $this->parsedBody['use_bank_bag']===true?1:0, true, false),
+        ClientInputValidatorSpecs::withBoolean("use_bank_bag" , $this->parsedBody, true, false),
       ]);
 
 
     $ulId   = $this->decodedToken->getUlId();
 
-    //recupère les settings exitants
+    //récupère les settings existants
     $ulPreferenceEntity = $this->ULPreferencesFirestoreDBService ->getULPrefs($ulId);
 
     if(!$ulPreferenceEntity)

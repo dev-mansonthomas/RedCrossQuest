@@ -1,8 +1,6 @@
 <?php
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Exception;
 use PDOException;
 use Ramsey\Uuid\Uuid;
@@ -150,7 +148,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -186,7 +186,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -245,7 +247,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -300,7 +304,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }
@@ -339,7 +345,9 @@ LIMIT 1
 
     if($count == 1)
     {
-      $result = new UserEntity($stmt->fetch(), $this->logger);
+      //temp var, because pass by reference
+      $row = $stmt->fetch();
+      $result = new UserEntity($row, $this->logger);
       $stmt->closeCursor();
       return $result;
     }

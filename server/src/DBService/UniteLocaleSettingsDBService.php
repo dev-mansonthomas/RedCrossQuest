@@ -2,8 +2,6 @@
 
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Exception;
 use PDOException;
 use RedCrossQuest\Entity\UniteLocaleSettingsEntity;
@@ -37,7 +35,9 @@ WHERE   `ul_id` = :ul_id
     $stmt = $this->db->prepare($sql);
 
     $stmt->execute(["ul_id" => $ulId]);
-    $uls = new UniteLocaleSettingsEntity($stmt->fetch(), $this->logger);
+    //temp var, because pass by reference
+    $row = $stmt->fetch();
+    $uls = new UniteLocaleSettingsEntity($row, $this->logger);
     $stmt->closeCursor();
 
     return $uls;

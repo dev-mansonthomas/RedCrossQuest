@@ -45,13 +45,13 @@ class GetTroncQueteur extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('id', $this->args['id'], 1000000, true)
+        ClientInputValidatorSpecs::withInteger('id', $this->args, 1000000, true)
       ]);
 
-    $troncQueteurId           = $this->validatedData["id"];
+    $troncQueteurId = $this->validatedData["id"];
 
-    $ulId      = $this->decodedToken->getUlId       ();
-    $roleId    = $this->decodedToken->getRoleId     ();
+    $ulId           = $this->decodedToken->getUlId       ();
+    $roleId         = $this->decodedToken->getRoleId     ();
 
     $troncQueteur   = $this->troncQueteurBusinessService->getTroncQueteurFromTroncQueteurId($troncQueteurId, $ulId, $roleId);
 

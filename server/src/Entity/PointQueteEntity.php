@@ -110,7 +110,7 @@ class PointQueteEntity  extends Entity
    * @param LoggerInterface $logger
    * @throws Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data, LoggerInterface $logger)
+  public function __construct(array &$data, LoggerInterface $logger)
   {
     parent::__construct($logger);
 

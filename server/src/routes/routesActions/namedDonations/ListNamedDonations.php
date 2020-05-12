@@ -46,14 +46,14 @@ class ListNamedDonations extends Action
 
 
     $validations = [
-      ClientInputValidatorSpecs::withString ("q"       ,  $this->getParam('q'               ), 100 , false    ),
-      ClientInputValidatorSpecs::withBoolean("deleted" ,  $this->getParam('deleted'         ), false  , false),
-      ClientInputValidatorSpecs::withInteger("year"    ,  $this->getParam('year'            ), 2050 , false    )
+      ClientInputValidatorSpecs::withString ("q"       ,  $this->queryParams, 100 , false    ),
+      ClientInputValidatorSpecs::withBoolean("deleted" ,  $this->queryParams, false  , false),
+      ClientInputValidatorSpecs::withInteger("year"    ,  $this->queryParams, 2050 , false    )
     ];
 
     if(array_key_exists('admin_ul_id',$this->queryParams) && $roleId == 9)
     {
-      $validations [] = ClientInputValidatorSpecs::withInteger('admin_ul_id',$this->getParam('admin_ul_id'), 1000, true);
+      $validations [] = ClientInputValidatorSpecs::withInteger('admin_ul_id',$this->queryParams, 1000, true);
     }
 
     $this->validateSentData($validations);

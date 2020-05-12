@@ -5,8 +5,6 @@ use Google\Cloud\Firestore\CollectionReference;
 use Google\Cloud\Firestore\FirestoreClient;
 use RedCrossQuest\Service\Logger;
 
-require '../../vendor/autoload.php';
-
 abstract class FirestoreDBService
 {
   /** @var FirestoreClient $firstoreClient*/

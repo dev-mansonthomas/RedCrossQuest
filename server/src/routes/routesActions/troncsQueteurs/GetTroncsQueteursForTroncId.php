@@ -45,7 +45,7 @@ class GetTroncsQueteursForTroncId extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withInteger('tronc_id', $this->getParam('tronc_id'), 1000000, true)
+        ClientInputValidatorSpecs::withInteger('tronc_id', $this->queryParams, 1000000, true)
       ]);
 
     $tronc_id     = $this->validatedData["tronc_id"];

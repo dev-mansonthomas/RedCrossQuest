@@ -1,7 +1,9 @@
 <?php
 error_reporting(E_ALL );
+require __DIR__ . '/../../vendor/autoload.php';
 
 use Slim\Factory\AppFactory;
+use DI\ContainerBuilder;
 
 if (PHP_SAPI == 'cli-server')
 {
@@ -13,20 +15,15 @@ if (PHP_SAPI == 'cli-server')
         return false;
     }
 }
-
-use DI\ContainerBuilder;
-
-require __DIR__ . '/../../vendor/autoload.php';
 //REST services do not need server sessions
 //session_start();
-
 
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 // use annotation to inject settings
 $containerBuilder->useAnnotations(true);
 
-$containerBuilder->enableCompilation('/tmp/cache');
+$containerBuilder->enableCompilation(sys_get_temp_dir().'/cache');
 
 // Set up settings
 $settings = require __DIR__ . '/../../src/settings.php';

@@ -587,7 +587,7 @@
               alors inscrivez sur chaque sac un identifiant unique et reportez cet identifiant dans les cases ci-dessous.
               Un onglet des graphiques pour le compteur vous donnera le détail par sac (nombre de pièces, montant, poids)
               <br/>
-              <b>Ex: 2018-PIECE-001, 2018-BILLET-001</b>
+              <b>Ex: {{rfe.currentYear}}-PIECE-001, {{rfe.currentYear}}-BILLET-001</b>
             </span>
             </div>
           </div>
@@ -599,18 +599,20 @@
 
                 <input
                   id="coins_money_bag_id"
+                  name="coins_money_bag_id"
                   type="text"
                   ng-model="rfe.current.recu_fiscal.coins_money_bag_id"
                   placeholder="Rechercher un identifiant de sac à pièces existant"
                   uib-typeahead="moneyBagId as moneyBagId for moneyBagId in rfe.searchCoinMoneyBagId($viewValue)"
-                  typeahead-loading="loadingMoneyBagId"
+                  typeahead-loading="loadingCoinMoneyBagId"
                   typeahead-no-results="noResultsCoin"
-                  typeahead-wait-ms="20"
+                  typeahead-wait-ms="350"
+                  typeahead-on-select="rfe.getBagDetails($item, $model, $label, $event, true)"
                   class="form-control"
 
-                  ng-required
+                  ng-required="rfe.use_bank_bag && rfe.current.recu_fiscal.type == 1"
                   autocomplete="off">
-                <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
+                <i   ng-show="loadingCoinMoneyBagId" class="glyphicon glyphicon-refresh"></i>
                 <span class="input-group-addon glyphicon glyphicon-coins" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
               <div ng-show="noResultsCoin">
@@ -625,18 +627,20 @@
 
                 <input
                   id="bills_money_bag_id"
+                  name="bills_money_bag_id"
                   type="text"
                   ng-model="rfe.current.recu_fiscal.bills_money_bag_id"
                   placeholder="Rechercher un identifiant de sac à billets existant"
                   uib-typeahead="moneyBagId as moneyBagId for moneyBagId in rfe.searchBillMoneyBagId($viewValue)"
-                  typeahead-loading="loadingMoneyBagId"
+                  typeahead-loading="loadingBillMoneyBagId"
                   typeahead-no-results="noResultsBill"
-                  typeahead-wait-ms="20"
+                  typeahead-wait-ms="350"
+                  typeahead-on-select="rfe.getBagDetails($item, $model, $label, $event, false)"
                   class="form-control"
 
-                  ng-required
+                  ng-required="rfe.use_bank_bag && rfe.current.recu_fiscal.type == 1"
                   autocomplete="off">
-                <i   ng-show="loadingMoneyBagId" class="glyphicon glyphicon-refresh"></i>
+                <i   ng-show="loadingBillMoneyBagId" class="glyphicon glyphicon-refresh"></i>
                 <span class="input-group-addon glyphicon glyphicon-money" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
               <div ng-show="noResultsBill">
@@ -647,6 +651,83 @@
 
           </div>
         </div>
+
+        <div class="row" ng-show="rfe.current.coinsMoneyBagDetails || rfe.current.billsMoneyBagDetails">
+          <div class="col-md-4 col-md-offset-4" ng-show="rfe.current.coinsMoneyBagDetails">
+            <div style="text-align: center;color:#777;font-weight:400;font-size:19.5px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">Détails du sac de pièces</div>
+            <table class="table table-striped table-condensed table-hover">
+              <tr>
+                <td></td>
+                <td>Actuel</td>
+                <td>Après ce tronc</td>
+              </tr>
+              <tr>
+                <th>Total</th>
+                <td>{{rfe.current.coinsMoneyBagDetails.amount| currency : "€" : 2}}</td>
+                <td>{{rfe.current.coinsMoneyBagDetails.amount +
+                  rfe.current.recu_fiscal.euro2   * 2     +
+                  rfe.current.recu_fiscal.euro1   * 1     +
+                  rfe.current.recu_fiscal.cents50 * 0.5   +
+                  rfe.current.recu_fiscal.cents20 * 0.2   +
+                  rfe.current.recu_fiscal.cents10 * 0.1   +
+                  rfe.current.recu_fiscal.cents5  * 0.05  +
+                  rfe.current.recu_fiscal.cents2  * 0.02  +
+                  rfe.current.recu_fiscal.cent1   * 0.01  | currency : "€" : 2}}</td>
+              </tr>
+              <tr>
+                <th>Poids</th>
+                <td>{{rfe.current.coinsMoneyBagDetails.weight | currency : "g" : 2 }}</td>
+                <td>{{rfe.current.coinsMoneyBagDetails.weight +
+                  rfe.current.recu_fiscal.euro2   *  8.5  +
+                  rfe.current.recu_fiscal.euro1   *  7.5  +
+                  rfe.current.recu_fiscal.cents50 *  7.8  +
+                  rfe.current.recu_fiscal.cents20 *  5.74 +
+                  rfe.current.recu_fiscal.cents10 *  4.1  +
+                  rfe.current.recu_fiscal.cents5  *  3.92 +
+                  rfe.current.recu_fiscal.cents2  *  3.06 +
+                  rfe.current.recu_fiscal.cent1   *  2.3  | currency : "g" : 2 }}</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="col-md-4" ng-show="rfe.current.billsMoneyBagDetails">
+            <div style="text-align: center;color:#777;font-weight:400;font-size:19.5px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">Détails du sac de billets</div>
+            <table class="table table-striped table-condensed table-hover">
+              <tr>
+                <td></td>
+                <td>Actuel</td>
+                <td>Après ce tronc</td>
+              </tr>
+              <tr>
+                <th>Total</th>
+                <td>{{rfe.current.billsMoneyBagDetails.amount| currency : "€" : 2}}</td>
+                <td>{{rfe.current.billsMoneyBagDetails.amount +
+                  rfe.current.recu_fiscal.euro5   * 5   +
+                  rfe.current.recu_fiscal.euro10  * 10  +
+                  rfe.current.recu_fiscal.euro20  * 20  +
+                  rfe.current.recu_fiscal.euro50  * 50  +
+                  rfe.current.recu_fiscal.euro100 * 100 +
+                  rfe.current.recu_fiscal.euro200 * 200 +
+                  rfe.current.recu_fiscal.euro500 * 500  | currency : "€" : 2}}</td>
+              </tr>
+              <tr>
+                <th>Poids</th>
+                <td>{{rfe.current.billsMoneyBagDetails.weight| currency : "g" : 2}}</td>
+                <td>{{rfe.current.billsMoneyBagDetails.weight +
+                  rfe.current.recu_fiscal.euro5   *  1.1 +
+                  rfe.current.recu_fiscal.euro10  *  1.1 +
+                  rfe.current.recu_fiscal.euro20  *  1   +
+                  rfe.current.recu_fiscal.euro50  *  0.9 +
+                  rfe.current.recu_fiscal.euro100 *  0.8 +
+                  rfe.current.recu_fiscal.euro200 *  0.7 +
+                  rfe.current.recu_fiscal.euro500 *  0.6 | currency : "g" : 2}}</td>
+              </tr>
+            </table>
+          </div>
+
+        </div>
+
+
 
         <div class="row" ng-show="rfe.current.confirmInputValues">
           <div class="form-group col-md-6 col-md-offset-3">

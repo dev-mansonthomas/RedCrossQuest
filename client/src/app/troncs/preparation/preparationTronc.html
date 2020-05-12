@@ -92,7 +92,7 @@
                uib-typeahead="queteur as queteur.full_name for queteur in pt.searchQueteur($viewValue)"
                typeahead-loading="loadingQueteurs"
                typeahead-no-results="noResults"
-               typeahead-wait-ms="20"
+               typeahead-wait-ms="350"
                typeahead-select-on-blur="true"
                class="form-control"
                ng-required="true"
@@ -129,7 +129,7 @@
                 uib-typeahead="tronc as tronc.stringView for tronc in pt.searchTronc($viewValue)"
                 typeahead-loading="loadingTroncs"
                 typeahead-no-results="noTroncsResults"
-                typeahead-wait-ms="20"
+                typeahead-wait-ms="350"
                 typeahead-select-on-blur="true"
                 class="form-control"
                 ng-required="true"
@@ -156,7 +156,7 @@
                       pq in pt.pointsQuete | filter: $viewValue"
                 typeahead-loading="loadingTroncs"
                 typeahead-no-results="noTroncsResults"
-                typeahead-wait-ms="20"
+                typeahead-wait-ms="350"
                 typeahead-select-on-blur="true"
                 class="form-control"
                 ng-required="true"
@@ -200,7 +200,7 @@
               <strong>Bravo!</strong> La préparation a été sauvegardée avec succès!  <br/>
 
 
-              <a href="/#!/tronc_queteur/edit/{{pt.previous.id}}"><strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> ID {{pt.previous.id}}</a> - 
+              <a href="/#!/tronc_queteur/edit/{{pt.previous.id}}"><strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> ID {{pt.previous.id}}</a> -
               <a href="/#!/queteurs/edit/{{pt.previous.queteur.id         }}">Queteur N°
               {{pt.previous.queteur.id         }} -
               {{pt.previous.queteur.first_name }}

@@ -37,7 +37,7 @@ class DecodedToken
    * Mode of use of RCQ.
    * 1 : RCQ is used to record dailyStats (dailystats before RCQ)
    * 2 : Normal mode
-   * 3 : Deprecated, was aimed for Country Side UL, functionnality moved to RedQuest
+   * 3 : Deprecated, was aimed for Country Side UL, functionality moved to RedQuest
    * @var int $ulMode
    */
   private $ulMode        ;

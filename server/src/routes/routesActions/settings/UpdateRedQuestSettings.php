@@ -49,14 +49,14 @@ class UpdateRedQuestSettings extends Action
     $this->logger->debug("parsed body", [$this->parsedBody]);
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("rq_autonomous_depart_and_return" , $this->parsedBody['rq_autonomous_depart_and_return']===true?1:0, true, false),
-        ClientInputValidatorSpecs::withBoolean("rq_display_daily_stats"          , $this->parsedBody['rq_display_daily_stats'         ]===true?1:0, true, false),
-        ClientInputValidatorSpecs::withString ("rq_display_queteur_ranking"      , $this->parsedBody['rq_display_queteur_ranking'     ], 8,      true),
+        ClientInputValidatorSpecs::withBoolean("rq_autonomous_depart_and_return" , $this->parsedBody, true, false),
+        ClientInputValidatorSpecs::withBoolean("rq_display_daily_stats"          , $this->parsedBody, true, false),
+        ClientInputValidatorSpecs::withString ("rq_display_queteur_ranking"      , $this->parsedBody, 8,      true),
       ]);
 
     $ulId   = $this->decodedToken->getUlId();
 
-    //recupère les settings exitants
+    //récupère les settings existants
     $ulPreferenceEntity = $this->ULPreferencesFirestoreDBService ->getULPrefs($ulId);
 
     if(!$ulPreferenceEntity)

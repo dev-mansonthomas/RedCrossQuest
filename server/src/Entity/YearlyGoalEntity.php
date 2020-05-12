@@ -84,7 +84,7 @@ class YearlyGoalEntity  extends Entity
    * @param LoggerInterface $logger
    * @throws Exception if a parse Date or JSON fails
    */
-  public function __construct(array $data, LoggerInterface $logger)
+  public function __construct(array &$data, LoggerInterface $logger)
   {
     parent::__construct($logger);
     $this->getInteger('id'               , $data);
@@ -101,6 +101,5 @@ class YearlyGoalEntity  extends Entity
     $this->getInteger('day_7_percentage' , $data);
     $this->getInteger('day_8_percentage' , $data);
     $this->getInteger('day_9_percentage' , $data);
-
   }
 }

@@ -28,7 +28,7 @@ class GetMailingSummary extends Action
    */
   public function __construct(LoggerInterface               $logger,
                               ClientInputValidator          $clientInputValidator,
-                              MailingDBService               $mailingDBService)
+                              MailingDBService              $mailingDBService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->mailingDBService = $mailingDBService;

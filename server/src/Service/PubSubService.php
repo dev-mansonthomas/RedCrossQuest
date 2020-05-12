@@ -1,9 +1,6 @@
 <?php
 namespace RedCrossQuest\Service;
 
-
-require '../../vendor/autoload.php';
-
 use Exception;
 use Google\Cloud\PubSub\PubSubClient;
 

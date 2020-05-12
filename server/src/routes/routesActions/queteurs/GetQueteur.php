@@ -54,7 +54,7 @@ class GetQueteur extends Action
     $ulId   = $this->decodedToken->getUlId  ();
     $roleId = $this->decodedToken->getRoleId();
     $this->validateSentData([
-      ClientInputValidatorSpecs::withInteger("id", $this->args['id'], 1000000 , false, 0)
+      ClientInputValidatorSpecs::withInteger("id", $this->args, 1000000 , false, 0)
     ]);
 
     $queteurId  = $this->validatedData["id"];

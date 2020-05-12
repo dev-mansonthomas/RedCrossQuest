@@ -2,8 +2,6 @@
 
 namespace RedCrossQuest\DBService;
 
-require '../../vendor/autoload.php';
-
 use Exception;
 use PDOException;
 use RedCrossQuest\Entity\PointQueteEntity;
@@ -200,8 +198,9 @@ $ulRestriction
     $stmt = $this->db->prepare($sql);
 
     $stmt->execute($parameters);
-
-    $point_quete = new PointQueteEntity($stmt->fetch(), $this->logger);
+    //temp var, because pass by reference
+    $row = $stmt->fetch();
+    $point_quete = new PointQueteEntity($row, $this->logger);
     $stmt->closeCursor();
     return $point_quete;
   }

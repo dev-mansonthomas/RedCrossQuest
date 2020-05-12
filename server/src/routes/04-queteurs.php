@@ -5,9 +5,6 @@
  * Date: 06/03/2017
  * Time: 18:38
  */
-
-require '../../vendor/autoload.php';
-
 use RedCrossQuest\routes\routesActions\queteurs\AnonymizeQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\ApproveQueteurRegistration;
 use RedCrossQuest\routes\routesActions\queteurs\AssociateRegistrationWithExistingQueteur;

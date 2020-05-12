@@ -71,9 +71,9 @@ class ResetPassword extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("uuid"    , $this->parsedBody["uuid"     ], 36   , true, ClientInputValidator::$UUID_VALIDATION),
-        ClientInputValidatorSpecs::withString("password", $this->parsedBody["password" ], 60   , true),
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody["token"    ], 1500 , true),
+        ClientInputValidatorSpecs::withString("uuid"    , $this->parsedBody, 36   , true, ClientInputValidator::$UUID_VALIDATION),
+        ClientInputValidatorSpecs::withString("password", $this->parsedBody, 60   , true),
+        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
       ]);
 
     $uuid     = $this->validatedData["uuid"];

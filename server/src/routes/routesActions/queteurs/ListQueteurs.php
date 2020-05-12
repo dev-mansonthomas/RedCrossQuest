@@ -49,7 +49,7 @@ class ListQueteurs extends Action
 
     if($anonymization_token != null && strlen($anonymization_token) > 0 && $roleId >= 4)
     {// If the token is given, then other search criteria are ignored. RGPD anonymised volunteer
-      $this->validateSentData([ClientInputValidatorSpecs::withString("anonymization_token", $anonymization_token, 36 , true, ClientInputValidator::$UUID_VALIDATION)]);
+      $this->validateSentData([ClientInputValidatorSpecs::withString("anonymization_token", $this->queryParams, 36 , true, ClientInputValidator::$UUID_VALIDATION)]);
 
       $queteurs = $this->queteurDBService->getQueteurByAnonymizationToken($this->validatedData["anonymization_token"],$ulId, $roleId);
 
@@ -59,21 +59,21 @@ class ListQueteurs extends Action
     }
 
     $validations = [
-      ClientInputValidatorSpecs::withString ("q"               , $this->getParam('q'               ), 100, false    ),
-      ClientInputValidatorSpecs::withInteger('searchType'      , $this->getParam('searchType'      ), 5   , false    ),
-      ClientInputValidatorSpecs::withInteger('secteur'         , $this->getParam('secteur'         ), 10  , false    ),
-      ClientInputValidatorSpecs::withBoolean("active"          , $this->getParam('active'          ), false , true ),
-      ClientInputValidatorSpecs::withBoolean("rcqUser"         , $this->getParam('rcqUser'         ), false , false),
-      ClientInputValidatorSpecs::withBoolean("rcqUserActif"    , $this->getParam('rcqUserActif'    ), false , false),
-      ClientInputValidatorSpecs::withBoolean("benevoleOnly"    , $this->getParam('benevoleOnly'    ), false , false),
-      ClientInputValidatorSpecs::withString ("queteurIds"      , $this->getParam('queteurIds'      ), 50 , false    ),
-      ClientInputValidatorSpecs::withInteger('QRSearchType'    , $this->getParam('QRSearchType'    ), 5   , false    )
+      ClientInputValidatorSpecs::withString ("q"               , $this->queryParams, 100, false    ),
+      ClientInputValidatorSpecs::withInteger('searchType'      , $this->queryParams, 5   , false    ),
+      ClientInputValidatorSpecs::withInteger('secteur'         , $this->queryParams, 10  , false    ),
+      ClientInputValidatorSpecs::withBoolean("active"          , $this->queryParams, false , true ),
+      ClientInputValidatorSpecs::withBoolean("rcqUser"         , $this->queryParams, false , false),
+      ClientInputValidatorSpecs::withBoolean("rcqUserActif"    , $this->queryParams, false , false),
+      ClientInputValidatorSpecs::withBoolean("benevoleOnly"    , $this->queryParams, false , false),
+      ClientInputValidatorSpecs::withString ("queteurIds"      , $this->queryParams, 50 , false    ),
+      ClientInputValidatorSpecs::withInteger('QRSearchType'    , $this->queryParams, 5   , false    )
     ];
 
     $adminUlSearch = false;
     if(array_key_exists('admin_ul_id',$this->queryParams) && $roleId == 9)
     {
-      $validations[]= ClientInputValidatorSpecs::withInteger('admin_ul_id', $this->getParam('admin_ul_id'), 1000, true);
+      $validations[]= ClientInputValidatorSpecs::withInteger('admin_ul_id', $this->queryParams, 1000, true);
       $adminUlSearch = true;
     }
 

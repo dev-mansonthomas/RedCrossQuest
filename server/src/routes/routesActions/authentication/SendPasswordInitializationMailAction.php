@@ -73,8 +73,8 @@ class SendPasswordInitializationMailAction extends Action
 
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("username", $parsedBody["username" ], 20   , true),
-        ClientInputValidatorSpecs::withString("token"   , $parsedBody["token"    ], 1500 , true),
+        ClientInputValidatorSpecs::withString("username", $parsedBody, 20   , true),
+        ClientInputValidatorSpecs::withString("token"   , $parsedBody, 1500 , true),
       ]);
 
     $username = $this->validatedData["username"];

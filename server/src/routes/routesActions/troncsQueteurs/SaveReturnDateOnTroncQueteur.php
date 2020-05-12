@@ -45,7 +45,7 @@ class SaveReturnDateOnTroncQueteur extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("dateDepartIsMissing", $this->getParam('dateDepartIsMissing'), false, false)
+        ClientInputValidatorSpecs::withBoolean("dateDepartIsMissing", $this->queryParams, false, false)
       ]);
 
     $dateDepartIsMissing = $this->validatedData["dateDepartIsMissing"];

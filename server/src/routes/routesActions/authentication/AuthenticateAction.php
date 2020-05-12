@@ -82,9 +82,9 @@ class AuthenticateAction extends AuthenticateAbstractAction
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("username", $this->parsedBody["username" ], 20   , true),
-        ClientInputValidatorSpecs::withString("password", $this->parsedBody["password" ], 60   , true),
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody["token"    ], 1500 , true),
+        ClientInputValidatorSpecs::withString("username", $this->parsedBody, 20   , true),
+        ClientInputValidatorSpecs::withString("password", $this->parsedBody, 60   , true),
+        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
     ]);
 
     $username = $this->validatedData["username"];
