@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpParameterByRefIsNotUsedAsReferenceInspection */
+
 /**
  * Created by IntelliJ IDEA.
  * User: thomas

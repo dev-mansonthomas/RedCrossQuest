@@ -2,36 +2,81 @@
 <div class="container">
   <div class="container">
     <div class="container">
-
       <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-          Un bug, besoin d'une nouvelle fonctionnalité ?
+        <div class="col-md-4">
+
+          <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="alert alert-info" role="alert">
+              <span class="glyphicon glyphicon-bug big-icon"  aria-hidden="true"></span><b>Un bug ? Une idée ? Une amélioration ?</b>
+            </div>
+            <div class="panel-body">
+              RedCrossQuest & RedQuest sont développés en open-source et disponible sur GitHub<br/><br/>
+              <a href="https://github.com/dev-mansonthomas/RedCrossQuest/issues" target="_blank">Ouvrez un ticket sur Github pour RedCrossQuest!</a><br/>
+              <a href="https://github.com/dev-mansonthomas/RedQuest/issues"      target="_blank">Ouvrez un ticket sur Github pour RedQuest!</a><br/><br/>
+              <small>Vous devez vous créer un compte sur Github au préalable</small>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel panel-heading">
+              <span class="glyphicon glyphicon-bug big-icon"  aria-hidden="true"></span><b>Vos infos techniques</b>
+            </div>
+            <div class="panel-body">
+              Ces informations pourront vous être demandées par le support pour investiguer sur un problème technique
+              <pre>
+username   : {{cl.username       }}
+UL Name    : {{cl.ulName         }}
+UL ID      : {{cl.ulId           }}
+UID        : {{cl.id             }}
+QUETEUR_ID : {{cl.queteurId      }}
+ROLE       : {{cl.currentUserRole}}</pre>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-md-8">
+
+          <uib-accordion close-others="false">
+            <div uib-accordion-group class="panel-default" heading="Version 2020" is-open="true">
+              <ul>
+                <li><b>Interface Graphique (ce site web quoi...) :</b>
+                  <ol>
+                    <li>Passage à un theme graphique plus clair</li>
+                    <li>Changement de la page d'accueil, avec une image piquée à la Croix Rouge de Nouvelles Zélande</li>
+                    <li>RedCrossQuest fonctionne mieux avec les mobiles et tablettes</li>
+                    <li>Quand une nouvelle version a été publié, le site vous demande de rafraichir la page pour profiter des dernières améliorations</li>
+                    <li>Vous lisez d'ailleurs la liste des ces améliorations ce qui est nouveaux</li>
+                    <li>Vous pouvez maintenant sauvegarder vos paramètres RedCrossQuest et RedQuest dans l'administration
+                      <ul>
+                        <li><b>RedCrossQuest</b> : Est ce que vous utilisez les sacs de banque (si oui, leur saisie devient obligatoire)</li>
+                        <li><b>RedQuest</b> : Est ce que les quêteurs sont autonomes pour enregistrer les horaires de départ/retour (utile en province sur de grande zone géographique ou le quêteur ne peut pas revenir au local après chaque créneau de quête)</li>
+                        <li><b>RedQuest</b> : Est-ce que RedQuest affiche les stats de la journées (total €, nombres d'heures, nombres de queteur etc...)</li>
+                        <li><b>RedQuest</b> : Est ce que le classement des quêteurs est affichés : non, première page de 10 résultats, toutes les pages</li>
+
+                      </ul>
+                    </li>
+                  </ol>
+                </li>
+                <li><b>Coté Serveur :</b>
+                  <ol>
+                    <li>RedCrossQuest est désormais compatible avec l'authentification Google, ce qui sera utilisé lorsque la Croix Rouge sera passée sur GSuite</li>
+                    <li>Améliorations côtés sécurités : de nouveaux mécanismes ont été mise en place pour sécuriser toujours plus l'application</li>
+                    <li>Mise à jours des librairies utilisées par RedCrossQuest, ce qui améliore généralement la sécurité et les performances</li>
+                    <li>Mise à jour de SlimFramework de v3 à v4 : Énorme travail, 140 fichiers impactés, près de 7000 lignes ajoutées, 2800 supprimées</li>
+                    <li>Mise à jour de la gestion des erreurs et des logs</li>
+                  </ol>
+                </li>
+                <li><b>Graphiques :</b>
+                  <ol>
+                    <li>Le refresh automatique affiche bien les données à jours. Un changement chez l'éditeur à changer le comportement et ca avait été découvernt pendant la quête de 2019</li>
+                  </ol>
+                </li>
+              </ul>
+            </div>
+          </uib-accordion>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-          <a href="https://github.com/dev-mansonthomas/RedCrossQuest/issues" target="_blank">Ouvrez un ticket sur Github !</a><br/>
-          <small>Vous devez vous créer un compte sur Github au préalable</small>
-        </div>
-      </div>
-
-
-
-      <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-          <h3>vos infos :</h3>
-          <pre>
-          username   : {{cl.username       }}
-          UL Name    : {{cl.ulName         }}
-          UL ID      : {{cl.ulId           }}
-          UID        : {{cl.id             }}
-          QUETEUR_ID : {{cl.queteurId      }}
-          ROLE       : {{cl.currentUserRole}}
-          </pre>
-
-        </div>
-      </div>
-
     </div>
   </div>
 </div>
