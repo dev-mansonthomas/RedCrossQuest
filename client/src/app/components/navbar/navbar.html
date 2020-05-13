@@ -1,3 +1,4 @@
+<style>.newVersion-modal-dialog .modal-dialog {width: 90%;} </style>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -25,11 +26,11 @@
         </li>
         <li ng-class="{'nav-active':vm.currentPath=='/queteurs'}"                  ><a ng-href="/#!/queteurs"                   ng-show="vm.currentUlMode >= 2"  style="padding-right:5px !important;"><span class="glyphicon glyphicon-group big-icon"      aria-hidden="true"></span>&nbsp;&nbsp;Quêteurs</a></li>
         <li ng-class="{'nav-active':vm.currentPath=='/queteurs/pendingValidation'}"><a ng-href="/#!/queteurs/pendingValidation" ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2" style="padding-left:0px !important;padding-top:17px;" ng-class="vm.pendingQueteurRegistrationCount>0 ? 'pendingQueteurCount':'pendingQueteurCountZero'"><span class="badge">{{vm.pendingQueteurRegistrationCount}}</span></a></li>
-        <li ng-class="{'nav-active':vm.currentPath=='/queteurs/edit'}"             ><a ng-href="/#!/queteurs/edit"              ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-user-add big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Ajout d'un Quêteur</a></li>
+        <li ng-class="{'nav-active':vm.currentPath=='/queteurs/edit'}"             ><a ng-href="/#!/queteurs/edit"              ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2" style="padding-left:0px !important;padding-right:0px !important;"><span class="glyphicon glyphicon-user-add big-icon" aria-hidden="true"></span></a></li>
         <li ng-class="{'nav-active':vm.currentPath=='/troncs/prepa'}"              ><a ng-href="/#!/troncs/prepa"               ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-clock    big-icon" aria-hidden="true"></span><span ng-show="vm.currentUlMode == 3">&nbsp;&nbsp;Préparation</span><span ng-show="vm.currentUlMode == 2">&nbsp;&nbsp;Déclaration</span></a></li>
         <li ng-class="{'nav-active':vm.currentPath=='/troncs/depart'}"             ><a ng-href="/#!/troncs/depart"              ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-out  big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Départ</a></li>
         <li ng-class="{'nav-active':vm.currentPath=='/troncs/retour'}"             ><a ng-href="/#!/troncs/retour"              ng-show="vm.currentUserRole>1 && vm.currentUlMode >= 3"><span class="glyphicon glyphicon-log-in   big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Retour</a></li>
-        <li ng-class="{'nav-active':vm.currentPath=='/tronc_queteur/'}"            ><a ng-href="/#!/tronc_queteur"              ng-show="vm.currentUserRole>2 && vm.currentUlMode >= 2"><span class="glyphicon glyphicon-coins    big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Comptage</a></li>
+        <li ng-class="{'nav-active':vm.currentPath=='/tronc_queteur/'}"            ><a ng-href="/#!/tronc_queteur"              ng-show="vm.currentUserRole>2 && vm.currentUlMode >= 2" style="padding-right:0px !important;"><span class="glyphicon glyphicon-coins    big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Comptage</a></li>
 
       </ul>
 
@@ -89,3 +90,30 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+<!-- Modal window in case of error -->
+<script type="text/ng-template" id="NewVersioNModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Une nouvelle version de RedCrossQuest est disponible 🎉 !</h3>
+  </div>
+  <div class="modal-body">
+
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="alert alert-info" role="alert"><b>Quelques infos sur la nouvelle version</b></div>
+
+
+      <div class="panel-body">
+        Cette nouvelle version comporte <i>notamment</i> les changements suivants :<br/><br/>
+        <ng-bind-html
+          ng-bind-html="versionInfo.deployNotes">
+        </ng-bind-html>
+        <br/>
+        Pour plus d'informations, voir &nbsp;<a ng-href="/#!/changelog"><span class="glyphicon glyphicon-info-sign big-icon"  aria-hidden="true"></span> les notes de versions</a>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" type="button" ng-click="reload()">Recharger la page</button>
+    <button class="btn btn-primary" type="button" ng-click="cancel()">Pas tout de suite</button>
+  </div>
+</script>

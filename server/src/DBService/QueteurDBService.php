@@ -992,7 +992,7 @@ VALUES
     if($firstName != null)
     {
       $searchFirstName = "
-q.`first_name` like :first_name
+UPPER(q.`first_name`) like UPPER(:first_name)
 ";
       $parameters["first_name"] = "%".$firstName."%";
       $numberOfParameters++;
@@ -1010,7 +1010,7 @@ q.`first_name` like :first_name
       }
 
       $searchLastName = "
-$OR q.`last_name` like :last_name
+$OR UPPER(q.`last_name`) like UPPER(:last_name)
 ";
       $parameters["last_name"] = "%".$lastName."%";
       $numberOfParameters++;
@@ -1028,7 +1028,7 @@ $OR q.`last_name` like :last_name
       }
 
       $searchNivol = "
-$OR q.`nivol` like :nivol
+$OR UPPER(q.`nivol`) like UPPER(:nivol)
 ";
       $parameters["nivol"] = "%".$nivol."%";
     }
