@@ -169,7 +169,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
         return $this->denyRequest("0001");
       }
 
-      //$this->logger->error("$path");
+      //$this->logger->debug("$path");
       //public path that must not go through authentication check
       if($path == '/rest/authenticate'      ||
          $path == '/rest/firebase-authenticate'      ||
@@ -182,7 +182,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
         $this->logger->info("Non authenticate route", array( "path"=>$path, "uuid"=>$uuid));
         return $handler->handle($request);
       }
-      //$this->logger->error("authenticated route : $path");
+      //$this->logger->debug("authenticated route : $path");
       $authorizations = $request->getHeader('Authorization');
       //get token
       if(count($authorizations) == 0)
@@ -207,7 +207,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       $path         = $request->getUri()->getPath();
       $explodedPath = explode("/",  substr($path, strlen('/rest/')),2);
 
-      //$this->logger->error("path info", array("path"=>$path, "explodedPath"=>$explodedPath, "\$_SERVER"=>$_SERVER));
+      //$this->logger->debug("path info", array("path"=>$path, "explodedPath"=>$explodedPath, "\$_SERVER"=>$_SERVER));
 
       if(count($explodedPath) == 2) //explode with limit 2 will return one element + the rest of the string, so array size is maximum 2 but can be less
       {

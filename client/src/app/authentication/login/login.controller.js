@@ -75,8 +75,9 @@
           function error(message)
           {
             $timeout.cancel(loginTimeout);
-            vm.error    = true;
-            vm.errorStr = 'Un erreur s\'est produite: '+JSON.stringify(message);
+            console.log('login error',message);
+            vm.error    = true;//do not display the exception as it contains the password
+            vm.errorStr = 'Un erreur s\'est produite à : '+JSON.stringify(new Date());
             vm.loading  = false;
             vm.success  = null;
           }

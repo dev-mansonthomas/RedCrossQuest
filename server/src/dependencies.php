@@ -154,15 +154,10 @@ return function (ContainerBuilder $containerBuilder)
       $envLabel['P'] = "prod";
 
       $gcpBucket  = str_replace("_country_", $country, str_replace("_env_", $env           , $bucketTemplate));
-      $project_id = str_replace("_country_", $country, str_replace("_env_", $envLabel[$env], "redcrossquest-_country_-_env_"));
-      //TODO: check if projectID is mandatory, it shouldn't be
       //documentation : https://cloud.google.com/storage/docs/reference/libraries
       //https://github.com/googleapis/google-cloud-php
-      $storage = new StorageClient([
-        'projectId' => $project_id
-      ]);
 
-      return $storage->bucket($gcpBucket);
+      return (new StorageClient())->bucket($gcpBucket);
     },
 
 
