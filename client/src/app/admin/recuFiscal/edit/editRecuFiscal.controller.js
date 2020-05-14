@@ -334,7 +334,7 @@
       {
         vm.current.billsMoneyBagDetails = MoneyBagResource.billsMoneyBagDetails({'id':$item});
       }
-    };;
+    };
 
 
     vm.fillEmptyValues = function()

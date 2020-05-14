@@ -180,7 +180,6 @@ class Entity
     {
       if(is_array($data[$key]))
       {
-        //$this->logger->error("json parsed momentjs");
         // json parsed momentjs object : {"date":"2017-06-05 03:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"}
         $array = $data[$key];
         try
@@ -209,11 +208,11 @@ class Entity
           {
             //json javascript date : "2017-06-04T23:00:00.000Z"
             //                        2019-11-05T21:51:21.000000Z
-            //$this->logger->error("json javascript ".$stringValue);
+            //$this->logger->debug("json javascript ".$stringValue);
             try
             {
               $this->$key = Carbon::parse($stringValue);
-              //$this->logger->error("json javascript parsed : ".$this->$key);
+              //$this->logger->debug("json javascript parsed : ".$this->$key);
             }
             catch(Exception $e)
             {
@@ -227,12 +226,12 @@ class Entity
             // from DB Date :"2016-06-09 00:36:43"
             //  The parsing is done with UTC timezone, as dates are stored with this timezone in DB
             //  Then we switch the date to Paris Timezone to reflect the Timezone of the client
-            //$this->logger->error("DB date '$stringValue'");
+            //$this->logger->debug("DB date '$stringValue'");
             try
             {
               $this->$key = Carbon::parse($stringValue, 'UTC')->setTimezone("Europe/Paris");
 
-             // $this->logger->error("DB date Carbon : ".$this->$key);
+             // $this->logger->debug("DB date Carbon : ".$this->$key);
             }
             catch(Exception $e)
             {

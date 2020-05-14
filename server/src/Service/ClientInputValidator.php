@@ -92,7 +92,7 @@ class ClientInputValidator
 
     if (0 !== count($violations))
     {
-      $this->logger->error("Input value fails validations", array(
+      $this->logger->warning("Input value fails validations", array(
         "parameterName" => $parameterName,
         "maxLength"     => $maxLength,
         "notNull"       => $notNull,
@@ -156,7 +156,7 @@ class ClientInputValidator
 
     if (0 !== count($violations))
     {
-      $this->logger->error("Input value fails validations", array(
+      $this->logger->warning("Input value fails validations", array(
         "parameterName" => $parameterName,
         "maxValue"      => $maxValue,
         "notNull"       => $notNull,
@@ -226,7 +226,7 @@ class ClientInputValidator
       return false;
     }
 
-    $this->logger->error("Input value fails validations", array(
+    $this->logger->warning("Input value fails validations", array(
       "parameterName" => $parameterName,
       "violations"    => $violations,
       "inputValue"    => $inputValue));
