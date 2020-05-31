@@ -11,10 +11,13 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
       id: '@id'
     },
     {
-    update: {
+      update: {
       method: 'PUT'
-    },
-    anonymize:
+      },
+      query:{
+        isArray: false
+      },
+      anonymize:
       {
         method: 'PUT',
         params:
@@ -69,7 +72,7 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
     listPendingQueteurRegistration:
     {
       method: 'GET',
-      isArray: true,
+      isArray: false,
       params:
         {
           action: 'listPendingQueteurRegistration'

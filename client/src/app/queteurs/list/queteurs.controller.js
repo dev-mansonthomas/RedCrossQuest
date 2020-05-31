@@ -18,6 +18,9 @@
     vm.rcqUser          = 0;
     vm.rcqUserActif     = 1;
     vm.currentUserRole  = $localStorage.currentUser.roleId;
+    vm.pageNumber       = 1;
+    vm.rowCount         = 0;
+    vm.list             = [];
 
     $rootScope.$emit('title-updated', 'Liste des quêtêurs');
 
@@ -29,15 +32,23 @@
       {id:5 ,label:'Commerçant'},
       {id:6 ,label:'Spécial'}
     ];
+    vm.typeBenevoleHash=[];
+    for(var i=0;i< vm.typeBenevoleList.length;i++)
+    {
+      vm.typeBenevoleHash[vm.typeBenevoleList[i].id]=vm.typeBenevoleList[i].label;
+    }
+
 
     vm.handleDate = function (theDate)
     {
       return DateTimeHandlingService.handleServerDate(theDate).stringVersion;
     };
 
-    function handleSearchResults(results)
+    function handleSearchResults(pageableResponse)
     {
-      vm.list = results;
+      vm.rowCount = pageableResponse.count;
+      vm.list     = pageableResponse.rows ;
+
       var dataLength = vm.list.length;
 
       for(var i=0;i<dataLength;i++)
@@ -47,11 +58,6 @@
         vm.list[i].retour            = vm.handleDate(vm.list[i].retour);
       }
     }
-
-    //initial search with type 0 (all queteur)
-    QueteurResource.query({'searchType':0}).$promise.then(handleSearchResults).catch(function(e){
-      $log.error("error searching for Queteur", e);
-    });
 
     vm.doSearch=function()
     {
@@ -64,7 +70,8 @@
         'active'              : vm.active       ,
         'rcqUser'             : vm.rcqUser      ,
         'rcqUserActif'        : vm.rcqUserActif ,
-        'anonymization_token' : vm.anonymization_token};
+        'anonymization_token' : vm.anonymization_token,
+        'pageNumber'          : vm.pageNumber   };
 
 
       if(vm.currentUserRole === 9 && vm.admin_ul_id !== null)
@@ -77,6 +84,8 @@
       });
     };
 
+    //initial search with type 0 (all queteur)
+    vm.doSearch();
 
 
     /**

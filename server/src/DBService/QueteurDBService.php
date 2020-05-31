@@ -5,6 +5,8 @@ namespace RedCrossQuest\DBService;
 use Exception;
 use PDOException;
 use Ramsey\Uuid\Uuid;
+use RedCrossQuest\Entity\PageableRequestEntity;
+use RedCrossQuest\Entity\PageableResponseEntity;
 use RedCrossQuest\Entity\QueteurEntity;
 
 
@@ -25,7 +27,7 @@ class QueteurDBService extends DBService
   {
 
     $sql = "
-SELECT count(1) as count_pending_registration
+SELECT 1
 FROM `queteur_registration` qr, ul_settings us
 where us.ul_id = :ul_id
 AND 
@@ -36,28 +38,30 @@ AND
 )
 AND registration_approved is null
 ";
-
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId]);
-    $row = $stmt->fetch();
-    return (int) $row['count_pending_registration'];
+    $parameters = ["ul_id" => $ulId];
+    return $this->getCountForSQLQuery($sql, $parameters);
   }
-
 
   /**
    * List the pending registration
    *
+   * @param PageableRequestEntity $pageableRequest
+   *        int $ulId               Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   *        int $registrationStatus 0: pending registration, 1: approved registration, 2: refused registration
    *
-   * @param int $ulId               Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param int $registrationStatus 0: pending registration, 1: approved registration, 2: refused registration
-   *
-   * @return QueteurEntity[]  the list of Queteurs
+   * @return PageableResponseEntity the list of Queteurs
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations
    */
-  public function listPendingQueteurRegistration(int $ulId, int $registrationStatus):array
+  public function listPendingQueteurRegistration(PageableRequestEntity $pageableRequest):PageableResponseEntity
   {
+    //int $ulId, int $registrationStatus):array
+
+    $parameters      = ["ul_id" => $pageableRequest->filterMap['ul_id']];
+
+    /** @var int $registrationStatus */
+    $registrationStatus = $pageableRequest->filterMap['registration_status'];
+
     $registrationStatusSQL = null;
 
     if ($registrationStatus == 0 || $registrationStatus == null)
@@ -98,23 +102,14 @@ AND
   qr.ul_registration_token = us.token_benevole_1j
 )
 $registrationStatusSQL
-ORDER BY created desc
+ORDER BY qr.created desc
 ";
+    $count   = $this->getCountForSQLQuery ($sql, $parameters);
+    $results = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new QueteurEntity($row, $this->logger);
+    }, $pageableRequest->pageNumber, $pageableRequest->rowsPerPage);
 
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["ul_id" => $ulId]);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new QueteurEntity($row, $this->logger);
-    }
-
-    $stmt->closeCursor();
-    return $results;
+    return new PageableResponseEntity($count, $results, $pageableRequest->pageNumber, $pageableRequest->rowsPerPage);
   }
 
 
@@ -166,36 +161,25 @@ AND qr.`id` = :id
 AND qr.`registration_approved` is null
 ";
 
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["ul_id" => $ulId,
-                    "id"    => $registrationId]);
-
-    $queteurRegistration = null;
-    if ($row = $stmt->fetch())
-    {
-      $queteurRegistration = new QueteurEntity($row, $this->logger);
-    }
-    $stmt->closeCursor();
-    return $queteurRegistration;
+    $parameters = ["ul_id" => $ulId, "id" => $registrationId];
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new QueteurEntity($row, $this->logger);
+    }, true);
   }
-
-
 
 
   /**
    * Update one queteur registration with the approval decision, and if approved the newly inserted queteur id
    *
    * @param QueteurEntity $queteur The queteur to update (with the registration specific data)
-   * @param int           $queteurId  The id of the newly inserted queteur
-   * @param int           $userId the id of the person who approve or reject the registration
+   * @param int $queteurId The id of the newly inserted queteur
+   * @param int $userId the id of the person who approve or reject the registration
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function updateQueteurRegistration(QueteurEntity $queteur, int $queteurId, int $userId)
   {
-
-
     $sql = "
 UPDATE `queteur_registration`
 SET
@@ -216,21 +200,17 @@ AND   ul_registration_token = :ul_registration_token
       "ul_registration_token"  => $queteur->ul_registration_token
     ];
     
-    $this->logger->debug("updateQueteurRegistration", array("ul_registration_token"=> $queteur->ul_registration_token,"parameters"=>$parameters));
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
   /**
    * Update one queteur registration with as approved and associated with an existing queteur.
    *
    * @param QueteurEntity $queteur The queteur to update (with the registration specific data)
-   * @param int           $userId the id of the person who approve or reject the registration
-   * @param int           $ulId the id of the ul of the current user
+   * @param int $userId the id of the person who approve or reject the registration
+   * @param int $ulId the id of the ul of the current user
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function associateRegistrationWithExistingQueteur(QueteurEntity $queteur, int $userId, int $ulId)
   {
@@ -254,9 +234,7 @@ AND   ul_registration_token = :ul_registration_token
       "ul_registration_token"  => $queteur->ul_registration_token
     ];
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
 
 
 //forcing the user to active state
@@ -273,9 +251,7 @@ AND   ul_id   = :ul_id
       "ul_id"  => $ulId
     ];
 
-    $stmt2 = $this->db->prepare($sql2);
-    $stmt2->execute($parameters2);
-    $stmt2->closeCursor();
+    $this->executeQueryForUpdate($sql2, $parameters2);
 
     $this->logger->debug("associateRegistrationWithExistingQueteur : Associating registration with existing queteur, and set this last as active", array("parameters"=>$parameters, "parameters2"=>$parameters2));
 
@@ -330,47 +306,65 @@ AND
       $parameters["query"]= $query;
     }
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new QueteurEntity($row, $this->logger);
-    }
-
-    $stmt->closeCursor();
-    return $results;
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new QueteurEntity($row, $this->logger);
+    });
   }
 
 
   /**
    * search all queteur according to the following criteria
    *
-   * @param string  $query search string compared against first_name, last_name, nivol using like '%query%'
-   * @param int     $searchType
+
+   *
+   * @param  PageableRequestEntity $pageableRequestEntity
+   * expected data :
+   * string  $query search string compared against first_name, last_name, nivol using like '%query%'
+   * int     $searchType
    *                             0 : All queteur, whether they did quete one time or not
    *                             1 : queteur that are registered for one tronc_quete but who didn't left yet
    *                             2 : queteur that are still on the street ( registered for one tronc_quete and have a depart date non null and a retour date null)
-   * @param int     $secteur      secteur to search (1:Social, 2: Secours, 3:Non Bénévole, 4:Commerçant, 5: Spécial)
-   * @param int     $ulId         Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param boolean $active       search only active or inactive queteurs
-   * @param boolean $benevoleOnly Retourne que les bénévoles et anciens bénévoles (usecase: recherche de référent pour le queteur d'un jour)
-   * @param boolean $rcqUser      return only RCQ users
-   * @param string  $queteurIds   IDs of queteurs separated by comma to search
-   * @param int     $QRSearchType Type of QRCode Search :  0 all, 1: Printed, 2: Not printed
-   * @param bool    $rcqUserActif Recherche que les utilisateurs actifs
-   * @return QueteurEntity[] list of Queteurs
+   * int     $secteur      secteur to search (1:Social, 2: Secours, 3:Non Bénévole, 4:Commerçant, 5: Spécial)
+   * int     $ulId         Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * boolean $active       search only active or inactive queteurs
+   * boolean $benevoleOnly Retourne que les bénévoles et anciens bénévoles (usecase: recherche de référent pour le queteur d'un jour)
+   * boolean $rcqUser      return only RCQ users
+   * string  $queteurIds   IDs of queteurs separated by comma to search
+   * int     $QRSearchType Type of QRCode Search :  0 all, 1: Printed, 2: Not printed
+   * bool    $rcqUserActif Recherche que les utilisateurs actifs
+   *
+   * @return PageableResponseEntity list of Queteurs
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations
    */
-  public function searchQueteurs(?string $query, ?int $searchType, ?int $secteur, ?int $ulId,
-                                 bool $active, bool $benevoleOnly, bool $rcqUser, bool $rcqUserActif,
-                                 ?string $queteurIds, ?int $QRSearchType   )
+
+  //?string $query, ?int $searchType, ?int $secteur, ?int $ulId,
+  //                                 bool $active, bool $benevoleOnly, bool $rcqUser, bool $rcqUserActif,
+  //                                 ?string $queteurIds, ?int $QRSearchType
+  public function searchQueteurs(PageableRequestEntity $pageableRequestEntity)
   {
-    $parameters      = ["ul_id" => $ulId];
+    $parameters      = ["ul_id" => $pageableRequestEntity->filterMap['ul_id']];
+    /** @var string $query */
+    $query           = $pageableRequestEntity->filterMap['q'];
+    /** @var int $searchType */
+    $searchType      = $pageableRequestEntity->filterMap['searchType'];
+    /** @var int $secteur */
+    $secteur         = $pageableRequestEntity->filterMap['secteur'];
+    /** @var bool $active */
+    $active          = $pageableRequestEntity->filterMap['active'];
+    /** @var bool $benevoleOnly */
+    $benevoleOnly    = $pageableRequestEntity->filterMap['benevoleOnly'];
+    /** @var bool $rcqUser */
+    $rcqUser         = $pageableRequestEntity->filterMap['rcqUser'];
+    /** @var bool $rcqUserActif */
+    $rcqUserActif    = $pageableRequestEntity->filterMap['rcqUserActif'];
+    /** @var string $queteurIds */
+    $queteurIds      = $pageableRequestEntity->filterMap['queteurIds'];
+    /** @var int $QRSearchType */
+    $QRSearchType    = $pageableRequestEntity->filterMap['QRSearchType'];
+
+
+
     $querySQL        = "";
     $secteurSQL      = "";
     $benevoleOnlySQL = "";
@@ -378,7 +372,7 @@ AND
     $queteurIdsSQL   = "";
     $QRSearchTypeSQL = "";
 
-    if($query !== null)
+    if($query !== null && trim($query) !='')
     {
       $querySQL = "
 AND  
@@ -476,19 +470,15 @@ AND q.id IN (
     $parameters["active"] = $active;
 
     $this->logger->debug("Querying queteurs", array_merge(["sql" => $sql, "searchType" => $searchType], $parameters));
-    $stmt   = $this->db->prepare($sql);
+
+    $count   = $this->getCountForSQLQuery ($sql, $parameters);
+    $results = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new QueteurEntity($row, $this->logger);
+    }, $pageableRequestEntity->pageNumber, $pageableRequestEntity->rowsPerPage);
 
 
-    $stmt->execute($parameters);
 
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new QueteurEntity($row, $this->logger);
-    }
-    $stmt->closeCursor();
-    return $results;
+    return new PageableResponseEntity($count, $results, $pageableRequestEntity->pageNumber, $pageableRequestEntity->rowsPerPage);
   }
 
 
@@ -685,11 +675,6 @@ ORDER BY q.last_name ASC
 ";
   }
 
-
-
-
-
-
   /**
    * Get one queteur by its ID
    * UL_ID is optional as this method is used by the login process, which don't know yet the UL_ID
@@ -728,7 +713,6 @@ FROM  `queteur` AS q,
 WHERE  q.id    = :queteur_id
 AND    q.ul_id = u.id
 ";
-
     $parameters = ["queteur_id" => $queteur_id];
 
     if($ul_id > 0)
@@ -738,25 +722,18 @@ AND  u.id = :ul_id
 ";
       $parameters["ul_id"] = $ul_id;
     }
-    $queteur = null;
-    $stmt = $this->db->prepare($sql);
+    $queteur = $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new QueteurEntity($row, $this->logger);
+    }, true);
 
-    $stmt->execute($parameters);
-    if($row = $stmt->fetch())
+    if($queteur->referent_volunteer > 0)
     {
-      $queteur = new QueteurEntity($row, $this->logger);
-      if($queteur->referent_volunteer > 0)
-      {
-        $referent         = $this->getQueteurById($queteur->referent_volunteer, $ul_id);
-        $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
-        $queteur->referent_volunteerQueteur = $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
-      }
+      $referent         = $this->getQueteurById($queteur->referent_volunteer, $ul_id);
+      $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
+      $queteur->referent_volunteerQueteur = $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
     }
-    $stmt->closeCursor();
 
-    if(!$row)
-      throw new Exception("queteur not found. id='".$queteur_id."'");
-
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
     return $queteur;
   }
 
@@ -797,16 +774,11 @@ WHERE  UPPER(q.nivol)   = UPPER(:nivol)
 AND    q.active  = 1
 AND    q.ul_id   = u.id
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["nivol" => $nivol]);
-
-    //temp var, because pass by reference
-    $row = $stmt->fetch();
-    $queteur = new QueteurEntity($row, $this->logger);
-    $stmt->closeCursor();
-    return $queteur;
+    $parameters = ["nivol" => $nivol];
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new QueteurEntity($row, $this->logger);
+    }, true);
   }
 
 
@@ -814,9 +786,10 @@ AND    q.ul_id   = u.id
    * Update one queteur
    *
    * @param QueteurEntity $queteur The queteur to update
-   * @param int           $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param int           $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function update(QueteurEntity $queteur, int $ulId, int $roleId)
   {
@@ -862,21 +835,19 @@ AND   `ul_id`           = :ul_id
       $parameters["ul_id"] = $ulId;
     }
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
 
   /**
    * Insert one queteur
    *
-   * @param QueteurEntity $queteur  The queteur to update
-   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param int           $roleId   role id of the user of RCQ that creates the queteur. If roleId is 9, superAdmin, then it allows the queteur to be created in any Unite Local of the super Admin choice
+   * @param QueteurEntity $queteur The queteur to update
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId role id of the user of RCQ that creates the queteur. If roleId is 9, superAdmin, then it allows the queteur to be created in any Unite Local of the super Admin choice
    * @return int the primary key of the new queteur
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function insert(QueteurEntity $queteur, int $ulId, int $roleId)
   {
@@ -916,11 +887,6 @@ VALUES
   :referent_volunteer
 )
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-
-    $this->db->beginTransaction();
     $parameters = [
       "first_name"         => $queteur->first_name,
       "last_name"          => $queteur->last_name,
@@ -935,39 +901,27 @@ VALUES
       "referent_volunteer" => $queteur->secteur == 3 ? $queteur->referent_volunteer : 0
     ];
 
-    $stmt->execute($parameters);
-    $stmt->closeCursor();
-
-    $stmt = $this->db->query("select last_insert_id()");
-    $row = $stmt->fetch();
-
-    $lastInsertId = $row['last_insert_id()'];
-
-    $stmt->closeCursor();
-    $this->db->commit();
-    return $lastInsertId;
+    return $this->executeQueryForInsert($sql, $parameters, true);
   }
 
 
   /**
    * Get the current number of Queteurs for the Unite Local
    *
-   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the number of queteur
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function getNumberOfQueteur(int $ulId)
   {
     $sql="
-    SELECT count(1) as cnt
+    SELECT 1
     FROM   queteur
     WHERE  ul_id = :ul_id
     ";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId]);
-    $row = $stmt->fetch();
-    return $row['cnt'];
+    $parameters = ["ul_id" => $ulId];
+    return $this->getCountForSQLQuery($sql, $parameters);
   }
 
 
@@ -1049,19 +1003,9 @@ $searchLastName
 $searchNivol
 )
 ";
-
-    $stmt   = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new QueteurEntity($row, $this->logger);
-    }
-
-    $stmt->closeCursor();
-    return $results;
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new QueteurEntity($row, $this->logger);
+    });
   }
 
   /**
@@ -1112,9 +1056,7 @@ AND   `ul_id`           = :ul_id
       $parameters["ul_id"] = $ulId;
     }
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
 
     return $token;
   }
@@ -1122,8 +1064,9 @@ AND   `ul_id`           = :ul_id
 
   /**
    * Mark All Queteur as printed
-   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function markAllAsPrinted(int $ulId)
   {
@@ -1135,10 +1078,7 @@ WHERE  `ul_id`           = :ul_id
 ";
     $parameters["ul_id"] = $ulId;
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-    $stmt->closeCursor();
-
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
 
@@ -1147,11 +1087,11 @@ WHERE  `ul_id`           = :ul_id
    * @param string $anonymization_token The anonymisation token
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
-   * @return QueteurEntity[]  One Queteur or 0, in an array for compatibility with the search feature
+   * @return PageableResponseEntity  One Queteur or 0, in an array for compatibility with the search feature
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getQueteurByAnonymizationToken(string $anonymization_token, int $ulId, int $roleId)
+  public function getQueteurByAnonymizationToken(string $anonymization_token, int $ulId, int $roleId):PageableResponseEntity
   {
     $parameters = ["anonymization_token" => $anonymization_token];
 
@@ -1189,21 +1129,11 @@ AND    q.ul_id   = :ul_id
 ";
       $parameters["ul_id"] = $ulId;
     }
-    $stmt = $this->db->prepare($sql);
+    
+    $queteur = $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new QueteurEntity($row, $this->logger);
+    }, false);
 
-    $stmt->execute($parameters);
-
-    $queteur = null;
-    $row = $stmt->fetch();
-    if($row)
-    {
-      $queteur = new QueteurEntity($row, $this->logger);
-      $stmt->closeCursor();
-      return [$queteur];
-    }
-    else
-    {
-      return [];
-    }
+    return new PageableResponseEntity($queteur!=null?1:0, [$queteur],1,1);
   }
 }

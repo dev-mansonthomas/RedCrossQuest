@@ -64,7 +64,7 @@ class ClientInputValidator
       $inputValue = $inputArray[$parameterName];
     }
 
-    if(!$notNull && $inputValue === null)
+    if(!$notNull && ($inputValue === null || $inputValue === ""))
       return (string) null;
 
     $validator = Validation::createValidator();
@@ -116,7 +116,7 @@ class ClientInputValidator
    */
   public function validateInteger($parameterName, ?array &$inputArray, $maxValue=0, $notNull=true, $defaultValue=0):?int
   {
-    if($inputArray == null || !array_key_exists($parameterName, $inputArray))
+    if($inputArray === null || $inputArray === "" || !array_key_exists($parameterName, $inputArray))
     {
       $inputValue = null;
     }
@@ -125,7 +125,7 @@ class ClientInputValidator
       $inputValue = $inputArray[$parameterName];
     }
 
-    if(!$notNull && $inputValue === null)
+    if(!$notNull && ($inputValue === null || $inputValue === ""))
       return $defaultValue;
 
     if("$inputValue"==="0")
@@ -177,7 +177,7 @@ class ClientInputValidator
    */
   public function validateBoolean($parameterName,  ?array &$inputArray, bool $notNull, bool $defaultValue=null):?bool
   {
-    if($inputArray == null || !array_key_exists($parameterName, $inputArray))
+    if($inputArray === null || $inputArray === "" || !array_key_exists($parameterName, $inputArray))
     {
       $inputValue = null;
     }
@@ -186,7 +186,7 @@ class ClientInputValidator
       $inputValue = $inputArray[$parameterName];
     }
 
-    if(!$notNull && $inputValue === null)
+    if(!$notNull && ($inputValue === null || $inputValue === ""))
       return (bool)$defaultValue;
 
     if($inputValue === "1" || $inputValue === 1 || $inputValue === true)

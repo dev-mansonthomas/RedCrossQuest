@@ -8,9 +8,13 @@ angular.module('redCrossQuestClient').factory('RecuFiscalResource', function($re
       roleId: function () { return $localStorage.currentUser.roleId},
       ulId  : function () { return $localStorage.currentUser.ulId  },
       id    : '@id'
-    }, {
-    update: {
-      method: 'PUT' // this method issues a PUT request
-    }
+    },
+    {
+      update: {
+        method: 'PUT' // this method issues a PUT request
+      },
+      query:{
+        isArray: false
+      }
   });
 });

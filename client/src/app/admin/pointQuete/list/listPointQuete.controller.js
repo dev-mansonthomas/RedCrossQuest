@@ -18,7 +18,11 @@
     vm.ul = $localStorage.guiSettings.ul;
     $rootScope.$emit('title-updated', 'Liste des points de quête');
 
+    vm.pageNumber       = 1;
+    vm.rowCount         = 0;
+
     vm.typePointQueteList=[
+      {id:null,label:''},
       {id:1,label:'Voie Publique / Feux Rouge'},
       {id:2,label:'Piéton'},
       {id:3,label:'Commerçant'},
@@ -26,13 +30,9 @@
       {id:5,label:'Autre'}
     ];
 
-    vm.pointsQuete = PointQueteResource.query().$promise.then(handleResult).catch(function(e){
-      $log.error("error searching for PointQuete", e);
-    });
-
     vm.doSearch=function()
     {
-      var searchParams = {'action':'search','q':vm.search, 'point_quete_type':vm.point_quete_type, 'active':vm.active};
+      var searchParams = {'action':'search','q':vm.search, 'point_quete_type':vm.point_quete_type, 'active':vm.active, 'pageNumber': vm.pageNumber   };
 
       if(vm.currentUserRole === 9 && vm.admin_ul_id !== null)
       {
@@ -45,6 +45,8 @@
 
     };
 
+    vm.doSearch();
+
     vm.createNewPointQuete=function()
     {
       $location.path("/pointsQuetes/edit").replace();
@@ -52,15 +54,15 @@
 
 
 
-    function handleResult (pointsQuete)
+    function handleResult (pointsQueteResponse)
     {
-      $log.info("Find '"+pointsQuete.length+"' pointsQuete");
+      vm.pointsQuete = pointsQueteResponse.rows;
+      vm.rowCount    = pointsQueteResponse.count;
 
-      vm.pointsQuete = pointsQuete;
-      var counti     = pointsQuete.length;
+      var counti     = vm.pointsQuete.length;
       for(var i=0;i<counti;i++)
       {
-        vm.pointsQuete[i].created      = DateTimeHandlingService.handleServerDate(vm.pointsQuete[i].created     ).stringVersion;
+        vm.pointsQuete[i].created      = DateTimeHandlingService.handleServerDate(vm.pointsQuete[i].created).stringVersion;
       }
     }
 

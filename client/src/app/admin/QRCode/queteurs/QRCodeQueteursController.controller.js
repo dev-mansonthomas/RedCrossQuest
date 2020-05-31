@@ -38,10 +38,10 @@
         vm.listQueteurIds = vm.listQueteurIds.replace(/\s/g,'');
       }
 
-      QueteurResource.query({'searchType':0, 'QRSearchType':vm.QRSearchType, 'queteurIds':vm.listQueteurIds}).$promise.then(function(response)
+      QueteurResource.query({'searchType':0, 'QRSearchType':vm.QRSearchType, 'queteurIds':vm.listQueteurIds, 'rowsPerPage':0}).$promise.then(function(response)
       {
 
-        vm.list   = response.map(function(queteur)
+        vm.list   = response.rows.map(function(queteur)
           {
             //the Q of Queteur is put in the HTML page, with a font size of 11px to exactly match the same template as TRONC, so that it print exactly on the stickers
             queteur.qr_code="QUETEUR-"+("000000"+queteur.ul_id).slice(-6)+"-"+("00000000"+queteur.id).slice(-9);

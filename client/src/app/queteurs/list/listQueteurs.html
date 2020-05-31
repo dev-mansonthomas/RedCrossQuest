@@ -3,7 +3,18 @@
 <div class="container">
 
   <div class="panel panel-primary">
-    <div class="panel-heading">Les Quêteurs</div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-2">
+          <h5>Les Quêteurs</h5>
+        </div>
+        <div class="col-md-3 col-md-offset-7" style="text-align: right;">
+          <a href="/#!/queteurs/edit" class="btn btn-info">
+            Ajouter un Quêteur
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="well">
     <form class="form-search" name="searchForm" novalidate>
@@ -56,11 +67,9 @@
       <div class="row">
         <div class="col-md-4">
           <br/><br/>
-          Nombre de Bénévoles/Quêteur d'un jour: <span class="badge">{{q.list.length}}</span>
+          Nombre de Bénévoles/Quêteur d'un jour: <span class="badge">{{q.rowCount}}</span>
         </div>
         <div class="col-md-4">
-
-
         </div>
         <div class="col-md-2">
           <div class="form-group">
@@ -159,32 +168,50 @@
     </form>
   </div>
 
-
-    <div class="col-xs-12 col-md-12">
-      <div class="row">
-
-        <div class="contact-card col-xs-12 col-sm-4" style="height:150px;" data-ng-repeat="queteur in q.list">
-          <div class="contact-card-inner">
-            <h4>
-              <a ng-href="/#!/queteurs/edit/{{::queteur.id}}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                &nbsp;{{::queteur.last_name | uppercase}} {{::queteur.first_name}}
-              </a>
-            </h4>
-            <div class="contact-address">{{::queteur.email}}</div>
-            <div class="contact-phone">{{::queteur.mobile}} - {{::queteur.nivol}}</div>
-            <div class="contact-phone">{{::queteur.point_quete_name}}</div>
-
-            <div class="queteur-status">
-              <div ng-show=" queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-home"        aria-hidden="true" style="color:darkblue"></span> Pas encore parti, départ théorique à {{:: queteur.depart_theorique}}</div>
-              <div ng-show="!queteur.retour           &&  queteur.depart"                   ><span class="glyphicon glyphicon-coins"       aria-hidden="true" style="color:gold"></span> En train de quêter, départ à {{::  queteur.depart          }}</div>
-              <div ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart"><span class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="color:purple"></span> Rentré de quête à {{::queteur.retour }}</div>
-              <div ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color:grey"></span> Pas actif aujourd'hui</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+      <ul uib-pagination ng-change="q.doSearch()" boundary-links="true" total-items="q.rowCount" ng-model="q.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
     </div>
+  </div>
+  <div clas="row">
+    <table class="table table-hover table-condensed">
+      <thead>
+      <tr>
+        <th>NIVOL           </th>
+        <th>secteur         </th>
+        <th>Prénom          </th>
+        <th>Nom             </th>
+        <th>Email           </th>
+        <th>Téléphone       </th>
+        <th>Point de Quête  </th>
+        <th>Status          </th>
+      </tr>
+      </thead>
 
+      <tbody>
+      <tr ng-repeat="queteur in q.list">
+        <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.nivol}}</a></td>
+        <td>{{q.typeBenevoleHash[queteur.secteur]}}</td>
+        <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.first_name}}</a></td>
+        <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.last_name | uppercase}}</a></td>
+
+        <td><a ng-href="mailto:{{::queteur.email}}">{{::queteur.email}}</a></td>
+        <td ng-show="queteur.mobile!='N/A'">{{::queteur.mobile}}<a ng-href="tel:{{::queteur.mobile}}"><span class="glyphicon glyphicon-iphone"></span></a> <a ng-href="sms:{{::queteur.mobile}}"><span class="glyphicon glyphicon-sms"></span></a></td>
+        <td ng-show="queteur.mobile=='N/A'">&nbsp;</td>
+        <td>{{::queteur.point_quete_name}}</td>
+        <td>
+          <span ng-show=" queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-home"        aria-hidden="true" style="height: 20px!important;color:darkblue" tooltip-popup-close-delay='1000' uib-tooltip='Pas encore parti, départ théorique à {{::queteur.depart_theorique}}'></span>
+          <span ng-show="!queteur.retour           &&  queteur.depart"                    class="glyphicon glyphicon-coins"       aria-hidden="true" style="height: 20px!important;color:gold"     tooltip-popup-close-delay='1000' uib-tooltip='En train de quêter, départ à {{::queteur.depart}}'></span>
+          <span ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart" class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="height: 20px!important;color:purple"   tooltip-popup-close-delay='1000' uib-tooltip='Rentré de quête à {{::queteur.retour }}'></span>
+          <span ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="height: 20px!important;color:grey"     tooltip-popup-close-delay='1000' uib-tooltip="Pas actif aujourd'hui"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+      <ul uib-pagination ng-change="q.doSearch()" boundary-links="true" total-items="q.rowCount" ng-model="q.pageNumber" items-per-page="30"  max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+    </div>
   </div>
 </div>

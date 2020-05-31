@@ -51,7 +51,7 @@
 
     function handleResult (settings)
     {
-      vm.settings = settings;
+      vm.settings.ul_settings = settings;
       computeURL();
     }
   }

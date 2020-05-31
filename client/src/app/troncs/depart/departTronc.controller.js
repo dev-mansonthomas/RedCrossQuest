@@ -133,7 +133,7 @@
       $log.info("Tronc: Manual Search for '"+queryString+"'");
       return TroncResource.query({"q":queryString}).$promise.then(function(response)
       {
-        return response.map(function(tronc)
+        return response.rows.map(function(tronc)
         {
           tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
           return tronc;

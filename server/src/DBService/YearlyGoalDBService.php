@@ -35,31 +35,24 @@ SELECT  y.`id`,
 FROM `yearly_goal` AS y
 WHERE y.ul_id = :ul_id
 AND   y.year  = :year
-ORDER BY y.year DESC
 ";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId, "year" => $year]);
-
-    $yg=null;
-    $row = $stmt->fetch();
-    if($row)
-    {
-      $yg= new YearlyGoalEntity($row, $this->logger);
-    }
-    $stmt->closeCursor();
-    return $yg;
+    $parameters = ["ul_id" => $ulId, "year" => $year];
+    
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new YearlyGoalEntity($row, $this->logger);
+    }, false);
   }
 
   /**
    * update a yearly goal
    * @param YearlyGoalEntity $yearlyGoalEntity info about the dailyStats
-   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function update(YearlyGoalEntity $yearlyGoalEntity, int $ulId):void
   {
-    
     $sql ="
 update  `yearly_goal`
 set     
@@ -76,9 +69,7 @@ set
 where   `id`       = :id
 AND     `ul_id`    = :ulId   
 ";
-
-    $stmt         = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "amount"            => $yearlyGoalEntity->amount,
       "day_1_percentage"  => $yearlyGoalEntity->day_1_percentage,
       "day_2_percentage"  => $yearlyGoalEntity->day_2_percentage,
@@ -91,19 +82,17 @@ AND     `ul_id`    = :ulId
       "day_9_percentage"  => $yearlyGoalEntity->day_9_percentage,
       "id"                => $yearlyGoalEntity->id,
       "ulId"              => $ulId
-
-    ]);
-
-    $stmt->closeCursor();
-
+    ];
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
   /**
    * Create a year of goal
    *
-   * @param int    $ulId  Id of the UL for which we create the data
-   * @param string $year  year to create
+   * @param int $ulId Id of the UL for which we create the data
+   * @param string $year year to create
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function createYear(int $ulId, string $year):void
   {
@@ -139,10 +128,7 @@ VALUES
   :day_9_percentage 
 )
 ";
-
-    $stmt         = $this->db->prepare($sql);
-
-    $stmt->execute([
+    $parameters = [
       "ul_id"            => $ulId,
       "year"             => $year,
       "amount"           => 0,
@@ -155,32 +141,31 @@ VALUES
       "day_7_percentage" => 8,
       "day_8_percentage" => 15,
       "day_9_percentage" => 10
-    ]);
+    ];
 
-    $stmt->closeCursor();
+    $this->executeQueryForInsert($sql, $parameters, false);
   }
 
 
   /**
    * Get the current number of YearlyGoals recorded for this year for the Unite Local
    *
-   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the number of dailyStats
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function getNumberOfYearlyGoals(int $ulId):int
   {
     $sql="
-    SELECT count(1) as cnt
+    SELECT 1
     FROM   yearly_goal
     WHERE  ul_id = :ul_id
     AND    year = year(now())
     ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId]);
-    $row = $stmt->fetch();
-    return $row['cnt'];
+    $parameters = ["ul_id" => $ulId];
+    return $this->getCountForSQLQuery($sql, $parameters);
   }
 
 
@@ -223,16 +208,8 @@ WHERE y.ul_id = :ul_id
 $yearSQL
 ORDER BY y.id ASC
 ";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new YearlyGoalEntity($row, $this->logger);
-    }
-    return $results;
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new YearlyGoalEntity($row, $this->logger);
+    });
   }
 }

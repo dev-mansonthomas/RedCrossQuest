@@ -10,8 +10,12 @@
     .controller('TroncsController', TroncsController);
 
   /** @ngInject */
-  function TroncsController($rootScope, $log, TroncResource) {
+  function TroncsController($rootScope, $log, TroncResource, DateTimeHandlingService) {
     var vm = this;
+
+    vm.rowCount   = 0;
+    vm.list       = [];
+    vm.pageNumber = 1;
 
     $rootScope.$emit('title-updated', 'Liste des Troncs');
     vm.typeTroncList=[
@@ -21,12 +25,32 @@
       {id:3,label:'Autre'}
     ];
 
-    vm.list = TroncResource.query();
+    function handleSearchResults(pageableResponse)
+    {
+      vm.rowCount = pageableResponse.count;
+      vm.list     = pageableResponse.rows;
+
+      var dataLength = vm.list.length;
+
+      for(var i=0;i<dataLength;i++)
+      {
+        vm.list[i].created = vm.handleDate(vm.list[i].created);
+      }
+    }
 
     vm.searchSubmit = function()
     {
-      vm.list = TroncResource.query({'active':vm.active, 'type':vm.type===0?'':vm.type, 'q':vm.search});
+      TroncResource.query({'pageNumber': vm.pageNumber, 'active':vm.active, 'type':vm.type===0?'':vm.type, 'q':vm.search!= null? vm.search.trim():null}).$promise.then(handleSearchResults).catch(function(e){
+        $log.error("error searching for Queteur", e);
+      });
     };
+
+    vm.handleDate = function (theDate)
+    {
+      return DateTimeHandlingService.handleServerDate(theDate).stringVersion;
+    };
+
+    vm.searchSubmit();
   }
 })();
 

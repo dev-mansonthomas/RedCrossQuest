@@ -300,11 +300,11 @@
 
     function handleTroncQueteur(tronc_queteur)
     {
-      vm.current.tronc_queteur        =  tronc_queteur;
+      vm.current.tronc_queteur        = tronc_queteur;
       vm.current.dateRetourNotFilled  = false;
       vm.current.fillTronc            = false;
 
-      if(vm.current.tronc_queteur.id == null  && tronc_queteur.rowCount === 0)
+      if(vm.current.tronc_queteur == null )
       {
         vm.current.troncQueteurNotFound = true;
         return;
@@ -422,7 +422,7 @@
       $log.info("Tronc: Manual Search for '"+queryString+"'");
       return TroncResource.query({"q":queryString}).$promise.then(function(response)
         {
-          return response.map(function(tronc)
+          return response.rows.map(function(tronc)
           {
             tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
             return tronc;

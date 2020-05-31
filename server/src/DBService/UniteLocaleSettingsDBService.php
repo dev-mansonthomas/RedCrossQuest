@@ -31,15 +31,10 @@ SELECT  `id`,
 FROM    `ul_settings` 
 WHERE   `ul_id` = :ul_id
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["ul_id" => $ulId]);
-    //temp var, because pass by reference
-    $row = $stmt->fetch();
-    $uls = new UniteLocaleSettingsEntity($row, $this->logger);
-    $stmt->closeCursor();
-
-    return $uls;
+    $parameters = ["ul_id" => $ulId];
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new UniteLocaleSettingsEntity($row, $this->logger);
+    }, true);
   }
 }

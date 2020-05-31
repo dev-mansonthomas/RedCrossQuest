@@ -17,6 +17,7 @@ class UserDBService extends DBService
    * if not, do nothing.
    * @param string $nivol nivol to check
    * @throws UserAlreadyExistsException if at least one active user exist on the whole system
+   * @throws Exception
    */
   public function checkExistingUserWithNivol(string $nivol):void
   {
@@ -46,20 +47,12 @@ AND u.queteur_id = q.id
 ";
 
     $parameters = ["nivol"=>$nivol];
+    $results = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return $row;
+    });
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = $row;
-    }
-
-    $stmt->closeCursor();
-
-    if($i>0)
+    $i = count($results);
+    if( $i > 0)
     {
       $exception = new UserAlreadyExistsException($i. " utilisateurs actifs RCQ existent déjà avec ce nivol: '$nivol'.\nVeuillez contacter l'administrateur RCQ sur slack ou support.redcrossquest@croix-rouge.fr");
       $exception->users = $results;
@@ -68,15 +61,15 @@ AND u.queteur_id = q.id
   }
 
 
-
   /**
    * Insert one user for a queteur.
    *
    * @param string $nivol : Nivol of the user
-   * @param int    $queteurId : queteurId of the user
+   * @param int $queteurId : queteurId of the user
    * @return int the primary key of the new user
    * @throws PDOException if the query fails to execute on the server
    * @throws UserAlreadyExistsException if at least one active user exist on the whole system
+   * @throws Exception
    */
   public function insert(string $nivol, int $queteurId):int
   {
@@ -115,25 +108,12 @@ NULL
 )
 ";
 
-    $stmt = $this->db->prepare($sql);
-
-    $this->db->beginTransaction();
-    $stmt->execute([
+    $parameters = [
       "nivol"       => ltrim($nivol, '0'),
       "queteur_id"  => $queteurId
-    ]);
+    ];
 
-    $stmt->closeCursor();
-
-    $stmt = $this->db->query("select last_insert_id()");
-    $row = $stmt->fetch();
-
-    $lastInsertId = $row['last_insert_id()'];
-    //$this->logger->info('$lastInsertId:', [$lastInsertId]);
-
-    $stmt->closeCursor();
-    $this->db->commit();
-    return $lastInsertId;
+    return $this->executeQueryForInsert($sql, $parameters, true);
   }
 
 
@@ -158,24 +138,11 @@ AND    u.active = 1
 LIMIT 1
 ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([$email]);
-
-    $count = $stmt->rowCount();
-
-    if($count == 1)
-    {
-      //temp var, because pass by reference
-      $row = $stmt->fetch();
-      $result = new UserEntity($row, $this->logger);
-      $stmt->closeCursor();
-      return $result;
-    }
-    else
-    {
-      $stmt->closeCursor();
-      throw new Exception ("Update didn't update the correct number of rows($count) for nivol: $email");
-    }
+    $parameters = [$email];
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new UserEntity($row, $this->logger);
+    }, true);
   }
   /***
    * This function is used by the authenticate method (prior to firebase), to get the user info from its nivol.
@@ -195,30 +162,12 @@ WHERE  upper(nivol) = upper(?)
 AND    active = 1
 LIMIT 1
 ";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([$nivol]);
-
-    $count = $stmt->rowCount();
-
-    if($count == 1)
-    {
-      //temp var, because pass by reference
-      $row = $stmt->fetch();
-      $result = new UserEntity($row, $this->logger);
-      $stmt->closeCursor();
-      return $result;
-    }
-    else
-    {
-      $stmt->closeCursor();
-      throw new Exception ("Update didn't update the correct number of rows($count) for nivol: $nivol");
-    }
+    $parameters = [$nivol];
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new UserEntity($row, $this->logger);
+    }, true);
   }
-
-
-
-
 
   /***
    * This function is used by queteurEditForm, where the info from the user is retrieved from the queteurId
@@ -256,22 +205,10 @@ LIMIT 1
       $parameters["ul_id"]=$ulId;
     }
 
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $count = $stmt->rowCount();
-
-    if($count == 1)
-    {
-      //temp var, because pass by reference
-      $row = $stmt->fetch();
-      $result = new UserEntity($row, $this->logger);
-      $stmt->closeCursor();
-      return $result;
-    }
-    return null;
-
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new UserEntity($row, $this->logger);
+    }, false);
   }
 
 
@@ -312,24 +249,10 @@ LIMIT 1
       $parameters["ul_id"]= $ulId;
     }
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    //$this->logger->info( "queryResult=$queryResult, queteurId=$userId, ulId=$ulId, roleId=$roleId, count=".$stmt->rowCount());
-
-    $count = $stmt->rowCount();
-
-    if($count == 1)
-    {
-      //temp var, because pass by reference
-      $row = $stmt->fetch();
-      $result = new UserEntity($row, $this->logger);
-      $stmt->closeCursor();
-      return $result;
-    }
-
-    return null;
-
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new UserEntity($row, $this->logger);
+    }, false);
   }
 
 
@@ -353,30 +276,12 @@ AND    role  != 9
 LIMIT 1
 ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["uuid" => $uuid]);
-
-    //$this->logger->info( "queryResult=$queryResult, $uuid, ".$stmt->rowCount());
-
-    $count = $stmt->rowCount();
-
-    if($count == 1)
-    {
-      //temp var, because pass by reference
-      $row = $stmt->fetch();
-      $result = new UserEntity($row, $this->logger);
-      $stmt->closeCursor();
-      return $result;
-    }
-    else
-    {
-      $stmt->closeCursor();
-      throw new Exception ("Update didn't update the correct number of rows($count) for '$uuid' ");
-    }
-
+    $parameters = ["uuid" => $uuid];
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new UserEntity($row, $this->logger);
+    }, true);
   }
-
-
 
   /***
    * This function is used by dataExport
@@ -401,20 +306,9 @@ LIMIT 1
 
     $parameters = ["ul_id"=>$ulId];
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new UserEntity($row, $this->logger);
-    }
-
-    $stmt->closeCursor();
-
-    return $results;
-
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new UserEntity($row, $this->logger);
+    });
   }
 
   /**
@@ -445,23 +339,17 @@ AND     role             != 9
 ";
 
     $this->logger->info("SendInit for password reset", ['username'=>$username, 'uuid'=>$uuid, 'mailTTL'=>$mailTTL]);
+    $parameters=[
+      "nivol" => $username,
+      "uuid"  => $uuid
+    ];
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(
-      [
-        "nivol" => $username,
-        "uuid"  => $uuid
-      ]
-    );
-
-    $count = $stmt->rowCount();
-    $stmt->closeCursor();
+    $count = $this->executeQueryForUpdate($sql, $parameters);
 
     if($count == 1)
     {
       return $uuid;
     }
-    
     throw new Exception ("Update didn't update the correct number of rows($count) for $username");
   }
 
@@ -471,6 +359,7 @@ AND     role             != 9
    * @param string $password the new password( clear text), stores it as a hash
    * @return bool true if the query is successfull, false otherwise
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function resetPassword(string $uuid, string $password):bool
   {
@@ -484,22 +373,13 @@ AND     init_passwd_date > NOW()
 AND     active = 1
 AND     role  != 9
 ";
+    $parameters = [
+      "uuid"     => $uuid,
+      "password" => password_hash($password, PASSWORD_DEFAULT)
+    ];
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(
-      [
-        "uuid"     => $uuid,
-        "password" => password_hash($password, PASSWORD_DEFAULT)
-      ]
-    );
-
-    if($stmt->rowCount() == 1)
-    {
-      $stmt->closeCursor();
-      return true;
-    }
-    $stmt->closeCursor();
-    return false;
+    $count = $this->executeQueryForUpdate($sql, $parameters);
+    return $count == 1;
   }
 
 
@@ -508,6 +388,7 @@ AND     role  != 9
    * @param int $userId the id of the user that is connecting
    * @return bool true if query successful, false otherwise
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function registerSuccessfulLogin(int $userId):bool
   {
@@ -517,18 +398,10 @@ SET     last_successful_login_date  = NOW(),
         nb_of_failure               = 0
 WHERE   id                          = :id
 ";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(
-      [
-        "id"     => $userId
-      ]
-    );
 
-    if($stmt->rowCount() == 1)
-    {
-      return true;
-    }
-    return false;
+    $parameters = ["id" => $userId];
+    $count = $this->executeQueryForUpdate($sql, $parameters);
+    return $count == 1;
   }
 
   /**
@@ -536,6 +409,7 @@ WHERE   id                          = :id
    * @param int $userId the id of the user that is connecting
    * @return boolean true if query successful, false otherwise
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function registerFailedLogin(int $userId):bool
   {
@@ -545,18 +419,9 @@ SET     last_failure_login_date  = NOW(),
         nb_of_failure            = nb_of_failure + 1
 WHERE   id                       = :id
 ";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(
-      [
-        "id"     => $userId
-      ]
-    );
-
-    if($stmt->rowCount() == 1)
-    {
-      return true;
-    }
-    return false;
+    $parameters = ["id" => $userId];
+    $count = $this->executeQueryForUpdate($sql, $parameters);
+    return $count == 1;
   }
 
 
@@ -606,36 +471,70 @@ AND     q.ul_id = :ul_id
       $parameters["ul_id"] = $ulId;
     }
 
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    if($stmt->rowCount() == 1)
-    {
-      return true;
-    }
-    return false;
+    $count = $this->executeQueryForUpdate($sql, $parameters);
+    return $count == 1;
   }
 
   /**
    * Get the current number of Users for the Unite Local
    *
-   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the number of users
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function getNumberOfUser(int $ulId):int
   {
     $sql="
-    SELECT count(1) as cnt
+    SELECT 1
     FROM   users u, queteur q
     WHERE  q.ul_id = :ul_id
     AND    q.id    = u.queteur_id 
     ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId]);
-    $row = $stmt->fetch();
-    return $row['cnt'];
+    $parameters = ["ul_id" => $ulId];
+    return $this->getCountForSQLQuery($sql, $parameters);
+  }
+
+
+
+
+  /**
+   * this method anonymise the user if it exists. Triggered from the Queteur page, anonymise button.
+   * @param  int $queteurId the ID of the queteur
+   * @param  int $ulId      the UL ID  of the person performing the action
+   * @param  int $roleId    id of the role of the user performing the action. If != 9, limit the query to the UL of the user
+   * @return bool true if query updated one row, false otherwise
+   * @throws Exception if a validation fails while creating the Entities
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function anonymise(int $queteurId, int $ulId, int $roleId):bool
+  {
+    $sql = "
+UPDATE        `users`    u
+  INNER JOIN  `queteur`  q
+  ON         u.queteur_id = q.id
+SET          u.nivol      = '',
+             u.password   = 'N/A',
+             u.active     = false,
+             u.role       = 0
+WHERE        q.id         = :id
+AND          u.role      != 9
+";
+
+    $parameters = [
+      "id"     => $queteurId
+    ];
+
+    if($roleId != 9)
+    {//allow super admin to update any UL queteurs, but he cannot change the UL
+      $sql .= "
+AND   `ul_id`           = :ul_id      
+";
+      $parameters["ul_id"] = $ulId;
+    }
+
+    $count = $this->executeQueryForUpdate($sql, $parameters);
+    return $count == 1;
   }
 }

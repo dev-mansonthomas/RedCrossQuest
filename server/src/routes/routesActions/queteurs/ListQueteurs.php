@@ -1,15 +1,12 @@
 <?php
 
-
-
-
 namespace RedCrossQuest\routes\routesActions\queteurs;
-
 
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
+use RedCrossQuest\Entity\PageableRequestEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
@@ -59,6 +56,8 @@ class ListQueteurs extends Action
     }
 
     $validations = [
+      ClientInputValidatorSpecs::withInteger('pageNumber'      , $this->queryParams, 100 , false    ),
+      ClientInputValidatorSpecs::withInteger('rowsPerPage'     , $this->queryParams, 100 , false    ),
       ClientInputValidatorSpecs::withString ("q"               , $this->queryParams, 100, false    ),
       ClientInputValidatorSpecs::withInteger('searchType'      , $this->queryParams, 5   , false    ),
       ClientInputValidatorSpecs::withInteger('secteur'         , $this->queryParams, 10  , false    ),
@@ -67,29 +66,25 @@ class ListQueteurs extends Action
       ClientInputValidatorSpecs::withBoolean("rcqUserActif"    , $this->queryParams, false , false),
       ClientInputValidatorSpecs::withBoolean("benevoleOnly"    , $this->queryParams, false , false),
       ClientInputValidatorSpecs::withString ("queteurIds"      , $this->queryParams, 50 , false    ),
-      ClientInputValidatorSpecs::withInteger('QRSearchType'    , $this->queryParams, 5   , false    )
+      ClientInputValidatorSpecs::withInteger('QRSearchType'    , $this->queryParams, 5   , false    ),
+      ClientInputValidatorSpecs::withInteger('admin_ul_id'     , $this->queryParams, 1000, false    )
     ];
 
-    $adminUlSearch = false;
-    if(array_key_exists('admin_ul_id',$this->queryParams) && $roleId == 9)
-    {
-      $validations[]= ClientInputValidatorSpecs::withInteger('admin_ul_id', $this->queryParams, 1000, true);
-      $adminUlSearch = true;
-    }
 
     $this->validateSentData($validations);
 
-    $queteurs = $this->queteurDBService->searchQueteurs(
-      $this->validatedData["q"],
-      $this->validatedData["searchType"],
-      $this->validatedData["secteur"],
-      $adminUlSearch ? $this->validatedData["admin_ul_id"] : $ulId,
-      $this->validatedData["active"],
-      $this->validatedData["benevoleOnly"],
-      $this->validatedData["rcqUser"],
-      $this->validatedData["rcqUserActif"],
-      $this->validatedData["queteurIds"],
-      $this->validatedData["QRSearchType"]);
+    if(array_key_exists('admin_ul_id',$this->queryParams) && $roleId == 9)
+    {
+      $this->validatedData['ul_id'] = $this->validatedData["admin_ul_id"];
+    }
+    else
+    {
+      $this->validatedData['ul_id'] = $ulId;
+    }
+
+    $pageableRequest = new PageableRequestEntity($this->validatedData);
+
+    $queteurs = $this->queteurDBService->searchQueteurs($pageableRequest);
 
     $this->response->getBody()->write(json_encode($queteurs));
 

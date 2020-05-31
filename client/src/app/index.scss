@@ -90,6 +90,11 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
   background-color:blue;
 }
 
+.queteur-status, .queteur-status span
+{
+  height: 20px !important;
+}
+
 @media print
 {
  .tronc-queteur

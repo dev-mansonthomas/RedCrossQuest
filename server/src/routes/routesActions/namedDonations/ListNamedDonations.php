@@ -10,6 +10,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\NamedDonationDBService;
+use RedCrossQuest\Entity\PageableRequestEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
@@ -46,29 +47,32 @@ class ListNamedDonations extends Action
 
 
     $validations = [
-      ClientInputValidatorSpecs::withString ("q"       ,  $this->queryParams, 100 , false    ),
-      ClientInputValidatorSpecs::withBoolean("deleted" ,  $this->queryParams, false  , false),
-      ClientInputValidatorSpecs::withInteger("year"    ,  $this->queryParams, 2050 , false    )
+      ClientInputValidatorSpecs::withInteger('pageNumber' , $this->queryParams, 100  , false    ),
+      ClientInputValidatorSpecs::withInteger('rowsPerPage', $this->queryParams, 100  , false    ),
+      ClientInputValidatorSpecs::withString ("q"          , $this->queryParams, 100 , false    ),
+      ClientInputValidatorSpecs::withBoolean("deleted"    , $this->queryParams, false  , false),
+      ClientInputValidatorSpecs::withInteger("year"       , $this->queryParams, 2050 , false    ),
+      ClientInputValidatorSpecs::withInteger('admin_ul_id', $this->queryParams, 1000 ,false     )
     ];
-
-    if(array_key_exists('admin_ul_id',$this->queryParams) && $roleId == 9)
-    {
-      $validations [] = ClientInputValidatorSpecs::withInteger('admin_ul_id',$this->queryParams, 1000, true);
-    }
 
     $this->validateSentData($validations);
 
-    $query     = $this->validatedData["q"];
-    $deleted   = $this->validatedData["deleted"];
-    $year      = $this->validatedData["year"];
-    $adminUlId = null;
-    if(array_key_exists('admin_ul_id',$this->queryParams) && $roleId == 9)
+    $admin_ul_id  = $this->validatedData["admin_ul_id"];
+
+    if($admin_ul_id != null && $roleId == 9)
     {
-      $adminUlId = $this->validatedData["admin_ul_id"];
+      $this->validatedData['ul_id'] = $this->validatedData["admin_ul_id"];
+    }
+    else
+    {
+      $this->validatedData['ul_id'] = $ulId;
     }
 
-    $this->logger->info("searching named donation", array('q'=>$query, 'deleted'=>$deleted, 'year'=>$year, 'admin_ul_id'=>$adminUlId));
-    $namedDonations = $this->namedDonationDBService->getNamedDonations($query, $deleted, $year, $adminUlId!= null && $roleId == 9? $adminUlId : $ulId);
+    //$this->logger->info("searching named donation", array('q'=>$query, 'deleted'=>$deleted, 'year'=>$year, 'admin_ul_id'=>$adminUlId));
+
+    $pageableRequest = new PageableRequestEntity($this->validatedData);
+
+    $namedDonations = $this->namedDonationDBService->getNamedDonations($pageableRequest);
 
     $this->response->getBody()->write(json_encode($namedDonations));
 

@@ -61,9 +61,7 @@ class TroncQueteurBusinessService
    */
   public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId):TroncQueteurEntity
   {
-    $troncQueteur               = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id                     , $ulId);
-
-    //if no tronc_queteur is found, a troncQueteur is still return with "rowCount"=0, and the tronc_id
+    $troncQueteur = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id, $ulId);
     if($troncQueteur->queteur_id)
     {
       $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById              ($troncQueteur->queteur_id     , $roleId ==9 ? null: $ulId);

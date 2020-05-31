@@ -6,14 +6,14 @@
     .controller('LoginController', LoginController);
 
   /** @ngInject */
-  function LoginController($rootScope, $location, $timeout, $window, $routeParams,
+  function LoginController($rootScope, $location, $timeout, $window, $routeParams, $log,
                            AuthenticationService) {
     var vm       = this;
     var forceSSL = function ()
     {
-      if($location.protocol() !== 'https' &&
-         $location.host() !=='localhost'  &&
-         $location.host() !=='rcq'        )
+      if($location.protocol() !== 'https'      &&
+         $location.host    () !== 'localhost'  &&
+         $location.host    () !== 'rcq'        )
       {
         $window.location.href = $location.absUrl().replace('http', 'https');
       }
@@ -75,7 +75,7 @@
           function error(message)
           {
             $timeout.cancel(loginTimeout);
-            console.log('login error',message);
+            $log.error(message);
             vm.error    = true;//do not display the exception as it contains the password
             vm.errorStr = 'Un erreur s\'est produite à : '+JSON.stringify(new Date());
             vm.loading  = false;

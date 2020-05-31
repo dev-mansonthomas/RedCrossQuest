@@ -16,6 +16,10 @@
     var vm             = this;
     vm.currentUserRole = $localStorage.currentUser.roleId;
     vm.ul              = $localStorage.guiSettings.ul;
+
+    vm.pageNumber       = 1;
+    vm.rowCount         = 0;
+
     $rootScope.$emit('title-updated', 'Liste des inscriptions de Quêteur en attente de validation');
 
     vm.registrationStatusList=[
@@ -28,7 +32,7 @@
 
     vm.doSearch=function()
     {
-      vm.registrations = QueteurResource.listPendingQueteurRegistration({'registration_status':vm.registrationStatus}).$promise.then(handleResult).catch(function(e){
+      vm.registrations = QueteurResource.listPendingQueteurRegistration({'registration_status':vm.registrationStatus, 'pageNumber':vm.pageNumber}).$promise.then(handleResult).catch(function(e){
         $log.error("error searching listPendingQueteurRegistration", e);
       });
     };
@@ -36,12 +40,14 @@
     vm.doSearch();
 
 
-    function handleResult (registrations)
+    function handleResult (pageableResponse)
     {
-      $log.info("Find '"+registrations.length+"' registrations");
+      vm.rowCount      = pageableResponse.count;
+      vm.registrations = pageableResponse.rows ;
 
-      vm.registrations = registrations;
-      var counti     = registrations.length;
+      $log.info("Find '"+vm.registrations.length+"' registrations");
+
+      var counti     = vm.registrations.length;
       for(var i=0;i<counti;i++)
       {
         vm.registrations[i].created      = DateTimeHandlingService.handleServerDate(vm.registrations[i].created     ).stringVersion;

@@ -7,22 +7,21 @@
 
   /** @ngInject */
   function config($logProvider, $httpProvider,
-                  toastrConfig, jwtOptionsProvider)
+                  toastrConfig, jwtOptionsProvider, $compileProvider)
   {
     //angular-jwt configuration
     jwtOptionsProvider.config({
       unauthenticatedRedirectPath: '/login',
       tokenGetter: ['options', '$localStorage', function(options, $localStorage) {
-
         if(options && options.url.substr(options.url.length - 5) === '.html')
         {
           return null;
         }
-
         return $localStorage.RCQ_JWT_Token;
       }]
-
     });
+    //add sms to allowed links
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|mailto|tel|sms):/);
 
     $httpProvider.interceptors.push('jwtInterceptor');
 

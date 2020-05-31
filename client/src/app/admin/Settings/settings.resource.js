@@ -11,13 +11,10 @@ angular.module('redCrossQuestClient').factory('SettingsResource', function ($res
       id    : function () {return $localStorage.currentUser.ulId  }
     },
     {
-//move to UniteLocale
-//get the UL name, address, contact details etc...
-//      query:
-//        {
-//          method: 'GET',
-//          isArray: false
-//        },
+     query:
+        {
+          isArray: false
+        },
       //get setup info to determine if the administator has do to something
       getSetupStatus: {
         method: 'GET',

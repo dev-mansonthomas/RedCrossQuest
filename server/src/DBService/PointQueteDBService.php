@@ -4,6 +4,8 @@ namespace RedCrossQuest\DBService;
 
 use Exception;
 use PDOException;
+use RedCrossQuest\Entity\PageableRequestEntity;
+use RedCrossQuest\Entity\PageableResponseEntity;
 use RedCrossQuest\Entity\PointQueteEntity;
 
 class PointQueteDBService extends DBService
@@ -45,38 +47,34 @@ AND pq.enabled = 1
 ORDER BY type, name
 ";
 
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId]);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new PointQueteEntity($row, $this->logger);
-    }
-
-    $stmt->closeCursor();
-    return $results;
+    return $this->executeQueryForArray($sql, ["ul_id" => $ulId], function($row) {
+      return new PointQueteEntity($row, $this->logger);
+    });
   }
 
 
   /**
    * Search  pointQuete for UL $ulId
    *
-   * @param  string $query query string to search across name, code, address, city
-   * @param  int $point_quete_type type of point quete.
-   * @param  bool $active if the point quete is active or not
-   * @param  int $ulId The ID of the Unite Locale
-   * @return PointQueteEntity[]  The list of PointQuete
+   * @param PageableRequestEntity $pageableRequest
+   *         string $query query string to search across name, code, address, city
+   *         int $point_quete_type type of point quete.
+   *         bool $active if the point quete is active or not
+   *         int $ulId The ID of the Unite Locale
+   * @return PageableResponseEntity  The list of PointQuete
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function searchPointQuetes(?string $query, ?int $point_quete_type, bool $active, int $ulId):array
+  public function searchPointQuetes(PageableRequestEntity $pageableRequest):PageableResponseEntity
   {
+//?string $query, ?int $point_quete_type, bool $active, int $ulId
 
+    /** @var string $query */
+    $query            = $pageableRequest->filterMap['q'];
+    /** @var int $point_quete_type */
+    $point_quete_type = $pageableRequest->filterMap['point_quete_type'];
 
-    $parameters      = ["ul_id" => $ulId, "active" => $active];
+    $parameters      = ["ul_id" => $pageableRequest->filterMap['ul_id'], "active" =>$pageableRequest->filterMap['active']];
     $querySQL        = "";
     $typeSQL         = "";
 
@@ -132,18 +130,14 @@ $typeSQL
 ORDER BY type ASC, name ASC
 ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
+    $count   = $this->getCountForSQLQuery ($sql, $parameters);
 
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new PointQueteEntity($row, $this->logger);
-    }
+    $results = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new PointQueteEntity($row, $this->logger);
+    }, $pageableRequest->pageNumber, $pageableRequest->rowsPerPage);
 
-    $stmt->closeCursor();
-    return $results;
+    return new PageableResponseEntity($count, $results, $pageableRequest->pageNumber, $pageableRequest->rowsPerPage);
+
   }
 
 
@@ -194,15 +188,10 @@ FROM `point_quete` AS pq
 WHERE  pq.id    = :point_quete_id 
 $ulRestriction
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute($parameters);
-    //temp var, because pass by reference
-    $row = $stmt->fetch();
-    $point_quete = new PointQueteEntity($row, $this->logger);
-    $stmt->closeCursor();
-    return $point_quete;
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new PointQueteEntity($row, $this->logger);
+    }, true);
   }
 
 
@@ -212,6 +201,7 @@ $ulRestriction
    * @param PointQueteEntity $pointQuete The pointQuete to update
    * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId id of the role of the user performing the action. If != 9, limit the query to the UL of the user
+   * @throws Exception
    */
   public function update(PointQueteEntity $pointQuete, int $ulId, int $roleId):void
   {
@@ -261,13 +251,8 @@ AND   `ul_id`           = :ul_id
 ";
       $parameters["ul_id"] = $ulId;
     }
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
   }
-
 
 
   /**
@@ -276,6 +261,7 @@ AND   `ul_id`           = :ul_id
    * @param PointQueteEntity $pointQuete The pointQuete to update
    * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the primary key of the new pointQuete
+   * @throws Exception
    */
   public function insert(PointQueteEntity $pointQuete, int $ulId):int
   {  //TODO : check if we should use $ulID
@@ -323,10 +309,7 @@ AND   `ul_id`           = :ul_id
   )
   ";
 
-    $stmt = $this->db->prepare($sql);
-
-    $this->db->beginTransaction();
-    $stmt->execute([
+    $parameters = [
       "code"               => $pointQuete->code               ,
       "name"               => $pointQuete->name               ,
       "latitude"           => $pointQuete->latitude           ,
@@ -343,27 +326,18 @@ AND   `ul_id`           = :ul_id
       "time_to_reach"      => $pointQuete->time_to_reach      ,
       "transport_to_reach" => $pointQuete->transport_to_reach ,
       "ul_id"              => $pointQuete->ul_id
-    ]);
+    ];
 
-    $stmt->closeCursor();
-
-    $stmt = $this->db->query("select last_insert_id()");
-    $row  = $stmt->fetch();
-
-    $lastInsertId = $row['last_insert_id()'];
-
-    $stmt->closeCursor();
-    $this->db->commit ();
-
-    return $lastInsertId;
+    return $this->executeQueryForInsert($sql, $parameters, true);
   }
 
   /**
    * Get the current number of point_quete for the Unite Local
    *
-   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the number of point_quete
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function getNumberOfPointQuete(int $ulId):int
   {
@@ -372,15 +346,16 @@ AND   `ul_id`           = :ul_id
     FROM   point_quete
     WHERE  ul_id = :ul_id
     ";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId]);
-    $row = $stmt->fetch();
-    return $row['cnt'];
+    $parameters = ["ul_id" => $ulId];
+    return $this->getCountForSQLQuery($sql, $parameters);
   }
 
 
-
+  /**
+   * Called only one time, at the first connection of the admin of the UL to set the first point_quete
+   * @param int $ulId
+   * @throws Exception
+   */
   public function initBasePointQuete(int $ulId):void
   {
     $sql="
@@ -390,11 +365,8 @@ AND   `ul_id`           = :ul_id
     FROM  ul u
     WHERE id = :id
     ";
-    $stmt = $this->db->prepare($sql);
 
-    $stmt->execute([
-      "id"              => $ulId
-    ]);
-    $stmt->closeCursor();
+    $parameters = ["id"=> $ulId];
+    $this->executeQueryForInsert($sql, $parameters);
   }
 }

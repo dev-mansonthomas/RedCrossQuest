@@ -85,8 +85,8 @@ use RedCrossQuest\routes\routesActions\namedDonations\UpdateNamedDonation;
  *         response=200,
  *         description="Success",
  *         @OA\JsonContent(
- *          type="array",
- *           @OA\Items(ref="#/components/schemas/NamedDonationEntity"),
+ *          type="object",
+ *           @OA\Items(ref="#/components/schemas/PageableResponseEntity"),
  *         ),
  *     ),
  *     @OA\Response(
