@@ -17,17 +17,24 @@ class ULPreferencesEntity extends Entity
   /** @var bool $rq_display_daily_stats Display in RedQuest the dailystats or not*/
   public $rq_display_daily_stats    ;
   /** @var string $rq_display_queteur_ranking Display the ranking of queteur : no, 1st page, all pages (see statics var)*/
-  public $rq_display_queteur_ranking    ;
+  public $rq_display_queteur_ranking;
   /** @var bool $use_bank_bag use bank moneybag or not (mandatory field in tronc_queteur comptage)*/
   public $use_bank_bag              ;
   /** @var bool $rq_autonomous_depart_and_return Can volunteers set the depart & return date themselves with RedQuest*/
   public $rq_autonomous_depart_and_return;
 
+
+  /** @var string $token_benevole  token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
+  public $token_benevole                 ;
+  /** @var string $token_benevole_1j token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
+  public $token_benevole_1j              ;
+
+
   public static $RQ_DISPLAY_QUETE_STATS_NONE      = "NONE"    ;
   public static $RQ_DISPLAY_QUETE_STATS_1ST_PAGE  = "1ST_PAGE";
   public static $RQ_DISPLAY_QUETE_STATS_ALL       = "ALL"     ;
   
-  protected $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'rq_autonomous_depart_and_return'];
+  protected $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'rq_autonomous_depart_and_return', 'token_benevole', 'token_benevole_1j'];
 
   /**
    * Accept an array of data matching properties of this class

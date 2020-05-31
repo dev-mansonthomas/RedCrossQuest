@@ -11,6 +11,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
+use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
@@ -24,6 +25,11 @@ class AnonymizeQueteur extends Action
   private $queteurDBService;
 
   /**
+   * @var UserDBService           $userDBService
+   */
+  private $userDBService;
+
+  /**
    * @var EmailBusinessService    $emailBusinessService
    */
   private $emailBusinessService;
@@ -31,16 +37,19 @@ class AnonymizeQueteur extends Action
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param QueteurDBService          $queteurDBService
-   * @param EmailBusinessService    $emailBusinessService
+   * @param QueteurDBService $queteurDBService
+   * @param UserDBService $userDBService
+   * @param EmailBusinessService $emailBusinessService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
                               QueteurDBService        $queteurDBService,
+                              UserDBService           $userDBService,
                               EmailBusinessService    $emailBusinessService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->queteurDBService     = $queteurDBService;
+    $this->userDBService        = $userDBService;
     $this->emailBusinessService = $emailBusinessService;
 
   }
@@ -58,10 +67,22 @@ class AnonymizeQueteur extends Action
     $queteurEntity = new QueteurEntity($this->parsedBody, $this->logger);
 
     $queteurOriginalData   = $this->queteurDBService->getQueteurById($queteurEntity->id);
-    $token                 = $this->queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId, $userId);
+
+    try
+    {
+      $this->queteurDBService->transactionStart();
+      $token                 = $this->queteurDBService->anonymize($queteurOriginalData->id, $ulId, $roleId, $userId);
+      $userAnonymised        = $this->userDBService   ->anonymise($queteurOriginalData->id, $ulId, $roleId);
+      $this->queteurDBService->transactionCommit();
+    }
+    catch(Exception $e)
+    {
+      $this->queteurDBService->transactionRollback();
+      throw $e;
+    }
 
     if(isset($queteurOriginalData->email))
-      $this->emailBusinessService->sendAnonymizationEmail($queteurOriginalData, $token);
+      $this->emailBusinessService->sendAnonymizationEmail($queteurOriginalData, $token, $userAnonymised);
 
     $queteurAnonymizedData = $this->queteurDBService->getQueteurById($queteurEntity->id);
 

@@ -8,10 +8,14 @@ angular.module('redCrossQuestClient').factory('TroncResource', function($resourc
       roleId: function () { return $localStorage.currentUser.roleId},
       ulId  : function () { return $localStorage.currentUser.ulId  },
       id    : '@id'
-    }, {
-    update: {
-      method: 'PUT' // this method issues a PUT request
     },
+    {
+      update: {
+        method: 'PUT' // this method issues a PUT request
+      },
+      query:{
+        isArray: false
+      },
     markAllAsPrinted: {
     method: 'POST',
       params: {

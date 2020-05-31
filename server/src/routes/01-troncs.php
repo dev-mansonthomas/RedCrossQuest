@@ -77,8 +77,8 @@ use RedCrossQuest\routes\routesActions\troncs\UpdateTronc;
  *         response=200,
  *         description="Success",
  *         @OA\JsonContent(
- *          type="array",
- *          @OA\Items(ref="#/components/schemas/TroncEntity")
+ *          type="object",
+ *           @OA\Items(ref="#/components/schemas/PageableResponseEntity"),
  *         ),
  *     ),
  *     @OA\Response(

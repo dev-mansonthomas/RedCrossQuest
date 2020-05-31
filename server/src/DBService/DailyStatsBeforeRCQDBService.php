@@ -64,48 +64,33 @@ $yearSQL
 ORDER BY d.date ASC
 ";
 
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i = 0;
-    while ($row = $stmt->fetch())
-    {
-      $results[$i++] = new DailyStatsBeforeRCQEntity($row, $this->logger);
-    }
-
-    $stmt->closeCursor();
-
-    return $results;
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new DailyStatsBeforeRCQEntity($row, $this->logger);
+    });
   }
 
   /**
    * update a daily stat (ie a particular day of a particular year)
    * @param DailyStatsBeforeRCQEntity $dailyStatsBeforeRCQEntity info about the dailyStats
-   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function update(DailyStatsBeforeRCQEntity $dailyStatsBeforeRCQEntity, int $ulId):void
   {
-    
     $sql ="
 update  `daily_stats_before_rcq`
 set     `amount`  = :amount
 where   `id`      = :id
 AND     `ul_id`   = :ulId   
 ";
-
-    $stmt         = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "amount"        => $dailyStatsBeforeRCQEntity->amount,
       "id"            => intVal($dailyStatsBeforeRCQEntity->id),
       "ulId"          => $ulId
-
-    ]);
-
-    $stmt->closeCursor();
-
+    ];
+    
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
   /**
@@ -159,22 +144,20 @@ VALUES
   /**
    * Get the current number of DailyStats recorded for the Unite Local
    *
-   * @param int           $ulId     Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @return int the number of dailyStats
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function getNumberOfDailyStats(int $ulId):int
   {
+    //query modified in getCountForSQLQuery
     $sql="
-    SELECT count(1) as cnt
+    SELECT 1
     FROM   daily_stats_before_rcq
     WHERE  ul_id = :ul_id
     ";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["ul_id" => $ulId]);
-    $row = $stmt->fetch();
-    return $row['cnt'];
+    return $this->getCountForSQLQuery($sql, ["ul_id" => $ulId]);
   }
 
 }

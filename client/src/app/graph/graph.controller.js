@@ -25,8 +25,8 @@
     vm.tokenAndExpirationDate = GraphResource.get();
     vm.tokenAndExpirationDate.$promise.then(function success(data){
       vm.showGraphs     = true;
-      vm.tokenAndExpirationDate.token_expiration_local = DateTimeHandlingService.handleServerDate(data.token_expiration).stringVersion;
-      vm.token = data.token;
+      vm.tokenAndExpirationDate.token_expiration_local = DateTimeHandlingService.handleServerDate(data.tokenExpiration).stringVersion;
+      vm.token = data.validToken;
     }).catch(function(e){
       $log.error("error searching for Graph", e);
     });

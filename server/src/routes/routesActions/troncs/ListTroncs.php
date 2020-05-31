@@ -10,6 +10,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\TroncDBService;
+use RedCrossQuest\Entity\PageableRequestEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
@@ -44,17 +45,18 @@ class ListTroncs extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("active", $this->queryParams, false     , null),
-        ClientInputValidatorSpecs::withInteger("type"  , $this->queryParams, 5       , false, null),
-        ClientInputValidatorSpecs::withInteger("q"     , $this->queryParams, 1000000 , false, null),
+        ClientInputValidatorSpecs::withInteger('pageNumber'  , $this->queryParams, 100     , false    ),
+        ClientInputValidatorSpecs::withInteger('rowsPerPage' , $this->queryParams, 100     , false    ),
+        ClientInputValidatorSpecs::withBoolean("active"      , $this->queryParams, false     , true),
+        ClientInputValidatorSpecs::withInteger("type"        , $this->queryParams, 5       , false, null),
+        ClientInputValidatorSpecs::withInteger("q"           , $this->queryParams, 1000000 , false, null),
       ]);
 
-    $active = $this->validatedData["active"];
-    $type   = $this->validatedData["type"  ];
-    $q      = $this->validatedData["q"     ];
-
     $ulId   = $this->decodedToken  ->getUlId  ();
-    $troncs = $this->troncDBService->getTroncs($q, $ulId, $active, $type);
+
+    $pageableRequest = new PageableRequestEntity($this->validatedData);
+
+    $troncs = $this->troncDBService->getTroncs($pageableRequest, $ulId);
 
     $this->response->getBody()->write(json_encode($troncs));
 

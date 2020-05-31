@@ -15,6 +15,8 @@
   {
     var vm = this;
     vm.currentUserRole=$localStorage.currentUser.roleId;
+    vm.pageNumber       = 1;
+    vm.rowCount         = 0;
 
     $rootScope.$emit('title-updated', 'Reçu Fiscaux');
 
@@ -32,7 +34,7 @@
 
     vm.doSearch=function()
     {
-      var searchParams = {'action':'search','q':vm.search, 'year':vm.year, 'deleted':vm.deleted};
+      var searchParams = {'action':'search','q':vm.search, 'year':vm.year, 'deleted':vm.deleted, 'pageNumber':vm.pageNumber};
 
       if(vm.currentUserRole === 9 && vm.admin_ul_id !== null)
       {
@@ -54,16 +56,17 @@
 
 
 
-    function handleResult (recuFiscal)
+    function handleResult (pageableResponse)
     {
-      $log.info("Find '"+recuFiscal.length+"' recuFiscal");
-      vm.recuFiscal = recuFiscal;
-      var counti = recuFiscal.length;
+      vm.recuFiscal  = pageableResponse.rows;
+      vm.rowCount    = pageableResponse.count;
+
+      var counti = vm.recuFiscal.length;
       var i=0;
       for(i=0;i<counti;i++)
       {
-        var oneRecu = recuFiscal[i];
-        oneRecu.donation_date = DateTimeHandlingService.handleServerDate(vm.recuFiscal[i].donation_date     ).stringVersion;
+        var oneRecu = vm.recuFiscal[i];
+        oneRecu.donation_date = DateTimeHandlingService.handleServerDate(oneRecu.donation_date     ).stringVersion;
         oneRecu.total_amount  = oneRecu.euro2   * 2    +
                                 oneRecu.euro1   * 1    +
                                 oneRecu.cents50 * 0.5  +

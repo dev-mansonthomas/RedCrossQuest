@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\ULPreferencesFirestoreDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
+use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
@@ -40,6 +41,11 @@ class GetAllULSettings extends Action
    */
   private $dailyStatsBeforeRCQDBService;
 
+  /**
+   * UniteLocaleSettingsDBService    $uniteLocaleSettingsDBService
+   */
+  private $uniteLocaleSettingsDBService;
+
 
   /**
    * @Inject("settings")
@@ -66,13 +72,15 @@ class GetAllULSettings extends Action
    * @param UniteLocaleDBService $uniteLocaleDBService
    * @param UserDBService $userDBService
    * @param DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService
+   * @param UniteLocaleSettingsDBService $uniteLocaleSettingsDBService
    */
   public function __construct(LoggerInterface                 $logger,
                               ClientInputValidator            $clientInputValidator,
                               ULPreferencesFirestoreDBService $uniteLocalePrefsFirestoreService,
                               UniteLocaleDBService            $uniteLocaleDBService,
                               UserDBService                   $userDBService,
-                              DailyStatsBeforeRCQDBService    $dailyStatsBeforeRCQDBService)
+                              DailyStatsBeforeRCQDBService    $dailyStatsBeforeRCQDBService,
+                              UniteLocaleSettingsDBService    $uniteLocaleSettingsDBService)
   {
     parent::__construct($logger, $clientInputValidator);
 
@@ -80,6 +88,7 @@ class GetAllULSettings extends Action
     $this->uniteLocaleDBService             = $uniteLocaleDBService;
     $this->userDBService                    = $userDBService;
     $this->dailyStatsBeforeRCQDBService     = $dailyStatsBeforeRCQDBService;
+    $this->uniteLocaleSettingsDBService    = $uniteLocaleSettingsDBService;
   }
 
   /**
@@ -100,10 +109,19 @@ class GetAllULSettings extends Action
       $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()
     );
 
-    $guiSettings->ul          = $roleId == 1 ? "" : $this->uniteLocaleDBService             ->getUniteLocaleById   ($ulId);
-    $guiSettings->ul_settings = $roleId == 1 ? "" : $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
-    if(isset($guiSettings->ul_settings))
-      unset($guiSettings->ul_settings->FIRESTORE_DOC_ID);
+    if($roleId>1)
+    {
+      $guiSettings->ul          = $this->uniteLocaleDBService             ->getUniteLocaleById   ($ulId);
+      $guiSettings->ul_settings = $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
+
+      $ulTokens    = $this->uniteLocaleSettingsDBService->getUniteLocaleById($ulId);
+
+      $guiSettings->ul_settings->token_benevole    = $ulTokens->token_benevole;
+      $guiSettings->ul_settings->token_benevole_1j = $ulTokens->token_benevole_1j;
+
+      if(isset($guiSettings->ul_settings))
+        unset($guiSettings->ul_settings->FIRESTORE_DOC_ID);
+    }
     $guiSettings->user        = $this->userDBService->getUserInfoWithUserId($userId, $ulId, $roleId);
 
     $this->response->getBody()->write(json_encode($guiSettings));

@@ -44,10 +44,11 @@ class SpotfireAccessDBService extends DBService
     DELETE FROM spotfire_access
     WHERE user_id = :user_id
     ";
-    $stmt = $this->db->prepare($deleteSQL);
-    $stmt->execute(["user_id"=> $userId ]);
 
-    $stmt->closeCursor();
+    $parameters = ["user_id"=> $userId ];
+
+    $this->executeQueryForUpdate($deleteSQL, $parameters);
+
 
     //create a new one
     $sql = "
@@ -69,18 +70,14 @@ VALUES
     $tokenExpiryDate =  new DateTime();
     $tokenExpiryDate->add(new DateInterval("PT".$tokenTTL."H"));
 
+    $parameters2=[
+      "token"             => $token,
+      "token_expiration"  => $tokenExpiryDate->format("Y-m-d H:i:s"),
+      "ul_id"             => (int)$ulId,
+      "user_id"           => (int)$userId
+    ];
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(
-      [
-        "token"             => $token,
-        "token_expiration"  => $tokenExpiryDate->format("Y-m-d H:i:s"),
-        "ul_id"             => (int)$ulId,
-        "user_id"           => (int)$userId
-      ]
-    );
-
-    $stmt->closeCursor();
+    $this->executeQueryForInsert($sql, $parameters2, false);
 
     $currentDate = Carbon::now();
     $currentDate->setTimezone("Europe/Paris");
@@ -111,25 +108,14 @@ VALUES
 //+ INTERVAL 1 HOUR
 //TODO need to check if we need an offset of 1 or 2 hours, for the timezone differences.
 
-    $stmt = $this->db->prepare($sql);
+    $parameters = [
+      "userId" => $userId,
+      "ulId"   => $ulId
+    ];
 
-    $stmt->execute(
-      [
-          "userId" => $userId,
-          "ulId"   => $ulId
-      ]);
-
-    if($stmt->rowCount() == 1)
-    {
-      $data = $stmt->fetch();
-      $spotfireAccess = new SpotfireAccessEntity($data, $this->logger);
-    }
-    else
-    {
-      $spotfireAccess = null;
-    }
-    $stmt->closeCursor();
-    return $spotfireAccess;
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new SpotfireAccessEntity($row, $this->logger);
+    }, false);
   }
-
 }

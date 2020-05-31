@@ -14,6 +14,7 @@ class MailingDBService extends DBService
    * @param int $ulId the Id of the Unite Local
    * @return MailingSummaryEntity[][] list of summaries
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function getMailingSummary(int $ulId):array
   {
@@ -43,18 +44,10 @@ group by secteur
 order by secteur";
 
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
+    $summary["UNSENT_EMAIL"] = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new MailingSummaryEntity($row, $this->logger);
+    });
 
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new MailingSummaryEntity($row, $this->logger);
-    }
-
-    $summary["UNSENT_EMAIL"] = $results;
 
 
 // email successfully sent
@@ -81,19 +74,9 @@ AND q.id IN
 group by secteur
 order by secteur";
 
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new MailingSummaryEntity($row, $this->logger);
-    }
-
-    $summary["EMAIL_SUCCESS"] = $results;
+    $summary["EMAIL_SUCCESS"] = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new MailingSummaryEntity($row, $this->logger);
+    });
 
 
 //email sent with error
@@ -121,20 +104,11 @@ group by secteur
 order by secteur";
 
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
 
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new MailingSummaryEntity($row, $this->logger);
-    }
-
-    $summary["EMAIL_ERROR"] = $results;
-
-
+    $summary["EMAIL_ERROR"] = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new MailingSummaryEntity($row, $this->logger);
+    });
+    
     return $summary;
   }
 
@@ -177,37 +151,28 @@ AND q.id IN
 order by q.secteur, q.id
 LIMIT 0, $pagingSize";
 
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new MailingInfoEntity($row, $this->logger);
-    }
-
-    return $results;
+    
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new MailingInfoEntity($row, $this->logger);
+    });
   }
 
   /**
    * Insert one queteur_mailing_status
-
-   * @param int    $queteur_id    Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param string $status_code   Status code of the send email
-   * @throws PDOException if the query fails to execute on the server
+   * @param int $queteur_id Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param string $status_code Status code of the send email
+   * @throws PDOException if the query fails to execute on the server*@throws Exception
+   * @throws Exception
    */
   public function insertQueteurMailingStatus(int $queteur_id, string $status_code):void
   {
 
-    $queryData = [
-      'queteur_id'=> $queteur_id,
+    $parameters = [
+      'queteur_id' => $queteur_id,
       'status_code'=> $status_code
     ];
 
-      $sql = "
+    $sql = "
 INSERT INTO `queteur_mailing_status`
 (
   `queteur_id`,
@@ -221,12 +186,9 @@ VALUES
 YEAR(NOW()),
 :status_code,
 NOW()
-);
+)
 ";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($queryData);
-    $stmt->closeCursor();
+    $this->executeQueryForInsert($sql, $parameters);
   }
 
 
@@ -235,13 +197,14 @@ NOW()
    * Should only be called if there's no existing spotfire token
    *
    * @param string $spotfireAccessToken the spotfire access token
-   * @param int    $ulId       Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param int    $queteurId     Id of the queteur
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $queteurId Id of the queteur
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function updateQueteurWithSpotfireAccessToken(string $spotfireAccessToken, int $queteurId, int $ulId):void
   {
-    $queryData = [
+    $parameters = [
       'id'                   => $queteurId,
       'ul_id'                => $ulId     ,
       'spotfire_access_token'=> $spotfireAccessToken
@@ -253,12 +216,7 @@ SET   `spotfire_access_token`     = :spotfire_access_token
 WHERE `id`    = :id
 AND   `ul_id` = :ul_id  
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute($queryData);
-
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
 
@@ -267,12 +225,13 @@ AND   `ul_id` = :ul_id
    *
    * @param string $guid the GUID of the spotfire_access_token from queteur table
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function confirmRead(string $guid):void
   {
     $this->logger->info("Updating spotfire_open to 1 for queteur", ["guid"=>$guid]);
 
-    $queryData = [
+    $parameters = [
       'guid'                   => $guid
     ];
 
@@ -285,10 +244,6 @@ SET   qms.`spotfire_opened`       = 1,
 WHERE   q.`spotfire_access_token` = :guid
 ";
 
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute($queryData);
-
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 }

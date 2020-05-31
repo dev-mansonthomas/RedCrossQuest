@@ -46,7 +46,7 @@ class GetSpotfireAccessToken extends Action
 
     $validToken = $this->spotfireAccessDBService->getValidToken($userId, $ulId);
 
-    $this->response->getBody()->write(json_encode(new GetSpotfireTokenResponse($validToken->token)));
+    $this->response->getBody()->write(json_encode(new GetSpotfireTokenResponse($validToken->token, $validToken->token_expiration)));
 
     return $this->response;
   }

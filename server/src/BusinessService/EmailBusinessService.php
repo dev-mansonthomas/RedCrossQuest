@@ -201,7 +201,7 @@ class EmailBusinessService
    * @param string        $token     The uuid to be inserted in the email
    * @throws Exception   if the email fails to be sent
    */
-  public function sendAnonymizationEmail(QueteurEntity $queteur, string $token): void
+  public function sendAnonymizationEmail(QueteurEntity $queteur, string $token, bool $userAnonymised): void
   {
     $this->logger->info("sendAnonymizationEmail:'", ["email"=>$queteur->email]);
 
@@ -209,6 +209,23 @@ class EmailBusinessService
 
     $anonymiseDateCarbon = Carbon::now();
     $anonymiseDateString = $anonymiseDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
+
+    $userAnonymisedHtml  = "";
+
+    if($userAnonymised)
+    {
+      $userAnonymisedHtml = "
+  <li><b>Utilisateur RCQ</b>
+    <ul>
+      <li>NIVOL: ''</li>
+      <li>Password: 'N/A'</li>
+      <li>Active: false</li>
+      <li>Role: 0</li> 
+    </ul>  
+  </li>
+";
+    }
+
 
     $title = "Suite à votre demande, vos données viennent d'être anonymisées";
 
@@ -233,15 +250,16 @@ Nous espérons vous revoir bientôt à la quête ou en tant que bénévole!
 
 <p>Conformément à votre demande, vos données personnelles ont été remplacées par les valeurs indiquées ci-après :
   <ul>
-   <li>Nom: 'Quêteur' </li>
-   <li>Prénom: 'Anonimisé'</li>
-   <li>Email: ''</li>
-   <li>Secteur: 0</li>
-   <li>NIVOL: ''</li>
-   <li>Mobile: ''</li>
-   <li>Date de Naissance: 22/12/1922</li>
-   <li>Homme: 0</li> 
-   <li>Active: 0</li>
+    <li>Nom: 'Quêteur' </li>
+    <li>Prénom: 'Anonimisé'</li>
+    <li>Email: ''</li>
+    <li>Secteur: 0</li>
+    <li>NIVOL: ''</li>
+    <li>Mobile: ''</li>
+    <li>Date de Naissance: 22/12/1922</li>
+    <li>Homme: 0</li> 
+    <li>Active: 0</li>
+$userAnonymisedHtml
   </ul>
  </p>
 

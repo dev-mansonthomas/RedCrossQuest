@@ -5,6 +5,7 @@
  * Date: 06/03/2017
  * Time: 18:38
  */
+
 use RedCrossQuest\routes\routesActions\queteurs\AnonymizeQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\ApproveQueteurRegistration;
 use RedCrossQuest\routes\routesActions\queteurs\AssociateRegistrationWithExistingQueteur;
@@ -155,8 +156,8 @@ use RedCrossQuest\routes\routesActions\queteurs\UpdateQueteur;
  *         response=200,
  *         description="Success",
  *         @OA\JsonContent(
- *          type="array",
- *           @OA\Items(ref="#/components/schemas/QueteurEntity"),
+ *          type="object",
+ *           @OA\Items(ref="#/components/schemas/PageableResponseEntity"),
  *         ),
  *     ),
  *     @OA\Response(
@@ -246,8 +247,8 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/countPendingQueteurRegistration'
  *         response=200,
  *         description="Success",
  *         @OA\JsonContent(
- *          type="array",
- *           @OA\Items(ref="#/components/schemas/QueteurEntity"),
+ *          type="object",
+ *           @OA\Items(ref="#/components/schemas/PageableResponseEntity"),
  *         ),
  *     ),
  *     @OA\Response(

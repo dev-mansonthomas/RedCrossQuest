@@ -27,9 +27,9 @@
     //"Maison des solidarités Parc d''activités du Bois Vert  rue Barthélémy Thimonier  , 56800,  PLOERMEL";
     vm.ulAddress = ulInfo.address+", "+ulInfo.postal_code+", "+ulInfo.city;
 
-    TroncResource.query().$promise.then(function(response)
+    TroncResource.query({'rowsPerPage':0}).$promise.then(function(response)
     {
-      vm.list = response.map(function(tronc)
+      vm.list = response.rows.map(function(tronc)
         {
           tronc.qr_code="TRONC-"+("000000"+tronc.ul_id).slice(-6)+"-"+("00000000"+tronc.id).slice(-9);
           return tronc;

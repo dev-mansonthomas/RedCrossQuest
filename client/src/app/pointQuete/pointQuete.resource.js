@@ -14,7 +14,7 @@ angular.module('redCrossQuestClient').factory('PointQueteResource', function($re
     },
     search:{
         method: 'GET',
-        isArray: true,
+        isArray: false,
         params: {
           action: 'search'
         }

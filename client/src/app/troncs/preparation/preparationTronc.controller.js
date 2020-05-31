@@ -201,7 +201,7 @@
       $log.info("Queteur : Manual Search for '"+queryString+"'");
       return QueteurResource.query({"q":queryString, "searchType":3}).$promise.then(function success(response)
       {
-        return response.map(function(queteur)
+        return response.rows.map(function(queteur)
         {
           queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
           return queteur;
@@ -224,7 +224,7 @@
       $log.info("Tronc: Manual Search for '"+queryString+"'");
       return TroncResource.query({"q":queryString}).$promise.then(function success(response)
       {
-        return response.map(function(tronc)
+        return response.rows.map(function(tronc)
         {
           tronc.stringView = "tronc N°"+tronc.id;
           return tronc;

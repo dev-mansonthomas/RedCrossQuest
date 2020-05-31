@@ -57,26 +57,22 @@ FROM    `ul`
 WHERE   `ul`.id    = :ul_id
 ";
 
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["ul_id" => $ulId]);
-    //temp var, because pass by reference
-    $row = $stmt->fetch();
-    $ul = new UniteLocaleEntity($row, $this->logger);
-    $stmt->closeCursor();
-
-    return $ul;
+    $parameters = ["ul_id" => $ulId];
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new UniteLocaleEntity($row, $this->logger);
+    }, true);
   }
-
 
 
   /**
    * Update UL name and address
    *
    * @param UniteLocaleEntity $ul The UL info
-   * @param int           $ulId  The id of the UL to be updated
-   * @param int           $userId the id of the person who approve or reject the registration
+   * @param int $ulId The id of the UL to be updated
+   * @param int $userId the id of the person who approve or reject the registration
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function updateUL(UniteLocaleEntity $ul, int $ulId, int $userId):void
   {
@@ -142,12 +138,7 @@ WHERE `id`      = :id
       "id"                   => $ulId
     ];
 
-
-    $stmt = $this->db->prepare($sql);
-    $this->logger->warning("Updating Unite Locale id: $ulId by userId:$userId", array("parameters"=>$parameters));
-    $stmt->execute($parameters);
-
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
 
@@ -162,6 +153,8 @@ WHERE `id`      = :id
    */
   public function searchUniteLocale(string $query):array
   {
+    if ($query === null)
+      return [];
 
     $sql = "
 SELECT  `ul`.`id`,
@@ -189,26 +182,11 @@ WHERE   UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
   OR    UPPER(ul.`admin_last_name`     ) like concat('%', UPPER(:query), '%')
   OR    UPPER(ul.`tresorier_first_name`) like concat('%', UPPER(:query), '%')
   OR    UPPER(ul.`tresorier_last_name` ) like concat('%', UPPER(:query), '%')
-
-
 ";
-    $stmt = $this->db->prepare($sql);
-    if ($query !== null)
-    {
-      $stmt->execute([
-        "query" => $query
-      ]);
+    $parameters = ["query" => $query];
 
-      $results = [];
-      $i = 0;
-      while ($row = $stmt->fetch())
-      {
-        $results[$i++] = new UniteLocaleEntity($row, $this->logger);
-      }
-
-      $stmt->closeCursor();
-      return $results;
-    }
-    return [];
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new UniteLocaleEntity($row, $this->logger);
+    });
   }
 }

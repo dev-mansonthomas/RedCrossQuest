@@ -4,7 +4,11 @@ namespace RedCrossQuest\DBService;
 
 use Exception;
 use PDOException;
+use RedCrossQuest\Entity\BillsMoneyBagSummaryEntity;
 use RedCrossQuest\Entity\NamedDonationEntity;
+use RedCrossQuest\Entity\PageableRequestEntity;
+use RedCrossQuest\Entity\PageableResponseEntity;
+use RedCrossQuest\Entity\PointQueteEntity;
 
 
 class NamedDonationDBService extends DBService
@@ -14,22 +18,27 @@ class NamedDonationDBService extends DBService
   /**
    * Get all named donation for an UL
    *
-   * @param string $query search string
-   * @param bool $deleted search for deleted or non deleted rows
-   * @param string $year search for named donation of the specified year, if null, search all year
-   * @param int $ulId the Id of the Unite Local
-   * @return NamedDonationEntity[] list of NamedDonationEntity
+   * @param PageableRequestEntity $pageableRequest
+   *        string $query search string
+   *        bool $deleted search for deleted or non deleted rows
+   *        string $year search for named donation of the specified year, if null, search all year
+   *        int $ulId the Id of the Unite Local
+   * @return PageableResponseEntity list of NamedDonationEntity
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception if parsing errors occurs
    * @noinspection SpellCheckingInspection
    */
-  public function getNamedDonations(?string $query, bool $deleted, ?string $year, int $ulId):array
+  public function getNamedDonations(PageableRequestEntity $pageableRequest):PageableResponseEntity
   {
+    //?string $query, bool $deleted, ?string $year, int $ulId):array
+    /** @var string $query */
+    $query            = $pageableRequest->filterMap['q'];
+    /** @var string $year */
+    $year             = $pageableRequest->filterMap['year'];
 
-    $parameters = ["ul_id"   => $ulId,
-                   "deleted" => $deleted?1:0];
+    $parameters      = ["ul_id" => $pageableRequest->filterMap['ul_id'], "deleted" =>$pageableRequest->filterMap['deleted']?1:0];
 
-    $this->logger->debug("searching named donation", $parameters);
+    //$this->logger->debug("searching named donation", $parameters);
 
     $searchSQL = "";
     $yearSQL   = "";
@@ -99,19 +108,12 @@ ORDER BY `id` DESC
 ";
 
     //$this->logger->info("search named_donation ", array('sql'=> $sql));
+    $count   = $this->getCountForSQLQuery ($sql, $parameters);
+    $results = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new NamedDonationEntity($row, $this->logger);
+    }, $pageableRequest->pageNumber, $pageableRequest->rowsPerPage);
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new NamedDonationEntity($row, $this->logger);
-    }
-    //$this->logger->info("search named_donation ".count($results), $parameters) ;
-    return $results;
+    return new PageableResponseEntity($count, $results, $pageableRequest->pageNumber, $pageableRequest->rowsPerPage);
   }
 
   /**
@@ -178,16 +180,10 @@ WHERE `id`      = :id
 $ulIdWhere
 ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute($parameters);
-
-    //temp var, because pass by reference
-    $row = $stmt->fetch();
-    $namedDonation = new NamedDonationEntity($row, $this->logger);
-
-    $stmt->closeCursor();
-
-    return $namedDonation;
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters,function($row) {
+      return new NamedDonationEntity($row, $this->logger);
+    }, true);
   }
 
   /**
@@ -318,24 +314,7 @@ VALUES
 NOW()
 );
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-    $this->db->beginTransaction();
-    $stmt->execute($queryData);
-
-    $stmt->closeCursor();
-
-    $stmt = $this->db->query("select last_insert_id()");
-    $row  = $stmt->fetch();
-
-    $lastInsertId = $row['last_insert_id()'];
-
-    $stmt->closeCursor();
-    $this->db->commit();
-
-
-    return $lastInsertId;
+    return $this->executeQueryForInsert($sql, $queryData, true);
   }
 
 
@@ -431,10 +410,6 @@ WHERE `id`    = :id
 AND   `ul_id` = :ul_id  
 ";
 
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute($queryData);
-
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $queryData);
   }
 }

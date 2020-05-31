@@ -15,6 +15,7 @@ use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\DBService\YearlyGoalDBService;
+use RedCrossQuest\Entity\PageableRequestEntity;
 use ZipArchive;
 
 class ExportDataBusinessService
@@ -95,11 +96,11 @@ class ExportDataBusinessService
     $exportData = [];
 
     $exportData['dailyStats']    = $this->dailyStatsBeforeRCQDBService->getDailyStats         ($ulId, $year);
-    $exportData['namedDonation'] = $this->namedDonationDBService      ->getNamedDonations     (null, false, $year, $ulId);
+    $exportData['namedDonation'] = $this->namedDonationDBService      ->getNamedDonations     (new PageableRequestEntity(['rowsPerPage'=>0,'year'=>$year, 'ul_id'=>$ulId, 'deleted'=>false, 'q'=>null]))->rows;
     $exportData['pointQuete']    = $this->pointQueteDBService         ->getPointQuetes        ($ulId);
     $exportData['queteur']       = $this->queteurDBService            ->getQueteurs           ("", $ulId);
     $exportData['user']          = $this->userDBService               ->getULUsers            ($ulId);
-    $exportData['troncs']        = $this->troncDBService              ->getTroncs             (null, $ulId, true, null);
+    $exportData['troncs']        = $this->troncDBService              ->getTroncs             (new PageableRequestEntity(['rowsPerPage'=>0,'active'=>true, 'q'=>null, 'type'=>null]), $ulId)->rows;
     $exportData['troncQueteur']  = $this->troncQueteurDBService       ->getTroncsQueteurFromUL($ulId, $year);
     $exportData['ul']            = $this->uniteLocaleDBService        ->getUniteLocaleById    ($ulId);
     $exportData['yearlyGoal']    = $this->yearlyGoalDBService         ->getYearlyGoalsForExportData($ulId, $year);

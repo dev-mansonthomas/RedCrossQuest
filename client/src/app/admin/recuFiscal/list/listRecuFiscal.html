@@ -32,7 +32,7 @@
                     data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
               </span>
             </div>
-            Nombre de points de Reçu Fiscaux: <span class="badge">{{rf.recuFiscal.length}}</span>
+            Nombre de points de Reçu Fiscaux: <span class="badge">{{rf.rowCount}}</span>
           </div>
         </div>
         <div class="col-md-2">
@@ -92,8 +92,12 @@
   </div>
 
 
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+      <ul uib-pagination ng-change="rf.doSearch()" boundary-links="true" total-items="rf.rowCount" ng-model="rf.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+    </div>
+  </div>
   <div clas="row">
-
     <table class="table table-hover table-condensed histo">
       <thead>
       <tr>
@@ -122,8 +126,12 @@
         <td style="text-align: right;"><a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">{{::r.total_amount | currency : "€" : 2}}</a></td>
       </tr>
       </tbody>
-
     </table>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+      <ul uib-pagination ng-change="rf.doSearch()" boundary-links="true" total-items="rf.rowCount" ng-model="rf.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+    </div>
   </div>
 
 </div>

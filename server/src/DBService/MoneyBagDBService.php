@@ -13,10 +13,11 @@ class MoneyBagDBService extends DBService
    * Search existing money_bag id from the current year and the current UniteLocale
    *
    * @param string $query the searched string
-   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param string $type "bill" or "coin" depending the kind of bag the user search
    * @return string[]  list of money_bag_id that match the search
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function searchMoneyBagId(string $query, string $type, int $ulId):array
   {
@@ -44,17 +45,11 @@ SELECT DISTINCT t.money_bag_id FROM
 ORDER BY t.money_bag_id DESC
 ";
 
-    $stmt = $this->db->prepare($sql);
+  $parameters = ["query" => "%".$query."%", "ul_id" => $ulId];
 
-    $stmt->execute(["query" => "%".$query."%", "ul_id" => $ulId]);
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  $row['money_bag_id'];
-    }
-    return $results;
+  return $this->executeQueryForArray($sql, $parameters, function($row) {
+    return $row['money_bag_id'];
+  });
   }
 
   /**
@@ -146,19 +141,11 @@ nd.cent1
   AND   nd.deleted            = 0) as union_select ;
 ";
 
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute($parameters);
-    if($row = $stmt->fetch())
-    {
-      return  new CoinsMoneyBagSummaryEntity($row, $this->logger);
-    }
-
-    return null;
-
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters,function($row) {
+      return new CoinsMoneyBagSummaryEntity($row, $this->logger);
+    });
   }
-
-
 
   /**
    * Get the details of coins money bag : total amount, weight, per coins count & total
@@ -176,9 +163,7 @@ nd.cent1
       "bills_money_bag_id" => $billsMoneyBagId,
       "ul_id2"             => $ulId,
       "bills_money_bag_id2"=> $billsMoneyBagId,
-
     ];
-
 
     $sql = "
 SELECT bills_money_bag_id,
@@ -247,13 +232,9 @@ nd.euro5
 ) as union_select
 ";
 
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute($parameters);
-
-    if($row = $stmt->fetch())
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters,function($row) {
       return new BillsMoneyBagSummaryEntity($row, $this->logger);
-
-    return null;
+    });
   }
 }

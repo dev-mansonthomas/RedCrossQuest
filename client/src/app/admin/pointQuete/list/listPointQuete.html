@@ -31,7 +31,7 @@
                     data-when="{'0': 'No contact', 'one': 'One contact', 'other': '{} contacts' }">
               </span>
             </div>
-            Nombre de points de Quête: <span class="badge">{{pq.pointsQuete.length}}</span>
+            Nombre de points de Quête: <span class="badge">{{pq.rowCount}}</span>
           </div>
         </div>
         <div class="col-md-3">
@@ -92,6 +92,11 @@
     </form>
   </div>
 
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+      <ul uib-pagination ng-change="pq.doSearch()" boundary-links="true" total-items="pq.rowCount" ng-model="pq.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+    </div>
+  </div>
 
   <div clas="row">
 
@@ -135,6 +140,11 @@
       </tbody>
 
     </table>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+      <ul uib-pagination ng-change="pq.doSearch()" boundary-links="true" total-items="pq.rowCount" ng-model="pq.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+    </div>
   </div>
 
 </div>

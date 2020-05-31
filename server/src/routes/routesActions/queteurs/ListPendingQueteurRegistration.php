@@ -10,6 +10,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
+use RedCrossQuest\Entity\PageableRequestEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
@@ -45,12 +46,17 @@ class ListPendingQueteurRegistration extends Action
     $ulId     = $this->decodedToken->getUlId();
 
     $this->validateSentData([
-      ClientInputValidatorSpecs::withInteger("registration_status", $this->queryParams, 2 , false, 0)
+      ClientInputValidatorSpecs::withInteger('pageNumber'         , $this->queryParams, 100 , false    ),
+      ClientInputValidatorSpecs::withInteger('rowsPerPage'        , $this->queryParams, 100 , false    ),
+      ClientInputValidatorSpecs::withInteger("registration_status", $this->queryParams, 2   , false, 0)
     ]);
 
-    $registrationStatus  = $this->validatedData["registration_status"];
+    $this->validatedData['ul_id'] = $ulId;
 
-    $queteurs = $this->queteurDBService->listPendingQueteurRegistration($ulId, $registrationStatus);
+    $pageableRequest = new PageableRequestEntity($this->validatedData);
+
+    $queteurs = $this->queteurDBService->listPendingQueteurRegistration($pageableRequest);
+
     $this->response->getBody()->write(json_encode($queteurs));
 
     return $this->response;

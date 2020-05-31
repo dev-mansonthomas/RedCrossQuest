@@ -72,24 +72,12 @@ AND    t.deleted    = 0
 ORDER BY id DESC
 LIMIT 1
 ";
+    $parameters = ["tronc_id" => $tronc_id, "ul_id" => $ulId];
 
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
-
-    if($stmt->rowCount() == 1 )
-    {
-      //temp var, because pass by reference
-      $row = $stmt->fetch();
-      $tronc = new TroncQueteurEntity($row, $this->logger);
-    }
-    else
-    {
-      $data= ["tronc_id"=>$tronc_id, "rowCount"=>$stmt->rowCount()];
-      $tronc = new TroncQueteurEntity($data, $this->logger);
-    }
-    $stmt->closeCursor();
-    return $tronc;
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new TroncQueteurEntity($row, $this->logger);
+    }, true);
   }
 
 
@@ -156,18 +144,10 @@ AND    t.ul_id      = :ul_id
 ORDER BY t.id DESC
 
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["tronc_id" => $tronc_id, "ul_id" => $ulId]);
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
-    }
-    return $results;
+    $parameters = ["tronc_id" => $tronc_id, "ul_id" => $ulId];
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new TroncQueteurEntity($row, $this->logger);
+    });
   }
 
 
@@ -229,28 +209,15 @@ WHERE  t.id         = :id
 AND    t.ul_id      = :ul_id
 
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["id" => $id, "ul_id" => $ulId]);
-
-    if($stmt->rowCount() == 1 )
-    {
-      //temp var, because pass by reference
-      $row = $stmt->fetch();
-      $tronc = new TroncQueteurEntity($row, $this->logger);
-      $stmt->closeCursor();
-      return $tronc;
-    }
-    else
-    {
-      $stmt->closeCursor();
-      throw new Exception("Tronc Queteur with ID:'".$id . "' not found");
-    }
+    $parameters = ["id" => $id, "ul_id" => $ulId];
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new TroncQueteurEntity($row, $this->logger);
+    }, true);
   }
 
   /**
-   * Get all tronc form  queteur ID
+   * Get all tronc form queteur ID
    *
    * @param int $queteur_id The ID of the queteur
    * @param int $ulId the Id of the Unite Local
@@ -304,27 +271,21 @@ AND    t.ul_id      = :ul_id
 ORDER BY t.id desc 
 ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute(["queteur_id" => $queteur_id, "ul_id" => $ulId]);
-
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
-    }
-    return $results;
+    $parameters = ["queteur_id" => $queteur_id, "ul_id" => $ulId];
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new TroncQueteurEntity($row, $this->logger);
+    });
   }
 
   /**
    * Update one tronc with Date Depart set to current time
    *
-   * @param  int $tronc_queteur_id : the id of tronc_queteur table to update
-   * @param  int $ulId the Id of the Unite Local
-   * @param  int $userId id of the user performing the operation
+   * @param int $tronc_queteur_id : the id of tronc_queteur table to update
+   * @param int $ulId the Id of the Unite Local
+   * @param int $userId id of the user performing the operation
    * @return Carbon the date that has been set to tronc_queteur.dateDepart
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function setDepartToNow(int $tronc_queteur_id, int $ulId, int $userId):Carbon
   {
@@ -339,29 +300,27 @@ AND   tq.ul_id              = :ul_id
     $currentDate = Carbon::now();
     $currentDate->tz='UTC';
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "depart"            => $currentDate->format('Y-m-d H:i:s'),
       "userId"            => $userId,
       "id"                => $tronc_queteur_id,
       "ul_id"             => $ulId
-    ]);
+    ];
 
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
 
     return $currentDate->setTimezone("Europe/Paris");
-
   }
-
 
 
   /**
    * Update one tronc with Date Depart set to custom time. For the use case : préparation=>forget depart => retour
    *
    * @param TroncQueteurEntity $tq The tronc to update
-   * @param  int $ulId the Id of the Unite Local
-   * @param  int $userId id of the user performing the operation
+   * @param int $ulId the Id of the Unite Local
+   * @param int $userId id of the user performing the operation
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function setDepartToCustomDate(TroncQueteurEntity $tq, int $ulId, int $userId):void
   {
@@ -374,17 +333,14 @@ WHERE tq.`id`               = :id
 AND   tq.ul_id              = :ul_id
 ";
 
+    $parameters = [
+     "depart"            => $tq->depart->format('Y-m-d H:i:s'),
+     "userId"            => $userId,
+     "id"                => $tq->id,
+     "ul_id"             => $ulId
+   ];
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
-      "depart"            => $tq->depart->format('Y-m-d H:i:s'),
-      "userId"            => $userId,
-      "id"                => $tq->id,
-      "ul_id"             => $ulId
-    ]);
-
-    $stmt->closeCursor();
-
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
 
@@ -393,10 +349,11 @@ AND   tq.ul_id              = :ul_id
    * Update one tronc and set 'depart' to null if retour is null as well
    *
    * @param TroncQueteurEntity $tq The tronc to update
-   * @param  int $ulId the Id of the Unite Local
-   * @param  int $userId id of the user performing the operation
+   * @param int $ulId the Id of the Unite Local
+   * @param int $userId id of the user performing the operation
    * @return int the number of row updated
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function cancelDepart(TroncQueteurEntity $tq, int $ulId, int $userId):int
   {
@@ -410,19 +367,13 @@ AND   tq.`retour`           is null
 AND   tq.`ul_id`            = :ul_id
 ";
 
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "userId"            => $userId,
       "id"                => $tq->id,
       "ul_id"             => $ulId
-    ]);
+    ];
 
-    $numberOfUpdateRows = $stmt->rowCount();
-
-    $stmt->closeCursor();
-
-    return $numberOfUpdateRows;
+    return $this->executeQueryForUpdate($sql, $parameters);
   }
 
   /**
@@ -430,10 +381,11 @@ AND   tq.`ul_id`            = :ul_id
    * Update one tronc and set 'retour' to null if comptage is null as well
    *
    * @param TroncQueteurEntity $tq The tronc to update
-   * @param  int $ulId the Id of the Unite Local
-   * @param  int $userId id of the user performing the operation
+   * @param int $ulId the Id of the Unite Local
+   * @param int $userId id of the user performing the operation
    * @return int the number of row updated
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    */
   public function cancelRetour(TroncQueteurEntity $tq, int $ulId, int $userId):int
   {
@@ -447,19 +399,12 @@ AND   tq.`comptage`         is null
 AND   tq.`ul_id`            = :ul_id
 ";
 
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "userId"            => $userId,
       "id"                => $tq->id,
       "ul_id"             => $ulId
-    ]);
-
-    $numberOfUpdateRows = $stmt->rowCount();
-
-    $stmt->closeCursor();
-
-    return $numberOfUpdateRows;
+    ];
+    return $this->executeQueryForUpdate($sql, $parameters);
   }
 
   /**
@@ -484,16 +429,15 @@ WHERE tq.`id`                 = :id
 AND   tq.ul_id                = :ul_id
 ";
     $currentDate = Carbon::now();
-    $stmt        = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "retour"            => $tq->retour->format('Y-m-d H:i:s'),
       "userId"            => $userId,
       "id"                => $tq->id,
       "ul_id"             => $ulId,
       "notes_retour"      => $tq->notes_retour
-    ]);
+    ];
 
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
 
     return $currentDate;
 
@@ -512,7 +456,6 @@ AND   tq.ul_id                = :ul_id
   public function updateCoinsCount(TroncQueteurEntity $tq, bool $adminMode, int $ulId, int $userId):void
   {
     $this->logger->info("Saving coins for tronc",array("tronc"=> $tq, "adminMode" => $adminMode, "ulId"=>$ulId, "userId"=> $userId));
-
 
     if(!$tq->isMoneyFilled())
     {// si pas de données sur l'argent, on ne fait pas l'update
@@ -572,8 +515,7 @@ WHERE tq.`id`                   = :id
 AND   tq.ul_id                  = :ul_id
 ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "euro500"                       => $tq->euro500,
       "euro200"                       => $tq->euro200,
       "euro100"                       => $tq->euro100,
@@ -601,9 +543,9 @@ AND   tq.ul_id                  = :ul_id
       "don_cheque_number"             => $tq->don_cheque_number == null? 0:$tq->don_cheque_number,
       "don_creditcard"                => $tq->don_creditcard,
       "don_cb_total_number"           => $tq->don_cb_total_number
-    ]);
+    ];
 
-    $stmt->closeCursor();
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
   /**
@@ -633,8 +575,7 @@ WHERE tq.`id`          = :id
 AND   tq.ul_id         = :ul_id
 ";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "depart_theorique"  => $tq->depart_theorique,
       "depart"            => $tq->depart,
       "retour"            => $tq->retour,
@@ -644,10 +585,9 @@ AND   tq.ul_id         = :ul_id
       "id"                => $tq->id,
       "ul_id"             => $ulId,
       "notes_update"      => $tq->notes_update
-    ]);
+    ];
 
-    $stmt->closeCursor();
-
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
 
@@ -667,11 +607,11 @@ AND   tq.ul_id         = :ul_id
   {
     $checkTroncResult = $this->checkTroncNotAlreadyInUse($tq->tronc_id, $tq->queteur_id,$ulId);
 
-    $prepareTroncQueteurResponse = new PrepareTroncQueteurResponse($checkTroncResult!= null,$checkTroncResult);
+    $prepareTroncQueteurResponse = new PrepareTroncQueteurResponse($checkTroncResult!= null, $checkTroncResult);
 
     if($checkTroncResult == null)
     {
-      $queryData =
+      $parameters =
         [
           "ul_id"                 => $ulId,
           "queteur_id"            => $tq->queteur_id,
@@ -690,7 +630,7 @@ AND   tq.ul_id         = :ul_id
       else
       {
         $departTheoriqueQuery ="  :depart_theorique,";
-        $queryData["depart_theorique"] = $tq->depart_theorique->format('Y-m-d H:i:s');
+        $parameters["depart_theorique"] = $tq->depart_theorique->format('Y-m-d H:i:s');
       }
 
 //in case of preparationAndDepart, an update after this insert is done.
@@ -718,24 +658,8 @@ $departTheoriqueQuery
   :notes_depart_theorique
 )
 ";
-
-      $stmt = $this->db->prepare($sql);
-
-      $this->db->beginTransaction();
-      $stmt->execute($queryData);
-
-      $stmt->closeCursor();
-
-      $stmt = $this->db->query("select last_insert_id()");
-      $row  = $stmt->fetch();
-
-      $lastInsertId = $row['last_insert_id()'];
-
-      $stmt->closeCursor();
-      $this->db->commit();
-      $prepareTroncQueteurResponse->lastInsertId=$lastInsertId;
+      $prepareTroncQueteurResponse->lastInsertId = $this->executeQueryForInsert($sql, $parameters, true);
     }
-
 
     return $prepareTroncQueteurResponse;
   }
@@ -802,50 +726,33 @@ AND    (tq.depart     is null OR
         tq.retour     is null)
 ";
 
-
-    $stmt = $this->db->prepare($sqlTronc);
-    $stmt->execute([
+    $existingUseOfTronc = null;
+    $parameters=[
       "tronc_id"  => $troncId,
-      "ul_id"      => $ulId
-    ]);
+      "ul_id"     => $ulId
+    ];
 
-    $rowCount = $stmt->rowCount();
-    $existingUseOfTronc = [];
-    $i=0;
-    if( $rowCount > 0)
-    {
-      while($row = $stmt->fetch())
-      {
-        $existingUseOfTronc[$i++]=new TroncInUseEntity($row, $this->logger);
-      }
-    }
-    $stmt->closeCursor();
+    $array1 = $this->executeQueryForArray($sqlTronc, $parameters, function($row) {
+      return new TroncInUseEntity($row, $this->logger);
+    });
 
-    $stmt2 = $this->db->prepare($sqlQueteur);
-    $stmt2->execute([
+    $parameters2=[
       "queteur_id" => $queteurId,
       "ul_id"      => $ulId
-    ]);
+    ];
+    $array2 = $this->executeQueryForArray($sqlQueteur, $parameters2, function($row) {
+      return new TroncInUseEntity($row, $this->logger);
+    });
 
-    $rowCount2 = $stmt2->rowCount();
-
-    if( $rowCount2 > 0)
+    if($array1 == null && $array2 == null)
     {
-      while($row2 = $stmt2->fetch())
-      {
-        $existingUseOfTronc[$i++]=new TroncInUseEntity($row2, $this->logger);
-      }
+      return null; // it's ok, no use of tronc
     }
-    $stmt2->closeCursor();
-
-    if( $rowCount > 0 ||  $rowCount2 > 0)
+    else
     {
-      return $existingUseOfTronc;
+      return array_merge($array1, $array2);
     }
-    
-    return null;// it's ok, no use of tronc
   }
-
 
 
   /***
@@ -853,9 +760,10 @@ AND    (tq.depart     is null OR
    * If the use decide to delete the tronc_queteur row because the existing rows
    * represents a session of quete that has not been performed
    * @param int $troncId the Id of the tronc to be deleted
-   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $userId the ID of the user performing the action
    * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
    *
    */
   public function deleteNonReturnedTroncQueteur(int $troncId, int $ulId, int $userId):void
@@ -871,16 +779,12 @@ AND   tq.ul_id    = :ul_id
 AND  (tq.depart IS NULL OR 
       tq.retour IS NULL)
 ";
-
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([
+    $parameters = [
       "tronc_id"        => $troncId,
       "ul_id"           => $ulId   ,
       "user_id"         => $userId
-    ]);
-
-
-    $stmt->closeCursor();
+    ];
+    $this->executeQueryForUpdate($sql, $parameters);
   }
 
 
@@ -945,17 +849,10 @@ AND    t.ul_id            = :ul_id
 ORDER BY t.id DESC
 ";
 
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute(["tronc_queteur_id" => $id, "ul_id" => $ulId]);
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
-    }
-    return $results;
+    $parameters = ["tronc_queteur_id" => $id, "ul_id" => $ulId];
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new TroncQueteurEntity($row, $this->logger);
+    });
   }
 
   /**
@@ -1054,18 +951,8 @@ $yearSQL
 order by tq.id asc
 
 ";
-
-    $stmt = $this->db->prepare($sql);
-
-    $stmt->execute($parameters);
-
-    $results = [];
-    $i=0;
-    while($row = $stmt->fetch())
-    {
-      $results[$i++] =  new TroncQueteurEntity($row, $this->logger);
-    }
-    return $results;
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new TroncQueteurEntity($row, $this->logger);
+    });
   }
-
 }

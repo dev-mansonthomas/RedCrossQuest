@@ -66,27 +66,51 @@
               <input type="submit" class="btn btn-primary" value="Rechercher" ng-click="t.searchSubmit()" />
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-4">
+              Nombre de troncs: <span class="badge">{{t.rowCount}}</span>
+            </div>
+          </div>
         </form>
       </div>
     </div>
 
 
-    <div class="col-xs-12 col-md-12">
-      <div class="row">
 
-        <div class="contact-card col-sm-2" data-ng-repeat="tronc in t.list | filter:t.search">
-          <div class="contact-card-inner">
-            <h4>
-              <a ng-href="/#!/troncs/edit/{{tronc.id}}"><span ng-class="{'glyphicon':true, 'glyphicon-cd':tronc.type==1, 'glyphicon-shop':tronc.type==2, 'glyphicon-asterisk':tronc.type==3, 'glyphicon-credit-card':tronc.type==4}" aria-hidden="true"></span> &nbsp;{{::tronc.id}}</a>
-
-            </h4>
-            <div class="contact-address">{{::tronc.enabled?'Opérationnel':'Non Opérationnel'}}</div>
-            <div class="contact-phone"  >{{::tronc.notes}}</div>
-          </div>
-        </div>
-
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+        <ul uib-pagination ng-change="t.searchSubmit()" boundary-links="true" total-items="t.rowCount" ng-model="t.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <table class="table table-hover table-condensed">
+          <thead>
+          <tr>
+            <th>Type            </th>
+            <th>Id              </th>
+            <th>Opérationnel ?  </th>
+            <th>Date de Création</th>
+            <th>Notes           </th>
+          </tr>
+          </thead>
 
+          <tbody>
+          <tr ng-repeat="tronc in t.list">
+            <td><a ng-href="/#!/troncs/edit/{{tronc.id}}"><span ng-class="{'glyphicon':true, 'glyphicon-cd':tronc.type==1, 'glyphicon-shop':tronc.type==2, 'glyphicon-asterisk':tronc.type==3}" aria-hidden="true"></span></a></td>
+            <td><a ng-href="/#!/troncs/edit/{{tronc.id}}">{{::tronc.id}}</a></td>
+            <td><a ng-href="/#!/troncs/edit/{{tronc.id}}">{{::tronc.enabled?'Opérationnel':'Non Opérationnel'}}</a></td>
+            <td>{{::tronc.created}}</td>
+            <td>{{::tronc.notes}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+        <ul uib-pagination ng-change="t.searchSubmit()" boundary-links="true" total-items="t.rowCount" ng-model="t.pageNumber" items-per-page="30" vmax-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+      </div>
+    </div>
   </div>
 </div>
