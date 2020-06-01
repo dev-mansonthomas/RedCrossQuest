@@ -85,6 +85,24 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
           {
             action:'approveQueteurRegistration'
           }
-      }
-  });
+      },
+      countInactiveQueteurs:
+        {
+          method: 'GET',
+          params:
+            {
+              action: 'countInactiveQueteurs'
+            }
+        }
+      ,
+      disableInactiveQueteurs:
+        {
+          method:'POST',
+          params:
+            {
+              action:'disableInactiveQueteurs'
+            }
+        },
+
+    });
 });

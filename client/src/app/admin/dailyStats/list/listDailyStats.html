@@ -3,7 +3,7 @@
   <div class="container">
 
     <div class="panel panel-primary">
-      <div class="panel-heading">Résultats Journalier (avant l'utilisation de RedCrossQuest)</div>
+      <div class="panel-heading">Résultats Journalier<br/>(avant l'utilisation de RedCrossQuest)</div>
     </div>
     <div class="well">
       <form class="form-search form-inline" name="searchForm" novalidate ng-submit='ds.doSearch();'>
@@ -33,21 +33,21 @@
         <form name="dailyStatForms">
           <table class="table .table-striped .table-hover .table-condensed">
             <thead>
-              <th>id</th>
-              <th style="width:70px;">Date</th>
+              <th class="visible-lg-inline-block">id</th>
+              <th>Date</th>
               <th>Montant</th>
               <th>&nbsp;</th>
             </thead>
             <tbody data-ng-repeat="dailyStats in ds.list">
               <tr>
-                <td>{{::dailyStats.id}}</td>
-                <td style="width:70px;"><input name="stateDate_{{::dailyStats.id}}" id="statDate_{{::dailyStats.id}}" type="date" class="form-control" ng-model="dailyStats.date" ng-readonly="true"/></td>
+                <td class="visible visible-lg-inline-block">{{::dailyStats.id}}</td>
+                <td><input name="stateDate_{{::dailyStats.id}}" id="statDate_{{::dailyStats.id}}" type="date" class="form-control" ng-model="dailyStats.date" ng-readonly="true"/></td>
                 <td>
                   <div class="input-group" ng-class="{'has-error':dailyStatForms['amount_'+dailyStats.id].$invalid}">
-                  <input name="amount_{{::dailyStats.id}}" id="amount_{{::dailyStats.id}}" type="number" class="form-control" ng-model="dailyStats.amount" required autocomplete="off"/><span class="input-group-addon">€</span>
+                  <input style="min-width: 82px!important;" name="amount_{{::dailyStats.id}}" id="amount_{{::dailyStats.id}}" type="number" class="form-control" ng-model="dailyStats.amount" required autocomplete="off"/><span class="input-group-addon">€</span>
                   </div>
                 </td>
-                <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="ds.save(dailyStats.id, dailyStats.amount);">Sauvegarder</button></td>
+                <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="ds.save(dailyStats.id, dailyStats.amount);"><span class="glyphicon glyphicon-floppy-disk"  aria-hidden="true"></span></button></td>
               </tr>
             </tbody>
             <tfoot>

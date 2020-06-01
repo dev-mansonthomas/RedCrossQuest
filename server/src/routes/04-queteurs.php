@@ -9,8 +9,10 @@
 use RedCrossQuest\routes\routesActions\queteurs\AnonymizeQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\ApproveQueteurRegistration;
 use RedCrossQuest\routes\routesActions\queteurs\AssociateRegistrationWithExistingQueteur;
+use RedCrossQuest\routes\routesActions\queteurs\CountInactiveQueteurs;
 use RedCrossQuest\routes\routesActions\queteurs\CountPendingQueteurRegistration;
 use RedCrossQuest\routes\routesActions\queteurs\CreateQueteur;
+use RedCrossQuest\routes\routesActions\queteurs\DisableInactiveQueteurs;
 use RedCrossQuest\routes\routesActions\queteurs\GetQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\GetQueteurRegistration;
 use RedCrossQuest\routes\routesActions\queteurs\ListPendingQueteurRegistration;
@@ -329,6 +331,147 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/listPendingQueteurRegistration' 
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/searchSimilarQueteurs'          , SearchSimilarQueteurs::class);
 /**
  *
+ * @OA\Put(
+ *     path="/{role-id:[2-9]}/ul/{ul-id}/queteurs/markAllAsPrinted",
+ *     tags={"Quêteurs"},
+ *     summary="Mark all QRCode as printed",
+ *     description="Mark all QRCode as printed for the user's UL",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/markAllAsPrinted'                             , MarkAllQueteurQRCodeAsPrinted::class);
+
+/**
+ *
+ * @OA\Get(
+ *     path="/{role-id:[1-9]}/ul/{ul-id}/queteurs/countInactiveQueteurs",
+ *     tags={"Quêteurs"},
+ *     summary="Count inactive queteur since X years",
+ *     description="Count inactive queteur since X years",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="yearsOfInactivity",
+ *         in="query",
+ *         description="The number of years of inactivity we should count",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *         @OA\JsonContent(
+ *          type="object",
+ *          ref="#/components/schemas/CountInactiveQueteursResponse",
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/countInactiveQueteurs', CountInactiveQueteurs::class);
+
+
+/**
+ *
+ * @OA\Post(
+ *     path="/{role-id:[1-9]}/ul/{ul-id}/queteurs/disableInactiveQueteurs",
+ *     tags={"Quêteurs"},
+ *     summary="Disable inactive queteur since X years",
+ *     description="Disable inactive queteur since X years",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="yearsOfInactivity",
+ *         in="query",
+ *         description="The number of years of inactivity we should disable",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *         @OA\JsonContent(
+ *          type="object",
+ *          ref="#/components/schemas/CountInactiveQueteursResponse",
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->post('/{role-id:[1-9]}/ul/{ul-id}/queteurs/disableInactiveQueteurs', DisableInactiveQueteurs::class);
+
+/**
+ *
  * @OA\Get(
  *     path="/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}",
  *     tags={"Quêteurs"},
@@ -428,43 +571,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}'                           
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs/{id}/getQueteurRegistration'    , GetQueteurRegistration::class);
 
-/**
- *
- * @OA\Put(
- *     path="/{role-id:[2-9]}/ul/{ul-id}/queteurs/markAllAsPrinted",
- *     tags={"Quêteurs"},
- *     summary="Mark all QRCode as printed",
- *     description="Mark all QRCode as printed for the user's UL",
- *    @OA\Parameter(
- *         name="role-id",
- *         in="path",
- *         description="Current User Role",
- *         required=true,
- *         @OA\Schema(
- *             type="integer",
- *         )
- *     ),
- *    @OA\Parameter(
- *         name="ul-id",
- *         in="path",
- *         description="User's Unite Locale ID",
- *         required=true,
- *         @OA\Schema(
- *             type="integer",
- *         )
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Success"
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="General Error",
- *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
- *     )
- * )
- */
-$app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/markAllAsPrinted'                             , MarkAllQueteurQRCodeAsPrinted::class);
+
 /**
  *
  * @OA\Put(

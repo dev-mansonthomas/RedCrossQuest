@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-md-9">
           <h5>
-            Un Quêteur: <span ng-bind="queteur.current.id"></span>
+            Quêteur: <span ng-bind="queteur.current.id"></span>
             <span ng-show="queteur.current.first_name"> - </span>
             <b>
               <span ng-bind="queteur.current.first_name"></span>
@@ -545,7 +545,7 @@
           <button class="btn btn-warning"
                   ng-click="queteur.anonymize();"
                   style="width:100%;height:70px;">
-            CNIL/GDPR : Anonymiser les données du Quêteur
+             GDPR: Anonymiser les données du Quêteur
           </button>
           <span class="help-block">
             <p>Cliquez sur ce bouton si le quêteur vous demande la suppression de ses données dans RedCrossQuest.</p>
@@ -625,77 +625,106 @@
 
 
       <!-- liste des troncs -->
-      <div class="row" ng-show="queteur.current.id > 0 && !queteur.isRegistration   == true" style="padding-top:20px;">
+      <div class="row"  ng-show="queteur.current.id > 0 && !queteur.isRegistration   == true" style="padding-top:20px;">
         <div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">Listes des troncs ({{::queteur.current.troncs_queteur.length}}) de <b><span ng-bind="queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span></b></div>
-          <table class='table'>
-            <thead>
-              <tr>
-                <th>ID (click to edit)</th>
-                <th>Tronc ID</th>
-                <th>Départ théorique</th>
-                <th>Départ</th>
-                <th>Retour</th>
-                <th>Durée(min)</th>
-                <th>Point de Quête</th>
-                <th>Montant</th>
-                <th>Poids</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="tq in queteur.current.troncs_queteur">
-                <th><a ng-href="/#!/tronc_queteur/edit/{{tq.id}}">{{tq.id}}</a>&nbsp;<span class="glyphicon glyphicon-bin" aria-hidden="true" style="color:grey;" ng-show="tq.deleted"></span></th>
-                <td>{{tq.tronc_id}} </td>
-                <td>{{tq.depart_theorique}} </td>
-                <td>{{tq.depart}}</td>
-                <td>{{tq.retour}}</td>
-                <td>{{tq.duration.toFixed(2)}}</td>
-                <td>{{tq.point_quete_id}} - {{queteur.pointQueteHash[tq.point_quete_id].name==null ?'Désactivé':queteur.pointQueteHash[tq.point_quete_id].name}}</td>
-                <td style="text-align: right">
-                  {{
-                  tq.euro500 * 500 +
-                  tq.euro200 * 200 +
-                  tq.euro100 * 100 +
-                  tq.euro50  * 50  +
-                  tq.euro20  * 20  +
-                  tq.euro10  * 10  +
-                  tq.euro5   * 5   +
-                  tq.euro2   * 2   +
-                  tq.euro1   * 1   +
-                  tq.cents50 * 0.5 +
-                  tq.cents20 * 0.2 +
-                  tq.cents10 * 0.1 +
-                  tq.cents5  * 0.05+
-                  tq.cents2  * 0.02+
-                  tq.cent1   * 0.01+
-                  tq.don_cheque    +
-                  tq.don_creditcard
-                  | currency : "€" : 2}}
-                </td>
-                <td style="text-align: right">
-                  {{(tq.euro500 * 1.1  +
-                  tq.euro200 * 1.1  +
-                  tq.euro100 * 1    +
-                  tq.euro50  * 0.9  +
-                  tq.euro20  * 0.8  +
-                  tq.euro10  * 0.7  +
-                  tq.euro5   * 0.6  +
-                  tq.euro2   * 8.5  +
-                  tq.euro1   * 7.5  +
-                  tq.cents50 * 7.8  +
-                  tq.cents20 * 5.74 +
-                  tq.cents10 * 4.1  +
-                  tq.cents5  * 3.92 +
-                  tq.cents2  * 3.06 +
-                  tq.cent1   * 2.3  ).toFixed(2)}}
-                  g
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <!-- Default panel contents -->
+        <div class="panel-heading">Listes des troncs ({{::queteur.current.troncs_queteur.length}}) de <b><span ng-bind="queteur.current.first_name"></span> <span ng-bind="queteur.current.last_name"></span></b></div>
+        <table class="table visible-lg-block">
+          <thead>
+            <tr>
+              <th>ID (click to edit)</th>
+              <th>Tronc ID</th>
+              <th>Départ théorique</th>
+              <th>Départ</th>
+              <th>Retour</th>
+              <th>Durée(min)</th>
+              <th>Point de Quête</th>
+              <th>Montant</th>
+              <th>Poids</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="tq in queteur.current.troncs_queteur">
+              <th><a ng-href="/#!/tronc_queteur/edit/{{tq.id}}">{{tq.id}}</a>&nbsp;<span class="glyphicon glyphicon-bin" aria-hidden="true" style="color:grey;" ng-show="tq.deleted"></span></th>
+              <td>{{tq.tronc_id}} </td>
+              <td>{{tq.depart_theorique}} </td>
+              <td>{{tq.depart}}</td>
+              <td>{{tq.retour}}</td>
+              <td>{{tq.duration.toFixed(2)}}</td>
+              <td>{{tq.point_quete_id}} - {{queteur.pointQueteHash[tq.point_quete_id].name==null ?'Désactivé':queteur.pointQueteHash[tq.point_quete_id].name}}</td>
+              <td style="text-align: right">
+                {{
+                tq.euro500 * 500 +
+                tq.euro200 * 200 +
+                tq.euro100 * 100 +
+                tq.euro50  * 50  +
+                tq.euro20  * 20  +
+                tq.euro10  * 10  +
+                tq.euro5   * 5   +
+                tq.euro2   * 2   +
+                tq.euro1   * 1   +
+                tq.cents50 * 0.5 +
+                tq.cents20 * 0.2 +
+                tq.cents10 * 0.1 +
+                tq.cents5  * 0.05+
+                tq.cents2  * 0.02+
+                tq.cent1   * 0.01+
+                tq.don_cheque    +
+                tq.don_creditcard
+                | currency : "€" : 2}}
+              </td>
+              <td style="text-align: right">
+                {{(tq.euro500 * 1.1  +
+                tq.euro200 * 1.1  +
+                tq.euro100 * 1    +
+                tq.euro50  * 0.9  +
+                tq.euro20  * 0.8  +
+                tq.euro10  * 0.7  +
+                tq.euro5   * 0.6  +
+                tq.euro2   * 8.5  +
+                tq.euro1   * 7.5  +
+                tq.cents50 * 7.8  +
+                tq.cents20 * 5.74 +
+                tq.cents10 * 4.1  +
+                tq.cents5  * 3.92 +
+                tq.cents2  * 3.06 +
+                tq.cent1   * 2.3  ).toFixed(2)}}
+                g
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ul class="list-group hidden-lg">
+          <li class="list-group-item" ng-repeat="tq in queteur.current.troncs_queteur">
+            <a ng-href="/#!/tronc_queteur/edit/{{tq.id}}">
+              {{tq.tronc_id}} - {{queteur.pointQueteHash[tq.point_quete_id].name==null ?'Désactivé':queteur.pointQueteHash[tq.point_quete_id].name}} -
+
+              {{
+              tq.euro500 * 500 +
+              tq.euro200 * 200 +
+              tq.euro100 * 100 +
+              tq.euro50  * 50  +
+              tq.euro20  * 20  +
+              tq.euro10  * 10  +
+              tq.euro5   * 5   +
+              tq.euro2   * 2   +
+              tq.euro1   * 1   +
+              tq.cents50 * 0.5 +
+              tq.cents20 * 0.2 +
+              tq.cents10 * 0.1 +
+              tq.cents5  * 0.05+
+              tq.cents2  * 0.02+
+              tq.cent1   * 0.01+
+              tq.don_cheque    +
+              tq.don_creditcard
+              | currency : "€" : 2}} <br/>
+
+              {{tq.depart}} - {{tq.duration.toFixed(2)}}min
+            </a>
+          </li>
+        </ul>
       </div>
+    </div>
     </form>
   </div>
 </div>

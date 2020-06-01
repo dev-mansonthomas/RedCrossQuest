@@ -18,6 +18,21 @@
     vm.settings        = $localStorage.guiSettings;
     vm.running         = false;
 
+    vm.typeBenevoleList=[
+      {id:1 ,label:'Action Sociale'},
+      {id:2 ,label:'Secours'},
+      {id:3 ,label:'Bénévole 1j'},
+      {id:4 ,label:'Ancien Bénévole, Inactif ou Adhérent'},
+      {id:5 ,label:'Commerçant'},
+      {id:6 ,label:'Spécial'}
+    ];
+    vm.typeBenevoleHash=[];
+    for(var i=0;i< vm.typeBenevoleList.length;i++)
+    {
+      vm.typeBenevoleHash[vm.typeBenevoleList[i].id]=vm.typeBenevoleList[i].label;
+    }
+
+
     $rootScope.$emit('title-updated', 'Mailing de remerciement');
 
     vm.typeBenevoleList=[
@@ -49,12 +64,17 @@
 
     vm.handleMailingSending=function(mailingReport)
     {
-      vm.mailingReport = mailingReport;
 
-      if(vm.mailingReport == null || vm.mailingReport.length === 0)
+
+      if(mailingReport == null || mailingReport.length === 0)
       {// no more email to send, stop processing.
         vm.stop    = true;
         vm.running = false;
+        //do not overwrite vm.mailingReport, to leave displayed the last emails sent
+      }
+      else
+      {
+        vm.mailingReport = mailingReport;
       }
       //recompute statistics
       MailingResource.get().$promise.then(vm.handleMailingSummaryResponse).catch(function(e){
