@@ -98,7 +98,7 @@
     </div>
   </div>
 
-  <div clas="row">
+  <div class="row visible-lg-block">
 
     <table class="table table-hover table-condensed histo">
       <thead>
@@ -126,11 +126,10 @@
 
         <td>{{::p.max_people        }}</td>
 
-        <td><span ng-show="p.minor_allowed==1" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-show="p.minor_allowed==0" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></td>
+        <td><span ng-show="p.minor_allowed==1" class="glyphicon glyphicon-teenager" aria-hidden="true"></span><span ng-show="p.minor_allowed==0" class="glyphicon glyphicon-person" aria-hidden="true"></span></td>
         <td>{{::p.created           }}</td>
         <td><span ng-if="p.enabled" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-if="!p.enabled" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></td>
-        <td
-               ><span ng-if="p.type==1" class="glyphicon glyphicon-road"            aria-hidden="true"
+        <td><span ng-if="p.type==1" class="glyphicon glyphicon-road"            aria-hidden="true"
         ></span><span ng-if="p.type==2" class="glyphicon glyphicon-person-walking"  aria-hidden="true"
         ></span><span ng-if="p.type==3" class="glyphicon glyphicon-shop"            aria-hidden="true"
         ></span><span ng-if="p.type==4" class="glyphicon glyphicon-plus-sign"       aria-hidden="true"
@@ -141,6 +140,29 @@
 
     </table>
   </div>
+
+  <div class="hidden-lg row ">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="p in pq.pointsQuete">
+        <span ng-if="p.type==1" class="glyphicon glyphicon-road"            aria-hidden="true"
+        ></span><span ng-if="p.type==2" class="glyphicon glyphicon-person-walking"  aria-hidden="true"
+      ></span><span ng-if="p.type==3" class="glyphicon glyphicon-shop"            aria-hidden="true"
+      ></span><span ng-if="p.type==4" class="glyphicon glyphicon-plus-sign"       aria-hidden="true"
+      ></span><span ng-if="p.type==5" class="glyphicon glyphicon-asterisk"        aria-hidden="true"
+      ></span>
+        <span ng-if="p.enabled" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><span ng-if="!p.enabled" class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+        <span ng-show="p.minor_allowed==1" class="glyphicon glyphicon-teenager" aria-hidden="true"></span><span ng-show="p.minor_allowed==0" class="glyphicon glyphicon-person" aria-hidden="true"></span>
+
+        <a ng-href="/#!/pointsQuetes/edit/{{::p.id}}">{{::p.code}} {{::p.name}}</a> - {{::p.max_people}} &nbsp;<span class="glyphicon glyphicon-family"  aria-hidden="true"></span> <br/>
+        <a ng-href="https://www.google.com/maps/dir/?api=1&travelmode=walking&origin={{::pq.ul.latitude}},{{::pq.ul.longitude}}&destination={{::p.latitude}},{{::p.longitude}}" target="_blank">{{::p.address}}, {{::p.postal_code}}, {{::p.city}}</a>
+
+
+
+      </li>
+    </ul>
+  </div>
+
+
   <div class="row">
     <div class="col-md-6 col-md-offset-3" style="text-align:center;">
       <ul uib-pagination ng-change="pq.doSearch()" boundary-links="true" total-items="pq.rowCount" ng-model="pq.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>

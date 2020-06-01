@@ -97,7 +97,7 @@
       <ul uib-pagination ng-change="rf.doSearch()" boundary-links="true" total-items="rf.rowCount" ng-model="rf.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
     </div>
   </div>
-  <div clas="row">
+  <div class="row visible-lg-block">
     <table class="table table-hover table-condensed histo">
       <thead>
       <tr>
@@ -127,6 +127,15 @@
       </tr>
       </tbody>
     </table>
+  </div>
+  <div class="hidden-lg row">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="r in rf.recuFiscal">
+        <a ng-href="/#!/recu_fiscal/edit/{{::r.id}}">
+          {{::r.ref_recu_fiscal    }} - {{::r.first_name         }} {{::r.last_name          }} - {{::r.total_amount | currency : "€" : 2}} </a><br/>
+          {{::r.donation_date }}
+      </li>
+    </ul>
   </div>
   <div class="row">
     <div class="col-md-6 col-md-offset-3" style="text-align:center;">

@@ -87,84 +87,139 @@
           <button type="button" class="btn btn-primary" ng-click="q.doSearch();">Rechercher</button>
         </div>
       </div>
-      <div class="row" ng-show="q.currentUserRole>=4" ng-cloak style="padding-top:10px;margin-top: 10px;border-top:solid 1px silver">
-        <div class="col-md-2">
-          <strong>Section Admin</strong>
-        </div>
-        <div class="col-md-2">
+
+      <uib-accordion close-others="true" ng-show="q.currentUserRole>=4" ng-cloak>
+        <div uib-accordion-group class="panel-default" heading="Administrateur" is-open="false">
           <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label for="rcqUserRadio1" class="control-label">Utilisateur RCQ ?</label><br/>
-                <label class="radio-inline">
-                  <input type="radio" name="rcqUserRadio" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="rcqUserRadio" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==0"> Non
-                </label>
+            <div class="col-md-2">
+              <strong>Section Admin</strong>
+            </div>
+            <div class="col-md-2">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="rcqUserRadio1" class="control-label">Utilisateur RCQ ?</label><br/>
+                    <label class="radio-inline">
+                      <input type="radio" name="rcqUserRadio" id="rcqUserRadio1" ng-model="q.rcqUser" value="1" required ng-checked="q.rcqUser==1"> Oui
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="rcqUserRadio" id="rcqUserRadio2" ng-model="q.rcqUser" value="0" required ng-checked="q.rcqUser==0"> Non
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="rcqUserActifRadio1" class="control-label">Utilisateur RCQ Actif?</label><br/>
+                    <label class="radio-inline">
+                      <input type="radio" name="rcqUserActifRadio" id="rcqUserActifRadio1" ng-model="q.rcqUserActif" value="1" required ng-checked="q.rcqUserActif==1"> Oui
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="rcqUserActifRadio" id="rcqUserActifRadio2" ng-model="q.rcqUserActif" value="0" required ng-checked="q.rcqUserActif==0"> Non
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
               <div class="form-group">
-                <label for="rcqUserActifRadio1" class="control-label">Utilisateur RCQ Actif?</label><br/>
-                <label class="radio-inline">
-                  <input type="radio" name="rcqUserActifRadio" id="rcqUserActifRadio1" ng-model="q.rcqUserActif" value="1" required ng-checked="q.rcqUserActif==1"> Oui
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="rcqUserActifRadio" id="rcqUserActifRadio2" ng-model="q.rcqUserActif" value="0" required ng-checked="q.rcqUserActif==0"> Non
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-8">
-          <div class="form-group">
-            <label for="anonymization_token" class="control-label">Jeton d'Anonymisation</label>
-            <input
-              name="anonymization_token"
-              id="anonymization_token"
-              class="form-control"
-              ng-model="q.anonymization_token"
-              placeholder="Lors d'une recherche par token, les autres champs sont ignorés"
-            />
-            <span class="help-block">
-              Lorsqu'une fiche d'un quêteur est anonymisée, il recoit un email avec un jeton <small>(ex: '0c0d1d14-5416-4a15-b011-1ad53213ccdb')</small>
+                <label for="anonymization_token" class="control-label">Jeton d'Anonymisation</label>
+                <input
+                  name="anonymization_token"
+                  id="anonymization_token"
+                  class="form-control"
+                  ng-model="q.anonymization_token"
+                  placeholder="Lors d'une recherche par token, les autres champs sont ignorés"
+                />
+                <span class="help-block">
+              Lorsqu'une fiche d'un quêteur est anonymisée, il reçoit un email avec un jeton <small>(ex: '0c0d1d14-5416-4a15-b011-1ad53213ccdb')</small>
               Vous pouvez retrouver cette fiche anonymisée, et la revaloriser avec les données du quêteur <strong>(sur sa demande)</strong> pour qu'il puisse
               retrouver ses statistiques des années précédentes
             </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row" ng-show="q.currentUserRole==9">
-        <div class="col-md-2">
-          <strong>Section Super Admin</strong>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="ulId" class="control-label">Unité Locale</label>
-            <input
-              id="ulId"
-              type="text"
-              ng-model="q.admin_ul"
-              placeholder="Tappez votre recherche"
-              uib-typeahead="ul as ul.full_name for ul in q.searchUL($viewValue)"
-              typeahead-loading="loadingULs"
-              typeahead-no-results="noResults"
-              typeahead-wait-ms="350"
-              class="form-control"
-              ng-required
-              autocomplete="off">
-            <i   ng-show="loadingULs" class="glyphicon glyphicon-refresh"></i>
-            <div ng-show="noResults">
-              <i class="glyphicon glyphicon-remove"></i> Aucune Unité Locale trouvée
+              </div>
             </div>
-            <span class="help-block">Recherche par nom, code postal, ville</span>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              &nbsp;
+            </div>
+            <div class="col-md-10">
+              <label class="control-label">Désactiver les quêteurs inactifs</label>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <select name="yearsOfInactivity" id="yearsOfInactivity" class="form-control" ng-model="q.yearsOfInactivity"
+                            ng-options="(r.id) as r.label
+                    for
+                    r in q.yearsOfInactivityList"
+                    >
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-2" style="vertical-align: top;">
+                  <button type="button" class="btn btn-primary" ng-click="q.countInactiveQueteurs();">Compter</button>
+                </div>
+                <div class="col-md-6">
+                  <span class="help-block">Seuls les quêteurs n'ayant pas de troncs comptés depuis <strong>{{q.yearsOfInactivity}} an{{q.yearsOfInactivity==1?'':'nées'}}</strong> seront sélectionnés pour être désactivés (les utilisateurs RCQ actifs et avec un password ne sont pas impactés)</span>
+                </div>
+              </div>
+
+              <div class="row" ng-cloak ng-show="q.inactiveQueteurCount!==null">
+                <div class="col-md-8">
+                  <span class="help-block" style="color:#003399;font-size: 20px;"> Les quêteurs inactifs depuis <strong>{{q.yearsOfInactivity}} an{{q.yearsOfInactivity==1?'':'nées'}}</strong> sont au nombre de <span class="badge" style="background-color:#003399;">{{q.inactiveQueteurCount}}</span> </span>
+                </div>
+                <div class="col-md-4" ng-show="q.inactiveQueteurCount>0">
+                  <button type="button" class="btn btn-primary" ng-click="q.disableInactiveQueteurs();">Désactiver les quêteurs inactifs</button>
+                </div>
+              </div>
+
+              <div class="row" ng-cloak ng-show="q.inactiveQueteurDisabled>0">
+                <div class="col-md-8">
+                  <span class="help-block" style="color:#003399;font-size: 20px;"> Les <span class="badge" style="background-color:#003399;">{{q.inactiveQueteurDisabled}}</span> quêteurs inactifs depuis <strong>{{q.yearsOfInactivity}} an{{q.yearsOfInactivity==1?'':'nées'}}</strong>  ont été désactivés</span>
+                </div>
+              </div>
+
+
+
+
+            </div>
           </div>
         </div>
-      </div>
+        <div uib-accordion-group class="panel-default" heading="Super Administrateur" is-open="false" ng-show="q.currentUserRole==9" ng-cloak>
+          <div class="row">
+            <div class="col-md-2">
+              <strong>Section Super Admin</strong>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ulId" class="control-label">Unité Locale</label>
+                <input
+                  id="ulId"
+                  type="text"
+                  ng-model="q.admin_ul"
+                  placeholder="Tappez votre recherche"
+                  uib-typeahead="ul as ul.full_name for ul in q.searchUL($viewValue)"
+                  typeahead-loading="loadingULs"
+                  typeahead-no-results="noResults"
+                  typeahead-wait-ms="350"
+                  class="form-control"
+                  ng-required
+                  autocomplete="off">
+                <i   ng-show="loadingULs" class="glyphicon glyphicon-refresh"></i>
+                <div ng-show="noResults">
+                  <i class="glyphicon glyphicon-remove"></i> Aucune Unité Locale trouvée
+                </div>
+                <span class="help-block">Recherche par nom, code postal, ville</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </uib-accordion>
+
+
+
+
     </form>
   </div>
 
@@ -173,7 +228,7 @@
       <ul uib-pagination ng-change="q.doSearch()" boundary-links="true" total-items="q.rowCount" ng-model="q.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
     </div>
   </div>
-  <div clas="row">
+  <div class="visible-lg-block row">
     <table class="table table-hover table-condensed">
       <thead>
       <tr>
@@ -190,7 +245,7 @@
 
       <tbody>
       <tr ng-repeat="queteur in q.list">
-        <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.nivol}}</a></td>
+        <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.nivol!=''?'':'bénévole 1j'}}</a></td>
         <td>{{q.typeBenevoleHash[queteur.secteur]}}</td>
         <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.first_name}}</a></td>
         <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.last_name | uppercase}}</a></td>
@@ -209,6 +264,20 @@
       </tbody>
     </table>
   </div>
+
+  <div class="row hidden-lg">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="queteur in q.list">
+        <a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.nivol}} {{::queteur.nivol!=''?'-':'Bénévole 1j - '}} {{::queteur.first_name}} {{::queteur.last_name | uppercase}} - {{q.typeBenevoleHash[queteur.secteur]}}</a><br/>
+        <a ng-href="mailto:{{::queteur.email}}"><span class="glyphicon glyphicon-message-plus"></span></a> <div style="display:inline" ng-show="queteur.mobile!='N/A'"><a ng-href="tel:{{::queteur.mobile}}"><span class="glyphicon glyphicon-iphone"></span></a> <a ng-href="sms:{{::queteur.mobile}}"><span class="glyphicon glyphicon-sms"></span></a></div>
+        {{::queteur.point_quete_name}} <span ng-show=" queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-home"        aria-hidden="true" style="height: 20px!important;color:darkblue" tooltip-popup-close-delay='1000' uib-tooltip='Pas encore parti, départ théorique à {{::queteur.depart_theorique}}'></span>
+        <span ng-show="!queteur.retour           &&  queteur.depart"                    class="glyphicon glyphicon-coins"       aria-hidden="true" style="height: 20px!important;color:gold"     tooltip-popup-close-delay='1000' uib-tooltip='En train de quêter, départ à {{::queteur.depart}}'></span>
+        <span ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart" class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="height: 20px!important;color:purple"   tooltip-popup-close-delay='1000' uib-tooltip='Rentré de quête à {{::queteur.retour }}'></span>
+        <span ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="height: 20px!important;color:grey"     tooltip-popup-close-delay='1000' uib-tooltip="Pas actif aujourd'hui"></span>
+      </li>
+    </ul>
+  </div>
+
   <div class="row">
     <div class="col-md-6 col-md-offset-3" style="text-align:center;">
       <ul uib-pagination ng-change="q.doSearch()" boundary-links="true" total-items="q.rowCount" ng-model="q.pageNumber" items-per-page="30"  max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>

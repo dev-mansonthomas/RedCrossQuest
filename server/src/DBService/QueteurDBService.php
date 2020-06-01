@@ -13,6 +13,87 @@ use RedCrossQuest\Entity\QueteurEntity;
 class QueteurDBService extends DBService
 {
 
+  /**
+   * Count the number of active queteur with no tronc_queteur since $yearsOfInactivity years for an UL and are not an active RCQ user.
+   * Are counted, active queteurs that don't have a tronc_queteur with "comptage" date older than $yearsOfInactivity and that is not deleted
+   * Are NOT counted : queteur that are also user of RCQ, with an active account and a password set
+   *                   queteur that have been created this year
+   *
+   *
+   * @param int $yearsOfInactivity  the number of years
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return int the count of inactive queteur
+   * @throws Exception in other situations
+   */
+  public function countInactiveQueteurs(int $yearsOfInactivity, int $ulId):int
+  {
+    $sql = "
+SELECT 1
+FROM  queteur  q
+WHERE q.active = 1 
+AND   q.ul_id  = :ul_id
+AND   EXTRACT(YEAR from q.created) != EXTRACT(YEAR from NOW())
+AND   q.id    NOT IN
+(
+  SELECT tq.queteur_id  
+  FROM   tronc_queteur tq
+  WHERE  tq.queteur_id = q.id
+  AND    tq.deleted    = 0
+  AND    EXTRACT(YEAR from comptage) >= EXTRACT(YEAR from NOW()) - :years_of_inactivity
+)
+AND q.id NOT IN
+(
+  SELECT u.queteur_id
+  FROM   users u
+  WHERE  u.queteur_id = q.id
+  AND    u.active     =1
+  AND    length(u.password) > 0
+)
+";
+    $parameters = ["ul_id" => $ulId, "years_of_inactivity"=>$yearsOfInactivity];
+    return $this->getCountForSQLQuery($sql, $parameters);
+  }
+
+
+  /**
+   * Disable queteur not active since $yearsOfInactivity years for an UL.
+   * Are counted, active queteurs that don't have a tronc_queteur with "comptage" date older than $yearsOfInactivity and that is not deleted
+   * Are NOT counted : queteur that are also user of RCQ, with an active account and a password set
+   *                   queteur that have been created this year
+   * 
+   * @param int $yearsOfInactivity  the number of years
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return int the count of inactive queteur
+   * @throws Exception in other situations
+   */
+  public function disableInactiveQueteurs(int $yearsOfInactivity, int $ulId):int
+  {
+    $sql = "
+UPDATE  queteur q
+SET   q.active = 0
+WHERE q.active = 1 
+AND   EXTRACT(YEAR from q.created) != EXTRACT(YEAR from NOW())
+AND   q.ul_id  = :ul_id
+AND   q.id    NOT IN
+(
+  SELECT tq.queteur_id  
+  FROM   tronc_queteur tq
+  WHERE  tq.queteur_id = q.id
+  AND    tq.deleted    = 0
+  AND    EXTRACT(YEAR from comptage) >= EXTRACT(YEAR from NOW()) - :years_of_inactivity
+)
+AND q.id NOT IN
+(
+  SELECT u.queteur_id
+  FROM   users u
+  WHERE  u.queteur_id = q.id
+  AND    u.active     =1
+  AND    length(u.password) > 0
+)
+";
+    $parameters = ["ul_id" => $ulId, "years_of_inactivity"=>$yearsOfInactivity];
+    return $this->executeQueryForUpdate($sql, $parameters);
+  }
 
   /**
    * Count the number of pending registration

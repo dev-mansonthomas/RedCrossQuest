@@ -352,7 +352,7 @@
       return QueteurResource.query({"q":queryString, "active":1, "benevoleOnly":1}).$promise.then(
         function success(response)
         {
-          return response.map(
+          return response.rows.map(
             function success(queteur)
             {
               queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;

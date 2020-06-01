@@ -14,20 +14,30 @@
                               QueteurResource, UniteLocaleResource, DateTimeHandlingService)
   {
     var vm = this;
-    vm.searchType       = 0;
-    vm.rcqUser          = 0;
-    vm.rcqUserActif     = 1;
-    vm.currentUserRole  = $localStorage.currentUser.roleId;
-    vm.pageNumber       = 1;
-    vm.rowCount         = 0;
-    vm.list             = [];
+    vm.searchType           = 0;
+    vm.rcqUser              = 0;
+    vm.rcqUserActif         = 1;
+    vm.currentUserRole      = $localStorage.currentUser.roleId;
+    vm.pageNumber           = 1;
+    vm.rowCount             = 0;
+    vm.list                 = [];
+    vm.yearsOfInactivity    = 1;
+    vm.inactiveQueteurCount    = null;
+    vm.inactiveQueteurDisabled = null;
 
     $rootScope.$emit('title-updated', 'Liste des quêtêurs');
+
+    vm.yearsOfInactivityList=[
+      {id:1 ,label:'1 an'},
+      {id:2 ,label:'2 ans'},
+      {id:3 ,label:'3 ans'},
+      {id:4 ,label:'4 ans'}
+    ];
 
     vm.typeBenevoleList=[
       {id:1 ,label:'Action Sociale'},
       {id:2 ,label:'Secours'},
-      {id:3 ,label:'Bénévole d\'un Jour'},
+      {id:3 ,label:'Bénévole 1j'},
       {id:4 ,label:'Ancien Bénévole, Inactif ou Adhérent'},
       {id:5 ,label:'Commerçant'},
       {id:6 ,label:'Spécial'}
@@ -86,6 +96,30 @@
 
     //initial search with type 0 (all queteur)
     vm.doSearch();
+
+
+    vm.countInactiveQueteurs=function()
+    {
+      QueteurResource.countInactiveQueteurs({'yearsOfInactivity': vm.yearsOfInactivity}).$promise.then(function(response){
+
+        vm.inactiveQueteurCount    = response.count;
+        vm.inactiveQueteurDisabled = null;
+
+      }).catch(function(e){
+        $log.error("error countInactiveQueteurs", e);
+      });
+    };
+
+    vm.disableInactiveQueteurs=function()
+    {
+      QueteurResource.disableInactiveQueteurs({'yearsOfInactivity': vm.yearsOfInactivity}).$promise.then(function(response){
+        vm.inactiveQueteurCount    = null;
+        vm.inactiveQueteurDisabled = response.count;
+
+      }).catch(function(e){
+        $log.error("error countInactiveQueteurs", e);
+      });
+    };
 
 
     /**
