@@ -18,6 +18,7 @@ use RedCrossQuest\routes\routesActions\troncsQueteurs\PrepareTroncQueteur;
 use RedCrossQuest\routes\routesActions\troncsQueteurs\SaveAsAdminOnTroncQueteur;
 use RedCrossQuest\routes\routesActions\troncsQueteurs\SaveCoinsOnTroncQueteur;
 use RedCrossQuest\routes\routesActions\troncsQueteurs\SaveReturnDateOnTroncQueteur;
+use RedCrossQuest\routes\routesActions\troncsQueteurs\TroncQueteurPreparationChecks;
 
 /********************************* TRONC_QUETEUR ****************************************/
 
@@ -27,6 +28,67 @@ use RedCrossQuest\routes\routesActions\troncsQueteurs\SaveReturnDateOnTroncQuete
  *   description="Methods that apply to the TroncQueteur object. Which hold the information of Who(Queteur) goes where, at what time and with What(Tronc)."
  * )
  */
+
+
+/**
+ * @OA\Get(
+ *     path="/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/preparationChecks",
+ *     tags={"TroncsQueteurs"},
+ *     summary="Checks if the tronc or the queteur are not already in use",
+ *     description="Checks if the tronc or the queteur are not already in use. This check is done when saving the preparation. This method allows to check just after filling tronc & queteur and before point de quete",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="tronc_id",
+ *         in="query",
+ *         description="The ID of the Tronc that is being checked",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="queteur_id",
+ *         in="query",
+ *         description="The ID of the Queteur that is being checked",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *         @OA\JsonContent(
+ *          type="object",
+ *          ref="#/components/schemas/PrepareTroncQueteurResponse",
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->get('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/preparationChecks', TroncQueteurPreparationChecks::class);
+
 
 /**
  * @OA\Delete(
@@ -638,7 +700,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/getTroncsOfQueteur'        
  *     )
  * )
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id}', GetTroncQueteur::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur/{id:\d+}', GetTroncQueteur::class);
 
 
 
