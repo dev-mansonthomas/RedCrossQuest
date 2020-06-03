@@ -12,10 +12,17 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
     },
     {
       update: {
-      method: 'PUT'
+       method: 'PUT'
       },
       query:{
         isArray: false
+      },
+      exportData:{
+        method: 'POST',
+        params:
+          {
+            action: 'exportData'
+          }
       },
       anonymize:
       {

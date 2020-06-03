@@ -5,6 +5,7 @@ namespace RedCrossQuest\BusinessService;
 
 use Exception;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\NamedDonationDBService;
 use RedCrossQuest\DBService\PointQueteDBService;
@@ -79,6 +80,38 @@ class ExportDataBusinessService
 
 
   /**
+   * Export Queteur data
+   *
+   * @param int $queteurId The ID of the queteur
+   * @param integer $ulId The ID of the Unité Locale
+   * @return array filename of the generated file, and the number of lines exported
+   *
+   * @throws Exception if something wrong happen
+   */
+  public function exportDataQueteur(int $queteurId, int $ulId):array
+  {
+    $uuid         = Uuid::uuid4();
+
+    /**
+    @@var Entity[][]
+     */
+    $exportData = [];
+
+    $exportData['pointQuete']    = $this->pointQueteDBService         ->getPointQuetes        ($ulId     , $queteurId);
+    $exportData['queteur']       = $this->queteurDBService            ->getQueteurById        ($queteurId, $ulId     );
+    $exportData['troncQueteur']  = $this->troncQueteurDBService       ->getTroncsQueteurFromUL($ulId, null, $queteurId);
+
+
+    $uniquePrefix = $exportData['queteur']->id."-".$uuid->toString();
+
+    $nbOfLine     = $this->dataToFile     ($exportData, $uniquePrefix);
+    $zipFileName  = $this->generateZipFile($exportData, $uniquePrefix, $exportData['queteur']->first_name."-".$exportData['queteur']->last_name);
+
+    return ["fileName" => $zipFileName, "numberOfRows"=> $nbOfLine];
+  }
+
+
+  /**
    * Export UL data
    *
    * @param integer $ulId  The ID of the Unité Locale
@@ -89,7 +122,8 @@ class ExportDataBusinessService
    */
   public function exportData(int $ulId, ?string $year):array
   {
-
+    $uuid         = Uuid::uuid4();
+    $uniquePrefix = $ulId."-".$uuid->toString();
 /**
    @@var Entity[][]
  */
@@ -104,8 +138,86 @@ class ExportDataBusinessService
     $exportData['troncQueteur']  = $this->troncQueteurDBService       ->getTroncsQueteurFromUL($ulId, $year);
     $exportData['ul']            = $this->uniteLocaleDBService        ->getUniteLocaleById    ($ulId);
     $exportData['yearlyGoal']    = $this->yearlyGoalDBService         ->getYearlyGoalsForExportData($ulId, $year);
-    $nbOfLine=0;
 
+    $nbOfLine     = $this->dataToFile     ($exportData, $uniquePrefix);
+    $zipFileName  = $this->generateZipFile($exportData, $uniquePrefix, $exportData['ul']->name, $year);
+
+    return ["fileName" => $zipFileName, "numberOfRows"=> $nbOfLine];
+  }
+
+  /**
+   * Compress the previously generated CSV file
+   * @param array $exportData ex : $exportData['dailyStats']=DailyStatsBeforeRCQEntity[]
+   * @param string $subjectName Name of the UL or firstname-lastname of the queteur
+   * @param string $uniquePrefix A prefix for the file :  ul_id or queteur_id + UUID
+   * @param string|null $year year of export for UL data
+   * @return string  the zip file name
+   * @throws Exception
+   */
+  private function generateZipFile(array $exportData, string $uniquePrefix, string $subjectName, ?string $year=null)
+  {
+    try
+    {
+      $dateTime = date('Y-m-d-H-i-s', time());
+      $ulNameForFileName = strtr(strtr($subjectName, [' '=> '']), $this->unwanted_array );
+
+      if(substr($ulNameForFileName, -1) == ".")
+      {
+        $ulNameForFileName = substr($ulNameForFileName, 0, strlen($ulNameForFileName) - 1);
+      }
+
+      $zipFileName = "$dateTime-RedCrossQuest-DataExport-$uniquePrefix".($year!= null? $year.'':'')."-".$ulNameForFileName.".zip";
+
+      $zipFilePath = sys_get_temp_dir()."/".$zipFileName;
+      $z = new ZipArchive();
+      $zipFileOpen = ($z->open($zipFilePath, ZipArchive::CREATE));
+      if(true === $zipFileOpen)
+      {
+        //$z->setPassword($password);
+        $archiveComment = strtr( 'RedCrossQuest Data Export - '.$dateTime .' for UL - '.$uniquePrefix.' - '.$subjectName.($year!= null? ' for year :'.$year.'':''), $this->unwanted_array );
+        $z->setArchiveComment($archiveComment );
+
+        foreach ($exportData as $tableName => $oneDataTable)
+        {
+          $filename = $uniquePrefix."-".$tableName.".csv";
+          $z->addFile(sys_get_temp_dir()."/$filename", $filename);
+          //$z->setEncryptionName($filename,  ZipArchive::EM_AES_256 , $password);
+        }
+        //csv files must not be deleted before closing the zip, otherwise we get file not found. as if the zip file is built on the close command
+        $z->close();
+
+        $this->logger->info("zip file generated with stats $zipFilePath",["fileInfo"=>stat ($zipFilePath)]);
+
+        foreach ($exportData as $tableName => $oneDataTable)
+        {
+          $filename = $uniquePrefix."-".$tableName.".csv";
+          unlink(sys_get_temp_dir()."/$filename");
+        }
+      }
+      else
+      {
+        $this->logger->info("failed opening Zip",["zipFileOpen"=>$zipFileOpen]);
+      }
+    }
+    catch(Exception $e)
+    {
+      $this->logger->error("Error while Exporting Data", ["YEAR" => $year, "Exception" => $e]);
+      throw $e;
+    }
+    return $zipFileName;
+  }
+
+
+
+  /**
+   * Take an array of arrays of Entities and dump each array in a file (one for queteur, tronc_queteur, etc...)
+   * @param array $exportData    ex : $exportData['dailyStats']=DailyStatsBeforeRCQEntity[]
+   * @param string $uniquePrefix A prefix for the file :  ul_id or queteur_id + UUID
+   * @return int the number of line generated in all CSV files
+   */
+  private function dataToFile(array $exportData, string $uniquePrefix)
+  {
+    $nbOfLine=0;
     foreach ($exportData as $tableName => $oneDataTable)
     {
       $fileContent = "";
@@ -130,62 +242,14 @@ class ExportDataBusinessService
         $nbOfLine++;
       }
 
-      $this->logger->info("generating file ".sys_get_temp_dir()."/$ulId-".$tableName.".csv  $nbOfLine");
-      file_put_contents(sys_get_temp_dir()."/$ulId-".$tableName.".csv",
+      $this->logger->info("generating file ".sys_get_temp_dir()."/$uniquePrefix-".$tableName.".csv  $nbOfLine");
+      file_put_contents(sys_get_temp_dir()."/$uniquePrefix-".$tableName.".csv",
         mb_convert_encoding($fileContent, "ISO-8859-1" , "ASCII, UTF-8" ));
 
-      $this->logger->info("file  generated with stats ".sys_get_temp_dir()."/$ulId-".$tableName.".csv  $nbOfLine",["fileInfo"=>stat (sys_get_temp_dir()."/$ulId-".$tableName.".csv")]);
+      $this->logger->info("file  generated with stats ".sys_get_temp_dir()."/$uniquePrefix-".$tableName.".csv  $nbOfLine",
+        ["fileInfo"=>stat (sys_get_temp_dir()."/$uniquePrefix-".$tableName.".csv")]);
     }
 
-    try
-    {
-      $dateTime = date('Y-m-d-H-i-s', time());
-      $ulNameForFileName = strtr(strtr($exportData['ul']->name, [' '=> '']), $this->unwanted_array );
-
-      if(substr($ulNameForFileName, -1) == ".")
-      {
-        $ulNameForFileName = substr($ulNameForFileName, 0, strlen($ulNameForFileName) - 1);
-      }
-
-      $zipFileName = "$dateTime-RedCrossQuest-DataExport-UL-$ulId".($year!= null? $year.'':'')."-".$ulNameForFileName.".zip";
-
-      $zipFilePath = sys_get_temp_dir()."/".$zipFileName;
-      $z = new ZipArchive();
-      $zipFileOpen = ($z->open($zipFilePath, ZipArchive::CREATE));
-      if(true === $zipFileOpen)
-      {
-        //$z->setPassword($password);
-        $archiveComment = strtr( 'RedCrossQuest Data Export - '.$dateTime .' for UL - '.$ulId.' - '.$exportData['ul']->name.($year!= null? ' for year :'.$year.'':''), $this->unwanted_array );
-        $z->setArchiveComment($archiveComment );
-
-        foreach ($exportData as $tableName => $oneDataTable)
-        {
-          $filename = $ulId."-".$tableName.".csv";
-          $z->addFile(sys_get_temp_dir()."/$filename", $filename);
-          //$z->setEncryptionName($filename,  ZipArchive::EM_AES_256 , $password);
-        }
-        //csv files must not be deleted before closing the zip, otherwise we get file not found. as if the zip file is built on the close command
-        $z->close();
-
-        $this->logger->info("zip file generated with stats $zipFilePath",["fileInfo"=>stat ($zipFilePath)]);
-
-        foreach ($exportData as $tableName => $oneDataTable)
-        {
-          $filename = $ulId."-".$tableName.".csv";
-          unlink(sys_get_temp_dir()."/$filename");
-        }
-      }
-      else
-      {
-        $this->logger->info("failed opening Zip",["zipFileOpen"=>$zipFileOpen]);
-      }
-    }
-    catch(Exception $e)
-    {
-      $this->logger->error("Error while Exporting Data", ["YEAR" => $year, "Exception" => $e]);
-      throw $e;
-    }
-
-    return ["fileName" => $zipFileName, "numberOfRows"=> $nbOfLine];
+    return $nbOfLine;
   }
 }

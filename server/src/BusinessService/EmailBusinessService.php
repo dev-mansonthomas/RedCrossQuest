@@ -148,7 +148,46 @@ class EmailBusinessService
 
   }
 
-  
+
+  /**
+   * Send an email to the queteur that made an export data request with his data
+   * @param QueteurEntity $queteur        The information of the connected user
+   * @param string        $zipFileName    The file name to attach to the email
+   * @return string                       The status code from Sendgrid
+   * @throws Exception   if the email fails to be sent
+   */
+  public function sendExportDataQueteur(QueteurEntity $queteur, string $zipFileName):string
+  {
+    $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
+
+    $title = "Export de vos données";
+
+    return $this->mailService->sendMail(
+      "RedCrossQuest",
+      "exportDataQueteur",
+      "[Confidentiel] $title",
+      $queteur->email,
+      $queteur->first_name,
+      $queteur->last_name,
+      $this->getMailHeader($title, $queteur->first_name).
+      "
+<br/>
+ Cet email fait suite à votre demande d'export de vos données personnelles stockée dans l'application RedCrossQuest/RedQuest<br/>
+<br/>
+<strong>Attention :</strong> <br/>
+<ul>
+<li>Les données stockées dans RedCrossQuest & RedQuest sont le strict nécessaire à la bonne organisation de la quête de la Croix Rouge</li>
+<li>Les données sont stockées sur les serveurs de la Croix Rouge française qui se situent en europe</li>
+<li>Il n'y a pas de suivi temps réel de vos coordonnées GPS. On défini avant votre départ, l'endroit ou vous allez quêter qui lui à des coordonnées GPS pour l'affichage sur une carte</li>
+<li>Si vous avez des questions, n'hésitez pas à contacter l'unité locale pour laquelle vous avez Quêté.</li>
+<li>Il vous est possible de demander l'anonymisation de vos données à votre unité locale. Vous receverez alors une confirmation par email avec un Jeton. Avec ce jeton, vous pourrez l'année suivante, si vous revenez quêter dans la meme unité locale, revaloriser vos noms/prénoms et retrouver vos statistiques/badges dans RedQuest</li>
+</ul>
+<br/>".$this->getMailFooter($uniteLocaleEntity, false, $queteur),
+      $uniteLocaleEntity->admin_email,
+      $zipFileName);
+
+  }
+
 
   /**
    * Send an email to the connected user with the data export of the UL
@@ -180,13 +219,9 @@ class EmailBusinessService
 <li>Cette archive contient <strong>les données personnelles</strong> de vos bénévoles et bénévoles d'un jour</li>
 <li>Prenez toutes les précautions nécessaire pour que ces données ne soient pas diffusées en dehors du minimum de personnes ayant besoin d'avoir accès a ces informations.</li>
 <li>Ces données ont été collectés pour les Journées Nationale, n'utilisez pas ces données hors du cadre des Journées Nationales !</li>
+<li>Après utilisation des données, pensez a supprimer le fichier zip et la version décompressée. Si on vous vole votre ordi, ou vous le perdez, vous seriez responsable d'une fuite de données</li>
+<li>Si vous devez conserver ces données, stockez les dans un espace de stockage sécurisé</li>
 </ul>
-
-<br/>
- L'archive est protégé par un mot de passe qui était affiché sur la page d'export des données.<br/>
- Cette protection par mot de passe est faible et ne constitue qu'une protection très basique.<br/> 
- <br/>
- Sur Mac OS X, utilisez <a href='https://itunes.apple.com/us/app/the-unarchiver/id425424353?mt=12' target='_blank'>'The Unarchiver'</a> pour pouvoir décompresser cette archive protégée par un mot de passe.
 <br/>".$this->getMailFooter($uniteLocaleEntity, false, $queteur),
       $uniteLocaleEntity->admin_email,
       $zipFileName);

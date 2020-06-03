@@ -1,7 +1,7 @@
 <?php /** @noinspection SpellCheckingInspection */
 
 
-namespace RedCrossQuest\routes\routesActions\exportData;
+namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
 use Exception;
@@ -12,9 +12,10 @@ use RedCrossQuest\BusinessService\ExportDataBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\ClientInputValidatorSpecs;
 
 
-class ExportData extends Action
+class ExportQueteurData extends Action
 {
   /**
    * @var QueteurDBService              $queteurDBService
@@ -56,13 +57,38 @@ class ExportData extends Action
    */
   protected function action(): Response
   {
-    $ulId          = $this->decodedToken->getUlId();
-    $queteurId     = $this->decodedToken->getQueteurId();
-    $queteurEntity = $this->queteurDBService->getQueteurById($queteurId, $ulId);
-    $exportReport  = $this->exportDataBusinessService->exportData($ulId, null);
-    $status        = $this->emailBusinessService->sendExportDataUL($queteurEntity, $exportReport['fileName']);
+    $ulId     = $this->decodedToken->getUlId();
 
-    $this->response->getBody()->write(json_encode(new ExportDataResponse($status, $queteurEntity->email, $exportReport['fileName'],$exportReport['numberOfRows'])));
+    $this->validateSentData([
+      ClientInputValidatorSpecs::withInteger("id", $this->args, 1000000 , false, 0)
+    ]);
+
+    $queteurId  = $this->validatedData["id"];
+
+    $queteurEntity = $this->queteurDBService         ->getQueteurById   ($queteurId, $ulId);
+    $exportReport  = $this->exportDataBusinessService->exportDataQueteur($queteurId, $ulId);
+
+    $status = $this->emailBusinessService->sendExportDataQueteur($queteurEntity, $exportReport['fileName']);
+
+    $this->response->getBody()->write(json_encode(new ExportDataQueteurResponse($status, $queteurEntity->email, $exportReport['fileName'],$exportReport['numberOfRows'])));
+
+    /*  envoie bien le fichier comme il faut, mais ne fonctionne pas en rest
+
+    $fh = fopen("/tmp/".$zipFileName, 'r  ');
+    $stream = new \Slim\Http\Stream($fh);
+    return $response->withHeader('Content-Type', 'application/force-download')
+      ->withHeader('Content-Type', 'application/octet-stream')
+      ->withHeader('Content-Type', 'application/download')
+      ->withHeader('Content-Description', 'File Transfer')
+      ->withHeader('Content-Transfer-Encoding', 'binary')
+      ->withHeader('Content-Disposition', 'attachment; filename="' .$zipFileName . '"')
+      ->withHeader('Expires', '0')
+      ->withHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+      ->withHeader('Pragma', 'public')
+      ->withBody($stream);
+      */
+
+
 
     return $this->response;
   }
