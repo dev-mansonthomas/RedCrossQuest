@@ -12,6 +12,12 @@ angular.module('redCrossQuestClient').factory('TroncQueteurResource', function (
       update: {
         method: 'PUT' // this method issues a PUT request
       },
+      preparationChecks:{
+        method: 'GET',
+        params: {
+          action: 'preparationChecks'
+        }
+      },
       deleteNonReturnedTroncQueteur: {
         method: 'DELETE',
         params: {

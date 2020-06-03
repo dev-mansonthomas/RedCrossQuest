@@ -715,7 +715,7 @@ q.last_name,
 q.email, 
 q.mobile, 
 q.nivol,
-'QUETEUR_HAS_ALREADY_HAS_A_TRONC' as status
+'QUETEUR_ALREADY_HAS_A_TRONC' as status
 FROM  tronc_queteur tq,
       queteur        q
 WHERE    q.ul_id      = :ul_id

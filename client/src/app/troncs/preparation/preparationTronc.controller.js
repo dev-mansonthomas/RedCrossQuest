@@ -106,6 +106,7 @@
         try
         {
           $scope.pt.current.queteurId = newValue.id;
+          vm.preparationChecks();
         }
         catch(exception)
         {
@@ -289,6 +290,7 @@
           vm.current.queteur = queteur;
           vm.current.queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
           $scope.pt.current.queteurId = queteur.id;
+          vm.preparationChecks();
         };
         var queteurDecodedAndNotFoundInDB=function (reason, queteurId, ulId)
         {
@@ -318,6 +320,7 @@
             vm.current.tronc = tronc;
             vm.current.tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
             $scope.pt.current.troncId = tronc.id;
+            vm.preparationChecks();
           };
 
           var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
@@ -336,6 +339,15 @@
       }
       vm.decodedData = data;
 
+    };
+    //when tronc & queteur is filled, check if one of them is not already in use
+    vm.preparationChecks=function()
+    {
+      if(vm.current.queteurId >0  && typeof(vm.current.tronc) ==='object' && vm.current.tronc.id > 0)
+      {
+        TroncQueteurResource.preparationChecks({'tronc_id':vm.current.tronc.id,'queteur_id':vm.current.queteurId}
+        ).$promise.then(savedSuccessfully, onSaveError);
+      }
     };
 
     /**
@@ -363,11 +375,14 @@
                 TroncQueteurResource, errorOnSave, troncId, saveFunction, DateTimeHandlingService)
   {
 
-    //this can be triggered because the current tronc is already setted to someone else
-    //or the queteur already has a tronc setted. ==>  queteurHasAnotherTronc is here to check that and set the list of tronc_id in an array
+    //this can be triggered because the current tronc is already set to someone else
+    //or the queteur already has a tronc set. ==>  queteurHasAnotherTronc is here to check that and set the list of tronc_id in an array
     // it's likely that there's only one, so we delete the first of the array
     var queteurHasAnotherTronc=false;
     var otherTroncs=[];
+    var previousTQID=null;
+    var twoIdenticalRows=false;
+
     for(var i=0, counti=errorOnSave.length;i<counti;i++)
     {
       errorOnSave[i].depart           = DateTimeHandlingService.handleServerDate(errorOnSave[i].depart          ).stringVersion;
@@ -377,9 +392,20 @@
         queteurHasAnotherTronc=true;
         otherTroncs[otherTroncs.length]= errorOnSave[i].tronc_id;
       }
+      if(errorOnSave[i].id === previousTQID)
+      {
+        twoIdenticalRows=true;
+      }
+      previousTQID = errorOnSave[i].id;
     }
 
     $scope.troncInfos=errorOnSave;
+    $scope.twoIdenticalRows = twoIdenticalRows;
+    $scope.label= {
+      'TRONC_IN_USE':'Ce tronc est affecté a un autre quêteur',
+      'QUETEUR_ALREADY_HAS_A_TRONC':'Ce quêteur à déjà un tronc'
+    };
+
 
 
     $scope.deleteNonReturnedTronc = function ()
@@ -403,8 +429,6 @@
       $uibModalInstance.dismiss('cancel');
     };
   });
-
-
 
 })();
 

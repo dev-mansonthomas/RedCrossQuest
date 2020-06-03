@@ -6,7 +6,7 @@
 <!-- Modal window in case of error -->
   <script type="text/ng-template" id="myModalContent.html">
     <div class="modal-header">
-      <h3 class="modal-title">Erreur lors de la sauvegarde de la préparation du {Tronc-Quêteur}!</h3>
+      <h3 class="modal-title">Erreur lors de la sauvegarde de la préparation du<br class="hidden-lg"/> {Tronc-Quêteur}!</h3>
     </div>
     <div class="modal-body">
 
@@ -14,7 +14,7 @@
         <!-- Default panel contents -->
         <div class="panel-heading">Ce <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> est comptabilisé comme étant en cours d'utilisation <b>{{troncInfos.length}}</b> fois</div>
 
-        <table class='table'>
+        <table class='table visible-lg-block'>
           <thead>
           <tr>
             <th>tronc_queteur ID</th>
@@ -42,18 +42,34 @@
             <td>{{info.email}}</td>
             <td>{{info.mobile}}</td>
             <td>{{info.nivol}}</td>
-            <td>{{info.status}}</td>
+            <td>{{label[info.status]}}</td>
           </tr>
           </tbody>
         </table>
+
+        <ul class="list-group hidden-lg">
+          <li class="list-group-item" ng-repeat="info in troncInfos">
+            TQ ID : {{info.id}} -
+            Départ : {{info.depart_theorique}} -
+            Tronc : {{info.tronc_id}}
+            Queteur ID: {{info.queteur_id}} -
+            {{info.first_name}} -
+            {{info.last_name}}  -
+            {{info.email}} -
+            {{info.mobile}} -
+            {{info.nivol}} -
+            {{label[info.status]}}
+          </li>
+        </ul>
       </div>
 
+      <div class="alert alert-danger" ng-if="twoIdenticalRows" role="alert">Vous avez déjà préparé ce tronc avec ce Quêteur ! Cliquer sur le bouton Annuler.</div>
 
 
     </div>
     <div class="modal-footer">
-      <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()">Supprimer les Anciens <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> et sauver la préparation du {Tronc-Quêteur} courant</button>
-      <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> au bon quêteur</button>
+      <button class="btn btn-warning" type="button" ng-click="deleteNonReturnedTronc()" ng-disabled="twoIdenticalRows">Supprimer les Anciens <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> et <br class="hidden-lg"/>sauver la préparation du {Tronc-Quêteur} courant</button><br class="hidden-lg"/><br class="hidden-lg"/>
+      <button class="btn btn-primary" type="button" ng-click="cancel()">Annuler et donner le <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> au<br class="hidden-lg"/> bon quêteur</button>
     </div>
   </script>
 
@@ -131,6 +147,8 @@
                 typeahead-no-results="noTroncsResults"
                 typeahead-wait-ms="350"
                 typeahead-select-on-blur="true"
+                typeahead-on-select="pt.preparationChecks()"
+
                 class="form-control"
                 ng-required="true"
                 autocomplete="off">
