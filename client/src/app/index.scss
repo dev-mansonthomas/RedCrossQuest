@@ -109,11 +109,17 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
    text-align: right;
 
  }
+  .tronc-queteur-print div
+  {
+    text-align: right;
+    margin-right:45px;
+  }
 
   .tronc-queteur-print table
   {
     width:490px;
     border:2px solid silver;
+    margin-left:75px;
   }
 
 
@@ -166,6 +172,23 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
   {
     padding:4px;
   }
+
+  .tronc-queteur-print tfoot tr
+  {
+    border:1px solid silver;
+    height:40px;
+  }
+  .tronc-queteur-print tfoot td
+  {
+    text-align: left;
+    font-size:10px;
+  }
+  .tronc-queteur-print tfoot th
+  {
+    font-weight: bold;
+    padding-left:5px;
+  }
+
   @page {
     margin: 0.1cm;
   }
