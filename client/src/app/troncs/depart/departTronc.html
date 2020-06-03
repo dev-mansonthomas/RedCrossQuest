@@ -84,10 +84,23 @@
         <div class="row" ng-show="dt.current.tronc_queteur.troncFromPreviousYear">
           <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-danger">
-              <div class="panel-heading"><b>ATTENTION : </b>Ce tronc a été préparé l'année dernière</div>
+              <div class="panel-heading"><b>ATTENTION : </b>Ce tronc a été préparé une année précédente !</div>
               <div style="margin:25px;">
-                Ce tronc a été préparé pour l'année 2017 !<br/>
-                Veuillez effectuer la préparation de ce tronc et non le départ !
+                Ce tronc a été préparé pour l'année {{dt.current.tronc_queteur.depart_theorique |date:'yyyy' }} !<br/>
+                Veuillez effectuer la <strong>préparation</strong> de ce tronc et non le départ !
+                <br/><br/>
+                Il s'agit du tronc
+                <a href="/#!/tronc_queteur/edit/{{dt.current.tronc_queteur.id}}"><strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong> ID {{dt.current.tronc_queteur.id}}</a> -
+                <a href="/#!/queteurs/edit/{{dt.current.queteur.id         }}">Queteur N°
+                  {{dt.current.tronc_queteur.queteur_id         }} -
+                  {{dt.current.tronc_queteur.queteur.first_name }}
+                  {{dt.current.tronc_queteur.queteur.last_name  }}</a>
+                avec <a href="/#!/troncs/edit/{{dt.current.tronc_queteur.tronc_id           }}">le tronc N°
+                {{dt.current.tronc_queteur.tronc_id           }}</a> <br/>
+                sur le <a href="/#!/pointsQuetes/edit/{{dt.current.tronc_queteur.point_quete.id  }}">point de Quete N° {{dt.current.tronc_queteur.point_quete.id     }}
+                {{dt.current.tronc_queteur.point_quete.name   }}</a> prévu au départ à <strong>{{dt.current.tronc_queteur.depart_theorique | date:'dd/MM/yyyy HH:mm:ss'}}</strong>
+
+
               </div>
             </div>
           </div>
@@ -107,7 +120,7 @@
                 {{dt.previous.tronc_queteur.queteur.last_name  }}</a>
               avec <a href="/#!/troncs/edit/{{dt.previous.tronc_queteur.tronc_id           }}">le tronc N°
               {{dt.previous.tronc_queteur.tronc_id           }}</a> <br/>
-              Sur le <a href="/#!/pointsQuetes/edit/{{dt.previous.tronc_queteur.point_quete.id  }}">point de Quete N° {{dt.previous.tronc_queteur.point_quete.id     }}
+              sur le <a href="/#!/pointsQuetes/edit/{{dt.previous.tronc_queteur.point_quete.id  }}">point de Quete N° {{dt.previous.tronc_queteur.point_quete.id     }}
               {{dt.previous.tronc_queteur.point_quete.name   }}</a>
 
 

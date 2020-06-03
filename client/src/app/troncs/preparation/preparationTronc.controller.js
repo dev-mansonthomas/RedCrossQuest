@@ -150,9 +150,14 @@
       }
       else
       {
-        vm.initData(returnData.lastInsertId);
-        vm.savedSuccessfully=true;
-        $timeout(function () { vm.savedSuccessfully=false; }, 10000);
+        if(vm.current.lieuDeQuete)
+        { //Lorsque tronc et queteur sont rempli, un check est fait est cette méthode est appelée (la meme que pour le save)
+          //Si le check est successful, pas de tronc en cours d'utilisation, on arrive ici, mais il ne faut pas réinitialise le formulaire
+          //car la sauvegarde n'est pas encore faite (heure et point de quete pas encore choisi)
+          vm.initData(returnData.lastInsertId);
+          vm.savedSuccessfully=true;
+          $timeout(function () { vm.savedSuccessfully=false; }, 10000);
+        }
       }
     }
 

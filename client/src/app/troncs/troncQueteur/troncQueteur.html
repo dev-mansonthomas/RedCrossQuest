@@ -3,7 +3,10 @@
 
   <!-- print version of tronc queteur -->
   <div class="tronc-queteur-print">
-    <table style="margin-top:120px;margin-left:100px;">
+    <div>
+      <img src="assets/images/logoCRF.png" alt="logo Croix Rouge Francaise"/>
+    </div>
+    <table>
       <thead>
         <tr>
           <th colspan="3"> Croix-Rouge -  {{tq.ulName}}</th>
@@ -196,27 +199,47 @@
             <b>Encaisseur :</b>
           </td>
         </tr>
-      <tr style="border-bottom: none;">
-        <td style="text-align:left;font-size:8px;">
-          Date      : {{ tq.currentDate | date : 'dd/MM/yyyy'}}<br/>
-          Signature :
-        </td>
-        <td style="text-align: left;font-size:8px;">
-          Date      : {{ tq.currentDate | date : 'dd/MM/yyyy'}}<br/>
-          Signature :
-        </td>
-        <td style="text-align: left;font-size:8px;">
-          Date      : {{ tq.currentDate | date : 'dd/MM/yyyy'}}<br/>
-          Signature :
-        </td>
-      </tr>
-      <tr style="border-top:none;height:50px;">
-        <td colspan="3"></td>
-      </tr>
+        <tr style="border-bottom: none;">
+          <td style="text-align:left;font-size:8px;">
+            Date      : {{ tq.currentDate | date : 'dd/MM/yyyy'}}<br/>
+            Signature :
+          </td>
+          <td style="text-align: left;font-size:8px;">
+            Date      : {{ tq.currentDate | date : 'dd/MM/yyyy'}}<br/>
+            Signature :
+          </td>
+          <td style="text-align: left;font-size:8px;">
+            Date      : {{ tq.currentDate | date : 'dd/MM/yyyy'}}<br/>
+            Signature :
+          </td>
+        </tr>
+        <tr style="border-top:none;height:50px;">
+          <td colspan="3"></td>
+        </tr>
       </tbody>
+      <tfoot>
+        <tr ng-if="tq.current.tronc_queteur.notes_depart_theorique">
+          <th>Notes de préparation</th>
+          <td colspan="2" >{{tq.current.tronc_queteur.notes_depart_theorique}}</td>
+        </tr>
+        <tr ng-if="tq.current.tronc_queteur.notes_retour">
+          <th>Notes de retour</th>
+          <td colspan="2">{{tq.current.tronc_queteur.notes_retour}}</td>
+        </tr>
+        <tr ng-if="tq.current.tronc_queteur.notes_retour_comptage_pieces">
+          <th>Notes de comptage</th>
+          <td colspan="2" >{{tq.current.tronc_queteur.notes_retour_comptage_pieces}}</td>
+        </tr>
+        <tr ng-if="tq.current.tronc_queteur.notes_update">
+          <th>Notes de mise à jour</th>
+          <td colspan="2" >{{tq.current.tronc_queteur.notes_update}}</td>
+        </tr>
+      </tfoot>
     </table>
 
   </div>
+
+
   <!-- END OF  - print version of tronc queteur -->
   <div class="panel panel-primary tronc-queteur" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important">
     <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h2>Comptage du <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong></h2>
