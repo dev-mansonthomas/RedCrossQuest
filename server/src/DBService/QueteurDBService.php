@@ -1107,8 +1107,8 @@ $searchNivol
     $sql = "
 UPDATE `queteur`
 SET
-  `first_name`           = 'Anonimisé',
-  `last_name`            = 'Quêteur',
+  `first_name`           = 'Quêteur',
+  `last_name`            = 'Anonimisé',
   `email`                = '' ,
   `secteur`              = 0,
   `nivol`                = '',

@@ -81,7 +81,7 @@ class AnonymizeQueteur extends Action
       throw $e;
     }
 
-    if(isset($queteurOriginalData->email))
+    if(isset($queteurOriginalData->email) && strlen($queteurOriginalData->email)>=5)
       $this->emailBusinessService->sendAnonymizationEmail($queteurOriginalData, $token, $userAnonymised);
 
     $queteurAnonymizedData = $this->queteurDBService->getQueteurById($queteurEntity->id);
