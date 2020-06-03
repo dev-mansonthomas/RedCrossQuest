@@ -250,8 +250,8 @@ Nous espérons vous revoir bientôt à la quête ou en tant que bénévole!
 
 <p>Conformément à votre demande, vos données personnelles ont été remplacées par les valeurs indiquées ci-après :
   <ul>
-    <li>Nom: 'Quêteur' </li>
-    <li>Prénom: 'Anonimisé'</li>
+    <li>Prénom: 'Quêteur' </li>
+    <li>Nom: 'Anonimisé'</li>
     <li>Email: ''</li>
     <li>Secteur: 0</li>
     <li>NIVOL: ''</li>

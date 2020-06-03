@@ -108,7 +108,7 @@ class MailService
           'recipientEmail' => $recipientEmail,
           'subject'        => $subject,
           'content'        => $content,
-          'exception'      => print_r($e, true)));
+          'exception'      => $e));
 
       throw $e;
     }
