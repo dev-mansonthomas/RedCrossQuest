@@ -83,6 +83,8 @@
       {
         vm.current = queteur;
 
+        vm.current.exportDataAskConfirmation=false;
+
 
         if(vm.isRegistration)
         {
@@ -480,7 +482,8 @@
       vm.current.userErrorWhileSaving       = false;
       vm.current.userErrorWhileSavingDetails= '';
 
-      vm.current.reinitPasswordEmailSent = true;
+      vm.current.reinitPasswordEmailSent    = true;
+      vm.current.exportDataAskConfirmation  = false;
 
       user.$reInitPassword(vm.userSavedSuccessfully, vm.errorWhileSavingUserFunction);
     };
@@ -503,6 +506,26 @@
       delete $location.$$search.registration;
       $location.path('/queteurs/edit/' + queteurId).replace();
     };
+
+
+
+
+
+
+    vm.exportQueteurData=function()
+    {
+      vm.current.exportDataAskConfirmation=true;
+    };
+
+    vm.doExportQueteurData=function()
+    {
+      vm.current.doExportQueteurDataButtonDisabled=true;
+      QueteurResource.exportData({"id":vm.current.id}).$promise.then(function(result){
+        vm.current.exportDataResult = result;
+        vm.current.doExportQueteurDataButtonDisabled=false;
+      }, vm.errorWhileSavingFunction);
+    };
+
 
 
     vm.anonymize=function()

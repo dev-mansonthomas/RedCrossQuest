@@ -13,6 +13,7 @@ use RedCrossQuest\routes\routesActions\queteurs\CountInactiveQueteurs;
 use RedCrossQuest\routes\routesActions\queteurs\CountPendingQueteurRegistration;
 use RedCrossQuest\routes\routesActions\queteurs\CreateQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\DisableInactiveQueteurs;
+use RedCrossQuest\routes\routesActions\queteurs\ExportQueteurData;
 use RedCrossQuest\routes\routesActions\queteurs\GetQueteur;
 use RedCrossQuest\routes\routesActions\queteurs\GetQueteurRegistration;
 use RedCrossQuest\routes\routesActions\queteurs\ListPendingQueteurRegistration;
@@ -733,6 +734,61 @@ $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/anonymize'                 
  * )
  */
 $app->put('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/associateRegistrationWithExistingQueteur', AssociateRegistrationWithExistingQueteur::class);
+
+
+
+/**
+ *
+ * @OA\Get(
+ *     path="/{role-id:[4-9]}/ul/{ul-id}/exportData",
+ *     tags={"ExportData"},
+ *     summary="Export UL's data",
+ *     description="Export UL's data as several CSV files, packed in a zip file protected by password",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID of the queteur (the existing one in RCQ)",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *         @OA\JsonContent(
+ *          type="object",
+ *          ref="#/components/schemas/ExportDataQueteurResponse",
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->post('/{role-id:[2-9]}/ul/{ul-id}/queteurs/{id}/exportData', ExportQueteurData::class);
+
+
 
 /**
  *

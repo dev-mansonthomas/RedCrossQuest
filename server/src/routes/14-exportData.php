@@ -45,15 +45,6 @@ use RedCrossQuest\routes\routesActions\exportData\ExportData;
  *             type="integer",
  *         )
  *     ),
- *    @OA\Parameter(
- *         name="password",
- *         in="query",
- *         description="Password of the file",
- *         required=true,
- *         @OA\Schema(
- *             type="string",
- *         )
- *     ),
  *     @OA\Response(
  *         response=200,
  *         description="Success",

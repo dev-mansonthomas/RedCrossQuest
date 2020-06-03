@@ -864,7 +864,7 @@ ORDER BY t.id DESC
    * @throws Exception if some parsing fails
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getTroncsQueteurFromUL(int $ulId, ?string $year):array
+  public function getTroncsQueteurFromUL(int $ulId, ?string $year, ?int $queteurId=null):array
   {
     $parameters = ["ul_id" => $ulId];
     $yearSQL="";
@@ -873,7 +873,12 @@ ORDER BY t.id DESC
       $yearSQL="AND  YEAR(tq.depart) = :year";
       $parameters["year"] = $year;
     }
-
+    $queteurSQL="";
+    if($queteurId != null)
+    {
+      $queteurSQL="AND  tq.queteur_id = :queteur_id";
+      $parameters["queteur_id"] = $queteurId;
+    }
 
     $sql = "
 select
@@ -946,8 +951,9 @@ tq.bills_money_bag_id
 from tronc_queteur as tq,
         queteur           as q
 WHERE tq.queteur_id = q.id
-AND    q.ul_id = :ul_id
+AND    q.ul_id      = :ul_id
 $yearSQL
+$queteurSQL
 order by tq.id asc
 
 ";

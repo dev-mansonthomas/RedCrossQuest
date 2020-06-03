@@ -60,7 +60,15 @@ class Entity
       }
       else
       {
-        $csvRow.= $value.";";
+        if(is_array($value))
+        {
+          $csvRow.= implode("-",$value).";";
+        }
+        else
+        {
+          $csvRow.= $value.";";
+        }
+
       }
 
     }

@@ -14,12 +14,34 @@ class PointQueteDBService extends DBService
    * Get all pointQuete for UL $ulId
    *
    * @param int $ulId The ID of the Unite Locale
+   * @param int|null $queteurId if we want to export only the PointQuete that has been used by a queteur, we provide it's ID. (for data export)
    * @return PointQueteEntity[]  The list of PointQuete
-   * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getPointQuetes(int $ulId):array
+  public function getPointQuetes(int $ulId,?int $queteurId=null):array
   {
+    $parameters = ["ul_id" => $ulId];
+
+    if($queteurId != null)
+    {
+      $restrictToQueteurSQL ="
+AND pq.id       in (
+    select tq.point_quete_id
+    from   tronc_queteur tq
+    where  tq.queteur_id = :queteur_id
+)
+";
+      $parameters['queteur_id']=$queteurId;
+    }
+    else
+    {
+      //when exporting data fr
+      $restrictToQueteurSQL ="
+      AND pq.enabled = 1
+";
+    }
+
+
 
     $sql = "
 SELECT pq.`id`,
@@ -43,11 +65,12 @@ SELECT pq.`id`,
 FROM `point_quete` AS pq
 WHERE pq.id > 0
 AND pq.ul_id = :ul_id
-AND pq.enabled = 1
+$restrictToQueteurSQL
 ORDER BY type, name
 ";
 
-    return $this->executeQueryForArray($sql, ["ul_id" => $ulId], function($row) {
+
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
       return new PointQueteEntity($row, $this->logger);
     });
   }

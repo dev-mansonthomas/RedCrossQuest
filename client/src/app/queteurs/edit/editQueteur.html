@@ -536,92 +536,170 @@
         </div>
       </div>
 
-      <!-- CNIL GDPR -->
-      <div class="row" ng-show="!queteur.isRegistration   == true &&
+
+      <uib-accordion close-others="true" ng-show="!queteur.isRegistration   == true &&
                                  queteur.current.id       > 0     &&
                                  queteur.currentUserRole  >= 4    &&
-                                !queteur.current.anonymization_token" style="padding-top:20px;">
-        <div class="col-md-offset-2 col-md-8">
-          <button class="btn btn-warning"
-                  ng-click="queteur.anonymize();"
-                  style="width:100%;height:70px;">
-             GDPR: Anonymiser les données du Quêteur
-          </button>
-          <span class="help-block">
+                                !queteur.current.anonymization_token"  ng-cloak>
+        <div uib-accordion-group class="panel-info" heading="GDPR" is-open="false">
+
+
+
+          <!-- CNIL GDPR Export Queteur Data-->
+          <div class="row" style="padding-top:20px;">
+            <div class="col-md-offset-2 col-md-8">
+              <button class="btn btn-info"
+                      ng-click="queteur.exportQueteurData();"
+                      style="width:100%;height:70px;">
+                <strong>GDPR: Export des données du Quêteur</strong>
+              </button>
+              <span class="help-block">
+                <p>Cliquez sur ce bouton si le quêteur vous demande l'export de ses données RedCrossQuest/RedQuest.</p>
+                <p>Après confirmation, le quêteur recevra un email avec un fichier zip contenant ses données sous forme de fichier <a href="https://fr.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV</a>.</p>
+              </span>
+            </div>
+          </div>
+          <div class="row" ng-show="queteur.current.exportDataAskConfirmation" >
+            <div class="col-md-offset-2 col-md-4">
+              <button class="btn btn-danger"
+                      ng-click="queteur.doExportQueteurData();"
+                      ng-hide="queteur.current.doExportQueteurDataButtonDisabled"
+                      style="width:100%;height:70px;">
+                J'exporte les <br/>données du quêteur
+              </button>
+              <div ng-show="queteur.current.doExportQueteurDataButtonDisabled">
+                <img src="assets/images/loading.gif" alt="Chargement en cours, veuillez patienter" />
+              </div>
+              <span class="help-block">
+            <p>En cliquant sur ce bouton, les données du quêteur lui sont envoyées par email.</p>
+          </span>
+            </div>
+
+            <div class="col-md-4">
+              <button class="btn btn-default"
+                      ng-click="queteur.current.exportDataAskConfirmation=false;"
+                      style="width:100%;height:70px;">
+                Ouuppss.... <br/>Je me suis trompé !
+              </button>
+              <span class="help-block">
+            <p>En cliquant sur ce bouton, vous revenez un cran en arrière, aucun export n'aura été effectué</p>
+          </span>
+            </div>
+          </div>
+          <div class="row" ng-show="queteur.current.exportDataResult" style="padding-top:20px;">
+            <div class="col-md-offset-2 col-md-8">
+<pre>
+Status      : {{queteur.current.exportDataResult.status=="202"?'Export et envoie réussi':"Une erreur s'est produite"}}
+Email       : {{queteur.current.exportDataResult.email}}
+Fichier     : {{queteur.current.exportDataResult.fileName}}
+Nb de Ligne : {{queteur.current.exportDataResult.numberOfRows}}
+</pre>
+            </div>
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <!-- CNIL GDPR Anonimyse Data-->
+          <div class="row" style="padding-top:20px;">
+            <div class="col-md-offset-2 col-md-8">
+              <button class="btn btn-warning"
+                      ng-click="queteur.anonymize();"
+                      style="width:100%;height:70px;">
+                <strong>GDPR: Anonymiser les données du Quêteur</strong>
+              </button>
+              <span class="help-block">
             <p>Cliquez sur ce bouton si le quêteur vous demande la suppression de ses données dans RedCrossQuest.</p>
             <p>Après confirmation, les données de cet écran sont effacées et un jeton unique est attaché à la fiche du quêteur et envoyé par email au quêteur.</p>
             <p>L'année suivante (ou immédiatement, si l'action a été faite par erreur), le quêteur peut vous transmettre ce jeton pour retrouver la fiche anonymisée et la revaloriser pour une nouvelle année de quête. Il retrouvera tous ses troncs</p>
             <p>Les troncs ne sont pas supprimés/modifiés par cette action, le bilan comptable n'est pas impacté.</p>
           </span>
-        </div>
-      </div>
-      <div class="row" ng-show="queteur.currentUserRole >= 4        &&
+            </div>
+          </div>
+          <div class="row" ng-show="queteur.currentUserRole >= 4        &&
                                !queteur.current.anonymization_token &&
                                 queteur.current.anonymizeAskConfirmation" >
-        <div class="col-md-offset-2 col-md-4">
-          <button class="btn btn-danger"
-                  ng-click="queteur.doAnonymize();"
-                  ng-hide="queteur.current.doAnonymizeButtonDisabled"
-                  style="width:100%;height:70px;">
-            J'anonymise les <br/>données du quêteur
-          </button>
-          <div ng-show="queteur.current.doAnonymizeButtonDisabled">
-          <img src="assets/images/loading.gif" alt="Chargement en cours, veuillez patienter" />
-          </div>
-          <span class="help-block">
+            <div class="col-md-offset-2 col-md-4">
+              <button class="btn btn-danger"
+                      ng-click="queteur.doAnonymize();"
+                      ng-hide="queteur.current.doAnonymizeButtonDisabled"
+                      style="width:100%;height:70px;">
+                J'anonymise les <br/>données du quêteur
+              </button>
+              <div ng-show="queteur.current.doAnonymizeButtonDisabled">
+                <img src="assets/images/loading.gif" alt="Chargement en cours, veuillez patienter" />
+              </div>
+              <span class="help-block">
             <p>En cliquant sur ce bouton, les données de cet écran sont effacées et un jeton unique est envoyé par email au quêteur.</p>
           </span>
-        </div>
+            </div>
 
-        <div class="col-md-4">
-          <button class="btn btn-default"
-                  ng-click="queteur.current.anonymizeAskConfirmation=false;"
-                  style="width:100%;height:70px;">
-            Ouuppss.... <br/>Je me suis trompé !
-          </button>
-          <span class="help-block">
+            <div class="col-md-4">
+              <button class="btn btn-default"
+                      ng-click="queteur.current.anonymizeAskConfirmation=false;"
+                      style="width:100%;height:70px;">
+                Ouuppss.... <br/>Je me suis trompé !
+              </button>
+              <span class="help-block">
             <p>En cliquant sur ce bouton, vous revenez un cran en arrière, aucune modification n'aura été effectuée</p>
           </span>
-        </div>
-      </div>
-      <div class="row" ng-show="queteur.currentUserRole >= 4 && queteur.current.anonymization_token" style="padding-top:20px;">
-        <div class="col-md-offset-2 col-md-4">
-          <label for="anonymization_token" class="control-label">Token d'Anonymisation</label>
-          <input name="anonymization_token" id="anonymization_token" class="form-control" ng-model="queteur.current.anonymization_token" readonly/>
-        </div>
-        <div class="col-md-4">
-          <label for="anonymization_date" class="control-label">Date d'anonymisation</label>
-          <input name="anonymization_date" id="anonymization_date" class="form-control" ng-model="queteur.current.anonymization_date" readonly/>
-        </div>
-      </div>
-      <div class="row" ng-show="queteur.currentUserRole >= 4        &&
+            </div>
+          </div>
+          <div class="row" ng-show="queteur.currentUserRole >= 4 && queteur.current.anonymization_token" style="padding-top:20px;">
+            <div class="col-md-offset-2 col-md-4">
+              <label for="anonymization_token" class="control-label">Token d'Anonymisation</label>
+              <input name="anonymization_token" id="anonymization_token" class="form-control" ng-model="queteur.current.anonymization_token" readonly/>
+            </div>
+            <div class="col-md-4">
+              <label for="anonymization_date" class="control-label">Date d'anonymisation</label>
+              <input name="anonymization_date" id="anonymization_date" class="form-control" ng-model="queteur.current.anonymization_date" readonly/>
+            </div>
+          </div>
+          <div class="row" ng-show="queteur.currentUserRole >= 4        &&
                                 queteur.current.anonymization_token &&
                                 queteur.current.unanonymizeAskConfirmation"
-      style="margin-top:20px;">
-        <div class="col-md-offset-2 col-md-4">
-          <button class="btn btn-danger"
-                  ng-click="queteur.confirmUnAnonymize();"
-                  style="width:100%;height:70px;">
-            Je revalorise la fiche du quêteur sur demande<br/>
-            explicite de la personne concernée
-          </button>
-          <span class="help-block">
+               style="margin-top:20px;">
+            <div class="col-md-offset-2 col-md-4">
+              <button class="btn btn-danger"
+                      ng-click="queteur.confirmUnAnonymize();"
+                      style="width:100%;height:70px;">
+                Je revalorise la fiche du quêteur sur demande<br/>
+                explicite de la personne concernée
+              </button>
+              <span class="help-block">
             <p>En cliquant sur ce bouton, vous revalorisez la fiche quêteur d'une personne qui a explicitement demandé à ce que ses données soient anonymisées.</p>
             <p>Vous ne devez faire cela, que sur demande expresse de la personne, qui vous aura transmis le jeton d'anonymisation.</p>
           </span>
-        </div>
+            </div>
 
-        <div class="col-md-4">
-          <button class="btn btn-default"
-                  ng-click="queteur.current.unanonymizeAskConfirmation=false;"
-                  style="width:100%;height:70px;">
-            Ouuppss.... <br/>Je me suis trompé !
-          </button>
-          <span class="help-block">
+            <div class="col-md-4">
+              <button class="btn btn-default"
+                      ng-click="queteur.current.unanonymizeAskConfirmation=false;"
+                      style="width:100%;height:70px;">
+                Ouuppss.... <br/>Je me suis trompé !
+              </button>
+              <span class="help-block">
             <p>En cliquant sur ce bouton, vous revenez un cran en arrière, aucune modification n'aura été effectuée</p>
           </span>
+            </div>
+          </div>
+
+
+
         </div>
-      </div>
+      </uib-accordion>
+
+
+
 
 
       <!-- liste des troncs -->
