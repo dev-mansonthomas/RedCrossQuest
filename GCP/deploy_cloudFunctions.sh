@@ -52,9 +52,9 @@ HTTP_FUNCTIONS=("findQueteurById"          \
                 "registerQueteur"          \
                 "z_testCrossProjectFirestoreConnectivity" \
                 "z_testCrossProjectSQLConnectivity"	  \
-		"tronc_setDepartOrRetour"		  \
-		"tronc_listPrepared"                      \
-		"historiqueTroncQueteur"		  )
+                "tronc_setDepartOrRetour"		  \
+                "tronc_listPrepared"                      \
+                "historiqueTroncQueteur"		  )
 
 #list of pubsub functions
 #Attention : pas d'espace entre les []
@@ -68,15 +68,15 @@ REDQUEST="rq"
 REDCROSSQUEST="rcq"
 declare -A FUNCTIONS_PROJECT_PREFIX=(["findQueteurById"]="${REDQUEST}"                                \
                                      ["findULDetailsByToken"]="${REDQUEST}"                           \
-				     ["tronc_setDepartOrRetour"]="${REDQUEST}"                        \
-				     ["tronc_listPrepared"]="${REDQUEST}"                             \
+                                     ["tronc_setDepartOrRetour"]="${REDQUEST}"                        \
+                                     ["tronc_listPrepared"]="${REDQUEST}"                             \
                                      ["registerQueteur"]="${REDQUEST}"                                \
                                      ["notifyRedQuestOfRegistrationApproval"]="${REDCROSSQUEST}"      \
                                      ["ULQueteurStatsPerYear"]="${REDCROSSQUEST}"                     \
                                      ["z_testCrossProjectFirestoreConnectivity"]="${REDCROSSQUEST}"   \
                                      ["z_testCrossProjectSQLConnectivity"]="${REDQUEST}"              \
                                      ["ULTriggerRecompute"]="${REDCROSSQUEST}"                        \
-				     ["historiqueTroncQueteur"]="${REDQUEST}")
+				                             ["historiqueTroncQueteur"]="${REDQUEST}")
 
 
 declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="--timeout 540s")
@@ -128,7 +128,7 @@ function deployHttpFunction
 
   PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 
-  SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
+    SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
 
   echo
   echo "################################################################################################################"
