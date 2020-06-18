@@ -9,9 +9,11 @@ gcloud services enable maps-backend.googleapis.com
 #Google GeoCoding API
 echo "gcloud services enable geocoding-backend.googleapis.com"
 gcloud services enable geocoding-backend.googleapis.com
-#Google Cloud firestore API (to access RedQuest Firestore)
+#Google Cloud firestore API (to access RedQuest Firestore & RedCrossQuest firestore)
 echo "gcloud services enable firestore.googleapis.com"
 gcloud services enable firestore.googleapis.com
+echo "gcloud services enable sqladmin.googleapis.com"
+gcloud services enable sqladmin.googleapis.com
 
 #secret manager
 #in Google Cloud Console
@@ -36,6 +38,7 @@ gcloud projects add-iam-policy-binding "${GCP_PROJECT_NAME}" \
   --role "${SECRET_MANAGER_ACCESSOR_ROLE}"
 
 
+
 if [[ "${ENV}1" == "dev1" ]]
 then
   echo "enable accessor role for local dev service account"
@@ -45,6 +48,7 @@ then
     --role "${SECRET_MANAGER_ACCESSOR_ROLE}"
 fi
 
+init_cloud_functions_service_accounts
 
 #Create a new secret named 'my-secret' in 'us-central1' and 'us-east1' with
 #the value "s3cr3t":

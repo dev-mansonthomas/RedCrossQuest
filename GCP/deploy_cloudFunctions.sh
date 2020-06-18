@@ -33,8 +33,10 @@ fi
 if [[ -f common.sh ]]
 then
   . common.sh
+  . init_lib/common.sh
 else
   . GCP/common.sh
+  . GCP/init_lib/common.sh
 fi
 #if it does not exists, it means we're being called by ../gcp-deploy.sh (so not the same working dir), and it includes the common.sh
 setProject "rcq-${COUNTRY}-${ENV}"
@@ -43,43 +45,14 @@ setProject "rcq-${COUNTRY}-${ENV}"
 #  SETTINGS
 ################################################################################################################
 REPOSITORY_ID="github_dev-mansonthomas_redcrossquestcloudfunctions"
-RUNTIME="nodejs8"
+RUNTIME="nodejs12"
 REGION="europe-west1"
 
-#list of http functions
-HTTP_FUNCTIONS=("findQueteurById"          \
-                "findULDetailsByToken"     \
-                "registerQueteur"          \
-                "z_testCrossProjectFirestoreConnectivity" \
-                "z_testCrossProjectSQLConnectivity"	  \
-                "tronc_setDepartOrRetour"		  \
-                "tronc_listPrepared"                      \
-                "historiqueTroncQueteur"		  )
-
-#list of pubsub functions
-#Attention : pas d'espace entre les []
-declare -A PUBSUB_FUNCTIONS=(["notifyRedQuestOfRegistrationApproval"]="queteur_approval_topic"    \
-                             ["ULQueteurStatsPerYear"]="ul_update"                                \
-                             ["ULTriggerRecompute"]="trigger_ul_update"                           )
-
-#in which project should the function be deployed : RedQuest or RedCrossQuest
-#deploy the function in the correct project
-REDQUEST="rq"
-REDCROSSQUEST="rcq"
-declare -A FUNCTIONS_PROJECT_PREFIX=(["findQueteurById"]="${REDQUEST}"                                \
-                                     ["findULDetailsByToken"]="${REDQUEST}"                           \
-                                     ["tronc_setDepartOrRetour"]="${REDQUEST}"                        \
-                                     ["tronc_listPrepared"]="${REDQUEST}"                             \
-                                     ["registerQueteur"]="${REDQUEST}"                                \
-                                     ["notifyRedQuestOfRegistrationApproval"]="${REDCROSSQUEST}"      \
-                                     ["ULQueteurStatsPerYear"]="${REDCROSSQUEST}"                     \
-                                     ["z_testCrossProjectFirestoreConnectivity"]="${REDCROSSQUEST}"   \
-                                     ["z_testCrossProjectSQLConnectivity"]="${REDQUEST}"              \
-                                     ["ULTriggerRecompute"]="${REDCROSSQUEST}"                        \
-				                             ["historiqueTroncQueteur"]="${REDQUEST}")
+################################################################################################################
+#  CLOUD FUNCTIONS SETTINGS see GCP/init_lib/common.sh
+################################################################################################################
 
 
-declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="--timeout 540s")
 
 ################################################################################################################
 #  FUNCTIONS
@@ -109,6 +82,20 @@ function generateEnvFile
     RETURN_VALUE=""
   fi
 }
+#from nodejs12 deploy, the package.json and package-lock.json must be in sync
+function npmInstall
+{
+  FUNC_NAME=$1                                           #uppercase
+  local PROJECT_NAME="${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]^^}"
+
+  cd "${HOME}/RedCrossQuestCloudFunctions/${PROJECT_NAME}/${FUNC_NAME}/" || exit 1
+  echo "running npm install for function ${FUNC_NAME} running in ${PROJECT_NAME}"
+  npm install
+  echo "commit and push lock file to be available for the gcloud deploy functions"
+  git commit index.js common.js package.json package-lock.json -m"Commit before deployment"
+  git push
+  cd -  || exit 1
+}
 
 function deployHttpFunction
 {
@@ -125,10 +112,11 @@ function deployHttpFunction
     exit 1
   fi
 
+  npmInstall "$FUNCTION_NAME"
 
   PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 
-    SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
+  SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
 
   echo
   echo "################################################################################################################"
@@ -141,7 +129,7 @@ function deployHttpFunction
 
   setProject "${PROJECT_ID}"
 
-  DEPLOY_CMD="gcloud functions deploy ${FUNCTION_NAME} --source ${SOURCE} --runtime ${RUNTIME} --trigger-http --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS}"
+  DEPLOY_CMD="gcloud beta functions deploy ${FUNCTION_NAME} --service-account cf-${FUNCTION_NAME}@${PROJECT_ID}.iam.gserviceaccount.com --source ${SOURCE} --runtime ${RUNTIME} --trigger-http --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS} --allow-unauthenticated"
   echo
   echo
   echo "${DEPLOY_CMD}"
@@ -152,6 +140,7 @@ function deployHttpFunction
 
 function deployPubSubFunction
 {
+  echo $1
   #take the function parameter and transform the ; delimited string into array
   PARAM_ARRAY=(${1//;/ })
 
@@ -163,6 +152,8 @@ function deployPubSubFunction
     echo "${FUNCTION_NAME} is not configured in associative array PUBSUB_FUNCTIONS"
     exit
   fi
+
+  npmInstall "$FUNCTION_NAME"
 
   #get the correct project prefix for the function
    #get the correct project prefix for the function
@@ -184,10 +175,9 @@ function deployPubSubFunction
   generateEnvFile "${FUNCTION_NAME}"
   ENV_VAR="${RETURN_VALUE}"
 
-  setProject ${PROJECT_ID}
+  setProject "${PROJECT_ID}"
 
-
-  DEPLOY_CMD="gcloud functions deploy ${FUNCTION_NAME} --source ${SOURCE} --runtime ${RUNTIME} --trigger-topic ${FUNCTION_TOPIC} --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS}"
+  DEPLOY_CMD="gcloud beta functions deploy ${FUNCTION_NAME} --service-account cf-${FUNCTION_NAME}@${PROJECT_ID}.iam.gserviceaccount.com --source ${SOURCE} --runtime ${RUNTIME} --trigger-topic ${FUNCTION_TOPIC} --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS} --no-allow-unauthenticated"
   echo
   echo
   echo "${DEPLOY_CMD}"
@@ -201,26 +191,36 @@ function deployPubSubFunction
 #  RUN
 ################################################################################################################
 
-
+echo "refreshing common.js in each cloud functions"
+cd "${HOME}/RedCrossQuestCloudFunctions/" || exit 1
+./copy_common.js.sh
+cd - || exit 1
 
 if  [[ "${TARGET}1" == "all1" ]]
 then
   echo "Deploying all cloud functions"
 
-  for FUNC_NAME in "${!PUBSUB_FUNCTIONS[@]}"
+  for FUNC_NAME in "${!CLOUD_FUNCTIONS[@]}"
   do
+    IFS=';' read -r -a CLOUD_FUNCTIONS_DESC <<< "${CLOUD_FUNCTIONS[$FUNC_NAME]}"
 
-    deployPubSubFunction "${FUNC_NAME};${PUBSUB_FUNCTIONS[$FUNC_NAME]}"
+    #trim ending space
+    FUNCTION_TYPE="${CLOUD_FUNCTIONS_DESC[0]}"
+    FUNCTION_TOPIC="${CLOUD_FUNCTIONS_DESC[1]}"
+
+    echo "type : '$FUNCTION_TYPE'"
+
+    if  [[ "${FUNCTION_TYPE}1" == "http1" ]]
+    then
+      echo "deploy http function ${FUNC_NAME}"
+      deployHttpFunction "${FUNC_NAME}"
+    else
+      echo "deploy pubsub function ${FUNC_NAME} on topic ${FUNCTION_TOPIC}"
+      deployPubSubFunction "${FUNC_NAME};${FUNCTION_TOPIC}"
+    fi
 
   done
 
-
-  for FUNC_NAME in ${HTTP_FUNCTIONS[@]}
-  do
-
-    deployHttpFunction "${FUNC_NAME}"
-
-  done
 
 else
 
@@ -254,7 +254,10 @@ else
   then
     deployHttpFunction "${FUNCTION_NAME}"
   else
-    deployPubSubFunction "${FUNCTION_NAME};${PUBSUB_FUNCTIONS[$FUNCTION_NAME]}"
+    CLOUD_FUNCTIONS_DESC=("${CLOUD_FUNCTIONS[FUNC_NAME]//;/ }")
+    FUNCTION_TOPIC="${CLOUD_FUNCTIONS_DESC[1]}"
+
+    deployPubSubFunction "${FUNCTION_NAME};${FUNCTION_TOPIC}"
   fi
 fi
 
@@ -262,10 +265,7 @@ fi
 #restore the default project id (rcq)
 setProject "rcq-${COUNTRY}-${ENV}"
 
-
-
-
-
-
-
-
+echo "refreshing virtual node_modules"
+cd "${HOME}/RedCrossQuestCloudFunctions/" || exit 1
+npm install
+cd - || exit

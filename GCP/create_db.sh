@@ -94,8 +94,8 @@ then
             --format=json                            | tee logs/${COUNTRY}-${ENV}.log
 
     echo "waiting ${MYSQL_WAIT_AFTER_CREATE} seconds"
-    sleep ${MYSQL_WAIT_AFTER_CREATE}
-    gcloud sql users set-password root --instance=${MYSQL_INSTANCE} --password=${MYSQL_ROOT} --host "%"
+    sleep "${MYSQL_WAIT_AFTER_CREATE}"
+    gcloud sql users set-password root --instance="${MYSQL_INSTANCE}" --password="${MYSQL_ROOT}" --host "%"
 
 fi
 
@@ -106,7 +106,14 @@ echo "wait for proxy to initialize"
 sleep 2
 cp  ./sql/CreateUser.sql ./tmp/CreateUser.sql
 
-sed -i '' -e "s/¤MYSQL_USER¤/${MYSQL_USER}/g" -e "s/¤MYSQL_PASSWORD¤/${MYSQL_PASSWORD}/g" -e "s/¤MYSQL_DB¤/${MYSQL_DB}/g" ./tmp/CreateUser.sql
+sed -i '' -e "s/¤MYSQL_USER¤/${MYSQL_USER}/g"           \
+          -e "s/¤MYSQL_PASSWORD¤/${MYSQL_PASSWORD}/g"   \
+          -e "s/¤MYSQL_DB¤/${MYSQL_DB}/g"               \
+          -e "s/¤MYSQL_USER_READ¤/${MYSQL_USER_READ}/g" \
+          -e "s/¤MYSQL_USER_READ_PASSWORD¤/${MYSQL_USER_READ_PASSWORD}/g"\
+          -e "s/¤MYSQL_USER_WRITE¤/${MYSQL_USER_WRITE}/g" \
+          -e "s/¤MYSQL_USER_WRITE_PASSWORD¤/${MYSQL_USER_WRITE_PASSWORD}/g"\
+          ./tmp/CreateUser.sql
 
 
 #backup copy of the current file
