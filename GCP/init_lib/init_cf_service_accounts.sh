@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-#
-# usage : ./init_gcp_env.sh fr test
-#
-# Initialize the GCP project with the basics so that other scripts can successfully be deployed
-# it deploys the on time resources such as PubSub topics
-#
-#
-
 COUNTRY=$1
 ENV=$2
 
@@ -23,21 +15,25 @@ then
   exit 1
 fi
 
-#load common functions
-. common.sh
+. ./common.sh
+. ../common.sh
+
+#create service accounts and then grant roles
+PROJECT_NAME="rcq"
+PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+setProject "${PROJECT_ID}"
+
+init_cloud_functions_create_service_accounts
+
+PROJECT_NAME="rq"
+PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+setProject "${PROJECT_ID}"
+
+init_cloud_functions_create_service_accounts
+init_cloud_functions_grant_roles
 
 PROJECT_NAME="rcq"
 PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 setProject "${PROJECT_ID}"
 
-./init_lib/create_gae.sh
-./init_lib/create_scheduler.sh
-./init_lib/create_topics.sh
-./init_lib/init_api_redcrossquest.sh
-./init_lib/init_secret.sh "${ENV}"
-
-#init RedQuest API as well
-PROJECT_NAME="rq"
-PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
-setProject "${PROJECT_ID}"
-./init_lib/init_api_redquest.sh
+init_cloud_functions_grant_roles
