@@ -84,7 +84,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
     
     if(substr_count($tokenStr, ".") !=  2)
     {
-      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0008'],print_r($tokenStr, true)));
+      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0008'], $tokenStr));
       return new DecodedToken( '0008');
     }
 
@@ -96,7 +96,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
 
     if(!$token->verify($signer, $this->jwtSecret))
     {
-      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
+      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],$tokenStr));
       return new DecodedToken( '0009');
     }
     //$this->logger->debug("JWT Token not altered:".print_r($tokenStr, true));
@@ -110,7 +110,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
 
     if(!$validation)
     {
-      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],print_r($tokenStr, true)));
+      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'], $tokenStr));
       $errorCode = '0010';
     }
     try
@@ -131,7 +131,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
     }
     catch(Exception $error)
     { //getClaim can raise exception if the claim is not here
-      $this->logger->error(AuthorisationMiddleware::$errorMessage['0011'], array("exception"=>$error));
+      $this->logger->error(AuthorisationMiddleware::$errorMessage['0011'], array("exception"=>json_encode($error)));
       throw $error;
     }
     return $decodedToken;
@@ -171,11 +171,12 @@ class AuthorisationMiddleware implements MiddlewareInterface
 
       //$this->logger->debug("$path");
       //public path that must not go through authentication check
-      if($path == '/rest/authenticate'      ||
-         $path == '/rest/firebase-authenticate'      ||
-         $path == '/rest/sendInit'          ||
-         $path == '/rest/resetPassword'     ||
-         $path == '/rest/getInfoFromUUID'   ||
+      if($path == '/rest/authenticate'                      ||
+         $path == '/rest/firebase-authenticate'             ||
+         $path == '/rest/sendInit'                          ||
+         $path == '/rest/resetPassword'                     ||
+         $path == '/rest/getInfoFromUUID'                   ||
+         $path == '/rest/ul_registration'                   ||
          strpos($path,'/rest/thanks_mailing/') === 0 ||
          strpos($path,'/rest/redQuest/'      ) === 0   )
       {
@@ -198,7 +199,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       //check if authenticated
       if($decodedToken->getAuthenticated() === false)
       {//token invalid
-        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0003'], print_r($decodedToken, true), $path));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0003'], json_encode($decodedToken), $path));
         return $this->denyRequest(sprintf('0003'.'.%s - %s', $decodedToken->getErrorCode(), $path));
       }
       Logger::dataForLogging(new LoggingEntity($decodedToken));
@@ -215,7 +216,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
 
         if(!is_scalar($roleIdStr))
         {
-          $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, print_r($decodedToken, true)));
+          $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, json_encode($decodedToken)));
           return $this->denyRequest('0004');
         }
 
@@ -223,13 +224,13 @@ class AuthorisationMiddleware implements MiddlewareInterface
       }
       else
       {
-        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0005'], $path, print_r($explodedPath, true), print_r($decodedToken, true)));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0005'], $path, json_encode($explodedPath), json_encode($decodedToken)));
         return $this->denyRequest('0005');
       }
 
       if($decodedToken->getRoleId() != $roleId)
       {
-        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0006'], $path, $roleIdStr, $roleId, $decodedToken->getRoleId(), print_r($decodedToken, true)));
+        $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0006'], $path, $roleIdStr, $roleId, $decodedToken->getRoleId(), json_encode($decodedToken)));
         return $this->denyRequest('0006');
       }
 
@@ -244,7 +245,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       }
       catch(Exception $applicationError)
       {
-        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$applicationError));
+        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>json_encode($applicationError)));
 
         return (new Response())->withStatus(500);
       }
@@ -256,7 +257,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
     catch(Exception $error)
     {
       $this->logger->debug("[PERF];".(microtime(true)-$start).";true;".$path);
-      $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>$error));
+      $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>json_encode($error)));
       return $this->denyRequest('0007');
     }
 

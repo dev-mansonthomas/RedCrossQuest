@@ -101,11 +101,7 @@ class ResetPassword extends Action
       if($success)
       {
         $queteur          = $this->queteurDBService->getQueteurById($user->queteur_id);
-
         $this->emailBusinessService->sendResetPasswordEmailConfirmation($queteur);
-
-        $this->logger->error("sendResetPasswordEmailConfirmation");
-
         $this->response->getBody()->write(json_encode( new ResetPasswordResponse(true, $queteur->email)));
         return $this->response;
       }

@@ -142,6 +142,88 @@ WHERE `id`      = :id
   }
 
 
+  /**
+   * Register a new UL
+   *
+   * @param UniteLocaleEntity $ul The UL info
+   * @return  int the ID of the registration
+   * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
+   */
+  public function registerNewUL(UniteLocaleEntity $ul):int
+  {
+
+    $sql = "
+INSERT INTO  `ul_registration`
+(
+  `ul_id`               ,
+  `president_man`       ,
+  `president_nivol`     ,
+  `president_first_name`,
+  `president_last_name` ,
+  `president_email`     ,
+  `president_mobile`    ,
+  `tresorier_man`       ,
+  `tresorier_nivol`     ,
+  `tresorier_first_name`,
+  `tresorier_last_name` ,
+  `tresorier_email`     ,
+  `tresorier_mobile`    ,
+  `admin_man`           ,
+  `admin_nivol`         ,
+  `admin_first_name`    ,
+  `admin_last_name`     ,
+  `admin_email`         ,
+  `admin_mobile`        
+)
+VALUES
+(
+  :ul_id,
+  :president_man,       
+  :president_nivol,      
+  :president_first_name, 
+  :president_last_name,  
+  :president_email,      
+  :president_mobile,     
+  :tresorier_man,        
+  :tresorier_nivol,      
+  :tresorier_first_name, 
+  :tresorier_last_name,  
+  :tresorier_email,      
+  :tresorier_mobile,     
+  :admin_man,            
+  :admin_nivol,          
+  :admin_first_name,     
+  :admin_last_name,      
+  :admin_email,          
+  :admin_mobile
+)
+";
+    $parameters = [
+      "ul_id"                => $ul->id,
+      "president_man"        => $ul->president_man == 1 ?  1 : 0,
+      "president_nivol"      => $ul->president_nivol,
+      "president_first_name" => $ul->president_first_name,
+      "president_last_name"  => $ul->president_last_name,
+      "president_email"      => $ul->president_email,
+      "president_mobile"     => $ul->president_mobile,
+      "tresorier_man"        => $ul->tresorier_man == 1 ?  1 : 0,
+      "tresorier_nivol"      => $ul->tresorier_nivol,
+      "tresorier_first_name" => $ul->tresorier_first_name,
+      "tresorier_last_name"  => $ul->tresorier_last_name,
+      "tresorier_email"      => $ul->tresorier_email,
+      "tresorier_mobile"     => $ul->tresorier_mobile,
+      "admin_man"            => $ul->admin_man == 1 ?  1 : 0,
+      "admin_nivol"          => $ul->admin_nivol,
+      "admin_first_name"     => $ul->admin_first_name,
+      "admin_last_name"      => $ul->admin_last_name,
+      "admin_email"          => $ul->admin_email,
+      "admin_mobile"         => $ul->admin_mobile
+    ];
+
+    return $this->executeQueryForInsert($sql, $parameters, true);
+  }
+
 
   /**
    * Search unite locale by name, postal code, city
@@ -189,4 +271,40 @@ WHERE   UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
       return new UniteLocaleEntity($row, $this->logger);
     });
   }
+
+
+  /**
+   * Search unite locale by name, postal code, city that are not registered
+   *
+   * @param string $query : the criteria to search UL on name postal code city and president, tresorier, admin first & last name
+   * @return UniteLocaleEntity[]  the list of UniteLocale
+   * @throws PDOException if the query fails to execute on the server
+   * @throws Exception in other situations, possibly : parsing error in the entity
+   */
+  public function searchUnRegisteredUniteLocale(string $query):array
+  {
+    if ($query === null)
+      return [];
+
+    $sql = "
+SELECT  `ul`.`id`,
+        `ul`.`name`,
+        `ul`.`postal_code`,
+        `ul`.`city`
+FROM    `ul`
+WHERE   `ul`.`date_demarrage_rcq` is NULL
+AND     `ul`.`id` not in (select `ul_id` from `ul_registration`)     
+AND (   
+        UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`postal_code`         ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`city`                ) like concat('%', UPPER(:query), '%')
+)
+";
+    $parameters = ["query" => $query];
+
+    return $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new UniteLocaleEntity($row, $this->logger);
+    });
+  }
+
 }

@@ -118,7 +118,7 @@ class ApproveQueteurRegistration extends Action
     {
       $this->logger->error("error while publishing registration approval", array("messageProperties"=> $messageProperties,
         "queteurEntity"    => $queteurEntity,
-        "exception"        => $exception));
+        "exception"        => json_encode($exception)));
       //do not rethrow
     }
     $this->response->getBody()->write(json_encode(

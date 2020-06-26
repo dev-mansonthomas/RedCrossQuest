@@ -46,7 +46,6 @@ class UpdateRedQuestSettings extends Action
    */
   protected function action(): Response
   {
-    $this->logger->debug("parsed body", [$this->parsedBody]);
     $this->validateSentData(
       [
         ClientInputValidatorSpecs::withBoolean("rq_autonomous_depart_and_return" , $this->parsedBody, true, false),

@@ -245,7 +245,7 @@
 
       <tbody>
       <tr ng-repeat="queteur in q.list">
-        <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.nivol!=''?'':'bénévole 1j'}}</a></td>
+        <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.nivol!=''?queteur.nivol:'bénévole 1j'}}</a></td>
         <td>{{q.typeBenevoleHash[queteur.secteur]}}</td>
         <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.first_name}}</a></td>
         <td><a ng-href="/#!/queteurs/edit/{{::queteur.id}}">{{::queteur.last_name | uppercase}}</a></td>

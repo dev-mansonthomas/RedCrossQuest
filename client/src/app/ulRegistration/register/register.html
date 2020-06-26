@@ -1,0 +1,403 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" ng-href="#/" style="color:#5AADBB;">
+        <span class="glyphicon glyphicon-plus" style="font-weight:bolder;color:#E3001B;"></span> RedCrossQuest
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">Inscription de Votre Unité Locale pour utiliser RedCrossQuest</div>
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    Merci pour votre intérêt pour RedCrossQuest & RedQuest ! <br/>
+    L'identité du trésorier et du président seront vérifiées via l'annuaire Structure sur l'intranet.<br/>
+    Bien vérifier l'exactitude des informations saisies dans ce formulaire. Merci :)
+  </div>
+
+  <uib-accordion close-others="false">
+
+    <div uib-accordion-group class="panel-default" heading="De quelle Unité Locale êtes-vous ?" is-open="ulr.settings.ulSearchOpen">
+
+      <div class="form-group">
+        <label for="ul_id_admin" class="control-label">Unité Locale</label>
+        <input
+          id="ul_id_admin"
+          type="text"
+          ng-model="ulr.settings.ul_name"
+          placeholder="Tappez votre recherche"
+          uib-typeahead="ul as ul.full_name for ul in ulr.searchUL($viewValue)"
+          typeahead-loading="loadingULs"
+          typeahead-no-results="noResults"
+          typeahead-wait-ms="350"
+          class="form-control"
+          ng-required
+          autocomplete="off">
+        <i   ng-show="loadingULs" class="glyphicon glyphicon-refresh"></i>
+        <div ng-show="noResults">
+          <i class="glyphicon glyphicon-remove"></i> Aucune Unité Locale trouvée
+        </div>
+        <span class="help-block">Recherche par nom, code postal, ville. <br/>
+          Si votre Unité Locale n'apparait pas c'est que soit elle a déjà utilisé RedCrossQuest dans le passé, soit une inscription est déjà enregistrée.<br/>
+          Si vous pensez que vous devriez pouvoir vous inscrire, contactez <a href="mailto:support@redcrossquest.com" target="_blank">support@redcrossquest.com</a>
+        </span>
+      </div>
+
+    </div>
+    <div uib-accordion-group
+         class="panel-default"
+         heading="Qui sont l'administrateur de RedCrossQuest pour votre UL, le président et le trésorier ?"
+         ng-show="ulr.settings.coordinatesVisible"
+         is-open="ulr.settings.coordinatesOpen"
+         ng-cloak>
+      <div class="panel-body">
+
+        <form novalidate name="registerForm">
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Administrateur Principal</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.admin_man.$invalid}">
+                        <label for="admin_manRadio1" class="control-label">Sexe</label>  <br/>
+                        <label class="radio-inline">
+                          <input type="radio" name="admin_man" id="admin_manRadio1" ng-model="ulr.settings.admin_man" ng-value="true" required> Homme
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="admin_man" id="admin_manRadio2" ng-model="ulr.settings.admin_man" ng-value="false" required> Femme
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.admin_nivol.$invalid}">
+                        <label for="admin_nivol" class="control-label">NIVOL</label>
+                        <input     name="admin_nivol"
+                                   id="admin_nivol"
+                                   class="form-control"
+                                   ng-model="ulr.settings.admin_nivol"
+                                   required
+                                   ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.admin_first_name.$invalid}">
+                        <label for="admin_first_name" class="control-label">Prénom</label>
+                        <input
+                          name="admin_first_name"
+                          id="admin_first_name"
+                          class="form-control"
+                          ng-model="ulr.settings.admin_first_name"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.admin_last_name.$invalid}">
+                        <label for="admin_last_name" class="control-label">Nom</label>
+                        <input name="admin_last_name"
+                               id="admin_last_name"
+                               class="form-control"
+                               ng-model="ulr.settings.admin_last_name"
+                               required
+
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group" ng-class="{'has-error':registerForm.admin_email.$invalid}">
+                        <label for="admin_email" class="control-label">Email</label>
+                        <div class="input-group">
+                          <span class="input-group-addon">@</span>
+                          <input
+                            name="admin_email"
+                            id="admin_email"
+                            class="form-control"
+                            type="email"
+                            ng-model="ulr.settings.admin_email"
+                            ng-pattern="'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$'"
+                            required/>
+                        </div>
+                        <span class="help-block" ng-show="registerForm.admin_email.$invalid">*@croix-rouge.fr</sub></span>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group" ng-class="{'has-error':registerForm.admin_mobile.$invalid}">
+                        <label for="admin_mobile" class="control-label">Téléphone</label>
+                        <div class="input-group">
+                          <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
+                          <input name="admin_mobile"
+                                 id="admin_mobile"
+                                 class="form-control"
+                                 type="text"
+                                 ng-model="ulr.settings.admin_mobile"
+                                 required
+                                 ng-pattern="'33[6-7][0-9]{8,8}'"
+                                 autocomplete="tel-national"/>
+                        </div>
+                        <span class="help-block" ng-show="registerForm.admin_mobile.$invalid">ex: 33601020304</sub></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Trésorier</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.tresorier_man.$invalid}">
+                        <label for="tresorier_manRadio1" class="control-label">Sexe</label>  <br/>
+                        <label class="radio-inline">
+                          <input type="radio" name="tresorier_man" id="tresorier_manRadio1" ng-model="ulr.settings.tresorier_man" ng-value="true" required> Homme
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="tresorier_man" id="tresorier_manRadio2" ng-model="ulr.settings.tresorier_man" ng-value="false" required> Femme
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.tresorier_nivol.$invalid}">
+                        <label for="tresorier_nivol" class="control-label">NIVOL</label>
+                        <input     name="tresorier_nivol"
+                                   id="tresorier_nivol"
+                                   class="form-control"
+                                   ng-model="ulr.settings.tresorier_nivol"
+                                   required
+                                   ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.tresorier_first_name.$invalid}">
+                        <label for="tresorier_first_name" class="control-label">Prénom</label>
+                        <input
+                          name="tresorier_first_name"
+                          id="tresorier_first_name"
+                          class="form-control"
+                          ng-model="ulr.settings.tresorier_first_name"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.tresorier_last_name.$invalid}">
+                        <label for="tresorier_last_name" class="control-label">Nom</label>
+                        <input name="tresorier_last_name"
+                               id="tresorier_last_name"
+                               class="form-control"
+                               ng-model="ulr.settings.tresorier_last_name"
+                               required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group" ng-class="{'has-error':registerForm.tresorier_email.$invalid}">
+                        <label for="tresorier_email" class="control-label">Email</label>
+                        <div class="input-group">
+                          <span class="input-group-addon">@</span>
+                          <input
+                            name="tresorier_email"
+                            id="tresorier_email"
+                            class="form-control"
+                            type="email"
+                            ng-model="ulr.settings.tresorier_email"
+                            ng-pattern="'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$'"
+                            required/>
+                        </div>
+                        <span class="help-block" ng-show="registerForm.tresorier_email.$invalid">*@croix-rouge.fr</sub></span>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group" ng-class="{'has-error':registerForm.tresorier_mobile.$invalid}">
+                        <label for="tresorier_mobile" class="control-label">Téléphone</label>
+                        <div class="input-group">
+                          <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
+                          <input name="tresorier_mobile"
+                                 id="tresorier_mobile"
+                                 class="form-control"
+                                 type="text"
+                                 ng-model="ulr.settings.tresorier_mobile"
+                                 required
+                                 ng-pattern="'33[6-7][0-9]{8,8}'"
+                                 autocomplete="tel-national"/>
+                        </div>
+                        <span class="help-block" ng-show="registerForm.tresorier_mobile.$invalid">ex: 33601020304</sub></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px;">
+            <div class="col-md-6">
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Président</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.president_man.$invalid}">
+                        <label for="president_manRadio1" class="control-label">Sexe</label>  <br/>
+                        <label class="radio-inline">
+                          <input type="radio" name="president_man" id="president_manRadio1" ng-model="ulr.settings.president_man" ng-value="true" required> Homme
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="president_man" id="president_manRadio2" ng-model="ulr.settings.president_man" ng-value="false" required> Femme
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.president_nivol.$invalid}">
+                        <label for="president_nivol" class="control-label">NIVOL</label>
+                        <input     name="president_nivol"
+                                   id="president_nivol"
+                                   class="form-control"
+                                   ng-model="ulr.settings.president_nivol"
+                                   required
+                                   ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.president_first_name.$invalid}">
+                        <label for="president_first_name" class="control-label">Prénom</label>
+                        <input
+                          name="president_first_name"
+                          id="president_first_name"
+                          class="form-control"
+                          ng-model="ulr.settings.president_first_name"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':registerForm.president_last_name.$invalid}">
+                        <label for="president_last_name" class="control-label">Nom</label>
+                        <input name="president_last_name"
+                               id="president_last_name"
+                               class="form-control"
+                               ng-model="ulr.settings.president_last_name"
+                               required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group" ng-class="{'has-error':registerForm.president_email.$invalid}">
+                        <label for="president_email" class="control-label">Email</label>
+                        <div class="input-group">
+                          <span class="input-group-addon">@</span>
+                          <input
+                            name="president_email"
+                            id="president_email"
+                            class="form-control"
+                            type="email"
+                            ng-model="ulr.settings.president_email"
+                            ng-pattern="'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$'"
+                            required/>
+                        </div>
+                        <span class="help-block" ng-show="registerForm.president_email.$invalid">*@croix-rouge.fr</sub></span>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group" ng-class="{'has-error':registerForm.president_mobile.$invalid}">
+                        <label for="president_mobile" class="control-label">Téléphone</label>
+                        <div class="input-group">
+                          <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
+                          <input name="president_mobile"
+                                 id="president_mobile"
+                                 class="form-control"
+                                 type="text"
+                                 ng-model="ulr.settings.president_mobile"
+                                 required
+                                 ng-pattern="'33[6-7][0-9]{8,8}'"
+                                 autocomplete="tel-national"/>
+                        </div>
+                        <span class="help-block" ng-show="registerForm.president_mobile.$invalid">ex: 33601020304</sub></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" style="padding-top:25px">
+            <div class="col-md-2 col-md-offset-8">
+              <button type="button" class="btn btn-primary" ng-disabled="registerForm.$invalid" ng-click='ulr.register();'>Enregister mon inscription</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+    <div uib-accordion-group class="panel-default" heading="L'inscription est enregistrée !" ng-show="ulr.settings.registrationCompletedVisible" is-open="ulr.settings.registrationCompletedOpen" ng-cloak>
+      Merci !
+      Votre inscription est enregistrée avec l'identifiant '{{ulr.registrationId}}', vous allez recevoir un email de confirmation.
+    </div>
+
+    <!-- Successful Save -->
+    <div class="row" ng-show="ulr.success">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="ulr.success=false"><span aria-hidden="true">&times;</span></button>
+          <strong>Bravo!</strong> L'inscription de votre UL a été sauvegardé avec succès!
+        </div>
+      </div>
+    </div>
+    <!-- Error while saving -->
+    <div class="row" ng-if="ulr.error==true">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="ulr.error=false"><span aria-hidden="true">&times;</span></button>
+          <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde !
+          <pre style="text-align: left;">{{ulr.errorStr}}</pre>
+        </div>
+      </div>
+    </div>
+  </uib-accordion>
+</div>
