@@ -94,7 +94,7 @@ class SaveCoinsOnTroncQueteur extends Action
     }
     catch(Exception $exception)
     {
-      $this->logger->error("error while publishing on topic", array("messageProperties"=>$messageProperties,"exception"=>$exception));
+      $this->logger->error("error while publishing on topic", array("messageProperties"=>$messageProperties,"exception"=>json_encode($exception)));
       //do not rethrow
     }
 

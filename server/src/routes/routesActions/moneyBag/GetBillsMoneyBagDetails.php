@@ -44,7 +44,7 @@ class GetBillsMoneyBagDetails extends Action
     $bagId         = $this->validatedData["id"];
     $ulId          = $this->decodedToken->getUlId ();
 
-    $this->logger->info("Get bills moneyBagDetails",["bagId"=>$bagId]);
+    $this->logger->trace("Get bills moneyBagDetails",["bagId"=>$bagId]);
 
     $bagData = $this->moneyBagDBService->getBillsMoneyBagDetails($ulId, $bagId);
 

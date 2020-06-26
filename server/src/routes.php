@@ -21,4 +21,5 @@ return function (App $app) {
   include_once("routes/13-mailing.php");
   include_once("routes/14-exportData.php");
   include_once("routes/15-money-bag.php");
+  include_once("routes/16-unite-locale-registration.php");
 };

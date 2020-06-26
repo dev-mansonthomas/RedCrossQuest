@@ -88,7 +88,7 @@ class Logger implements LoggerInterface
     }
     else
     {
-      error_log("[EMERGENCY] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+      error_log( PHP_EOL.date('Y-m-d\TH:i:s')."[EMERGENCY] ".$message." - ".json_encode($this->getDataForLogging($context)), 3, $this->localLogFile);
     }
   }
 
@@ -112,7 +112,7 @@ class Logger implements LoggerInterface
     }
     else
     {
-      error_log("[ALERT] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+      error_log( PHP_EOL.date('Y-m-d\TH:i:s')."[ALERT] ".$message." - ".json_encode($this->getDataForLogging($context)), 3, $this->localLogFile);
     }
   }
 
@@ -136,7 +136,7 @@ class Logger implements LoggerInterface
     }
     else
     {
-      error_log("[CRITICAL] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+      error_log( PHP_EOL.date('Y-m-d\TH:i:s')."[CRITICAL] ".$message." - ".json_encode($this->getDataForLogging($context)), 3, $this->localLogFile);
     }
   }
 
@@ -160,7 +160,7 @@ class Logger implements LoggerInterface
     }
     else
     {
-      error_log("[ERROR] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+      error_log( PHP_EOL.date('Y-m-d\TH:i:s')."[ERROR] ".$message." - ".json_encode($this->getDataForLogging($context)), 3, $this->localLogFile);
     }
   }
   /**
@@ -183,7 +183,7 @@ class Logger implements LoggerInterface
     }
     else
     {
-      error_log("[WARN] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+      error_log( PHP_EOL.date('Y-m-d\TH:i:s')."[WARN] ".$message." - ".json_encode($this->getDataForLogging($context)), 3, $this->localLogFile);
     }
   }
   /**
@@ -206,7 +206,7 @@ class Logger implements LoggerInterface
     }
     else
     {
-      error_log("[NOTICE] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+      error_log( PHP_EOL.date('Y-m-d\TH:i:s')."[NOTICE] ".$message." - ".json_encode($this->getDataForLogging($context)), 3, $this->localLogFile);
     }
   }
   /**
@@ -229,7 +229,7 @@ class Logger implements LoggerInterface
     }
     else
     {
-      error_log("[INFO] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+      error_log( PHP_EOL.date('Y-m-d\TH:i:s')."[INFO] ".$message." - ".json_encode($this->getDataForLogging($context)), 3, $this->localLogFile);
     }
   }
   /**
@@ -252,7 +252,7 @@ class Logger implements LoggerInterface
     }
     else
     {
-      error_log("[DEBUG] ".$message." - ".print_r($context, true), 3, $this->localLogFile);
+      error_log( PHP_EOL.date('Y-m-d\TH:i:s')."[DEBUG] ".$message." - ".json_encode($this->getDataForLogging($context)), 3, $this->localLogFile);
     }
   }
 
@@ -274,9 +274,9 @@ class Logger implements LoggerInterface
       $array="";
       if(array_count_values($context)>0)
       {
-        $array=print_r($context, true);
+        $array=json_encode($context);
       }
-      error_log(date("Y-m-d H:i:s")." [".strtoupper($level)."] ".$message." - ".$array, 3, $this->localLogFile);
+      error_log( PHP_EOL.date("Y-m-d H:i:s")." [".strtoupper($level)."] ".$message." - ".$array, 3, $this->localLogFile);
     }
   }
 }

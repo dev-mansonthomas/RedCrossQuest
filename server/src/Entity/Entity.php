@@ -42,7 +42,7 @@ class Entity
    */
   public function generateCSVHeader():string
   {
-    return implode(";", $this->_fieldList)."\n";
+    return implode(";", $this->_fieldList). PHP_EOL;
   }
 
   /**
@@ -72,7 +72,7 @@ class Entity
       }
 
     }
-    return $csvRow."\n";
+    return $csvRow. PHP_EOL;
   }
 
   /**
@@ -162,7 +162,7 @@ class Entity
     }
     catch(Exception $e)
     {
-      $this->logger->error("Error while decoding json for key '$key'", array("exception"=> $e, "data"=>$data));
+      $this->logger->error("Error while decoding json for key '$key'", array("data"=>$data, "exception"=> json_encode($e)));
       throw $e;
     }
   }
@@ -197,7 +197,7 @@ class Entity
         }
         catch(Exception $e)
         {
-          $this->logger->error("Error while decoding date (from momentjs date) for key '$key'", array("exception"=> $e, "data"=>$data));
+          $this->logger->error("Error while decoding date (from momentjs date) for key '$key'", array("data"=>$data, "exception"=> json_encode($e)));
           throw $e;
         }
       }
@@ -224,7 +224,7 @@ class Entity
             }
             catch(Exception $e)
             {
-              $this->logger->error("Error while decoding date (from js date) for key '$key'", array("exception"=> $e, "data"=>$data));
+              $this->logger->error("Error while decoding date (from js date) for key '$key'", array("data"=>$data, "exception"=> json_encode($e)));
               throw $e;
             }
 
@@ -243,7 +243,7 @@ class Entity
             }
             catch(Exception $e)
             {
-              $this->logger->error("Error while decoding date (from DB date) for key '$key'", array("exception"=> $e, "data"=>$data));
+              $this->logger->error("Error while decoding date (from DB date) for key '$key'", array("data"=>$data,"exception"=> json_encode($e)));
               throw $e;
             }
           }

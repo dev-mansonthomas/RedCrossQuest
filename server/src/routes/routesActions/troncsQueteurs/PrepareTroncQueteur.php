@@ -57,8 +57,6 @@ class PrepareTroncQueteur extends Action
     $ulId      = $this->decodedToken->getUlId       ();
     $userId    = $this->decodedToken->getUid        ();
 
-    $this->logger->warning("TroncQueteur POST PREPARATION");
-
     $tq    = new TroncQueteurEntity($this->parsedBody, $this->logger);
     $hasQueteAlreadyStarted = $this->troncQueteurBusinessService->hasQueteAlreadyStarted($this->settings['appSettings']['deploymentType'], $tq->depart_theorique);
 
@@ -75,13 +73,12 @@ class PrepareTroncQueteur extends Action
 
       if($tq->preparationAndDepart == true)
       {//if the user click to Save And perform the depart, we proceed and save the depart
-        $this->logger->warning("TroncQueteur POST PREPARATION DEPART NOW");
         $this->troncQueteurDBService->setDepartToNow($insertResponse->lastInsertId, $ulId, $userId);
       }
     }
     else
     {
-      $this->logger->warning("TroncQueteur POST PREPARATION - TRONC IN USE");
+      $this->logger->warning("TroncQueteur POST PREPARATION - TRONC IN USE", ["troncQueteur"=>$tq, "insertResponse"=>$insertResponse ]);
     }
 
     //in any case, we return the insert response

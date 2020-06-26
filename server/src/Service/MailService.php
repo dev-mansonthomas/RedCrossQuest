@@ -64,20 +64,45 @@ class MailService
   {
     $deployment        = self::getDeploymentInfo();
     $deploymentLogging = $deployment == '' ? "*PROD*": $deployment;
-
+    $emailAddressesAdded = [];
     try
     {
       $email = new Mail();
       $email->setFrom   ($this->sendgridSender,"$application");
       $email->setSubject("[$application]".$deployment.$subject);
       $email->addTo     ($recipientEmail, $recipientFirstName.' '.$recipientLastName);
-      if($bcc != null && strtolower($bcc) != strtolower($recipientEmail))
-        $email->addBcc    ($bcc);
+      $emailAddressesAdded[]=$recipientEmail;
+      //add BCC if required. Sendgrid raise an error if in {to, cc, bcc} there's duplicates
+      if($bcc != null)
+      {
+        if(strpos($bcc, ";")>0)
+        {
+          $mailList = explode(";", $bcc);
+          foreach($mailList as $mailBCC)
+          {
+            if(!in_array($mailBCC, $emailAddressesAdded))
+            {
+              $email->addBcc    ($mailBCC);
+              $emailAddressesAdded[]=$mailBCC;
+            }
+
+          }
+        }
+        else
+        {
+          if(!in_array($bcc, $emailAddressesAdded))
+          {
+            $email->addBcc($bcc);
+            $emailAddressesAdded[] = $bcc;
+          }
+        }
+      }
+
       $email->addContent("text/html", ($deployment!=''?$deployment.'<br/>':'').$content);
 
       if($fileName != null)
       {
-        $email->addAttachment(new SendGrid\Mail\Attachment(base64_encode (file_get_contents(sys_get_temp_dir()."/".$fileName)),"application/zip", "$fileName"));
+        $email->addAttachment(new SendGrid\Mail\Attachment(base64_encode(file_get_contents(sys_get_temp_dir()."/".$fileName)),"application/zip", "$fileName"));
       }
 
 
@@ -88,12 +113,12 @@ class MailService
         unlink(sys_get_temp_dir(). "/".$fileName);
       }
 
-      $this->logger->info("Sending email successfully",
+      $this->logger->info("Sendgrid return status code of '".$response->statusCode()."'",
         array(
           'mailType'       => $mailType,
           'deployment'     => $deploymentLogging,
           'recipientEmail' => $recipientEmail,
-          'response'       => print_r($response, true)));
+          'response'       => json_encode($response)));
 
       return $response->statusCode();
 

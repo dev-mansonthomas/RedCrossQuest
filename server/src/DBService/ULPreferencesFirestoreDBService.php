@@ -52,7 +52,7 @@ class ULPreferencesFirestoreDBService extends FirestoreDBService
 
     if($ulPrefs->ul_id != $ul_id)
     {
-      throw new UnexpectedValueException("Attempt to update prefs from another UL. user from ul : $ul_id attempt to update UL ID : $ulPrefs->ul_id, with data ".print_r($dataForFirestore, true));
+      throw new UnexpectedValueException("Attempt to update prefs from another UL. user from ul : $ul_id attempt to update UL ID : $ulPrefs->ul_id, with data ".json_encode($dataForFirestore));
     }
     if($ulPrefs->FIRESTORE_DOC_ID)
     {//update

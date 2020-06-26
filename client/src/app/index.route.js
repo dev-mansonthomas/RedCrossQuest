@@ -27,6 +27,11 @@
         controller  : 'ResetPasswordController',
         controllerAs: 'vm'
       })
+      .when('/ulRegistration', {
+        templateUrl : 'app/ulRegistration/register/register.html',
+        controller  : 'RegisterULController',
+        controllerAs: 'ulr'
+      })
       // ============== QUETEURS ==============
       .when('/queteurs', {
         templateUrl : 'app/queteurs/list/listQueteurs.html',

@@ -151,7 +151,7 @@ class ReCaptchaService
             'actionRequired'=> $actionRequired,
             'remoteIp'      => $remoteIP,
             'username'      => $username,
-            'response'      => print_r($resp, true),
+            'response'      => json_encode($resp),
             'token'         => $token
           )
         );
@@ -168,7 +168,7 @@ class ReCaptchaService
           'remoteIp'      => $remoteIP,
           'username'      => $username,
           'token'         => $token,
-          'exception'     => print_r($e,true)
+          'exception'     => json_encode($e)
         )
       );
       return 5;

@@ -53,6 +53,132 @@ class EmailBusinessService
     $this->uniteLocaleDBService = $uniteLocaleDBService;
   }
 
+  /**
+   *
+   * Send a confirmation email to admin, tresorier and president for the Registration to RedCrossQuest
+   *
+   * @param UniteLocaleEntity $ulRegistration UL registration info
+   *
+   * @throws Exception if the mail fails to be sent
+   *
+   */
+  public function newULRegistrationEmail(UniteLocaleEntity $ulRegistration): void
+  {
+    $this->logger->info("newULRegistrationEmail:'", ['ulRegistration' =>$ulRegistration]);
+
+    $url=$this->appSettings['appUrl'];
+
+    $uniteLocaleEntity = $this->uniteLocaleDBService->getUniteLocaleById($ulRegistration->id);
+
+    $registrationDate = Carbon::now();
+    $registrationDateString = $registrationDate->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
+
+    $queteurData = ["id"=>0, "first_name"=>"Inscription", "last_name"=>"UL", "email"=>"n@a.com"];
+    $queteur = new QueteurEntity($queteurData, $this->logger);
+
+    $title="L'inscription de votre Unité Locale a été enregistrée";
+
+    $this->mailService->sendMail(
+      "RedCrossQuest",
+      "newULRegistrationEmail",
+       $title,
+      $ulRegistration->admin_email,
+      $ulRegistration->admin_first_name,
+      $ulRegistration->admin_last_name,
+      $this->getMailHeader($title, $ulRegistration->admin_first_name).
+      "
+<br/>
+ Cet email confirme l'inscription de votre unité locale à l'application RedCrossQuest le $registrationDateString.<br/><br/>
+ 
+ Merci de bien vouloir rejoindre <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié, ainsi que le <a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'> forum interactif Slack</a><br/>
+ 
+ Pour rappel, RedCrossQuest/RedQuest, ce sont deux sites web dédiés à la gestion de la quête, un forum d'entraide (Slack) et un site intranet<br/>
+ <ul>
+    <li><a href='https://redcrossquest.croix-rouge.fr' target='_blank'>RedCrossQuest</a>
+      <ul>
+          <li>Le site de gestion de la quête par vos cadres et votre trésorier</li>
+          <li>Gestion des bénévoles et bénévoles d'un jour</li>
+          <li>Gestion de la préparation, du départ, du retour et du comptage des troncs</li>
+          <li>Gestion des dons avec reçu fiscaux</li>
+          <li>Gestion des données comptables de la quête : montant, remplissage des sacs de banque avec détails par pièces/billets/poids/total €</li>
+          <li>Analyses des données avec de nombreux graphiques : Montant total quêté, comparaison avec les années précédentes, nombre de bénévoles, heures de quêtes, classements, meilleurs points de quête</li>
+          <li>Mailing de remerciement aux quêteurs avec un texte personnalisable, l'affichage d'une carte avec les points de quête ou le quêteur a quêté et le montant quêté</li>
+      </ul>
+    </li>
+    <li><a href='https://redquest.croix-rouge.fr' target='_blank'>RedQuest</a>
+        <ul>
+          <li>Le site compagnon du quêteur</li>
+          <li>Qu'est ce que la Croix Rouge, ses principes, pourquoi on fait la quête, ou va l'argent et toutes les questions qu'on peut poser au quêteur</li>    
+          <li>Les astuces pour bien quêter</li>
+          <li>Le système de Badge (ou <a href='https://fr.wikipedia.org/wiki/Ludification' target='_blank'>gamification</a>) : récompenser virtuellement les quêteurs pour leurs contributions pour les inciter à se donner encore plus</li>
+          <li>Un classement (configurable) des quêteurs de l'UL (pas de classement, 10 premiers, classement complet)</li>
+          <li>Où est mon prochain point de quête, enregistrement autonome des départs/retours par le quêteur</li>
+          <li>Historique de ses troncs de l'année et récapitulatif des années précédentes</li>
+          <li>Information sur mon unité locale</li>
+      </ul>
+    </li>
+    <li><a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'>Le forum interactif Slack</a>
+        <ul>
+          <li>Messagerie instantanée organisé par thème : posez votre question, la communauté ou le support vous répond</li>
+          <li>Échanger vos astuces pour négocier avec les banques, motiver vos bénévoles</li>    
+      </ul>
+    </li>
+    <li><a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>L'espace intranet</a>
+        <ul>
+          <li>Retrouver la documentation, les infos </li>
+          <li>Les enregistrements des webinaires (formation, résutlats de la dernière quête)</li>    
+      </ul>
+    </li>
+
+ </ul>
+ 
+ 
+ Une présentation plus <a href='https://docs.google.com/presentation/d/1en_icDl5bjFyyNPomBUV1S_QksYmVzq_l4bnreE3Tnw/edit?usp=sharing' target='_blank'>complête est disponible ici</a> 
+ 
+ 
+<br/>
+ Rappel des éléments de votre inscription :
+<ul>
+    <li>Unité Locale : $uniteLocaleEntity->name </li>
+    <li>Administrateur RedCrossQuest :
+      <ul>
+        <li>$ulRegistration->admin_first_name $ulRegistration->admin_last_name </li>
+        <li>$ulRegistration->admin_nivol</li>
+        <li>$ulRegistration->admin_email</li>                  
+        <li>+$ulRegistration->admin_mobile</li>
+        <li>".($ulRegistration->admin_man?"Homme":"Femme")."</li>
+      </ul>
+    </li>
+    <li> Trésorier de l'Unité Locale :
+      <ul>
+        <li>$ulRegistration->tresorier_first_name $ulRegistration->tresorier_last_name </li>
+        <li>$ulRegistration->tresorier_nivol</li>
+        <li>$ulRegistration->tresorier_email</li>                  
+        <li>+$ulRegistration->tresorier_mobile</li>
+        <li>".($ulRegistration->tresorier_man?"Homme":"Femme")."</li>
+      </ul>
+    
+    </li>
+    <li> Président de l'Unité Locale :
+      <ul>
+        <li>$ulRegistration->president_first_name $ulRegistration->president_last_name </li>
+        <li>$ulRegistration->president_nivol</li>
+        <li>$ulRegistration->president_email</li>                  
+        <li>+$ulRegistration->president_mobile</li>
+        <li>".($ulRegistration->president_man?"Homme":"Femme")."</li>
+      </ul>
+    
+    </li> 
+</ul>
+
+ Votre inscription va prochainement être validée et vous serez recontacté par email<br/>
+ 
+ <a href='https://goo.gl/UpTLAK' target='_blank'>RedCrossQuest & la RGPD</a>
+".$this->getMailFooter($uniteLocaleEntity, false, $queteur),
+      $ulRegistration->president_email.";".$ulRegistration->tresorier_email);
+
+  }
+
 
   /**
    * Send an email to allow the user to reset its password (or create the password for the first connexion)

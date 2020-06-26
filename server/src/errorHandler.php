@@ -25,7 +25,7 @@ return function (ContainerInterface $c, App $app)
         'httpMethod'=> $request->getMethod (),
         'headers'   => $request->getHeaders(),
         'body'      => $request->getBody   ()->getContents(),
-        'exception' => $exception));
+        'exception' => json_encode($exception)));
 
 
     $payload = ['error' => $exception->getMessage()];

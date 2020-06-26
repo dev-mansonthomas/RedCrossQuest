@@ -129,7 +129,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
       $response401 = $this->response->withStatus(401);
       $response401->getBody()->write(json_encode(["error" =>"Authentication error"]));
 
-      $this->logger->error("Firebase authentication error", array('email' => $email, 'token' => $token, 'exception' => $e));
+      $this->logger->error("Firebase authentication error", array('email' => $email, 'token' => $token, 'exception' => json_encode($e)));
 
       return $response401;
     }

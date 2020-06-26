@@ -51,10 +51,10 @@ AND u.queteur_id = q.id
       return $row;
     });
 
-    $i = count($results);
-    if( $i > 0)
+    $count = count($results);
+    if( $count > 0)
     {
-      $exception = new UserAlreadyExistsException($i. " utilisateurs actifs RCQ existent déjà avec ce nivol: '$nivol'.\nVeuillez contacter l'administrateur RCQ sur slack ou support.redcrossquest@croix-rouge.fr");
+      $exception = new UserAlreadyExistsException($count. " utilisateurs actifs RCQ existent déjà avec ce nivol: '$nivol'.\nVeuillez contacter l'administrateur RCQ sur slack ou support.redcrossquest@croix-rouge.fr");
       $exception->users = $results;
       throw $exception;
     }
