@@ -3,7 +3,7 @@
  */
 
 angular.module('redCrossQuestClient').factory('UniteLocaleResource', function($resource, $localStorage) {
-  return $resource('/rest/:roleId/ul/:id',
+  return $resource('/rest/:roleId/ul/:action/:id',
     {
       roleId: function () { return $localStorage.currentUser.roleId},
       id    : '@id'
@@ -13,6 +13,28 @@ angular.module('redCrossQuestClient').factory('UniteLocaleResource', function($r
     },
       query:{
         isArray: true
+      },
+      listRegistrations:{
+        isArray: false,
+        params:
+          {
+            action: 'registrations'
+          }
+      },
+      getRegistration:{
+        isArray: false,
+        params:
+          {
+            action: 'registrations'
+          }
+      },
+      registrationDecision:{
+        isArray: false,
+        method: 'PUT',
+        params:
+          {
+            action: 'registrations'
+          }
       },
       get:{
         isArray: false

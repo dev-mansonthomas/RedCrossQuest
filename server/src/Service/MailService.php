@@ -48,7 +48,7 @@ class MailService
    * @param string $recipientLastName     Recipient Last Name
    * @param string $content               Email html content
    * @param string $fileName              The filename that will be attached to the email. The file will be read from sys_get_temp_dir() and removed after the mail is sent
-   * @param string $bcc                   The BCC email
+   * @param string $bcc                   The BCC email. A single email, or a ";" separated value list of email
    * @return int Mail status code
    * @throws Exception                   when sending the email fails
    */

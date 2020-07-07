@@ -51,6 +51,7 @@
         vm.searchedYear = vm.selectedYear;
 
         $rootScope.$emit('title-updated', 'Stats Avant RCQ - Année '+vm.selectedYear);
+        vm.saveInProgress=false;
       }).catch(function(e){
         $log.error("error searching for DailyStats", e);
       });
@@ -63,7 +64,7 @@
     {
       vm.saveInProgress=true;
       var dailyStatsResource = new DailyStatsResource({year:year});
-      dailyStatsResource.$createYear(function(){vm.saveInProgress=false;vm.doSearch();}, function(error){vm.saveInProgress=false;$log.error(error);});
+      dailyStatsResource.$createYear(function(){vm.doSearch();}, function(error){vm.saveInProgress=false;$log.error(error);});
     };
 
     vm.save=function(id, amount)

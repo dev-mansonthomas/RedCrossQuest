@@ -29,8 +29,13 @@ class Entity
   /***
     @var string[]
    */
-  protected $_fieldList
-;
+  protected $_fieldList;
+
+  public function getFieldList():array
+  {
+    return $this->_fieldList;
+  }
+
   public function __construct(LoggerInterface $logger)
   {
     $this->logger               = $logger;
@@ -182,7 +187,7 @@ class Entity
    * @param array  $data the associative array
    * @throws Exception when failing to parse date
    */
-  protected function getDate(string $key, array $data):void
+  protected function getDate(string $key, array &$data):void
   {
     if(array_key_exists($key, $data))
     {

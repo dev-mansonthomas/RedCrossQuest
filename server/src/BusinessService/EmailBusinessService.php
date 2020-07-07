@@ -747,4 +747,71 @@ Si vous pensez qu'il y a une erreur, veuillez contacter votre Unité Locale.
       $message
       .$this->getMailFooter($uniteLocaleEntity, false, $queteur, true));
   }
+
+
+  /**
+   *
+   * Send the Queteur an email to notify him of the approval decision
+   *
+   * @param UniteLocaleEntity $uniteLocaleEntity
+   * @throws Exception if the mail fails to be sent
+   */
+  public function sendULRegistrationApprovalDecision(UniteLocaleEntity $uniteLocaleEntity):void
+  {
+    $this->logger->info("sendRedQuestApprovalDecision", ["email" => $uniteLocaleEntity->admin_email, "decision"=> $uniteLocaleEntity->registration_approved, "reject_reason"=> $uniteLocaleEntity->reject_reason]);
+
+    $url="https://".$this->appSettings['RedQuestDomain']."/login";
+
+
+    $title="Votre inscription à RedCrossQuest a été ".($uniteLocaleEntity->registration_approved?"approuvée":"refusée");
+
+    if($uniteLocaleEntity->registration_approved)
+    {
+      $message = "
+<br/>
+Félicitations ! L'inscription de votre Unité Locale à RedCrossQuest/RedQuest a été validée!<br/>
+ <br/>
+L'administrateur a reçu un email lui permettant d'initialiser son mot de passe.
+<ul>
+    <li>N'attendez pas pour initialiser votre mot de passe, le lien est valable 48h. Passé ce délai, il suffit d'utiliser la fonction 'Réinitialiser mon mot de passe' sur la page de <a href='https://".$this->getDeploymentInfo()."redcrossquest.croix-rouge.fr' target='_blank'>login</a></li>
+    <li>Seul le compte de l'administrateur a été créé, il revient à l'administrateur de créer les comptes du président et du trésorier</li>
+    <li>Une fois connecté, vous aurez une liste d'instructions à suivre pour finir le paramétrage de l'application et vous préparer</li>
+    <li>Le support est apporté via <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié, ainsi que le <a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'> forum interactif Slack</a></li>
+    <li>Vous disposez aussi d'un site de Test <a href='https://test.redcrossquest.croix-rouge.fr' target='_blank'>https://test.redcrossquest.croix-rouge.fr</a> sur lequel vous pouvez vous entrainer.</li>    
+</ul>
+
+<span style='color:white; font-size: 1px;'>queteur id : ".$uniteLocaleEntity->registration_id.", ul_id:".$uniteLocaleEntity->id." </span>
+";
+    }
+    else
+    {
+      $message = "
+<br/>
+ Ohoh... Nous sommes désolé, votre inscription à RedCrossQuest a été refusée par le support avec le message suivant : 
+ 
+<hr>
+$uniteLocaleEntity->reject_reason
+<hr>
+
+Si vous pensez qu'il y a une erreur, veuillez contacter le support : <a href='mailto:support@redcrossquest.com' target='_blank'>support@redcrossquest.com</a>.
+<span style='color:white; font-size: 1px;'>queteur id : ".$uniteLocaleEntity->registration_id.", ul_id:".$uniteLocaleEntity->id." </span>  
+";
+    }
+
+    $queteurData = ["id"=>0, "first_name"=>$uniteLocaleEntity->admin_first_name, "last_name"=> $uniteLocaleEntity->admin_last_name, "email"=>$uniteLocaleEntity->admin_email];
+    $queteur = new QueteurEntity($queteurData, $this->logger);
+
+    $this->mailService->sendMail(
+      "RedCrossQuest",
+      "sendULRegistrationApprovalDecision",
+      $title,
+      $uniteLocaleEntity->admin_email,
+      $uniteLocaleEntity->admin_first_name,
+      $uniteLocaleEntity->admin_last_name,
+      $this->getMailHeader($title, $uniteLocaleEntity->admin_first_name, false).
+      $message
+      .$this->getMailFooter($uniteLocaleEntity, false, $queteur, false),
+    "$uniteLocaleEntity->president_email;$uniteLocaleEntity->tresorier_email");
+  }
+
 }

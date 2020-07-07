@@ -15,6 +15,7 @@ use RedCrossQuest\DBService\ULPreferencesFirestoreDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
+use RedCrossQuest\Entity\ULPreferencesEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 
@@ -113,6 +114,24 @@ class GetAllULSettings extends Action
     {
       $guiSettings->ul          = $this->uniteLocaleDBService             ->getUniteLocaleById   ($ulId);
       $guiSettings->ul_settings = $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
+
+      if($guiSettings->ul_settings == null)
+      {//initialization of a new UL
+
+        $data = [];
+
+        $data['use_bank_bag'                   ] = true;
+        $data['rq_autonomous_depart_and_return'] = false;
+        $data['rq_display_daily_stats'         ] = true;
+        $data['rq_display_queteur_ranking'     ] = ULPreferencesEntity::$RQ_DISPLAY_QUETE_STATS_ALL;
+        $data['ul_id'                          ] = $ulId;
+
+        $ulPreferenceEntity = ULPreferencesEntity::withArray($data, $this->logger);
+
+        $this->uniteLocalePrefsFirestoreService ->updateUlPrefs($ulId, $ulPreferenceEntity);
+
+        $guiSettings->ul_settings = $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
+      }
 
       $ulTokens    = $this->uniteLocaleSettingsDBService->getUniteLocaleById($ulId);
 

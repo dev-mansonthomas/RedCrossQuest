@@ -4,6 +4,9 @@ namespace RedCrossQuest\DBService;
 
 use Exception;
 use PDOException;
+use RedCrossQuest\Entity\PageableRequestEntity;
+use RedCrossQuest\Entity\PageableResponseEntity;
+use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
 
 class UniteLocaleDBService extends DBService
@@ -64,20 +67,7 @@ WHERE   `ul`.id    = :ul_id
     }, true);
   }
 
-
-  /**
-   * Update UL name and address
-   *
-   * @param UniteLocaleEntity $ul The UL info
-   * @param int $ulId The id of the UL to be updated
-   * @param int $userId the id of the person who approve or reject the registration
-   * @throws PDOException if the query fails to execute on the server
-   * @throws Exception
-   */
-  public function updateUL(UniteLocaleEntity $ul, int $ulId, int $userId):void
-  {
-
-    $sql = "
+  public static $updateUniteLocaleSQL = "
 UPDATE `ul`
 SET
   `email`                = :email,
@@ -106,8 +96,20 @@ SET
   `admin_last_name`      = :admin_last_name,     
   `admin_email`          = :admin_email,         
   `admin_mobile`         = :admin_mobile       
-WHERE `id`      = :id
+WHERE `id`               = :id
 ";
+
+  /**
+   * Update UL name and address
+   *
+   * @param UniteLocaleEntity $ul The UL info
+   * @param int $ulId The id of the UL to be updated
+   * @param int $userId the id of the person who approve or reject the registration
+   * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
+   */
+  public function updateUL(UniteLocaleEntity $ul, int $ulId, int $userId):void
+  {
     $parameters = [
       "email"                => $ul->email,
       "name"                 => $ul->name,
@@ -118,29 +120,55 @@ WHERE `id`      = :id
       "longitude"            => $ul->longitude,
       "latitude"             => $ul->latitude,
       "president_man"        => $ul->president_man == 1 ?  1 : 0,
-      "president_nivol"      => $ul->president_nivol,    
+      "president_nivol"      => $ul->president_nivol,
       "president_first_name" => $ul->president_first_name,
       "president_last_name"  => $ul->president_last_name,
-      "president_email"      => $ul->president_email,    
-      "president_mobile"     => $ul->president_mobile,   
+      "president_email"      => $ul->president_email,
+      "president_mobile"     => $ul->president_mobile,
       "tresorier_man"        => $ul->tresorier_man == 1 ?  1 : 0,
-      "tresorier_nivol"      => $ul->tresorier_nivol,    
+      "tresorier_nivol"      => $ul->tresorier_nivol,
       "tresorier_first_name" => $ul->tresorier_first_name,
       "tresorier_last_name"  => $ul->tresorier_last_name,
-      "tresorier_email"      => $ul->tresorier_email,    
-      "tresorier_mobile"     => $ul->tresorier_mobile,   
+      "tresorier_email"      => $ul->tresorier_email,
+      "tresorier_mobile"     => $ul->tresorier_mobile,
       "admin_man"            => $ul->admin_man == 1 ?  1 : 0,
-      "admin_nivol"          => $ul->admin_nivol,        
-      "admin_first_name"     => $ul->admin_first_name,   
-      "admin_last_name"      => $ul->admin_last_name,    
-      "admin_email"          => $ul->admin_email,        
-      "admin_mobile"         => $ul->admin_mobile,                
+      "admin_nivol"          => $ul->admin_nivol,
+      "admin_first_name"     => $ul->admin_first_name,
+      "admin_last_name"      => $ul->admin_last_name,
+      "admin_email"          => $ul->admin_email,
+      "admin_mobile"         => $ul->admin_mobile,
       "id"                   => $ulId
+    ];
+
+    $this->executeQueryForUpdate(self::$updateUniteLocaleSQL, $parameters);
+  }
+
+  /**
+   * Update UL registration approval info
+   *
+   * @param UniteLocaleEntity $ul The UL info
+   * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
+   */
+  public function updateULRegistration(UniteLocaleEntity $ul)
+  {
+    $sql = "
+UPDATE `ul_registration`
+SET
+  `registration_approved` = :registration_approved,
+  `reject_reason`         = :reject_reason,
+  `approval_date`         = NOW()       
+WHERE `id`                = :id
+";
+
+    $parameters = [
+      "registration_approved" => $ul->registration_approved == 1 ?  1 : 0,
+      "reject_reason"         => $ul->reject_reason,
+      "id"                    => $ul->registration_id
     ];
 
     $this->executeQueryForUpdate($sql, $parameters);
   }
-
 
   /**
    * Register a new UL
@@ -307,4 +335,144 @@ AND (
     });
   }
 
+
+  /**
+   * List UL registration by status (new registration, validated, rejected)
+   *
+   * @param PageableRequestEntity $pageableRequest
+   * @return PageableResponseEntity the list of UniteLocale
+   * @throws Exception in other situations, possibly : parsing error in the entity
+   */
+  public function listULRegistrations(PageableRequestEntity $pageableRequest):PageableResponseEntity
+  {
+    /** @var int $registrationStatus */
+    $registrationStatus = $pageableRequest->filterMap['registration_status'];
+
+    $registrationStatusSQL = null;
+
+    if ($registrationStatus == 0 || $registrationStatus == null)
+    {
+      $registrationStatusSQL = "AND registration_approved is null";
+    }
+    else if ($registrationStatus == 1)
+    {
+      $registrationStatusSQL = "AND registration_approved = 1";
+    }
+    else if ($registrationStatus == 2)
+    {
+      $registrationStatusSQL = "AND registration_approved = 0";
+    }
+
+
+    $sql = "
+SELECT  `ul`.`id`,
+        `ul`.`name`,
+        `ul`.`phone`,
+        `ul`.`latitude`,
+        `ul`.`longitude`,
+        `ul`.`address`,
+        `ul`.`postal_code`,
+        `ul`.`city`,
+        `ul`.`external_id`,
+        `ul`.`email`,
+        `ul`.`id_structure_rattachement`,
+        `ul`.`date_demarrage_activite`,
+        `ul`.`date_demarrage_rcq`,
+        `ul`.`mode`,
+        `ul`.`publicDashboard`,
+        ulr.`id` as registration_id,
+        ulr.`president_man`,
+        ulr.`president_nivol`,
+        ulr.`president_first_name`,
+        ulr.`president_last_name`,
+        ulr.`president_email`,
+        ulr.`president_mobile`,
+        ulr.`tresorier_man`,
+        ulr.`tresorier_nivol`,
+        ulr.`tresorier_first_name`,
+        ulr.`tresorier_last_name`,
+        ulr.`tresorier_email`,
+        ulr.`tresorier_mobile`,
+        ulr.`admin_man`,
+        ulr.`admin_nivol`,
+        ulr.`admin_first_name`,
+        ulr.`admin_last_name`,
+        ulr.`admin_email`,
+        ulr.`admin_mobile`,
+        ulr.`created`
+FROM    `ul`, `ul_registration` ulr
+WHERE   ulr.ul_id = `ul`.id
+$registrationStatusSQL
+";
+    $parameters = [];
+
+    $count   = $this->getCountForSQLQuery ($sql, $parameters);
+    $results = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new UniteLocaleEntity($row, $this->logger);
+    }, $pageableRequest->pageNumber, $pageableRequest->rowsPerPage);
+
+    return new PageableResponseEntity($count, $results, $pageableRequest->pageNumber, $pageableRequest->rowsPerPage);
+  }
+
+
+  /**
+   * get an UL registration
+   *
+   * @param int $ulRegistrationId
+   * @return UniteLocaleEntity the registration details
+   * @throws Exception in other situations, possibly : parsing error in the entity
+   */
+  public function getULRegistration(int $ulRegistrationId):UniteLocaleEntity
+  {
+
+    $sql = "
+SELECT  `ul`.`id`,
+        `ul`.`name`,
+        `ul`.`phone`,
+        `ul`.`latitude`,
+        `ul`.`longitude`,
+        `ul`.`address`,
+        `ul`.`postal_code`,
+        `ul`.`city`,
+        `ul`.`external_id`,
+        `ul`.`email`,
+        `ul`.`id_structure_rattachement`,
+        `ul`.`date_demarrage_activite`,
+        `ul`.`date_demarrage_rcq`,
+        `ul`.`mode`,
+        `ul`.`publicDashboard`,
+        ulr.`id` as registration_id,
+        ulr.`president_man`,
+        ulr.`president_nivol`,
+        ulr.`president_first_name`,
+        ulr.`president_last_name`,
+        ulr.`president_email`,
+        ulr.`president_mobile`,
+        ulr.`tresorier_man`,
+        ulr.`tresorier_nivol`,
+        ulr.`tresorier_first_name`,
+        ulr.`tresorier_last_name`,
+        ulr.`tresorier_email`,
+        ulr.`tresorier_mobile`,
+        ulr.`admin_man`,
+        ulr.`admin_nivol`,
+        ulr.`admin_first_name`,
+        ulr.`admin_last_name`,
+        ulr.`admin_email`,
+        ulr.`admin_mobile`,
+        ulr.`created`,
+        ulr.`registration_approved`,
+        ulr.`reject_reason`,
+        ulr.`approval_date`
+FROM    `ul`, `ul_registration` ulr
+WHERE   ulr.ul_id = `ul`.id
+AND     ulr.id = :registration_id
+";
+    $parameters = ["registration_id"=> $ulRegistrationId];
+
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new UniteLocaleEntity($row, $this->logger);
+    });
+  }
 }

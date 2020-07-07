@@ -919,20 +919,7 @@ AND   `ul_id`           = :ul_id
     $this->executeQueryForUpdate($sql, $parameters);
   }
 
-
-  /**
-   * Insert one queteur
-   *
-   * @param QueteurEntity $queteur The queteur to update
-   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @param int $roleId role id of the user of RCQ that creates the queteur. If roleId is 9, superAdmin, then it allows the queteur to be created in any Unite Local of the super Admin choice
-   * @return int the primary key of the new queteur
-   * @throws PDOException if the query fails to execute on the server
-   * @throws Exception
-   */
-  public function insert(QueteurEntity $queteur, int $ulId, int $roleId)
-  {
-    $sql = "
+  public static $insertQueteurSQL = "
 INSERT INTO `queteur`
 (
   `first_name`,
@@ -968,6 +955,20 @@ VALUES
   :referent_volunteer
 )
 ";
+
+  /**
+   * Insert one queteur
+   *
+   * @param QueteurEntity $queteur The queteur to update
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId role id of the user of RCQ that creates the queteur. If roleId is 9, superAdmin, then it allows the queteur to be created in any Unite Local of the super Admin choice
+   * @return int the primary key of the new queteur
+   * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
+   */
+  public function insert(QueteurEntity $queteur, int $ulId, int $roleId)
+  {
+
     $parameters = [
       "first_name"         => $queteur->first_name,
       "last_name"          => $queteur->last_name,
@@ -982,7 +983,7 @@ VALUES
       "referent_volunteer" => $queteur->secteur == 3 ? $queteur->referent_volunteer : 0
     ];
 
-    return $this->executeQueryForInsert($sql, $parameters, true);
+    return $this->executeQueryForInsert(self::$insertQueteurSQL, $parameters, true);
   }
 
 

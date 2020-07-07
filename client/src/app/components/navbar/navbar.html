@@ -83,6 +83,9 @@
 
               <li class="divider" ng-show="vm.currentUlMode >= 2"></li>
               <li role="menuitem" ng-show="vm.currentUlMode >= 2"><a ng-href="/#!/exportData"     ><span class="glyphicon glyphicon-file-cloud-download"      aria-hidden="true"></span>&nbsp;&nbsp;Export des données de L'UL</a></li>
+
+              <li class="divider" ng-show="vm.currentUserRole >= 9"></li>
+              <li role="menuitem" ng-show="vm.currentUserRole >= 9"><a ng-href="/#!/listULRegistration"><span class="glyphicon glyphicon-inbox-in"      aria-hidden="true"></span>&nbsp;&nbsp;Inscription des ULs</a></li>
             </ul>
           </div>
         </li>

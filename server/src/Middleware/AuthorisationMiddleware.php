@@ -246,7 +246,6 @@ class AuthorisationMiddleware implements MiddlewareInterface
       catch(Exception $applicationError)
       {
         $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>json_encode($applicationError)));
-
         return (new Response())->withStatus(500);
       }
       //log execution time in milliseconds; error(true/false);request path

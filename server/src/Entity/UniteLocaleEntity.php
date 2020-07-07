@@ -182,6 +182,39 @@ class UniteLocaleEntity  extends Entity
    */
   public $admin_mobile;
 
+  /***UL REGISTRATION***/
+
+  /**
+   * @OA\Property()
+   * @var int $registration_id the registration id
+   */
+  public $registration_id;
+
+  /**
+   * @OA\Property()
+   * @var Carbon $created the registration create date
+   */
+  public $created;
+
+  /**
+   * @OA\Property()
+   * @var bool $registration_approved if the approval is not done (null), approved or rejected
+   */
+  public $registration_approved;
+
+  /**
+   * @OA\Property()
+   * @var string $reject_reason the reason of rejection
+   */
+  public $reject_reason;
+
+  /**
+   * @OA\Property()
+   * @var Carbon $approval_date Date of approval/rejection
+   */
+  public $approval_date;
+
+
   protected $_fieldList = ['id','name','phone','latitude','longitude','address','postal_code','city','external_id','email','id_structure_rattachement','date_demarrage_activite','date_demarrage_rcq','mode','publicDashboard',
     'president_man'         ,
     'president_nivol'       ,
@@ -200,7 +233,12 @@ class UniteLocaleEntity  extends Entity
     'admin_first_name'      ,
     'admin_last_name'       ,
     'admin_email'           ,
-    'admin_mobile'         ];
+    'admin_mobile'          ,
+    'registration_id'       ,
+    'created'               ,
+    'registration_approved' ,
+    'reject_reason'         ,
+    'approval_date'        ];
   /**
    * Accept an array of data matching properties of this class
    * and create the class
@@ -246,5 +284,14 @@ class UniteLocaleEntity  extends Entity
     $this->getString ('admin_last_name'            , $data, 100);
     $this->getString ('admin_email'                , $data, 100);
     $this->getString ('admin_mobile'               , $data, 20);
+
+    $this->getInteger('registration_id'            , $data);
+    $this->getBoolean('registration_approved'      , $data);
+    $this->getDate   ('created'                    , $data);
+    $this->getDate   ('approval_date'              , $data);
+    $this->getString ('reject_reason'              , $data, 200);
+
+
+
   }
 }
