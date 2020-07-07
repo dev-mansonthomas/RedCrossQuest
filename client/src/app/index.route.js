@@ -194,6 +194,18 @@
         controller  : 'ChangelogController',
         controllerAs: 'cl'
       })
+      // ============== UL Registration Administration   ==============
+      .when('/listULRegistration', {
+        templateUrl : 'app/admin/ULRegistration/listULRegistration/listULRegistration.html',
+        controller  : 'ListULRegistrationController',
+        controllerAs: 'lur'
+      })
+      .when('/validateULRegistration/:id', {
+        templateUrl : 'app/admin/ULRegistration/ULRegistrationValidation/ulRegistrationValidation.html',
+        controller  : 'ULRegistrationValidationController',
+        controllerAs: 'urv'
+      })
+
       // ============== OTHERWISE ==============
       .otherwise({
         redirectTo: '/'

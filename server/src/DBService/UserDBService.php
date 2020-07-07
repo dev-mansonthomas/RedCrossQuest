@@ -66,12 +66,12 @@ AND u.queteur_id = q.id
    *
    * @param string $nivol : Nivol of the user
    * @param int $queteurId : queteurId of the user
+   * @param int $roleId the roleId to create the user with. When validating UL, it's 4 (for admin) otherwise it's 1 (
    * @return int the primary key of the new user
-   * @throws PDOException if the query fails to execute on the server
    * @throws UserAlreadyExistsException if at least one active user exist on the whole system
    * @throws Exception
    */
-  public function insert(string $nivol, int $queteurId):int
+  public function insert(string $nivol, int $queteurId, int $roleId=1):int
   {
 
     $this->checkExistingUserWithNivol($nivol);
@@ -96,7 +96,7 @@ VALUES
 :nivol,
 :queteur_id,
 '',
-1,
+:role_id,
 NOW(),
 NOW(),
 1,
@@ -110,7 +110,8 @@ NULL
 
     $parameters = [
       "nivol"       => ltrim($nivol, '0'),
-      "queteur_id"  => $queteurId
+      "queteur_id"  => $queteurId,
+      "role_id"     => $roleId
     ];
 
     return $this->executeQueryForInsert($sql, $parameters, true);

@@ -52,8 +52,22 @@
 
 
       <uib-accordion close-others="false">
+        <div uib-accordion-group class="panel-default ng-scope ng-isolate-scope panel" heading="Paramètres de l'Unité Locale">
+          <ul>
+            <li><b>Pourquoi :</b> Vérifier les coordonnées de l'unité locale, ainsi que vos préférences pour RedCrossQuest et RedQuest</li>
+            <li><b>Comment :</b>
+              <ol>
+                <li>Menu Administration -> Paramétrage de l'UL</li>
+                <li>Il y a 3 parties : Coordonnées de l'unité locales, Paramétrage de RedCrossQuest et Paramétrage de RedQuest</li>
+                <li>Coordonnées: email, téléphone, adresse postale (utilisé comme référence pour définir les trajets base à point de quête), les coordonnées des administrateurs, trésorier et président de l'unité locale.</li>
+                <li>RedCrossQuest : vous pouvez activer la fonction 'Sac de Banque', qui vous permet de définir dans quel sac vous versez le contenu d'un tronc. </li>
+                <li>RedQuest : Affichage dans l'application mobile pour le quêteur du classement des quêteurs (toutes les pages, premières pages, aucune), des stats journalières (en construction), laissez le quêteur définir son heure de départ et retour.</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
 
-        <div uib-accordion-group class="panel-{{main.setupStatus.userIncomplete?'warning':'default'}}"  heading="Créez les utilisateurs de l'application RCQ">
+        <div uib-accordion-group class="panel-{{main.setupStatus.userIncomplete?'warning':'default'}} ng-scope ng-isolate-scope panel"  heading="Créez les utilisateurs de l'application RCQ">
           <ul>
             <li><b>Pourquoi :</b> En créant plusieurs utilisateurs pour vos cadres de quêtes, ceux-ci peuvent vous aider à finir plus rapidement le paramétrage
               initial et ils vous permettent de distribuer les tâches lors de la quête (gérer préparation/départ/retour, comptage, suivi des chiffres).
@@ -77,7 +91,7 @@
           </ul>
         </div>
 
-        <div uib-accordion-group class="panel-{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}}" heading="Définissez vos résultats journaliers des années précédentes">
+        <div uib-accordion-group class="panel-{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}} ng-scope ng-isolate-scope panel" heading="Définissez vos résultats journaliers des années précédentes">
           <ul>
             <li><b>Pourquoi :</b> Ces données vous permettront de comparer les chiffres journaliers de cette année avec les précédentes années et ainsi de vous situer par rapport à votre objectif</li>
             <li><b>Durée :</b> Une fois que vous avez retrouvez les données, 2 minutes par année</li>
@@ -93,7 +107,7 @@
         </div>
 
 
-        <div uib-accordion-group class="panel-{{main.setupStatus.troncsIncomplete?'warning':'default'}}" heading="Créez les troncs dans RCQ">
+        <div uib-accordion-group class="panel-{{main.setupStatus.troncsIncomplete?'warning':'default'}} ng-scope ng-isolate-scope panel" heading="Créez les troncs dans RCQ">
           <ul>
             <li><b>Pourquoi :</b> A chaque tronc sera attribué un identifiant représenté sous la forme d'un QRCode <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span> qui est à coller sous le tronc,
               ce qui permet de fiabiliser les opérations de distrubtion des troncs et de comptages des pièces et billets</li>
@@ -117,7 +131,7 @@
           </ul>
         </div>
 
-        <div uib-accordion-group class="panel-{{main.setupStatus.pointQueteIncomplete?'warning':'default'}}" heading="Définition des points de quête">
+        <div uib-accordion-group class="panel-{{main.setupStatus.pointQueteIncomplete?'warning':'default'}} ng-scope ng-isolate-scope panel" heading="Définition des points de quête">
           <ul>
             <li><b>Pourquoi :</b> La défnition des points de quête permet de déterminer où vos quêteurs vont quêter et dans quelle condition
               (pieton, feux, magasin, à combien de quêteurs).<br/>
@@ -134,29 +148,31 @@
           </ul>
         </div>
 
-        <div uib-accordion-group class="panel-{{main.setupStatus.queteurIncomplete?'warning':'default'}}" heading="Créez les quêteurs de votre unité locale">
+        <div uib-accordion-group class="panel-{{main.setupStatus.queteurIncomplete?'warning':'default'}} ng-scope ng-isolate-scope panel" heading="Inscription de vos quêteurs : diffuser les liens vers RedQuest">
           <ul>
-            <li><b>Pourquoi :</b> Chaque quêteur doit être identifié dans l'application, et ce afin de pouvoir lui envoyer des emails, de s'assurer qu'un mineur ne quête pas sur un point de quête non prévu pour les mineurs</li>
-            <li><b>Durée via Export Gaia :</b> environ 5 minutes + le temps d'éventuellement corriger les données (Variable).</li>
-            <li><b>Durée en ajoutant quêteur par quêteur : </b> environ 2 minutes par quêteur.</li>
-            <li><b>Comment : Ajoutez un Quêteur</b>
+            <li><b>Pourquoi :</b> Chaque quêteur doit être identifié dans l'application, et ce afin de pouvoir lui envoyer des emails, de s'assurer qu'un mineur ne quête pas sur un point de quête non prévu pour les mineurs, lui associer le compte de chacun de ses troncs</li>
+            <li><b>Durée :</b> quelques minutes + le temps de valider les inscriptions</li>
+            <li><b>Comment :</b>
               <ol>
-                <li>Soit vous ajouter à la main tous vos quêteurs (non recommandé si vous avez plus d'une vingtaine de bénévoles)</li>
-                <li>Soit vous faîtes un export Gaia des bénévoles de votre Unité Locale et vous l'adaptez au format suivant:</li>
-                <ol>
-                  <li>Nivol</li>
-                  <li>Sexe: 0: femme, 1: homme</li>
-                  <li>Nom</li>
-                  <li>Prénom</li>
-                  <li>Date de naissance	au format AAAA-MM-DD: Obligatoire pour les bénévoles mineurs, si inconnus pour les adultes, mettre 1922-12-22.</li>
-                  <li>Telephone mobile : au format +33XXXXXXXXX (pour vous permettre d'appeler le bénévole rapidement en cas de souci, l'application RCQ pourrait envoyer des SMS prochainement)</li>
-                  <li>Email : l'application RCQ envoie des emails </li>
-                  <li>Secteur: 1: Action Sociale, 2: Secours, 4:Ancien Bénévole, inactif ou adhérent</li>
-                </ol>
+                <li>Allez dans Administration -> RedQuest - Impression des QRCodes</li>
+                <li>Imprimez les QR Codes du site de production, puis affichez les dans votre locale. Les bénévoles et bénévoles d'un jour pourront s'inscrire le jour même en scannant le QRCode avec l'appareil photo de leur smartphone</li>
+                <li>Diffusez par email/facebook ou autre, le lien d'inscription pour vos bénévoles. Prévoyez de le faire suffisamment en avance pour avoir le temps d'imprimer les QRCodes des quêteurs et de les coller sur la carte du quêteur.</li>
+                <li>Comment se déroule l'inscription et la validation de l'inscription
+                  <ol>
+                    <li>Le bénévole scan le QR Code sur son mobile ou clique sur le lien</li>
+                    <li>Il arrive alors sur le site de RedQuest</li>
+                    <li>Il se connect soit avec Gmail, soit Facebook, ou il se créer un compte en spécifiant un email et un mot de passe</li>
+                    <li>Il accède ensuite a un formulaire, lui demandant les informations suivante : nom, prénom, sexe, date de naissance, email, mobile, secteur</li>
+                    <li>Il valide l'inscription</li>
+                    <li>L'administrateur voit alors l'inscription arriver dans le menu de RedCrossQuest: le compteur a droite du menu 'Quêteur' est incrémenté </li>
+                    <li>Vous cliquez sur le compteur et accéder à la liste des inscriptions a valider</li>
+                    <li>Lorsque vous cliquez sur une inscription, le site fait une recherche sur les quêteurs déjà enregistré pour être sur que le bénévole n'est pas déjà inscrit</li>
+                    <li>Si le queteur est déjà inscrit, vous pouvez associez l'inscription dans RedQuest avec le queteur dans RedCrossQuest</li>
+                    <li>Si le queteur n'est pas encore inscrit, vous pouvez créer un nouveau quêteur</li>
+                  </ol>
                 </li>
-                <li>Et vous envoyez ce fichier à <a href="mailto:thomas.manson@croix-rouge.fr?subject=[Export Queteur][UL={{::main.ulId}}] {{::main.ulName}}">thomas.manson@croix-rouge.fr</a>
-                  avec pour sujet "[Export Queteur][UL={{::main.ulId}}] {{::main.ulName}}" en précisant votre mobile dans le corps du mail (en cas de souci).
-                  Je m'occuperai de charger vos quêteurs d'un coup.</li>
+
+
               </ol>
             </li>
           </ul>
@@ -164,12 +180,12 @@
 
 
 
-        <div uib-accordion-group class="panel-default" heading="Achat de matériel">
+        <div uib-accordion-group class="panel-default ng-scope ng-isolate-scope panel" heading="Achat de matériel">
           <ul>
             <li><b>Pourquoi :</b> Pour utiliser efficacement l'application RedCrossQuest</li>
             <li><b>Comment :</b>
               <ol>
-                <li><a href="https://www.ctms.fr/fraude-monetique/trieuse-valorisatrice/53-tdp-50.html" target="_blank">Trieuse de pièces CMTS TDP 50</a> : Pour compter de manière fiable et rapide les pièces</li>
+                <li><a href="https://shop.ctms.fr/fraude-monetique/traitement-des-pieces/53-tdp-50.html" target="_blank">Trieuse de pièces CMTS TDP 50</a> : Pour compter de manière fiable et rapide les pièces</li>
                 <li><a href="https://www.amazon.fr/gp/product/B0096M4QOY/ref=oh_aui_detailpage_o07_s00?ie=UTF8&psc=1" target="_blank">WebCam</a> : Même si l'application est prévue pour pouvoir s'en passer, elle fait gagner du temps et fiabilise les données saisies (par exemple, cela évite les fautes de frappe qui feraient choisir une personne à la place d'une autre ou un tronc à la place d'un autre)</li>
                 <li><a href="https://www.amazon.fr/dp/B000KJOPB6/ref=wl_it_dp_o_pC_S_ttl?_encoding=UTF8&colid=1KCTGF7CH2M0J&coliid=I79UXJI8L7C57" target="_blank">Film autocollant pour coller les QRCodes</a> : Au moins sur les troncs, cela permet de protéger le QRCode de la pluie.<br/> Ou sinon, cette feuille autocollante est resistante à la pluie, mais nécessite une imprimante laser : <a href="https://www.avery.fr/produit/etiquette-ultra-resistante-l4775-20" target="_blank">Etiquette Ultra Resistante</a></li>
                 <li><a href="https://www.amazon.fr/100-feuilles-papier-adh%C3%A9sif-blanc/dp/B0161EU3VO/ref=pd_sim_229_4?_encoding=UTF8&psc=1&refRID=ZZADHQWY505X2068AMZ1" target="_blank">Page etiquette autocollante pour coller les QR Code des quêteurs sur les cartes de quêteurs</a></li>
@@ -179,10 +195,10 @@
           </ul>
         </div>
 
-        <div uib-accordion-group class="panel-default" heading="Impression des QR Codes">
+        <div uib-accordion-group class="panel-default ng-scope ng-isolate-scope panel" heading="Impression des QR Codes">
           <ul>
             <li><b>Pourquoi :</b> En utilisant les QRCode et en les scannant avec la webcam, vous gagnez en rapidité et en fiabilité en évitant les fautes de frappe.</li>
-            <li><b>Durée : </b>20 minutes</li>
+            <li><b>Durée : </b>1 heure</li>
             <li><b>Comment :</b>
               <ol>
                 <li>Aller sur les deux pages suivantes et cliquez sur le bouton "Imprimer"</li>
@@ -190,19 +206,21 @@
                 <li><b>Menu->Quêteurs - Impression des QRCodes</b></li>
                 <li>Par défaut la taille des QRCode est fixée à 200, il est recommandé de ne pas changer cette valeur</li>
                 <li>Une fois imprimé, il faut découper chaque QRCode. Le plus simple est d'utiliser un Massicot</li>
+                <li>Coller les QR Codes sur les troncs &amp; et cartes de quêteur à l'aide de film transparant autocollant</li>
               </ol>
             </li>
           </ul>
         </div>
 
-        <div uib-accordion-group class="panel-default" heading="Test de bon fonctionnement du PC qui servira pour la quête">
+        <div uib-accordion-group class="panel-default ng-scope ng-isolate-scope panel" heading="Test de bon fonctionnement du PC qui servira pour la quête">
           <ul>
             <li><b>Pourquoi :</b> Pour s'assurer que le jour J tout fonctionnera correctement</li>
             <li><b>Durée : </b>5 minutes</li>
-            <li><b>Comment :</b> <u>Depuis l'ordinateur qui sera utilisé pendant la quête</u>
+            <li><b>Comment :</b> <u>Depuis l'ordinateur qui sera utilisé pendant la quête et en utilisant le site de test : <a href="https://test.redcrossquest.coix-rouge.fr" target="_blank">https://test.redcrossquest.coix-rouge.fr</a> </u>
               <ol>
-                <li>Effectuez une préparation de Tronc</li>
-                <li>Naviguez sur la page "Graphiques" et ouvrez un graphique</li>
+                <li>Effectuez une préparation de Tronc en utilisant la webcam et les QRCodes, puis les départ, retour, comptage</li>
+                <li>Recommencez sans les QRCodes, en tapant les numéros des tronc et quêteur</li>
+                <li>Naviguez sur la page "Graphiques" et ouvrez un graphique et vérifier que les données s'affichent correctement (la synchronisation des graphiques se fait toutes les minutes)</li>
               </ol>
             </li>
           </ul>

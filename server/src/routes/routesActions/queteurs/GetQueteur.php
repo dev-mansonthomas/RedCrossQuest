@@ -58,7 +58,7 @@ class GetQueteur extends Action
     ]);
 
     $queteurId  = $this->validatedData["id"];
-    $queteur    = $this->queteurDBService->getQueteurById($queteurId, $ulId);
+    $queteur    = $this->queteurDBService->getQueteurById($queteurId, $roleId == 9? null : $ulId);
 
     if($queteur->ul_id != $ulId && $roleId != 9)
     {

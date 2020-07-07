@@ -153,7 +153,18 @@ abstract class DBService
       {
         $stmt = $this->db->prepare($sql);
 
-        $this->db->beginTransaction();
+        //sometime insert operation are within a more complex operation that requires transaction
+        //in this case, we don't start or commit the transaction)
+        $transactionCurrentlyInProgress = false;
+        if(!$this->db->inTransaction())
+        {
+          $this->db->beginTransaction();
+        }
+        else
+        {
+          $transactionCurrentlyInProgress = true;
+        }
+
         $stmt->execute($parameters);
 
         $stmt->closeCursor();
@@ -164,7 +175,10 @@ abstract class DBService
         $lastInsertId = $row['last_insert_id()'];
 
         $stmt->closeCursor();
-        $this->db->commit();
+        if(!$transactionCurrentlyInProgress)
+        {
+          $this->db->commit();
+        }
 
         return $lastInsertId;
       }

@@ -1,0 +1,421 @@
+<acme-navbar></acme-navbar>
+<div class="container">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">Validation de l'inscription d'unité locale</div>
+  </div>
+
+  <!-- Successful Save -->
+  <div class="row" ng-show="urv.savedSuccessfully">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="urv.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
+        <strong>Bravo!</strong> Les paramètres de l'UL ont été sauvegardé avec succès!
+      </div>
+    </div>
+  </div>
+  <!-- Error while saving -->
+  <div class="row" ng-if="urv.errorWhileSaving==true">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="urv.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
+        <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde !
+        <pre style="text-align: left;">{{urv.errorWhileSavingDetails}}</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <uib-accordion close-others="true">
+    <div uib-accordion-group class="panel-default" heading="Nom et adresse de l'UL" is-open="true">
+
+      <form novalidate name="ulSettingsForm">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.ulEmail.$invalid}">
+                <label for="ulEmail" class="control-label">Email de contact</label>
+                <input type="email" id="ulEmail" name="ulEmail" ng-model="urv.settings.email" maxlength="100" class="form-control" required autocomplete="email" autofocus
+                       ng-pattern="'^.*@croix-rouge.fr$'"/>
+                <span class="help-block">Cet email est affiché en signature des mails envoyé par RedCrossQuest en votre nom et dans l'application RedQuest</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.ulPhone.$invalid}">
+                <label for="ulPhone" class="control-label">Téléphone de contact</label>
+                <input type="text" id="ulPhone" name="ulPhone" ng-model="urv.settings.phone" maxlength="13" class="form-control" required autocomplete="phone"
+                       ng-pattern="'\\+33[1,6,7,9][0-9]{8,8}'"/>
+                <span class="help-block">Ce téléphone est affiché en signature des mails envoyé par RedCrossQuest en votre nom et dans l'application RedQuest</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqName.$invalid}">
+                <label for="ulDateDemarrageRCQ" class="control-label">Date de démarrage d'utilisateur de RCQ</label>
+                <input type="text" id="ulDateDemarrageRCQ" name="ulDateDemarrageRCQ" ng-model="urv.settings.date_demarrage_rcq" class="form-control" readonly/>
+                <span class="help-block">Date a partir de laquelle votre Unité Locale Utilise RedCrossQuest</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqName.$invalid}">
+                <label for="ulName" class="control-label">Nom</label>
+                <input type="text" id="ulName" name="ulName" ng-model="urv.settings.name" maxlength="50" class="form-control" required autocomplete="name" autofocus/>
+              </div>
+            </div>
+            <div class="col-md-2 ">
+              <label for="ulID" class="control-label">id</label>
+              <input type="text" id="ulID" name="pqID" ng-model="urv.settings.id" class="form-control" readonly/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqAddress.$invalid}">
+                <label for="ulAddress" class="control-label">Adresse</label>
+                <input type="text" id="ulAddress" name="ulAddress" ng-model="urv.settings.address" maxlength="70"  class="form-control" required autocomplete="address"/>
+              </div>
+            </div>
+            <div class="col-md-2" style="width:100px;">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqPostalCode.$invalid}">
+                <label for="pqPostalCode" class="control-label" style="font-size: 11px;">Code Postal</label>
+                <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="urv.settings.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'/>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqCity.$invalid}">
+                <label for="pqCity" class="control-label">Ville</label>
+                <input type="text" id="pqCity" name="pqCity" ng-model="urv.settings.city" class="form-control" maxlength="70"  required autocomplete='address-level2'/>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Administrateur Principal</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.admin_man.$invalid}">
+                        <label for="admin_manRadio1" class="control-label">Sexe</label>  <br/>
+                        <label class="radio-inline">
+                          <input type="radio" name="admin_man" id="admin_manRadio1" ng-model="urv.settings.admin_man" ng-value="true" required> Homme
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="admin_man" id="admin_manRadio2" ng-model="urv.settings.admin_man" ng-value="false" required> Femme
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.admin_nivol.$invalid}">
+                        <label for="admin_nivol" class="control-label">NIVOL</label>
+                        <input     name="admin_nivol"
+                                   id="admin_nivol"
+                                   class="form-control"
+                                   ng-model="urv.settings.admin_nivol"
+                                   ng-required
+                                   ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.admin_first_name.$invalid}">
+                        <label for="admin_first_name" class="control-label">Prénom</label>
+                        <input
+                          name="admin_first_name"
+                          id="admin_first_name"
+                          class="form-control"
+                          ng-model="urv.settings.admin_first_name"
+
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.admin_last_name.$invalid}">
+                        <label for="admin_last_name" class="control-label">Nom</label>
+                        <input name="admin_last_name"
+                               id="admin_last_name"
+                               class="form-control"
+                               ng-model="urv.settings.admin_last_name"
+
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.admin_email.$invalid}">
+                        <label for="admin_email" class="control-label">Email</label>
+                        <div class="input-group">
+                          <span class="input-group-addon">@</span>
+                          <input
+                            name="admin_email"
+                            id="admin_email"
+                            class="form-control"
+                            type="email"
+                            ng-model="urv.settings.admin_email"
+                            ng-pattern="'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$'"
+                            required/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.admin_mobile.$invalid}">
+                        <label for="admin_mobile" class="control-label">Téléphone</label>
+                        <div class="input-group">
+                          <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
+                          <input name="admin_mobile" id="admin_mobile" class="form-control"  type="text"
+                                 ng-model="urv.settings.admin_mobile" required ng-pattern="'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Trésorier</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.tresorier_man.$invalid}">
+                        <label for="tresorier_manRadio1" class="control-label">Sexe</label>  <br/>
+                        <label class="radio-inline">
+                          <input type="radio" name="tresorier_man" id="tresorier_manRadio1" ng-model="urv.settings.tresorier_man" ng-value="true" required> Homme
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="tresorier_man" id="tresorier_manRadio2" ng-model="urv.settings.tresorier_man" ng-value="false" required> Femme
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.tresorier_nivol.$invalid}">
+                        <label for="tresorier_nivol" class="control-label">NIVOL</label>
+                        <input     name="tresorier_nivol"
+                                   id="tresorier_nivol"
+                                   class="form-control"
+                                   ng-model="urv.settings.tresorier_nivol"
+                                   ng-required
+                                   ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.tresorier_first_name.$invalid}">
+                        <label for="tresorier_first_name" class="control-label">Prénom</label>
+                        <input
+                          name="tresorier_first_name"
+                          id="tresorier_first_name"
+                          class="form-control"
+                          ng-model="urv.settings.tresorier_first_name"
+
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.tresorier_last_name.$invalid}">
+                        <label for="tresorier_last_name" class="control-label">Nom</label>
+                        <input name="tresorier_last_name"
+                               id="tresorier_last_name"
+                               class="form-control"
+                               ng-model="urv.settings.tresorier_last_name"
+
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.tresorier_email.$invalid}">
+                        <label for="tresorier_email" class="control-label">Email</label>
+                        <div class="input-group">
+                          <span class="input-group-addon">@</span>
+                          <input
+                            name="tresorier_email"
+                            id="tresorier_email"
+                            class="form-control"
+                            type="email"
+                            ng-model="urv.settings.tresorier_email"
+                            ng-pattern="'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$'"
+                            required/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.tresorier_mobile.$invalid}">
+                        <label for="tresorier_mobile" class="control-label">Téléphone</label>
+                        <div class="input-group">
+                          <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
+                          <input name="tresorier_mobile" id="tresorier_mobile" class="form-control"  type="text"
+                                 ng-model="urv.settings.tresorier_mobile" required ng-pattern="'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="padding-top:10px;">
+            <div class="col-md-6">
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Président</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.president_man.$invalid}">
+                        <label for="president_manRadio1" class="control-label">Sexe</label>  <br/>
+                        <label class="radio-inline">
+                          <input type="radio" name="president_man" id="president_manRadio1" ng-model="urv.settings.president_man" ng-value="true" required> Homme
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="president_man" id="president_manRadio2" ng-model="urv.settings.president_man" ng-value="false" required> Femme
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.president_nivol.$invalid}">
+                        <label for="president_nivol" class="control-label">NIVOL</label>
+                        <input     name="president_nivol"
+                                   id="president_nivol"
+                                   class="form-control"
+                                   ng-model="urv.settings.president_nivol"
+                                   ng-required
+                                   ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.president_first_name.$invalid}">
+                        <label for="president_first_name" class="control-label">Prénom</label>
+                        <input
+                          name="president_first_name"
+                          id="president_first_name"
+                          class="form-control"
+                          ng-model="urv.settings.president_first_name"
+
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.president_last_name.$invalid}">
+                        <label for="president_last_name" class="control-label">Nom</label>
+                        <input name="president_last_name"
+                               id="president_last_name"
+                               class="form-control"
+                               ng-model="urv.settings.president_last_name"
+
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-7">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.president_email.$invalid}">
+                        <label for="president_email" class="control-label">Email</label>
+                        <div class="input-group">
+                          <span class="input-group-addon">@</span>
+                          <input
+                            name="president_email"
+                            id="president_email"
+                            class="form-control"
+                            type="email"
+                            ng-model="urv.settings.president_email"
+                            ng-pattern="'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@croix-rouge.fr$'"
+                            required/>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group" ng-class="{'has-error':ulSettingsForm.president_mobile.$invalid}">
+                        <label for="president_mobile" class="control-label">Téléphone</label>
+                        <div class="input-group">
+                          <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
+                          <input name="president_mobile" id="president_mobile" class="form-control"  type="text"
+                                 ng-model="urv.settings.president_mobile" required ng-pattern="'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div class="row" style="margin-top:20px;">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="form-group" ng-class="{'has-error':ulSettingsForm.registration_approved.$invalid}">
+                  <label for="registrationApprovedRadio1" class="control-label">Je valide l'inscription de l'Unité Locale</label><br/>
+                  <label class="radio-inline">
+                    <input type="radio" name="registration_approved" id="registrationApprovedRadio1" ng-model="urv.settings.registration_approved" ng-value="true" ng-required="true"> Oui
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="registration_approved" id="registrationApprovedRadio2" ng-model="urv.settings.registration_approved" ng-value="false" ng-required="true"> Non
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 " ng-show="urv.settings.registration_approved!= true">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.registrationRejectReason.$invalid}">
+                <label for="registrationRejectReason" class="control-label">Motif du refus de l'inscription ?</label><br/>
+                <small>Soyez courtois :)</small>
+                <input name="registrationRejectReason" id="registrationRejectReason" class="form-control" type="text" ng-model="urv.settings.reject_reason" ng-required="urv.settings.registration_approved!= true" autocomplete="off"/>
+              </div>
+            </div>
+
+          </div>
+          <div class="row" style="padding-top:25px">
+            <div class="col-md-2 col-md-offset-6">
+              <a ng-href="/#!/listULRegistration"><span class="glyphicon glyphicon-inbox-in"      aria-hidden="true"></span>&nbsp;&nbsp;Inscription des ULs</a>
+            </div>
+            <div class="col-md-2 col-md-offset-2">
+              <button type="button" class="btn btn-primary" ng-disabled="ulSettingsForm.$invalid"  ng-click='urv.save();'>Sauvegarder</button>
+            </div>
+          </div>
+          <div class="row" style="padding-top:25px">
+            <div class="col-md-12">
+<pre>
+user_id              {{urv.settings.response.user_id             }}
+queteur_id           {{urv.settings.response.queteur_id          }}
+ul_id                {{urv.settings.response.ul_id               }}
+registration_id      {{urv.settings.response.registration_id     }}
+create_queteur_sql   <hr>{{urv.settings.response.create_queteur_sql  }}<hr>
+update_ul_sql        <hr>{{urv.settings.response.update_ul_sql       }}<hr>
+</pre>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </uib-accordion>
+</div>

@@ -1,0 +1,85 @@
+<acme-navbar></acme-navbar>
+<div class="container">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-4">
+          <h5>Les Inscriptions des Unités Locales</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="well">
+    <form class="form-search" name="searchForm" novalidate ng-submit='lur.doSearch();'>
+      <div class="row">
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="registrationStatus" class="control-label">Status de l'inscription </label>
+
+            <select name="registrationStatus" id="registrationStatus" placeholder="Type de point de quête"  class="form-control" ng-model="lur.registrationStatus" required
+                    ng-options="(t.id) as t.label
+                      for
+                      t in lur.registrationStatusList"
+            >
+            </select>
+
+            Nombre d'inscriptions: <span class="badge">{{lur.rowCount}}</span>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <br/>
+          <input type="submit" class="btn btn-primary" value="Rechercher" />
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+      <ul uib-pagination ng-change="lur.doSearch()" boundary-links="true" total-items="lur.rowCount" ng-model="lur.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+    </div>
+  </div>
+  <div class="row">
+
+    <table class="table table-hover table-condensed histo">
+      <thead>
+        <tr>
+          <th>Reg. ID           </th>
+          <th>UL ID             </th>
+          <th>Nom               </th>
+          <th>Ville             </th>
+          <th>Admin sexe        </th>
+          <th>Admin prénom      </th>
+          <th>Admin nom         </th>
+          <th>Admin email       </th>
+          <th>Admin mobile      </th>
+          <th>Date d'Inscription</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="r in lur.registrations">
+          <td><a ng-href="/#!/validateULRegistration/{{::r.registration_id}}">{{::r.registration_id}}</a></td>
+          <td><a ng-href="/#!/validateULRegistration/{{::r.registration_id}}">{{::r.id         }}</a></td>
+          <td><a ng-href="/#!/validateULRegistration/{{::r.registration_id}}">{{::r.name      }}</a></td>
+          <td><a ng-href="/#!/validateULRegistration/{{::r.registration_id}}">{{::r.city }}</a></td>
+          <td><a ng-href="/#!/validateULRegistration/{{::r.registration_id}}">{{::r.admin_man? 'Homme' : 'Femme'}}</a></td>
+          <td><a ng-href="/#!/validateULRegistration/{{::r.registration_id}}">{{::r.admin_first_name  }}</a></td>
+          <td><a ng-href="/#!/validateULRegistration/{{::r.registration_id}}">{{::r.admin_last_name  }}</a></td>
+          <td><a ng-href="mailto:{{::r.admin_email}}">{{::r.admin_email   }}</a></td>
+          <td><a ng-href="tel:+{{::r.admin_mobile }}">+{{::r.admin_mobile }}</a></td>
+          <td><a ng-href="/#!/validateULRegistration/{{::r.registration_id}}">{{::r.created    }}</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3" style="text-align:center;">
+      <ul uib-pagination ng-change="lur.doSearch()" boundary-links="true" total-items="lur.rowCount" ng-model="lur.pageNumber" items-per-page="30" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+    </div>
+  </div>
+
+</div>
