@@ -104,9 +104,9 @@ class ApproveULRegistration extends Action
 
 
       $this->uniteLocaleDBService->updateULRegistration($ulEntity);
-      $ulEntity->date_demarrage_rcq = Carbon::now();
       //updating people details                         //we're operating outside of the current super admin UL
       $this->uniteLocaleDBService->updateUL($ulEntity, $ulEntity->id, $userId);
+      $this->uniteLocaleDBService->updateULDateDemarrageRCQ($ulEntity->id);
       
       //creating queteur
       $queteurData = [

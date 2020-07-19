@@ -44,7 +44,7 @@
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.ulPhone.$invalid}">
                 <label for="ulPhone" class="control-label">Téléphone de contact</label>
                 <input type="text" id="ulPhone" name="ulPhone" ng-model="s.settings.phone" maxlength="13" class="form-control" required autocomplete="phone"
-                       ng-pattern="'\\+33[1,6,7,9][0-9]{8,8}'"/>
+                       ng-pattern="'\\+33[0-9]{9,9}'"/>
                 <span class="help-block">Ce téléphone est affiché en signature des mails envoyé par RedCrossQuest en votre nom et dans l'application RedQuest</span>
               </div>
             </div>

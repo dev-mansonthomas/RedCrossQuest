@@ -34,7 +34,7 @@
           uib-typeahead="ul as ul.full_name for ul in ulr.searchUL($viewValue)"
           typeahead-loading="loadingULs"
           typeahead-no-results="noResults"
-          typeahead-wait-ms="350"
+          typeahead-wait-ms="150"
           class="form-control"
           ng-required
           autocomplete="off">
@@ -89,6 +89,7 @@
                                    required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
                         />
+                        <span class="help-block" ng-show="registerForm.admin_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</sub></span>
                       </div>
                     </div>
                   </div>
@@ -190,6 +191,7 @@
                                    required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
                         />
+                        <span class="help-block" ng-show="registerForm.tresorier_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</sub></span>
                       </div>
                     </div>
                   </div>
@@ -292,6 +294,7 @@
                                    required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
                         />
+                        <span class="help-block" ng-show="registerForm.president_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</sub></span>
                       </div>
                     </div>
                   </div>

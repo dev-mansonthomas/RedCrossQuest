@@ -83,7 +83,7 @@
                        ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }"
                        ng-change="queteur.searchSimilar();"
             />
-            <span class="help-block" ng-show="queteurForm.nivol.$invalid">NIVOL : Numéro d'Identifiant VOLontaire.<br/> <sub>Mettre 1000A si inconnu<br/> (mais faites un effort quand même pour le trouver)</sub></span>
+            <span class="help-block" ng-show="queteurForm.nivol.$invalid">NIVOL : Numéro d'Identifiant VOLontaire.<br/> (Sans les premiers 0) <sub>Mettre 1000A si inconnu<br/> (mais faites un effort quand même pour le trouver)</sub></span>
           </div>
           <div class="form-group" ng-class="{'has-error':queteurForm.referent_volunteer.$invalid}" ng-show="queteur.current.secteur == 3"> <!-- Non Bénévole -->
             <label for="referent_volunteer" class="control-label">Bénévole Référent</label>

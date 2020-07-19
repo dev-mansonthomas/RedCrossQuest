@@ -15,7 +15,12 @@
          $location.host    () !== 'localhost'  &&
          $location.host    () !== 'rcq'        )
       {
-        $window.location.href = $location.absUrl().replace('http', 'https');
+        $window.location.href = $location.absUrl().replace('http', 'https').replace('redcrossquest.com', 'redcrossquest.croix-rouge.fr');
+      }
+
+      if($location.host    ().indexOf('redcrossquest.com')>-1)
+      {
+        $window.location.href = $location.absUrl().replace('redcrossquest.com', 'redcrossquest.croix-rouge.fr');
       }
     };
     forceSSL();

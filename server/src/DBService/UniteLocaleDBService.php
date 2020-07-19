@@ -144,6 +144,29 @@ WHERE `id`               = :id
   }
 
   /**
+   * Update the UL date of first use of RCQ
+   *
+   * @param int $ulId The id of the UL to be updated
+   * @throws PDOException if the query fails to execute on the server
+   * @throws Exception
+   */
+  public function updateULDateDemarrageRCQ(int $ulId):void
+  {
+    $sql = "UPDATE `ul`
+SET
+  `date_demarrage_rcq`   = NOW()  
+WHERE `id`               = :id";
+    $parameters = [
+      "id"                   => $ulId
+    ];
+
+    $this->executeQueryForUpdate($sql, $parameters);
+  }
+
+
+
+
+  /**
    * Update UL registration approval info
    *
    * @param UniteLocaleEntity $ul The UL info
@@ -331,7 +354,7 @@ AND (
     $parameters = ["query" => $query];
 
     return $this->executeQueryForArray($sql, $parameters, function($row) {
-      return new UniteLocaleEntity($row, $this->logger);
+      return new UniteLocaleEntity($row, $this->logger, true);
     });
   }
 

@@ -239,25 +239,31 @@ class UniteLocaleEntity  extends Entity
     'registration_approved' ,
     'reject_reason'         ,
     'approval_date'        ];
+
   /**
    * Accept an array of data matching properties of this class
    * and create the class
    *
    * @param array $data The data to use to create
    * @param LoggerInterface $logger
+   * @param bool $lightMode light mode is used when searching UL for registration
    * @throws Exception if a parse Date or JSON fails
    */
-  public function __construct(array &$data, LoggerInterface $logger)
+  public function __construct(array &$data, LoggerInterface $logger, bool $lightMode=false)
   {
     parent::__construct($logger);
     $this->getInteger('id'                        , $data);
     $this->getString ('name'                      , $data, 50);
+    $this->getInteger('postal_code'               , $data);
+    $this->getString ('city'                      , $data, 70);
+
+    if($lightMode)
+      return;
+
     $this->getString ('phone'                     , $data, 13);
     $this->getFloat  ('latitude'                  , $data);
     $this->getFloat  ('longitude'                 , $data);
     $this->getString ('address'                   , $data, 200);
-    $this->getInteger('postal_code'               , $data);
-    $this->getString ('city'                      , $data, 70);
     $this->getInteger('external_id'               , $data);
     $this->getEmail  ('email'                     , $data);
     $this->getInteger('id_structure_rattachement' , $data);
@@ -290,8 +296,5 @@ class UniteLocaleEntity  extends Entity
     $this->getDate   ('created'                    , $data);
     $this->getDate   ('approval_date'              , $data);
     $this->getString ('reject_reason'              , $data, 200);
-
-
-
   }
 }

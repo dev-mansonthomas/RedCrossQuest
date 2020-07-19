@@ -91,8 +91,8 @@ function npmInstall
   cd "${HOME}/RedCrossQuestCloudFunctions/${PROJECT_NAME}/${FUNC_NAME}/" || exit 1
   echo "running npm install for function ${FUNC_NAME} running in ${PROJECT_NAME}"
   npm install
-  echo "commit -a and push lock file to be available for the gcloud deploy functions"
-  git commit -a index.js common.js package.json package-lock.json -m"Commit before deployment"
+  echo "commit and push lock file to be available for the gcloud deploy functions"
+  git commit index.js common.js package.json package-lock.json -m"Commit before deployment"
   git push
   cd -  || exit 1
 }
