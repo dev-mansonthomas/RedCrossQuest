@@ -52,32 +52,35 @@ declare -A FUNCTIONS_PROJECT_PREFIX=(["notifyRQOfRegistApproval"]="${REDCROSSQUE
                                      ["ztestCrossProjectSQLCx"]="${REDQUEST}")
 
 #grant roles in RCQ projects to RQ & RCQ Cloud functions
+#In RQ-fr-xxx projects, we grant the cloud functions to access the local project secret manager and firestore
 declare -A FUNCTIONS_ROLES_RQ=(["notifyRQOfRegistApproval"]="roles/datastore.user;"       \
                                ["ULQueteurStatsPerYear"]="roles/datastore.user;"          \
                                ["ULTriggerRecompute"]=""                                  \
                                ["ztestCrossProjectFirestoCx"]="roles/datastore.viewer;"   \
-                               ["findQueteurById"]="roles/datastore.viewer;"              \
-                               ["findULDetailsByToken"]=""                                \
-                               ["historiqueTroncQueteur"]="roles/datastore.user;"         \
-                               ["registerQueteur"]=""                                     \
-                               ["troncListPrepared"]="roles/datastore.viewer;"           \
-                               ["troncSetDepartOrRetour"]="roles/datastore.viewer;"      \
-                               ["ztestCrossProjectSQLCx"]="")
+                               ["findQueteurById"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;"              \
+                               ["findULDetailsByToken"]="roles/secretmanager.secretAccessor;"                                \
+                               ["historiqueTroncQueteur"]="roles/datastore.user;roles/secretmanager.secretAccessor" \
+                               ["registerQueteur"]="roles/secretmanager.secretAccessor;"                                     \
+                               ["troncListPrepared"]="roles/datastore.viewer;roles/secretmanager.secretAccessor"           \
+                               ["troncSetDepartOrRetour"]="roles/datastore.viewer;roles/secretmanager.secretAccessor"      \
+                               ["ztestCrossProjectSQLCx"]="roles/secretmanager.secretAccessor;")
 
-declare -A FUNCTIONS_ROLES_RCQ=(["notifyRQOfRegistApproval"]=""               \
-                                 ["ULQueteurStatsPerYear"]="roles/cloudsql.client;roles/secretmanager.secretAccessor"  \
-                                 ["ULTriggerRecompute"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/pubsub.publisher"                            \
+#In RCQ-fr-xxx we grant the rq-fr-xxx CF to access MySQL (hosted in RCQ)
+#and we grant RCQ-fr-xxx cloud function to access mysql, secret manager and pubsub
+declare -A FUNCTIONS_ROLES_RCQ=(["notifyRQOfRegistApproval"]="roles/pubsub.subscriber"               \
+                                 ["ULQueteurStatsPerYear"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/pubsub.subscriber;roles/pubsub.publisher;"  \
+                                 ["ULTriggerRecompute"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/pubsub.publisher;roles/pubsub.subscriber"\
                                  ["ztestCrossProjectFirestoCx"]="roles/datastore.viewer;"       \
-                                 ["findQueteurById"]="roles/cloudsql.client;roles/secretmanager.secretAccessor"                               \
-                                 ["findULDetailsByToken"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/datastore.viewer"   \
-                                 ["historiqueTroncQueteur"]="roles/cloudsql.client;roles/secretmanager.secretAccessor"                        \
-                                 ["registerQueteur"]="roles/cloudsql.client;roles/secretmanager.secretAccessor"                               \
-                                 ["troncListPrepared"]="roles/cloudsql.client;roles/secretmanager.secretAccessor"                            \
-                                 ["troncSetDepartOrRetour"]="roles/cloudsql.client;roles/secretmanager.secretAccessor"                       \
-                                 ["ztestCrossProjectSQLCx"]="roles/cloudsql.client;roles/secretmanager.secretAccessor"             )
+                                 ["findQueteurById"]="roles/cloudsql.client;"                               \
+                                 ["findULDetailsByToken"]="roles/cloudsql.client;"   \
+                                 ["historiqueTroncQueteur"]="roles/cloudsql.client;"                        \
+                                 ["registerQueteur"]="roles/cloudsql.client;"                               \
+                                 ["troncListPrepared"]="roles/cloudsql.client;"                            \
+                                 ["troncSetDepartOrRetour"]="roles/cloudsql.client;"                       \
+                                 ["ztestCrossProjectSQLCx"]="roles/cloudsql.client;"             )
 
 
-declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="--timeout 540s")
+declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="")
 
 
 

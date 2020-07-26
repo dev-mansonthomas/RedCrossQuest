@@ -10,13 +10,13 @@
   "dependencies": {
     "latest-version": "^5.0.0",
     "natives": "^1.1.6",
-    "npm": "^6.14.6"
+    "npm": "^6.14.7"
   },
   "scripts": {
     "test": "gulp test"
   },
   "devDependencies": {
-    "browser-sync": "^2.26.7",
+    "browser-sync": "^2.26.10",
     "browser-sync-spa": "~1.0.3",
     "chalk": "^2.4.2",
     "del": "~3.0.0",
@@ -61,7 +61,7 @@
     "wrench": "~1.5.9"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": "~0.10.0"
   },
   "resolutions": {
     "natives": "1.1.3"

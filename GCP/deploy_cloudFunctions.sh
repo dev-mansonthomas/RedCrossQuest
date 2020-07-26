@@ -92,7 +92,7 @@ function npmInstall
   echo "running npm install for function ${FUNC_NAME} running in ${PROJECT_NAME}"
   npm install
   echo "commit and push lock file to be available for the gcloud deploy functions"
-  git commit index.js common.js package.json package-lock.json -m"Commit before deployment"
+  git commit index.js common.js common_firestore.js common_firebase.js package.json package-lock.json -m"Commit before deployment"
   git push
   cd -  || exit 1
 }
@@ -254,9 +254,8 @@ else
   then
     deployHttpFunction "${FUNCTION_NAME}"
   else
-    CLOUD_FUNCTIONS_DESC=("${CLOUD_FUNCTIONS[FUNC_NAME]//;/ }")
+    IFS=';' read -r -a CLOUD_FUNCTIONS_DESC <<< "${CLOUD_FUNCTIONS[$FUNCTION_NAME]}"
     FUNCTION_TOPIC="${CLOUD_FUNCTIONS_DESC[1]}"
-
     deployPubSubFunction "${FUNCTION_NAME};${FUNCTION_TOPIC}"
   fi
 fi
