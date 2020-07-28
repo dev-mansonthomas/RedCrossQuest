@@ -15,6 +15,11 @@ then
   exit 1
 fi
 
+
+#Conflict of Node version 10 is required for RedCrossQuest, and RedQuest /Cloud Functions can use 14
+PATH="/usr/local/opt/node@14/bin/:$PATH"
+
+
 #load properties
 # shellcheck source=/Users/thomasmanson/.cred/
 . ~/.cred/rcq-${COUNTRY}-${ENV}.properties

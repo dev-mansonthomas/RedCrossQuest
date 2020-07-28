@@ -65,6 +65,16 @@ class MailService
     $deployment        = self::getDeploymentInfo();
     $deploymentLogging = $deployment == '' ? "*PROD*": $deployment;
     $emailAddressesAdded = [];
+
+    if($bcc == null || trim($bcc)=="")
+    {
+      $bcc = "support@redcrossquest.com";
+    }
+    else
+    {
+      $bcc = $bcc.";support@redcrossquest.com";
+    }
+    
     try
     {
       $email = new Mail();
@@ -73,28 +83,25 @@ class MailService
       $email->addTo     ($recipientEmail, $recipientFirstName.' '.$recipientLastName);
       $emailAddressesAdded[]=$recipientEmail;
       //add BCC if required. Sendgrid raise an error if in {to, cc, bcc} there's duplicates
-      if($bcc != null)
-      {
-        if(strpos($bcc, ";")>0)
-        {
-          $mailList = explode(";", $bcc);
-          foreach($mailList as $mailBCC)
-          {
-            if(!in_array($mailBCC, $emailAddressesAdded))
-            {
-              $email->addBcc    ($mailBCC);
-              $emailAddressesAdded[]=$mailBCC;
-            }
 
+      if(strpos($bcc, ";")>0)
+      {
+        $mailList = explode(";", $bcc);
+        foreach($mailList as $mailBCC)
+        {
+          if(!in_array($mailBCC, $emailAddressesAdded))
+          {
+            $email->addBcc    ($mailBCC);
+            $emailAddressesAdded[]=$mailBCC;
           }
         }
-        else
+      }
+      else
+      {
+        if(!in_array($bcc, $emailAddressesAdded))
         {
-          if(!in_array($bcc, $emailAddressesAdded))
-          {
-            $email->addBcc($bcc);
-            $emailAddressesAdded[] = $bcc;
-          }
+          $email->addBcc($bcc);
+          $emailAddressesAdded[] = $bcc;
         }
       }
 
