@@ -92,6 +92,26 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-intl-grapheme" />
       <path value="$PROJECT_DIR$/server/vendor/starkbank/ecdsa" />
       <path value="$PROJECT_DIR$/server/vendor/opis/closure" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/serializer" />
+      <path value="$PROJECT_DIR$/server/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/server/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/server/vendor/php-http/multipart-stream-builder" />
+      <path value="$PROJECT_DIR$/server/vendor/php-http/client-common" />
+      <path value="$PROJECT_DIR$/server/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/server/vendor/php-http/message" />
+      <path value="$PROJECT_DIR$/server/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/server/vendor/php-jsonpointer/php-jsonpointer" />
+      <path value="$PROJECT_DIR$/server/vendor/jane-php/open-api-runtime" />
+      <path value="$PROJECT_DIR$/server/vendor/jane-php/json-schema-runtime" />
+      <path value="$PROJECT_DIR$/server/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/server/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/server/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/server/vendor/clue/stream-filter" />
+      <path value="$PROJECT_DIR$/server/vendor/jolicode/slack-php-api" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php70" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />

@@ -1,5 +1,5 @@
 <?php
-namespace RedCrossQuest\routes\routesActions\settings;
+namespace RedCrossQuest\routes\routesActions\unitesLocales;
 
 
 /**
