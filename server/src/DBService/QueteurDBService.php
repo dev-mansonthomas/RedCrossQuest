@@ -552,7 +552,7 @@ AND q.id IN (
 
     $this->logger->debug("Querying queteurs", array_merge(["sql" => $sql, "searchType" => $searchType], $parameters));
 
-    $count   = $this->getCountForSQLQuery ($sql." qmlsdkfjqsmldfgjqsmdlkfj ", $parameters);
+    $count   = $this->getCountForSQLQuery ($sql, $parameters);
     $results = $this->executeQueryForArray($sql, $parameters, function($row) {
       return new QueteurEntity($row, $this->logger);
     }, $pageableRequestEntity->pageNumber, $pageableRequestEntity->rowsPerPage);
