@@ -23,9 +23,12 @@ class SecretManagerService
   public static $SENDGRID_API_KEY     = "SENDGRID_API_KEY";
   public static $MYSQL_PASSWORD       = "MYSQL_PASSWORD";
   public static $JWT_SECRET           = "JWT_SECRET";
+  public static $SLACK_TOKEN          = "SLACK_TOKEN";
 
   /** @var array */
   private $SECRET_NAME_ID_MAPPING;
+  /** @var string */
+  private $PROJECT_ID;
 
   /** @var boolean if false, it's considered that it's on dev machine and offline or with poor internet connectivity */
   private $online;
@@ -57,17 +60,7 @@ class SecretManagerService
       $this->logger->warning("using local mode for secret names");
     }
 
-    $PROJECT_ID = "rcq-fr-".$this->envs[$env];
-
-//projects/$PROJECT_ID/secrets/&#42;/versions/*
-    $this->SECRET_NAME_ID_MAPPING = [
-      "GOOGLE_RECAPTCHA_KEY" => "projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."GOOGLE_RECAPTCHA_KEY/versions/latest",
-      "RECAPTCHA_SECRET"     => "projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."RECAPTCHA_SECRET/versions/latest",
-      "GOOGLE_MAPS_API_KEY"  => "projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."GOOGLE_MAPS_API_KEY/versions/latest",
-      "SENDGRID_API_KEY"     => "projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."SENDGRID_API_KEY/versions/latest",
-      "MYSQL_PASSWORD"       => "projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."MYSQL_PASSWORD/versions/latest",
-      "JWT_SECRET"           => "projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."JWT_SECRET/versions/latest"
-    ];
+    $this->PROJECT_ID = "rcq-fr-".$this->envs[$env];
 
     $this->secretManagerServiceClient    = new SecretManagerServiceClient();
   }
@@ -119,11 +112,8 @@ class SecretManagerService
    */
   private function getSecretName(string $secretName):string
   {
-    if(!array_key_exists($secretName, $this->SECRET_NAME_ID_MAPPING))
-    {
-      throw new InvalidArgumentException("Invalid secret name. ".$secretName);
-    }
-    return $this->SECRET_NAME_ID_MAPPING[$secretName];
+    //projects/$PROJECT_ID/secrets/&#42;/versions/latest
+    return "projects/$this->PROJECT_ID/secrets/".$this->secretNamePrefix.$secretName."/versions/latest";
   }
 
   /**

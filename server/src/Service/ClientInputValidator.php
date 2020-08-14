@@ -45,12 +45,12 @@ class ClientInputValidator
   }
 
   /**
-   * @param  string $parameterName   the name of the input param (for logging purpose)
-   * @param  array  $inputArray      The reference to the array containing the $parameterName as a key (or not)
-   * @param  int    $maxLength       the max length of the string
-   * @param  bool   $notNull         Is the value allowed to be null or not
-   * @param  string $validationType  Type of validation (UUID, EMAIL)
-   * @return string The trimmed value
+   * @param  string       $parameterName   the name of the input param (for logging purpose)
+   * @param  array|null   $inputArray      The reference to the array containing the $parameterName as a key (or not)
+   * @param  int          $maxLength       the max length of the string
+   * @param  bool         $notNull         Is the value allowed to be null or not
+   * @param  string|null  $validationType  Type of validation (UUID, EMAIL)
+   * @return string|null                   The trimmed value
    */
 
   public function validateString(string $parameterName, ?array &$inputArray, int $maxLength, bool $notNull, $validationType=null):?string

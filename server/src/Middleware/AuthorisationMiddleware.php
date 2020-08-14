@@ -59,7 +59,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
   {
     //Define the urls that you want to exclude from Authentication, aka public urls
     $this->whiteList = array('\/authenticate');
-    $this->logger    = $container->get(LoggerInterface::class );
+    $this->logger    = $container->get(LoggerInterface::class);
 
     $this->bearer      = "Bearer ";
     $this->bearerStrLen=strlen($this->bearer);
@@ -67,7 +67,6 @@ class AuthorisationMiddleware implements MiddlewareInterface
     $this->jwtSettings = $container->get('settings')['jwt'];
 
     $this->jwtSecret   = $container->get(SecretManagerService::class)->getSecret(SecretManagerService::$JWT_SECRET);
-    //$this->logger->info("__construct finished");
   }
 
 

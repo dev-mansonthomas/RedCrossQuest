@@ -1,8 +1,5 @@
 <?php
-
-
 namespace RedCrossQuest\Service;
-
 
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\Entity\LoggingEntity;
@@ -11,6 +8,8 @@ class Logger implements LoggerInterface
 {
   /** @var LoggerInterface $psrLogger*/
   private $psrLogger;
+  /** @var SlackService $slackService */
+  private $slackService;
   /** @var string $rcqInfo*/
   private $rcqInfo;
   /** @var bool $online*/
@@ -20,9 +19,9 @@ class Logger implements LoggerInterface
 
   public function __construct(LoggerInterface $psrLogger, string $rcqVersion, string $rcqEnv, bool $online)
   {
-    $this->online     = $online;
-    $this->psrLogger  = $psrLogger;
-    $this->rcqInfo    =
+    $this->psrLogger    = $psrLogger;
+    $this->online       = $online;
+    $this->rcqInfo      =
       [
         "rcqVersion" => $rcqVersion,
         "rcqEnv"     => $rcqEnv,
@@ -34,10 +33,22 @@ class Logger implements LoggerInterface
     {
       $documentRoot = $_SERVER['DOCUMENT_ROOT'];
       $home = substr($documentRoot, 0, strpos($documentRoot, '/', 9));
-
       $this->localLogFile = "$home/RedCrossQuest/server/logs/local-logs.log";
     }
 
+    $GLOBALS['LoggerService']=&$this;
+  }
+  //
+
+  /**
+   * to break circular Dependencies.
+   * This method is manually called in the index.php after the DI container is built
+   * The other solution with PHP-DI 6 is to use lazy loading, which requires other dependencies
+   * @param SlackService $slackService
+   */
+  public function setSlackService(SlackService $slackService)
+  {
+    $this->slackService = $slackService;
   }
 
   /**
@@ -64,7 +75,7 @@ class Logger implements LoggerInterface
     else
       $dataForLogging = ['ESSENTIAL_LOGGING_INFO_NOT_SET'=>true];
 
-    return array_merge($this->rcqInfo, $dataForLogging, $dataToLog);
+    return ["appInfo"=>$this->rcqInfo, "logContext"=>$dataForLogging,"dataToBeLogged"=> $dataToLog];
   }
 
 
@@ -84,7 +95,10 @@ class Logger implements LoggerInterface
   {
     if($this->online)
     {
-      $this->psrLogger->emergency($message, $this->getDataForLogging($context));
+      $data = $this->getDataForLogging($context);
+
+      $this->psrLogger   ->emergency  ($message, $data);
+      $this->slackService->postMessage($message, $data);
     }
     else
     {
@@ -108,7 +122,10 @@ class Logger implements LoggerInterface
   {
     if($this->online)
     {
-      $this->psrLogger->alert($message, $this->getDataForLogging($context));
+      $data = $this->getDataForLogging($context);
+
+      $this->psrLogger   ->alert      ($message, $data);
+      $this->slackService->postMessage($message, $data);
     }
     else
     {
@@ -132,7 +149,10 @@ class Logger implements LoggerInterface
   {
     if($this->online)
     {
-      $this->psrLogger->critical($message, $this->getDataForLogging($context));
+      $data = $this->getDataForLogging($context);
+
+      $this->psrLogger   ->critical   ($message, $data);
+      $this->slackService->postMessage($message, $data);
     }
     else
     {
@@ -156,7 +176,10 @@ class Logger implements LoggerInterface
   {
     if($this->online)
     {
-      $this->psrLogger->error($message, $this->getDataForLogging($context));
+      $data = $this->getDataForLogging($context);
+
+      $this->psrLogger   ->error      ($message, $data);
+      $this->slackService->postMessage($message, $data);
     }
     else
     {

@@ -2,6 +2,8 @@
 error_reporting(E_ALL );
 require __DIR__ . '/../../vendor/autoload.php';
 
+use Psr\Log\LoggerInterface;
+use RedCrossQuest\Service\SlackService;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
 
@@ -22,8 +24,7 @@ if (PHP_SAPI == 'cli-server')
 $containerBuilder = new ContainerBuilder();
 // use annotation to inject settings
 $containerBuilder->useAnnotations(true);
-
-$containerBuilder->enableCompilation(sys_get_temp_dir().'/cache');
+$containerBuilder->enableCompilation (sys_get_temp_dir().'/cache');
 
 // Set up settings
 $settings = require __DIR__ . '/../../src/settings.php';
@@ -36,9 +37,17 @@ $dependencies($containerBuilder);
 // Build PHP-DI Container instance
 $container = $containerBuilder->build();
 
+$loggerInterface = $container->get(LoggerInterface::class);
+$slackService    = $container->get(SlackService::class);
+$loggerInterface->setSlackService ($slackService);
+$slackService   ->setLogger       ($loggerInterface);
+
+
 // Instantiate the app
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+
+
 
 // Register middleware
 $middleware = require __DIR__ . '/../../src/middleware.php';

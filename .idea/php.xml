@@ -112,6 +112,8 @@
       <path value="$PROJECT_DIR$/server/vendor/clue/stream-filter" />
       <path value="$PROJECT_DIR$/server/vendor/jolicode/slack-php-api" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php70" />
+      <path value="$PROJECT_DIR$/server/vendor/league/mime-type-detection" />
+      <path value="$PROJECT_DIR$/server/vendor/nyholm/psr7" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />

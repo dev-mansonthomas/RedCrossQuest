@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # deploy all http fonctions, or a specific function
 #
-# ./deploy_CloudFunctions.sh fr dev "http;registerQueteur"
-# ./deploy_CloudFunctions.sh fr dev "pubsub;processNewTroncQueteur"
+# ./deploy_CloudFunctions.sh fr dev "registerQueteur"
+# ./deploy_CloudFunctions.sh fr dev "processNewTroncQueteur"
 # ./deploy_CloudFunctions.sh fr dev all
 #
 #
@@ -95,9 +95,9 @@ function npmInstall
 
   cd "${HOME}/RedCrossQuestCloudFunctions/${PROJECT_NAME}/${FUNC_NAME}/" || exit 1
   echo "running npm install for function ${FUNC_NAME} running in ${PROJECT_NAME}"
-  npm install
+  npm -g install
   echo "commit and push lock file to be available for the gcloud deploy functions"
-  git commit index.js common.js common_firestore.js common_firebase.js package.json package-lock.json -m"Commit before deployment"
+  git commit index.js common.js common_firestore.js common_firebase.js common_mysql.js package.json package-lock.json -m"Commit before deployment"
   git push
   cd -  || exit 1
 }
@@ -229,11 +229,8 @@ then
 
 else
 
-  TARGET_ARRAY=(${TARGET//;/ })
-  TRIGGER_TYPE="${TARGET_ARRAY[0]}"
-  FUNCTION_NAME="${TARGET_ARRAY[1]}"
-
-  if [[ "${FUNCTION_NAME}1" == "1" ]] || [[ "${TRIGGER_TYPE}1" == "1" ]]
+  FUNCTION_NAME="${TARGET}"
+  if [[ "${FUNCTION_NAME}1" == "1" ]]
   then
     echo "Wrong syntax : function_name or trigger type is missing"
     echo
@@ -247,13 +244,16 @@ else
     exit 1
   fi
 
+  #get trigger type
+  CONFIGURATION=${CLOUD_FUNCTIONS[${FUNCTION_NAME}]}
+  CONFIGURATION_ARRAY=(${CONFIGURATION//;/ })
+  TRIGGER_TYPE="${CONFIGURATION_ARRAY[0]}"
 
   echo
   echo "################################################################################################################"
   echo "deploying PubSub cloud function '${FUNCTION_NAME}' triggertype : '${TRIGGER_TYPE}'"
   echo "################################################################################################################"
   echo
-
 
   if  [[ "${TRIGGER_TYPE}1" == "http1" ]]
   then
@@ -269,7 +269,5 @@ fi
 #restore the default project id (rcq)
 setProject "rcq-${COUNTRY}-${ENV}"
 
-echo "refreshing virtual node_modules"
-cd "${HOME}/RedCrossQuestCloudFunctions/" || exit 1
-npm install
+
 cd - || exit

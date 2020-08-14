@@ -140,7 +140,7 @@ class MailService
           'recipientEmail' => $recipientEmail,
           'subject'        => $subject,
           'content'        => $content,
-          'exception'      => $e));
+          'exception'      => json_encode($e)));
 
       throw $e;
     }

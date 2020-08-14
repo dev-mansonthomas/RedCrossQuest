@@ -201,7 +201,7 @@ class ExportDataBusinessService
     }
     catch(Exception $e)
     {
-      $this->logger->error("Error while Exporting Data", ["YEAR" => $year, "Exception" => json_encode($e)]);
+      $this->logger->error("Error while Exporting Data", ["YEAR" => $year, "exception" => json_encode($e)]);
       throw $e;
     }
     return $zipFileName;

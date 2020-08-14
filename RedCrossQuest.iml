@@ -51,12 +51,14 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/gcp-metadata" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/jwt" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/league/flysystem" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/league/mime-type-detection" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/league/uri" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/league/uri-interfaces" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/mtdowling/jmespath.php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/nesbot/carbon" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/nikic/fast-route" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/nyholm/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/opis/closure" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/invoker" />
