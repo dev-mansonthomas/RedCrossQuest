@@ -10,6 +10,7 @@ use Psr\Log\LoggerInterface;
 use RedCrossQuest\Middleware\DecodedToken;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
+use RedCrossQuest\Service\Logger;
 use Slim\Exception\HttpInternalServerErrorException;
 
 
@@ -105,7 +106,7 @@ abstract class Action
       $this->logger->error("Uncaught exception on Action",
         [ "actionClass"  => get_class($this),
           "validatedData"=> $validatedData,
-          "exception"    => json_encode($e)
+          Logger::$EXCEPTION    => $e
         ]);
       throw new HttpInternalServerErrorException($this->request, $e->getMessage(), $e);
     }

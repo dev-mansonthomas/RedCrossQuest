@@ -12,6 +12,7 @@ use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
+use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\PubSubService;
 
 
@@ -116,9 +117,10 @@ class ApproveQueteurRegistration extends Action
     }
     catch(Exception $exception)
     {
-      $this->logger->error("error while publishing registration approval", array("messageProperties"=> $messageProperties,
+      $this->logger->error("error while publishing registration approval",
+        array("messageProperties"=> $messageProperties,
         "queteurEntity"    => $queteurEntity,
-        "exception"        => json_encode($exception)));
+        Logger::$EXCEPTION => $exception));
       //do not rethrow
     }
     $this->response->getBody()->write(json_encode(

@@ -51,7 +51,8 @@ class CancelDepartOnTroncQueteur extends Action
     $numberOfRowUpdated = $this->troncQueteurDBService->cancelDepart($tq, $ulId, $userId);
     if($numberOfRowUpdated != 1 )
     {
-      $this->logger->error("numberOfRowUpdated != 1, likely that retour is not null", array("tronc_queteur"=>$tq->id, "numberOfRowUpdated"=>$numberOfRowUpdated));
+      $this->logger->error("numberOfRowUpdated != 1, likely that retour is not null",
+        array("tronc_queteur"=>$tq->id, "numberOfRowUpdated"=>$numberOfRowUpdated));
       throw new Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that retour is not null");
     }
 

@@ -130,7 +130,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
     }
     catch(Exception $error)
     { //getClaim can raise exception if the claim is not here
-      $this->logger->error(AuthorisationMiddleware::$errorMessage['0011'], array("exception"=>json_encode($error)));
+      $this->logger->error(AuthorisationMiddleware::$errorMessage['0011'], array(Logger::$EXCEPTION=>$error));
       throw $error;
     }
     return $decodedToken;
@@ -237,25 +237,25 @@ class AuthorisationMiddleware implements MiddlewareInterface
       $request = $request->withAttribute('decodedJWT', $decodedToken);
 
       //token valid
-      $start    = microtime(true);
+      //$start    = microtime(true);
       try
       {
         $response = $handler->handle($request);
       }
       catch(Exception $applicationError)
       {
-        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>json_encode($applicationError)));
+        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array(Logger::$EXCEPTION=>$applicationError));
         return (new Response())->withStatus(500);
       }
       //log execution time in milliseconds; error(true/false);request path
-      $this->logger->debug("[PERF];".(microtime(true)-$start).";false;".$path);
+      //$this->logger->debug("[PERF];".(microtime(true)-$start).";false;".$path);
 
       return $response;
     }
     catch(Exception $error)
     {
-      $this->logger->debug("[PERF];".(microtime(true)-$start).";true;".$path);
-      $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array("exception"=>json_encode($error)));
+      //$this->logger->debug("[PERF];".(microtime(true)-$start).";true;".$path);
+      $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array(Logger::$EXCEPTION=>$error));
       return $this->denyRequest('0007');
     }
 

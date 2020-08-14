@@ -17,6 +17,8 @@ class Logger implements LoggerInterface
   /** @var string $localLogFile*/
   private $localLogFile;
 
+  public static $EXCEPTION="exception";
+
   public function __construct(LoggerInterface $psrLogger, string $rcqVersion, string $rcqEnv, bool $online)
   {
     $this->psrLogger    = $psrLogger;
@@ -35,11 +37,7 @@ class Logger implements LoggerInterface
       $home = substr($documentRoot, 0, strpos($documentRoot, '/', 9));
       $this->localLogFile = "$home/RedCrossQuest/server/logs/local-logs.log";
     }
-
-    $GLOBALS['LoggerService']=&$this;
   }
-  //
-
   /**
    * to break circular Dependencies.
    * This method is manually called in the index.php after the DI container is built
@@ -74,6 +72,11 @@ class Logger implements LoggerInterface
       $dataForLogging = $_REQUEST['ESSENTIAL_LOGGING_INFO']->loggingInfoArray();
     else
       $dataForLogging = ['ESSENTIAL_LOGGING_INFO_NOT_SET'=>true];
+
+    if(array_key_exists(Logger::$EXCEPTION, $dataToLog) && $dataToLog[Logger::$EXCEPTION]!=null)
+    {
+      $dataToLog[Logger::$EXCEPTION] = substr(str_replace("\\","",str_replace("\\\\\\\\","/",json_encode($dataToLog[Logger::$EXCEPTION], JSON_PRETTY_PRINT))), 0, 2000);
+    }
 
     return ["appInfo"=>$this->rcqInfo, "logContext"=>$dataForLogging,"dataToBeLogged"=> $dataToLog];
   }

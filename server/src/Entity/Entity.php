@@ -13,6 +13,7 @@ use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\Logger;
 
 class Entity
 {
@@ -167,7 +168,7 @@ class Entity
     }
     catch(Exception $e)
     {
-      $this->logger->error("Error while decoding json for key '$key'", array("data"=>$data, "exception"=> json_encode($e)));
+      $this->logger->error("Error while decoding json for key '$key'", array("data"=>$data, Logger::$EXCEPTION=> $e));
       throw $e;
     }
   }
@@ -202,7 +203,7 @@ class Entity
         }
         catch(Exception $e)
         {
-          $this->logger->error("Error while decoding date (from momentjs date) for key '$key'", array("data"=>$data, "exception"=> json_encode($e)));
+          $this->logger->error("Error while decoding date (from momentjs date) for key '$key'", array("data"=>$data, Logger::$EXCEPTION=> $e));
           throw $e;
         }
       }
@@ -229,7 +230,7 @@ class Entity
             }
             catch(Exception $e)
             {
-              $this->logger->error("Error while decoding date (from js date) for key '$key'", array("data"=>$data, "exception"=> json_encode($e)));
+              $this->logger->error("Error while decoding date (from js date) for key '$key'", array("data"=>$data, Logger::$EXCEPTION=> $e));
               throw $e;
             }
 
@@ -248,7 +249,7 @@ class Entity
             }
             catch(Exception $e)
             {
-              $this->logger->error("Error while decoding date (from DB date) for key '$key'", array("data"=>$data,"exception"=> json_encode($e)));
+              $this->logger->error("Error while decoding date (from DB date) for key '$key'", array("data"=>$data,Logger::$EXCEPTION=> $e));
               throw $e;
             }
           }

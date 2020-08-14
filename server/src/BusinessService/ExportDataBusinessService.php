@@ -17,6 +17,7 @@ use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\DBService\YearlyGoalDBService;
 use RedCrossQuest\Entity\PageableRequestEntity;
+use RedCrossQuest\Service\Logger;
 use ZipArchive;
 
 class ExportDataBusinessService
@@ -201,7 +202,7 @@ class ExportDataBusinessService
     }
     catch(Exception $e)
     {
-      $this->logger->error("Error while Exporting Data", ["YEAR" => $year, "exception" => json_encode($e)]);
+      $this->logger->error("Error while Exporting Data", ["YEAR" => $year, Logger::$EXCEPTION => $e]);
       throw $e;
     }
     return $zipFileName;

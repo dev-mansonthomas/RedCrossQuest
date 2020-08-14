@@ -78,7 +78,7 @@ class SlackService
         //DO NOT SWITCH TO ERROR LEVEL
         [
           "message"=>$message,
-          "exception"=>json_encode($e)
+          Logger::$EXCEPTION=>$e
         ]);
       }
 

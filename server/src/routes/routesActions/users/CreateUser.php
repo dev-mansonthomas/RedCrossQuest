@@ -16,6 +16,7 @@ use RedCrossQuest\Entity\UserEntity;
 use RedCrossQuest\Exception\UserAlreadyExistsException;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\Logger;
 
 
 class CreateUser extends Action
@@ -91,7 +92,8 @@ class CreateUser extends Action
     }
     catch(UserAlreadyExistsException $exception)
     {
-      $this->logger->error($exception->getMessage(), [$exception->users, json_encode($exception)]);
+      $this->logger->error($exception->getMessage(),
+        ["users"=>$exception->users, Logger::$EXCEPTION=>$exception]);
       $this->response->getBody()->write(json_encode(["error" =>$exception->getMessage()]));
       return $this->response;
     }

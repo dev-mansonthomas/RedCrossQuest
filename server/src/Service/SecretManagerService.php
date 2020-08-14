@@ -86,7 +86,8 @@ class SecretManagerService
       catch (ApiException $apiException)
       {
         $this->logger->critical("Error while retrieving secret",
-          array("secret_name"=>$secretName, "secret_id"=>$secretId));
+          array("secret_name"=>$secretName, "secret_id"=>$secretId, Logger::$EXCEPTION=>$apiException));
+
         throw $apiException;
       }
     }

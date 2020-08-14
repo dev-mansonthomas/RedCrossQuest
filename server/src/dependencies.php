@@ -112,7 +112,12 @@ return function (ContainerBuilder $containerBuilder)
       catch(Exception $e)
       {
         $logger = $c->get(LoggerInterface::class);
-        $logger->critical("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($dbPwd), 'exception'=>json_encode($e)));
+        $logger->critical("Error while connecting to DB with parameters",
+          array(
+            'dsn'  =>$db['dsn'],
+            'user' =>$db['user'],
+            'pwd'  =>strlen($dbPwd),
+            Logger::$EXCEPTION=>$e));
         throw $e;
       }
     },

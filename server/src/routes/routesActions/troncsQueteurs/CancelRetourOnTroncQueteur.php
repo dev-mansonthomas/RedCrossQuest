@@ -51,7 +51,8 @@ class CancelRetourOnTroncQueteur extends Action
     $numberOfRowUpdated = $this->troncQueteurDBService->cancelRetour($tq, $ulId, $userId);
     if($numberOfRowUpdated != 1 )
     {
-      $this->logger->error("numberOfRowUpdated!=1, likely that comptage is not null", array("tronc_queteur"=>$tq->id, "numberOfRowUpdated"=>$numberOfRowUpdated));
+      $this->logger->error("numberOfRowUpdated!=1, likely that comptage is not null",
+        array("tronc_queteur"=>$tq->id, "numberOfRowUpdated"=>$numberOfRowUpdated));
       throw new Exception("numberOfRowUpdated=$numberOfRowUpdated, likely that comptage is not null");
     }
 
