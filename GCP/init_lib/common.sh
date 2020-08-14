@@ -57,20 +57,20 @@ declare -A FUNCTIONS_ROLES_RQ=(["notifyRQOfRegistApproval"]="roles/datastore.use
                                ["ULQueteurStatsPerYear"]="roles/datastore.user;"          \
                                ["ULTriggerRecompute"]=""                                  \
                                ["ztestCrossProjectFirestoCx"]="roles/datastore.viewer;"   \
-                               ["findQueteurById"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;"              \
-                               ["findULDetailsByToken"]="roles/secretmanager.secretAccessor;"                                \
-                               ["historiqueTroncQueteur"]="roles/datastore.user;roles/secretmanager.secretAccessor" \
-                               ["registerQueteur"]="roles/secretmanager.secretAccessor;"                                     \
-                               ["troncListPrepared"]="roles/datastore.viewer;roles/secretmanager.secretAccessor"           \
-                               ["troncSetDepartOrRetour"]="roles/datastore.viewer;roles/secretmanager.secretAccessor"      \
-                               ["ztestCrossProjectSQLCx"]="roles/secretmanager.secretAccessor;")
+                               ["findQueteurById"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"              \
+                               ["findULDetailsByToken"]="roles/secretmanager.secretAccessor;roles/logging.logWriter"                                \
+                               ["historiqueTroncQueteur"]="roles/datastore.user;roles/secretmanager.secretAccessor;roles/logging.logWriter" \
+                               ["registerQueteur"]="roles/secretmanager.secretAccessor;roles/logging.logWriter"                                     \
+                               ["troncListPrepared"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"           \
+                               ["troncSetDepartOrRetour"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"      \
+                               ["ztestCrossProjectSQLCx"]="roles/secretmanager.secretAccessor;roles/logging.logWriter")
 
 #In RCQ-fr-xxx we grant the rq-fr-xxx CF to access MySQL (hosted in RCQ)
 #and we grant RCQ-fr-xxx cloud function to access mysql, secret manager and pubsub
-declare -A FUNCTIONS_ROLES_RCQ=(["notifyRQOfRegistApproval"]="roles/pubsub.subscriber"               \
-                                 ["ULQueteurStatsPerYear"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/pubsub.subscriber;roles/pubsub.publisher;"  \
-                                 ["ULTriggerRecompute"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/pubsub.publisher;roles/pubsub.subscriber"\
-                                 ["ztestCrossProjectFirestoCx"]="roles/datastore.viewer;"       \
+declare -A FUNCTIONS_ROLES_RCQ=(["notifyRQOfRegistApproval"]="roles/pubsub.subscriber;roles/logging.logWriter"               \
+                                 ["ULQueteurStatsPerYear"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/pubsub.subscriber;roles/pubsub.publisher;roles/logging.logWriter;"  \
+                                 ["ULTriggerRecompute"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/pubsub.publisher;roles/pubsub.subscriber;roles/logging.logWriter"\
+                                 ["ztestCrossProjectFirestoCx"]="roles/datastore.viewer;roles/logging.logWriter"       \
                                  ["findQueteurById"]="roles/cloudsql.client;"                               \
                                  ["findULDetailsByToken"]="roles/cloudsql.client;"   \
                                  ["historiqueTroncQueteur"]="roles/cloudsql.client;"                        \

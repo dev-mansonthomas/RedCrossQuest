@@ -19,18 +19,19 @@ class ListQueteurs extends Action
    */
   private $queteurDBService;
 
+
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param QueteurDBService          $queteurDBService
+   * @param QueteurDBService $queteurDBService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
-                              QueteurDBService          $queteurDBService)
+                              QueteurDBService        $queteurDBService
+                              )
   {
     parent::__construct($logger, $clientInputValidator);
     $this->queteurDBService = $queteurDBService;
-
   }
 
   /**
@@ -81,9 +82,9 @@ class ListQueteurs extends Action
     {
       $this->validatedData['ul_id'] = $ulId;
     }
-
+    
     $pageableRequest = new PageableRequestEntity($this->validatedData);
-
+    
     $queteurs = $this->queteurDBService->searchQueteurs($pageableRequest);
 
     $this->response->getBody()->write(json_encode($queteurs));

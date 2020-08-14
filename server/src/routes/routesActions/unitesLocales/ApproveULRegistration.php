@@ -1,12 +1,6 @@
 <?php
-
-
-
-
 namespace RedCrossQuest\routes\routesActions\unitesLocales;
 
-
-use Carbon\Carbon;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -18,8 +12,8 @@ use RedCrossQuest\Entity\Entity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
 use RedCrossQuest\routes\routesActions\Action;
-use RedCrossQuest\routes\routesActions\settings\ApproveULRegistrationResponse;
 use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\Logger;
 
 
 class ApproveULRegistration extends Action
@@ -147,7 +141,7 @@ class ApproveULRegistration extends Action
     }
     catch (Exception $e)
     {
-      $this->logger->error("Error while approving a UL Registration",["ulRegistration"=>$ulEntity, "exception"=>$e]);
+      $this->logger->error("Error while approving a UL Registration",["ulRegistration"=>$ulEntity, Logger::$EXCEPTION=>$e]);
       $this->uniteLocaleDBService->transactionRollback();
       $errorResponse = (new \Slim\Psr7\Response())->withStatus(500);
       $errorResponse->getBody()->write(json_encode($e));

@@ -140,7 +140,7 @@ class MailService
           'recipientEmail' => $recipientEmail,
           'subject'        => $subject,
           'content'        => $content,
-          'exception'      => $e));
+          Logger::$EXCEPTION => $e));
 
       throw $e;
     }

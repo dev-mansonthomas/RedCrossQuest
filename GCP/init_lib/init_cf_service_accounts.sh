@@ -2,6 +2,8 @@
 
 COUNTRY=$1
 ENV=$2
+CREATE_OR_UPDATE=$3
+
 
 if [[ "${COUNTRY}1" != "fr1" ]]
 then
@@ -15,21 +17,41 @@ then
   exit 1
 fi
 
+if [[ "${CREATE_OR_UPDATE}1" != "create1" ]] && [[ "${CREATE_OR_UPDATE}1" != "update1" ]]
+then
+  echo "'${CREATE_OR_UPDATE}' the second parameter (CREATE_OR_UPDATE) is not valid. Valid values are ['create', 'update']. Create: create and set roles. Updates :  set roles only"
+  exit 1
+fi
+
+
 . ./common.sh
 . ../common.sh
 
-#create service accounts and then grant roles
-PROJECT_NAME="rcq"
-PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
-setProject "${PROJECT_ID}"
+if [[ "${CREATE_OR_UPDATE}1" == "create1" ]]
+then
 
-init_cloud_functions_create_service_accounts
+  #create service accounts and then grant roles
+  PROJECT_NAME="rcq"
+  PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+  setProject "${PROJECT_ID}"
 
-PROJECT_NAME="rq"
-PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
-setProject "${PROJECT_ID}"
+  init_cloud_functions_create_service_accounts
 
-init_cloud_functions_create_service_accounts
+  PROJECT_NAME="rq"
+  PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+  setProject "${PROJECT_ID}"
+
+  init_cloud_functions_create_service_accounts
+
+else
+  #set the correct project
+  PROJECT_NAME="rq"
+  PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+  setProject "${PROJECT_ID}"
+
+fi
+
+
 init_cloud_functions_grant_roles
 
 PROJECT_NAME="rcq"

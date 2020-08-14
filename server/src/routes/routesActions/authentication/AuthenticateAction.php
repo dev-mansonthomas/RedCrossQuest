@@ -100,7 +100,8 @@ class AuthenticateAction extends AuthenticateAbstractAction
     if($reCaptchaResponseCode > 0)
     {// error
 
-      $this->logger->error("authenticate: ReCaptcha error ", array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
+      $this->logger->error("authenticate: ReCaptcha error ",
+        array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
 
       $response401 = $this->response->withStatus(401);
       $response401->getBody()->write(json_encode(["error" =>"An error occurred - ReCode $reCaptchaResponseCode"]));

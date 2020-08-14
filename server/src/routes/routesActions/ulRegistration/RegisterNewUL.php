@@ -16,6 +16,7 @@ use RedCrossQuest\Entity\UniteLocaleEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
+use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\ReCaptchaService;
 
 
@@ -101,7 +102,8 @@ class RegisterNewUL extends Action
     }
     catch(Exception $e)
     {
-      $this->logger->error("RegisterUL fails because Admin Nivol is already an active user",["ulRegistration"=>$ulEntity, "exception"=>json_encode($e)]);
+      $this->logger->error("RegisterUL fails because Admin Nivol is already an active user",
+        ["ulRegistration"=>$ulEntity, Logger::$EXCEPTION=>$e]);
       $response401 = $this->response->withStatus(401);
       $response401->getBody()->write(json_encode(["error" =>"Le nivol entré pour l'administrateur a déjà un compte actif dans RedCrossQuest"]));
       return $response401;

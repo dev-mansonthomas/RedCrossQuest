@@ -168,7 +168,7 @@ class ReCaptchaService
           'remoteIp'      => $remoteIP,
           'username'      => $username,
           'token'         => $token,
-          'exception'     => json_encode($e)
+          Logger::$EXCEPTION     => $e
         )
       );
       return 5;

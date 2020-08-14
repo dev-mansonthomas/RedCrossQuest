@@ -3,6 +3,7 @@
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use RedCrossQuest\Service\Logger;
 use Slim\App;
 
 
@@ -25,7 +26,7 @@ return function (ContainerInterface $c, App $app)
         'httpMethod'=> $request->getMethod (),
         'headers'   => $request->getHeaders(),
         'body'      => $request->getBody   ()->getContents(),
-        'exception' => json_encode($exception)));
+        Logger::$EXCEPTION => $exception));
 
 
     $payload = ['error' => $exception->getMessage()];

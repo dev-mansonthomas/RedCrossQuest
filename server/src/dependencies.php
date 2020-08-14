@@ -35,6 +35,7 @@ use RedCrossQuest\Service\MailService;
 use RedCrossQuest\Service\PubSubService;
 use RedCrossQuest\Service\ReCaptchaService;
 use RedCrossQuest\Service\SecretManagerService;
+use RedCrossQuest\Service\SlackService;
 
 
 return function (ContainerBuilder $containerBuilder)
@@ -73,7 +74,7 @@ return function (ContainerBuilder $containerBuilder)
      * Custom Logger that automatically add context data to each log entries.
      * logger
      */
-    LoggerInterface::class => function (ContainerInterface $c):LoggerInterface
+    LoggerInterface::class => function (ContainerInterface $c):Logger
     {
       return new Logger($c->get("googleLogger"), (string)$c->get("RCQVersion"), $c->get('settings')['appSettings']['deploymentType'], $c->get('settings')['online']);
     },
@@ -82,14 +83,17 @@ return function (ContainerBuilder $containerBuilder)
     {
       return new SecretManagerService($c->get('settings'), $c->get(LoggerInterface::class));
     },
-    
+    SlackService::class =>function(ContainerInterface $c):SlackService
+    {
+      $slackToken = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$SLACK_TOKEN);
+      return new SlackService($slackToken, (string)$c->get("RCQVersion"), $c->get('settings')['appSettings']['deploymentType'], $c->get('settings')['online']);
+    },
     "googleMapsApiKey" => function (ContainerInterface $c):string
     {
       return $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$GOOGLE_MAPS_API_KEY);
     },
 
     /**
-     * 'db'
      * DB connection
      */
     PDO::class => function (ContainerInterface $c):PDO
@@ -108,7 +112,12 @@ return function (ContainerBuilder $containerBuilder)
       catch(Exception $e)
       {
         $logger = $c->get(LoggerInterface::class);
-        $logger->critical("Error while connecting to DB with parameters", array("dsn"=>$db['dsn'],'user'=>$db['user'],'pwd'=>strlen($dbPwd), 'exception'=>json_encode($e)));
+        $logger->critical("Error while connecting to DB with parameters",
+          array(
+            'dsn'  =>$db['dsn'],
+            'user' =>$db['user'],
+            'pwd'  =>strlen($dbPwd),
+            Logger::$EXCEPTION=>$e));
         throw $e;
       }
     },
@@ -117,7 +126,6 @@ return function (ContainerBuilder $containerBuilder)
       return new FirestoreClient();
     },
     /**
-     * 'PubSub'
      * Google PubSub service
      */
     PubSubService::class => function (ContainerInterface $c):PubSubService
@@ -127,7 +135,6 @@ return function (ContainerBuilder $containerBuilder)
     },
 
     /**
-     * 'reCaptcha'
      * Google ReCaptcha v3
      */
     ReCaptchaService::class => function (ContainerInterface $c):ReCaptchaService
@@ -137,7 +144,6 @@ return function (ContainerBuilder $containerBuilder)
     },
 
     /**
-     * 'bucket'
      * Google Storage Bucket
      */
     Bucket::class => function (ContainerInterface $c):Bucket
