@@ -350,7 +350,10 @@ AND (
   OR    UPPER(ul.`postal_code`         ) like concat('%', UPPER(:query), '%')
   OR    UPPER(ul.`city`                ) like concat('%', UPPER(:query), '%')
 )
-";
+AND  `ul`.id > 1
+ORDER BY `ul`.`name`
+LIMIT 0,20
+"; //ul with id 1 is a fake UL for data integrity
     $parameters = ["query" => $query];
 
     return $this->executeQueryForArray($sql, $parameters, function($row) {

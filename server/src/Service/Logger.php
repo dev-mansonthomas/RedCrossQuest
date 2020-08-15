@@ -75,7 +75,8 @@ class Logger implements LoggerInterface
 
     if(array_key_exists(Logger::$EXCEPTION, $dataToLog) && $dataToLog[Logger::$EXCEPTION]!=null)
     {
-      $dataToLog[Logger::$EXCEPTION] = substr(str_replace("\\","",str_replace("\\\\\\\\","/",json_encode($dataToLog[Logger::$EXCEPTION], JSON_PRETTY_PRINT))), 0, 2000);
+      $dataToLog[Logger::$EXCEPTION] = substr(json_encode($dataToLog[Logger::$EXCEPTION], JSON_PRETTY_PRINT), 0, 2000);
+     // $dataToLog[Logger::$EXCEPTION] = substr(str_replace("\\","",str_replace("\\\\\\\\","/",json_encode($dataToLog[Logger::$EXCEPTION], JSON_PRETTY_PRINT))), 0, 2000);
     }
 
     return ["appInfo"=>$this->rcqInfo, "logContext"=>$dataForLogging,"dataToBeLogged"=> $dataToLog];
