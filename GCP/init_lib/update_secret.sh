@@ -48,6 +48,9 @@ unset KEY
 KEY=()
 
 source ./common.sh
+source ../common.sh
+
+setProject "rcq-${COUNTRY}-${ENV}"
 
 PROPERTIES_FILE="${HOME}/.cred/rcq-${COUNTRY}-${ENV}${LOCAL_FILE}.properties"
 echo "reading property file ${PROPERTIES_FILE}"
