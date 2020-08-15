@@ -131,7 +131,7 @@ class AuthenticateAction extends AuthenticateAbstractAction
     else if($user instanceof UserEntity)
     {//we found the user, but password is not good
 
-      $this->logger->error("Authentication failed, wrong password", array("user_id"=> $user->id, "nivol" =>$username));
+      $this->logger->warning("Authentication failed, wrong password", array("user_id"=> $user->id, "nivol" =>$username));
       $this->userDBService->registerFailedLogin($user->id);
 
       $response401 = $this->response->withStatus(401);
