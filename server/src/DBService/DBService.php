@@ -39,7 +39,7 @@ abstract class DBService
     }
     catch(Exception $e)
     {
-      $this->logger->error("error while executeQueryForArray", ["sql"=>$sql, "parameters"=>$parameters, "exception"=>$e]);
+      $this->logger->error("error while executeQueryForArray", ["sql"=>$sql, "parameters"=>$parameters, Logger::$EXCEPTION=>$e]);
       throw $e;
     }
   }
@@ -84,7 +84,7 @@ abstract class DBService
     }
     catch(Exception $e)
     {
-      $this->logger->error("error while executeQueryForArray", ["sql"=>$sql, "parameters"=>$parameters, "pageNumber"=>$pageNumber, "rowsPerPage"=>$rowsPerPage, "exception"=>$e]);
+      $this->logger->error("error while executeQueryForArray", ["sql"=>$sql, "parameters"=>$parameters, "pageNumber"=>$pageNumber, "rowsPerPage"=>$rowsPerPage, Logger::$EXCEPTION=>$e]);
       throw $e;
     }
   }
@@ -117,7 +117,7 @@ abstract class DBService
     }
     catch(Exception $e)
     {
-      $this->logger->error("error while executeQueryForObject", ["sql"=>$sql, "parameters"=>$parameters, "exception"=>$e]);
+      $this->logger->error("error while executeQueryForObject", ["sql"=>$sql, "parameters"=>$parameters, Logger::$EXCEPTION=>$e]);
       throw $e;
     }
 
@@ -192,7 +192,7 @@ abstract class DBService
     }
     catch(Exception $e)
     {
-      $this->logger->error("error while inserting a row", ["sql"=>$sql, "parameters"=>$parameters, 'returnLastInsertedId'=>$returnLastInsertedId, "exception"=>$e]);
+      $this->logger->error("error while inserting a row", ["sql"=>$sql, "parameters"=>$parameters, 'returnLastInsertedId'=>$returnLastInsertedId, Logger::$EXCEPTION=>$e]);
       throw $e;
     }
   }
@@ -217,7 +217,7 @@ abstract class DBService
     }
     catch(Exception $e)
     {
-      $this->logger->error("error while updating a row", ["sql"=>$sql, "parameters"=>$parameters, "exception"=>$e]);
+      $this->logger->error("error while updating a row", ["sql"=>$sql, "parameters"=>$parameters, Logger::$EXCEPTION=>$e]);
       throw $e;
     }
     return $updatedRows;

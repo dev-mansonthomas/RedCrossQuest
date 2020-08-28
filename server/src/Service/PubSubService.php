@@ -54,7 +54,15 @@ class PubSubService
     }
     catch(Exception $exception)
     {
-      $this->logger->error("Error while publishing message on topic", ['topicName'=>$topicName, 'attributes'=>$attributes, 'jsonEncodeData'=>$jsonEncodeData, 'raiseExceptionInCaseOfError'=>$raiseExceptionInCaseOfError, 'data'=> $data, Logger::$EXCEPTION=>$exception] );
+      $this->logger->error("Error while publishing message on topic",
+        [
+          'topicName'                   =>$topicName,
+          'attributes'                  =>$attributes,
+          'jsonEncodeData'              =>$jsonEncodeData,
+          'raiseExceptionInCaseOfError' =>$raiseExceptionInCaseOfError,
+          'data'                        =>$data,
+          Logger::$EXCEPTION            =>$exception
+        ]);
 
       if($raiseExceptionInCaseOfError)
       {

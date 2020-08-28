@@ -50,6 +50,12 @@ class ULPreferencesFirestoreDBService extends FirestoreDBService
   {
     $dataForFirestore = $ulPrefs->prepareDataForFirestoreUpdate();
 
+    //remove non RQ properties
+    unset($dataForFirestore['token_benevole']);
+    unset($dataForFirestore['token_benevole_1j']);
+    unset($dataForFirestore['use_bank_bag']);
+
+
     if($ulPrefs->ul_id != $ul_id)
     {
       throw new UnexpectedValueException("Attempt to update prefs from another UL. user from ul : $ul_id attempt to update UL ID : $ulPrefs->ul_id, with data ".json_encode($dataForFirestore));

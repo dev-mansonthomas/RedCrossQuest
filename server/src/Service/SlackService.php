@@ -60,11 +60,19 @@ class SlackService
     if($this->online)
     {
       try
-      {
+      {// /Users/thomasmanson/Dropbox/eclipse-workspace/crf2/RedCrossQuest/server/
         $this->slackClient->chatPostMessage([
           'username'  => 'rcqlogger',
           'channel'   => 'monitoring-'.$this->envs[strtolower($this->rcqEnv)],
-          'text'      => "*".$message."*\n```".json_encode($context, JSON_PRETTY_PRINT)."```",
+          'text'      => "*".$message."*\n".
+            str_replace("\\", "",
+              str_replace(
+                "\/Users\/thomasmanson\/Dropbox\/eclipse-workspace\/crf2\/RedCrossQuest\/server\/", "server/",
+                str_replace("\\n","\n",
+                  json_encode($context, JSON_PRETTY_PRINT)
+                )
+              )
+            )."",
         ]);
       }
       catch(Exception $e)

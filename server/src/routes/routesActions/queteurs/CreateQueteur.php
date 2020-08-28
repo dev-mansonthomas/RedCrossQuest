@@ -29,12 +29,6 @@ class CreateQueteur extends Action
    * @var EmailBusinessService    $emailBusinessService
    */
   private $emailBusinessService;
-
-  /**
-   * @var PubSubService           $pubSubService
-   */
-  private $pubSubService;
-
   /**
    * @Inject("settings")
    * @var array settings
@@ -46,19 +40,15 @@ class CreateQueteur extends Action
    * @param ClientInputValidator $clientInputValidator
    * @param QueteurDBService          $queteurDBService
    * @param EmailBusinessService    $emailBusinessService
-   * @param PubSubService           $pubSubService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
                               QueteurDBService        $queteurDBService,
-                              EmailBusinessService    $emailBusinessService,
-                              PubSubService           $pubSubService)
+                              EmailBusinessService    $emailBusinessService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->queteurDBService     = $queteurDBService;
     $this->emailBusinessService = $emailBusinessService;
-    $this->pubSubService        = $pubSubService;
-
   }
 
   /**

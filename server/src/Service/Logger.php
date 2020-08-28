@@ -1,6 +1,7 @@
 <?php
 namespace RedCrossQuest\Service;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\Entity\LoggingEntity;
 
@@ -75,7 +76,12 @@ class Logger implements LoggerInterface
 
     if(array_key_exists(Logger::$EXCEPTION, $dataToLog) && $dataToLog[Logger::$EXCEPTION]!=null)
     {
-      $dataToLog[Logger::$EXCEPTION] = substr(json_encode($dataToLog[Logger::$EXCEPTION], JSON_PRETTY_PRINT), 0, 2000);
+      /** @var Exception $exception*/
+      $exception = $dataToLog[Logger::$EXCEPTION];
+      $dataToLog[Logger::$EXCEPTION] = [
+        "message"   =>$exception->getMessage(),
+        "stackTrace"=>PHP_EOL.$exception->getTraceAsString()
+      ];
      // $dataToLog[Logger::$EXCEPTION] = substr(str_replace("\\","",str_replace("\\\\\\\\","/",json_encode($dataToLog[Logger::$EXCEPTION], JSON_PRETTY_PRINT))), 0, 2000);
     }
 

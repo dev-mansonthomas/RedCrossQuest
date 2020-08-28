@@ -3,6 +3,7 @@
 COUNTRY=$1
 ENV=$2
 CREATE_OR_UPDATE=$3
+FUNC_NAME=$4
 
 
 if [[ "${COUNTRY}1" != "fr1" ]]
@@ -33,15 +34,17 @@ then
   #create service accounts and then grant roles
   PROJECT_NAME="rcq"
   PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+  echo "switching to ${PROJECT_ID}"
+  
   setProject "${PROJECT_ID}"
 
-  init_cloud_functions_create_service_accounts
+  init_cloud_functions_create_service_accounts "${FUNC_NAME}"
 
   PROJECT_NAME="rq"
   PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
   setProject "${PROJECT_ID}"
 
-  init_cloud_functions_create_service_accounts
+  init_cloud_functions_create_service_accounts "${FUNC_NAME}"
 
 else
   #set the correct project
@@ -52,10 +55,10 @@ else
 fi
 
 
-init_cloud_functions_grant_roles
+init_cloud_functions_grant_roles "${FUNC_NAME}"
 
 PROJECT_NAME="rcq"
 PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 setProject "${PROJECT_ID}"
 
-init_cloud_functions_grant_roles
+init_cloud_functions_grant_roles "${FUNC_NAME}"

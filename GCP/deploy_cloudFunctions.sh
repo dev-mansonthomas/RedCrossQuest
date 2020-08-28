@@ -99,6 +99,8 @@ function npmInstall
   echo "commit and push lock file to be available for the gcloud deploy functions"
   git commit index.js common.js common_firestore.js common_firebase.js common_mysql.js package.json package-lock.json -m"Commit before deployment"
   git push
+  echo "waiting 5 secs (otherwise the cloud function won't be deployed with the last code"
+  sleep 5
   cd -  || exit 1
 }
 
