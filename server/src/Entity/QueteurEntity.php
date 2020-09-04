@@ -202,13 +202,43 @@ class QueteurEntity  extends Entity
   public $registration_id             ;
 
 
+  /**
+   * @OA\Property()
+   * @property string $firebase_sign_in_provider   When this object represent a registration, the id of the registration
+   *
+   *
+  EmailAuthProviderID: password
+  PhoneAuthProviderID: phone
+  GoogleAuthProviderID: google.com
+  FacebookAuthProviderID: facebook.com
+  TwitterAuthProviderID: twitter.com
+  GitHubAuthProviderID: github.com
+  AppleAuthProviderID: apple.com
+  YahooAuthProviderID: yahoo.com
+  MicrosoftAuthProviderID: hotmail.com
+   *
+   */
+  public $firebase_sign_in_provider             ;
+
+  /**
+   * @OA\Property()
+   * @property string $firebase_uid   When this object represent a registration, the id of the registration
+   */
+  public $firebase_uid             ;
+
+  /**
+   * @OA\Property()
+   * @property string $benevole_referent   When this object represent a registration, the id of the registration
+   */
+  public $benevole_referent             ;
+
   protected $_fieldList = [
     'id','email','first_name','last_name','secteur','nivol','mobile','created','updated',
     'notes','ul_id','ul_name','ul_longitude','ul_latitude','point_quete_id','point_quete_name',
     'depart_theorique','depart','retour','active','man','birthdate','qr_code_printed','referent_volunteer',
     'referent_volunteer_entity','anonymization_token','anonymization_date',
     'ul_registration_token', 'queteur_registration_token', 'registration_approved', 'reject_reason',
-    'queteur_id', 'registration_id'
+    'queteur_id', 'registration_id','firebase_sign_in_provider','firebase_uid','benevole_referent'
     ];
 
   /**
@@ -261,6 +291,10 @@ class QueteurEntity  extends Entity
     $this->getString ('reject_reason'               , $data, 200);
     $this->getInteger('queteur_id'                  , $data);
     $this->getInteger('registration_id'             , $data);
+
+    $this->getString ('firebase_sign_in_provider'   , $data, 100);
+    $this->getString ('firebase_uid'                , $data, 64);
+    $this->getString ('benevole_referent'           , $data, 100);
 
   }
 }

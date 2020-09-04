@@ -69,7 +69,7 @@ class ReCaptchaService
     /*
       [HTTP_X_FORWARDED_FOR] => <client_ip>, <google_proxy>
     */
-    if(empty($_SERVER['REMOTE_ADDR']) && isset($_SERVER['HTTP_X_FORWARDED_FOR']) )
+    if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) )
     {
       $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] );
       $remoteIP = $ips[0] ;
@@ -78,7 +78,6 @@ class ReCaptchaService
     {
       $remoteIP = $_SERVER['REMOTE_ADDR'];
     }
-
     //discard token that are too long, null or empty
     if( $token         == null ||
         strlen($token) == 0    ||

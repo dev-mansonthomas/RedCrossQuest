@@ -173,7 +173,8 @@ SELECT qr.`id`,
        qr.`queteur_registration_token`,
        qr.`registration_approved`,
        qr.`reject_reason`,
-       qr.`queteur_id`
+       qr.`queteur_id`,
+       qr.`benevole_referent`
 FROM `queteur_registration` qr, ul_settings us
 where us.ul_id = :ul_id
 AND 
@@ -223,6 +224,9 @@ SELECT qr.`id`,
        qr.`registration_approved`,
        qr.`reject_reason`,
        qr.`queteur_id`,
+       qr.`firebase_sign_in_provider`,
+       qr.`firebase_uid`,
+       qr.`benevole_referent`,
        u.`id`        as ul_id,
        u.`name`      as ul_name,
        u.`longitude` as ul_longitude,
@@ -323,13 +327,17 @@ AND   ul_registration_token = :ul_registration_token
 UPDATE `queteur`
 SET
     `active`  = true,
-    `updated` = NOW()
+    `updated` = NOW(),
+    `firebase_sign_in_provider` = ?,
+    `firebase_uid`              = ?
 WHERE `id`    = :id
 AND   ul_id   = :ul_id
 ";
     $parameters2 = [
-      "id"     => $queteur->id,
-      "ul_id"  => $ulId
+      "id"                        => $queteur->id,
+      "ul_id"                     => $ulId,
+      "firebase_sign_in_provider" => $queteur->firebase_sign_in_provider,
+      "firebase_uid"              => $queteur->firebase_uid
     ];
 
     $this->executeQueryForUpdate($sql2, $parameters2);
@@ -786,6 +794,9 @@ SELECT  q.`id`,
         q.`referent_volunteer`,
         q.`anonymization_token`,
         q.`anonymization_date`,
+        q.`firebase_sign_in_provider`,
+        q.`firebase_uid`,
+       
         u.`name`       as 'ul_name',
         u.`latitude`   as 'ul_latitude',
         u.`longitude`  as 'ul_longitude'
@@ -1010,10 +1021,9 @@ VALUES
   /***
    * Search for similar queteur as the user is currently typing while creating a new queteur
    * @param int $ulId id of the unite locale of the connected user
-   * @param string $firstName what's being typed in first_name field
-   * @param string $lastName what's being typed in last_name field
-   * @param string $nivol what's being typed in nivol field
-   * @throws PDOException if the query fails to execute on the server
+   * @param string|null $firstName what's being typed in first_name field
+   * @param string|null $lastName what's being typed in last_name field
+   * @param string|null $nivol what's being typed in nivol field
    * @return QueteurEntity[]  the list of Queteurs matching the query
    * @throws Exception in other situations
    */

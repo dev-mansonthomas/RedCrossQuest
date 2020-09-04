@@ -53,6 +53,25 @@
 
 
     <form novalidate name="queteurForm">
+      <div class="alert alert-info" role="alert" style="text-align: center;">
+        <strong>Statut RedQuest</strong> :
+
+        <span class="glyphicon glyphicon-check"     aria-hidden="true"  ng-show=" queteur.current.firebase_uid">Inscrit</span>
+        <span class="glyphicon glyphicon-unchecked" aria-hidden="true"  ng-show="!queteur.current.firebase_uid">Pas encore Inscrit</span>
+
+
+
+        <strong>Type de connexion utilisée </strong> :
+
+        <span ng-show="queteur.current.firebase_sign_in_provider=='password'"     class="glyphicon glyphicon-keys" aria-hidden="true"  style="font-size:20px" title="Le bénévole a utilisé la connexion avec un login/password créé specifiquement pour RedQuest"> </span>   <!--ng-show="!queteur.current.firebase_uid" -->
+        <img  ng-show="queteur.current.firebase_sign_in_provider=='facebook.com'" src="assets/images/f_logo_RGB-Blue_250.png" alt="Le bénévole a utilisé la connexion avec Facebook pour se connecter a RedQuest" style="width:20px;"/>
+        <img  ng-show="queteur.current.firebase_sign_in_provider=='google.com'"   src="assets/images/Gmail Icon.png" alt="Le bénévole a utilisé la connexion avec Gmail pour se connecter a RedQuest" style="width:20px;"/>
+
+
+
+      </div>
+
+
       <div class="row">
         <div class="col-md-4 col-md-offset-2">
           <div class="form-group">
@@ -106,6 +125,7 @@
               <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
             </div>
             <span class="help-block" ng-show="queteurForm.referent_volunteer.$invalid">Indiquer le bénévole qui amène ce quêteur d'un jour<br/><sub>Recherche par nom, prénom, NIVOL</sub> S'il n'y en a pas, mettre le président de l'UL.</span>
+            <span class="help-block" style="color:#333333">Lors de l'inscription le queteur à indiqué que <br/><strong>'{{queteur.current.benevole_referent}}'</strong> était son référent</span>
           </div>
         </div>
       </div>

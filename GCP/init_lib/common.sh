@@ -34,6 +34,7 @@ declare -A CLOUD_FUNCTIONS=(["notifyRQOfRegistApproval"]="pubsub;queteur_approva
                                      ["findQueteurById"]="http;"                  \
                                      ["findULDetailsByToken"]="http;"             \
                                      ["getULPrefs"]="http;"                       \
+                                     ["getULStats"]="http;"                       \
                                      ["historiqueTroncQueteur"]="http;"           \
                                      ["registerQueteur"]="http;"                  \
                                      ["troncListPrepared"]="http;"                \
@@ -47,6 +48,7 @@ declare -A FUNCTIONS_PROJECT_PREFIX=(["notifyRQOfRegistApproval"]="${REDCROSSQUE
                                      ["findQueteurById"]="${REDQUEST}"                  \
                                      ["findULDetailsByToken"]="${REDQUEST}"             \
                                      ["getULPrefs"]="${REDQUEST}"                       \
+                                     ["getULStats"]="${REDQUEST}"                       \
                                      ["historiqueTroncQueteur"]="${REDQUEST}"           \
                                      ["registerQueteur"]="${REDQUEST}"                  \
                                      ["troncListPrepared"]="${REDQUEST}"                \
@@ -62,7 +64,8 @@ declare -A FUNCTIONS_ROLES_RQ=(["notifyRQOfRegistApproval"]="roles/datastore.use
                                ["ztestCrossProjectFirestoCx"]="roles/datastore.viewer;"   \
                                ["findQueteurById"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"              \
                                ["findULDetailsByToken"]="roles/secretmanager.secretAccessor;roles/logging.logWriter"                                \
-                               ["getULPrefs"]="roles/datastore.viewer;roles/logging.logWriter"                                                                             \
+                               ["getULPrefs"]="roles/datastore.viewer;roles/logging.logWriter"                                                      \
+                               ["getULStats"]="roles/datastore.viewer;roles/logging.logWriter"                                                      \
                                ["historiqueTroncQueteur"]="roles/datastore.user;roles/secretmanager.secretAccessor;roles/logging.logWriter"         \
                                ["registerQueteur"]="roles/secretmanager.secretAccessor;roles/logging.logWriter"                                     \
                                ["troncListPrepared"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"            \
@@ -78,6 +81,7 @@ declare -A FUNCTIONS_ROLES_RCQ=(["notifyRQOfRegistApproval"]="roles/pubsub.subsc
                                  ["findQueteurById"]="roles/cloudsql.client;"                               \
                                  ["findULDetailsByToken"]="roles/cloudsql.client;"                          \
                                  ["getULPrefs"]="roles/datastore.viewer"                                    \
+                                 ["getULStats"]=""                                                          \
                                  ["historiqueTroncQueteur"]="roles/datastore.user;"                         \
                                  ["historiqueTroncQueteur"]="roles/cloudsql.client;"                        \
                                  ["registerQueteur"]="roles/cloudsql.client;"                               \
