@@ -57,18 +57,20 @@ class ListQueteurs extends Action
     }
 
     $validations = [
-      ClientInputValidatorSpecs::withInteger('pageNumber'      , $this->queryParams, 100 , false    ),
-      ClientInputValidatorSpecs::withInteger('rowsPerPage'     , $this->queryParams, 100 , false    ),
-      ClientInputValidatorSpecs::withString ("q"               , $this->queryParams, 100, false    ),
-      ClientInputValidatorSpecs::withInteger('searchType'      , $this->queryParams, 5   , false    ),
-      ClientInputValidatorSpecs::withInteger('secteur'         , $this->queryParams, 10  , false    ),
-      ClientInputValidatorSpecs::withBoolean("active"          , $this->queryParams, false , true ),
-      ClientInputValidatorSpecs::withBoolean("rcqUser"         , $this->queryParams, false , false),
-      ClientInputValidatorSpecs::withBoolean("rcqUserActif"    , $this->queryParams, false , false),
-      ClientInputValidatorSpecs::withBoolean("benevoleOnly"    , $this->queryParams, false , false),
-      ClientInputValidatorSpecs::withString ("queteurIds"      , $this->queryParams, 50 , false    ),
-      ClientInputValidatorSpecs::withInteger('QRSearchType'    , $this->queryParams, 5   , false    ),
-      ClientInputValidatorSpecs::withInteger('admin_ul_id'     , $this->queryParams, 1000, false    )
+      ClientInputValidatorSpecs::withInteger('pageNumber'         , $this->queryParams, 100 , false    ),
+      ClientInputValidatorSpecs::withInteger('rowsPerPage'        , $this->queryParams, 100 , false    ),
+      ClientInputValidatorSpecs::withString ("q"                  , $this->queryParams, 100, false    ),
+      ClientInputValidatorSpecs::withInteger('redquest_registered', $this->queryParams, 3   , false    ),
+      ClientInputValidatorSpecs::withInteger('user_role'          , $this->queryParams, 4   , false    ),
+      ClientInputValidatorSpecs::withInteger('searchType'         , $this->queryParams, 5   , false    ),
+      ClientInputValidatorSpecs::withInteger('secteur'            , $this->queryParams, 10  , false    ),
+      ClientInputValidatorSpecs::withBoolean("active"             , $this->queryParams, false , true ),
+      ClientInputValidatorSpecs::withBoolean("rcqUser"            , $this->queryParams, false , false),
+      ClientInputValidatorSpecs::withBoolean("rcqUserActif"       , $this->queryParams, false , false),
+      ClientInputValidatorSpecs::withBoolean("benevoleOnly"       , $this->queryParams, false , false),
+      ClientInputValidatorSpecs::withString ("queteurIds"         , $this->queryParams, 50 , false    ),
+      ClientInputValidatorSpecs::withInteger('QRSearchType'       , $this->queryParams, 5   , false    ),
+      ClientInputValidatorSpecs::withInteger('admin_ul_id'        , $this->queryParams, 1000, false    )
     ];
 
 

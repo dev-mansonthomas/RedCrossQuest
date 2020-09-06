@@ -125,7 +125,7 @@
               <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
             </div>
             <span class="help-block" ng-show="queteurForm.referent_volunteer.$invalid">Indiquer le bénévole qui amène ce quêteur d'un jour<br/><sub>Recherche par nom, prénom, NIVOL</sub> S'il n'y en a pas, mettre le président de l'UL.</span>
-            <span class="help-block" style="color:#333333">Lors de l'inscription le queteur à indiqué que <br/><strong>'{{queteur.current.benevole_referent}}'</strong> était son référent</span>
+            <span class="help-block" style="color:#333333" ng-show="queteur.isRegistration">Lors de l'inscription le queteur à indiqué que <br/><strong>'{{queteur.current.benevole_referent}}'</strong> était son référent</span>
           </div>
         </div>
       </div>
@@ -187,7 +187,7 @@
                 <td>{{sim.email}}</td>
                 <td>{{sim.active == 1 ? 'Oui':'Non'}}</td>
                 <td ng-show="queteur.isRegistration">
-                  <a  ng-click="queteur.associateRegistrationWithExistingQueteur(sim.id);" class="btn btn-success" style="font-size: 10px;">Valider l'inscription et l'associer à ce quêteur</a>
+                  <a  ng-click="queteur.associateRegistrationWithExistingQueteur(sim.id);" ng-show="queteur.current.registration_approved!=false" class="btn btn-success" style="font-size: 10px;">Valider l'inscription et l'associer à ce quêteur</a>
                   <span ng-show="sim.active != 1"><br/>
                     <small style="color: silver;">La fiche du quêter sera réactivée</small>
                   </span>
@@ -379,7 +379,7 @@
           <a  ng-click="queteur.back();" class="btn btn-link">Annuler</a>
         </div>
         <div class="col-md-2 col-md-offset-4">
-          <input type="button" class="btn btn-primary" value="Sauvegarder" ng-disabled="queteurForm.$invalid || queteur.current.saveInProgress" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
+          <input type="button" class="btn btn-primary" value="{{queteur.isRegistration == true ? 'Créer le nouveau Quêteur':'Sauvegarder'}}" ng-disabled="queteurForm.$invalid || queteur.current.saveInProgress || queteur.current.registration_approved==true" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
         </div>
       </div>
 
@@ -684,9 +684,9 @@ Nb de Ligne : {{queteur.current.exportDataResult.numberOfRows}}
               <input name="anonymization_date" id="anonymization_date" class="form-control" ng-model="queteur.current.anonymization_date" readonly/>
             </div>
           </div>
-          <div class="row" ng-show="queteur.currentUserRole >= 4        &&
-                                queteur.current.anonymization_token &&
-                                queteur.current.unanonymizeAskConfirmation"
+          <div class="row" ng-show="queteur.currentUserRole >= 4            &&
+                                    queteur.current.anonymization_token     &&
+                                    queteur.current.unanonymizeAskConfirmation"
                style="margin-top:20px;">
             <div class="col-md-offset-2 col-md-4">
               <button class="btn btn-danger"

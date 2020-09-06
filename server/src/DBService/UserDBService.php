@@ -265,7 +265,7 @@ LIMIT 1
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getUserInfoWithUUID(string $uuid):UserEntity
+  public function getUserInfoWithUUID(string $uuid):?UserEntity
   {
     $sql = "
 SELECT id, queteur_id, password, role, nb_of_failure, last_failure_login_date, last_successful_login_date 
@@ -281,7 +281,7 @@ LIMIT 1
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     return $this->executeQueryForObject($sql, $parameters, function($row) {
       return new UserEntity($row, $this->logger);
-    }, true);
+    }, false);
   }
 
   /***

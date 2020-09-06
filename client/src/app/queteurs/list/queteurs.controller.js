@@ -15,7 +15,9 @@
   {
     var vm = this;
     vm.searchType           = 0;
+    vm.redquest_registered  = 3;
     vm.rcqUser              = 0;
+    vm.user_role            = null;
     vm.rcqUserActif         = 1;
     vm.currentUserRole      = $localStorage.currentUser.roleId;
     vm.pageNumber           = 1;
@@ -42,6 +44,14 @@
       {id:5 ,label:'Commerçant'},
       {id:6 ,label:'Spécial'}
     ];
+
+    vm.roleList=[
+      {id:1,label:'Lecture Seule' },
+      {id:2,label:'Opérateur'     },
+      {id:3,label:'Compteur'      },
+      {id:4,label:'Administrateur'}
+    ];
+
     vm.typeBenevoleHash=[];
     for(var i=0;i< vm.typeBenevoleList.length;i++)
     {
@@ -81,7 +91,9 @@
         'rcqUser'             : vm.rcqUser      ,
         'rcqUserActif'        : vm.rcqUserActif ,
         'anonymization_token' : vm.anonymization_token,
-        'pageNumber'          : vm.pageNumber   };
+        'pageNumber'          : vm.pageNumber   ,
+        'redquest_registered' : vm.redquest_registered,
+        'user_role'           : vm.user_role};
 
 
       if(vm.currentUserRole === 9 && vm.admin_ul_id !== null)

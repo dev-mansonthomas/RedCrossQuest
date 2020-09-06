@@ -118,7 +118,7 @@
               <div ng-show="noResults">
                 <i class="glyphicon glyphicon-remove"></i> Aucun Queteur trouvé
               </div>
-              <span class="help-block">Scan QR Code ou saisie manuelle. Champ obligatoire.</span>
+              <span class="help-block">Scan QR Code ou saisie manuelle. Champ obligatoire. Nom, Prénom, Nivol, ou Numéro du queteur (dernier chiffre sous le QRCode)</span>
               <div class="alert alert-warning" role="alert" ng-if="false"><strong>ATTENTION</strong>:<br/> En saisie manuelle, ne pas utiliser la touche "TAB" <br/>(petit bug pas encore résolu)</div>
             </div>
             <div class="form-group" ng-class="{'has-error':prepaTroncForm.horaireDepartTheorique.$invalid}" ng-show="pt.current.queteur.id>0 && pt.current.tronc.id > 0">
@@ -139,7 +139,7 @@
               <label for="troncId" class="control-label">Id Tronc</label>
               <input
                 id="troncId"
-                type="text"
+                type="number"
                 ng-model="pt.current.tronc"
                 placeholder="Scanner le QRCode du tronc"
                 uib-typeahead="tronc as tronc.stringView for tronc in pt.searchTronc($viewValue)"
@@ -157,7 +157,7 @@
                 <i class="glyphicon glyphicon-remove"></i> Aucun Tronc trouvé
               </div>
 
-              <span class="help-block">Scan QR Code ou saisie manuelle. Champ obligatoire.</span>
+              <span class="help-block">Scan QR Code ou saisie manuelle : Le numéro du tronc (les derniers chiffres sous le QRCode). Champ obligatoire.</span>
               <div class="alert alert-warning" role="alert"  ng-if="false"><strong>ATTENTION</strong>:<br/> En saisie manuelle, ne pas utiliser la touche "TAB" <br/>(petit bug pas encore résolu)</div>
             </div>
             <div class="form-group"  ng-show="pt.current.queteurId >0  && pt.current.tronc.id > 0">

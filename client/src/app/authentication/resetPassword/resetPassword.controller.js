@@ -128,7 +128,13 @@
               }
               else
               {
-                vm.error = "Votre demande est invalide ou périmée ou votre utilisateur a été désactivé. Veuillez contacter le support.";
+                vm.error = "Oups... <br/>Le lien sur lequel vous avez cliquez est soit<ul>" +
+                  "<li>périmé :  le lien est valide 4H après son émission (ou 48h lors de la création du compte)</li>" +
+                  "<li>Désactivé : Une fois le lien utilisé, il est désactivé et ne peut être réutilisé</li>" +
+                  "</ul>" +
+                  "Dans ces deux cas, il suffit de retourner sur <a href='/#!/login'>la page de login</a>, d'entrer votre NIVOL (sans les premiers 0) et cliquez sur le bouton Réinitaliser mon mot de passe.<br/>" +
+                  "Enfin, votre compte peut avoir été désactiver par l'administrateur de votre unité locale, dans ce cas, veuillez le contacter.";
+
               }
             },
             function (errorMessage)

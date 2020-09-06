@@ -243,7 +243,6 @@ AND
   qr.`ul_registration_token` = us.`token_benevole_1j`
 )
 AND qr.`id` = :id
-AND qr.`registration_approved` is null
 ";
 
     $parameters = ["ul_id" => $ulId, "id" => $registrationId];
@@ -328,8 +327,8 @@ UPDATE `queteur`
 SET
     `active`  = true,
     `updated` = NOW(),
-    `firebase_sign_in_provider` = ?,
-    `firebase_uid`              = ?
+    `firebase_sign_in_provider` = :firebase_sign_in_provider,
+    `firebase_uid`              = :firebase_uid
 WHERE `id`    = :id
 AND   ul_id   = :ul_id
 ";
@@ -451,8 +450,10 @@ AND
     $queteurIds      = $pageableRequestEntity->filterMap['queteurIds'];
     /** @var int $QRSearchType */
     $QRSearchType    = $pageableRequestEntity->filterMap['QRSearchType'];
-
-
+    /** @var int $redquest_registered */
+    $redquest_registered = $pageableRequestEntity->filterMap['redquest_registered'];
+    /** @var int $user_role */
+    $user_role       = $pageableRequestEntity->filterMap['user_role'];
 
     $querySQL        = "";
     $secteurSQL      = "";
@@ -460,6 +461,8 @@ AND
     $rcqUserSQL      = "";
     $queteurIdsSQL   = "";
     $QRSearchTypeSQL = "";
+    $redquest_registeredSQL = "";
+    $user_roleSQL    = "";
 
     if($query !== null && trim($query) !='')
     {
@@ -491,10 +494,22 @@ AND q.`secteur` IN (1,2,4)
 
     if($rcqUser == 1)
     {
+      if($user_role != null && $user_role > 0)
+      {
+        $user_roleSQL = " AND u.role = :user_role";
+        $parameters["user_role"]=$user_role;
+      }
+
+
+
       $rcqUserSQL="
-AND EXISTS (SELECT u.queteur_id from users u where u.queteur_id = q.id AND u.active = :rcqUserActif)      
+AND EXISTS (SELECT u.queteur_id from users u where u.queteur_id = q.id AND u.active = :rcqUserActif $user_roleSQL)      
 ";
       $parameters["rcqUserActif"]=$rcqUserActif=="1"?1:0;
+
+
+
+
     }
 
     if($QRSearchType > 0)
@@ -535,25 +550,31 @@ AND q.id IN (
     }
 
 
+    if($redquest_registered == 1 || $redquest_registered == 2)
+    {// == 3 is everyone, default setting, no filtering
+      $redquest_registeredSQL = "
+AND q.firebase_uid is ".($redquest_registered == 1?"NOT":"")." NULL
+";
+    }
 
     $sql = null;
     switch ($searchType)
     {
       case 0:
-        $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL);
+        $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL, $redquest_registeredSQL);
         break;
       case 1:
-        $sql = $this->getSearchNotLeftQuery     ($querySQL, $secteurSQL, $rcqUserSQL);
+        $sql = $this->getSearchNotLeftQuery     ($querySQL, $secteurSQL, $rcqUserSQL, $redquest_registeredSQL);
         break;
       case 2:
-        $sql = $this->getSearchNotReturnedQuery ($querySQL, $secteurSQL, $rcqUserSQL);
+        $sql = $this->getSearchNotReturnedQuery ($querySQL, $secteurSQL, $rcqUserSQL, $redquest_registeredSQL);
         break;
       case 3: //search queteur when preparing a tronc-queteur
         $sql = $this->getSearchSimpleQuery      ($querySQL);
         break;
 
       default:
-        $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL);
+        $sql = $this->getSearchAllQuery         ($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL, $redquest_registeredSQL);
     }
 
     $parameters["active"] = $active;
@@ -598,7 +619,7 @@ ORDER BY q.last_name ASC
 ";
   }
 
-  private function getSearchAllQuery($querySQL, $secteurSQL, $benevoleOnlySQL,  $rcqUserSQL, $queteurIdsSQL, $QRSearchTypeSQL)
+  private function getSearchAllQuery(string $querySQL, string $secteurSQL, string $benevoleOnlySQL,  string $rcqUserSQL, string $queteurIdsSQL, string $QRSearchTypeSQL, string $redquest_registeredSQL)
   {
 
      return "
@@ -637,6 +658,7 @@ $benevoleOnlySQL
 $rcqUserSQL
 $queteurIdsSQL
 $QRSearchTypeSQL
+$redquest_registeredSQL
 AND  
 (
   (
@@ -661,7 +683,7 @@ ORDER BY q.last_name ASC
 ";
   }
 
-  private function getSearchNotLeftQuery($querySQL, $secteurSQL, $rcqUserSQL)
+  private function getSearchNotLeftQuery(string $querySQL,  string $secteurSQL,  string $rcqUserSQL, string $redquest_registeredSQL)
   {
     return "
 SELECT  q.`id`,
@@ -698,6 +720,7 @@ AND    q.active= :active
 $querySQL 
 $secteurSQL 
 $rcqUserSQL
+$redquest_registeredSQL
 AND     q.id      = tq.queteur_id
 AND    tq.deleted = 0
 AND    tq.id      = (  
@@ -714,7 +737,7 @@ ORDER BY q.last_name ASC
 ";
   }
 
-  private function getSearchNotReturnedQuery($querySQL, $secteurSQL, $rcqUserSQL)
+  private function getSearchNotReturnedQuery( string $querySQL,  string $secteurSQL,  string $rcqUserSQL, string $redquest_registeredSQL)
   {
 
     return "
@@ -749,6 +772,7 @@ AND    q.active= :active
 $querySQL
 $secteurSQL
 $rcqUserSQL
+$redquest_registeredSQL
 AND     q.id      = tq.queteur_id
 AND    tq.deleted = 0
 AND    tq.id      = (

@@ -62,8 +62,7 @@ class GetQueteurRegistration extends Action
 
     //so that it's preset to active. No point of accepting a registration of an inactive queteur
     $queteur->active = true;
-    //unset the decision to not pre select any answer
-    unset($queteur->registration_approved);
+    
     $this->response->getBody()->write(json_encode($queteur));
     return $this->response;
   }

@@ -99,7 +99,7 @@ class ClientInputValidator
         "validationType"=> $validationType,
         "violations"    => $violations,
         "inputValue"    => $inputValue));
-      throw new InvalidArgumentException("Input value fails string validations. parameterName='$parameterName', inputValue='$inputValue'" );
+      throw new InvalidArgumentException("Input value fails string validations. parameterName='$parameterName', inputValue='".substr($inputValue."", 0, 500)."' (500 first chars)" );
     }
 //trim(htmlentities($inputValue, ENT_QUOTES | ENT_HTML5, "UTF-8"));
     //issue with email address where it breaks the validation.
@@ -107,14 +107,14 @@ class ClientInputValidator
   }
 
   /**
-   * @param  string $parameterName   the name of the input param (for logging purpose)
-   * @param  array  $inputArray      The reference to the array containing the $parameterName as a key (or not)
-   * @param  int    $maxValue        the max value for the input
-   * @param  bool   $notNull         Is the value allowed to be null or not
-   * @param  int    $defaultValue    If the value is null, return this value instead.
+   * @param string $parameterName the name of the input param (for logging purpose)
+   * @param array|null $inputArray The reference to the array containing the $parameterName as a key (or not)
+   * @param int $maxValue the max value for the input
+   * @param bool $notNull Is the value allowed to be null or not
+   * @param int $defaultValue If the value is null, return this value instead.
    * @return int|null The passed value casted to int
    */
-  public function validateInteger($parameterName, ?array &$inputArray, $maxValue=0, $notNull=true, $defaultValue=0):?int
+  public function validateInteger(string $parameterName, ?array &$inputArray, $maxValue=0, $notNull=true, $defaultValue=0):?int
   {
     if($inputArray === null || $inputArray === "" || !array_key_exists($parameterName, $inputArray))
     {
@@ -162,20 +162,20 @@ class ClientInputValidator
         "notNull"       => $notNull,
         "violations"    => $violations,
         "inputValue"    => $inputValue));
-      throw new InvalidArgumentException("Input value fails int validations");
+      throw new InvalidArgumentException("Input value fails int validations. parameterName='$parameterName', inputValue='".substr($inputValue."", 0, 500)."' (500 first chars)");
     }
     return (int) $inputValue;
   }
 
 
   /**
-   * @param  string $parameterName  the name of the input param (for logging purpose)
-   * @param  array  $inputArray      The reference to the array containing the $parameterName as a key (or not)
-   * @param  bool   $notNull        If true, the value can't be null
-   * @param  bool   $defaultValue   If the value is null and it's allowed ($notNull=true), then the function will return this bool value instead of null
+   * @param string $parameterName the name of the input param (for logging purpose)
+   * @param array|null $inputArray The reference to the array containing the $parameterName as a key (or not)
+   * @param bool $notNull If true, the value can't be null
+   * @param bool $defaultValue If the value is null and it's allowed ($notNull=true), then the function will return this bool value instead of null
    * @return boolean true or false
    */
-  public function validateBoolean($parameterName,  ?array &$inputArray, bool $notNull, bool $defaultValue=null):?bool
+  public function validateBoolean(string $parameterName, ?array &$inputArray, bool $notNull, bool $defaultValue=null):?bool
   {
     if($inputArray === null || $inputArray === "" || !array_key_exists($parameterName, $inputArray))
     {
@@ -230,7 +230,7 @@ class ClientInputValidator
       "parameterName" => $parameterName,
       "violations"    => $violations,
       "inputValue"    => $inputValue));
-    throw new InvalidArgumentException("Input value fails int validations");
+    throw new InvalidArgumentException("Input value fails int validations. parameterName='$parameterName', inputValue='".substr($inputValue."", 0, 500)."' (500 first chars)");
 
   }
 

@@ -106,9 +106,7 @@ class GetUserInfoFromUUIDAction extends Action
     if ($user != null)
     {
       $queteur = $this->queteurDBService->getQueteurById($user->queteur_id);
-
       $this->response->getBody()->write(json_encode(new GetUserInfoFromUUIDResponse(true, $queteur->nivol)));
-      
       return $this->response;
 
     }

@@ -70,6 +70,18 @@
           Nombre de Bénévoles/Quêteur d'un jour: <span class="badge">{{q.rowCount}}</span>
         </div>
         <div class="col-md-4">
+          <div class="form-group">
+            <label for="activeRadio1" class="control-label">Quêteur Inscrit sur RedQuest:</label><br/>
+            <label class="radio-inline">
+              <input type="radio" name="redquest_registered" id="redquest_registered1" ng-model="q.redquest_registered" value="1" ng-checked="q.redquest_registered==1"> Inscrit
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="redquest_registered" id="redquest_registered2" ng-model="q.redquest_registered" value="2" ng-checked="q.redquest_registered==2"> Non Inscrit
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="redquest_registered" id="redquest_registered3" ng-model="q.redquest_registered" value="3" ng-checked="q.redquest_registered==3"> Inscrit et non inscrit
+            </label>
+          </div>
         </div>
         <div class="col-md-2">
           <div class="form-group">
@@ -108,7 +120,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" ng-show="q.rcqUser==1">
                 <div class="col-md-12">
                   <div class="form-group">
                     <label for="rcqUserActifRadio1" class="control-label">Utilisateur RCQ Actif?</label><br/>
@@ -123,7 +135,7 @@
               </div>
             </div>
             <div class="col-md-8">
-              <div class="form-group">
+              <div class="form-group" ng-show="q.rcqUser==0">
                 <label for="anonymization_token" class="control-label">Jeton d'Anonymisation</label>
                 <input
                   name="anonymization_token"
@@ -133,10 +145,19 @@
                   placeholder="Lors d'une recherche par token, les autres champs sont ignorés"
                 />
                 <span class="help-block">
-              Lorsqu'une fiche d'un quêteur est anonymisée, il reçoit un email avec un jeton <small>(ex: '0c0d1d14-5416-4a15-b011-1ad53213ccdb')</small>
-              Vous pouvez retrouver cette fiche anonymisée, et la revaloriser avec les données du quêteur <strong>(sur sa demande)</strong> pour qu'il puisse
-              retrouver ses statistiques des années précédentes
-            </span>
+                  Lorsqu'une fiche d'un quêteur est anonymisée, il reçoit un email avec un jeton <small>(ex: '0c0d1d14-5416-4a15-b011-1ad53213ccdb')</small>
+                  Vous pouvez retrouver cette fiche anonymisée, et la revaloriser avec les données du quêteur <strong>(sur sa demande)</strong> pour qu'il puisse
+                  retrouver ses statistiques des années précédentes
+                </span>
+              </div>
+              <div class="form-group" ng-show="q.rcqUser==1">
+                <label for="q.role" class="control-label">Rôle de l'utilisateur</label>
+                <!-- (r.id+'') otherwise the value of the option tag is value='number:1' -->
+                <select name="q.role" id="q.role" class="form-control" ng-model="q.user_role"
+                        ng-options="(r.id) as r.label
+                      for
+                      r in q.roleList">
+                </select>
               </div>
             </div>
           </div>
