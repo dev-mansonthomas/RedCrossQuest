@@ -127,7 +127,7 @@ angular
             {
               $log.debug("troncId:"+troncId +" found in Database", tronc);
 
-              if(tronc.active !== true)
+              if(tronc.enabled !== true)
               {
                 troncDecodedAndNotFoundInDB("INACTIVE", troncId, ulId);
                 return;

@@ -1119,7 +1119,7 @@
                 typeahead-on-select="tq.getBagDetails($item, $model, $label, $event, true)"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                ng-required="tq.use_bank_bag"
+                ng-required="tq.use_bank_bag && tq.current.adminEditMode == false"
                 autocomplete="off">
               <i   ng-show="loadingCoinMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-coins" aria-hidden="true" style="top:0px;">&nbsp;</span>
@@ -1147,7 +1147,7 @@
                 typeahead-on-select="tq.getBagDetails($item, $model, $label, $event, false)"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                ng-required="tq.use_bank_bag"
+                ng-required="tq.use_bank_bag && tq.current.adminEditMode == false"
                 autocomplete="off">
               <i   ng-show="loadingBillMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-money" aria-hidden="true" style="top:0px;">&nbsp;</span>

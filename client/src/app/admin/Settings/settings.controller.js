@@ -26,12 +26,17 @@
     vm.deploymentType               = $localStorage.currentUser.d;
     //update it with current DB Values
 
+    vm.refreshInProgressUL=false;
+    vm.refreshInProgressSettings=false;
+
 
     vm.reload=function()
     {
+      vm.refreshInProgressUL=true;
       UniteLocaleResource.get({id:$localStorage.guiSettings.ul.id}).$promise.then(handleResult).catch(function(e){
         $log.error("error searching for UL", e);
       });
+      vm.refreshInProgressSettings=true;
       SettingsResource.getULSettings().$promise.then(handleResultAppSettings).catch(function(e){
         $log.error("error searching for Settings", e);
       });
@@ -41,11 +46,13 @@
 
     function handleResultAppSettings(settings)
     {
+      vm.refreshInProgressSettings=false;
       vm.applicationSettings = settings;
     }
 
     function handleResult (uniteLocalDetails)
     {
+      vm.refreshInProgressUL=false;
       vm.settings = uniteLocalDetails;
       vm.settings.date_demarrage_rcq=DateTimeHandlingService.handleServerDate(vm.settings.date_demarrage_rcq).stringVersion;
 

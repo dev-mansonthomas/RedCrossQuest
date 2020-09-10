@@ -89,6 +89,12 @@ class QueteurEntity  extends Entity
    * @var int $point_quete_id Current Point De Quete ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
   public $point_quete_id              ;
+
+  /**
+   * @OA\Property()
+   * @var int $tronc_id Current Tronc ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   */
+  public $tronc_id              ;
   /**
    * @OA\Property()
    * @var string $point_quete_name  Current Point De Quete name   (when searching queteur, search can be perform by status (about to leave, on the street, returned))
@@ -234,7 +240,7 @@ class QueteurEntity  extends Entity
 
   protected $_fieldList = [
     'id','email','first_name','last_name','secteur','nivol','mobile','created','updated',
-    'notes','ul_id','ul_name','ul_longitude','ul_latitude','point_quete_id','point_quete_name',
+    'notes','ul_id','ul_name','ul_longitude','ul_latitude','point_quete_id','point_quete_name', 'tronc_id',
     'depart_theorique','depart','retour','active','man','birthdate','qr_code_printed','referent_volunteer',
     'referent_volunteer_entity','anonymization_token','anonymization_date',
     'ul_registration_token', 'queteur_registration_token', 'registration_approved', 'reject_reason',
@@ -270,6 +276,7 @@ class QueteurEntity  extends Entity
 
     $this->getInteger('point_quete_id'              , $data);
     $this->getString ('point_quete_name'            , $data, 100);
+    $this->getInteger('tronc_id'                    , $data);
     $this->getDate   ('depart_theorique'            , $data);
     $this->getDate   ('depart'                      , $data);
     $this->getDate   ('retour'                      , $data);

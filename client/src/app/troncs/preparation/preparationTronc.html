@@ -86,7 +86,7 @@
       <form novalidate name="prepaTroncForm">
         <div class="row" ng-if="pt.current.QRCodeScanError" style="text-align: center;">
           <div class="col-md-8 col-md-offset-4">
-            <span class="alert alert-danger" role="alert">{{pt.current.QRCodeScanError}}</span>
+            <span class="alert alert-danger" role="alert" ng-bind-html="pt.current.QRCodeScanError"></span>
             <br/><br/>
           </div>
         </div>

@@ -36,7 +36,8 @@
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.ulEmail.$invalid}">
                 <label for="ulEmail" class="control-label">Email de contact</label>
                 <input type="email" id="ulEmail" name="ulEmail" ng-model="s.settings.email" maxlength="100" class="form-control" required autocomplete="email" autofocus
-                       ng-pattern="'^.*@croix-rouge.fr$'"/>
+                       ng-pattern="'^.*@croix-rouge.fr$'"
+                ng-readonly="s.refreshInProgressUL"/>
                 <span class="help-block">Cet email est affiché en signature des mails envoyé par RedCrossQuest en votre nom et dans l'application RedQuest</span>
               </div>
             </div>
@@ -44,7 +45,8 @@
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.ulPhone.$invalid}">
                 <label for="ulPhone" class="control-label">Téléphone de contact</label>
                 <input type="text" id="ulPhone" name="ulPhone" ng-model="s.settings.phone" maxlength="13" class="form-control" required autocomplete="phone"
-                       ng-pattern="'\\+33[0-9]{9,9}'"/>
+                       ng-pattern="'\\+33[0-9]{9,9}'"
+                       ng-readonly="s.refreshInProgressUL"/>
                 <span class="help-block">Ce téléphone est affiché en signature des mails envoyé par RedCrossQuest en votre nom et dans l'application RedQuest</span>
               </div>
             </div>
@@ -60,7 +62,8 @@
             <div class="col-md-4">
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqName.$invalid}">
                 <label for="ulName" class="control-label">Nom</label>
-                <input type="text" id="ulName" name="ulName" ng-model="s.settings.name" maxlength="50" class="form-control" required autocomplete="name" autofocus/>
+                <input type="text" id="ulName" name="ulName" ng-model="s.settings.name" maxlength="50" class="form-control" required autocomplete="name" autofocus
+                       ng-readonly="s.refreshInProgressUL"/>
               </div>
             </div>
             <div class="col-md-2 ">
@@ -72,19 +75,22 @@
             <div class="col-md-6">
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqAddress.$invalid}">
                 <label for="ulAddress" class="control-label">Adresse</label>
-                <input type="text" id="ulAddress" name="ulAddress" ng-model="s.settings.address" maxlength="70"  class="form-control" required autocomplete="address"/>
+                <input type="text" id="ulAddress" name="ulAddress" ng-model="s.settings.address" maxlength="70"  class="form-control" required autocomplete="address"
+                       ng-readonly="s.refreshInProgressUL"/>
               </div>
             </div>
             <div class="col-md-2" style="width:100px;">
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqPostalCode.$invalid}">
                 <label for="pqPostalCode" class="control-label" style="font-size: 11px;">Code Postal</label>
-                <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="s.settings.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'/>
+                <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="s.settings.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'
+                       ng-readonly="s.refreshInProgressUL"/>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqCity.$invalid}">
                 <label for="pqCity" class="control-label">Ville</label>
-                <input type="text" id="pqCity" name="pqCity" ng-model="s.settings.city" class="form-control" maxlength="70"  required autocomplete='address-level2'/>
+                <input type="text" id="pqCity" name="pqCity" ng-model="s.settings.city" class="form-control" maxlength="70"  required autocomplete='address-level2'
+                       ng-readonly="s.refreshInProgressUL"/>
               </div>
             </div>
             <div class="col-md-1">
@@ -96,13 +102,13 @@
             <div class="col-md-2">
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqLatitude.$invalid}">
                 <label for="pqLatitude" class="control-label">Latitude</label>
-                <input type="text" id="pqLatitude" name="pqLatitude" ng-model="s.settings.latitude" class="form-control"    ng-maxlength="18" required ng-pattern="s.latlongRegExp"/>
+                <input type="text" id="pqLatitude" name="pqLatitude" ng-model="s.settings.latitude" class="form-control"    ng-maxlength="18" required ng-pattern="s.latlongRegExp" ng-readonly="s.refreshInProgressUL"/>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group" ng-class="{'has-error':ulSettingsForm.pqLongitude.$invalid}">
                 <label for="pqLongitude" class="control-label">Longitude</label>
-                <input type="text" id="pqLongitude" name="pqLongitude" ng-model="s.settings.longitude" class="form-control" ng-maxlength="18" required ng-pattern="s.latlongRegExp"/>
+                <input type="text" id="pqLongitude" name="pqLongitude" ng-model="s.settings.longitude" class="form-control" ng-maxlength="18" required ng-pattern="s.latlongRegExp" ng-readonly="s.refreshInProgressUL"/>
               </div>
             </div>
             <div class="col-md-8">
@@ -162,10 +168,10 @@
                       <div class="form-group" ng-class="{'has-error':ulSettingsForm.admin_man.$invalid}">
                         <label for="admin_manRadio1" class="control-label">Sexe</label>  <br/>
                         <label class="radio-inline">
-                          <input type="radio" name="admin_man" id="admin_manRadio1" ng-model="s.settings.admin_man" ng-value="true" required> Homme
+                          <input type="radio" name="admin_man" id="admin_manRadio1" ng-model="s.settings.admin_man" ng-value="true" required ng-disabled="s.refreshInProgressSettings"> Homme
                         </label>
                         <label class="radio-inline">
-                          <input type="radio" name="admin_man" id="admin_manRadio2" ng-model="s.settings.admin_man" ng-value="false" required> Femme
+                          <input type="radio" name="admin_man" id="admin_manRadio2" ng-model="s.settings.admin_man" ng-value="false" required ng-disabled="s.refreshInProgressSettings"> Femme
                         </label>
                       </div>
                     </div>
@@ -179,6 +185,7 @@
                                    ng-model="s.settings.admin_nivol"
                                    ng-required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                                   ng-readonly="s.refreshInProgressSettings"
                         />
                       </div>
                     </div>
@@ -195,6 +202,7 @@
                           id="admin_first_name"
                           class="form-control"
                           ng-model="s.settings.admin_first_name"
+                          ng-readonly="s.refreshInProgressSettings"
 
                         />
                       </div>
@@ -206,6 +214,7 @@
                                id="admin_last_name"
                                class="form-control"
                                ng-model="s.settings.admin_last_name"
+                               ng-readonly="s.refreshInProgressSettings"
 
                         />
                       </div>
@@ -225,7 +234,8 @@
                             type="email"
                             ng-model="s.settings.admin_email"
                             ng-pattern="'^[-_a-zA-Z0-9]+\.[-_a-zA-Z0-9]+@croix-rouge.fr$'"
-                            required/>
+                            required
+                            ng-readonly="s.refreshInProgressSettings"/>
                         </div>
                       </div>
                     </div>
@@ -235,7 +245,11 @@
                         <div class="input-group">
                           <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
                           <input name="admin_mobile" id="admin_mobile" class="form-control"  type="text"
-                                 ng-model="s.settings.admin_mobile" required ng-pattern="'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+                                 ng-model="s.settings.admin_mobile"
+                                 required
+                                 ng-pattern="'33[6-7][0-9]{8,8}'"
+                                 autocomplete="tel-national"
+                                 ng-readonly="s.refreshInProgressSettings"/>
                         </div>
                       </div>
                     </div>
@@ -254,10 +268,10 @@
                       <div class="form-group" ng-class="{'has-error':ulSettingsForm.tresorier_man.$invalid}">
                         <label for="tresorier_manRadio1" class="control-label">Sexe</label>  <br/>
                         <label class="radio-inline">
-                          <input type="radio" name="tresorier_man" id="tresorier_manRadio1" ng-model="s.settings.tresorier_man" ng-value="true" required> Homme
+                          <input type="radio" name="tresorier_man" id="tresorier_manRadio1" ng-model="s.settings.tresorier_man" ng-value="true" required ng-disabled="s.refreshInProgressSettings"> Homme
                         </label>
                         <label class="radio-inline">
-                          <input type="radio" name="tresorier_man" id="tresorier_manRadio2" ng-model="s.settings.tresorier_man" ng-value="false" required> Femme
+                          <input type="radio" name="tresorier_man" id="tresorier_manRadio2" ng-model="s.settings.tresorier_man" ng-value="false" required ng-disabled="s.refreshInProgressSettings"> Femme
                         </label>
                       </div>
                     </div>
@@ -271,6 +285,7 @@
                                    ng-model="s.settings.tresorier_nivol"
                                    ng-required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                                   ng-readonly="s.refreshInProgressSettings"
                         />
                       </div>
                     </div>
@@ -287,6 +302,7 @@
                           id="tresorier_first_name"
                           class="form-control"
                           ng-model="s.settings.tresorier_first_name"
+                          ng-readonly="s.refreshInProgressSettings"
 
                         />
                       </div>
@@ -298,6 +314,7 @@
                                id="tresorier_last_name"
                                class="form-control"
                                ng-model="s.settings.tresorier_last_name"
+                               ng-readonly="s.refreshInProgressSettings"
 
                         />
                       </div>
@@ -317,7 +334,8 @@
                             type="email"
                             ng-model="s.settings.tresorier_email"
                             ng-pattern="'^[-_a-zA-Z0-9]+\.[-_a-zA-Z0-9]+@croix-rouge.fr$'"
-                            required/>
+                            required
+                            ng-readonly="s.refreshInProgressSettings"/>
                         </div>
                       </div>
                     </div>
@@ -327,7 +345,12 @@
                         <div class="input-group">
                           <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
                           <input name="tresorier_mobile" id="tresorier_mobile" class="form-control"  type="text"
-                                 ng-model="s.settings.tresorier_mobile" required ng-pattern="'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+                                 ng-model="s.settings.tresorier_mobile"
+                                 required
+                                 ng-pattern="'33[6-7][0-9]{8,8}'"
+                                 autocomplete="tel-national"
+                                 ng-readonly="s.refreshInProgressSettings"
+                          />
                         </div>
                       </div>
                     </div>
@@ -348,10 +371,10 @@
                       <div class="form-group" ng-class="{'has-error':ulSettingsForm.president_man.$invalid}">
                         <label for="president_manRadio1" class="control-label">Sexe</label>  <br/>
                         <label class="radio-inline">
-                          <input type="radio" name="president_man" id="president_manRadio1" ng-model="s.settings.president_man" ng-value="true" required> Homme
+                          <input type="radio" name="president_man" id="president_manRadio1" ng-model="s.settings.president_man" ng-value="true" required ng-disabled="s.refreshInProgressSettings"> Homme
                         </label>
                         <label class="radio-inline">
-                          <input type="radio" name="president_man" id="president_manRadio2" ng-model="s.settings.president_man" ng-value="false" required> Femme
+                          <input type="radio" name="president_man" id="president_manRadio2" ng-model="s.settings.president_man" ng-value="false" required ng-disabled="s.refreshInProgressSettings"> Femme
                         </label>
                       </div>
                     </div>
@@ -365,6 +388,7 @@
                                    ng-model="s.settings.president_nivol"
                                    ng-required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
+                                   ng-readonly="s.refreshInProgressSettings"
                         />
                       </div>
                     </div>
@@ -381,6 +405,7 @@
                           id="president_first_name"
                           class="form-control"
                           ng-model="s.settings.president_first_name"
+                          ng-readonly="s.refreshInProgressSettings"
 
                         />
                       </div>
@@ -392,6 +417,7 @@
                                id="president_last_name"
                                class="form-control"
                                ng-model="s.settings.president_last_name"
+                               ng-readonly="s.refreshInProgressSettings"
 
                         />
                       </div>
@@ -411,7 +437,9 @@
                             type="email"
                             ng-model="s.settings.president_email"
                             ng-pattern="'^[-_a-zA-Z0-9]+\.[-_a-zA-Z0-9]+@croix-rouge.fr$'"
-                            required/>
+                            required
+                            ng-readonly="s.refreshInProgressSettings"
+                          />
                         </div>
                       </div>
                     </div>
@@ -421,7 +449,12 @@
                         <div class="input-group">
                           <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" style="top:0px;">&nbsp;+</span>
                           <input name="president_mobile" id="president_mobile" class="form-control"  type="text"
-                                 ng-model="s.settings.president_mobile" required ng-pattern="'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+                                 ng-model="s.settings.president_mobile"
+                                 required
+                                 ng-pattern="'33[6-7][0-9]{8,8}'"
+                                 autocomplete="tel-national"
+                                 ng-readonly="s.refreshInProgressSettings"
+                          />
                         </div>
                       </div>
                     </div>

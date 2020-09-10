@@ -276,10 +276,10 @@
         <td ng-show="queteur.mobile=='N/A'">&nbsp;</td>
         <td>{{::queteur.point_quete_name}}</td>
         <td>
-          <span ng-show=" queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-home"        aria-hidden="true" style="height: 20px!important;color:darkblue" tooltip-popup-close-delay='1000' uib-tooltip='Pas encore parti, départ théorique à {{::queteur.depart_theorique}}'></span>
-          <span ng-show="!queteur.retour           &&  queteur.depart"                    class="glyphicon glyphicon-coins"       aria-hidden="true" style="height: 20px!important;color:gold"     tooltip-popup-close-delay='1000' uib-tooltip='En train de quêter, départ à {{::queteur.depart}}'></span>
-          <span ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart" class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="height: 20px!important;color:purple"   tooltip-popup-close-delay='1000' uib-tooltip='Rentré de quête à {{::queteur.retour }}'></span>
-          <span ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="height: 20px!important;color:grey"     tooltip-popup-close-delay='1000' uib-tooltip="Pas actif aujourd'hui"></span>
+          <span ng-show=" queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-home"        aria-hidden="true" style="height: 20px!important;color:darkblue" tooltip-popup-close-delay='1000' uib-tooltip='Pas encore parti, départ théorique à {{::queteur.depart_theorique}} avec le tronc {{::queteur.tronc_id}}'></span>
+          <span ng-show="!queteur.retour           &&  queteur.depart"                    class="glyphicon glyphicon-coins"       aria-hidden="true" style="height: 20px!important;color:gold" tooltip-popup-close-delay='1000' uib-tooltip='En train de quêter, départ à {{::queteur.depart}} avec le tronc {{::queteur.tronc_id}}'></span>
+          <span ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart" class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="height: 20px!important;color:purple" tooltip-popup-close-delay='1000' uib-tooltip='Rentré de quête à {{::queteur.retour }} avec le tronc {{::queteur.tronc_id}}'></span>
+          <span ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="height: 20px!important;color:grey" tooltip-popup-close-delay='1000' uib-tooltip="Pas actif aujourd'hui"></span>
         </td>
       </tr>
       </tbody>

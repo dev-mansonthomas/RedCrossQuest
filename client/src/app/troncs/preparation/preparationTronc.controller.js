@@ -14,7 +14,7 @@
                                       QueteurResource, PointQueteResource   ,
                                       TroncResource  , TroncQueteurResource ,
                                       QRDecodeService,
-                                      moment, DateTimeHandlingService)
+                                      moment)
   {
     var vm = this;
 
@@ -310,7 +310,7 @@
           }
           else
           {
-            vm.current.QRCodeScanError="Le quêteur n'a pas été trouvé ! Attention un QRCode imprimé depuis la plateforme de TEST ne fonctionnera pas sur la PROD !"+reason;
+            vm.current.QRCodeScanError="Le quêteur n'a pas été trouvé ! <br/>Attention un QRCode imprimé depuis la plateforme de <b>TEST</b> ne fonctionnera pas sur la <b>PROD</b> !";
           }
           $log.debug("QueteurID="+queteurId+" ulId="+ulId, reason);
         };
@@ -346,7 +346,7 @@
             }
             else
             {
-              vm.current.QRCodeScanError="Le tronc n'a pas été trouvé ! Attention un QRCode imprimé depuis la plateforme de TEST ne fonctionnera pas sur la PROD !"+reason;
+              vm.current.QRCodeScanError="Le tronc n'a pas été trouvé ! <br/> Attention un QRCode imprimé depuis la plateforme de <b>TEST</b> ne fonctionnera pas sur la <b>PROD</b> !";
             }
             $log.debug( troncId+' '+ulId,reason);
           };
