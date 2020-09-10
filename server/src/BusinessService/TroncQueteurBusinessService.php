@@ -116,13 +116,20 @@ class TroncQueteurBusinessService
       return true;
 
     /*
-    $logger->debug("checking preparation date",["preparationData"=>$dateToCheck, "startOfQuete"=> DailyStatsBeforeRCQDBService::getCurrentQueteStartDate(),
-      "resultOfCheck"=>$dateToCheck ->gte(Carbon::createFromFormat("Y-m-d", DailyStatsBeforeRCQDBService::getCurrentQueteStartDate()))]);
-      */
+    $this->logger->error("checking preparation date",
+      [
+        "preparationData"=>$dateToCheck,
+        "startOfQuete"=> $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate(),
+        "resultOfCheckWithNow(null)"=>
+        Carbon::now()->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00")),
+        "resultOfCheckWithSpecificDate"=>
+          $dateToCheck ->addHours(2)->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00"))
+      ]);
+    */
     return
       $dateToCheck == null ?
         Carbon::now()->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00")):
-        $dateToCheck ->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00"));
+        $dateToCheck ->addHours(2)->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00"));
   }
 
 }

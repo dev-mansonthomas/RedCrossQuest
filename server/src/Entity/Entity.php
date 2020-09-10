@@ -195,6 +195,7 @@ class Entity
       if(is_array($data[$key]))
       {
         // json parsed momentjs object : {"date":"2017-06-05 03:00:00.000000","timezone_type":3,"timezone":"Europe/Paris"}
+
         $array = $data[$key];
         try
         {
