@@ -13,6 +13,9 @@ gcloud services enable firestore.googleapis.com
 echo "gcloud services enable sqladmin.googleapis.com"
 gcloud services enable sqladmin.googleapis.com
 
+echo "gcloud services enable cloudbuild.googleapis.com"
+gcloud services enable cloudbuild.googleapis.com
+
 
 #secret manager
 #in Google Cloud Console

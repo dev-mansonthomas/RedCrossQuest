@@ -93,7 +93,7 @@
       if(vm.current.tronc_queteur.retour === null)
       {
         vm.current.tronc_queteur.retour = new Date();
-        vm.current.tronc_queteur.retourMax = vm.current.tronc_queteur.retour;
+        vm.current.tronc_queteur.retourMax = vm.current.tronc_queteur.retour;//pas de retour dans le futur
       }
       else
       {

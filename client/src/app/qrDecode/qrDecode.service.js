@@ -48,8 +48,19 @@ angular
 
           QueteurResource.get({'id':queteurId}).$promise.then(function(queteur)
             {
-              $log.debug("queteurId:"+queteurId +" found in Database");
-              $log.debug(queteur);
+              $log.debug("queteurId:"+queteurId +" found in Database", queteur);
+
+              if(queteur.anonymization_token !== "")
+              {//The queteur has been anonymised and can't be used to prepare a tronc
+                queteurDecodedAndNotFoundInDB("ANONYMISED", queteurId, ulId);
+                return;
+              }
+
+              if(queteur.active !== true)
+              {//The queteur has been anonymised and can't be used to prepare a tronc
+                queteurDecodedAndNotFoundInDB("INACTIVE", queteurId, ulId);
+                return;
+              }
 
               //play scanner beep
               local.sound.play();
@@ -114,9 +125,13 @@ angular
 
           TroncResource.get({'id':troncId}).$promise.then(function(tronc)
             {
-              $log.debug("troncId:"+troncId +" found in Database");
-              $log.debug(tronc);
+              $log.debug("troncId:"+troncId +" found in Database", tronc);
 
+              if(tronc.active !== true)
+              {
+                troncDecodedAndNotFoundInDB("INACTIVE", troncId, ulId);
+                return;
+              }
               //play scanner beep
               local.sound.play();
 

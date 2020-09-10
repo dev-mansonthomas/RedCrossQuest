@@ -232,7 +232,7 @@
       {
         return response.rows.map(function(tronc)
         {
-          tronc.stringView = "tronc N°"+tronc.id;
+          tronc.stringView = tronc.id;
           return tronc;
         });
       },
@@ -299,10 +299,20 @@
         };
         var queteurDecodedAndNotFoundInDB=function (reason, queteurId, ulId)
         {
-          //TODO display a message to the user
-          alert("Quêteur Non trouvé ! Attention un QRCode imprimé depuis la plateforme de TEST ne fonctionnera pas sur la PROD !") ;
-          $log.debug(JSON.stringify(reason) +' ' + queteurId+' '+ulId);
-          //JSON.stringify(reason) +' ' + queteurId+' '+ulId
+
+          if(reason === 'ANONYMISED')
+          {
+            vm.current.QRCodeScanError="Le quêteur dont vous avez scanné le QRCode a été anonymisé et ne peut être utilisé pour quêter";
+          }
+          else if(reason === 'INACTIVE')
+          {
+            vm.current.QRCodeScanError="Le quêteur dont vous avez scanné le QRCode est inactif ! Seuls les queteurs actifs peuvent quêter";
+          }
+          else
+          {
+            vm.current.QRCodeScanError="Le quêteur n'a pas été trouvé ! Attention un QRCode imprimé depuis la plateforme de TEST ne fonctionnera pas sur la PROD !"+reason;
+          }
+          $log.debug("QueteurID="+queteurId+" ulId="+ulId, reason);
         };
 
         var foundSomething = QRDecodeService.decodeQueteur(data, checkQueteurNotAlreadyDecocededFunction, queteurDecodedAndFoundInDB, queteurDecodedAndNotFoundInDB);
@@ -323,16 +333,22 @@
           var troncDecodedAndFoundInDB = function(tronc)
           {
             vm.current.tronc = tronc;
-            vm.current.tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
+            vm.current.tronc.stringView = tronc.id;
             $scope.pt.current.troncId = tronc.id;
             vm.preparationChecks();
           };
 
           var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)
           {
-            alert("Tronc Non trouvé ! Attention un QRCode imprimé depuis la plateforme de TEST ne fonctionnera pas sur la PROD !") ;
-            $log.debug(JSON.stringify(reason) +' ' + troncId+' '+ulId);
-            //reason +' ' + troncId+' '+ulId
+            if(reason === 'INACTIVE')
+            {
+              vm.current.QRCodeScanError="Le tronc dont vous avez scanné le QRCode est inactif ! Seuls les troncs actifs peuvent être utilisés";
+            }
+            else
+            {
+              vm.current.QRCodeScanError="Le tronc n'a pas été trouvé ! Attention un QRCode imprimé depuis la plateforme de TEST ne fonctionnera pas sur la PROD !"+reason;
+            }
+            $log.debug( troncId+' '+ulId,reason);
           };
           QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
 

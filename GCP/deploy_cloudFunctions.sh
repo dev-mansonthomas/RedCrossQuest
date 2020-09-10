@@ -68,14 +68,14 @@ REGION="europe-west1"
 #this function generate the yaml file and pass it to the deploy command if a shell script named after the function is present
 function generateEnvFile
 {
-  FUNCTION_NAME="$1"
-  BASH_FILE_NAME=~/.cred/functionsEnvVar/${FUNCTION_NAME}.sh
-  YAML_FILE_NAME=~/.cred/functionsEnvVar/${FUNCTION_NAME}.yaml
+  local FUNCTION_NAME="$1"
+  local BASH_FILE_NAME=~/.cred/functionsEnvVar/${FUNCTION_NAME}.sh
+  local YAML_FILE_NAME=~/.cred/functionsEnvVar/${FUNCTION_NAME}.yaml
 
   #test if a shell script exist that generates the env yaml file
   if [[ -f ${BASH_FILE_NAME} ]]
   then
-    ENV_VAR="--env-vars-file=${YAML_FILE_NAME}"
+    local ENV_VAR="--env-vars-file=${YAML_FILE_NAME}"
     echo "generating env_var yaml file for ${FUNCTION_NAME}"
     #regenerate the yaml file from properties
     cd ~/.cred/functionsEnvVar/  || exit 1
@@ -90,7 +90,7 @@ function generateEnvFile
 #from nodejs12 deploy, the package.json and package-lock.json must be in sync
 function npmInstall
 {
-  FUNC_NAME=$1                                           #uppercase
+  local FUNC_NAME=$1                                           #uppercase
   local PROJECT_NAME="${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]^^}"
 
   cd "${HOME}/RedCrossQuestCloudFunctions/${PROJECT_NAME}/${FUNC_NAME}/" || exit 1
@@ -106,12 +106,12 @@ function npmInstall
 
 function deployHttpFunction
 {
-  FUNCTION_NAME="$1"
+  local FUNCTION_NAME="$1"
   #get the correct project prefix for the function
-  PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]}
-  PROJECT_NAME_UPPER=$(echo ${PROJECT_NAME} | tr a-z A-Z)
+  local PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[$FUNCTION_NAME]}
+  local PROJECT_NAME_UPPER=$(echo ${PROJECT_NAME} | tr a-z A-Z)
 
-  EXTRA_PARAMS=${FUNCTIONS_EXTRA_PARAMS[${FUNCTION_NAME}]}
+  local EXTRA_PARAMS=${FUNCTIONS_EXTRA_PARAMS[${FUNCTION_NAME}]}
 
   if [[ "${PROJECT_NAME}1" == "1" ]]
   then
@@ -121,9 +121,9 @@ function deployHttpFunction
 
   npmInstall "$FUNCTION_NAME"
 
-  PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+  local PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 
-  SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
+  local SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
 
   echo
   echo "################################################################################################################"
@@ -132,11 +132,11 @@ function deployHttpFunction
   echo
 
   generateEnvFile "${FUNCTION_NAME}"
-  ENV_VAR="${RETURN_VALUE}"
+  local ENV_VAR="${RETURN_VALUE}"
 
   setProject "${PROJECT_ID}"
 
-  DEPLOY_CMD="gcloud beta functions deploy ${FUNCTION_NAME} --service-account cf-${FUNCTION_NAME}@${PROJECT_ID}.iam.gserviceaccount.com --source ${SOURCE} --runtime ${RUNTIME} --trigger-http --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS} --allow-unauthenticated"
+  local DEPLOY_CMD="gcloud beta functions deploy ${FUNCTION_NAME} --service-account cf-${FUNCTION_NAME}@${PROJECT_ID}.iam.gserviceaccount.com --source ${SOURCE} --runtime ${RUNTIME} --trigger-http --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS} --allow-unauthenticated"
   echo
   echo
   echo "${DEPLOY_CMD}"
@@ -149,10 +149,10 @@ function deployPubSubFunction
 {
   echo $1
   #take the function parameter and transform the ; delimited string into array
-  PARAM_ARRAY=(${1//;/ })
+  local PARAM_ARRAY=(${1//;/ })
 
-  FUNCTION_NAME="${PARAM_ARRAY[0]}"
-  FUNCTION_TOPIC="${PARAM_ARRAY[1]}"
+  local FUNCTION_NAME="${PARAM_ARRAY[0]}"
+  local FUNCTION_TOPIC="${PARAM_ARRAY[1]}"
 
   if [[ "${FUNCTION_TOPIC}1" == "1" ]]
   then
@@ -164,11 +164,11 @@ function deployPubSubFunction
 
   #get the correct project prefix for the function
    #get the correct project prefix for the function
-  PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[${FUNCTION_NAME}]}
-  PROJECT_NAME_UPPER=$(echo ${PROJECT_NAME} | tr a-z A-Z)
-  PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
+  local PROJECT_NAME=${FUNCTIONS_PROJECT_PREFIX[${FUNCTION_NAME}]}
+  local PROJECT_NAME_UPPER=$(echo ${PROJECT_NAME} | tr a-z A-Z)
+  local PROJECT_ID="${PROJECT_NAME}-${COUNTRY}-${ENV}"
 
-  EXTRA_PARAMS=${FUNCTIONS_EXTRA_PARAMS[${FUNCTION_NAME}]}
+  local EXTRA_PARAMS=${FUNCTIONS_EXTRA_PARAMS[${FUNCTION_NAME}]}
 
 
   echo
@@ -177,14 +177,14 @@ function deployPubSubFunction
   echo "################################################################################################################"
   echo
 
-  SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
+  local SOURCE=https://source.developers.google.com/projects/${PROJECT_ID}/repos/${REPOSITORY_ID}/moveable-aliases/master/paths/${PROJECT_NAME_UPPER}/${FUNCTION_NAME}
 
   generateEnvFile "${FUNCTION_NAME}"
-  ENV_VAR="${RETURN_VALUE}"
+  local ENV_VAR="${RETURN_VALUE}"
 
   setProject "${PROJECT_ID}"
 
-  DEPLOY_CMD="gcloud beta functions deploy ${FUNCTION_NAME} --service-account cf-${FUNCTION_NAME}@${PROJECT_ID}.iam.gserviceaccount.com --source ${SOURCE} --runtime ${RUNTIME} --trigger-topic ${FUNCTION_TOPIC} --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS} --no-allow-unauthenticated"
+  local DEPLOY_CMD="gcloud beta functions deploy ${FUNCTION_NAME} --service-account cf-${FUNCTION_NAME}@${PROJECT_ID}.iam.gserviceaccount.com --source ${SOURCE} --runtime ${RUNTIME} --trigger-topic ${FUNCTION_TOPIC} --region ${REGION} ${ENV_VAR} ${EXTRA_PARAMS} --no-allow-unauthenticated"
   echo
   echo
   echo "${DEPLOY_CMD}"

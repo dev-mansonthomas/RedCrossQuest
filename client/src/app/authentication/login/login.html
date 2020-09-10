@@ -13,10 +13,10 @@
 
     <div class="col-md-offset-2 col-md-7">
       <h2>Bienvenue sur RedCrossQuest !</h2>
-      <form name="loginForm" ng-submit="form.$valid && vm.login()" novalidate>
+      <form name="loginForm" ng-submit="loginForm.$valid && vm.login()" novalidate>
 
 
-        <div class="form-group" ng-class="{ 'has-error': form.username.$invalid }">
+        <div class="form-group" ng-class="{ 'has-error': loginForm.username.$invalid }">
           <label for="username">Nom d'utilisateur</label>
           <input type="text"
                  id="username"
@@ -32,7 +32,7 @@
             Le nom d'utilisateur est requis et <b>ne</b> doit <b>pas</b> commencer par des 0.
           </span>
         </div>
-        <div class="form-group" ng-class="{ 'has-error': form.$submitted && form.password.$invalid }">
+        <div class="form-group" ng-class="{ 'has-error': loginForm.$submitted && loginForm.password.$invalid }">
           <label for="password">Mot de passe</label>
           <input type="password"
                    id="password"
@@ -43,7 +43,7 @@
          autocomplete="current-password"
              tabindex="2"
           />
-          <div ng-messages="form.$submitted && form.password.$error" class="help-block">
+          <div ng-messages="loginForm.$submitted && loginForm.password.$error" class="help-block">
             <div ng-message="required">Le mot de passe est requis</div>
           </div>
         </div>
@@ -60,7 +60,7 @@
             </div>
             <div class="col-md-2 col-md-offset-4">
               <button
-                ng-disabled="vm.loading || form.$invalid"
+                ng-disabled="vm.loading || loginForm.$invalid"
                       class="btn btn-primary"
                    ng-click="vm.login()"
                    tabindex="3">Connexion</button>
@@ -69,7 +69,7 @@
           </div>
         </div>
         <div ng-if="vm.timeout" class="alert alert-danger" >Le serveur ne répond pas</div>
-        <div ng-if="vm.error"   class="alert alert-danger" >{{vm.errorStr}}</div>
+        <div ng-if="vm.error"   class="alert alert-danger"  ng-bind-html="vm.errorStr"></div>
         <div ng-if="vm.success" class="alert alert-success">
           Si votre compte existe, un email va vous être envoyé avec un lien pour réinitialiser votre mot de passe.<br/>
           Ce lien est valable <strong>quatre heures</strong> !<br/>

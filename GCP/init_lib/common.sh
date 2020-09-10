@@ -30,7 +30,6 @@ REDCROSSQUEST="rcq"
 declare -A CLOUD_FUNCTIONS=(["notifyRQOfRegistApproval"]="pubsub;queteur_approval_topic"  \
                                      ["ComputeULStats"]="http;"                           \
                                      ["ULTriggerRecompute"]="pubsub;trigger_ul_update"    \
-                                     ["ztestCrossProjectFirestoCx"]="http;"               \
                                      ["findQueteurById"]="http;"                  \
                                      ["findULDetailsByToken"]="http;"             \
                                      ["getULPrefs"]="http;"                       \
@@ -38,13 +37,11 @@ declare -A CLOUD_FUNCTIONS=(["notifyRQOfRegistApproval"]="pubsub;queteur_approva
                                      ["historiqueTroncQueteur"]="http;"           \
                                      ["registerQueteur"]="http;"                  \
                                      ["troncListPrepared"]="http;"                \
-                                     ["troncSetDepartOrRetour"]="http;"           \
-                                     ["ztestCrossProjectSQLCx"]="http;")
+                                     ["troncSetDepartOrRetour"]="http;"           )
 
 declare -A FUNCTIONS_PROJECT_PREFIX=(["notifyRQOfRegistApproval"]="${REDCROSSQUEST}"    \
                                      ["ComputeULStats"]="${REDCROSSQUEST}"              \
                                      ["ULTriggerRecompute"]="${REDCROSSQUEST}"          \
-                                     ["ztestCrossProjectFirestoCx"]="${REDCROSSQUEST}"  \
                                      ["findQueteurById"]="${REDQUEST}"                  \
                                      ["findULDetailsByToken"]="${REDQUEST}"             \
                                      ["getULPrefs"]="${REDQUEST}"                       \
@@ -52,8 +49,7 @@ declare -A FUNCTIONS_PROJECT_PREFIX=(["notifyRQOfRegistApproval"]="${REDCROSSQUE
                                      ["historiqueTroncQueteur"]="${REDQUEST}"           \
                                      ["registerQueteur"]="${REDQUEST}"                  \
                                      ["troncListPrepared"]="${REDQUEST}"                \
-                                     ["troncSetDepartOrRetour"]="${REDQUEST}"           \
-                                     ["ztestCrossProjectSQLCx"]="${REDQUEST}")
+                                     ["troncSetDepartOrRetour"]="${REDQUEST}"           )
 
 #see https://cloud.google.com/iam/docs/understanding-roles for list of roles
 #grant roles in RCQ projects to RQ & RCQ Cloud functions
@@ -61,7 +57,6 @@ declare -A FUNCTIONS_PROJECT_PREFIX=(["notifyRQOfRegistApproval"]="${REDCROSSQUE
 declare -A FUNCTIONS_ROLES_RQ=(["notifyRQOfRegistApproval"]="roles/datastore.user;"       \
                                ["ComputeULStats"]="roles/datastore.user;"                 \
                                ["ULTriggerRecompute"]=""                                  \
-                               ["ztestCrossProjectFirestoCx"]="roles/datastore.viewer;"   \
                                ["findQueteurById"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"              \
                                ["findULDetailsByToken"]="roles/secretmanager.secretAccessor;roles/logging.logWriter"                                \
                                ["getULPrefs"]="roles/datastore.viewer;roles/logging.logWriter"                                                      \
@@ -69,15 +64,13 @@ declare -A FUNCTIONS_ROLES_RQ=(["notifyRQOfRegistApproval"]="roles/datastore.use
                                ["historiqueTroncQueteur"]="roles/datastore.user;roles/secretmanager.secretAccessor;roles/logging.logWriter"         \
                                ["registerQueteur"]="roles/secretmanager.secretAccessor;roles/logging.logWriter"                                     \
                                ["troncListPrepared"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"            \
-                               ["troncSetDepartOrRetour"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"       \
-                               ["ztestCrossProjectSQLCx"]="roles/secretmanager.secretAccessor;roles/logging.logWriter")
+                               ["troncSetDepartOrRetour"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"       )
 
 #In RCQ-fr-xxx we grant the rq-fr-xxx CF to access MySQL (hosted in RCQ)
 #and we grant RCQ-fr-xxx cloud function to access mysql, secret manager and pubsub
 declare -A FUNCTIONS_ROLES_RCQ=(["notifyRQOfRegistApproval"]="roles/pubsub.subscriber;roles/logging.logWriter"               \
                                  ["ComputeULStats"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/logging.logWriter;"  \
-                                 ["ULTriggerRecompute"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/cloudtasks.enqueuer;roles/pubsub.subscriber;roles/logging.logWriter;roles/cloudfunctions.invoker"\
-                                 ["ztestCrossProjectFirestoCx"]="roles/datastore.viewer;roles/logging.logWriter"       \
+                                 ["ULTriggerRecompute"]="roles/cloudsql.client;roles/secretmanager.secretAccessor;roles/pubsub.subscriber;roles/logging.logWriter;roles/cloudtasks.enqueuer"\
                                  ["findQueteurById"]="roles/cloudsql.client;"                               \
                                  ["findULDetailsByToken"]="roles/cloudsql.client;"                          \
                                  ["getULPrefs"]="roles/datastore.viewer"                                    \
@@ -86,8 +79,7 @@ declare -A FUNCTIONS_ROLES_RCQ=(["notifyRQOfRegistApproval"]="roles/pubsub.subsc
                                  ["historiqueTroncQueteur"]="roles/cloudsql.client;"                        \
                                  ["registerQueteur"]="roles/cloudsql.client;"                               \
                                  ["troncListPrepared"]="roles/cloudsql.client;"                             \
-                                 ["troncSetDepartOrRetour"]="roles/cloudsql.client;"                        \
-                                 ["ztestCrossProjectSQLCx"]="roles/cloudsql.client;"                        )
+                                 ["troncSetDepartOrRetour"]="roles/cloudsql.client;"                        )
 
 
 declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="")
@@ -100,8 +92,8 @@ declare -A FUNCTIONS_EXTRA_PARAMS=(["ULTriggerRecompute"]="")
 #most function  run in one project (ex: RCQ) and requires rights on the other project (RQ: firestore)
 init_cloud_functions_create_service_accounts()
 {
-  FIRST_ARG=$1
-
+  local FIRST_ARG=$1
+  local FUNC_NAME
   if  [[ "${FIRST_ARG}1" == "1" ]]
   then
     echo "Creating all cloudfunctions service accounts"
@@ -117,8 +109,8 @@ init_cloud_functions_create_service_accounts()
 
 init_cloud_functions_create_one_service_accounts()
 {
-  FUNC_NAME=$1
-  RUNTIME_PROJECT=${FUNCTIONS_PROJECT_PREFIX[$FUNC_NAME]}
+  local FUNC_NAME=$1
+  local RUNTIME_PROJECT=${FUNCTIONS_PROJECT_PREFIX[$FUNC_NAME]}
 
   if  [[ "${RUNTIME_PROJECT}1" == "${PROJECT_NAME}1" ]]
   then
@@ -140,8 +132,8 @@ init_cloud_functions_create_one_service_accounts()
 
 init_cloud_functions_grant_roles()
 {
-  FIRST_ARG=$1
-  
+  local FIRST_ARG=$1
+  local FUNC_NAME
   if  [[ "${FIRST_ARG}1" == "1" ]]
   then
     echo "granting cloudfunctions service accounts roles"
@@ -157,7 +149,8 @@ init_cloud_functions_grant_roles()
 
 init_one_cloud_functions_grant_roles()
 {
-  FUNC_NAME=$1
+  local FUNC_NAME=$1
+  local CLOUD_FUNCTIONS_ROLES
   #get a ; separated value list of roles
   if  [[ "${PROJECT_NAME}1" == "rcq1" ]]
   then
@@ -166,7 +159,7 @@ init_one_cloud_functions_grant_roles()
     CLOUD_FUNCTIONS_ROLES=("${FUNCTIONS_ROLES_RQ[$FUNC_NAME]//;/ }")
   fi
 
-
+  local FUNC_ROLE
   # shellcheck disable=SC2068
   for FUNC_ROLE in ${CLOUD_FUNCTIONS_ROLES[@]}
   do

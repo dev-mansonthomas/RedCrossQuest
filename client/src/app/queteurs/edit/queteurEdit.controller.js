@@ -181,6 +181,11 @@
         {
           //to help the operator to see if the registration is not a duplicate of an existing user.
           //in RedQuest : it means attaching the authentication mode to the existing queteur instead of the registration
+
+          if(vm.current.registration_approved == false && vm.current.reject_reason === '')
+          {//preset to true the registration approval
+            vm.current.registration_approved = true;
+          }
           vm.searchSimilar();
         }
       }

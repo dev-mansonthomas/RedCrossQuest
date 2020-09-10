@@ -64,12 +64,17 @@ class TroncQueteurBusinessService
     $troncQueteur = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id, $ulId);
     if($troncQueteur->queteur_id)
     {
-      $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById              ($troncQueteur->queteur_id     , $roleId ==9 ? null: $ulId);
+      $troncQueteur->queteur      = $this->queteurDBService   ->getQueteurById    ($troncQueteur->queteur_id     , $roleId ==9 ? null: $ulId);
     }
 
     if($troncQueteur->point_quete_id)
     {
-      $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById           ($troncQueteur->point_quete_id , $ulId, $roleId);
+      $troncQueteur->point_quete  = $this->pointQueteDBService->getPointQueteById ($troncQueteur->point_quete_id , $ulId, $roleId);
+    }
+
+    if($troncQueteur->tronc_id)
+    {
+      $troncQueteur->tronc       = $this->troncDBService      ->getTroncById      ($troncQueteur->tronc_id       , $ulId);
     }
     return  $troncQueteur;
   }

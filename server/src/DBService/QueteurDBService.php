@@ -614,6 +614,7 @@ SELECT  q.`id`,
 FROM  queteur     AS q
 WHERE  q.ul_id = :ul_id
 AND    q.active= :active
+AND    q.anonymization_token is null
 $querySQL 
 ORDER BY q.last_name ASC
 ";
@@ -1015,7 +1016,7 @@ VALUES
       "birthdate"          => $queteur->birthdate,
       "man"                => $queteur->man===true?"1":"0",
       "active"             => $queteur->active===true?"1":"0",
-      "referent_volunteer" => $queteur->secteur == 3 ? $queteur->referent_volunteer : 0
+      "referent_volunteer" => $queteur->secteur == 3 ? ($queteur->referent_volunteer != null ? $queteur->referent_volunteer: 0) : 0
     ];
 
     return $this->executeQueryForInsert(self::$insertQueteurSQL, $parameters, true);

@@ -112,6 +112,7 @@ class GetUserInfoFromUUIDAction extends Action
     }
     else
     {//the user do not have an account
+      $this->logger->info("No account found with UUID '".$uuid."'");
       $this->response->getBody()->write(json_encode(new GetUserInfoFromUUIDResponse(false)));
       return $this->response;
     }

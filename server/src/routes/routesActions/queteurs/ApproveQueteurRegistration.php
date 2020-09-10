@@ -81,7 +81,6 @@ class ApproveQueteurRegistration extends Action
     ]);
     if($queteurEntity->registration_approved)
     {
-      $queteurEntity->referent_volunteer = 0;
       $queteurId = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
 
       $this->queteurDBService->updateQueteurRegistration($queteurEntity, $queteurId, $userId);

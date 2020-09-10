@@ -188,7 +188,7 @@
                 <td>{{sim.active == 1 ? 'Oui':'Non'}}</td>
                 <td ng-show="queteur.isRegistration">
                   <a  ng-click="queteur.associateRegistrationWithExistingQueteur(sim.id);" ng-show="queteur.current.registration_approved!=false" class="btn btn-success" style="font-size: 10px;">Valider l'inscription et l'associer à ce quêteur</a>
-                  <span ng-show="sim.active != 1"><br/>
+                  <span ng-show="sim.active != 1 && queteur.current.registration_approved!=false"><br/>
                     <small style="color: silver;">La fiche du quêter sera réactivée</small>
                   </span>
                 </td>
@@ -379,7 +379,7 @@
           <a  ng-click="queteur.back();" class="btn btn-link">Annuler</a>
         </div>
         <div class="col-md-2 col-md-offset-4">
-          <input type="button" class="btn btn-primary" value="{{queteur.isRegistration == true ? 'Créer le nouveau Quêteur':'Sauvegarder'}}" ng-disabled="queteurForm.$invalid || queteur.current.saveInProgress || queteur.current.registration_approved==true" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
+          <input type="button" class="btn btn-primary" value="{{queteur.isRegistration == true ? (queteur.current.registration_approved?'Créer le nouveau Quêteur':'Notifier du Refus d\'Inscription'):'Sauvegarder'}}" ng-disabled="queteurForm.$invalid || queteur.current.saveInProgress" ng-show="queteur.currentUserRole>1" ng-click='queteur.save();'/>
         </div>
       </div>
 

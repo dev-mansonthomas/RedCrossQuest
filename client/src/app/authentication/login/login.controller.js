@@ -50,7 +50,6 @@
       vm.loading = true;
       var loginTimeout = $timeout(function () {vm.loading=false;vm.timeout=true; }, 10000);
 
-
       var doLogin = function(token) {
 
         AuthenticationService.login(vm.username, vm.password, token,
@@ -77,12 +76,20 @@
             }
             $timeout.cancel(loginTimeout);
           },
-          function error(message)
+          function error(errorResponse)
           {
             $timeout.cancel(loginTimeout);
-            $log.error(message);
+            $log.error(errorResponse);
             vm.error    = true;//do not display the exception as it contains the password
-            vm.errorStr = 'Un erreur s\'est produite à : '+JSON.stringify(new Date());
+
+            if(errorResponse.data.error==='username or password error. Code 2.1')
+              vm.errorStr = 'Login ou Mot de passe incorrect! Vérifier votre NIVOL sur Pegass/Gaia. <br/><br/>' +
+                'Si vous avez oublié votre mot de passe, saisissez votre NIVOL et cliquer sur le bouton <br>"<strong>Réinitialiser mon Mot de Passe</strong>".<br/><br/>' +
+                '<strong>Attention</strong> : le lien pour réinitialiser son mot de passe n\'est valable que 4 heures et ne peut être utilisé qu\'une fois.' +
+                'Vérifier le dossier SPAM';
+            else
+              vm.errorStr = 'Un erreur s\'est produite à : '+JSON.stringify(new Date());
+
             vm.loading  = false;
             vm.success  = null;
           }
