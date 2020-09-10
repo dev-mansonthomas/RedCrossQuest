@@ -101,7 +101,7 @@ class SendPasswordInitializationMailAction extends Action
     }
     catch(Exception $e)
     {
-      $this->logger->error("sendInit : Error while setting UUID for user with specified username",
+      $this->logger->warning("sendInit : Error while setting UUID for user with specified username",
         array(
           "passedLogin"=>$username,
           Logger::$EXCEPTION=>$e));

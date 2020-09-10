@@ -120,15 +120,15 @@ abstract class DBService
       $this->logger->error("error while executeQueryForObject", ["sql"=>$sql, "parameters"=>$parameters, Logger::$EXCEPTION=>$e]);
       throw $e;
     }
-
+    $message = "SQL query return 0 rows instead of 1";
     if($throwExceptionIfNotFound)
     {
-      $message = "SQL query return 0 rows instead of 1";
       $this->logger->error($message, ["sql"=>$sql, "parameters"=>$parameters]);
       throw new Exception($message);
     }
     else
     {
+      $this->logger->warning($message, ["sql"=>$sql, "parameters"=>$parameters]);
       return null;
     }
   }

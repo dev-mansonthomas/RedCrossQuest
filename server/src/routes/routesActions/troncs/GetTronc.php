@@ -51,7 +51,17 @@ class GetTronc extends Action
     $troncId = $this->validatedData["id"];
 
     $tronc = $this->troncDBService->getTroncById($troncId, $ulId);
-    $this->response->getBody()->write(json_encode($tronc));
+    if($tronc != null)
+    {
+      $this->response->getBody()->write(json_encode($tronc));
+    }
+    else
+    {
+      $response404 = $this->response->withStatus(404);
+      $response404->getBody()->write(json_encode(["error"=>'tronc not found']));
+      return $response404;
+    }
+
 
     return $this->response;
   }

@@ -310,7 +310,7 @@
           }
           else
           {
-            vm.current.QRCodeScanError="Le quêteur n'a pas été trouvé ! <br/>Attention un QRCode imprimé depuis la plateforme de <b>TEST</b> ne fonctionnera pas sur la <b>PROD</b> !";
+            vm.current.QRCodeScanError="Le quêteur n'a pas été trouvé ! <small>Attention un QRCode imprimé depuis la plateforme de <b>TEST</b> ne fonctionnera pas sur la <b>PROD</b></small> !";
           }
           $log.debug("QueteurID="+queteurId+" ulId="+ulId, reason);
         };
@@ -346,7 +346,7 @@
             }
             else
             {
-              vm.current.QRCodeScanError="Le tronc n'a pas été trouvé ! <br/> Attention un QRCode imprimé depuis la plateforme de <b>TEST</b> ne fonctionnera pas sur la <b>PROD</b> !";
+              vm.current.QRCodeScanError="Le tronc n'a pas été trouvé !<small>Attention un QRCode imprimé depuis la plateforme de <b>TEST</b> ne fonctionnera pas sur la <b>PROD</b></small> !";
             }
             $log.debug( troncId+' '+ulId,reason);
           };

@@ -86,11 +86,11 @@ WHERE  t.ul_id = :ul_id
      *
      * @param int $tronc_id The ID of the tronc
      * @param int $ulId the ID of the UniteLocal
-     * @return TroncEntity  The tronc
+     * @return TroncEntity|null  The tronc
      * @throws Exception if the tronc is not found
      * @throws PDOException if the query fails to execute on the server
      */
-    public function getTroncById(int $tronc_id, int $ulId):TroncEntity
+    public function getTroncById(int $tronc_id, int $ulId):?TroncEntity
     {
       $sql = "
 SELECT `id`,
@@ -108,7 +108,7 @@ AND    t.ul_id = :ul_id
       /** @noinspection PhpIncompatibleReturnTypeInspection */
       return $this->executeQueryForObject($sql, $parameters, function($row) {
         return new TroncEntity($row, $this->logger);
-      }, true);
+      }, false);
     }
 
 
