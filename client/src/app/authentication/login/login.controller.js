@@ -83,7 +83,9 @@
             vm.error    = true;//do not display the exception as it contains the password
 
             if(errorResponse.data.error==='username or password error. Code 2.1')
-              vm.errorStr = 'Login ou Mot de passe incorrect! Vérifier votre NIVOL sur Pegass/Gaia. <br/><br/>' +
+              vm.errorStr = '<strong>Login ou Mot de passe incorrect!</strong> <br/>' +
+                'Vérifier votre NIVOL sur Pegass/Gaia.<br/>' +
+                'Votre compte n\'est peut être pas activé comme étant utilisateur de RedCrossQuest. <br/><br/>' +
                 'Si vous avez oublié votre mot de passe, saisissez votre NIVOL et cliquer sur le bouton <br>"<strong>Réinitialiser mon Mot de Passe</strong>".<br/><br/>' +
                 '<strong>Attention</strong> : le lien pour réinitialiser son mot de passe n\'est valable que 4 heures et ne peut être utilisé qu\'une fois.' +
                 'Vérifier le dossier SPAM';
