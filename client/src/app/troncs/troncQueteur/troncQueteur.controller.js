@@ -424,7 +424,7 @@
         {
           return response.rows.map(function(tronc)
           {
-            tronc.stringView = tronc.id+" - "+DateTimeHandlingService.handleServerDate(tronc.created).stringVersion;
+            tronc.stringView = tronc.id;
             return tronc;
           });
         },

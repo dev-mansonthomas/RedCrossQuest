@@ -293,13 +293,14 @@
             <label for="troncId" class="control-label">Id Tronc</label>
             <input
               id="troncId"
-              type="text"
+              type="number"
               ng-model="tq.current.tronc"
               placeholder="Scanner le QRCode du tronc"
               uib-typeahead="tronc as tronc.id for tronc in tq.searchTronc($viewValue)"
               typeahead-loading="loadingTroncs"
               typeahead-no-results="noTroncsResults"
               typeahead-wait-ms="350"
+              typeahead-select-on-blur="true"
               class="form-control"
               ng-required
               ng-disabled="tq.current.readOnlyView"
@@ -310,7 +311,7 @@
               <i class="glyphicon glyphicon-remove"></i> Aucun Tronc trouvé
             </div>
 
-            <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
+            <span class="help-block">Scan QR Code, avec mode secours saisie manuelle: Le numéro du tronc (les derniers chiffres sous le QRCode)</span>
           </div>
 
           <div class="form-group col-md-4" ng-show="tq.current.tronc_queteur.id > 0">

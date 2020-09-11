@@ -270,14 +270,12 @@
                     class="btn btn-warning"
                     ng-click="pt.current.preparationAndDepart = true;pt.save();"
                     ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed() || pt.isCurrentTimeBefore1stDayOfQuete() || pt.current.saveInProgress">Préparer et Départ</button>
-            <span class="help-block">C'est l'action exceptionnelle que vous devez utiliser si le tronc n'a pas pu être préparé.</span>
+            <span class="help-block">C'est l'action que vous utilisez la plus part du temps</span>
             <span class="help-block" style="color:red;font-weight:bold;" ng-show="pt.isCurrentTimeBefore1stDayOfQuete()">
               Cette fonction est désactivée tant que la quête n'a pas commencé!
               <br/>
               Vous pouvez cependant préparer des troncs avec un départ théorique après le {{pt.firstDayStr}}
             </span>
-
-
           </div>
           <div class="col-md-1">
           </div>
@@ -286,10 +284,9 @@
                     class="btn btn-warning"
                     ng-click="pt.current.preparationAndDepart = false;pt.save();"
                     ng-disabled="prepaTroncForm.$invalid || !pt.isQueteurAllowed() || pt.current.saveInProgress">Sauvegarder la préparation du tronc</button>
-            <span class="help-block">C'est l'action normale que vous devez utiliser 90% du temps</span>
+            <span class="help-block">Vous pouvez préparer vos prochains créneaux pour prendre de l'avance et être plus efficace lors du départ du prochain créneau de quête</span>
           </div>
         </div>
-
         <div class="row" ng-show="pt.current.tronc.type == 4">
           <div class="col-md-8 col-md-offset-2">
             <div class="alert alert-warning" role="alert" style="text-align: center;">

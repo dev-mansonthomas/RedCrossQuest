@@ -18,6 +18,11 @@
     vm.latlongRegExp=/^-?(\d+\.)*\d+$/;
     $rootScope.$emit('title-updated', 'Paramètres');
 
+    vm.readOnlyGraphNameList=[
+      {id:'RCQ-Public-MontantsCachés'   ,label:'Montant total de la quête caché'  },
+      {id:'RCQ-Public-MontantsVisibles' ,label:'Montant total de la quête affiché'}
+    ];
+
     //load the local stoarge version first
     vm.settings                     = $localStorage.guiSettings.ul;
     vm.applicationSettings          = $localStorage.guiSettings.ul_settings;

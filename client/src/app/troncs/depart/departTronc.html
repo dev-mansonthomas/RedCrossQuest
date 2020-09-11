@@ -28,13 +28,14 @@
               <label for="troncId" class="control-label">Id Tronc</label>
               <input
                 id="troncId"
-                type="text"
+                type="number"
                 ng-model="dt.current.tronc"
                 placeholder="Scanner le QRCode du tronc"
                 uib-typeahead="tronc as tronc.stringView for tronc in dt.searchTronc($viewValue)"
                 typeahead-loading="loadingTroncs"
                 typeahead-no-results="noTroncsResults"
                 typeahead-wait-ms="350"
+                typeahead-select-on-blur="true"
                 class="form-control"
                 ng-required
                 autofocus

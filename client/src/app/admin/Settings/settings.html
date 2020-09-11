@@ -462,6 +462,19 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group" ng-class="{'has-error':ulSettingsForm.publicDashboard.$invalid}">
+                <label for="secteur" class="control-label">Graphique pour l'utilisateur en "Lecture Seule"</label>
+                <select name="publicDashboard" id="secteur" class="form-control" ng-model="s.settings.publicDashboard" required
+                        ng-options="(r.id+'') as r.label
+                for
+                r in s.readOnlyGraphNameList"
+                >
+                </select>
+                <span class="help-block">En créant un faux quêteur, utilisateur de RCQ, vous avez accès au Graphique Lecteur Seule qui peut être projeté dans le local. Le profil lecture seule est nécessaire car l'ordinateur utilisé pour projeter est potentiellement un ordinateur en libre accès.</strong></span>
+
+              </div>
+            </div>
           </div>
 
 
@@ -501,7 +514,18 @@
               <span class="help-block">Cette option, lorsqu'elle est activée rend obligatoire la saisie de sac de banque</span>
             </div>
           </div>
-
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':ulRedCrossQuestSettingsForm.ControlDates.$invalid}">
+              <label for="ControlDatesRadio1" class="control-label">Contrôle sur les Dates des troncs ?</label> <br/>
+              <label class="radio-inline">
+                <input type="radio" name="ControlDates" id="ControlDatesRadio1" ng-model="s.applicationSettings.control_dates" ng-value="true"  ng-required> Oui
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="ControlDates" id="ControlDatesRadio2" ng-model="s.applicationSettings.control_dates" ng-value="false" ng-required> Non
+              </label>
+              <span class="help-block">Avec cette options vous pouvez désactiver certains contrôles sur les dates. Il n'est <strong>pas recommandé de desactiver le controles sur les dates</strong></span>
+            </div>
+          </div>
         </div>
         <div class="row" style="padding-top:25px">
           <div class="col-md-2 col-md-offset-10">
