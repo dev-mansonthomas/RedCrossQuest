@@ -150,11 +150,11 @@ LIMIT 1
    * Can't be restricted by ULID since the UL is not known.
    *
    * @param string $nivol string The Nivol passed at login
-   * @return UserEntity An instance of UserEntity, null if nothing is found
+   * @return UserEntity|null An instance of UserEntity, null if nothing is found
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getUserInfoWithNivol(string $nivol):UserEntity
+  public function getUserInfoWithNivol(string $nivol):?UserEntity
   {
     $sql = "
 SELECT id, queteur_id, password, role, nb_of_failure, last_failure_login_date, last_successful_login_date 
@@ -167,7 +167,7 @@ LIMIT 1
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     return $this->executeQueryForObject($sql, $parameters, function($row) {
       return new UserEntity($row, $this->logger);
-    }, true);
+    }, false);
   }
 
   /***

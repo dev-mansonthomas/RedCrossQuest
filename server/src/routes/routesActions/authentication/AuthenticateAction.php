@@ -141,11 +141,9 @@ class AuthenticateAction extends AuthenticateAbstractAction
     }
     else
     {
-      $this->logger->error("Authentication failed, response is not an UserEntity ", array("username" => $username, "user" => $user));
-      $this->userDBService->registerFailedLogin($user->id);
-
+      $this->logger->warning("Authentication failed, response is null, user not found ", array("username" => $username, "user" => $user));
       $response401 = $this->response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.2']));
+      $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.1']));
 
       return $response401;
     }
