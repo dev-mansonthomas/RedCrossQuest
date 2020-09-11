@@ -168,6 +168,7 @@
                          type="datetime-local"
                         class="form-control"
                      ng-model="rt.current.tronc_queteur.depart"
+                       ng-min="rt.check_dates_not_in_the_past ? rt.current.tronc_queteur.depart_theorique : null"
                        ng-max="rt.current.tronc_queteur.retour"
                   ng-required="rt.current.tronc_queteur.dateDepartIsMissing === true"/>
 

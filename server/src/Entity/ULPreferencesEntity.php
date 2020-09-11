@@ -20,6 +20,12 @@ class ULPreferencesEntity extends Entity
   public $rq_display_queteur_ranking;
   /** @var bool $use_bank_bag use bank moneybag or not (mandatory field in tronc_queteur comptage)*/
   public $use_bank_bag              ;
+
+  /** @var bool $check_dates_not_in_the_past if true: the checks on Date Depart/Retour are done normally.
+   * If false, the checks are skipped to allow dates in the past. Some unit needs to input the troncs the day after
+   the feature */
+  public $check_dates_not_in_the_past;
+
   /** @var bool $rq_autonomous_depart_and_return Can volunteers set the depart & return date themselves with RedQuest*/
   public $rq_autonomous_depart_and_return;
 
@@ -34,7 +40,7 @@ class ULPreferencesEntity extends Entity
   public static $RQ_DISPLAY_QUETE_STATS_1ST_PAGE  = "1ST_PAGE";
   public static $RQ_DISPLAY_QUETE_STATS_ALL       = "ALL"     ;
   
-  protected $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'rq_autonomous_depart_and_return', 'token_benevole', 'token_benevole_1j'];
+  protected $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'check_dates_not_in_the_past', 'rq_autonomous_depart_and_return', 'token_benevole', 'token_benevole_1j'];
 
   /**
    * Accept an array of data matching properties of this class
@@ -48,8 +54,9 @@ class ULPreferencesEntity extends Entity
     parent::__construct($logger);
 
     $this->getInteger('ul_id'                          , $data);
-    $this->getBoolean('rq_display_daily_stats'         , $data);
     $this->getBoolean('use_bank_bag'                   , $data);
+    $this->getBoolean('check_dates_not_in_the_past'    , $data);
+    $this->getBoolean('rq_display_daily_stats'         , $data);
     $this->getBoolean('rq_autonomous_depart_and_return', $data);
     $this->getString ('rq_display_queteur_ranking'     , $data, 8);
   }

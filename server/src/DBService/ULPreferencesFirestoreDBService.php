@@ -53,7 +53,7 @@ class ULPreferencesFirestoreDBService extends FirestoreDBService
     //remove non RQ properties
     unset($dataForFirestore['token_benevole']);
     unset($dataForFirestore['token_benevole_1j']);
-    unset($dataForFirestore['use_bank_bag']);
+    //unset($dataForFirestore['use_bank_bag']);
 
 
     if($ulPrefs->ul_id != $ul_id)

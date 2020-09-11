@@ -40,7 +40,7 @@
 
     vm.searchSubmit = function()
     {
-      TroncResource.query({'pageNumber': vm.pageNumber, 'active':vm.active, 'type':vm.type===0?'':vm.type, 'q':vm.search!= null? vm.search.trim():null}).$promise.then(handleSearchResults).catch(function(e){
+      TroncResource.query({'pageNumber': vm.pageNumber, 'active':vm.active, 'type':vm.type===0?'':vm.type, 'q':vm.search}).$promise.then(handleSearchResults).catch(function(e){
         $log.error("error searching for Queteur", e);
       });
     };

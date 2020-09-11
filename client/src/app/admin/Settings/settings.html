@@ -514,16 +514,24 @@
               <span class="help-block">Cette option, lorsqu'elle est activée rend obligatoire la saisie de sac de banque</span>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-8">
             <div class="form-group" ng-class="{'has-error':ulRedCrossQuestSettingsForm.ControlDates.$invalid}">
               <label for="ControlDatesRadio1" class="control-label">Contrôle sur les Dates des troncs ?</label> <br/>
               <label class="radio-inline">
-                <input type="radio" name="ControlDates" id="ControlDatesRadio1" ng-model="s.applicationSettings.control_dates" ng-value="true"  ng-required> Oui
+                <input type="radio" name="ControlDates" id="ControlDatesRadio1" ng-model="s.applicationSettings.check_dates_not_in_the_past" ng-value="true"  ng-required> Oui
               </label>
               <label class="radio-inline">
-                <input type="radio" name="ControlDates" id="ControlDatesRadio2" ng-model="s.applicationSettings.control_dates" ng-value="false" ng-required> Non
+                <input type="radio" name="ControlDates" id="ControlDatesRadio2" ng-model="s.applicationSettings.check_dates_not_in_the_past" ng-value="false" ng-required> Non
               </label>
-              <span class="help-block">Avec cette options vous pouvez désactiver certains contrôles sur les dates. Il n'est <strong>pas recommandé de desactiver le controles sur les dates</strong></span>
+              <span class="help-block">
+                <strong style="{{s.applicationSettings.check_dates_not_in_the_past?'':'color:red;'}}">Il n'est pas recommandé de mettre cette option à non. Faites le qu'après discussion avec le Support RedQuest (Slack ou email)</strong><br/>
+                Avec cette option vous pouvez enregistrer des troncs a postériori.<br/>
+                Une fois cette option enregistrée à "Non", vous faite une préparation de tronc ( et pas 'préparation et départ')<br/>
+                Puis vous allez sur l'onglet "Retour" et scannez votre tronc.<br/>
+                Le formulaire vous affichera la date de départ a saisir car elle est manquante. <br/>
+                Vous pourrez alors saisir la date de départ et de retour dans le passé et enregistré, puis faire le comptage via l'onglet comptage.
+              </span>
+
             </div>
           </div>
         </div>

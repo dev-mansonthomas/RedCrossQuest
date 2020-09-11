@@ -10,7 +10,7 @@
     .controller('RetourTroncController', RetourTroncController);
 
   /** @ngInject */
-    function RetourTroncController($rootScope, $scope, $log, $routeParams, $timeout,
+    function RetourTroncController($rootScope, $scope, $log, $routeParams, $timeout,$localStorage,
                                    TroncResource, TroncQueteurResource,
                                    QRDecodeService, moment,
                                    DateTimeHandlingService)
@@ -19,6 +19,8 @@
     vm.onlyNumbers = /^\d+$/;
 
     $rootScope.$emit('title-updated', 'Retour d\'un Tronc');
+
+    vm.check_dates_not_in_the_past = $localStorage.guiSettings.ul_settings.check_dates_not_in_the_past;
 
     vm.initForm = function()
     {

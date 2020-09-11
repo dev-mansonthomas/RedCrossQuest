@@ -48,7 +48,8 @@ class UpdateRedCrossQuestSettings extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("use_bank_bag" , $this->parsedBody, true, false),
+        ClientInputValidatorSpecs::withBoolean("use_bank_bag"                , $this->parsedBody, true, false),
+        ClientInputValidatorSpecs::withBoolean("check_dates_not_in_the_past" , $this->parsedBody, true, true ),
       ]);
 
 
@@ -61,14 +62,17 @@ class UpdateRedCrossQuestSettings extends Action
     {//does not exist in firestore
       $data = [];
 
-      $data['use_bank_bag'] = $this->validatedData["use_bank_bag"];
+      $data['use_bank_bag'               ] = $this->validatedData["use_bank_bag"];
+      $data['check_dates_not_in_the_past'] = $this->validatedData["check_dates_not_in_the_past"];
+
       $data['ul_id'       ] = $ulId;
 
       $ulPreferenceEntity = ULPreferencesEntity::withArray($data, $this->logger);
     }
     else
     {
-      $ulPreferenceEntity->use_bank_bag = $this->validatedData["use_bank_bag"];
+      $ulPreferenceEntity->use_bank_bag                = $this->validatedData["use_bank_bag"               ];
+      $ulPreferenceEntity->check_dates_not_in_the_past = $this->validatedData["check_dates_not_in_the_past"];
     }
 
     $this->ULPreferencesFirestoreDBService ->updateUlPrefs($ulId, $ulPreferenceEntity);

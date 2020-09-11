@@ -44,7 +44,7 @@ class GetCoinsMoneyBagDetails extends Action
     $bagId = $this->validatedData["id"];
     $ulId  = $this->decodedToken->getUlId ();
 
-    $this->logger->trace("Get Coins moneyBagDetails",["bagId"=>$bagId]);
+    $this->logger->debug("Get Coins moneyBagDetails",["bagId"=>$bagId]);
 
     $bagData = $this->moneyBagDBService->getCoinsMoneyBagDetails($ulId, $bagId);
 
