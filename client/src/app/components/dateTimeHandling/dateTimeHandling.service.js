@@ -57,7 +57,7 @@ angular
     {
       if(dateWithoutTime == null)
         return "";
-      return moment(dateWithoutTime).format("YYYY-MM-DD");
+      return moment(dateWithoutTime).add(2, 'h').toDate();
     };
 
     return instance;

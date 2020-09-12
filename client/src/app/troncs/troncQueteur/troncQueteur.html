@@ -965,7 +965,7 @@
                          class="form-control"
                          ng-model="tq.current.tronc_queteur.don_creditcard"
                          ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                         ng-required="tq.current.fillTronc"/>
+                         ng-required="tq.current.fillTronc && !tq.current.adminEditMode"/>
                   <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"  style="top:0px;">&nbsp;</span>
                 </div>
                 <span class="help-block">Saisir la somme des dons en CB sur le créneau de quête</span>

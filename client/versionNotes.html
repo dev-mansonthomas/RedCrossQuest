@@ -10,5 +10,9 @@
     <li>Préparation, Départ, Retour, Comptage : le champ de recherche par numéro de tronc n'accepte que les entiers. Pour rappel, le N° a saisir en saisie manuelle est les derniers chiffres non nulles sous le QRCode. Ex: TRONC-000348-00000123 :  c'est 123 qu'il faut saisir.</li>
     <li>un bug empéchait d'avoir le détails d'un sac de banque sur la page de comptage, c'est corrigé</li>
     <li>Une nouvelle option permet de saisir sur la page de retour des dates dans le passé. C'est pour un cas bien particulier et ne devrait pas être utilisé de manière générale. https://github.com/dev-mansonthomas/RedCrossQuest/issues/17</li>
+    <li>Lorsqu'on éditait un point de quête, la modification n'était pas visible tout de suite, il fallait se déconnecter/reconnecter. C'est corrigé, les modifications sont visible tout de suite</li>
+    <li>Lorsqu'on édite un queteur, la date de naissance n'était pas enregistré correctement. (elle reculait d'un jour) c'est corrigé</li>
+    <li>En mode Admin, l'édition de la date de retour était bloqué par le champs montant total CB, c'est corrigé.</li>
+    <li>Lors de la recherche de tronc, si une valeur négative est saisie, aucune recherche n'est effectuée</li>
   </ul>
 </div>

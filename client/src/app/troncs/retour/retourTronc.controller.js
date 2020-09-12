@@ -180,6 +180,9 @@
     vm.searchTronc=function(queryString)
     {
       $log.info("Tronc: Manual Search for '"+queryString+"'");
+      if(parseInt(queryString)<=0)
+        return;
+
       return TroncResource.query({"q":queryString}).$promise.then(function(response)
         {
           return response.rows.map(function(tronc)

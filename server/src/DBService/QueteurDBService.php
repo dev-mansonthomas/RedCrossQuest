@@ -940,7 +940,7 @@ WHERE `id`              = :id
       "secteur"             => $queteur->secteur,
       "nivol"               => ltrim($queteur->nivol, '0'),
       "mobile"              => $queteur->mobile,
-      "birthdate"           => $queteur->birthdate,
+      "birthdate"           => $queteur->birthdate->format("Y-m-d"),
       "man"                 => $queteur->man===true?"1":"0",
       "active"              => $queteur->active===true?"1":"0",
       "referent_volunteer"  => $queteur->referent_volunteer,
