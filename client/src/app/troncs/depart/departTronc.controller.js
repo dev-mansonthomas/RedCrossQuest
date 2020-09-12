@@ -52,43 +52,46 @@
 
       TroncQueteurResource.getTroncQueteurForTroncIdAndSetDepart({'tronc_id':tronc.id},
         function(tronc_queteur)
-      {
-        $log.debug("Tronc Queteur returned");
-        $log.debug(tronc_queteur);
-
-        vm.current.tronc_queteur =  tronc_queteur;
-        if(tronc_queteur.depart !== null)
         {
-          var tempDate = DateTimeHandlingService.handleServerDate(tronc_queteur.depart);
-          vm.current.tronc_queteur.depart    = tempDate.dateInLocalTimeZone;
-          vm.current.tronc_queteur.departStr = tempDate.stringVersion;
-        }
+          $log.debug("Tronc Queteur returned");
+          $log.debug(tronc_queteur);
 
-        if(tronc_queteur.depart_theorique !== null)
-        {
-          vm.current.tronc_queteur.depart_theorique = DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).dateInLocalTimeZone;
-        }
-
-
-        if(tronc_queteur.troncQueteurIsInAnIncorrectState !== true && tronc_queteur.queteHasNotStartedYet !== true)
-        {
-          vm.savedSuccessfully= true;
-          vm.previous         = vm.current;
-          $timeout(function ()
+          vm.current.tronc_queteur =  tronc_queteur;
+          if(tronc_queteur.depart !== null)
           {
-            vm.savedSuccessfully=false;
-            vm.initForm();
-          }, 30000);
-        }
-        else
+            var tempDate = DateTimeHandlingService.handleServerDate(tronc_queteur.depart);
+            vm.current.tronc_queteur.depart    = tempDate.dateInLocalTimeZone;
+            vm.current.tronc_queteur.departStr = tempDate.stringVersion;
+          }
+
+          if(tronc_queteur.depart_theorique !== null)
+          {
+            vm.current.tronc_queteur.depart_theorique = DateTimeHandlingService.handleServerDate(tronc_queteur.depart_theorique).dateInLocalTimeZone;
+          }
+
+
+          if(tronc_queteur.troncQueteurIsInAnIncorrectState !== true && tronc_queteur.queteHasNotStartedYet !== true)
+          {
+            vm.savedSuccessfully= true;
+            vm.previous         = vm.current;
+            $timeout(function ()
+            {
+              vm.savedSuccessfully=false;
+              vm.initForm();
+            }, 30000);
+          }
+          else
+          {
+            vm.current.tronc_queteur.retourStr = DateTimeHandlingService.handleServerDate(tronc_queteur.retour).stringVersion;
+          }
+          $log.debug("deleting troncId to allow a new scan directly");
+          delete vm.current.troncId;
+
+
+        },function(error)
         {
-          vm.current.tronc_queteur.retourStr = DateTimeHandlingService.handleServerDate(tronc_queteur.retour).stringVersion;
-        }
-        $log.debug("deleting troncId to allow a new scan directly");
-        delete vm.current.troncId;
-
-
-      });
+          vm.departError = error.data.error;
+        });
     };
 
 

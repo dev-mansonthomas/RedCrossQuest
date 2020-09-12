@@ -106,7 +106,6 @@
         try
         {
           $scope.pt.current.queteurId = newValue.id;
-          vm.preparationChecks();
         }
         catch(exception)
         {
@@ -189,7 +188,11 @@
       var troncQueteur = new TroncQueteurResource();
       troncQueteur.queteur_id             = vm.current.queteur.id;
       troncQueteur.tronc_id               = vm.current.tronc.id;
-      troncQueteur.point_quete_id         = vm.current.lieuDeQuete.id;
+      if(vm.current.lieuDeQuete)
+      {
+        troncQueteur.point_quete_id         = vm.current.lieuDeQuete.id;
+      }
+
       troncQueteur.depart_theorique       = vm.current.horaireDepartTheorique;
       troncQueteur.notes_depart_theorique = vm.current.notes_depart_theorique;
 
@@ -295,7 +298,6 @@
           vm.current.queteur = queteur;
           vm.current.queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
           $scope.pt.current.queteurId = queteur.id;
-          vm.preparationChecks();
         };
         var queteurDecodedAndNotFoundInDB=function (reason, queteurId, ulId)
         {
@@ -335,7 +337,6 @@
             vm.current.tronc = tronc;
             vm.current.tronc.stringView = tronc.id;
             $scope.pt.current.troncId = tronc.id;
-            vm.preparationChecks();
           };
 
           var troncDecodedAndNotFoundInDB=function(reason, troncId, ulId)

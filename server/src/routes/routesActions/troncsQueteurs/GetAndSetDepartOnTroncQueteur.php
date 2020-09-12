@@ -68,6 +68,14 @@ class GetAndSetDepartOnTroncQueteur extends Action
 
     $tq = $this->troncQueteurBusinessService->getLastTroncQueteurFromTroncId($tronc_id, $ulId, $roleId);
 
+    if($tq == null)
+    {
+      $response404 = $this->response->withStatus(404);
+      $response404->getBody()->write(json_encode(["error" =>"Le tronc n'as pas été préparé ! Il faut faire une préparation avant d'enregistrer le départ!"]));
+
+      return $response404;
+    }
+
     if($tq->depart_theorique->year != (Carbon::now())->year)
     {
       $tq->troncFromPreviousYear=true;

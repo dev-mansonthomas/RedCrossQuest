@@ -18,11 +18,11 @@ class TroncQueteurDBService extends DBService
    *
    * @param int $tronc_id The ID of the tronc
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @return TroncQueteurEntity  The tronc
+   * @return TroncQueteurEntity|null  The tronc
    * @throws Exception if tronc not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId):TroncQueteurEntity
+  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId):?TroncQueteurEntity
   {
     $sql = "
 SELECT 
@@ -77,7 +77,7 @@ LIMIT 1
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     return $this->executeQueryForObject($sql, $parameters, function($row) {
       return new TroncQueteurEntity($row, $this->logger);
-    }, true);
+    }, false);
   }
 
 

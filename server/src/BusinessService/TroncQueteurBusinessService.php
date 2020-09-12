@@ -59,9 +59,12 @@ class TroncQueteurBusinessService
    * @return TroncQueteurEntity
    * @throws Exception
    */
-  public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId):TroncQueteurEntity
+  public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId):?TroncQueteurEntity
   {
     $troncQueteur = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id, $ulId);
+    if($troncQueteur == null)
+      return null;
+    
     if($troncQueteur->queteur_id)
     {
       $troncQueteur->queteur      = $this->queteurDBService   ->getQueteurById    ($troncQueteur->queteur_id     , $roleId ==9 ? null: $ulId);

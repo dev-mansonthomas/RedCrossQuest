@@ -82,6 +82,11 @@
           </div>
         </div>
 
+        <div class="row" ng-show="dt.departError">
+          <div class="col-md-8 col-md-offset-4">
+            <div class="alert alert-danger" role="alert">{{dt.departError}}</div>
+          </div>
+        </div>
         <div class="row" ng-show="dt.current.tronc_queteur.troncFromPreviousYear">
           <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-danger">
