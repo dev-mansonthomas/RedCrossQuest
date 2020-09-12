@@ -71,11 +71,11 @@
 
     function savedSuccessfully(response)
     {
-      if(response && typeof response.pointQueteId ==='number')
+      if(response && typeof response.id ==='number')
       {
         //reload the list so that the local cache is up to date.
         PointQueteService.loadPointQuete(function(){
-          vm.goToPointQuete(response.pointQueteId);
+          vm.goToPointQuete(response.id);
         }
       );
       }
