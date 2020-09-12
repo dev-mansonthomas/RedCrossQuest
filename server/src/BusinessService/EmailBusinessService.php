@@ -203,7 +203,7 @@ class EmailBusinessService
 
     $this->logger->debug("sending Mail to init password", ["mail"=>$queteur->email, 'url'=> $url, "mailTTL"=>$mailTTL]);
     
-    $title = "Réinitialisation de votre mot de passe";
+    $title = ($firstInit ? "Initialisation":"Réinitialisation") ." de votre mot de passe";
 
     $this->mailService->sendMail(
       "RedCrossQuest",
