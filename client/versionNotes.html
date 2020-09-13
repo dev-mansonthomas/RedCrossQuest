@@ -1,4 +1,14 @@
+<!--
+---------------------------------- ATTENTION ----------------------------------
+
+ne pas mettre de guillement dans ce fichier, meme avec backquote, utiliser des apostrophes a la place
+
+Sinon, ca casse le JSON
+
+---------------------------------- ATTENTION ----------------------------------
+-->
 <div>
+  <div class='alert alert-danger' role='alert'>Rappel : Utilisez Google Chrome sur PC/Mac</div>
   <ul>
     <li>Correction sur les scans de QRCode des troncs</li>
     <li>La sauvegarde d'un queteur reculait sa date de naissance d'un jour (une sombre histoire de timezone)</li>
@@ -14,5 +24,7 @@
     <li>Lorsqu'on édite un queteur, la date de naissance n'était pas enregistré correctement. (elle reculait d'un jour) c'est corrigé</li>
     <li>En mode Admin, l'édition de la date de retour était bloqué par le champs montant total CB, c'est corrigé.</li>
     <li>Lors de la recherche de tronc, si une valeur négative est saisie, aucune recherche n'est effectuée</li>
+    <li>Dans certaines conditions, l'ID du queteur ou du point de quête ou du tronc n'est pas envoyé au serveur alors qu'il semble saisie lors de la préparation, un message d'alerte est affiché a l'utilisateur. Si ca vous arrive et que vous avec une idée du cheminement qui ammène cette erreur merci de le partager sur Slack ou support@redcossquest.com</li>
+    <li>Dans certaines conditions l'ID de l'UL n'était pas envoyé lors de la création d'un point de quête. Cela ne devrait plus se produire.</li>
   </ul>
 </div>

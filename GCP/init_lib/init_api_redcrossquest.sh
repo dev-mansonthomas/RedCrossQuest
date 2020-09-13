@@ -20,6 +20,8 @@ gcloud services enable cloudtasks.googleapis.com
 
 echo "gcloud services enable cloudbuild.googleapis.com"
 gcloud services enable cloudbuild.googleapis.com
+echo "gcloud services enable maps-embed-backend.googleapis.com"
+gcloud services enable maps-embed-backend.googleapis.com
 
 #secret manager
 #in Google Cloud Console

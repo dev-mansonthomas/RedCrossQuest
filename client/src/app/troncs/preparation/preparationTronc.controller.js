@@ -190,13 +190,26 @@
 
       if(troncQueteur.queteur_id === null || troncQueteur.queteur_id === undefined || !angular.isNumber(troncQueteur.queteur_id))
       {
-        alert("Attention : le queteur n'est pas détecté. Rééssayer de saisir le queteur. Si vous avec une idée du cheminement qui mène à cette erreur, merci de contacter support@redcrossquest.com ou sur Slack. Rappel : utilisez la dernière version de Google Chrome sur ordinateur. Si vous utilisez autre chose et que vous avez cette erreur, merci de le signaler a support@redcrossquest.com ou sur Slack");
+        alert("Attention : le queteur n'est pas détecté. Rééssayer de saisir le queteur. Ou Recharger la page. Si vous avec une idée du cheminement qui mène à cette erreur, merci de contacter support@redcrossquest.com ou sur Slack. Rappel : utilisez la dernière version de Google Chrome sur ordinateur. Si vous utilisez autre chose et que vous avez cette erreur, merci de le signaler a support@redcrossquest.com ou sur Slack");
         return;
       }
-      troncQueteur.tronc_id               = vm.current.tronc.id;
+      troncQueteur.tronc_id               = vm.current.tronc.id
+
+      if(troncQueteur.tronc_id === null || troncQueteur.tronc_id === undefined || !angular.isNumber(troncQueteur.tronc_id))
+      {
+        alert("Attention : le tronc n'est pas détecté. Rééssayer de saisir le tronc. Ou Recharger la page. Si vous avec une idée du cheminement qui mène à cette erreur, merci de contacter support@redcrossquest.com ou sur Slack. Rappel : utilisez la dernière version de Google Chrome sur ordinateur. Si vous utilisez autre chose et que vous avez cette erreur, merci de le signaler a support@redcrossquest.com ou sur Slack");
+        return;
+      }
+
       if(vm.current.lieuDeQuete)
       {
         troncQueteur.point_quete_id         = vm.current.lieuDeQuete.id;
+      }
+
+      if(troncQueteur.point_quete_id === null || troncQueteur.point_quete_id === undefined || !angular.isNumber(troncQueteur.point_quete_id))
+      {
+        alert("Attention : le point de quête n'est pas détecté. Rééssayer de saisir le point de quête. Ou Recharger la page. Si vous avec une idée du cheminement qui mène à cette erreur, merci de contacter support@redcrossquest.com ou sur Slack. Rappel : utilisez la dernière version de Google Chrome sur ordinateur. Si vous utilisez autre chose et que vous avez cette erreur, merci de le signaler a support@redcrossquest.com ou sur Slack");
+        return;
       }
 
       troncQueteur.depart_theorique       = vm.current.horaireDepartTheorique;
