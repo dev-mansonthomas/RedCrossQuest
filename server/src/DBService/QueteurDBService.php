@@ -651,9 +651,9 @@ SELECT  q.`id`,
 FROM  queteur     AS q LEFT JOIN tronc_queteur tq ON q.id = tq.queteur_id,
       point_quete AS pq, 
                ul AS u
-WHERE  q.ul_id = :ul_id
-AND    q.ul_id = u.id
-AND    q.active= :active
+WHERE  q.ul_id   = :ul_id
+AND    q.ul_id   = u.id
+AND    q.active  = :active
 $querySQL 
 $secteurSQL 
 $benevoleOnlySQL

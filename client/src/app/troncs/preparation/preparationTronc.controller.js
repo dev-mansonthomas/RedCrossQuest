@@ -187,6 +187,12 @@
       vm.current.saveInProgres=true;
       var troncQueteur = new TroncQueteurResource();
       troncQueteur.queteur_id             = vm.current.queteur.id;
+
+      if(troncQueteur.queteur_id === null || troncQueteur.queteur_id === undefined || !angular.isNumber(troncQueteur.queteur_id))
+      {
+        alert("Attention : le queteur n'est pas détecté. Rééssayer de saisir le queteur. Si vous avec une idée du cheminement qui mène à cette erreur, merci de contacter support@redcrossquest.com ou sur Slack. Rappel : utilisez la dernière version de Google Chrome sur ordinateur. Si vous utilisez autre chose et que vous avez cette erreur, merci de le signaler a support@redcrossquest.com ou sur Slack");
+        return;
+      }
       troncQueteur.tronc_id               = vm.current.tronc.id;
       if(vm.current.lieuDeQuete)
       {
