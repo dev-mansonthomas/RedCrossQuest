@@ -677,6 +677,10 @@ $departTheoriqueQuery
    */
   public function checkTroncNotAlreadyInUse(int $troncId, int $queteurId, int $ulId):?array
   {
+    // tronc_queteur de l'UL
+    // TQ Non Supprimé
+    // TQ utilisant le tronc qui s'apprete a etre ajouté
+    // TQ préparé (départ = null) ou en court de quête (retour null)
     $sqlTronc = "
 SELECT  
 tq.id, 
@@ -701,7 +705,10 @@ AND    (tq.depart     is null OR
         tq.retour     is null)
 ";
 
-
+    //TQ de l'UL
+    //TQ non supprimé
+    //TQ avec le queteur qu'on s'apprete a préparer
+    //TQ préparé ou en train de queter
     $sqlQueteur = "
 SELECT  
 tq.id, 

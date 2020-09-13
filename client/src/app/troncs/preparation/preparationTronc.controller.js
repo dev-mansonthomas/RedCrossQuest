@@ -231,7 +231,7 @@
       {
         return response.rows.map(function(queteur)
         {
-          queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+queteur.nivol;
+          queteur.full_name= queteur.first_name+' '+queteur.last_name+' - '+(queteur.nivol == ""?'Bénévole 1J':queteur.nivol);
           return queteur;
         },
         function error(reason)

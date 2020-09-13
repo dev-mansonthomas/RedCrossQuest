@@ -66,6 +66,7 @@ class PrepareTroncQueteur extends Action
       return $this->response;
     }
 
+    //throw new Exception("test exception");
     $insertResponse = $this->troncQueteurDBService->insert($tq, $ulId, $userId);
 
     if($insertResponse->troncInUse != true)
