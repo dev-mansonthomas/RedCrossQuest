@@ -32,9 +32,9 @@ class PrepareTroncQueteurResponse
 
   /**
    * @param bool $troncInUse
-   * @param TroncInUseEntity[] $troncInUseInfo
+   * @param TroncInUseEntity[]|null $troncInUseInfo
    */
-  public function __construct(bool $troncInUse, $troncInUseInfo)
+  public function __construct(bool $troncInUse, $troncInUseInfo=null)
   {
     $this->troncInUse      = $troncInUse;
     $this->troncInUseInfo  = $troncInUseInfo;
