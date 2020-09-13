@@ -287,7 +287,7 @@ AND   `ul_id`           = :ul_id
    * @throws Exception
    */
   public function insert(PointQueteEntity $pointQuete, int $ulId):int
-  {  //TODO : check if we should use $ulID
+  {
     $sql = "
   INSERT INTO `point_quete`
   (
@@ -348,7 +348,7 @@ AND   `ul_id`           = :ul_id
       "type"               => $pointQuete->type               ,
       "time_to_reach"      => $pointQuete->time_to_reach      ,
       "transport_to_reach" => $pointQuete->transport_to_reach ,
-      "ul_id"              => $pointQuete->ul_id
+      "ul_id"              => $ulId
     ];
 
     return $this->executeQueryForInsert($sql, $parameters, true);

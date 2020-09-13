@@ -3,21 +3,21 @@ namespace RedCrossQuest\routes\routesActions\pointsQuetes;
 
 
 /**
- * @OA\Schema(schema="CreatePointQueteResponse", required={"pointQueteId"})
+ * @OA\Schema(schema="CreatePointQueteResponse", required={"id"})
  */
 class CreatePointQueteResponse
 {
   /**
    * @OA\Property()
-   * @var int $pointQueteId the id of the newly created pointQuete
+   * @var int $id the id of the newly created pointQuete
    */
-  public $pointQueteId;
+  public $id;
 
-  protected $_fieldList = ["pointQueteId"];
+  protected $_fieldList = ["id"];
 
   public function __construct(int $pointQueteId)
   {
-    $this->pointQueteId       = $pointQueteId;
+    $this->id       = $pointQueteId;
 
   }
 }
