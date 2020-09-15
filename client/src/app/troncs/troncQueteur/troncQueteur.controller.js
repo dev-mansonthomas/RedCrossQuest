@@ -240,7 +240,7 @@
 
     function onSaveError(error)
     {
-      $log.debug("error while saving",{"CurrentData":vm,"error":error});
+      $log.error("error while saving",{"CurrentData":vm,"error":error});
 
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=JSON.stringify(error);
@@ -632,13 +632,10 @@
       var searchResults = vm.searchMoneyBagId(searchedString, 'coin');
 
       searchResults.then(function(data){
-
-        if(data === null || data.length === 0)
-        {
-          vm.current.coinsMoneyBagDetails = null;
-        }
-        console.log("results",data);
-
+          if(data === null || data.length === 0)
+          {
+            vm.current.coinsMoneyBagDetails = null;
+          }
         }
       );
       //vm.current.coinsMoneyBagDetails
@@ -648,14 +645,12 @@
     vm.searchBillMoneyBagId=function(searchedString)
     {
       var searchResults = vm.searchMoneyBagId(searchedString, 'bill');
-      searchResults.then(function(data){
-
+      searchResults.then(function(data)
+        {
           if(data === null || data.length === 0)
           {
             vm.current.billsMoneyBagDetails = null;
           }
-          console.log("results",data);
-
         }
       );
       return searchResults;
