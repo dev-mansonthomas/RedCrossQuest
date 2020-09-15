@@ -115,12 +115,34 @@
             </div>
           </div>
 
-          <div class="row" ng-hide="rt.checkDeltaDepartRetourIsCorrect()">
+          <div class="row" ng-show="rt.checkDeltaDepartRetourIsCorrect()==2">
             <div class="col-md-8 col-md-offset-2">
               <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: left;">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rt.initForm();"><span aria-hidden="true">&times;</span></button>
                 <span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style="font-size:40px;color:red;"></span>
                 La date de retour et la date de départ sont séparées <b>de plus de 24 heures</b><br/>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" ng-show="rt.checkDeltaDepartRetourIsCorrect()==1">
+            <div class="col-md-8 col-md-offset-2">
+              <div class="alert alert-warning alert-dismissible" role="alert" style="text-align: left;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="rt.initForm();"><span aria-hidden="true">&times;</span></button>
+                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="font-size:40px;color:orange;"></span>
+                <br/>
+                Les dates de retour et de départ sont séparées <b>de moins de 30 minutes</b><br/>
+                Si le quêteur a vraiment quêter moins de 30 minutes alors tout va bien, vous pouvez enregistré le retour normalement<br/>
+                Si vous avez enchainé départ et retour pour diverses raisons, l'efficacité du point de quête, du quêteur, et l'efficacité globale vont être faussées par la très grande valeur pour ce tronc.<br/>
+                Pour corriger la situation :
+                <ol>
+                  <li>notez le nom de la personne et du tronc</li>
+                  <li>Sauvegarder le retour tel quel</li>
+                  <li>éditez en mode admin le troncQueteur</li>
+                  <li>Divisé le montant total du tronc par le taux horaire moyen (entre 20 et 40€) et séparé les dates de départ et retour de ce nombre d'heure.</li>
+                </ol>
+                <strong>Cela permettra de ne pas faussé les taux horaires du point de quête, du quêteur et le taux horaire globale.</strong>
+
               </div>
             </div>
           </div>
@@ -223,7 +245,7 @@
                      ng-disabled="retourTroncForm.$invalid ||
                      rt.current.tronc_queteur.dateDepartIsMissing === true && rt.current.tronc_queteur.depart.getHours() == 0 && rt.current.tronc_queteur.depart.getMinutes() == 0 ||
                      rt.current.tronc_queteur.troncFromPreviousYear ||
-                     !rt.checkDeltaDepartRetourIsCorrect()" />
+                     rt.checkDeltaDepartRetourIsCorrect()==2" />
             </div>
           </div>
 

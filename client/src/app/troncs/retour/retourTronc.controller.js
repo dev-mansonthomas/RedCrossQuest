@@ -148,9 +148,15 @@
       {
         var retourMoment = moment(vm.current.tronc_queteur.retour);
         var departMoment = moment(vm.current.tronc_queteur.depart);
-        return moment.duration(retourMoment.diff(departMoment)).as('hours') <= 24;
+
+        //si c'est inférieur a 30Minutes:  warning
+        if(moment.duration(retourMoment.diff(departMoment)).as('minutes') <= 30)
+          return 1;
+        // si c'est superieur a 24h ==> erreur
+        if(!(moment.duration(retourMoment.diff(departMoment)).as('hours') <= 24))
+          return 2;
       }
-      return true;
+      return 0;
     };
 
     //function used when scanning QR Code or using autocompletion
