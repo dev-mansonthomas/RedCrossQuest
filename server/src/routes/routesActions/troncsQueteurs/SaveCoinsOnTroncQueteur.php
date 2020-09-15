@@ -77,19 +77,23 @@ class SaveCoinsOnTroncQueteur extends Action
 
     /** @var TroncQueteurEntity */
     $tq = new TroncQueteurEntity($this->parsedBody, $this->logger);
-    //get the setting for MoneyBags, if they are mandatory or not.
-    $ulPrefs = $this->ULPreferencesFirestoreDBService->getULPrefs($ulId);
 
-    if($ulPrefs->use_bank_bag && ($tq->coins_money_bag_id == null ||  $tq->bills_money_bag_id == null))
+    if(!$adminMode)//money bag check are not performed in AdminMode
     {
-      $this->logger->error("Les sacs de banques sont obligatoires et au moins un est null.", ["ULPrefs"=>$ulPrefs, "TroncQueteur"=>$tq]);
-      $response400 = $this->response->withStatus(400);
-      $response400->getBody()->write(json_encode([
-        "error"         => "Les sacs de banques sont obligatoires et au moins un est null. Essayer de re-saisir les sacs de banque et sauvegarder",
-        "use_bank_bag"  => $ulPrefs->use_bank_bag,
-        "TroncQueteur"  => $tq
-      ]));
-      return $response400;
+      //get the setting for MoneyBags, if they are mandatory or not.
+      $ulPrefs = $this->ULPreferencesFirestoreDBService->getULPrefs($ulId);
+
+      if($ulPrefs->use_bank_bag && ($tq->coins_money_bag_id == null ||  $tq->bills_money_bag_id == null))
+      {
+        $this->logger->error("Les sacs de banques sont obligatoires et au moins un est null.", ["ULPrefs"=>$ulPrefs, "TroncQueteur"=>$tq]);
+        $response400 = $this->response->withStatus(400);
+        $response400->getBody()->write(json_encode([
+          "error"         => "Les sacs de banques sont obligatoires et au moins un est null. Essayer de re-saisir les sacs de banque et sauvegarder",
+          "use_bank_bag"  => $ulPrefs->use_bank_bag,
+          "TroncQueteur"  => $tq
+        ]));
+        return $response400;
+      }
     }
 
     $this->troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);

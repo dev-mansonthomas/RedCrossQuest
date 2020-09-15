@@ -98,7 +98,8 @@
       .when('/tronc_queteur/edit/:id', {
         templateUrl : 'app/troncs/troncQueteur/troncQueteur.html',
         controller  : 'TroncQueteurController',
-        controllerAs: 'tq'
+        controllerAs: 'tq',
+        reloadOnSearch: false
       })
 
       // ============== Daily Stats ==============
