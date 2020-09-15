@@ -16,6 +16,13 @@ use RedCrossQuest\Service\ClientInputValidator;
 
 class GetSpotfireAccessToken extends Action
 {
+
+  /**
+   * @Inject("settings")
+   * @var array settings
+   */
+  protected $settings;
+  
   /**
    * @var SpotfireAccessDBService       $spotfireAccessDBService
    */
@@ -45,6 +52,11 @@ class GetSpotfireAccessToken extends Action
     $userId         = $this->decodedToken->getUid();
 
     $validToken = $this->spotfireAccessDBService->getValidToken($userId, $ulId);
+
+    if($validToken == null)
+    {
+      $validToken = $this->spotfireAccessDBService->grantAccess($userId ,$ulId,   $this->settings['appSettings']['sessionLength' ])->token;
+    }
 
     $this->response->getBody()->write(json_encode(new GetSpotfireTokenResponse($validToken->token, $validToken->token_expiration)));
 
