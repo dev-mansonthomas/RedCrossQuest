@@ -92,7 +92,8 @@
       .when('/tronc_queteur/', {
         templateUrl : 'app/troncs/troncQueteur/troncQueteur.html',
         controller  : 'TroncQueteurController',
-        controllerAs: 'tq'
+        controllerAs: 'tq',
+        reloadOnSearch: false
       })
       .when('/tronc_queteur/edit/:id', {
         templateUrl : 'app/troncs/troncQueteur/troncQueteur.html',

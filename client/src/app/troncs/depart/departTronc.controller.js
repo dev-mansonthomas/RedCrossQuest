@@ -41,9 +41,12 @@
 
     var troncDecodedAndFoundInDB = function(tronc)
     {
-      if(typeof tronc ==="string")
+      //if(typeof tronc ==="string")
+      //  return;
+      if(!tronc.id)
+      {
         return;
-
+      }
 
       vm.current.tronc = tronc;
       vm.current.tronc.stringView = tronc.id;

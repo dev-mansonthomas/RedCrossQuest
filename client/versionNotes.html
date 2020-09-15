@@ -26,5 +26,10 @@ Sinon, ca casse le JSON
     <li>Lors de la recherche de tronc, si une valeur négative est saisie, aucune recherche n'est effectuée</li>
     <li>Dans certaines conditions, l'ID du queteur ou du point de quête ou du tronc n'est pas envoyé au serveur alors qu'il semble saisie lors de la préparation, un message d'alerte est affiché a l'utilisateur. Si ca vous arrive et que vous avec une idée du cheminement qui ammène cette erreur merci de le partager sur Slack ou support@redcossquest.com</li>
     <li>Dans certaines conditions l'ID de l'UL n'était pas envoyé lors de la création d'un point de quête. Cela ne devrait plus se produire.</li>
+    <li>Correction du bug sur la préparation du troncQueteur, qui survenait si vous utilisiez la recherche textuelle du queteur, les fleches du clavier, puis entrée, puis TAB, sur un bénévole d'un jour.</li>
+    <li>Comptage : Si l'unité locale utilise les sacs de banque, un controle est fait coté serveur pour s'assurer qu'ils sont bien rempli. En cas d'erreur le navigateur est positionné sur le message d'erreur (qui a été agrandi)</li>
+    <li>Comptage : la page défile vers la zone de saisie des billets</li>
+    <li>Comptage : Meilleur affichage du détails des sacs de banque</li>
+    <li>Comptage : Si on a une erreur coté serveur, qu'on corrige et re-sauvegarde avec succès, l'erreur précédente n'est plus affichée</li>
   </ul>
 </div>

@@ -164,10 +164,11 @@
         {//vm.current.tronc is watch, in some case we must not modify it to not enter in an endless loop.
           vm.current.tronc = tronc;
         }
-
-        vm.current.tronc.stringView = tronc.id;
-
-        TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
+        if(tronc.id)
+        {
+          vm.current.tronc.stringView = tronc.id;
+          TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
+        }
       }
     }
 

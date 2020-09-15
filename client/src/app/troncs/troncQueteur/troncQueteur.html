@@ -498,12 +498,12 @@
             </div>
           </div>
         </div>
-        <div class="row" ng-show="tq.errorWhileSaving">
-          <div class="col-md-8 col-md-offset-2">
+        <div class="row" ng-show="tq.errorWhileSaving" id="ErrorDiv">
+          <div class="col-md-12">
             <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="tq.errorWhileSaving=false"><span aria-hidden="true">&times;</span></button>
               <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde du départ!
-              <pre style="text-align: left;">{{tq.errorWhileSavingDetails}}</pre>
+              <pre style="text-align: left;white-space: pre-wrap; height:96px;overflow-y:scroll;">{{tq.errorWhileSavingDetails}}</pre>
             </div>
           </div>
         </div>
@@ -528,6 +528,16 @@
           <div class="row">
             <div class="alert alert-info form-group col-md-12" role="alert" style="font-size:x-large">
              <strong>BILLETS</strong>
+
+              <span style="font-size: 12px;" ng-show="tq.current.tronc_queteur.id">
+        ID {{tq.current.tronc_queteur.id}} -
+        Tronc N° {{tq.current.tronc.id}} -
+           {{tq.current.tronc_queteur.queteur.first_name}}
+           {{tq.current.tronc_queteur.queteur.last_name}} -
+           {{tq.current.tronc_queteur.queteur.nivol}} -
+        parti depuis '<b>{{tq.current.tronc_queteur.departStr}}</b>'
+        au point de quête '<b>{{tq.current.tronc_queteur.point_quete.name}}</b>'</span>
+
             </div>
           </div>
           <div class="row">
@@ -1163,7 +1173,10 @@
 
 
         <div class="row" ng-show="tq.current.coinsMoneyBagDetails || tq.current.billsMoneyBagDetails">
-          <div class="col-md-4 col-md-offset-4" ng-show="tq.current.coinsMoneyBagDetails">
+          <div class="col-md-4">&nbsp;</div>
+          <div class="col-md-4">
+            <div ng-show="tq.current.coinsMoneyBagDetails">
+
             <div style="text-align: center;color:#777;font-weight:400;font-size:19.5px;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">Détails du sac de pièces</div>
             <table class="table table-striped table-condensed table-hover">
               <tr>
@@ -1198,6 +1211,8 @@
                   tq.current.tronc_queteur.cent1   *  2.3  | currency : "g" : 2 }}</td>
               </tr>
             </table>
+
+            </div>
           </div>
 
           <div class="col-md-4" ng-show="tq.current.billsMoneyBagDetails">

@@ -10,7 +10,7 @@
     .controller('TroncQueteurController', TroncQueteurController);
 
   /** @ngInject */
-  function TroncQueteurController($rootScope, $scope, $log, $routeParams, $timeout, $localStorage, // $anchorScroll, $location,
+  function TroncQueteurController($rootScope, $scope, $log, $routeParams, $timeout, $localStorage, $anchorScroll, $location,
                                   TroncResource, TroncQueteurResource, TroncQueteurHistoryResource, PointQueteResource,
                                   QRDecodeService, moment, MoneyBagResource,
                                   DateTimeHandlingService)
@@ -240,9 +240,14 @@
 
     function onSaveError(error)
     {
-      $log.debug(error);
+      $log.debug("error while saving",{"CurrentData":vm,"error":error});
+
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=JSON.stringify(error);
+
+      $location.hash("ErrorDiv");
+      $anchorScroll();
+
     }
 
     function savedSuccessfully()
@@ -259,7 +264,7 @@
 
     function savedSuccessfullyActions()
     {
-      if(vm.current.adminEditMode == true)
+      if(vm.current.adminEditMode === true)
       {
         vm.loadData();
       }
@@ -267,6 +272,9 @@
       {
         vm.current = {};
         vm.savedSuccessfully=true;
+        vm.errorWhileSaving = false;
+        vm.errorWhileSavingDetails=null;
+
         $timeout(function () { vm.savedSuccessfully=false; }, 10000);
       }
     }
@@ -303,6 +311,10 @@
       vm.current.tronc_queteur        = tronc_queteur;
       vm.current.dateRetourNotFilled  = false;
       vm.current.fillTronc            = false;
+
+      vm.current.coinsMoneyBagDetails = null;
+      vm.current.billsMoneyBagDetails = null;
+
 
       if(vm.current.tronc_queteur == null )
       {
@@ -363,8 +375,11 @@
 
       //this code is supposed to scroll the page to the form to set the coins
       //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again
-      //$location.hash('anchorForm');
-      //$anchorScroll();
+
+      window.setTimeout(function(){
+        $location.hash("anchorForm");
+        $anchorScroll();
+      }, 300);
 
       $rootScope.$emit('title-updated', moment().format('YYYY-MM-DD') + ' - Tronc '+vm.current.tronc_queteur.id+' - ' +
                                                  vm.current.tronc_queteur.point_quete.name + ' - '+
@@ -406,8 +421,11 @@
         {//vm.current.tronc is watch, in some case we must not modify it to not enter in an endless loop.
           vm.current.tronc = tronc;
         }
-        vm.current.tronc.stringView = tronc.id;
-        TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
+        if(tronc.id)
+        {
+          vm.current.tronc.stringView = tronc.id;
+          TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
+        }
       }
     }
 
@@ -611,12 +629,36 @@
 
     vm.searchCoinMoneyBagId=function(searchedString)
     {
-      return vm.searchMoneyBagId(searchedString, 'coin');
+      var searchResults = vm.searchMoneyBagId(searchedString, 'coin');
+
+      searchResults.then(function(data){
+
+        if(data === null || data.length === 0)
+        {
+          vm.current.coinsMoneyBagDetails = null;
+        }
+        console.log("results",data);
+
+        }
+      );
+      //vm.current.coinsMoneyBagDetails
+      return  searchResults;
     };
 
     vm.searchBillMoneyBagId=function(searchedString)
     {
-      return vm.searchMoneyBagId(searchedString, 'bill');
+      var searchResults = vm.searchMoneyBagId(searchedString, 'bill');
+      searchResults.then(function(data){
+
+          if(data === null || data.length === 0)
+          {
+            vm.current.billsMoneyBagDetails = null;
+          }
+          console.log("results",data);
+
+        }
+      );
+      return searchResults;
     };
 
     vm.searchMoneyBagId=function(searchedString, type)
