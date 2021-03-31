@@ -44,11 +44,8 @@
       <path value="$PROJECT_DIR$/server/vendor/google/protobuf" />
       <path value="$PROJECT_DIR$/server/vendor/google/gax" />
       <path value="$PROJECT_DIR$/server/vendor/ralouphie/getallheaders" />
-      <path value="$PROJECT_DIR$/server/vendor/cakephp/collection" />
       <path value="$PROJECT_DIR$/server/vendor/cakephp/datasource" />
       <path value="$PROJECT_DIR$/server/vendor/cakephp/utility" />
-      <path value="$PROJECT_DIR$/server/vendor/cakephp/cache" />
-      <path value="$PROJECT_DIR$/server/vendor/cakephp/log" />
       <path value="$PROJECT_DIR$/server/vendor/cakephp/core" />
       <path value="$PROJECT_DIR$/server/vendor/cakephp/database" />
       <path value="$PROJECT_DIR$/server/vendor/google/common-protos" />
@@ -61,15 +58,10 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/service-contracts" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/translation-contracts" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php73" />
-      <path value="$PROJECT_DIR$/server/vendor/superbalist/flysystem-google-storage" />
-      <path value="$PROJECT_DIR$/server/vendor/giggsey/locale" />
-      <path value="$PROJECT_DIR$/server/vendor/giggsey/libphonenumber-for-php" />
       <path value="$PROJECT_DIR$/server/vendor/riverline/multipart-parser" />
       <path value="$PROJECT_DIR$/server/vendor/kreait/firebase-tokens" />
-      <path value="$PROJECT_DIR$/server/vendor/kreait/gcp-metadata" />
       <path value="$PROJECT_DIR$/server/vendor/kreait/firebase-php" />
       <path value="$PROJECT_DIR$/server/vendor/kreait/clock" />
-      <path value="$PROJECT_DIR$/server/vendor/league/flysystem" />
       <path value="$PROJECT_DIR$/server/vendor/fig/http-message-util" />
       <path value="$PROJECT_DIR$/server/vendor/mtdowling/jmespath.php" />
       <path value="$PROJECT_DIR$/server/vendor/psr/http-server-handler" />
@@ -111,12 +103,12 @@
       <path value="$PROJECT_DIR$/server/vendor/league/uri" />
       <path value="$PROJECT_DIR$/server/vendor/clue/stream-filter" />
       <path value="$PROJECT_DIR$/server/vendor/jolicode/slack-php-api" />
-      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php70" />
-      <path value="$PROJECT_DIR$/server/vendor/league/mime-type-detection" />
       <path value="$PROJECT_DIR$/server/vendor/nyholm/psr7" />
+      <path value="$PROJECT_DIR$/server/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/server/vendor/lcobucci/clock" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
   <component name="PhpUnit">
     <phpunit_settings>
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/server/vendor/autoload.php" />

@@ -7,8 +7,11 @@ use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Logging\PsrLogger;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
+use Lcobucci\JWT\Configuration;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Auth;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\BusinessService\EmailBusinessService;
@@ -78,7 +81,21 @@ return function (ContainerBuilder $containerBuilder)
     {
       return new Logger($c->get("googleLogger"), (string)$c->get("RCQVersion"), $c->get('settings')['appSettings']['deploymentType'], $c->get('settings')['online']);
     },
+    Configuration::class => function (ContainerInterface $c):Configuration
+    {
+      $jwtSecret     = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$JWT_SECRET);
+      $signer        = new Sha256();
+      $key           = InMemory::plainText($jwtSecret);
+      $configuration = Configuration::forSymmetricSigner($signer, $key);
 
+      $configuration->setValidationConstraints(
+          new Lcobucci\JWT\Validation\Constraint\IssuedBy    ($c->get('settings')['jwt']['issuer'  ]),
+          new Lcobucci\JWT\Validation\Constraint\PermittedFor($c->get('settings')['jwt']['audience']),
+          new Lcobucci\JWT\Validation\Constraint\SignedWith  ($signer, $key)
+      );
+
+      return $configuration;
+    },
     SecretManagerService::class => function (ContainerInterface $c):SecretManagerService
     {
       return new SecretManagerService($c->get('settings'), $c->get(LoggerInterface::class));

@@ -5,6 +5,7 @@ namespace RedCrossQuest\routes\routesActions\authentication;
 
 
 use Exception;
+use Lcobucci\JWT\Configuration;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -17,55 +18,53 @@ use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\ReCaptchaService;
-use RedCrossQuest\Service\SecretManagerService;
 
 
 class AuthenticateAction extends AuthenticateAbstractAction
 {
 
-
   /**
    * @var ReCaptchaService
    */
-  private $reCaptchaService;
+  private ReCaptchaService $reCaptchaService;
   /**
    * @var UserDBService
    */
-  private $userDBService;
+  private UserDBService $userDBService;
   /**
    * @var QueteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
   /**
    * @var UniteLocaleDBService
    */
-  private $uniteLocaleDBService;
+  private UniteLocaleDBService $uniteLocaleDBService;
   /**
    * @var SpotfireAccessDBService
    */
-  private $spotfireAccessDBService;
+  private SpotfireAccessDBService $spotfireAccessDBService;
 
 
   /**
-   * @param LoggerInterface $logger
-   * @param ClientInputValidator $clientInputValidator
-   * @param SecretManagerService $secretManagerService
-   * @param ReCaptchaService $reCaptchaService
-   * @param UserDBService $userDBService
-   * @param QueteurDBService $queteurDBService
-   * @param UniteLocaleDBService $uniteLocaleDBService
+   * @param LoggerInterface         $logger
+   * @param ClientInputValidator    $clientInputValidator
+   * @param Configuration           $JWTConfiguration
+   * @param ReCaptchaService        $reCaptchaService
+   * @param UserDBService           $userDBService
+   * @param QueteurDBService        $queteurDBService
+   * @param UniteLocaleDBService    $uniteLocaleDBService
    * @param SpotfireAccessDBService $spotfireAccessDBService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
-                              SecretManagerService    $secretManagerService,
+                              Configuration           $JWTConfiguration,
                               ReCaptchaService        $reCaptchaService,
                               UserDBService           $userDBService,
                               QueteurDBService        $queteurDBService,
                               UniteLocaleDBService    $uniteLocaleDBService,
                               SpotfireAccessDBService $spotfireAccessDBService)
   {
-    parent::__construct($logger, $clientInputValidator, $secretManagerService);
+    parent::__construct($logger, $clientInputValidator, $JWTConfiguration);
     
     $this->reCaptchaService       = $reCaptchaService;
     $this->userDBService          = $userDBService;
@@ -118,7 +117,7 @@ class AuthenticateAction extends AuthenticateAbstractAction
       $ul      = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id     );
       $jwtToken= $this->getToken($queteur, $ul, $user);
       
-      $this->response->getBody()->write(json_encode( new AuthenticationResponse($jwtToken->__toString())));
+      $this->response->getBody()->write(json_encode( new AuthenticationResponse($jwtToken->toString())));
 
       $this->userDBService->registerSuccessfulLogin($user->id);
 

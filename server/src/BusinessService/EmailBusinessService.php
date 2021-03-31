@@ -488,10 +488,10 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
     try
     {
 
-      $title = $mailingInfoEntity->first_name.", Merci pour votre Participation aux Journées Nationales de la Croix Rouge";
+      $title = ucfirst($mailingInfoEntity->first_name).", Merci pour votre Participation aux Journées Nationales de la Croix Rouge";
       $statusCode = $this->mailService->sendMail(
         "RedCrossQuest",
-        "sendAnonymizationEmail",
+        "ThankYouEmail",
         $title,
         $mailingInfoEntity->email,
         $mailingInfoEntity->first_name,
@@ -507,12 +507,13 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
 <a href='$url' target='_blank'>
 <img src='https://redcrossquest.croix-rouge.fr/assets/images/RedCrossQuest-Merci.jpg' alt='Cliquez ICI'>
 </a><br/>
-<small style='color:silver;'>ou recopie l'addresse suivante dans ton navigateur:<br/>
+<small style='color:silver;'>ou recopie l'adresse suivante dans ton navigateur:<br/>
 <a href='$url' style='color:grey;'>$url</a>
 </small>
 <br/>
 <br/>
-". $this->getMailFooter($uniteLocaleEntity, true, $mailingInfoEntity));
+". $this->getMailFooter($uniteLocaleEntity, true, $mailingInfoEntity, false, true),
+        null, null, $uniteLocaleEntity->email);
 
 
       $mailingInfoEntity->status = $statusCode;
@@ -582,9 +583,10 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
    * @param bool $isNewsletter : if true, the wording of the footer is slightly different
    * @param mixed $queteurInfo : QueteurEntity or MailingInfoEntity : an object with the info of the queteur.
    * @param bool $RedQuest if true, mailing for RedQuest, then we use the term RedQuest instead of RedCrossQuest
+   * @param bool $thankYouEmail : if true, the email signature is from the president of the UL
    * @return string return the html of the mail header
    */
-  public function getMailFooter(UniteLocaleEntity $uniteLocaleEntity, bool $isNewsletter, $queteurInfo, bool $RedQuest=false): string
+  public function getMailFooter(UniteLocaleEntity $uniteLocaleEntity, bool $isNewsletter, $queteurInfo, bool $RedQuest=false, bool $thankYouEmail=false): string
   {
     $startValidityDateCarbon = Carbon::now();
     $startValidityDateString = $startValidityDateCarbon->setTimezone("Europe/Paris")->format('d/m/Y à H:i:s');
@@ -609,13 +611,19 @@ En vous remerciant,
 ".$queteurInfo->first_name." ".$queteurInfo->last_name.", 
 ".$queteurInfo->email.".");
 
-
+    $presidentSignature  = "";
+    $presidentSignature2 = "";
+    if($thankYouEmail && $uniteLocaleEntity->president_first_name != null && $uniteLocaleEntity->president_first_name != "")
+    {
+      $presidentSignature  = ucfirst($uniteLocaleEntity->president_first_name)." ".ucfirst($uniteLocaleEntity->president_last_name).", ";
+      $presidentSignature2 = "Président de ";
+    }
 
     return "
      <p>
         <span style=\"font-size: 15px;color:grey\">
-        Amicalement,<br>
-L'Unité Locale de ".$uniteLocaleEntity->name.",<br/>
+        Amicalement, $presidentSignature<br>
+$presidentSignature2 l'Unité Locale de ".$uniteLocaleEntity->name.",<br/>
 ".$uniteLocaleEntity->phone."<br/>
 ".$uniteLocaleEntity->email."<br/>
 ".$uniteLocaleEntity->address.", ".$uniteLocaleEntity->postal_code.", ".$uniteLocaleEntity->city."<br/>

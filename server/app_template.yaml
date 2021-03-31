@@ -1,4 +1,4 @@
-runtime: php73
+runtime: php74
 entrypoint: serve public/rest/index.php
 
 env_variables:

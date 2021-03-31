@@ -40,27 +40,29 @@ class MailService
    *
    * send an email without attachment
    *
-   * @param string $application           name of the Application (RedCrossQuest or RedQuest?)
-   * @param string $mailType              type of mail, for logging purpose
-   * @param string $subject               Subject for the email
-   * @param string $recipientEmail        Recipient email address
-   * @param string $recipientFirstName    Recipient First Name
-   * @param string $recipientLastName     Recipient Last Name
-   * @param string $content               Email html content
-   * @param string $fileName              The filename that will be attached to the email. The file will be read from sys_get_temp_dir() and removed after the mail is sent
-   * @param string $bcc                   The BCC email. A single email, or a ";" separated value list of email
+   * @param string $application name of the Application (RedCrossQuest or RedQuest?)
+   * @param string $mailType type of mail, for logging purpose
+   * @param string $subject Subject for the email
+   * @param string $recipientEmail Recipient email address
+   * @param string $recipientFirstName Recipient First Name
+   * @param string $recipientLastName Recipient Last Name
+   * @param string $content Email html content
+   * @param string|null $bcc The BCC email. A single email, or a ";" separated value list of email
+   * @param string|null $fileName The filename that will be attached to the email. The file will be read from sys_get_temp_dir() and removed after the mail is sent
+   * @param string|null $replyTo  Specify a reply to address, useful for the thankYou Mail where the reply is not intended to support
    * @return int Mail status code
-   * @throws Exception                   when sending the email fails
+   * @throws SendGrid\Mail\TypeException
    */
-  public function sendMail($application,
-                           $mailType,
-                           $subject,
-                           $recipientEmail,
-                           $recipientFirstName,
-                           $recipientLastName,
-                           $content,
-                           $bcc=null,
-                           $fileName=null):int
+  public function sendMail(string $application,
+                           string $mailType,
+                           string $subject,
+                           string $recipientEmail,
+                           string $recipientFirstName,
+                           string $recipientLastName,
+                           string $content,
+                           string $bcc=null,
+                           string $fileName=null,
+                           string $replyTo=null):int
   {
     $deployment        = self::getDeploymentInfo();
     $deploymentLogging = $deployment == '' ? "*PROD*": $deployment;
@@ -79,6 +81,10 @@ class MailService
     {
       $email = new Mail();
       $email->setFrom   ($this->sendgridSender,"$application");
+      if($replyTo != null)
+      {
+        $email->setReplyTo($replyTo);
+      }
       $email->setSubject("[$application]".$deployment.$subject);
       $email->addTo     ($recipientEmail, $recipientFirstName.' '.$recipientLastName);
       $emailAddressesAdded[]=$recipientEmail;

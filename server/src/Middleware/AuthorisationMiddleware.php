@@ -9,9 +9,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Google\ApiCore\ApiException;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\ValidationData;
+use Lcobucci\JWT\Configuration;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -20,7 +18,6 @@ use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Service\Logger;
-use RedCrossQuest\Service\SecretManagerService;
 use Slim\Psr7\Response;
 
 /**
@@ -31,7 +28,7 @@ use Slim\Psr7\Response;
  */
 class AuthorisationMiddleware implements MiddlewareInterface
 {
-  private static $errorMessage = [
+  private static array $errorMessage = [
     '0001' => "Rejecting non https (%s) connection on '%s'",
     '0002' => "Rejecting request as \$authorizations is empty (so no token)",
     '0003' => "Rejecting request, fails to decode Token or Authentication fails: %s, path: %s",
@@ -40,13 +37,13 @@ class AuthorisationMiddleware implements MiddlewareInterface
     '0006' => "Rejecting request, roleId in Path is different from roleId in JWT Token: Path: '%s', \$roleIdStr:'%s',  \$roleId:'%s', \$decodedToken->getRoleId():'%s', DecodedToken: %s",
     '0007' => "General Error while executing the request",
     '0008' => "wrong format for a jwt token (should have exactly 2 '.')  '%s'",
-    '0009' => "rejecting token, signature verification fails. Token : '%s'",
+    '0009' => "rejecting token, Constraints verification fails. Token : '%s'",
     '0010' => "JWT Validation fails: %s",
     '0011' => "Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode."
   ];
 
-  private $jwtSettings;
-  private $jwtSecret;
+  /** @var Configuration           $JWTConfiguration*/
+  private Configuration           $JWTConfiguration;
 
   /**
    * init of the constructor
@@ -63,10 +60,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
 
     $this->bearer      = "Bearer ";
     $this->bearerStrLen=strlen($this->bearer);
-
-    $this->jwtSettings = $container->get('settings')['jwt'];
-
-    $this->jwtSecret   = $container->get(SecretManagerService::class)->getSecret(SecretManagerService::$JWT_SECRET);
+    $this->JWTConfiguration = $container->get(Configuration::class);
   }
 
 
@@ -87,44 +81,35 @@ class AuthorisationMiddleware implements MiddlewareInterface
       return new DecodedToken( '0008');
     }
 
-    $token = (new Parser())->parse((string) $tokenStr);
-    $signer = new Sha256();
+    $token       = $this->JWTConfiguration->parser()->parse((string) $tokenStr);
+    $constraints = $this->JWTConfiguration->validationConstraints();
 
-    $issuer    = $this->jwtSettings['issuer'  ];
-    $audience  = $this->jwtSettings['audience'];
-
-    if(!$token->verify($signer, $this->jwtSecret))
+    if(!$this->JWTConfiguration->validator()->validate($token, ...$constraints))
     {
-      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],$tokenStr));
+      //rerun the validations, but this time we get the failings validations for logging
+      $violations = [];
+      foreach($constraints as $constraint)
+      {
+        $this->JWTConfiguration->checkConstraint($constraint, $token , $violations);
+      }
+      
+      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],$tokenStr), ["JWTViolations"=>$violations]);
+
       return new DecodedToken( '0009');
-    }
-    //$this->logger->debug("JWT Token not altered:".print_r($tokenStr, true));
-
-    $data = new ValidationData (); // It will use the current time to validate (iat, nbf and exp)
-    $data->setIssuer  ($issuer  );
-    $data->setAudience($audience);
-
-    $validation = $token->validate($data);
-    $errorCode  = '';
-
-    if(!$validation)
-    {
-      $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'], $tokenStr));
-      $errorCode = '0010';
     }
     try
     {
       $decodedToken = DecodedToken::withData(
-        $validation                        ,
-        $errorCode                         ,
-        $token->getClaim("username" ),
-        $token->getClaim("id"       ),
-        $token->getClaim("ulId"     ),
-        $token->getClaim("ulName"   ),
-        $token->getClaim("ulMode"   ),
-        $token->getClaim("queteurId"),
-        $token->getClaim("roleId"   ),
-        $token->getClaim("d"        )
+        true   ,
+        ''       ,
+        $token->claims()->get("username" ),
+        $token->claims()->get("id"       ),
+        $token->claims()->get("ulId"     ),
+        $token->claims()->get("ulName"   ),
+        $token->claims()->get("ulMode"   ),
+        $token->claims()->get("queteurId"),
+        $token->claims()->get("roleId"   ),
+        $token->claims()->get("d"        )
       );
 
     }
@@ -264,7 +249,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
    * @param string $errorCode the error code to send back to the frontend
    * @return ResponseInterface      the modified response
    */
-  private function denyRequest($errorCode) : ResponseInterface
+  private function denyRequest(string $errorCode) : ResponseInterface
   {
     $response = new Response();
     $response401 = $response->withStatus(401);
