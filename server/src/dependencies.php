@@ -35,7 +35,7 @@ use RedCrossQuest\DBService\YearlyGoalDBService;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\MailService;
-use RedCrossQuest\Service\PubSubService;
+use RedCrossQuest\Service\RedCallService;
 use RedCrossQuest\Service\ReCaptchaService;
 use RedCrossQuest\Service\SecretManagerService;
 use RedCrossQuest\Service\SlackService;
@@ -142,13 +142,37 @@ return function (ContainerBuilder $containerBuilder)
     {
       return new FirestoreClient();
     },
+
     /**
-     * Google PubSub service
+     * 'mailingDBService'
      */
-    PubSubService::class => function (ContainerInterface $c):PubSubService
+    MailingDBService::class => function (ContainerInterface $c):MailingDBService
     {
-      $settings = $c->get('settings')['PubSub'];
-      return new PubSubService($settings, $c->get(LoggerInterface::class));
+      return new MailingDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'mailService'
+     */
+    MailService::class => function (ContainerInterface $c):MailService
+    {
+      $settings       = $c->get('settings')['appSettings']['email'];
+      $deploymentType = $c->get('settings')['appSettings']['deploymentType'];
+
+      $sendgridApiKey = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$SENDGRID_API_KEY);
+
+      return new MailService($c->get(LoggerInterface::class),  $sendgridApiKey, $settings['sendgrid.sender'], $deploymentType);
+    },
+
+    /**
+     * RedCall service
+     */
+    RedCallService::class => function (ContainerInterface $c):RedCallService
+    {
+      $settings      = $c->get('settings');
+      $redCallSecret = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$REDCALL_SECRET);
+
+      return new RedCallService($settings, $redCallSecret, $c->get(LoggerInterface::class));
     },
 
     /**
@@ -286,27 +310,6 @@ return function (ContainerBuilder $containerBuilder)
     YearlyGoalDBService::class => function (ContainerInterface $c):YearlyGoalDBService
     {
       return new YearlyGoalDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
-    },
-
-    /**
-     * 'mailingDBService'
-     */
-    MailingDBService::class => function (ContainerInterface $c):MailingDBService
-    {
-      return new MailingDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
-    },
-
-    /**
-     * 'mailService'
-     */
-    MailService::class => function (ContainerInterface $c):MailService
-    {
-      $settings       = $c->get('settings')['appSettings']['email'];
-      $deploymentType = $c->get('settings')['appSettings']['deploymentType'];
-
-      $sendgridApiKey = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$SENDGRID_API_KEY);
-
-      return new MailService($c->get(LoggerInterface::class),  $sendgridApiKey, $settings['sendgrid.sender'], $deploymentType);
     },
 
 

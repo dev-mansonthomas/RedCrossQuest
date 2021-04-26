@@ -1007,7 +1007,6 @@ VALUES
    */
   public function insert(QueteurEntity $queteur, int $ulId, int $roleId)
   {
-
     $parameters = [
       "first_name"         => $queteur->first_name,
       "last_name"          => $queteur->last_name,

@@ -192,6 +192,12 @@ class UniteLocaleEntity  extends Entity
 
   /**
    * @OA\Property()
+   * @var int $registration_token the registration token, sent to the president by email, must be passed back to the form to get the validation.
+   */
+  public $registration_token;
+
+  /**
+   * @OA\Property()
    * @var Carbon $created the registration create date
    */
   public $created;
@@ -214,6 +220,12 @@ class UniteLocaleEntity  extends Entity
    */
   public $approval_date;
 
+  /**
+   * @OA\Property()
+   * @var int $registration_in_progress The value is 36 if a registration is in progress (lenght of the registration token) or null otherwise
+   */
+  public $registration_in_progress;
+
 
   protected $_fieldList = ['id','name','phone','latitude','longitude','address','postal_code','city','external_id','email','id_structure_rattachement','date_demarrage_activite','date_demarrage_rcq','mode','publicDashboard',
     'president_man'         ,
@@ -235,10 +247,12 @@ class UniteLocaleEntity  extends Entity
     'admin_email'           ,
     'admin_mobile'          ,
     'registration_id'       ,
+    'registration_token'    ,
     'created'               ,
     'registration_approved' ,
     'reject_reason'         ,
-    'approval_date'        ];
+    'approval_date'         ,
+    'registration_in_progress'];
 
   /**
    * Accept an array of data matching properties of this class
@@ -256,9 +270,49 @@ class UniteLocaleEntity  extends Entity
     $this->getString ('name'                      , $data, 50);
     $this->getInteger('postal_code'               , $data);
     $this->getString ('city'                      , $data, 70);
+    $this->getInteger('registration_in_progress'  , $data);
+    $this->getInteger('registration_id'           , $data);
 
     if($lightMode)
+    {  //remove unncessary properties : lighter payload, avoid exposing object structure to public
+      unset($this->phone                     );
+      unset($this->latitude                  );
+      unset($this->longitude                 );
+      unset($this->address                   );
+      unset($this->external_id               );
+      unset($this->email                     );
+      unset($this->id_structure_rattachement );
+      unset($this->date_demarrage_activite   );
+      unset($this->date_demarrage_rcq        );
+      unset($this->mode                      );
+      unset($this->publicDashboard           );
+      unset($this->president_man             );
+      unset($this->president_nivol           );
+      unset($this->president_first_name      );
+      unset($this->president_last_name       );
+      unset($this->president_email           );
+      unset($this->president_mobile          );
+      unset($this->tresorier_man             );
+      unset($this->tresorier_nivol           );
+      unset($this->tresorier_first_name      );
+      unset($this->tresorier_last_name       );
+      unset($this->tresorier_email           );
+      unset($this->tresorier_mobile          );
+      unset($this->admin_man                 );
+      unset($this->admin_nivol               );
+      unset($this->admin_first_name          );
+      unset($this->admin_last_name           );
+      unset($this->admin_email               );
+      unset($this->admin_mobile              );
+      unset($this->registration_token        );
+      unset($this->registration_approved     );
+      unset($this->created                   );
+      unset($this->approval_date             );
+      unset($this->reject_reason             );
+
       return;
+    }
+
 
     $this->getString ('phone'                     , $data, 13);
     $this->getFloat  ('latitude'                  , $data);
@@ -291,7 +345,7 @@ class UniteLocaleEntity  extends Entity
     $this->getString ('admin_email'                , $data, 100);
     $this->getString ('admin_mobile'               , $data, 20);
 
-    $this->getInteger('registration_id'            , $data);
+    $this->getString ('registration_token'         , $data, 36);
     $this->getBoolean('registration_approved'      , $data);
     $this->getDate   ('created'                    , $data);
     $this->getDate   ('approval_date'              , $data);

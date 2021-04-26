@@ -15,7 +15,7 @@ use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
-use RedCrossQuest\Service\PubSubService;
+use RedCrossQuest\Service\RedCallService;
 
 
 class CreateQueteur extends Action

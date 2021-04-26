@@ -26,6 +26,7 @@
         "google/protobuf": "^v3.15.2",
         "google/recaptcha": "^1.2.4",
         "grpc/grpc": "^v1.27.0",
+        "guzzlehttp/guzzle": "^7.0",
         "jolicode/slack-php-api": "^2.5",
         "kreait/firebase-php": "^5.8.1",
         "lcobucci/jwt": "^4.1.4",

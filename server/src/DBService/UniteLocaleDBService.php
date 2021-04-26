@@ -105,11 +105,10 @@ WHERE `id`               = :id
    *
    * @param UniteLocaleEntity $ul The UL info
    * @param int $ulId The id of the UL to be updated
-   * @param int $userId the id of the person who approve or reject the registration
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception
    */
-  public function updateUL(UniteLocaleEntity $ul, int $ulId, int $userId):void
+  public function updateUL(UniteLocaleEntity $ul, int $ulId):void
   {
     $parameters = [
       "email"                => $ul->email,
@@ -227,7 +226,8 @@ INSERT INTO  `ul_registration`
   `admin_first_name`    ,
   `admin_last_name`     ,
   `admin_email`         ,
-  `admin_mobile`        
+  `admin_mobile`        ,
+  `registration_token`
 )
 VALUES
 (
@@ -249,7 +249,8 @@ VALUES
   :admin_first_name,     
   :admin_last_name,      
   :admin_email,          
-  :admin_mobile
+  :admin_mobile,
+  :registration_token
 )
 ";
     $parameters = [
@@ -271,7 +272,8 @@ VALUES
       "admin_first_name"     => $ul->admin_first_name,
       "admin_last_name"      => $ul->admin_last_name,
       "admin_email"          => $ul->admin_email,
-      "admin_mobile"         => $ul->admin_mobile
+      "admin_mobile"         => $ul->admin_mobile,
+      "registration_token"   => $ul->registration_token
     ];
 
     return $this->executeQueryForInsert($sql, $parameters, true);
@@ -325,6 +327,33 @@ WHERE   UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
     });
   }
 
+  /**
+   * Search unite locale by name, postal code, city
+   *
+   * @param string $query : the criteria to search UL on name postal code city and president, tresorier, admin first & last name
+   * @return UniteLocaleEntity[]  the list of UniteLocale
+   * @throws PDOException if the query fails to execute on the server
+   * @throws Exception in other situations, possibly : parsing error in the entity
+   */
+  public function validateULRegistration(string $registration_token, int $ul_id, int $registration_id):int
+  {
+    $sql = "
+SELECT count(1) as rowcount
+FROM   ul_registration `ulr`
+WHERE  `ulr`.id                    = :registration_id
+AND    `ulr`.ul_id                 = :ul_id
+AND    `ulr`.registration_token    = :registration_token
+AND    `ulr`.registration_approved is null
+AND    `ulr`.approval_date         is null
+";
+    $parameters = [
+      "registration_id"   => $registration_id,
+      "ul_id"             => $ul_id,
+      "registration_token"=> $registration_token
+    ];
+
+    return $this->getCountForSQLQuery($sql, $parameters);
+  }
 
   /**
    * Search unite locale by name, postal code, city that are not registered
@@ -339,18 +368,32 @@ WHERE   UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
     if ($query === null)
       return [];
 
+    /**
+     * Select all UL that are not yet registred or the registration is incomplete
+     *
+     * It select all UL that
+     * * have a date_demarrage_rcq NULL (not currently using)
+     * * and
+     *      there's no registration (registration_token is null)
+     *      or
+     *      there's a registration, but not yet completed :  approval_date is null but there's a registration token
+     *
+     */
     $sql = "
-SELECT  `ul`.`id`,
-        `ul`.`name`,
-        `ul`.`postal_code`,
-        `ul`.`city`
+SELECT  `ul` .`id`,
+        `ul` .`name`,
+        `ul` .`postal_code`,
+        `ul` .`city`,
+        LENGTH(`ulr`.registration_token) as registration_in_progress,
+        `ulr`.id                         as registration_id
 FROM    `ul`
-WHERE   `ul`.`date_demarrage_rcq` is NULL
-AND     `ul`.`id` not in (select `ul_id` from `ul_registration`)     
-AND (   
-        UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
-  OR    UPPER(ul.`postal_code`         ) like concat('%', UPPER(:query), '%')
-  OR    UPPER(ul.`city`                ) like concat('%', UPPER(:query), '%')
+LEFT OUTER JOIN  `ul_registration` ulr on `ul`.`id` = ulr.ul_id
+WHERE   `ul` .`date_demarrage_rcq` is NULL
+and     `ulr`.approval_date        is NULL
+AND (
+        UPPER(ul.`name`       ) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`postal_code`) like concat('%', UPPER(:query), '%')
+  OR    UPPER(ul.`city`       ) like concat('%', UPPER(:query), '%')
 )
 AND  `ul`.id > 1
 ORDER BY `ul`.`name`

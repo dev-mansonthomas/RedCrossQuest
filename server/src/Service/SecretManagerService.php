@@ -24,6 +24,7 @@ class SecretManagerService
   public static $MYSQL_PASSWORD       = "MYSQL_PASSWORD";
   public static $JWT_SECRET           = "JWT_SECRET";
   public static $SLACK_TOKEN          = "SLACK_TOKEN";
+  public static $REDCALL_SECRET       = "REDCALL_SECRET";
 
   /** @var array */
   private $SECRET_NAME_ID_MAPPING;

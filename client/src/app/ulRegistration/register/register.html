@@ -15,9 +15,15 @@
   </div>
 
   <div class="alert alert-info" role="alert">
-    Merci pour votre intérêt pour RedCrossQuest & RedQuest ! <br/>
-    L'identité du trésorier et du président seront vérifiées via l'annuaire Structure sur l'intranet.<br/>
-    Bien vérifier l'exactitude des informations saisies dans ce formulaire. Merci :)
+    <strong>Merci pour votre intérêt pour RedCrossQuest & RedQuest !</strong> <br/><br/>
+    Le déroulement de votre inscription (il faut compter 5 minutes environ):<br/>
+    <ol>
+      <li>Vous sélectionnez votre Unité Locale</li>
+      <li>Vous remplissez le formulaire permettant de désigner l'administrateur (vous), votre trésorier et votre président</li>
+      <li>En enregistrant ce formulaire, un email est envoyé au président avec un code de vérification qu'il doit vous transferer</li>
+      <li>Vous recopiez ce code ici et votre inscription est validée : Vous pouvez commencer à utiliser RedCrossQuest !</li>
+    </ol>
+
   </div>
 
   <uib-accordion close-others="false">
@@ -89,7 +95,7 @@
                                    required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
                         />
-                        <span class="help-block" ng-show="registerForm.admin_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</sub></span>
+                        <span class="help-block" ng-show="registerForm.admin_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</span>
                       </div>
                     </div>
                   </div>
@@ -138,7 +144,7 @@
                             ng-pattern="'^[-_a-zA-Z0-9]+\.[-_a-zA-Z0-9]+@croix-rouge.fr$'"
                             required/>
                         </div>
-                        <span class="help-block" ng-show="registerForm.admin_email.$invalid">*@croix-rouge.fr</sub></span>
+                        <span class="help-block" ng-show="registerForm.admin_email.$invalid">*@croix-rouge.fr</span>
                       </div>
                     </div>
                     <div class="col-md-5">
@@ -155,7 +161,7 @@
                                  ng-pattern="'33[6-7][0-9]{8,8}'"
                                  autocomplete="tel-national"/>
                         </div>
-                        <span class="help-block" ng-show="registerForm.admin_mobile.$invalid">ex: 33601020304</sub></span>
+                        <span class="help-block" ng-show="registerForm.admin_mobile.$invalid">ex: 33601020304</span>
                       </div>
                     </div>
                   </div>
@@ -191,7 +197,7 @@
                                    required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
                         />
-                        <span class="help-block" ng-show="registerForm.tresorier_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</sub></span>
+                        <span class="help-block" ng-show="registerForm.tresorier_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</span>
                       </div>
                     </div>
                   </div>
@@ -239,7 +245,7 @@
                             ng-pattern="'^[-_a-zA-Z0-9]+\.[-_a-zA-Z0-9]+@croix-rouge.fr$'"
                             required/>
                         </div>
-                        <span class="help-block" ng-show="registerForm.tresorier_email.$invalid">*@croix-rouge.fr</sub></span>
+                        <span class="help-block" ng-show="registerForm.tresorier_email.$invalid">*@croix-rouge.fr</span>
                       </div>
                     </div>
                     <div class="col-md-5">
@@ -256,7 +262,7 @@
                                  ng-pattern="'33[6-7][0-9]{8,8}'"
                                  autocomplete="tel-national"/>
                         </div>
-                        <span class="help-block" ng-show="registerForm.tresorier_mobile.$invalid">ex: 33601020304</sub></span>
+                        <span class="help-block" ng-show="registerForm.tresorier_mobile.$invalid">ex: 33601020304</span>
                       </div>
                     </div>
                   </div>
@@ -294,7 +300,7 @@
                                    required
                                    ng-pattern="'[1-9][0-9]{3,11}[A-Z]'"
                         />
-                        <span class="help-block" ng-show="registerForm.president_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</sub></span>
+                        <span class="help-block" ng-show="registerForm.president_nivol.$invalid">Ne pas mettre les premiers 0. Ex: 12345A</span>
                       </div>
                     </div>
                   </div>
@@ -342,7 +348,7 @@
                             ng-pattern="'^[-_a-zA-Z0-9]+\.[-_a-zA-Z0-9]+@croix-rouge.fr$'"
                             required/>
                         </div>
-                        <span class="help-block" ng-show="registerForm.president_email.$invalid">*@croix-rouge.fr</sub></span>
+                        <span class="help-block" ng-show="registerForm.president_email.$invalid">*@croix-rouge.fr</span>
                       </div>
                     </div>
                     <div class="col-md-5">
@@ -359,7 +365,7 @@
                                  ng-pattern="'33[6-7][0-9]{8,8}'"
                                  autocomplete="tel-national"/>
                         </div>
-                        <span class="help-block" ng-show="registerForm.president_mobile.$invalid">ex: 33601020304</sub></span>
+                        <span class="help-block" ng-show="registerForm.president_mobile.$invalid">ex: 33601020304</span>
                       </div>
                     </div>
                   </div>
@@ -378,9 +384,42 @@
       </div>
 
     </div>
-    <div uib-accordion-group class="panel-default" heading="L'inscription est enregistrée !" ng-show="ulr.settings.registrationCompletedVisible" is-open="ulr.settings.registrationCompletedOpen" ng-cloak>
-      Merci !
-      Votre inscription est enregistrée avec l'identifiant '{{ulr.registrationId}}', vous allez recevoir un email de confirmation.
+    <div uib-accordion-group class="panel-default" heading="L'inscription est enregistrée !" ng-show="ulr.settings.registrationSavedVisible" is-open="ulr.settings.registrationSavedOpen" ng-cloak>
+      Merci !<br/>
+      Votre inscription est enregistrée avec l'identifiant '{{ulr.registrationId}}', vous et votre président allez recevoir un email de confirmation.<br/><br/>
+      <strong>L'email envoyé au président contient un code de confirmation</strong> qu'il faut copier/coller ci-dessous pour valider votre inscription.<br/><br/>
+
+      <form novalidate name="validateRegistrationForm">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-2">
+            <div class="form-group" ng-class="{'has-error':validateRegistrationForm.registrationToken.$invalid}">
+              <label for="admin_nivol" class="control-label">Code de Validation</label>
+              <input     name="registrationToken"
+                         id="registrationToken"
+                         class="form-control"
+                         ng-model="ulr.registrationToken"
+                         required
+                         ng-pattern="'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89ABab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$'"
+              />
+              <span class="help-block" ng-show="validateRegistrationForm.registrationToken.$invalid">Ex: 5938ca30-9127-4ce9-9344-e9b7bbbd506e</span>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="padding-top:25px">
+          <div class="col-md-2 col-md-offset-8">
+            <button type="button" class="btn btn-primary" ng-disabled="validateRegistrationForm.$invalid" ng-click='ulr.validateRegistrationCode();'>Vérifier mon code de confirmation</button>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+
+
+    <div uib-accordion-group class="panel-default" heading="L'inscription est validée & terminée !" ng-show="ulr.settings.registrationCompletedVisible" is-open="ulr.settings.registrationCompletedOpen" ng-cloak>
+      Ca y est !<br/>
+      Votre inscription est validée et terminée!<br/><br/>
+      <strong>Un email a été envoyé à l'administrateur pour initialiser son mot de passe et commencer la configuration de RedCrossQuest pour son unité locale!<br/><br/>
     </div>
 
     <!-- Successful Save -->
@@ -398,7 +437,7 @@
         <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="ulr.error=false"><span aria-hidden="true">&times;</span></button>
           <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde !
-          <pre style="text-align: left;">{{ulr.errorStr}}</pre>
+          <pre style="text-align: left;white-space: pre-wrap;">{{ulr.errorStr}}</pre>
         </div>
       </div>
     </div>

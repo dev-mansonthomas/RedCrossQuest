@@ -76,6 +76,13 @@ class MailService
     {
       $bcc = $bcc.";support@redcrossquest.com";
     }
+
+    if($this->deploymentType==='D')
+    {
+      //do not send email to real addresses in Dev.
+      //UL Registration requires to use the real emails
+      $recipientEmail = "mt@mansonthomas.com";
+    }
     
     try
     {
