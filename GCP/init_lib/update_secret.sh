@@ -64,9 +64,9 @@ fi
 
 if [[ "${CREATE}1" == "create1" ]]
 then
-  echo -n "${PROPERTIES[${SECRET_NAME}]}" | gcloud secrets create "${LOCAL}${SECRET_NAME}" --data-file=-
+  echo -n "${PROPERTIES[${SECRET_NAME}]}" | gcloud secrets create "${LOCAL}${SECRET_NAME}"  --replication-policy=user-managed --locations=europe-central2,europe-north1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6  --data-file=-
 else
-  echo -n "${PROPERTIES[${SECRET_NAME}]}" | gcloud secrets versions add "${LOCAL}${SECRET_NAME}" --data-file=-
+  echo -n "${PROPERTIES[${SECRET_NAME}]}" | gcloud secrets versions add "${LOCAL}${SECRET_NAME}"  --data-file=-
 fi
 
 

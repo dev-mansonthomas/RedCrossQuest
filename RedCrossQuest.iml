@@ -111,7 +111,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/zircote/swagger-php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/paragonie/constant_time_encoding" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/clock" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

@@ -20,7 +20,7 @@
     <ol>
       <li>Vous sélectionnez votre Unité Locale</li>
       <li>Vous remplissez le formulaire permettant de désigner l'administrateur (vous), votre trésorier et votre président</li>
-      <li>En enregistrant ce formulaire, un email est envoyé au président avec un code de vérification qu'il doit vous transferer</li>
+      <li>En enregistrant ce formulaire, un email est envoyé au <strong>président</strong> avec un <strong>code de vérification</strong> qu'il doit vous transferer</li>
       <li>Vous recopiez ce code ici et votre inscription est validée : Vous pouvez commencer à utiliser RedCrossQuest !</li>
     </ol>
 
@@ -407,8 +407,14 @@
         </div>
         <div class="row" style="padding-top:25px">
           <div class="col-md-2 col-md-offset-8">
-            <button type="button" class="btn btn-primary" ng-disabled="validateRegistrationForm.$invalid" ng-click='ulr.validateRegistrationCode();'>Vérifier mon code de confirmation</button>
+            <button type="button" class="btn btn-primary" ng-disabled="validateRegistrationForm.$invalid || ulr.validateRegistrationButtonReadOnly" ng-click='ulr.validateRegistrationCode();'>Vérifier mon code de confirmation</button>
           </div>
+        </div>
+        <div class="row" ng-show="ulr.loading">
+          <div class="col-md-4 col-md-offset-6">
+            <img src="assets/images/loading.gif" alt="Traitement en cours, veuillez patienter"/>
+          </div>
+
         </div>
 
       </form>

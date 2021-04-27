@@ -21,7 +21,8 @@
     vm.settings.registrationSavedVisible     = false;
     vm.settings.coordinatesOpen              = false;
     vm.settings.coordinatesVisible           = false;
-
+    vm.validateRegistrationButtonReadOnly    = false;
+    vm.loading                               = false;
 
     vm.register=function()
     {
@@ -55,7 +56,8 @@
     {
       var doValidateRegistrationCode = function(token) {
         vm.settings.token = token;
-
+        vm.validateRegistrationButtonReadOnly = true;
+        vm.loading = true;
         RegisterULResource.validateUlRegistration(
           {
             'token'             : token,
@@ -65,11 +67,13 @@
           },
           function success(returnedData)
           {
+            vm.loading = false;
             if(returnedData.success === true)
             {
               vm.success                               = true;
               vm.settings.registrationCompletedVisible = true;
               vm.settings.registrationCompletedOpen    = true;
+              vm.settings.registrationSavedOpen        = false;
               if(returnedData.message)
               {
                 vm.error    = true;
@@ -88,6 +92,7 @@
           function onrejectedValidation(error)
           {
             vm.error    = true;
+            vm.loading  = false;
             vm.errorStr = JSON.stringify(error.data);
             vm.settings.registrationCompletedVisible = false;
             vm.settings.registrationCompletedOpen    = false;

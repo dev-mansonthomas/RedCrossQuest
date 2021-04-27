@@ -213,7 +213,7 @@ class ValidateULRegistration extends Action
     }
     else if($deploymentType === "T")
     {
-      $lowerEnv = "https://test.redcrossquest.croix-rouge.fr";
+      $lowerEnv = "https://dev.redcrossquest.croix-rouge.fr";
     }
     else if($deploymentType === "D")
     {
@@ -228,6 +228,17 @@ class ValidateULRegistration extends Action
       )
     );*/
 
+
+
+/*
+// Create a middleware that echoes parts of the request.
+    $tapMiddleware = Middleware::tap(function ($request) {
+      echo $request->getHeaderLine('Content-Type');
+      // application/json
+      echo $request->getBody();
+      // {"foo":"bar"}
+    });
+ */
 
     $client        = new Client(
       [
@@ -252,7 +263,8 @@ class ValidateULRegistration extends Action
 
     $response = $client->request(
       'POST',
-      "rest/ul_registration/create_ul_in_lower_env",['debug' => true]);
+      "rest/ul_registration/create_ul_in_lower_env",
+      $options);
 
     $decodedResponse = json_decode($response->getBody()->getContents(), true );
 

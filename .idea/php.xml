@@ -105,7 +105,6 @@
       <path value="$PROJECT_DIR$/server/vendor/jolicode/slack-php-api" />
       <path value="$PROJECT_DIR$/server/vendor/nyholm/psr7" />
       <path value="$PROJECT_DIR$/server/vendor/paragonie/constant_time_encoding" />
-      <path value="$PROJECT_DIR$/server/vendor/lcobucci/clock" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

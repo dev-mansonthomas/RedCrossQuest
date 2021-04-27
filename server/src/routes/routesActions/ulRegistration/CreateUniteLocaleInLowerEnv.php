@@ -44,6 +44,11 @@ class CreateUniteLocaleInLowerEnv extends Action
   private $emailBusinessService;
 
   /**
+   * @var QueteurDBService              $queteurDBService
+   */
+  private QueteurDBService              $queteurDBService;
+
+  /**
    * @param LoggerInterface      $logger
    * @param ClientInputValidator $clientInputValidator
    * @param ReCaptchaService     $reCaptchaService
@@ -56,13 +61,15 @@ class CreateUniteLocaleInLowerEnv extends Action
                               ReCaptchaService              $reCaptchaService,
                               UserDBService                 $userDBService,
                               UniteLocaleDBService          $uniteLocaleDBService,
-                              EmailBusinessService          $emailBusinessService)
+                              EmailBusinessService          $emailBusinessService,
+                              QueteurDBService              $queteurDBService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->uniteLocaleDBService = $uniteLocaleDBService;
     $this->reCaptchaService     = $reCaptchaService;
     $this->userDBService        = $userDBService;
     $this->emailBusinessService = $emailBusinessService;
+    $this->queteurDBService     = $queteurDBService;
   }
 
   /**
@@ -80,9 +87,14 @@ class CreateUniteLocaleInLowerEnv extends Action
     }
 
     $this->logger->debug("create_ul_in_lower_env => request",
-      ["request"=>$this->request->getBody()->getContents(), "php://input"=> file_get_contents('php://input')]);
+      [
+        "request"=>$this->request->getBody()->getContents(),
+        "php://input"=> file_get_contents('php://input'),
+        "parsedBody"=>$this->parsedBody
+      ]
+    );
 
-    $ulEntity = new UniteLocaleEntity($this->parsedBody, $this->logger);
+    $ulEntity = new UniteLocaleEntity($this->parsedBody['ul'], $this->logger);
 
     try
     {
@@ -108,7 +120,7 @@ class CreateUniteLocaleInLowerEnv extends Action
         'birthdate'   => '1922-12-22'                 ,
         'ul_id'       => $ulEntity->id
       ];
-
+      $roleId=4;
       $queteurEntity = new QueteurEntity($queteurData, $this->logger);
       $queteurId     = $this->queteurDBService->insert($queteurEntity, $ulEntity->id, $roleId);
       $queteur       = $this->queteurDBService->getQueteurById($queteurId);
