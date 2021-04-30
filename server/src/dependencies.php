@@ -7,9 +7,9 @@ use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Logging\PsrLogger;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
-use Lcobucci\JWT\Configuration;
-use Kreait\Firebase\Factory;
 use Kreait\Firebase\Auth;
+use Kreait\Firebase\Factory;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Psr\Container\ContainerInterface;
@@ -35,8 +35,9 @@ use RedCrossQuest\DBService\YearlyGoalDBService;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\MailService;
-use RedCrossQuest\Service\RedCallService;
+use RedCrossQuest\Service\PubSubService;
 use RedCrossQuest\Service\ReCaptchaService;
+use RedCrossQuest\Service\RedCallService;
 use RedCrossQuest\Service\SecretManagerService;
 use RedCrossQuest\Service\SlackService;
 
@@ -71,7 +72,7 @@ return function (ContainerBuilder $containerBuilder)
     "RCQVersion" => function ():string
     {
       //version stays here, so that I don't have to update all the settings files
-      return "2020.0";
+      return "2021.0";
     },
     /**
      * Custom Logger that automatically add context data to each log entries.
@@ -164,6 +165,16 @@ return function (ContainerBuilder $containerBuilder)
       return new MailService($c->get(LoggerInterface::class),  $sendgridApiKey, $settings['sendgrid.sender'], $deploymentType);
     },
 
+    /**
+     * Google PubSub service
+     */
+    PubSubService::class => function (ContainerInterface $c):PubSubService
+    {
+      $settings = $c->get('settings')['PubSub'];
+      return new PubSubService($settings, $c->get(LoggerInterface::class));
+    },
+
+    
     /**
      * RedCall service
      */

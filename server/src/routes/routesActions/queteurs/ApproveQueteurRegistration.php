@@ -13,6 +13,7 @@ use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
+use RedCrossQuest\Service\PubSubService;
 use RedCrossQuest\Service\RedCallService;
 
 
@@ -29,7 +30,7 @@ class ApproveQueteurRegistration extends Action
   private $emailBusinessService;
 
   /**
-   * @var RedCallService           $pubSubService
+   * @var PubSubService           $pubSubService
    */
   private $pubSubService;
 
@@ -44,13 +45,13 @@ class ApproveQueteurRegistration extends Action
    * @param ClientInputValidator $clientInputValidator
    * @param QueteurDBService          $queteurDBService
    * @param EmailBusinessService    $emailBusinessService
-   * @param RedCallService           $pubSubService
+   * @param PubSubService           $pubSubService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
                               QueteurDBService        $queteurDBService,
                               EmailBusinessService    $emailBusinessService,
-                              RedCallService           $pubSubService)
+                              PubSubService           $pubSubService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->queteurDBService     = $queteurDBService;

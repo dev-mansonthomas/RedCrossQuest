@@ -43,6 +43,7 @@
     vm.key = null;
     vm.rate = 0;
     vm.passwordMatch = false;
+    vm.showResetForm = false;
 
     $rootScope.$emit('title-updated', 'Ré-initialisation de votre mot de passe');
 
@@ -101,12 +102,10 @@
 
     vm.resetPassword = resetPassword;
 
-    //on slow network, the recaptcha lib is not yet loaded
-    addEventListener("load", initController);
 
 
 
-    function initController()
+    vm.startResetProcess=function()
     {
       // reset login status
       vm.key     = $location.search()['key'];
@@ -120,6 +119,7 @@
             vm.key, token,
             function (success, info)
             {
+              vm.showResetForm=true;
               if (success)
               {
                 vm.username = info.nivol;
