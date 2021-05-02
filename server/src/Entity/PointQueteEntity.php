@@ -100,7 +100,7 @@ class PointQueteEntity  extends Entity
    */
   public $transport_to_reach;
 
-  protected $_fieldList = ['id','ul_id','code','name','latitude','longitude','address','postal_code','city','max_people','advice','localization','minor_allowed','created','enabled','type','time_to_reach','transport_to_reach'];
+  protected array $_fieldList = ['id','ul_id','code','name','latitude','longitude','address','postal_code','city','max_people','advice','localization','minor_allowed','created','enabled','type','time_to_reach','transport_to_reach'];
 
   /**
    * Accept an array of data matching properties of this class

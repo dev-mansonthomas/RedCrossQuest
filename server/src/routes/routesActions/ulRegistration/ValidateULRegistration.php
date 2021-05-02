@@ -4,12 +4,8 @@ namespace RedCrossQuest\routes\routesActions\ulRegistration;
 
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\MessageFormatter;
-use GuzzleHttp\Middleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
@@ -17,7 +13,6 @@ use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
 use RedCrossQuest\routes\routesActions\Action;
-use RedCrossQuest\routes\routesActions\unitesLocales\ApproveULRegistrationResponse;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
@@ -28,45 +23,45 @@ class ValidateULRegistration extends Action
 {
 
   /**
-   * @var UniteLocaleDBService          $uniteLocaleDBService
+   * @var UniteLocaleDBService    $uniteLocaleDBService
    */
-  private $uniteLocaleDBService;
+  private UniteLocaleDBService    $uniteLocaleDBService;
 
   /**
-   * @var ReCaptchaService              $reCaptchaService
+   * @var ReCaptchaService        $reCaptchaService
    */
-  private $reCaptchaService;
+  private ReCaptchaService        $reCaptchaService;
 
   /**
-   * @var UserDBService        $userDBService
+   * @var UserDBService           $userDBService
    */
-  private $userDBService;
+  private UserDBService           $userDBService;
 
   /**
-   * @var EmailBusinessService          $emailBusinessService
+   * @var EmailBusinessService    $emailBusinessService
    */
-  private $emailBusinessService;
+  private EmailBusinessService    $emailBusinessService;
 
   /**
    * @var RedCallService          $redCallService
    */
-  private RedCallService                $redCallService;
+  private RedCallService          $redCallService;
 
   /**
-   * @var QueteurDBService              $queteurDBService
+   * @var QueteurDBService        $queteurDBService
    */
-  private $queteurDBService;
-
+  private QueteurDBService        $queteurDBService;
 
 
   /**
-   * @param LoggerInterface      $logger
-   * @param ClientInputValidator $clientInputValidator
-   * @param ReCaptchaService     $reCaptchaService
-   * @param UserDBService        $userDBService
-   * @param EmailBusinessService $emailBusinessService
-   * @param UniteLocaleDBService $uniteLocaleDBService
-   * @param RedCallService       $redCallService
+   * @param LoggerInterface       $logger
+   * @param ClientInputValidator  $clientInputValidator
+   * @param ReCaptchaService      $reCaptchaService
+   * @param UserDBService         $userDBService
+   * @param UniteLocaleDBService  $uniteLocaleDBService
+   * @param EmailBusinessService  $emailBusinessService
+   * @param QueteurDBService      $queteurDBService
+   * @param RedCallService        $redCallService
    */
   public function __construct(LoggerInterface               $logger,
                               ClientInputValidator          $clientInputValidator,
@@ -219,26 +214,6 @@ class ValidateULRegistration extends Action
     {
       $lowerEnv = "http://localhost:3000";
     }
-/*
-    $stack = HandlerStack::create();
-    $stack->push(
-      Middleware::log(
-        $this->logger,
-        new MessageFormatter('{req_body} - {res_body}')
-      )
-    );*/
-
-
-
-/*
-// Create a middleware that echoes parts of the request.
-    $tapMiddleware = Middleware::tap(function ($request) {
-      echo $request->getHeaderLine('Content-Type');
-      // application/json
-      echo $request->getBody();
-      // {"foo":"bar"}
-    });
- */
 
     $client        = new Client(
       [
@@ -270,100 +245,4 @@ class ValidateULRegistration extends Action
 
     $this->logger->debug("create_ul_in_lower_env - response", ["decodedResponse"=>$decodedResponse]);
   }
-
-  private function checkPresident(UniteLocaleEntity $ulEntity):int
-  {
-    $nivolPresident  = str_pad( $ulEntity->president_nivol, 12, "0", STR_PAD_LEFT);
-    $uri             = "admin/pegass?page=1&type=volunteer&identifier=$nivolPresident";
-
-    $redCallResponse = $this->redCallService->get($uri);
-
-    $this->logger->debug("RedCallResponse", ['URI'=>$uri,'RedCallResponse'=>$redCallResponse, "ULEntityHTTP_POST"   => $ulEntity]);
-
-    $structureId  = $redCallResponse['payload']['entries']['0']['content']['user'   ]['structure']['id'];
-    $skills       = $redCallResponse['payload']['entries']['0']['content']['skills' ];
-    $user         = $redCallResponse['payload']['entries']['0']['content']['user'   ];
-    $contacts     = $redCallResponse['payload']['entries']['0']['content']['contact'];
-
-    /* check if :
-     * NIVOL is the same as the request
-     * has the same UL ID
-     * has the same email
-     * has the skill with ID 34 - Elu Local (Gouvernance Locale)
-     */
-
-    if($user["id"] !== $nivolPresident)
-    {
-      $this->logger->error("Error while checking President - Wrong NIVOL returned",
-        [ "ULEntityHTTP_POST"   => $ulEntity,
-          "PresidentFromRedCall"=> $redCallResponse,
-          "RedCallURI"          => $uri
-        ]);
-      return RegisterNewUL::$CHECK_NIVOL_ERROR;
-    }
-
-    $emailFound = false;
-    foreach($contacts as $oneContact)
-    {
-      if(strtoupper($oneContact['libelle']) === strtoupper($ulEntity->president_email))
-      {
-        $emailFound = true;
-        break;
-      }
-    }
-
-    if(!$emailFound)
-    {
-      $this->logger->error("Error while checking President - Email provided not found",
-        [ "ULEntityHTTP_POST"   => $ulEntity,
-          "PresidentFromRedCall"=> $redCallResponse,
-          "RedCallURI"          => $uri
-        ]);
-      return RegisterNewUL::$CHECK_EMAIL_ERROR;
-    }
-
-    $ULInDB = $this->uniteLocaleDBService->getUniteLocaleById($ulEntity->id);
-
-    if($ULInDB->external_id !== $structureId)
-    {
-      $this->logger->error("Error while checking President - Wrong Unité Locale",
-        [ "ULEntityHTTP_POST"   => $ulEntity,
-          "ULEntityInDB"        => $ULInDB,
-          "PresidentFromRedCall"=> $redCallResponse,
-          "RedCallURI"          => $uri
-        ]);
-      return RegisterNewUL::$CHECK_UL_ERROR;
-    }
-
-    $skillFound=false;
-
-    foreach($skills as $skill)
-    {
-      if($skill['id'] == RegisterNewUL::$CORRECT_ELU_LOCAL_SKILL_ID)
-      {
-        $skillFound=true;
-        break;
-      }
-    }
-
-    if(!$skillFound)
-    {
-      $this->logger->error("Error while checking President - Correct skill Not Found",
-        [ "ULEntityHTTP_POST"   => $ulEntity,
-          "PresidentFromRedCall"=> $redCallResponse,
-          "RedCallURI"          => $uri
-        ]);
-      return RegisterNewUL::$CHECK_SKILL_ERROR;
-    }
-
-    return 0;
-
-  }
-
-  public static int $CHECK_NIVOL_ERROR=1;
-  public static int $CHECK_EMAIL_ERROR=2;
-  public static int $CHECK_UL_ERROR=3;
-  public static int $CHECK_SKILL_ERROR=4;
-
-  private static int $CORRECT_ELU_LOCAL_SKILL_ID=34;
 }

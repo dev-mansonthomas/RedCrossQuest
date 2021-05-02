@@ -227,7 +227,7 @@ class UniteLocaleEntity  extends Entity
   public $registration_in_progress;
 
 
-  protected $_fieldList = ['id','name','phone','latitude','longitude','address','postal_code','city','external_id','email','id_structure_rattachement','date_demarrage_activite','date_demarrage_rcq','mode','publicDashboard',
+  protected array $_fieldList = ['id','name','phone','latitude','longitude','address','postal_code','city','external_id','email','id_structure_rattachement','date_demarrage_activite','date_demarrage_rcq','mode','publicDashboard',
     'president_man'         ,
     'president_nivol'       ,
     'president_first_name'  ,

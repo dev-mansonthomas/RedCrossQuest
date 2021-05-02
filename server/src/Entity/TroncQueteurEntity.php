@@ -311,7 +311,7 @@ class TroncQueteurEntity extends Entity
   public $departAlreadyRegistered;
 
 
-  protected $_fieldList = ['id','queteur_id','queteur','point_quete','point_quete_id','tronc_id','depart_theorique','depart','retour','comptage','last_update','last_update_user_id','euro500','euro200','euro100','euro50','euro20','euro10','euro5','euro2','euro1','cents50','cents20','cents10','cents5','cents2','cent1','don_cheque','don_creditcard','foreign_coins','foreign_banknote','notes_depart_theorique','notes_retour','notes_retour_comptage_pieces','notes_update','last_name','first_name','deleted','tronc_queteur_id','insert_date','preparationAndDepart','coins_money_bag_id','bills_money_bag_id','don_cb_total_number','don_cheque_number','amount','weight','time_spent_in_hours', 'troncFromPreviousYear', 'troncQueteurIsInAnIncorrectState', 'queteHasNotStartedYet','departAlreadyRegistered'];
+  protected array $_fieldList = ['id','queteur_id','queteur','point_quete','point_quete_id','tronc_id','depart_theorique','depart','retour','comptage','last_update','last_update_user_id','euro500','euro200','euro100','euro50','euro20','euro10','euro5','euro2','euro1','cents50','cents20','cents10','cents5','cents2','cent1','don_cheque','don_creditcard','foreign_coins','foreign_banknote','notes_depart_theorique','notes_retour','notes_retour_comptage_pieces','notes_update','last_name','first_name','deleted','tronc_queteur_id','insert_date','preparationAndDepart','coins_money_bag_id','bills_money_bag_id','don_cb_total_number','don_cheque_number','amount','weight','time_spent_in_hours', 'troncFromPreviousYear', 'troncQueteurIsInAnIncorrectState', 'queteHasNotStartedYet','departAlreadyRegistered'];
 
    /**
     * Accept an array of data matching properties of this class

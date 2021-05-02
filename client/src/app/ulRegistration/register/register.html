@@ -348,7 +348,7 @@
                             ng-pattern="'^[-_a-zA-Z0-9]+\.[-_a-zA-Z0-9]+@croix-rouge.fr$'"
                             required/>
                         </div>
-                        <span class="help-block" ng-show="registerForm.president_email.$invalid">*@croix-rouge.fr</span>
+                        <span class="help-block" ng-show="registerForm.president_email.$invalid">*@croix-rouge.fr. Utilisez l'email personnel (pas la boite générique president.ul...). Le Role "Elu Local" doit être présent sur Pegass. Si ce n'est pas le cas, contactez support.</span>
                       </div>
                     </div>
                     <div class="col-md-5">
@@ -425,7 +425,7 @@
     <div uib-accordion-group class="panel-default" heading="L'inscription est validée & terminée !" ng-show="ulr.settings.registrationCompletedVisible" is-open="ulr.settings.registrationCompletedOpen" ng-cloak>
       Ca y est !<br/>
       Votre inscription est validée et terminée!<br/><br/>
-      <strong>Un email a été envoyé à l'administrateur pour initialiser son mot de passe et commencer la configuration de RedCrossQuest pour son unité locale!<br/><br/>
+      <strong>Un email a été envoyé à l'administrateur pour initialiser son mot de passe et commencer la configuration de RedCrossQuest pour son unité locale!</strong><br/><br/>
     </div>
 
     <!-- Successful Save -->

@@ -17,7 +17,7 @@ use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
-use RedCrossQuest\Service\RedCallService;
+use RedCrossQuest\Service\PubSubService;
 
 
 class AssociateRegistrationWithExistingQueteur extends Action
@@ -25,36 +25,36 @@ class AssociateRegistrationWithExistingQueteur extends Action
   /**
    * @var QueteurDBService          $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
 
   /**
    * @var EmailBusinessService    $emailBusinessService
    */
-  private $emailBusinessService;
+  private EmailBusinessService $emailBusinessService;
 
   /**
-   * @var RedCallService           $pubSubService
+   * @var PubSubService           $pubSubService
    */
-  private $pubSubService;
+  private PubSubService $pubSubService;
 
   /**
    * @Inject("settings")
    * @var array settings
    */
-  protected $settings;
+  protected array $settings;
 
   /**
-   * @param LoggerInterface $logger
-   * @param ClientInputValidator $clientInputValidator
-   * @param QueteurDBService          $queteurDBService
-   * @param EmailBusinessService    $emailBusinessService
-   * @param RedCallService           $pubSubService
+   * @param LoggerInterface       $logger
+   * @param ClientInputValidator  $clientInputValidator
+   * @param QueteurDBService      $queteurDBService
+   * @param EmailBusinessService  $emailBusinessService
+   * @param PubSubService         $pubSubService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
                               QueteurDBService        $queteurDBService,
                               EmailBusinessService    $emailBusinessService,
-                              RedCallService           $pubSubService)
+                              PubSubService           $pubSubService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->queteurDBService     = $queteurDBService;

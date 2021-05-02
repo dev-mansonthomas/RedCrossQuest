@@ -20,7 +20,7 @@ class MailingSummaryEntity extends Entity
    */
   public $count            ;
 
-  protected $_fieldList = ['secteur', 'count'];
+  protected array $_fieldList = ['secteur', 'count'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class

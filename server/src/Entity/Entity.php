@@ -20,17 +20,17 @@ class Entity
   /**
    * @var LoggerInterface
    */
-  protected $logger;
+  protected LoggerInterface $logger;
   /**
    * @var ClientInputValidator
    */
-  protected $clientInputValidator;
+  protected ClientInputValidator $clientInputValidator;
 
 
   /***
     @var string[]
    */
-  protected $_fieldList;
+  protected array $_fieldList;
 
   public function getFieldList():array
   {
@@ -100,19 +100,19 @@ class Entity
   /**
    * set on this object the property named $this->$key,  $data[$key] as an integer value
    * @param string $key the key of the data to be returned
-   * @param array  $data the associative array
+   * @param array|null $data the associative array
    */
-  protected function getInteger(string $key, ?array &$data):void
+  protected function getInteger(string $key, ?array &$data, int $defaultValue=null):void
   {
-    $this->$key = $this->clientInputValidator->validateInteger($key, $data, 100000000, false, null);
+    $this->$key = $this->clientInputValidator->validateInteger($key, $data, 100000000, false, $defaultValue);
   }
 
   /**
    * set on this object the property named $this->$key,  $data[$key] as a float value
    * @param string $key the key of the data to be returned
-   * @param array  $data the associative array
+   * @param array|null $data the associative array
    */
-  protected function getFloat(string $key, ?array $data):void
+  protected function getFloat(string $key, ?array &$data):void
   {
     if($data != null && array_key_exists($key, $data))
     {

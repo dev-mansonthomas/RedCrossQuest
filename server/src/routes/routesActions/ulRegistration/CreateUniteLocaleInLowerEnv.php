@@ -34,7 +34,7 @@ class CreateUniteLocaleInLowerEnv extends Action
   private $reCaptchaService;
 
   /**
-   * @var UserDBService        $userDBService
+   * @var UserDBService                 $userDBService
    */
   private $userDBService;
 
@@ -49,12 +49,13 @@ class CreateUniteLocaleInLowerEnv extends Action
   private QueteurDBService              $queteurDBService;
 
   /**
-   * @param LoggerInterface      $logger
-   * @param ClientInputValidator $clientInputValidator
-   * @param ReCaptchaService     $reCaptchaService
-   * @param UserDBService        $userDBService
-   * @param UniteLocaleDBService $uniteLocaleDBService
-   * @param EmailBusinessService $emailBusinessService
+   * @param LoggerInterface       $logger
+   * @param ClientInputValidator  $clientInputValidator
+   * @param ReCaptchaService      $reCaptchaService
+   * @param UserDBService         $userDBService
+   * @param UniteLocaleDBService  $uniteLocaleDBService
+   * @param EmailBusinessService  $emailBusinessService
+   * @param QueteurDBService      $queteurDBService
    */
   public function __construct(LoggerInterface               $logger,
                               ClientInputValidator          $clientInputValidator,
@@ -85,15 +86,7 @@ class CreateUniteLocaleInLowerEnv extends Action
       $errorResponse->getBody()->write("");
       return $errorResponse;
     }
-
-    $this->logger->debug("create_ul_in_lower_env => request",
-      [
-        "request"=>$this->request->getBody()->getContents(),
-        "php://input"=> file_get_contents('php://input'),
-        "parsedBody"=>$this->parsedBody
-      ]
-    );
-
+    
     $ulEntity = new UniteLocaleEntity($this->parsedBody['ul'], $this->logger);
 
     try

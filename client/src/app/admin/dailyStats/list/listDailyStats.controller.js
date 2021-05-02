@@ -44,8 +44,12 @@
         for(var i=0; i<mylist.length; i++)
         {//orinal date format : 2013-06-09 00:00:00.000000
           //  console.log(mylist[i].date.date.substring(0, mylist[i].date.date.length -16 ));
-          mylist[i].date   = moment( mylist[i].date.substring(0, mylist[i].date.length -16 ),"YYYY-MM-DD").toDate();
-          mylist[i].amount = parseFloat(mylist[i].amount);
+          mylist[i].date            = moment    (mylist[i].date.substring(0, mylist[i].date.length -16 ),"YYYY-MM-DD").toDate();
+          mylist[i].amount          = parseFloat(mylist[i].amount        );
+          mylist[i].nb_benevole     = parseInt  (mylist[i].nb_benevole   );
+          mylist[i].nb_benevole_1j  = parseInt  (mylist[i].nb_benevole_1j);
+          mylist[i].nb_heure        = parseInt  (mylist[i].nb_heure      );
+
         }
 
         vm.searchedYear = vm.selectedYear;
@@ -67,9 +71,9 @@
       dailyStatsResource.$createYear(function(){vm.doSearch();}, function(error){vm.saveInProgress=false;$log.error(error);});
     };
 
-    vm.save=function(id, amount)
+    vm.save=function(id, amount, nb_benevole, nb_benevole_1j, nb_heure)
     {
-      var dailyStatsResource = new DailyStatsResource({id:id, amount:amount});
+      var dailyStatsResource = new DailyStatsResource({id:id, amount:amount, nb_benevole:nb_benevole,nb_benevole_1j:nb_benevole_1j, nb_heure:nb_heure});
       dailyStatsResource.$update();
     };
 

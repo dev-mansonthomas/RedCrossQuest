@@ -26,7 +26,7 @@ class MailingInfoEntity extends Entity
 
   public $status                      ;
 
-  protected $_fieldList = ['id', 'email', 'first_name', 'last_name', 'secteur', 'man', 'spotfire_access_token', 'status'];
+  protected array $_fieldList = ['id', 'email', 'first_name', 'last_name', 'secteur', 'man', 'spotfire_access_token', 'status'];
 
   /**
    * Accept an array of data matching properties of this class

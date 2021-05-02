@@ -56,7 +56,7 @@ class TroncInUseEntity  extends Entity
    */
   public $status;
 
-  protected $_fieldList = ['id','depart_theorique','depart','queteur_id','tronc_id','first_name','last_name','email','mobile','nivol', 'status'];
+  protected array $_fieldList = ['id','depart_theorique','depart','queteur_id','tronc_id','first_name','last_name','email','mobile','nivol', 'status'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class

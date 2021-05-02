@@ -29,13 +29,16 @@
     </div>
 
     <div class="row" ng-show="ds.list.length>0 && ds.searchedYear == ds.selectedYear">
-      <div class="col-md-8 col-md-offset-2" >
+      <div class="col-md-10 col-md-offset-1" >
         <form name="dailyStatForms">
           <table class="table .table-striped .table-hover .table-condensed">
             <thead>
               <th class="visible-lg-inline-block">id</th>
-              <th>Date</th>
-              <th>Montant</th>
+              <th style="vertical-align: top;text-align: center;">Date</th>
+              <th style="vertical-align: top;text-align: center;">Montant</th>
+              <th style="vertical-align: top;text-align: center;">Nombre de bénévole</th>
+              <th style="vertical-align: top;text-align: center;">Nombre de bénévole d'un Jour</th>
+              <th style="vertical-align: top;text-align: center;">Nombre d'heures de quête cumulées</th>
               <th>&nbsp;</th>
             </thead>
             <tbody data-ng-repeat="dailyStats in ds.list">
@@ -44,10 +47,25 @@
                 <td><input name="stateDate_{{::dailyStats.id}}" id="statDate_{{::dailyStats.id}}" type="date" class="form-control" ng-model="dailyStats.date" ng-readonly="true"/></td>
                 <td>
                   <div class="input-group" ng-class="{'has-error':dailyStatForms['amount_'+dailyStats.id].$invalid}">
-                  <input style="min-width: 82px!important;" name="amount_{{::dailyStats.id}}" id="amount_{{::dailyStats.id}}" type="number" class="form-control" ng-model="dailyStats.amount" required autocomplete="off"/><span class="input-group-addon">€</span>
+                    <input style="min-width: 82px!important;" name="amount_{{::dailyStats.id}}" id="amount_{{::dailyStats.id}}" type="number" class="form-control" ng-model="dailyStats.amount" required autocomplete="off"/><span class="input-group-addon">€</span>
                   </div>
                 </td>
-                <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="ds.save(dailyStats.id, dailyStats.amount);"><span class="glyphicon glyphicon-floppy-disk"  aria-hidden="true"></span></button></td>
+                <td>
+                  <div class="input-group" ng-class="{'has-error':dailyStatForms['nb_benevole_'+dailyStats.id].$invalid}">
+                    <input style="min-width: 82px!important;" name="nb_benevole_{{::dailyStats.id}}" id="nb_benevole_{{::dailyStats.id}}" type="number" ng-pattern="/^[0-9]{1,7}$/" class="form-control" ng-model="dailyStats.nb_benevole" required autocomplete="off"/><span class="input-group-addon glyphicon glyphicon-person-walking"  aria-hidden="true" style="top:0px; color: red;"></span>
+                  </div>
+                </td>
+                <td>
+                  <div class="input-group" ng-class="{'has-error':dailyStatForms['nb_benevole_1j_'+dailyStats.id].$invalid}">
+                    <input style="min-width: 82px!important;" name="nb_benevole_1j_{{::dailyStats.id}}" id="nb_benevole_1j_{{::dailyStats.id}}" type="number"  ng-pattern="/^[0-9]{1,7}$/"  class="form-control" ng-model="dailyStats.nb_benevole_1j" required autocomplete="off"/><span class="input-group-addon glyphicon glyphicon-person-walking"  aria-hidden="true" style="top:0px; color: blue;"></span>
+                  </div>
+                </td>
+                <td>
+                  <div class="input-group" ng-class="{'has-error':dailyStatForms['nb_heure_'+dailyStats.id].$invalid}">
+                    <input style="min-width: 82px!important;" name="nb_heure_{{::dailyStats.id}}" id="nb_heure_{{::dailyStats.id}}" type="number" ng-pattern="/^[0-9]{1,7}$/" class="form-control" ng-model="dailyStats.nb_heure" required autocomplete="off"/><span class="input-group-addon glyphicon glyphicon-clock"  aria-hidden="true" style="top:0px;"></span>
+                  </div>
+                </td>
+                <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="ds.save(dailyStats.id, dailyStats.amount, dailyStats.nb_benevole, dailyStats.nb_benevole_1j, dailyStats.nb_heure);"><span class="glyphicon glyphicon-floppy-disk"  aria-hidden="true"></span></button></td>
               </tr>
             </tbody>
             <tfoot>
