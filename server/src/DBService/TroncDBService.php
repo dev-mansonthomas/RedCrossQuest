@@ -102,6 +102,7 @@ SELECT `id`,
 FROM  `tronc` as t
 WHERE  t.id    = :tronc_id
 AND    t.ul_id = :ul_id
+LIMIT 1
 ";
       $parameters = ["tronc_id" => $tronc_id, "ul_id" => $ulId];
 

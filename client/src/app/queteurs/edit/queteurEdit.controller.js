@@ -270,6 +270,15 @@
       }
       else
       {
+        if(vm.current.id === vm.current.referent_volunteer)
+        {
+          vm.current.referent_volunteerQueteur=null;
+          vm.current.referent_volunteer=null;
+          vm.errorWhileSaving=true;
+          vm.errorWhileSavingDetails="Arrêtez de jouer aux apprentis sorciers... merci.";
+
+          return;
+        }
         vm.current.saveInProgress=true;
         if (!vm.isRegistration && angular.isDefined(vm.current.id) && vm.current.id != null)
         {//WARNING : le 9 janvier (heure d'hiver), coté javascript la date envoyé est le jour d'avant à 23h

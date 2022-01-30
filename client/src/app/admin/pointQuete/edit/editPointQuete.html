@@ -126,7 +126,14 @@
           <div class="col-md-2">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqMaxPeople.$invalid}">
               <label for="pqMaxPeople" class="control-label">Nb de quêteur Max</label>
-              <input type="text" id="pqMaxPeople" name="pqMaxPeople" ng-model="pqe.current.max_people" class="form-control" required  ng-disabled="pqe.currentUserRole < 4"/>
+              <input type="number"
+                     ng-pattern="pqe.onlyNumbers"
+                     id="pqMaxPeople"
+                     name="pqMaxPeople"
+                     ng-model="pqe.current.max_people"
+                     class="form-control" required
+                     ng-disabled="pqe.currentUserRole < 4"
+              />
             </div>
           </div>
           <div class="col-md-4">

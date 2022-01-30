@@ -199,8 +199,12 @@ class Entity
         $array = $data[$key];
         try
         {
+
+          //$this->logger->error("Entity->getDate() 1", ['date'=>$array['date'], "timezone"=>$array['timezone']]);
           $this->$key = Carbon::createFromFormat("Y-m-d H:i:s.u", $array['date'], $array['timezone']);
+          //$this->logger->error("Entity->getDate() 2", ['date'=>$array['date'], "timezone"=>$array['timezone'], "DateBeforeSettingUTC"=>$this->$key]);
           $this->$key->setTimezone("UTC");
+          //$this->logger->error("Entity->getDate() 3", ['date'=>$array['date'], "timezone"=>$array['timezone'], "DateAfterSettingUTC"=>$this->$key]);
         }
         catch(Exception $e)
         {
@@ -227,7 +231,8 @@ class Entity
             try
             {
               $this->$key = Carbon::parse($stringValue);
-              //$this->logger->debug("json javascript parsed : ".$this->$key);
+             // $this->$key->setTimezone("UTC");
+              $this->logger->debug("json javascript parsed for '$key' : '".$this->$key."' stringValue='$stringValue");
             }
             catch(Exception $e)
             {

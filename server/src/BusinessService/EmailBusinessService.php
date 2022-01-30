@@ -411,7 +411,7 @@ class EmailBusinessService
 <br/>
  Cet email confirme le changement de votre mot de passe pour l'application RedCrossQuest le $changePasswordDateString.<br/>
  Votre login est votre NIVOL : '".$queteur->nivol."'
- Si vous n'êtes pas à l'origine de cette demande, contactez votre cadre local ou départementale.<br/>
+ Si vous n'êtes pas à l'origine de cette demande, contactez votre cadre local ou départemental.<br/>
 <br/> 
  Vous pouvez maintenant vous connecter à RedCrossQuest avec votre nouveau mot de passe :<br/>
 <br/> 

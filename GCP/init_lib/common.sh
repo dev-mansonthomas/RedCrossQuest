@@ -36,6 +36,7 @@ declare -A CLOUD_FUNCTIONS=(["notifyRQOfRegistApproval"]="pubsub;queteur_approva
                                      ["getULStats"]="http;"                       \
                                      ["historiqueTroncQueteur"]="http;"           \
                                      ["registerQueteur"]="http;"                  \
+                                     ["resyncQueteurIdToFirestore"]="http;"       \
                                      ["troncListPrepared"]="http;"                \
                                      ["troncSetDepartOrRetour"]="http;"           )
 
@@ -48,6 +49,7 @@ declare -A FUNCTIONS_PROJECT_PREFIX=(["notifyRQOfRegistApproval"]="${REDCROSSQUE
                                      ["getULStats"]="${REDQUEST}"                       \
                                      ["historiqueTroncQueteur"]="${REDQUEST}"           \
                                      ["registerQueteur"]="${REDQUEST}"                  \
+                                     ["resyncQueteurIdToFirestore"]="${REDQUEST}"       \
                                      ["troncListPrepared"]="${REDQUEST}"                \
                                      ["troncSetDepartOrRetour"]="${REDQUEST}"           )
 
@@ -63,6 +65,7 @@ declare -A FUNCTIONS_ROLES_RQ=(["notifyRQOfRegistApproval"]="roles/datastore.use
                                ["getULStats"]="roles/datastore.viewer;roles/logging.logWriter"                                                      \
                                ["historiqueTroncQueteur"]="roles/datastore.user;roles/secretmanager.secretAccessor;roles/logging.logWriter"         \
                                ["registerQueteur"]="roles/secretmanager.secretAccessor;roles/logging.logWriter"                                     \
+                               ["resyncQueteurIdToFirestore"]="roles/datastore.user;roles/secretmanager.secretAccessor;roles/logging.logWriter"     \
                                ["troncListPrepared"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"            \
                                ["troncSetDepartOrRetour"]="roles/datastore.viewer;roles/secretmanager.secretAccessor;roles/logging.logWriter"       )
 
@@ -78,6 +81,7 @@ declare -A FUNCTIONS_ROLES_RCQ=(["notifyRQOfRegistApproval"]="roles/pubsub.subsc
                                  ["historiqueTroncQueteur"]="roles/datastore.user;"                         \
                                  ["historiqueTroncQueteur"]="roles/cloudsql.client;"                        \
                                  ["registerQueteur"]="roles/cloudsql.client;"                               \
+                                 ["resyncQueteurIdToFirestore"]="roles/cloudsql.client;"                    \
                                  ["troncListPrepared"]="roles/cloudsql.client;"                             \
                                  ["troncSetDepartOrRetour"]="roles/cloudsql.client;"                        )
 

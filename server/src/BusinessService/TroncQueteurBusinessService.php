@@ -62,22 +62,28 @@ class TroncQueteurBusinessService
   public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId):?TroncQueteurEntity
   {
     $troncQueteur = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id, $ulId);
+
+    //$this->logger->debug("getLastTroncQueteurFromTroncId - TQ", ["TQ"=>$troncQueteur]);
+
     if($troncQueteur == null)
       return null;
     
     if($troncQueteur->queteur_id)
     {
       $troncQueteur->queteur      = $this->queteurDBService   ->getQueteurById    ($troncQueteur->queteur_id     , $roleId ==9 ? null: $ulId);
+      //$this->logger->debug("getLastTroncQueteurFromTroncId - Queteur", ["Q"=>$troncQueteur->queteur ]);
     }
 
     if($troncQueteur->point_quete_id)
     {
       $troncQueteur->point_quete  = $this->pointQueteDBService->getPointQueteById ($troncQueteur->point_quete_id , $ulId, $roleId);
+      //$this->logger->debug("getLastTroncQueteurFromTroncId - PointQuete", ["PQ"=>$troncQueteur->point_quete]);
     }
 
     if($troncQueteur->tronc_id)
     {
       $troncQueteur->tronc       = $this->troncDBService      ->getTroncById      ($troncQueteur->tronc_id       , $ulId);
+      //$this->logger->debug("getLastTroncQueteurFromTroncId - Tronc", ["T"=>$troncQueteur->tronc]);
     }
     return  $troncQueteur;
   }
@@ -92,9 +98,13 @@ class TroncQueteurBusinessService
   public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId, int $roleId):TroncQueteurEntity
   {
     $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId);
+    //$this->logger->debug("getTroncQueteurFromTroncQueteurId - TQ", ["TQ"=>$troncQueteur]);
     $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $roleId ==9 ? null: $ulId);
+    //$this->logger->debug("getTroncQueteurFromTroncQueteurId - Queteur", ["Q"=>$troncQueteur->queteur ]);
     $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById  ($troncQueteur->point_quete_id, $ulId, $roleId);
+    //$this->logger->debug("getTroncQueteurFromTroncQueteurId - PointQuete", ["PQ"=>$troncQueteur->point_quete]);
     $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId);
+    //$this->logger->debug("getTroncQueteurFromTroncQueteurId - Tronc", ["T"=>$troncQueteur->tronc]);
 
     return  $troncQueteur;
   }
@@ -104,11 +114,11 @@ class TroncQueteurBusinessService
    * In Production : If the current date now() or the date passed in parameter is after the 1st day of the quete, returns true, false otherwise.
    * Other env : it returns always true to be able to test the application
    * @param string $deployment the current deployment value
-   * @param Carbon $dateToCheck  preparation date
+   * @param Carbon|null $dateToCheck preparation date
    * @return bool true if the quete has already started (or it's not production)
    * @throws Exception
    */
-  public function hasQueteAlreadyStarted(string $deployment, $dateToCheck=null):bool
+  public function hasQueteAlreadyStarted(string $deployment, Carbon $dateToCheck=null):bool
   {
     if(strlen($deployment) !=1)
     {
@@ -132,7 +142,7 @@ class TroncQueteurBusinessService
     return
       $dateToCheck == null ?
         Carbon::now()->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00")):
-        $dateToCheck ->addHours(2)->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00"));
+        $dateToCheck->clone()->addHours(2)->gte(Carbon::createFromFormat("Y-m-d H:i:s", $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()."00:00:00"));
   }
 
 }

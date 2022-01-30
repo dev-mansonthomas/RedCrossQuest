@@ -59,6 +59,7 @@ class CreateQueteur extends Action
   {
     $ulId   = $this->decodedToken->getUlId  ();
     $roleId = $this->decodedToken->getRoleId();
+    $userId = $this->decodedToken->getUid   ();
 
     $queteurEntity = new QueteurEntity($this->parsedBody, $this->logger);
 
@@ -66,7 +67,7 @@ class CreateQueteur extends Action
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
 
     $this->logger->info("queteur creation", array("queteur"=>$queteurEntity));
-    $queteurId  = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId);
+    $queteurId  = $this->queteurDBService->insert($queteurEntity, $ulId, $roleId, $userId);
     $this->response->getBody()->write(json_encode(new CreateQueteurResponse($queteurId)));
 
     return $this->response;

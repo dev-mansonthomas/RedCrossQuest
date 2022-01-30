@@ -182,7 +182,8 @@ ORDER BY type ASC, name ASC
     $ulRestriction="";
     if($roleId < 9)
     {
-      $ulRestriction = "AND    pq.ul_id = :ul_id";
+      $ulRestriction = "AND    pq.ul_id = :ul_id
+LIMIT 1";
 
       $parameters["ul_id"]=$ulId;
     }

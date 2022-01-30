@@ -2,7 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Python" name="Python">
-      <configuration sdkName="" />
+      <configuration sdkName="Python 2.7 (RedCrossQuestUtilityBackend)" />
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
@@ -111,7 +111,9 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/zircote/swagger-php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php81" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Python 2.7 (RedCrossQuestUtilityBackend) interpreter library" level="application" />
   </component>
 </module>

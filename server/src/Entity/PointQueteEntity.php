@@ -123,7 +123,7 @@ class PointQueteEntity  extends Entity
     $this->getString ('address'      , $data, 70);
     $this->getInteger('postal_code'  , $data);
     $this->getString ('city'         , $data, 70);
-    $this->getString ('max_people'   , $data, 50);
+    $this->getInteger('max_people'   , $data, 50);
     $this->getString ('advice'       , $data, 500);
     $this->getString ('localization' , $data, 500);
     $this->getBoolean('minor_allowed', $data);

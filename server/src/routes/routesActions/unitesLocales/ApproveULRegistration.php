@@ -116,7 +116,7 @@ class ApproveULRegistration extends Action
       ];
 
       $queteurEntity = new QueteurEntity($queteurData, $this->logger);
-      $queteurId     = $this->queteurDBService->insert($queteurEntity, $ulEntity->id, $roleId);
+      $queteurId     = $this->queteurDBService->insert($queteurEntity, $ulEntity->id, $roleId,$userId);
       $queteur       = $this->queteurDBService->getQueteurById($queteurId);
       //creating user
       $this->userDBService->insert($queteur->nivol, $queteur->id, 4);

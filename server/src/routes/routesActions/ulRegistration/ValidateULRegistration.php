@@ -155,7 +155,7 @@ class ValidateULRegistration extends Action
         $roleId=4;
         
         $queteurEntity = new QueteurEntity($queteurData, $this->logger);
-        $queteurId     = $this->queteurDBService->insert        ($queteurEntity, $ulEntity->id, $roleId);
+        $queteurId     = $this->queteurDBService->insert        ($queteurEntity, $ulEntity->id, $roleId, 0);
         $queteur       = $this->queteurDBService->getQueteurById($queteurId);
         //creating user
         $this->userDBService->insert($queteur->nivol, $queteur->id, 4);

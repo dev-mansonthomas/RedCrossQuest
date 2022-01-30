@@ -207,7 +207,7 @@ t.`ul_id`             ,
 FROM  `tronc_queteur` as t
 WHERE  t.id         = :id
 AND    t.ul_id      = :ul_id
-
+LIMIT 1
 ";
     $parameters = ["id" => $id, "ul_id" => $ulId];
     /** @noinspection PhpIncompatibleReturnTypeInspection */
@@ -631,6 +631,7 @@ AND   tq.ul_id         = :ul_id
       {
         $departTheoriqueQuery ="  :depart_theorique,";
         $parameters["depart_theorique"] = $tq->depart_theorique->format('Y-m-d H:i:s');
+        $this->logger->debug("insert troncQueteur - depart_theorique", ["formatted"=>$parameters["depart_theorique"], "raw"=>$tq->depart_theorique]);
       }
 
 //in case of preparationAndDepart, an update after this insert is done.
