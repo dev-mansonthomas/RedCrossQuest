@@ -44,12 +44,13 @@ class UpdateQueteur extends Action
   {
     $ulId   = $this->decodedToken->getUlId  ();
     $roleId = $this->decodedToken->getRoleId();
+    $userId = $this->decodedToken->getUid   ();
 
     $queteurEntity = new QueteurEntity($this->parsedBody, $this->logger);
 
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
-    $this->queteurDBService->update($queteurEntity, $ulId, $roleId);
+    $this->queteurDBService->update($queteurEntity, $ulId, $roleId, $userId);
 
     return $this->response;
   }

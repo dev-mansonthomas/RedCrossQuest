@@ -336,8 +336,11 @@
                     style="width:100%;height:70px;">
               Mode Edition Admin
             </button>
+            <!-- This is to check if one coin/bill/cb/cheque field has been set > 0 to make all field mandatory
+            THis is to avoid troncqueteur without coinMoneyBagID
 
-
+            <span ng-if="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"></span>
+            -->
             <div class="form-group" ng-show="tq.current.adminEditMode == true" ng-cloak="">
               <label for="deletedRadio1" class="control-label">Est ce que le tronc est marqué comme supprimé ?</label><br/>
               <label class="radio-inline">
@@ -552,7 +555,8 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro5"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required="tq.current.fillTronc && !tq.current.adminEditMode"/>
+                     ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                     ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro5">Montant : {{tq.current.tronc_queteur.euro5*5}} €</span>
             </div>
 
@@ -566,7 +570,8 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro10"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required="tq.current.fillTronc && !tq.current.adminEditMode"/>
+                     ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                     ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro10">Montant : {{tq.current.tronc_queteur.euro10*10}} €</span>
             </div>
 
@@ -580,7 +585,8 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro20"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                     ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                     ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro20">Montant : {{tq.current.tronc_queteur.euro20*20}} €</span>
             </div>
 
@@ -594,7 +600,8 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro50"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                     ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                     ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro50">Montant : {{tq.current.tronc_queteur.euro50*50}} €</span>
             </div>
           </div>
@@ -609,7 +616,8 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro100"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                     ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                     ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro100">Montant : {{tq.current.tronc_queteur.euro100*100}} €</span>
             </div>
 
@@ -623,7 +631,8 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro200"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                     ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                     ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro200">Montant : {{tq.current.tronc_queteur.euro200*200}} €</span>
             </div>
 
@@ -637,7 +646,8 @@
                      class="form-control input-fix-mousewheel"
                      ng-model="tq.current.tronc_queteur.euro500"
                      ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                     ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                     ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                     ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
               <span class="help-block" ng-show="tq.current.tronc_queteur.euro500">Montant : {{tq.current.tronc_queteur.euro500*500}} €</span>
             </div>
           </div>
@@ -694,7 +704,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.euro2"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro2">Montant : {{tq.current.tronc_queteur.euro2*2}} €</span>
               </div>
 
@@ -708,7 +719,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents50"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents50">Montant : {{(tq.current.tronc_queteur.cents50*0.5).toFixed(2)}} €</span>
               </div>
 
@@ -722,7 +734,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.euro1"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro1">Montant : {{tq.current.tronc_queteur.euro1*1}} €</span>
               </div>
 
@@ -736,7 +749,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents20"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents20">Montant : {{(tq.current.tronc_queteur.cents20*0.2).toFixed(2)}} €</span>
               </div>
             </div>
@@ -751,7 +765,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents5"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents5">Montant : {{(tq.current.tronc_queteur.cents5*0.05).toFixed(2)}} €</span>
               </div>
 
@@ -765,7 +780,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents10"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents10">Montant : {{(tq.current.tronc_queteur.cents10*0.1).toFixed(2)}} €</span>
               </div>
 
@@ -780,7 +796,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents2"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents2">Montant : {{(tq.current.tronc_queteur.cents2*0.02).toFixed(2)}} €</span>
               </div>
 
@@ -794,7 +811,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cent1"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"
                 />
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cent1">Montant : {{(tq.current.tronc_queteur.cent1*0.01).toFixed(2)}} €</span>
               </div>
@@ -813,7 +831,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.euro2"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro2">Montant : {{tq.current.tronc_queteur.euro2*2}} €</span>
               </div>
 
@@ -827,7 +846,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.euro1"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.euro1">Montant : {{tq.current.tronc_queteur.euro1*1}} €</span>
               </div>
 
@@ -841,7 +861,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents50"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents50">Montant : {{(tq.current.tronc_queteur.cents50*0.5).toFixed(2)}} €</span>
               </div>
 
@@ -855,7 +876,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents20"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents20">Montant : {{(tq.current.tronc_queteur.cents20*0.2).toFixed(2)}} €</span>
               </div>
             </div>
@@ -871,7 +893,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents10"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents10">Montant : {{(tq.current.tronc_queteur.cents10*0.1).toFixed(2)}} €</span>
               </div>
 
@@ -886,7 +909,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents5"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents5">Montant : {{(tq.current.tronc_queteur.cents5*0.05).toFixed(2)}} €</span>
               </div>
 
@@ -900,7 +924,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cents2"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cents2">Montant : {{(tq.current.tronc_queteur.cents2*0.02).toFixed(2)}} €</span>
               </div>
 
@@ -914,7 +939,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.cent1"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required=" tq.current.fillTronc && !tq.current.adminEditMode"
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required=" tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"
                 />
                 <span class="help-block" ng-show="tq.current.tronc_queteur.cent1">Montant : {{(tq.current.tronc_queteur.cent1*0.01).toFixed(2)}} €</span>
               </div>
@@ -975,7 +1001,8 @@
                          class="form-control"
                          ng-model="tq.current.tronc_queteur.don_creditcard"
                          ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                         ng-required="tq.current.fillTronc && !tq.current.adminEditMode"/>
+                         ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                         ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                   <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"  style="top:0px;">&nbsp;</span>
                 </div>
                 <span class="help-block">Saisir la somme des dons en CB sur le créneau de quête</span>
@@ -991,7 +1018,7 @@
                          class="form-control"
                          ng-model="tq.current.tronc_queteur.don_cb_total_number"
                          ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                         ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_creditcard != null"/>
+                         ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode) && tq.current.tronc_queteur.don_creditcard != null"/>
                   <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
                 </div>
                 <span class="help-block">Saisir le nombre de dons en CB sur le créneau de quête</span>
@@ -1037,7 +1064,8 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.don_cheque"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required="tq.current.fillTronc && !tq.current.adminEditMode"/>
+                       ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
+                       ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                 <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
               <span class="help-block">Saisir la somme total des dons en chèque sur le créneau de quête du quêteur pour lesquels le donateur ne demande pas de reçu fiscal.
@@ -1054,7 +1082,7 @@
                        class="form-control input-fix-mousewheel"
                        ng-model="tq.current.tronc_queteur.don_cheque_number"
                        ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                       ng-required="tq.current.fillTronc && !tq.current.adminEditMode && tq.current.tronc_queteur.don_cheque != null"
+                       ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode) && tq.current.tronc_queteur.don_cheque != null"
                 />
                 <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
               </div>
@@ -1130,7 +1158,7 @@
                 typeahead-on-select="tq.getBagDetails($item, $model, $label, $event, true)"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                ng-required="tq.use_bank_bag && tq.current.adminEditMode == false"
+                ng-required="tq.use_bank_bag && (tq.current.adminEditMode == false || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"
                 autocomplete="off">
               <i   ng-show="loadingCoinMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-coins" aria-hidden="true" style="top:0px;">&nbsp;</span>
@@ -1158,7 +1186,7 @@
                 typeahead-on-select="tq.getBagDetails($item, $model, $label, $event, false)"
                 class="form-control"
                 ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
-                ng-required="tq.use_bank_bag && tq.current.adminEditMode == false"
+                ng-required="tq.use_bank_bag && (tq.current.adminEditMode == false || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"
                 autocomplete="off">
               <i   ng-show="loadingBillMoneyBagId" class="glyphicon glyphicon-refresh"></i>
               <span class="input-group-addon glyphicon glyphicon-money" aria-hidden="true" style="top:0px;">&nbsp;</span>

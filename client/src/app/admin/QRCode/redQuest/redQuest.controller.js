@@ -33,20 +33,10 @@
 
     vm.reload();
 
-    function computeSubDomain()
-    {
-      switch (vm.deploymentType)
-      {
-        case 'P': return ''     ;
-        case 'T': return 'test.';
-        case 'D': return 'dev.' ;
-
-      }
-    }
     function computeURL()
     {
-      vm.token_benevole_url    = 'https://'+computeSubDomain()+vm.settings.RedQuestDomain+'/registration?uuid='+vm.settings.ul_settings.token_benevole   ;
-      vm.token_benevole_1j_url = 'https://'+computeSubDomain()+vm.settings.RedQuestDomain+'/registration?uuid='+vm.settings.ul_settings.token_benevole_1j;
+      vm.token_benevole_url    = 'https://'+vm.settings.RedQuestDomain+'/registration?uuid='+vm.settings.ul_settings.token_benevole   ;
+      vm.token_benevole_1j_url = 'https://'+vm.settings.RedQuestDomain+'/registration?uuid='+vm.settings.ul_settings.token_benevole_1j;
     }
 
     function handleResult (settings)

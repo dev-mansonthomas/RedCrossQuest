@@ -494,7 +494,13 @@
                       <div class="row">
                         <div class="form-group col-md-6">
                           <button class="btn btn-default" type="button" id="reInitUserPassword" ng-click="queteur.reinitPassword()">Réinitialiser le Password</button>
-                          <span class="help-block">Un email sera envoyé à l'utilsateur avec un lien pour réinitialiser son mot de passe</span>
+                          <span class="help-block">
+                            Un email sera envoyé à l'utilsateur avec un lien pour réinitialiser son mot de passe<br/>
+                            <strong style="color:red">2021 / Important : Antispam VadeSecure </strong> - L'antispam bloque régulièrement les emails de RedCrossQuest.
+                            Pour les débloquer, connectez vous sur <a href="https://cloud.vadesecure.com/#/login" target="_blank">l'antispam </a>, sélèctionnez le mail de RedCrossQuest et cliquez sur le bouton "Liste Blanche".<br/>
+                            Pour se connecter facilement à l'antispam, cherchez "Vade Secure" dans vos emails et cliquez sur le bouton "consultez en ligne":
+                            <img src="assets/images/vadesecure.jpg" alt="Bouton consultez en ligne dans l'antispam"/>
+                          </span>
                         </div>
                         <div class="form-group col-md-6">
                           <button class="btn btn-default" type="button" id="userSave" ng-click="queteur.userSave()" ng-disabled="queteur.current.userSaveInProgress || queteurForm.$invalid ">Sauvegarder</button>

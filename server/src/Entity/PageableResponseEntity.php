@@ -36,7 +36,7 @@ class PageableResponseEntity
    */
   public $additionalInfo;
 
-  protected $_fieldList = ['pageNumber', 'rowPerPage', 'rows', 'count', 'additionalInfo'];
+  protected array $_fieldList = ['pageNumber', 'rowPerPage', 'rows', 'count', 'additionalInfo'];
 
   /**
    * @param int $count

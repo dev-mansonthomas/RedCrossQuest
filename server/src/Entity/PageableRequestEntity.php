@@ -21,7 +21,7 @@ class PageableRequestEntity
    */
   public $filterMap;
 
-  protected $_fieldList = ['pageNumber', 'rowPerPage', 'filterMap'];
+  protected array $_fieldList = ['pageNumber', 'rowPerPage', 'filterMap'];
 
   /**
    * @param array $filterMap

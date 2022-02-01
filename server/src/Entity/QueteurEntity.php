@@ -238,7 +238,7 @@ class QueteurEntity  extends Entity
    */
   public $benevole_referent             ;
 
-  protected $_fieldList = [
+  protected array $_fieldList = [
     'id','email','first_name','last_name','secteur','nivol','mobile','created','updated',
     'notes','ul_id','ul_name','ul_longitude','ul_latitude','point_quete_id','point_quete_name', 'tronc_id',
     'depart_theorique','depart','retour','active','man','birthdate','qr_code_printed','referent_volunteer',

@@ -40,7 +40,7 @@ class ULPreferencesEntity extends Entity
   public static $RQ_DISPLAY_QUETE_STATS_1ST_PAGE  = "1ST_PAGE";
   public static $RQ_DISPLAY_QUETE_STATS_ALL       = "ALL"     ;
   
-  protected $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'check_dates_not_in_the_past', 'rq_autonomous_depart_and_return', 'token_benevole', 'token_benevole_1j'];
+  protected array $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'check_dates_not_in_the_past', 'rq_autonomous_depart_and_return', 'token_benevole', 'token_benevole_1j'];
 
   /**
    * Accept an array of data matching properties of this class

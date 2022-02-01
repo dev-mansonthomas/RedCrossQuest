@@ -91,7 +91,7 @@ class UserEntity extends Entity
    */
   public $last_name                   ;
 
-  protected $_fieldList = ['id','nivol','queteur_id','password','password_defined','role','created','updated','active','last_failure_login_date','nb_of_failure','last_successful_login_date','init_password_date','first_name','last_name'];
+  protected array $_fieldList = ['id','nivol','queteur_id','password','password_defined','role','created','updated','active','last_failure_login_date','nb_of_failure','last_successful_login_date','init_password_date','first_name','last_name'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class

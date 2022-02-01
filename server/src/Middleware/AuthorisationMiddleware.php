@@ -39,7 +39,8 @@ class AuthorisationMiddleware implements MiddlewareInterface
     '0008' => "wrong format for a jwt token (should have exactly 2 '.')  '%s'",
     '0009' => "rejecting token, Constraints verification fails. Token : '%s'",
     '0010' => "JWT Validation fails: %s",
-    '0011' => "Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode."
+    '0011' => "Error while decoding the Token! Check that the Claims set during the authentication are the same than the one we're trying to get during the decode.",
+    '0012' => "General Error while executing the handle method of the handler",
   ];
 
   /** @var Configuration           $JWTConfiguration*/
@@ -155,12 +156,14 @@ class AuthorisationMiddleware implements MiddlewareInterface
 
       //$this->logger->debug("$path");
       //public path that must not go through authentication check
-      if($path == '/rest/authenticate'                      ||
-         $path == '/rest/firebase-authenticate'             ||
-         $path == '/rest/sendInit'                          ||
-         $path == '/rest/resetPassword'                     ||
-         $path == '/rest/getInfoFromUUID'                   ||
-         $path == '/rest/ul_registration'                   ||
+      if($path === '/rest/authenticate'                            ||
+         $path === '/rest/firebase-authenticate'                   ||
+         $path === '/rest/sendInit'                                ||
+         $path === '/rest/resetPassword'                           ||
+         $path === '/rest/getInfoFromUUID'                         ||
+         $path === '/rest/ul_registration'                         ||
+         $path === '/rest/ul_registration/check_registration_code' ||
+         $path === '/rest/ul_registration/create_ul_in_lower_env'  ||
          strpos($path,'/rest/thanks_mailing/') === 0 ||
          strpos($path,'/rest/redQuest/'      ) === 0   )
       {
@@ -229,8 +232,8 @@ class AuthorisationMiddleware implements MiddlewareInterface
       }
       catch(Exception $applicationError)
       {
-        $this->logger->error(AuthorisationMiddleware::$errorMessage['0007'], array(Logger::$EXCEPTION=>$applicationError));
-        return (new Response())->withStatus(500);
+        $this->logger->error(AuthorisationMiddleware::$errorMessage['0012'], array(Logger::$EXCEPTION=>$applicationError));
+        return $this->denyRequest('0012', 500);
       }
       //log execution time in milliseconds; error(true/false);request path
       //$this->logger->debug("[PERF];".(microtime(true)-$start).";false;".$path);
@@ -249,10 +252,10 @@ class AuthorisationMiddleware implements MiddlewareInterface
    * @param string $errorCode the error code to send back to the frontend
    * @return ResponseInterface      the modified response
    */
-  private function denyRequest(string $errorCode) : ResponseInterface
+  private function denyRequest(string $errorCode, int $status=401) : ResponseInterface
   {
     $response = new Response();
-    $response401 = $response->withStatus(401);
+    $response401 = $response->withStatus($status);
     $response401->getBody()->write(json_encode("{error:'authentication fails - $errorCode'}"));
     return $response401;
   }

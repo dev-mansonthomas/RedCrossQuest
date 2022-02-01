@@ -12,7 +12,7 @@ use RedCrossQuest\Service\Logger;
 class DailyStatsBeforeRCQDBService extends DBService
 {
 
-  private $queteDates;
+  private array $queteDates;
 
 
   public function __construct(array $queteDates, PDO $db, Logger $logger)
@@ -34,10 +34,9 @@ class DailyStatsBeforeRCQDBService extends DBService
   /**
    * Get all stats for UL $ulId and a particular year
    *
-   * @param int     $ulId The ID of the Unite Locale
-   * @param string  $year The year for which we wants the daily stats
+   * @param int $ulId The ID of the Unite Locale
+   * @param string|null $year The year for which we wants the daily stats
    * @return DailyStatsBeforeRCQEntity[]  The PointQuete
-   * @throws PDOException if the query fails to execute on the server
    * @throws Exception if some parsing error occurs
    */
   public function getDailyStats(int $ulId, ?string $year):array
@@ -57,7 +56,10 @@ class DailyStatsBeforeRCQDBService extends DBService
 SELECT  d.`id`,
         d.`ul_id`,
         d.`date`,
-        d.`amount`
+        d.`amount`,
+        d.`nb_benevole`,
+        d.`nb_benevole_1j`,
+        d.`nb_heure`
 FROM `daily_stats_before_rcq` AS d
 WHERE d.ul_id = :ul_id
 $yearSQL
@@ -80,12 +82,18 @@ ORDER BY d.date ASC
   {
     $sql ="
 update  `daily_stats_before_rcq`
-set     `amount`  = :amount
+set     `amount`        = :amount,
+        `nb_benevole`   = :nb_benevole,
+        `nb_benevole_1j`= :nb_benevole_1j,
+        `nb_heure`      = :nb_heure
 where   `id`      = :id
 AND     `ul_id`   = :ulId   
 ";
     $parameters = [
       "amount"        => $dailyStatsBeforeRCQEntity->amount,
+      "nb_benevole"   => $dailyStatsBeforeRCQEntity->nb_benevole,
+      "nb_benevole_1j"=> $dailyStatsBeforeRCQEntity->nb_benevole_1j,
+      "nb_heure"      => $dailyStatsBeforeRCQEntity->nb_heure,
       "id"            => intVal($dailyStatsBeforeRCQEntity->id),
       "ulId"          => $ulId
     ];

@@ -7,9 +7,9 @@ use Google\Cloud\Logging\LoggingClient;
 use Google\Cloud\Logging\PsrLogger;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
-use Lcobucci\JWT\Configuration;
-use Kreait\Firebase\Factory;
 use Kreait\Firebase\Auth;
+use Kreait\Firebase\Factory;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Psr\Container\ContainerInterface;
@@ -37,6 +37,7 @@ use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\MailService;
 use RedCrossQuest\Service\PubSubService;
 use RedCrossQuest\Service\ReCaptchaService;
+use RedCrossQuest\Service\RedCallService;
 use RedCrossQuest\Service\SecretManagerService;
 use RedCrossQuest\Service\SlackService;
 
@@ -71,7 +72,7 @@ return function (ContainerBuilder $containerBuilder)
     "RCQVersion" => function ():string
     {
       //version stays here, so that I don't have to update all the settings files
-      return "2020.0";
+      return "2021.0";
     },
     /**
      * Custom Logger that automatically add context data to each log entries.
@@ -142,6 +143,28 @@ return function (ContainerBuilder $containerBuilder)
     {
       return new FirestoreClient();
     },
+
+    /**
+     * 'mailingDBService'
+     */
+    MailingDBService::class => function (ContainerInterface $c):MailingDBService
+    {
+      return new MailingDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+    },
+
+    /**
+     * 'mailService'
+     */
+    MailService::class => function (ContainerInterface $c):MailService
+    {
+      $settings       = $c->get('settings')['appSettings']['email'];
+      $deploymentType = $c->get('settings')['appSettings']['deploymentType'];
+
+      $sendgridApiKey = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$SENDGRID_API_KEY);
+
+      return new MailService($c->get(LoggerInterface::class),  $sendgridApiKey, $settings['sendgrid.sender'], $deploymentType);
+    },
+
     /**
      * Google PubSub service
      */
@@ -149,6 +172,18 @@ return function (ContainerBuilder $containerBuilder)
     {
       $settings = $c->get('settings')['PubSub'];
       return new PubSubService($settings, $c->get(LoggerInterface::class));
+    },
+
+    
+    /**
+     * RedCall service
+     */
+    RedCallService::class => function (ContainerInterface $c):RedCallService
+    {
+      $settings      = $c->get('settings');
+      $redCallSecret = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$REDCALL_SECRET);
+
+      return new RedCallService($settings, $redCallSecret, $c->get(LoggerInterface::class));
     },
 
     /**
@@ -286,27 +321,6 @@ return function (ContainerBuilder $containerBuilder)
     YearlyGoalDBService::class => function (ContainerInterface $c):YearlyGoalDBService
     {
       return new YearlyGoalDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
-    },
-
-    /**
-     * 'mailingDBService'
-     */
-    MailingDBService::class => function (ContainerInterface $c):MailingDBService
-    {
-      return new MailingDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
-    },
-
-    /**
-     * 'mailService'
-     */
-    MailService::class => function (ContainerInterface $c):MailService
-    {
-      $settings       = $c->get('settings')['appSettings']['email'];
-      $deploymentType = $c->get('settings')['appSettings']['deploymentType'];
-
-      $sendgridApiKey = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$SENDGRID_API_KEY);
-
-      return new MailService($c->get(LoggerInterface::class),  $sendgridApiKey, $settings['sendgrid.sender'], $deploymentType);
     },
 
 

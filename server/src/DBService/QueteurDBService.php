@@ -264,6 +264,7 @@ AND qr.`id` = :id
    */
   public function updateQueteurRegistration(QueteurEntity $queteur, int $queteurId, int $userId)
   {
+    $this->logger->debug("updateQueteurRegistration", ["queteur"=>$queteur, "queteurId"=> $queteurId, "userId"=> $userId]);
     $sql = "
 UPDATE `queteur_registration`
 SET
@@ -298,7 +299,7 @@ AND   ul_registration_token = :ul_registration_token
    */
   public function associateRegistrationWithExistingQueteur(QueteurEntity $queteur, int $userId, int $ulId)
   {
-
+    $this->logger->debug("associateRegistrationWithExistingQueteur", ["queteur"=>$queteur, "userId"=> $userId, "ulId"=> $ulId]);
     $sql = "
 UPDATE `queteur_registration`
 SET
@@ -839,6 +840,7 @@ AND    q.ul_id = u.id
     {
       $sql .= "
 AND  u.id = :ul_id
+LIMIT 1
 ";
       $parameters["ul_id"] = $ul_id;
     }
@@ -848,10 +850,18 @@ AND  u.id = :ul_id
 
     if($queteur->referent_volunteer > 0)
     {
-      $referent         = $this->getQueteurById($queteur->referent_volunteer, $ul_id);
-      $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
-      $queteur->referent_volunteerQueteur = $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
+      if($queteur->referent_volunteer != $queteur->id)
+      {
+        $referent = $this->getQueteurById($queteur->referent_volunteer, $ul_id);
+        $queteur->referent_volunteer_entity = ["id"=>$referent->id, "first_name"=>$referent->first_name,"last_name"=>$referent->last_name,"nivol"=>$referent->nivol];
+        $queteur->referent_volunteerQueteur = $referent->first_name ." " . $referent->last_name . " - " . $referent->nivol;
+      }
+      else
+      {
+        $this->logger->error("Queteur is referencing itself as referent",["queteur"=>$queteur]);
+      }
     }
+
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     return $queteur;
@@ -911,9 +921,9 @@ AND    q.ul_id   = u.id
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception
    */
-  public function update(QueteurEntity $queteur, int $ulId, int $roleId)
+  public function update(QueteurEntity $queteur, int $ulId, int $roleId, int $userId)
   {
-
+    $this->logger->debug("update Queteur", ["queteur"=>$queteur, "roleId"=> $roleId, "ulId"=> $ulId]);
     $sql = "
 UPDATE `queteur`
 SET
@@ -974,7 +984,9 @@ INSERT INTO `queteur`
   `man`,
   `active`,
   `qr_code_printed`,
-  `referent_volunteer`
+  `referent_volunteer`,
+  `firebase_uid`,
+  `firebase_sign_in_provider`
 )
 VALUES
 (
@@ -991,7 +1003,9 @@ VALUES
   :man,
   :active,
   false,
-  :referent_volunteer
+  :referent_volunteer,
+  :firebase_uid,
+  :firebase_sign_in_provider
 )
 ";
 
@@ -1005,21 +1019,24 @@ VALUES
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception
    */
-  public function insert(QueteurEntity $queteur, int $ulId, int $roleId)
+  public function insert(QueteurEntity $queteur, int $ulId, int $roleId, int $userId):?int
   {
-
+    $this->logger->debug("insert Queteur", ["queteur"=>$queteur, "roleId"=> $roleId, "ulId"=> $ulId, "userId"=>$userId]);
+    
     $parameters = [
-      "first_name"         => $queteur->first_name,
-      "last_name"          => $queteur->last_name,
-      "email"              => $queteur->email,
-      "secteur"            => $queteur->secteur,
-      "nivol"              => ltrim($queteur->nivol, '0'),
-      "mobile"             => $queteur->mobile,
-      "ul_id"              => $roleId == 9? $queteur->ul_id : $ulId,  //this ulId is safer, checked with JWT Token. if superAdmin, we take the ul_id value of queteur, than can be different from the ulId of the superAdmin
-      "birthdate"          => $queteur->birthdate,
-      "man"                => $queteur->man===true?"1":"0",
-      "active"             => $queteur->active===true?"1":"0",
-      "referent_volunteer" => $queteur->secteur == 3 ? ($queteur->referent_volunteer != null ? $queteur->referent_volunteer: 0) : 0
+      "first_name"                => $queteur->first_name,
+      "last_name"                 => $queteur->last_name,
+      "email"                     => $queteur->email,
+      "secteur"                   => $queteur->secteur,
+      "nivol"                     => ltrim($queteur->nivol, '0'),
+      "mobile"                    => $queteur->mobile,
+      "ul_id"                     => $roleId == 9? $queteur->ul_id : $ulId,  //this ulId is safer, checked with JWT Token. if superAdmin, we take the ul_id value of queteur, than can be different from the ulId of the superAdmin
+      "birthdate"                 => $queteur->birthdate,
+      "man"                       => $queteur->man===true?"1":"0",
+      "active"                    => $queteur->active===true?"1":"0",
+      "referent_volunteer"        => $queteur->secteur == 3 ? ($queteur->referent_volunteer != null ? $queteur->referent_volunteer: 0) : 0,
+      "firebase_uid"              => $queteur->firebase_uid,
+      "firebase_sign_in_provider" => $queteur->firebase_sign_in_provider
     ];
 
     return $this->executeQueryForInsert(self::$insertQueteurSQL, $parameters, true);
@@ -1141,6 +1158,8 @@ $searchNivol
    */
   public function anonymize(int $queteurId, int $ulId, int $roleId, int $userId)
   {
+    $this->logger->debug("anonymize Queteur", ["queteurId"=>$queteurId, "roleId"=> $roleId, "ulId"=> $ulId, "userId"=>$userId]);
+
     $token = Uuid::uuid4();
 
     $sql = "

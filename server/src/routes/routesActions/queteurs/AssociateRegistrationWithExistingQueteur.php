@@ -25,30 +25,30 @@ class AssociateRegistrationWithExistingQueteur extends Action
   /**
    * @var QueteurDBService          $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
 
   /**
    * @var EmailBusinessService    $emailBusinessService
    */
-  private $emailBusinessService;
+  private EmailBusinessService $emailBusinessService;
 
   /**
    * @var PubSubService           $pubSubService
    */
-  private $pubSubService;
+  private PubSubService $pubSubService;
 
   /**
    * @Inject("settings")
    * @var array settings
    */
-  protected $settings;
+  protected array $settings;
 
   /**
-   * @param LoggerInterface $logger
-   * @param ClientInputValidator $clientInputValidator
-   * @param QueteurDBService          $queteurDBService
-   * @param EmailBusinessService    $emailBusinessService
-   * @param PubSubService           $pubSubService
+   * @param LoggerInterface       $logger
+   * @param ClientInputValidator  $clientInputValidator
+   * @param QueteurDBService      $queteurDBService
+   * @param EmailBusinessService  $emailBusinessService
+   * @param PubSubService         $pubSubService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,

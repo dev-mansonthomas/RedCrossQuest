@@ -20,7 +20,7 @@ class CreateYearOfDailyStats extends Action
   /**
    * @var DailyStatsBeforeRCQDBService          $dailyStatsBeforeRCQDBService
    */
-  private $dailyStatsBeforeRCQDBService;
+  private DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService;
 
   /**
    * @param LoggerInterface $logger

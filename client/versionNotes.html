@@ -10,28 +10,9 @@ Sinon, ca casse le JSON
 <div>
   <div class='alert alert-danger' role='alert'>Rappel : Utilisez Google Chrome sur PC/Mac</div>
   <ul>
-    <li>Correction sur les scans de QRCode des troncs</li>
-    <li>La sauvegarde d'un queteur reculait sa date de naissance d'un jour (une sombre histoire de timezone)</li>
-    <li>Paramétrage de l'UL : si vous modifiez et sauvegardez trop vite, la sauvegarde n'est pas prise en compte. C'est corrigé.</li>
-    <li>Liste des Quêteur : Ajout de l'ID du tronc du queteur lorsqu'on laisse la souris au dessus de l'icone de status </li>
-    <li>Amélioration du message d'erreur quand le QRCode d'un tronc ou d'un queteur n'est pas reconnu</li>
-    <li>Amélioration du process de login lorsque le NIVOL n'est pas reconnu</li>
-    <li>Settings: choix du type de graphique pour les utilisateurs en lecture seule. ce graphique est destiné a être projeté</li>
-    <li>Préparation, Départ, Retour, Comptage : le champ de recherche par numéro de tronc n'accepte que les entiers. Pour rappel, le N° a saisir en saisie manuelle est les derniers chiffres non nulles sous le QRCode. Ex: TRONC-000348-00000123 :  c'est 123 qu'il faut saisir.</li>
-    <li>un bug empéchait d'avoir le détails d'un sac de banque sur la page de comptage, c'est corrigé</li>
-    <li>Une nouvelle option permet de saisir sur la page de retour des dates dans le passé. C'est pour un cas bien particulier et ne devrait pas être utilisé de manière générale. https://github.com/dev-mansonthomas/RedCrossQuest/issues/17</li>
-    <li>Lorsqu'on éditait un point de quête, la modification n'était pas visible tout de suite, il fallait se déconnecter/reconnecter. C'est corrigé, les modifications sont visible tout de suite</li>
-    <li>Lorsqu'on édite un queteur, la date de naissance n'était pas enregistré correctement. (elle reculait d'un jour) c'est corrigé</li>
-    <li>En mode Admin, l'édition de la date de retour était bloqué par le champs montant total CB, c'est corrigé.</li>
-    <li>Lors de la recherche de tronc, si une valeur négative est saisie, aucune recherche n'est effectuée</li>
-    <li>Dans certaines conditions, l'ID du queteur ou du point de quête ou du tronc n'est pas envoyé au serveur alors qu'il semble saisie lors de la préparation, un message d'alerte est affiché a l'utilisateur. Si ca vous arrive et que vous avec une idée du cheminement qui ammène cette erreur merci de le partager sur Slack ou support@redcossquest.com</li>
-    <li>Dans certaines conditions l'ID de l'UL n'était pas envoyé lors de la création d'un point de quête. Cela ne devrait plus se produire.</li>
-    <li>Correction du bug sur la préparation du troncQueteur, qui survenait si vous utilisiez la recherche textuelle du queteur, les fleches du clavier, puis entrée, puis TAB, sur un bénévole d'un jour.</li>
-    <li>Comptage : Si l'unité locale utilise les sacs de banque, un controle est fait coté serveur pour s'assurer qu'ils sont bien rempli. En cas d'erreur le navigateur est positionné sur le message d'erreur (qui a été agrandi)</li>
-    <li>Comptage : la page défile vers la zone de saisie des billets</li>
-    <li>Comptage : Meilleur affichage du détails des sacs de banque</li>
-    <li>Comptage : Si on a une erreur coté serveur, qu'on corrige et re-sauvegarde avec succès, l'erreur précédente n'est plus affichée</li>
-    <li>Retour : Si l'écart entre le départ et le retour est de moins de 30 minutes, affichage d'un avertissement sur l'impact sur l'efficacité du point de quête, du quêteur et l'efficacité globale</li>
-    <li>Retour : Correction sur le test des 24H</li>
+    <li>Peu de changements pour la version 2021 (covid, nouveaux jobs)</li>
+    <li>Les inscriptions des Unités Locales sont validées automatiquement via l'envoie d'un code au président de l'UL</li>
+    <li>La page de réinitialisation de mot de passe a été améliorée pour éviter d'être détecté comme un robot par erreur</li>
+    <li>La page de collecte des données des années précédentes permet de saisir le nombre de bénévole, bénévole d'un jour et nombre d'heure</li>
   </ul>
 </div>

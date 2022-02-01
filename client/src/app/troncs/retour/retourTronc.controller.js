@@ -150,11 +150,12 @@
         var departMoment = moment(vm.current.tronc_queteur.depart);
 
         //si c'est inférieur a 30Minutes:  warning
-        if(moment.duration(retourMoment.diff(departMoment)).as('minutes') <= 30)
-          return 1;
+        //if(moment.duration(retourMoment.diff(departMoment)).as('minutes') <= 30)
+        //  return 1;
         // si c'est superieur a 24h ==> erreur
-        if(!(moment.duration(retourMoment.diff(departMoment)).as('hours') <= 24))
-          return 2;
+        //if(!(moment.duration(retourMoment.diff(departMoment)).as('hours') <= 24))
+        //return 2;
+        //blablab
       }
       return 0;
     };

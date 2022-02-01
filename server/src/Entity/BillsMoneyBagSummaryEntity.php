@@ -97,7 +97,7 @@ class BillsMoneyBagSummaryEntity extends Entity
   public $bills_money_bag_id;
 
 
-  protected $_fieldList = [
+  protected array $_fieldList = [
     'total_euro5'   ,
     'total_euro10'  ,
     'total_euro20'  ,

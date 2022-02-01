@@ -89,7 +89,7 @@ class GetAllULSettings extends Action
     $this->uniteLocaleDBService             = $uniteLocaleDBService;
     $this->userDBService                    = $userDBService;
     $this->dailyStatsBeforeRCQDBService     = $dailyStatsBeforeRCQDBService;
-    $this->uniteLocaleSettingsDBService    = $uniteLocaleSettingsDBService;
+    $this->uniteLocaleSettingsDBService     = $uniteLocaleSettingsDBService;
   }
 
   /**

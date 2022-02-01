@@ -17,7 +17,7 @@
     "test": "gulp test"
   },
   "devDependencies": {
-    "browser-sync": "^2.26.10",
+    "browser-sync": "^2.26.14",
     "browser-sync-spa": "~1.0.3",
     "chalk": "^2.4.2",
     "del": "~3.0.0",
@@ -54,7 +54,7 @@
     "karma-ng-html2js-preprocessor": "~1.0.0",
     "karma-phantomjs-launcher": "~1.0.2",
     "libcipm": "^2.0.2",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "main-bower-files": "^2.13.3",
     "phantomjs": "~2.1.7",
     "uglify-save-license": "~0.4.1",

@@ -100,7 +100,7 @@ class PointQueteEntity  extends Entity
    */
   public $transport_to_reach;
 
-  protected $_fieldList = ['id','ul_id','code','name','latitude','longitude','address','postal_code','city','max_people','advice','localization','minor_allowed','created','enabled','type','time_to_reach','transport_to_reach'];
+  protected array $_fieldList = ['id','ul_id','code','name','latitude','longitude','address','postal_code','city','max_people','advice','localization','minor_allowed','created','enabled','type','time_to_reach','transport_to_reach'];
 
   /**
    * Accept an array of data matching properties of this class
@@ -123,7 +123,7 @@ class PointQueteEntity  extends Entity
     $this->getString ('address'      , $data, 70);
     $this->getInteger('postal_code'  , $data);
     $this->getString ('city'         , $data, 70);
-    $this->getString ('max_people'   , $data, 50);
+    $this->getInteger('max_people'   , $data, 50);
     $this->getString ('advice'       , $data, 500);
     $this->getString ('localization' , $data, 500);
     $this->getBoolean('minor_allowed', $data);

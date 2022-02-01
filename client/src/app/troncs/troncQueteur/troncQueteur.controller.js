@@ -68,6 +68,7 @@
     vm.activateAdminEditMode = function()
     {
       vm.current.adminEditMode=true;
+      vm.coinsAndCBAndChequeMandatoryInAdminModeFunction();
     };
 
     vm.getTypeLabel=function(id)
@@ -109,6 +110,32 @@
 
     };
 
+    vm.coinsAndCBAndChequeMandatoryInAdminModeFunction=function()
+    {
+      if(!vm.current || !vm.current.tronc_queteur)
+      {
+        return;
+      }
+
+      vm.current.coinsAndCBAndChequeMandatoryInAdminMode =
+        vm.isEmpty(vm.current.tronc_queteur.euro2          )    +
+        vm.isEmpty(vm.current.tronc_queteur.euro1          ) +
+        vm.isEmpty(vm.current.tronc_queteur.cents50        ) +
+        vm.isEmpty(vm.current.tronc_queteur.cents20        ) +
+        vm.isEmpty(vm.current.tronc_queteur.cents10        ) +
+        vm.isEmpty(vm.current.tronc_queteur.cents5         ) +
+        vm.isEmpty(vm.current.tronc_queteur.cents2         ) +
+        vm.isEmpty(vm.current.tronc_queteur.cent1          ) +
+        vm.isEmpty(vm.current.tronc_queteur.don_creditcard ) +
+        vm.isEmpty(vm.current.tronc_queteur.don_cheque     ) +
+        vm.isEmpty(vm.current.tronc_queteur.euro5          ) +
+        vm.isEmpty(vm.current.tronc_queteur.euro10         ) +
+        vm.isEmpty(vm.current.tronc_queteur.euro20         ) +
+        vm.isEmpty(vm.current.tronc_queteur.euro50         ) +
+        vm.isEmpty(vm.current.tronc_queteur.euro100        ) +
+        vm.isEmpty(vm.current.tronc_queteur.euro200        ) +
+        vm.isEmpty(vm.current.tronc_queteur.euro500        ) > 0;
+    }
 
     vm.setNonFilledCoinToZero=function()
     {

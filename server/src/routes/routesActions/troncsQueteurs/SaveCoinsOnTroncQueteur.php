@@ -18,7 +18,7 @@ use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
-use RedCrossQuest\Service\PubSubService;
+use RedCrossQuest\Service\RedCallService;
 
 
 class SaveCoinsOnTroncQueteur extends Action

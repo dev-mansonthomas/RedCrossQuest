@@ -15,7 +15,7 @@ class UniteLocaleSettingsEntity  extends Entity
   public $token_benevole;
   public $token_benevole_1j;
 
-  protected $_fieldList = ['id','ul_id','settings','created','updated','last_update_user_id','token_benevole','token_benevole_1j'];
+  protected array $_fieldList = ['id','ul_id','settings','created','updated','last_update_user_id','token_benevole','token_benevole_1j'];
 
   /**
    * Accept an array of data matching properties of this class

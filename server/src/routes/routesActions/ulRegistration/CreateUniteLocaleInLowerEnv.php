@@ -1,22 +1,26 @@
 <?php
-namespace RedCrossQuest\routes\routesActions\unitesLocales;
+
+namespace RedCrossQuest\routes\routesActions\ulRegistration;
 
 use Exception;
+use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UserDBService;
-use RedCrossQuest\Entity\Entity;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
 use RedCrossQuest\routes\routesActions\Action;
+use RedCrossQuest\routes\routesActions\unitesLocales\ApproveULRegistrationResponse;
 use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
+use RedCrossQuest\Service\ReCaptchaService;
 
-
-class ApproveULRegistration extends Action
+class CreateUniteLocaleInLowerEnv extends Action
 {
 
   /**
@@ -25,9 +29,9 @@ class ApproveULRegistration extends Action
   private $uniteLocaleDBService;
 
   /**
-   * @var QueteurDBService              $queteurDBService
+   * @var ReCaptchaService              $reCaptchaService
    */
-  private $queteurDBService;
+  private $reCaptchaService;
 
   /**
    * @var UserDBService                 $userDBService
@@ -39,29 +43,34 @@ class ApproveULRegistration extends Action
    */
   private $emailBusinessService;
 
+  /**
+   * @var QueteurDBService              $queteurDBService
+   */
+  private QueteurDBService              $queteurDBService;
 
   /**
-   * @param LoggerInterface $logger
-   * @param ClientInputValidator $clientInputValidator
-   * @param UniteLocaleDBService $uniteLocaleDBService
-   * @param QueteurDBService $queteurDBService
-   * @param UserDBService $userDBService
-   * @param EmailBusinessService $emailBusinessService
+   * @param LoggerInterface       $logger
+   * @param ClientInputValidator  $clientInputValidator
+   * @param ReCaptchaService      $reCaptchaService
+   * @param UserDBService         $userDBService
+   * @param UniteLocaleDBService  $uniteLocaleDBService
+   * @param EmailBusinessService  $emailBusinessService
+   * @param QueteurDBService      $queteurDBService
    */
   public function __construct(LoggerInterface               $logger,
                               ClientInputValidator          $clientInputValidator,
-                              UniteLocaleDBService          $uniteLocaleDBService,
-                              QueteurDBService              $queteurDBService,
+                              ReCaptchaService              $reCaptchaService,
                               UserDBService                 $userDBService,
-                              EmailBusinessService          $emailBusinessService
-)
+                              UniteLocaleDBService          $uniteLocaleDBService,
+                              EmailBusinessService          $emailBusinessService,
+                              QueteurDBService              $queteurDBService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->uniteLocaleDBService = $uniteLocaleDBService;
-    $this->queteurDBService     = $queteurDBService;
+    $this->reCaptchaService     = $reCaptchaService;
     $this->userDBService        = $userDBService;
     $this->emailBusinessService = $emailBusinessService;
-
+    $this->queteurDBService     = $queteurDBService;
   }
 
   /**
@@ -70,37 +79,27 @@ class ApproveULRegistration extends Action
    */
   protected function action(): Response
   {
-    $userId = $this->decodedToken->getUid   ();
-    $roleId = $this->decodedToken->getRoleId();
-
-    $ulEntity = new UniteLocaleEntity($this->parsedBody, $this->logger);
-
-    $originalUlRegistration = $this->uniteLocaleDBService->getULRegistration($ulEntity->registration_id);
-
-    if($originalUlRegistration->id != $ulEntity->id)
-    {
-      $this->logger->error("UL_ID changed between registration and approval");
-      throw new Exception("UL_ID changed between registration and approval");
+    if($this->emailBusinessService->getDeploymentEnvCode() ==='P')
+    {//this method is forbidden in production
+      $this->logger->error("create_ul_in_lower_env => access forbidden in production", ["request"=>$this->request]);
+      $errorResponse = (new \Slim\Psr7\Response())->withStatus(500);
+      $errorResponse->getBody()->write("");
+      return $errorResponse;
     }
-
-    if($ulEntity->registration_approved===false)
-    {
-      $this->uniteLocaleDBService->updateULRegistration($ulEntity);
-
-      $this->emailBusinessService->sendULRegistrationApprovalDecision($ulEntity);
-      $this->response->getBody()->write(json_encode($ulEntity));
-      return  $this->response;
-    }
+    
+    $ulEntity = new UniteLocaleEntity($this->parsedBody['ul'], $this->logger);
 
     try
     {
-      $this->uniteLocaleDBService->transactionStart();
+      $ulEntity->registration_approved = true;
+      $ulEntity->reject_reason         = "Automatically approved with token sent to president";
 
-      $this->uniteLocaleDBService->updateULRegistration($ulEntity);
+      $this->uniteLocaleDBService->transactionStart();
+      
       //updating people details                         //we're operating outside of the current super admin UL
       $this->uniteLocaleDBService->updateUL($ulEntity, $ulEntity->id);
       $this->uniteLocaleDBService->updateULDateDemarrageRCQ($ulEntity->id);
-      
+
       //creating queteur
       $queteurData = [
         'email'       => $ulEntity->admin_email       ,
@@ -114,12 +113,17 @@ class ApproveULRegistration extends Action
         'birthdate'   => '1922-12-22'                 ,
         'ul_id'       => $ulEntity->id
       ];
-
+      $roleId=4;
       $queteurEntity = new QueteurEntity($queteurData, $this->logger);
-      $queteurId     = $this->queteurDBService->insert($queteurEntity, $ulEntity->id, $roleId,$userId);
+      $queteurId     = $this->queteurDBService->insert($queteurEntity, $ulEntity->id, $roleId, 0);
       $queteur       = $this->queteurDBService->getQueteurById($queteurId);
+
+      $this->logger->debug("create_ul_in_lower_env, queteur inserted", ["queteur"=>$queteur]);
       //creating user
       $this->userDBService->insert($queteur->nivol, $queteur->id, 4);
+
+      $this->logger->debug("create_ul_in_lower_env, user inserted", ["queteur"=>$queteur]);
+
       $user = $this->userDBService->getUserInfoWithQueteurId($queteur->id, $ulEntity->id, $roleId);
       //sending email with password init
       $uuid = $this->userDBService->sendInit                ($queteur->nivol, true);
@@ -130,13 +134,21 @@ class ApproveULRegistration extends Action
       $this->emailBusinessService->sendULRegistrationApprovalDecision($ulEntity);
 
 
+
+
+
+
+
+     /*
+      * TODO:  send  a message over PubSub to update UL, Create Queteur, Activate user on the test env
+      *
       $queteurSQL = $this->replaceDataInString($queteurEntity, QueteurDBService::$insertQueteurSQL);
       $ulSQL      = $this->replaceDataInString($ulEntity     , UniteLocaleDBService::$updateUniteLocaleSQL);
 
       $response = new ApproveULRegistrationResponse($user->id, $queteurId, $ulEntity->id, $ulEntity->registration_id, $queteurSQL, $ulSQL);
       $ulEntity->response = $response;
       $this->response->getBody()->write(json_encode($ulEntity));
-
+     */
     }
     catch (Exception $e)
     {
@@ -148,30 +160,15 @@ class ApproveULRegistration extends Action
     }
 
 
+    $this->response->getBody()->write(json_encode(["success"=>true]));
     return $this->response;
-  }
 
 
-  private function replaceDataInString(Entity $entity, string $sql):string
-  {
-    $fieldList = $entity->getFieldList();
-    foreach($fieldList as $fieldName)
-    {
-      $varType = gettype($entity->$fieldName);
-      if($varType == 'boolean')
-        $value = $entity->$fieldName ? 1:0;
-      else if($varType == 'integer')
-        $value = $entity->$fieldName;
-      else
-        $value = '"'.$entity->$fieldName.'"' ;
 
-      if($fieldName == 'referent_volunteer')
-      {
-        $value = 0;
-      }
-      
-      $sql = str_replace(":$fieldName", $value, $sql);
-    }
-    return $sql.";";
+
+    
+
+
+
   }
 }

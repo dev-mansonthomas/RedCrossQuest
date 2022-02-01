@@ -20,17 +20,17 @@ class Entity
   /**
    * @var LoggerInterface
    */
-  protected $logger;
+  protected LoggerInterface $logger;
   /**
    * @var ClientInputValidator
    */
-  protected $clientInputValidator;
+  protected ClientInputValidator $clientInputValidator;
 
 
   /***
     @var string[]
    */
-  protected $_fieldList;
+  protected array $_fieldList;
 
   public function getFieldList():array
   {
@@ -100,19 +100,19 @@ class Entity
   /**
    * set on this object the property named $this->$key,  $data[$key] as an integer value
    * @param string $key the key of the data to be returned
-   * @param array  $data the associative array
+   * @param array|null $data the associative array
    */
-  protected function getInteger(string $key, ?array &$data):void
+  protected function getInteger(string $key, ?array &$data, int $defaultValue=null):void
   {
-    $this->$key = $this->clientInputValidator->validateInteger($key, $data, 100000000, false, null);
+    $this->$key = $this->clientInputValidator->validateInteger($key, $data, 100000000, false, $defaultValue);
   }
 
   /**
    * set on this object the property named $this->$key,  $data[$key] as a float value
    * @param string $key the key of the data to be returned
-   * @param array  $data the associative array
+   * @param array|null $data the associative array
    */
-  protected function getFloat(string $key, ?array $data):void
+  protected function getFloat(string $key, ?array &$data):void
   {
     if($data != null && array_key_exists($key, $data))
     {
@@ -199,8 +199,12 @@ class Entity
         $array = $data[$key];
         try
         {
+
+          //$this->logger->error("Entity->getDate() 1", ['date'=>$array['date'], "timezone"=>$array['timezone']]);
           $this->$key = Carbon::createFromFormat("Y-m-d H:i:s.u", $array['date'], $array['timezone']);
+          //$this->logger->error("Entity->getDate() 2", ['date'=>$array['date'], "timezone"=>$array['timezone'], "DateBeforeSettingUTC"=>$this->$key]);
           $this->$key->setTimezone("UTC");
+          //$this->logger->error("Entity->getDate() 3", ['date'=>$array['date'], "timezone"=>$array['timezone'], "DateAfterSettingUTC"=>$this->$key]);
         }
         catch(Exception $e)
         {
@@ -227,7 +231,8 @@ class Entity
             try
             {
               $this->$key = Carbon::parse($stringValue);
-              //$this->logger->debug("json javascript parsed : ".$this->$key);
+             // $this->$key->setTimezone("UTC");
+              $this->logger->debug("json javascript parsed for '$key' : '".$this->$key."' stringValue='$stringValue");
             }
             catch(Exception $e)
             {

@@ -58,8 +58,9 @@ class PrepareTroncQueteur extends Action
     $userId    = $this->decodedToken->getUid        ();
 
     $tq    = new TroncQueteurEntity($this->parsedBody, $this->logger);
+    $this->logger->debug("Preparation Tronc - Depart Theorique - before hasQueteAlreadyStarted", ["dt"=>$tq->depart_theorique]);
     $hasQueteAlreadyStarted = $this->troncQueteurBusinessService->hasQueteAlreadyStarted($this->settings['appSettings']['deploymentType'], $tq->depart_theorique);
-
+    $this->logger->debug("Preparation Tronc - Depart Theorique - After hasQueteAlreadyStarted", ["dt"=>$tq->depart_theorique]);
     if(!$hasQueteAlreadyStarted)
     {//enforce policy :  can't prepare or depart tronc before the start of the quête
       $this->response->getBody()->write(json_encode(new PrepareTroncQueteurQueteNotStartedResponse()));

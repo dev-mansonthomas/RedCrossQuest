@@ -15,6 +15,7 @@
   {
     var vm = this;
 
+    vm.onlyNumbers    = /^[0-9]{1,3}$/;
     vm.latlongRegExp=/^-?(\d+\.)*\d+$/;
 
     vm.typePointQueteList=[
