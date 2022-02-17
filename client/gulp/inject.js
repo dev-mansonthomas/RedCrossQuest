@@ -11,11 +11,9 @@ var _ = require('lodash');
 
 var browserSync = require('browser-sync');
 
-gulp.task('inject-reload', ['inject'], function() {
-  browserSync.reload();
-});
 
-gulp.task('inject', ['scripts', 'styles'], function () {
+
+gulp.task('inject', gulp.series(['scripts', 'styles']), function () {
   var injectStyles = gulp.src([
     path.join(conf.paths.tmp, '/serve/app/**/*.css'),
     path.join('!' + conf.paths.tmp, '/serve/app/vendor.css')
@@ -39,4 +37,8 @@ gulp.task('inject', ['scripts', 'styles'], function () {
     .pipe($.inject(injectScripts, injectOptions))
     .pipe(wiredep(_.extend({}, conf.wiredep)))
     .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve')));
+});
+
+gulp.task('inject-reload', gulp.series(['inject']), function() {
+  browserSync.reload();
 });
