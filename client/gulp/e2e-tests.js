@@ -33,7 +33,6 @@ function runProtractor (done) {
     });
 }
 
-
-gulp.task('protractor:src' , gulp.series(['serve:e2e'     , 'webdriver-update']), runProtractor);
-gulp.task('protractor:dist', gulp.series(['serve:e2e-dist', 'webdriver-update']), runProtractor);
-gulp.task('protractor'     , gulp.series(['protractor:src']));
+gulp.task('protractor', ['protractor:src']);
+gulp.task('protractor:src', ['serve:e2e', 'webdriver-update'], runProtractor);
+gulp.task('protractor:dist', ['serve:e2e-dist', 'webdriver-update'], runProtractor);

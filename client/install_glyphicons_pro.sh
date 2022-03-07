@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-FONT_LOCATION=~/Google\ Drive\ File\ Stream/My\ Drive/CRF/RedCrossQuest/Paid\ Stuff/Glyphicons\ Pro/glyphicons_pro_1_9_2/glyphicons/web/bootstrap_example/fonts/
+FONT_LOCATION=~/Google\ Drive/My\ Drive/03-CRF/RedCrossQuest/Paid\ Stuff/Glyphicons\ Pro/glyphicons_pro_1_9_2/glyphicons/web/bootstrap_example/fonts/
 rm -fr /tmp/glyphiconspro
 
 mkdir /tmp/glyphiconspro

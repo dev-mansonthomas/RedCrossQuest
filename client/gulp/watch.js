@@ -3,7 +3,6 @@
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
-var log             = require('fancy-log');
 
 var browserSync = require('browser-sync');
 
@@ -11,7 +10,7 @@ function isOnlyChange(event) {
   return event.type === 'changed';
 }
 
-gulp.task('watch', gulp.series(['inject']), function () {
+gulp.task('watch', ['inject'], function () {
 
   gulp.watch([path.join(conf.paths.src, '/*.html'), 'bower.json'], ['inject-reload']);
 
