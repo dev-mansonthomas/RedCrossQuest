@@ -18,6 +18,7 @@ use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
+use RedCrossQuest\Service\PubSubService;
 use RedCrossQuest\Service\RedCallService;
 
 
@@ -33,7 +34,10 @@ class SaveCoinsOnTroncQueteur extends Action
    */
   private $ULPreferencesFirestoreDBService;
 
-
+  /**
+   * @var PubSubService           $pubSubService
+   */
+  private $pubSubService;
 
 
   /**
@@ -43,19 +47,22 @@ class SaveCoinsOnTroncQueteur extends Action
   protected $settings;
 
   /**
-   * @param LoggerInterface $logger
-   * @param ClientInputValidator $clientInputValidator
-   * @param TroncQueteurDBService $troncQueteurDBService
+   * @param LoggerInterface                 $logger
+   * @param ClientInputValidator            $clientInputValidator
+   * @param TroncQueteurDBService           $troncQueteurDBService
    * @param ULPreferencesFirestoreDBService $ULPreferencesFirestoreDBService
+   * @param PubSubService                   $pubSubService
    */
-  public function __construct(LoggerInterface         $logger,
-                              ClientInputValidator    $clientInputValidator,
-                              TroncQueteurDBService   $troncQueteurDBService,
-                              ULPreferencesFirestoreDBService $ULPreferencesFirestoreDBService)
+  public function __construct(LoggerInterface                 $logger,
+                              ClientInputValidator            $clientInputValidator,
+                              TroncQueteurDBService           $troncQueteurDBService,
+                              ULPreferencesFirestoreDBService $ULPreferencesFirestoreDBService,
+                              PubSubService                   $pubSubService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->troncQueteurDBService           = $troncQueteurDBService;
     $this->ULPreferencesFirestoreDBService = $ULPreferencesFirestoreDBService;
+    $this->pubSubService                   = $pubSubService;
   }
 
   /**
@@ -97,6 +104,39 @@ class SaveCoinsOnTroncQueteur extends Action
     }
 
     $this->troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
+
+
+    $tqUpdated = $this->troncQueteurDBService->getTroncQueteurById($tq->id, $ulId);
+    $tqUpdated->preparePubSubPublishing();
+    if($adminMode)
+    {
+      $tqUpdated->saveAsAdmin=1;
+    }
+
+    $messageProperties  = [
+      'ulId'          => "".$ulId,
+      'uId'           => "".$userId,
+      'queteurId'     => "".$tqUpdated->queteur_id,
+      'troncQueteurId'=> "".$tqUpdated->id
+    ];
+
+    try
+    {
+      $this->pubSubService->publish(
+        $this->settings['PubSub']['tronc_queteur_update_topic'],
+        $tqUpdated,
+        $messageProperties,
+        true,
+        true);
+    }
+    catch(Exception $exception)
+    {
+      $this->logger->error("error while publishing SaveCoinsOnTroncQueteur",
+        array("messageProperties" => $messageProperties,
+          "troncQueteurEntity"    => $tqUpdated,
+          Logger::$EXCEPTION => $exception));
+      //do not rethrow
+    }
 
     return $this->response;
   }

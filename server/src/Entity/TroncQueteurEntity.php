@@ -433,33 +433,18 @@ class TroncQueteurEntity extends Entity
      * Prepare the object to be published to PubSub (final target is BigQuery)
      * Unset unwanted variables, they are those that don't have a definition in BigQuery
      * Change the dateTime format
-     *
-     * @return TroncQueteurEntity the object itself
      */
-    function prepareForPublish():TroncQueteurEntity
+    function preparePubSubPublishing():void
     {
-      $this->depart_theorique = $this->depart_theorique != null ? $this->depart_theorique ->toDateTimeString() : null;
-      $this->depart           = $this->depart           != null ? $this->depart           ->toDateTimeString() : null;
-      $this->retour           = $this->retour           != null ? $this->retour           ->toDateTimeString() : null;
-      $this->comptage         = $this->comptage         != null ? $this->comptage         ->toDateTimeString() : null;
-      $this->last_update      = $this->last_update      != null ? $this->last_update      ->toDateTimeString() : null;
+      $this->depart_theorique = $this->depart_theorique !== null ? $this->depart_theorique ->toDateTimeString() : null;
+      $this->depart           = $this->depart           !== null ? $this->depart           ->toDateTimeString() : null;
+      $this->retour           = $this->retour           !== null ? $this->retour           ->toDateTimeString() : null;
+      $this->comptage         = $this->comptage         !== null ? $this->comptage         ->toDateTimeString() : null;
+      $this->last_update      = $this->last_update      !== null ? $this->last_update      ->toDateTimeString() : null;
 
-      unset($this->queteur              );
-      unset($this->point_quete          );
-      unset($this->tronc_queteur_id     );
-      unset($this->insert_date          );
-      unset($this->preparationAndDepart );
-      unset($this->amount               );
-      unset($this->weight               );
-      unset($this->time_spent_in_hours  );
-      unset($this->first_name           );
-      unset($this->last_name            );
-      unset($this->clientInputValidator );
-      unset($this->troncFromPreviousYear);
-      unset($this->troncQueteurIsInAnIncorrectState );
-      unset($this->queteHasNotStartedYet            );
-      unset($this->departAlreadyRegistered          );
-      
-      return $this;
+      unset($this->tronc);
+      unset($this->rowCount);
+
+      $this->genericPreparePubSubPublishing();
     }
 }

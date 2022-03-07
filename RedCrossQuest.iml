@@ -20,7 +20,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/egulias/email-validator" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/fig/http-message-util" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/firebase/php-jwt" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/fzaninotto/faker" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/apiclient" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/apiclient-services" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/auth" />
@@ -40,7 +39,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/jane-php/json-schema-runtime" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/jane-php/open-api-runtime" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/jolicode/slack-php-api" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/clock" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/firebase-php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/kreait/firebase-tokens" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/jwt" />
@@ -112,6 +110,10 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/zircote/swagger-php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/paragonie/constant_time_encoding" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php81" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/brick/math" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/ramsey/collection" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/beste/clock" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Python 2.7 (RedCrossQuestUtilityBackend) interpreter library" level="application" />

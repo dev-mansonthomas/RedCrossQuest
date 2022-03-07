@@ -18,7 +18,6 @@
       <path value="$PROJECT_DIR$/server/vendor/monolog/monolog" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/translation" />
-      <path value="$PROJECT_DIR$/server/vendor/fzaninotto/faker" />
       <path value="$PROJECT_DIR$/server/vendor/nesbot/carbon" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/config" />
@@ -61,7 +60,6 @@
       <path value="$PROJECT_DIR$/server/vendor/riverline/multipart-parser" />
       <path value="$PROJECT_DIR$/server/vendor/kreait/firebase-tokens" />
       <path value="$PROJECT_DIR$/server/vendor/kreait/firebase-php" />
-      <path value="$PROJECT_DIR$/server/vendor/kreait/clock" />
       <path value="$PROJECT_DIR$/server/vendor/fig/http-message-util" />
       <path value="$PROJECT_DIR$/server/vendor/mtdowling/jmespath.php" />
       <path value="$PROJECT_DIR$/server/vendor/psr/http-server-handler" />
@@ -106,6 +104,10 @@
       <path value="$PROJECT_DIR$/server/vendor/nyholm/psr7" />
       <path value="$PROJECT_DIR$/server/vendor/paragonie/constant_time_encoding" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/server/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/server/vendor/ramsey/collection" />
+      <path value="$PROJECT_DIR$/server/vendor/lcobucci/clock" />
+      <path value="$PROJECT_DIR$/server/vendor/beste/clock" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

@@ -1,0 +1,124 @@
+{
+  "$id": "http://redcrossquest.croix-rouge.fr/rcq/TroncQueteurCreate.json",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "default": {},
+  "description": "Event of TroncQueteur creation. It can be a TroncQueteur that is created and scheduled for later (depart=null) or a TroncQueteur that is leaving right now depart_theorique==depart",
+  "examples": [
+    {
+      "id": 12156,
+      "ul_id": 348,
+      "queteur_id": 6990,
+      "point_quete_id": 49,
+      "tronc_id": 314,
+      "depart_theorique": "2022-02-24 02:17:46",
+      "depart": "2022-02-24 02:17:46",
+      "last_update": "2022-02-24 02:17:46",
+      "last_update_user_id": 163
+    }
+  ],
+  "required": [
+    "id",
+    "ul_id",
+    "queteur_id",
+    "point_quete_id",
+    "tronc_id",
+    "depart_theorique",
+    "last_update",
+    "last_update_user_id"
+  ],
+  "title": "Event of TroncQueteur creation.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$id": "#/properties/id",
+      "default": 0,
+      "description": "the primary key of the 'tronc_queteur' schema",
+      "examples": [
+        12156
+      ],
+      "title": "The id of the 'tronc_queteur' table",
+      "type": "integer"
+    },
+    "ul_id": {
+      "$id": "#/properties/ul_id",
+      "default": 0,
+      "description": "The primary key of the 'ul' table that is referenced by this field",
+      "examples": [
+        348
+      ],
+      "title": "ID of the UL for this TroncQueteur",
+      "type": "integer"
+    },
+    "queteur_id": {
+      "$id": "#/properties/queteur_id",
+      "default": 0,
+      "description": "The primary key of the 'queteur' table that is referenced by this field",
+      "examples": [
+        6990
+      ],
+      "title": "The ID of the Queteur of the TroncQueteur",
+      "type": "integer"
+    },
+    "point_quete_id": {
+      "$id": "#/properties/point_quete_id",
+      "default": 0,
+      "description": "The primary key of the 'point_quete' table that is referenced by this field",
+      "examples": [
+        49
+      ],
+      "title": "ID of the PointDeQuete for this TroncQueteur",
+      "type": "integer"
+    },
+    "tronc_id": {
+      "$id": "#/properties/tronc_id",
+      "default": 0,
+      "description": "The primary key of the 'tronc' table that is referenced by this field",
+      "examples": [
+        314
+      ],
+      "title": "The ID of the Tronc",
+      "type": "integer"
+    },
+    "depart_theorique": {
+      "$id": "#/properties/depart_theorique",
+      "default": "",
+      "description": "The scheduled departure time of the Queteur. If the queteur is leaving right away depart_theorique will be = to depart",
+      "examples": [
+        "2022-02-24 02:17:46"
+      ],
+      "title": "The scheduled departure time of the queteur for the identified point de quete",
+      "type": "string"
+    },
+    "depart": {
+      "$id": "#/properties/depart",
+      "default": "",
+      "description": "The actual departure time of the queteur. It's null if the departure is scheduled in the future",
+      "examples": [
+        "2022-02-24 02:17:46"
+      ],
+      "title": "The actual departure time of the queteur.",
+      "type": "string"
+    },
+    "last_update": {
+      "$id": "#/properties/last_update",
+      "default": "",
+      "description": "Time of the last update in Database (so it should be now())",
+      "examples": [
+        "2022-02-24 02:17:46"
+      ],
+      "title": "Time of the last update in Database",
+      "type": "string"
+    },
+    "last_update_user_id": {
+      "$id": "#/properties/last_update_user_id",
+      "default": 0,
+      "description": "primary key of the 'users' table that performed the action of creating the tronc_queteur",
+      "examples": [
+        163
+      ],
+      "title": "Id of the 'user' performing the action",
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}
