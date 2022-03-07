@@ -19,6 +19,10 @@ gcloud services enable cloudbuild.googleapis.com
 echo "gcloud services enable maps-embed-backend.googleapis.com"
 gcloud services enable maps-embed-backend.googleapis.com
 
+echo "gcloud services enable run.googleapis.com -- for cloud functions"
+gcloud services enable run.googleapis.com
+echo "gcloud services enable artifactregistry.googleapis.com -- for cloud functions"
+gcloud services enable artifactregistry.googleapis.com
 
 #secret manager
 #in Google Cloud Console

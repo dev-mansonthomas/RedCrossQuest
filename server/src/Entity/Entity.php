@@ -94,7 +94,18 @@ class Entity
     }
 
     return $data;
+  }
 
+  /**
+   * to reduce PubSub message payload, keys that have null values are deleted
+   */
+  public function genericPreparePubSubPublishing():void
+  {
+    foreach($this->_fieldList as $key)
+    {
+      if(empty($this->$key) || !isset($this->$key) || is_null($this->$key) || $this->$key."" === "null")
+        unset($this->$key);
+    }
   }
 
   /**

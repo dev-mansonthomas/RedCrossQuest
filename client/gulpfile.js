@@ -7,7 +7,6 @@
 'use strict';
 
 var gulp = require('gulp');
-var wrench = require('wrench');
 var log = require('fancy-log');
 
 /**
@@ -37,13 +36,11 @@ wrench.readdirSyncRecursive('./gulp').filter(function(file) {
 
 
 
-
+log("libs required");
 
 
 /**
  *  Default task clean temporaries directories and launch the
  *  main optimization build task
  */
-gulp.task('default', gulp.series(['clean']), function () {
-  gulp.start('build');
-});
+gulp.task('default', gulp.series('clean', 'build'));

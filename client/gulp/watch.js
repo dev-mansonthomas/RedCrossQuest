@@ -3,6 +3,7 @@
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
+var log             = require('fancy-log');
 
 var browserSync = require('browser-sync');
 

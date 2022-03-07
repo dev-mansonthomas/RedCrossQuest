@@ -11,6 +11,8 @@ use RedCrossQuest\DBService\TroncQueteurDBService;
 use RedCrossQuest\Entity\TroncQueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
+use RedCrossQuest\Service\Logger;
+use RedCrossQuest\Service\PubSubService;
 
 
 class PrepareTroncQueteur extends Action
@@ -26,26 +28,33 @@ class PrepareTroncQueteur extends Action
   private $troncQueteurBusinessService;
 
   /**
+   * @var PubSubService           $pubSubService
+   */
+  private $pubSubService;
+
+  /**
    * @Inject("settings")
    * @var array settings
    */
   protected $settings;
 
   /**
-   * @param LoggerInterface $logger
-   * @param ClientInputValidator $clientInputValidator
-   * @param TroncQueteurDBService $troncQueteurDBService
+   * @param LoggerInterface               $logger
+   * @param ClientInputValidator          $clientInputValidator
+   * @param TroncQueteurDBService         $troncQueteurDBService
    * @param TroncQueteurBusinessService   $troncQueteurBusinessService
+   * @param PubSubService                 $pubSubService
    */
   public function __construct(LoggerInterface             $logger,
                               ClientInputValidator        $clientInputValidator,
                               TroncQueteurDBService       $troncQueteurDBService,
-                              TroncQueteurBusinessService $troncQueteurBusinessService)
+                              TroncQueteurBusinessService $troncQueteurBusinessService,
+                              PubSubService               $pubSubService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->troncQueteurDBService       = $troncQueteurDBService;
     $this->troncQueteurBusinessService = $troncQueteurBusinessService;
-
+    $this->pubSubService               = $pubSubService;
   }
 
   /**
@@ -77,6 +86,35 @@ class PrepareTroncQueteur extends Action
       {//if the user click to Save And perform the depart, we proceed and save the depart
         $this->troncQueteurDBService->setDepartToNow($insertResponse->lastInsertId, $ulId, $userId);
       }
+
+      $tq = $this->troncQueteurDBService->getTroncQueteurById($insertResponse->lastInsertId, $ulId);
+      $tq->preparePubSubPublishing();
+      
+      $messageProperties  = [
+        'ulId'          => "".$ulId,
+        'uId'           => "".$userId,
+        'queteurId'     => "".$tq->queteur_id,
+        'troncQueteurId'=> "".$tq->id
+      ];
+
+      try
+      {
+        $this->pubSubService->publish(
+          $this->settings['PubSub']['tronc_queteur_create_topic'],
+          $tq,
+          $messageProperties,
+          true,
+          true);
+      }
+      catch(Exception $exception)
+      {
+        $this->logger->error("error while publishing PrepareTroncQueteur",
+          array("messageProperties"=> $messageProperties,
+            "troncQueteurEntity"    => $tq,
+            Logger::$EXCEPTION => $exception));
+        //do not rethrow
+      }
+
     }
     else
     {

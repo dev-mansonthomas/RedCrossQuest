@@ -187,7 +187,8 @@ class RegisterNewUL extends Action
 
     $ULInDB = $this->uniteLocaleDBService->getUniteLocaleById($ulEntity->id);
 
-    if($ULInDB->external_id !== $structureId)
+    //IDs from RedCall are now in text since february 2022 (since CSV sync between pegass & redcall)
+    if($ULInDB->external_id != $structureId)
     {
       $this->logger->error("Error while checking President - Wrong Unité Locale",
         [ "ULEntityHTTP_POST"   => $ulEntity,

@@ -104,10 +104,10 @@
       <path value="$PROJECT_DIR$/server/vendor/nyholm/psr7" />
       <path value="$PROJECT_DIR$/server/vendor/paragonie/constant_time_encoding" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php81" />
-      <path value="$PROJECT_DIR$/server/vendor/beste/clock" />
       <path value="$PROJECT_DIR$/server/vendor/brick/math" />
       <path value="$PROJECT_DIR$/server/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/server/vendor/lcobucci/clock" />
+      <path value="$PROJECT_DIR$/server/vendor/beste/clock" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
