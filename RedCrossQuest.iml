@@ -114,6 +114,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/ramsey/collection" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/clock" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/beste/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/beste/json" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Python 2.7 (RedCrossQuestUtilityBackend) interpreter library" level="application" />

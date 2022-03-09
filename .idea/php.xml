@@ -108,6 +108,7 @@
       <path value="$PROJECT_DIR$/server/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/server/vendor/lcobucci/clock" />
       <path value="$PROJECT_DIR$/server/vendor/beste/clock" />
+      <path value="$PROJECT_DIR$/server/vendor/beste/json" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

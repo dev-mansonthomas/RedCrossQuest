@@ -45,6 +45,8 @@
     vm.currentDate    = new Date();
     vm.currentYear    = new Date().getFullYear();
 
+    vm.confirmButtonDisabled=false;
+
     var tronc_queteur_id = $routeParams.id;
 
 
@@ -254,16 +256,70 @@
       }
       else
       {
-        if(vm.current.adminEditMode && vm.currentUserRole >= 4)
+        if(hasCoinsBeenModified())
         {
-          vm.current.tronc_queteur.$saveCoinsAsAdmin(savedSuccessfully, onSaveError);
+          vm.confirmButtonDisabled=true;
+          if(vm.current.adminEditMode && vm.currentUserRole >= 4)
+          {
+            vm.current.tronc_queteur.$saveCoinsAsAdmin(savedSuccessfully, onSaveError);
+          }
+          else
+          {
+            vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
+          }
         }
         else
-        {
-          vm.current.tronc_queteur.$saveCoins(savedSuccessfully, onSaveError);
+        {//no coins modified, but the rest of the form may has been modified
+          savedSuccessfully();
         }
       }
     };
+
+    function hasCoinsBeenModified()
+    {
+      var listOfFields=[
+        'euro5',
+        'euro10',
+        'euro20',
+        'euro50',
+        'euro100',
+        'euro200',
+        'euro500',
+        'euro2',
+        'cents50',
+        'euro1',
+        'cents20',
+        'cents10',
+        'cents05',
+        'cents02',
+        'cents01',
+        'euro2valueSorted',
+        'cents50valueSorted',
+        'euro1valueSorted',
+        'cents20valueSorted',
+        'cents10valueSorted',
+        'cents05valueSorted',
+        'cents02valueSorted',
+        'cents01valueSorted',
+        'don_creditcard',
+        'don_cb_total_number',
+        'don_cheque',
+        'don_cheque_number',
+        'coins_money_bag_id',
+        'bills_money_bag_id',
+        'notesRetour'
+      ];
+      var tqForm = $scope.troncQueteurForm;
+
+      for (var i=0;i<listOfFields.length;i++)
+      {
+        if(tqForm[listOfFields[i]] && !tqForm[listOfFields[i]].$pristine)
+        {
+          return true;
+        }
+      }
+      return false;
+    }
 
     function onSaveError(error)
     {
@@ -271,6 +327,7 @@
 
       vm.errorWhileSaving=true;
       vm.errorWhileSavingDetails=JSON.stringify(error);
+      vm.confirmButtonDisabled=false;
 
       $location.hash("ErrorDiv");
       $anchorScroll();
@@ -279,7 +336,7 @@
 
     function savedSuccessfully()
     {
-      if(vm.current.adminEditMode && vm.currentUserRole >= 4)
+      if(hasTopFormBeenModified() && vm.current.adminEditMode && vm.currentUserRole >= 4)
       {
         vm.current.tronc_queteur.$saveAsAdmin(savedSuccessfullyActions, onSaveError) ;
       }
@@ -287,6 +344,28 @@
       {
         savedSuccessfullyActions();
       }
+    }
+
+    function hasTopFormBeenModified()
+    {
+      var listOfFields=[
+        'point_quete_id',
+        'deleted',
+        'horaireDepartTheorique',
+        'horaireDepart',
+        'retour',
+        'notesUpdate'
+      ];
+      var tqForm = $scope.troncQueteurForm;
+
+      for (var i=0;i<listOfFields.length;i++)
+      {
+        if(tqForm[listOfFields[i]] && !tqForm[listOfFields[i]].$pristine)
+        {
+          return true;
+        }
+      }
+      return false;
     }
 
     function savedSuccessfullyActions()
@@ -301,6 +380,7 @@
         vm.savedSuccessfully=true;
         vm.errorWhileSaving = false;
         vm.errorWhileSavingDetails=null;
+        vm.confirmButtonDisabled=false;
 
         $timeout(function () { vm.savedSuccessfully=false; }, 10000);
       }
