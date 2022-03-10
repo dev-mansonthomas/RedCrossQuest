@@ -427,9 +427,9 @@
       Votre inscription est validée et terminée!<br/><br/>
       <strong>Un email a été envoyé à l'administrateur pour initialiser son mot de passe et commencer la configuration de RedCrossQuest pour son unité locale!</strong><br/><br/>
     </div>
-
+    <a href="#SaveResult"></a>
     <!-- Successful Save -->
-    <div class="row" ng-show="ulr.success">
+    <div class="row" ng-show="ulr.success" style="margin-top:50px;margin-bottom:200px;">
       <div class="col-md-8 col-md-offset-2">
         <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="ulr.success=false"><span aria-hidden="true">&times;</span></button>
@@ -438,12 +438,12 @@
       </div>
     </div>
     <!-- Error while saving -->
-    <div class="row" ng-if="ulr.error==true">
+    <div class="row" ng-if="ulr.error==true" style="margin-top:50px;margin-bottom:200px;">
       <div class="col-md-8 col-md-offset-2">
         <div class="alert alert-danger alert-dismissible" role="alert" style="text-align: center;">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="ulr.error=false"><span aria-hidden="true">&times;</span></button>
           <strong>Oouupps!</strong> Une erreur est survenue lors de la sauvegarde !
-          <pre style="text-align: left;white-space: pre-wrap;">{{ulr.errorStr}}</pre>
+          <div style="color:#555555;text-align: left;background-color: #f5f5f5;border: 1px silver solid;padding:15px;margin:5px;border-radius: 5px;">{{ulr.errorStr}}</div>
         </div>
       </div>
     </div>

@@ -101,7 +101,7 @@ WHERE `id`               = :id
 ";
 
   /**
-   * Update UL name and address
+   * Update UL name and address and main contacts
    *
    * @param UniteLocaleEntity $ul The UL info
    * @param int $ulId The id of the UL to be updated

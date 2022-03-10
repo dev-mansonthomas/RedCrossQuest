@@ -146,8 +146,8 @@
     {
       if(vm.current.tronc_queteur && vm.current.tronc_queteur.retour != null && vm.current.tronc.type === 1 )
       {
-        var retourMoment = moment(vm.current.tronc_queteur.retour);
-        var departMoment = moment(vm.current.tronc_queteur.depart);
+        //var retourMoment = moment(vm.current.tronc_queteur.retour);
+        //var departMoment = moment(vm.current.tronc_queteur.depart);
 
         //si c'est inférieur a 30Minutes:  warning
         //if(moment.duration(retourMoment.diff(departMoment)).as('minutes') <= 30)

@@ -122,7 +122,7 @@ class ValidateULRegistration extends Action
     );
 
     if($rowCount === 1)
-    { // it means that the token is the one expected, so that the president did forward the token to the administror
+    { // it means that the token is the one expected, so that the president did forward the token to the administrator
       //So the registration is approved
       try
       {

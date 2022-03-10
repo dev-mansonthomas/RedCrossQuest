@@ -484,7 +484,7 @@
       //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again
 
       window.setTimeout(function(){
-        $location.hash("anchorForm");
+        $location.hash("SaveResult");
         $anchorScroll();
       }, 300);
 

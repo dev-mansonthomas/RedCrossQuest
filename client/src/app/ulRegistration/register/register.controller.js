@@ -7,7 +7,7 @@
 
   /** @ngInject */
   function RegisterULController($rootScope, $log, $scope,
-                                 RegisterULResource)
+                                RegisterULResource)
   {
     var vm = this;
 
@@ -24,6 +24,13 @@
     vm.validateRegistrationButtonReadOnly    = false;
     vm.loading                               = false;
 
+    var errorMsg=Array();
+    errorMsg["1"]="La recherche sur RedCall avec le NIVOL du président a retrouné un autre NIVOL. Contactez le support";
+    errorMsg["2"]="L'email du président entré dans ce formulaire ne correspond pas à un des emails renseigné dans Pegass. Modifiez l'email du président dans le formulaire ci-dessus (prenom.nom@croix-rouge.fr), ou demandez au président de mettre à jour la fiche pégass du président ou contactez le support.";
+    errorMsg["3"]="L'unité Locale saisie dans le formulaire ci-dessus ne correspond pas à l'unité Locale associé au président dans Pegass. Contactez le support.";
+    errorMsg["4"]="Le président n'a pas la nomination 'Elu Local' dans Pegass. Contactez le support RedCrossQuest pour valider votre inscription, et faites une demande au support Gaia/Pegass pour corriger ce problème.";
+    errorMsg["5"]="Le NIVOL entré pour l'administrateur a déjà un compte actif dans RedCrossQuest";
+
     vm.register=function()
     {
       var doRegister = function(token) {
@@ -36,8 +43,19 @@
           vm.registrationId                    = returnedData.registrationId;
         }, function onrejected(error)
         {
+          var message = "";
+
+          if ( !isNaN(error.data.error) && angular.isNumber(+error.data.error) && error.data.error >0  && error.data.error < 10)
+          {
+            message = errorMsg[error.data.error];
+          }
+          else
+          {
+            message = JSON.stringify(error.data.error);
+          }
+
           vm.error    = true;
-          vm.errorStr = JSON.stringify(error.data.error);
+          vm.errorStr = message;
           vm.success  = null;
         });
       };
@@ -116,7 +134,7 @@
      * */
     vm.searchUL=function(queryString)
     {
-      $log.info("UL : Manual Search for '"+queryString+"'");
+      //$log.info("UL : Manual Search for '"+queryString+"'");
       return RegisterULResource.query({"q":queryString}).$promise.then(function success(response)
       {
         return response.map(function(ul)
