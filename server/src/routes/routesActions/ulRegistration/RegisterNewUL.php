@@ -85,8 +85,7 @@ class RegisterNewUL extends Action
         ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
       ]);
 
-    $token    = $this->validatedData["token"   ];
-
+    $token                 = $this->validatedData["token"   ];
     $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/registerNewUL", "RegisterNewUL");
 
     if($reCaptchaResponseCode > 0)
@@ -110,7 +109,7 @@ class RegisterNewUL extends Action
       $this->logger->error("RegisterUL fails because Admin Nivol is already an active user",
         ["ulRegistration"=>$ulEntity, Logger::$EXCEPTION=>$e]);
       $response401 = $this->response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>"Le nivol entré pour l'administrateur a déjà un compte actif dans RedCrossQuest"]));
+      $response401->getBody()->write(json_encode(["error" =>"5"]));
       return $response401;
     }
 
