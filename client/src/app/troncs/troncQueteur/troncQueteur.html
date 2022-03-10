@@ -1362,11 +1362,14 @@
             <a ng-click="tq.back();" class="btn btn-link">Annuler</a>
           </div>
           <div class="col-md-2">
-            <button type="button"
+            <button
+                    type="button"
                     ng-model="singleModel"
                     class="btn btn-danger"
                     uib-btn-checkbox
-                    ng-click="tq.confirmSave();">
+                    ng-click="tq.confirmSave();"
+                    ng-disabled="tq.confirmButtonDisabled"
+            >
               Confirmer
             </button>
           </div>
