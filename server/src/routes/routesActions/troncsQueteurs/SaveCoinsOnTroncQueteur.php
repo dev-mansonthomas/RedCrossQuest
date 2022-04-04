@@ -81,7 +81,7 @@ class SaveCoinsOnTroncQueteur extends Action
 
     $ulId      = $this->decodedToken->getUlId       ();
     $userId    = $this->decodedToken->getUid        ();
-
+    
     /** @var TroncQueteurEntity */
     $tq = new TroncQueteurEntity($this->parsedBody, $this->logger);
 

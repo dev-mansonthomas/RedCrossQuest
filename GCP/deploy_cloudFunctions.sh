@@ -43,7 +43,7 @@ setProject "rcq-${COUNTRY}-${ENV}"
 
 
 #Conflict of Node version 10 is required for RedCrossQuest, and RedQuest /Cloud Functions can use 14
-PATH="/usr/local/opt/node@14/bin/:$PATH"
+PATH="/usr/local/opt/node@17/bin/:$PATH"
 
 
 ################################################################################################################

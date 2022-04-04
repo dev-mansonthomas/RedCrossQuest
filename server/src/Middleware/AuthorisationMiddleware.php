@@ -164,6 +164,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
          $path === '/rest/ul_registration'                         ||
          $path === '/rest/ul_registration/check_registration_code' ||
          $path === '/rest/ul_registration/create_ul_in_lower_env'  ||
+         $path === '/rest/html/management/dashboards'              ||
          strpos($path,'/rest/thanks_mailing/') === 0 ||
          strpos($path,'/rest/redQuest/'      ) === 0   )
       {

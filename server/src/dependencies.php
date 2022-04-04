@@ -18,6 +18,7 @@ use RedCrossQuest\BusinessService\EmailBusinessService;
 use RedCrossQuest\BusinessService\ExportDataBusinessService;
 use RedCrossQuest\BusinessService\SettingsBusinessService;
 use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
+use RedCrossQuest\DBService\CreditCardDBService;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\MailingDBService;
 use RedCrossQuest\DBService\MoneyBagDBService;
@@ -72,7 +73,7 @@ return function (ContainerBuilder $containerBuilder)
     "RCQVersion" => function ():string
     {
       //version stays here, so that I don't have to update all the settings files
-      return "2021.0";
+      return "2022.0";
     },
     /**
      * Custom Logger that automatically add context data to each log entries.
@@ -287,7 +288,19 @@ return function (ContainerBuilder $containerBuilder)
      */
     TroncQueteurDBService::class => function (ContainerInterface $c):TroncQueteurDBService
     {
-      return new TroncQueteurDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
+      return new TroncQueteurDBService(
+        $c->get(CreditCardDBService::class),
+        $c->get(PDO::class                ),
+        $c->get(LoggerInterface::class    )
+      );
+    },
+
+    /**
+     * 'troncQueteurDBService'
+     */
+    CreditCardDBService::class => function (ContainerInterface $c):CreditCardDBService
+    {
+      return new CreditCardDBService($c->get(PDO::class), $c->get(LoggerInterface::class));
     },
 
     /**

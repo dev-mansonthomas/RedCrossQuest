@@ -84,7 +84,7 @@ class GetUserInfoFromUUIDAction extends Action
     }
     else
     {
-      $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/getUserInfoWithUUID", "getInfoFromUUID");
+      $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/getUserInfoWithUUID", "getInfoFromUUID", $this->parsedBody);
     }
 
 

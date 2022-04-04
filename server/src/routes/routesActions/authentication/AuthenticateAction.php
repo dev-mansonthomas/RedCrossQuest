@@ -94,7 +94,7 @@ class AuthenticateAction extends AuthenticateAbstractAction
 
     $this->logger->debug("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
 
-    $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/login", $username);
+    $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/login", $username, $this->parsedBody);
 
     if($reCaptchaResponseCode > 0)
     {// error

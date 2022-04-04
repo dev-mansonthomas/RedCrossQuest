@@ -4,14 +4,24 @@ namespace RedCrossQuest\DBService;
 
 use Carbon\Carbon;
 use Exception;
+use PDO;
 use PDOException;
 use RedCrossQuest\Entity\TroncInUseEntity;
 use RedCrossQuest\Entity\TroncQueteurEntity;
 use RedCrossQuest\routes\routesActions\troncsQueteurs\PrepareTroncQueteurResponse;
+use RedCrossQuest\Service\Logger;
 
 
 class TroncQueteurDBService extends DBService
 {
+  private CreditCardDBService $creditCardDBService;
+
+  public function __construct(CreditCardDBService $creditCardDBService, PDO $db, Logger $logger)
+  {
+    $this->creditCardDBService = $creditCardDBService;
+    parent::__construct($db,$logger);
+  }
+
 
   /**
    * Get the last tronc_queteur for the tronc_id
@@ -74,10 +84,17 @@ LIMIT 1
 ";
     $parameters = ["tronc_id" => $tronc_id, "ul_id" => $ulId];
 
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    return $this->executeQueryForObject($sql, $parameters, function($row) {
+    /**
+     * @var TroncQueteurEntity  $troncQueteurEntity
+    */
+    $troncQueteurEntity = $this->executeQueryForObject($sql, $parameters, function($row) {
       return new TroncQueteurEntity($row, $this->logger);
     }, false);
+
+    $troncQueteurEntity->don_cb_details = $this->creditCardDBService->getCreditCardEntriesForTroncQueteur($troncQueteurEntity->id, $ulId);
+
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $troncQueteurEntity;
   }
 
 
@@ -210,10 +227,17 @@ AND    t.ul_id      = :ul_id
 LIMIT 1
 ";
     $parameters = ["id" => $id, "ul_id" => $ulId];
-    /** @noinspection PhpIncompatibleReturnTypeInspection */
-    return $this->executeQueryForObject($sql, $parameters, function($row) {
+    /**
+     * @var TroncQueteurEntity  $troncQueteurEntity
+     */
+    $troncQueteurEntity = $this->executeQueryForObject($sql, $parameters, function($row) {
       return new TroncQueteurEntity($row, $this->logger);
-    }, true);
+    }, false);
+
+    $troncQueteurEntity->don_cb_details = $this->creditCardDBService->getCreditCardEntriesForTroncQueteur($troncQueteurEntity->id, $ulId);
+
+    return $troncQueteurEntity;
+
   }
 
   /**
@@ -546,6 +570,9 @@ AND   tq.ul_id                  = :ul_id
     ];
 
     $this->executeQueryForUpdate($sql, $parameters);
+
+    $this->creditCardDBService->createOrUpdateOrDeleteCreditCardDonation($tq->don_cb_details, $tq->id, $ulId);
+
   }
 
   /**

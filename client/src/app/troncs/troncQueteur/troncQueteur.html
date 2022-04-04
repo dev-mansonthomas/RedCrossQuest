@@ -984,10 +984,6 @@
 
             <div class="row">
               <div class="form-group col-md-2">
-                <label for="don_cheque_cb" class="control-label" style="color:#F5F5F5;">Mettre à Zéro</label>
-                <button id="don_cheque_cb" type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.setCBToZero();" ng-if="!tq.current.readOnlyView || tq.current.adminEditMode" ng-cloak>
-                  Mettre à zéro
-                </button>
               </div>
               <div class="form-group  col-md-4" ng-class="{'has-error':troncQueteurForm.don_creditcard.$invalid}">
                 <label for="don_creditcard" class="control-label">Total des dons CB en €</label>
@@ -1000,7 +996,8 @@
                          id="don_creditcard"
                          class="form-control"
                          ng-model="tq.current.tronc_queteur.don_creditcard"
-                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                         ng-readonly="true"
+                         ng-value="tq.computeTotalAmountForCB()"
                          ng-change="tq.coinsAndCBAndChequeMandatoryInAdminModeFunction();"
                          ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode)"/>
                   <span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"  style="top:0px;">&nbsp;</span>
@@ -1017,13 +1014,74 @@
                          id="don_cb_total_number"
                          class="form-control"
                          ng-model="tq.current.tronc_queteur.don_cb_total_number"
-                         ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                         ng-readonly="true"
+                         ng-pattern="/^[0-9]{1,7}$/"
+                         ng-value="tq.computeTotalQuantityForCB()"
                          ng-required="tq.current.fillTronc && (!tq.current.adminEditMode || tq.current.coinsAndCBAndChequeMandatoryInAdminMode) && tq.current.tronc_queteur.don_creditcard != null"/>
                   <span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
                 </div>
                 <span class="help-block">Saisir le nombre de dons en CB sur le créneau de quête</span>
               </div>
             </div>
+
+            <div class="row">
+              <div class="alert form-group col-md-10 col-md-offset-2" role="alert" style="font-size:large;background-color: silver;color:black;">
+                <strong>CARTE BLEUE - Calculette</strong>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 col-md-offset-6" >
+                <table class="table .table-striped .table-hover .table-condensed">
+                  <thead>
+                  <th class="visible-lg-inline-block">index</th>
+                  <th style="vertical-align: top;text-align: center;">Montant des tickets</th>
+                  <th style="vertical-align: top;text-align: center;">Nombre de tickets</th>
+                  <th style="vertical-align: top;text-align: center;">Total</th>
+                  <th>&nbsp;</th>
+                  </thead>
+                  <tbody data-ng-repeat="cbd in tq.current.tronc_queteur.don_cb_details">
+                  <tr ng-hide="cbd.delete">
+                    <td class="visible visible-lg-inline-block" style="border-top: none!important;padding-top:14px; ">{{::cbd.index}}</td>
+                    <td ng-class="{'has-error':troncQueteurForm['cbd_amount_'  +cbd.index].$invalid}">
+                      <div class="input-group">
+                        <input name="cbd_amount_{{::cbd.index}}"
+                               id="cbd_amount_{{::cbd.index}}"
+                               type="number"
+                               class="form-control"
+                               min="0"
+                               ng-model="cbd.amount"
+                               ng-required="true"
+                               ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                        /><span class="input-group-addon glyphicon glyphicon-euro" aria-hidden="true"  style="top:0px;">&nbsp;</span>
+                      </div>
+                    </td>
+                    <td ng-class="{'has-error':troncQueteurForm['cbd_quantity_'+cbd.index].$invalid}">
+                      <div class="input-group">
+                        <input name="cbd_quantity_{{::cbd.index}}"
+                               id="cbd_quantity_{{::cbd.index}}"
+                               type="number"
+                               class="form-control"
+                               min="0"
+                               ng-model="cbd.quantity"
+                               ng-required="true"
+                               ng-readonly="tq.current.readOnlyView  && tq.current.adminEditMode == false"
+                               ng-pattern="/^[0-9]{1,7}$/"
+                        /><span class="input-group-addon glyphicon glyphicon-hash" aria-hidden="true" style="top:0px;">&nbsp;</span>
+                      </div>
+                    </td>
+                    <td style="text-align: right;">{{cbd.amount*cbd.quantity | currency : "€" : 2}}</td>
+                    <td style="text-align: right;"><button type="button" ng-model="singleModel" class="btn btn-danger" uib-btn-checkbox ng-click="tq.removeRowForCB(cbd.index);" ng-hide="tq.current.readOnlyView  && tq.current.adminEditMode == false"><span class="glyphicon glyphicon-minus-sign"  aria-hidden="true"></span></button></td>
+                  </tr>
+                  </tbody>
+                  <tfoot>
+                    <td style="text-align: right;"><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.addRowForCB();" ng-hide="tq.current.readOnlyView  && tq.current.adminEditMode == false"><span class="glyphicon glyphicon-plus-sign"  aria-hidden="true"></span></button></td>
+                    <td colspan="3"></td>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
 
           </div>
           <!-- FIN TERMINAL CB -->

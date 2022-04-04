@@ -95,7 +95,7 @@ class ValidateULRegistration extends Action
 
     $token    = $this->validatedData["token"   ];
 
-    $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/validateULRegistration", "ValidateULRegistration");
+    $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/validateULRegistration", "ValidateULRegistration", $this->parsedBody);
 
     if($reCaptchaResponseCode > 0)
     {// error

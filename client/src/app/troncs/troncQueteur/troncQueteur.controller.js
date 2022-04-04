@@ -188,26 +188,51 @@
       {
         vm.current.tronc_queteur.depart = new Date();
       }
-
-      vm.current.tronc_queteur.euro5   = vm.isEmpty(vm.current.tronc_queteur.euro5  );
-      vm.current.tronc_queteur.euro10  = vm.isEmpty(vm.current.tronc_queteur.euro10 );
-      vm.current.tronc_queteur.euro20  = vm.isEmpty(vm.current.tronc_queteur.euro20 );
-      vm.current.tronc_queteur.euro50  = vm.isEmpty(vm.current.tronc_queteur.euro50 );
-      vm.current.tronc_queteur.euro100 = vm.isEmpty(vm.current.tronc_queteur.euro100);
-      vm.current.tronc_queteur.euro200 = vm.isEmpty(vm.current.tronc_queteur.euro200);
-      vm.current.tronc_queteur.euro500 = vm.isEmpty(vm.current.tronc_queteur.euro500);
-
-      vm.current.tronc_queteur.euro2   = vm.isEmpty(vm.current.tronc_queteur.euro2  );
-      vm.current.tronc_queteur.euro1   = vm.isEmpty(vm.current.tronc_queteur.euro1  );
-      vm.current.tronc_queteur.cents50 = vm.isEmpty(vm.current.tronc_queteur.cents50);
-      vm.current.tronc_queteur.cents20 = vm.isEmpty(vm.current.tronc_queteur.cents20);
-      vm.current.tronc_queteur.cents10 = vm.isEmpty(vm.current.tronc_queteur.cents10);
-      vm.current.tronc_queteur.cents5  = vm.isEmpty(vm.current.tronc_queteur.cents5 );
-      vm.current.tronc_queteur.cents2  = vm.isEmpty(vm.current.tronc_queteur.cents2 );
-      vm.current.tronc_queteur.cent1   = vm.isEmpty(vm.current.tronc_queteur.cent1  );
+      vm.setNonFilledBillToZero();
+      vm.setNonFilledCoinToZero();
+      vm.setCBToZero();
+      vm.setChequeToZero();
 
     };
 
+    vm.computeTotalQuantityForCB=function()
+    {
+      if(vm.current.tronc_queteur)
+      {
+        let total = 0;
+        vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
+          if(cbd.quantity && !cbd.delete)
+            total+=cbd.quantity;
+        });
+        vm.current.tronc_queteur.don_cb_total_number=total;
+      }
+
+    };
+
+    vm.computeTotalAmountForCB=function()
+    {
+      if(vm.current.tronc_queteur)
+      {
+        let total = 0;
+        vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
+          if(cbd.quantity && cbd.amount && !cbd.delete)//otherwise we get empty total
+            total+=cbd.quantity*cbd.amount;
+        });
+        vm.current.tronc_queteur.don_creditcard=parseFloat(total.toFixed(2));
+      }
+    };
+
+    vm.addRowForCB=function()
+    {
+      vm.current.tronc_queteur.don_cb_details[vm.current.tronc_queteur.don_cb_details.length]={index:vm.current.tronc_queteur.don_cb_details.length};
+    };
+
+    vm.removeRowForCB=function(index)
+    {
+      vm.current.tronc_queteur.don_cb_details[index].delete=true;
+      vm.computeTotalAmountForCB  ();
+      vm.computeTotalQuantityForCB();
+    };
 
     vm.cancelDepart=function()
     {
@@ -243,6 +268,8 @@
 
     vm.confirmSave = function ()
     {
+      if(vm.hasCBDetailsForDuplicateAmount())
+        return;
       vm.current.overrideWarning=true;
       vm.save();
     };
@@ -259,6 +286,11 @@
         if(hasCoinsBeenModified())
         {
           vm.confirmButtonDisabled=true;
+          //remove deleted item that didn't exist in DB (ex: added, then removed, then save)
+          vm.current.tronc_queteur.don_cb_details = vm.current.tronc_queteur.don_cb_details.filter(function(value, index, arr) {
+            return !(value.delete && !value.id)
+          });
+
           if(vm.current.adminEditMode && vm.currentUserRole >= 4)
           {
             vm.current.tronc_queteur.$saveCoinsAsAdmin(savedSuccessfully, onSaveError);
@@ -318,7 +350,22 @@
           return true;
         }
       }
-      return false;
+      let modified = false;
+      if(vm.current.tronc_queteur.don_cb_details)
+      {
+        vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
+          if(
+            cbd.id > 0 && cbd.delete || //if we delete a cbd that has an id (so exist in db)
+            tqForm['cbd_quantity_'+cbd.index] && !tqForm['cbd_quantity_'+cbd.index].$pristine ||
+            tqForm['cbd_amount_'  +cbd.index] && !tqForm['cbd_amount_'  +cbd.index].$pristine
+          )
+          {
+            modified = true;
+          }
+        });
+      }
+
+      return modified;
     }
 
     function onSaveError(error)
@@ -479,6 +526,12 @@
         //if the return date is non null, then it's time to fill the number of coins
         vm.current.fillTronc=true;
       }
+
+      let cbIndex=0;
+      vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
+        cbd.index=cbIndex++;
+      });
+
 
       //this code is supposed to scroll the page to the form to set the coins
       //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again
@@ -664,14 +717,43 @@
           vm.current.tronc_queteur.don_cb_total_number = 1;
           displayConfirmDialog=true;
           vm.current.confirmInputValuesMessage+="<li>Le total des paiements CB est supérieur à 0, mais le nombre total de paiement est égale à 0. " +
-            "Le nombre de paiement a été initialisé à 1 </li>";
+            "Le nombre de paiements a été initialisé à 1 </li>";
         }
       }
+
+      if(vm.hasCBDetailsForDuplicateAmount())
+      {
+        displayConfirmDialog=true;
+        vm.current.confirmInputValuesMessage+="<li>Il existe au moins 2 lignes avec le meme montant de carte bleue<br/><h4><strong>Il est OBLIGATOIRE d'avoir une seule ligne par montant, utilisez 'Nombre de tickets' pour ajuster votre saisie</strong></h4></li>";
+      }
+
 
 
       return displayConfirmDialog;
     };
 
+
+    vm.hasCBDetailsForDuplicateAmount=function()
+    {
+      //find if there's at least two lines with the same amount (they should be merged with the quantity summed or removed if it's an error)
+      let typeOfAmount = [];
+      let nonDeletedCBD = 0;
+      if(vm.current.tronc_queteur.don_cb_details)
+      {
+        vm.current.tronc_queteur.don_cb_details.forEach(function(cbd) {
+          if (!cbd.delete)
+          {
+            typeOfAmount[cbd.amount] = cbd.quantity;
+            nonDeletedCBD++;
+          }
+        });
+        if(Object.keys(typeOfAmount).length !== nonDeletedCBD)
+        {
+          return true;
+        }
+      }
+      return false;
+    }
 
     /**
      * called when qr-scanner is able to decode something successfully from the webcam

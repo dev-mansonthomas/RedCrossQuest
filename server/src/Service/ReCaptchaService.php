@@ -59,11 +59,12 @@ class ReCaptchaService
    * @param $token            string    the token sent by the client
    * @param $actionRequired   string    what action is expected by the server
    * @param $username         string    the username of the client when applicable
+   * @param $parsedBody       array     Reference to the parsedBody for logging purpose if an error occurs
    *
    * @return                  int       0: Success, 1: token empty/null/too long, 2: wrong action, 3: score too low, 4: response is an error, 5: exception occurred while performing the check.
    *
    */
-  public function verify($token, $actionRequired, $username):int
+  public function verify(string $token, string $actionRequired, string $username, array &$parsedBody):int
   {
     //Google App Engine do not fill the REMOTE_ADDR, instead :
     /*
@@ -89,7 +90,8 @@ class ReCaptchaService
           'actionRequired'=> $actionRequired,
           'remoteIp'      => $remoteIP,
           'username'      => $username,
-          'token length'  => strlen($token)
+          'token length'  => strlen($token),
+          'parsedBody'    => &$parsedBody
         )
       );
       return 1;
@@ -115,7 +117,8 @@ class ReCaptchaService
               'clientAction'  => $action,
               'remoteIp'      => $remoteIP,
               'username'      => $username,
-              'token'         => $token
+              'token'         => $token,
+              'parsedBody'    => &$parsedBody
             )
           );
           return 2;
@@ -130,7 +133,8 @@ class ReCaptchaService
               'score'         => $score,
               'remoteIp'      => $remoteIP,
               'username'      => $username,
-              'token'         => $token
+              'token'         => $token,
+              'parsedBody'    => &$parsedBody
             )
           );
 
@@ -151,6 +155,7 @@ class ReCaptchaService
             'remoteIp'      => $remoteIP,
             'username'      => $username,
             'response'      => json_encode($resp),
+            'parsedBody'    => &$parsedBody,
             'token'         => $token
           )
         );
@@ -167,7 +172,8 @@ class ReCaptchaService
           'remoteIp'      => $remoteIP,
           'username'      => $username,
           'token'         => $token,
-          Logger::$EXCEPTION     => $e
+          Logger::$EXCEPTION     => $e,
+          'parsedBody'    => &$parsedBody
         )
       );
       return 5;
