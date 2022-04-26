@@ -75,7 +75,8 @@ ORDER BY c.amount ASC
       }
       else
       {
-        $this->insertCreditCard($creditCardEntity, $troncQueteurId, $ulId);
+        if($creditCardEntity->quantity > 0 )//form is prefilled with default options 1€, 2€, 3€, 4€, 5€, but if no quantity is added, do not save it.
+          $this->insertCreditCard($creditCardEntity, $troncQueteurId, $ulId);
       }
     }
   }
