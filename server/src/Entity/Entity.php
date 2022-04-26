@@ -103,7 +103,7 @@ class Entity
   {
     foreach($this->_fieldList as $key)
     {                                                                         //TroncQueteurEntity.don_cb_details is an array
-      if(empty($this->$key) || !isset($this->$key) || is_null($this->$key) || (!is_array($this->$key) && $this->$key."" === "null"))
+      if(empty($this->$key) || !isset($this->$key) || is_null($this->$key) || (!is_array($this->$key) && !is_object($this->$key) && $this->$key."" === "null"))
         unset($this->$key);
     }
   }
