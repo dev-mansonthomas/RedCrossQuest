@@ -49,7 +49,29 @@ ROLE       : {{cl.currentUserRole}}</pre>
         <div class="col-md-8">
 
           <uib-accordion close-others="false">
-            <div uib-accordion-group class="panel-default" heading="Version 2021" is-open="true">
+            <div uib-accordion-group class="panel-default" heading="Version 2022" is-open="true">
+              <ul>
+                <li><b>Interface Graphique (ce site web quoi...) :</b>
+                  <ol>
+                    <li>Amélioration de l'édition des TroncQueteurs en mode Admin. Auparavant il était possible de sauvegarder un tronc en mode admin pour y entrer les pièces/billets/CB et oublier de remplir les références des sacs de banques</li>
+                    <li>Ajout d'une calculatrice pour les dons en carte bleue. La saisie se fait par type de montant et nombre de tickets CB de ce montant. Les montants de 1 à 10€ (entiers) sont prérempli, on peut en ajouter d'autres, avec des décimales ou des montants supérieurs à 10€. </li>
+                    <li>Les écrans de retour et comptage inclus maintenant des liens dans le bandeau titre de la page, vers le troncQueteur, le tronc, le queteur et le point de quete</li>
+                    <li>Il est possible de modifié l'heure de départ au retour d'un tronc</li>
+                    <li>Message d'erreur explicite sur l'inscription des ULs</li>
+                    <li>La page de réinitialisation de mot de passe a été améliorée pour éviter d'être détecté comme un robot par erreur</li>
+                    <li>La page de collecte des données des années précédentes permet de saisir le nombre de bénévole, bénévole d'un jour et nombre d'heure</li>
+                    <li>Mise à jour des dépendances techniques</li>
+                  </ol>
+                </li>
+                <li><b>Coté Serveur :</b>
+                  <ol>
+                    <li>Mise à jour coté serveur liées aux améliorations ci-dessus </li>
+                    <li>Mise à jours des librairies utilisées par RedCrossQuest, ce qui améliore généralement la sécurité et les performances</li>
+                  </ol>
+                </li>
+              </ul>
+            </div>
+            <div uib-accordion-group class="panel-default" heading="Version 2021" is-open="false">
               <ul>
                 <li><b>Interface Graphique (ce site web quoi...) :</b>
                   <ol>

@@ -22,6 +22,7 @@
 
     vm.check_dates_not_in_the_past = $localStorage.guiSettings.ul_settings.check_dates_not_in_the_past;
 
+
     vm.initForm = function()
     {
       if(vm.current)
@@ -29,6 +30,7 @@
         vm.previous = vm.current;
       }
       vm.current = {};
+      vm.current.departDateEditable=false;
     };
     vm.initForm();
 
@@ -120,6 +122,7 @@
 
       if(vm.current.tronc_queteur.depart !== null)
       {
+        vm.departDateEditable=false;
         vm.current.tronc_queteur.dateDepartIsMissing=false;
         var depart = DateTimeHandlingService.handleServerDate(tronc_queteur.depart);
         vm.current.tronc_queteur.departStr = depart.stringVersion;
@@ -128,8 +131,7 @@
       else
       {
         vm.current.tronc_queteur.dateDepartIsMissing=true;
-
-
+        vm.current.departDateEditable=true;
         var newDepartDate = new Date( vm.current.tronc_queteur.retour.getTime());
 
         newDepartDate.setHours        (0);

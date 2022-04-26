@@ -244,13 +244,15 @@
   <div class="panel panel-primary tronc-queteur" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important">
     <div class="panel-heading" style="background-color: #f0ad4e!important;border-color:#f0ad4e!important"><h2>Comptage du <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong></h2>
       <span ng-show="tq.current.tronc_queteur.id">
-        ID {{tq.current.tronc_queteur.id}} -
-        Tronc N° {{tq.current.tronc.id}} -
-           {{tq.current.tronc_queteur.queteur.first_name}}
+        ID <a href="#!/tronc_queteur/edit/{{tq.current.tronc_queteur.id}}" target="_blank">{{tq.current.tronc_queteur.id}}</a> -
+  Tronc N° <a href="#!/troncs/edit/{{tq.current.tronc_queteur.tronc_id}}" target="_blank">{{tq.current.tronc.id}}</a> -
+           <a href="#!/queteurs/edit/{{tq.current.tronc_queteur.queteur_id}}" target="_blank">{{tq.current.tronc_queteur.queteur.first_name}}
            {{tq.current.tronc_queteur.queteur.last_name}} -
-           {{tq.current.tronc_queteur.queteur.nivol}} -
+           {{tq.current.tronc_queteur.queteur.nivol}}</a> -
         parti depuis '<b>{{tq.current.tronc_queteur.departStr}}</b>'
-        au point de quête '<b>{{tq.current.tronc_queteur.point_quete.name}}</b>'</span></div>
+        du point de quête '<b><a href="/#!/pointsQuetes/edit/{{tq.current.tronc_queteur.point_quete_id}}" target="_blank">{{tq.current.tronc_queteur.point_quete.name}}</a></b>'
+      </span>
+    </div>
   </div>
 
 
@@ -406,7 +408,7 @@
             <span class="help-block" ng-show="prepaTroncForm.horaireDepartTheorique.$error.required">Required</span>
           </div>
 
-          <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.horaireDepart.$invalid}">
+          <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.horaireDepatq.$invalid}">
             <label for="horaireDepart" class="control-label">Horaire Départ Réel</label>
             <input name="horaireDepart"
                    id="horaireDepart"
@@ -415,7 +417,7 @@
                    ng-model="tq.current.tronc_queteur.depart"
                    ng-required="tq.current.adminEditMode != true"
                    ng-readonly="tq.current.adminEditMode == false"/>
-            <span class="help-block" ng-show="prepaTroncForm.horaireDepart.$error.required">Required</span>
+            <span class="help-block" ng-show="prepaTroncForm.horaireDepatq.$error.required">Required</span>
           </div>
 
           <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.retour.$invalid}"

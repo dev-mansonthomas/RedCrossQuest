@@ -5,13 +5,15 @@
   <div class="panel panel-primary"  style="background-color: #5bc0de!important;border-color:#5bc0de!important;">
     <div class="panel-heading" style="background-color: #5bc0de!important;border-color:#5bc0de!important;"><h2>Retour du <strong style="color:red;">{</strong> Tronc-Quêteur <strong style="color:red;">}</strong></h2>
       <span ng-show="rt.current.tronc_queteur.id">
-        ID {{rt.current.tronc_queteur.id}} -
-  Tronc N° {{rt.current.tronc.id}} -
-           {{rt.current.tronc_queteur.queteur.first_name}}
+        ID <a href="#!/tronc_queteur/edit/{{rt.current.tronc_queteur.id}}" target="_blank">{{rt.current.tronc_queteur.id}}</a> -
+  Tronc N° <a href="#!/troncs/edit/{{rt.current.tronc_queteur.tronc_id}}" target="_blank">{{rt.current.tronc.id}}</a> -
+           <a href="#!/queteurs/edit/{{rt.current.tronc_queteur.queteur_id}}" target="_blank">{{rt.current.tronc_queteur.queteur.first_name}}
            {{rt.current.tronc_queteur.queteur.last_name}} -
-           {{rt.current.tronc_queteur.queteur.nivol}} -
+           {{rt.current.tronc_queteur.queteur.nivol}}</a> -
         parti depuis '<b>{{rt.current.tronc_queteur.departStr}}</b>'
-        du point de quête '<b>{{rt.current.tronc_queteur.point_quete.name}}</b>'</span></div>
+        du point de quête '<b><a href="/#!/pointsQuetes/edit/{{rt.current.tronc_queteur.point_quete_id}}" target="_blank">{{rt.current.tronc_queteur.point_quete.name}}</a></b>'
+      </span>
+    </div>
   </div>
 
 
@@ -31,6 +33,38 @@
               <span class="help-block" ng-bind="departTronc.decodedData"></span>
             </div>
             <div class="col-md-8">
+              <div class="row" ng-show="rt.current.tronc_queteur.id>0">
+
+                <div class="form-group col-md-6" ng-class="{'has-error':retourTroncForm.depart.$invalid}">
+                  <label for="depart" class="control-label">Horaire Départ Réelle</label>
+
+                  <!-- pas de
+                  ng-min="rt.current.tronc_queteur.depart_theorique"
+                  car on peut préparer le tronc pour 10h et le gars se pointe à 9h et veut partir tout de suite.
+                  -->
+                  <div class="row">
+                    <div class="col-md-10" ng-class="{'alert':rt.current.tronc_queteur.dateDepartIsMissing,'alert-danger':rt.current.tronc_queteur.dateDepartIsMissing}">
+                      <input name="depart"
+                             id="depart"
+                             type="datetime-local"
+                             class="form-control"
+                             ng-model="rt.current.tronc_queteur.depart"
+                             ng-min="rt.check_dates_not_in_the_past ? rt.current.tronc_queteur.depart_theorique : null"
+                             ng-max="rt.current.tronc_queteur.retour"
+                             ng-readonly="!rt.current.departDateEditable"
+                             ng-required="rt.current.tronc_queteur.dateDepartIsMissing === true"
+                      />
+                    </div>
+                    <div class="col-md-2">
+                      <button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="rt.current.departDateEditable=!rt.current.departDateEditable" ng-show="!rt.current.tronc_queteur.dateDepartIsMissing"><span class="glyphicon glyphicon-edit"  aria-hidden="true"></span></button>
+                    </div>
+                  </div>
+                  <span class="help-block" ng-show="retourTroncForm.depart.$error.required">Required</span>
+                  <span class="help-block" ng-show="rt.current.departDateEditable && rt.check_dates_not_in_the_past">Le départ doit être après l'heure de départ théorique : {{rt.current.tronc_queteur.depart_theoriqueStr}}<br/>
+                  Le départ théorique peut être modifié par l'administrateur local (quêteur->recherche du quêteur (nivol:{{rt.current.tronc_queteur.queteur.nivol}})->selection du tronc (id:{{rt.current.tronc_queteur.id}})->mode admin</span>
+                </div>
+
+              </div>
               <div class="row">
                 <div class="form-group  col-md-6" ng-class="{'has-error':retourTroncForm.troncId.$invalid}">
                   <label for="troncId" class="control-label">Id Tronc</label>
@@ -132,7 +166,7 @@
                 <span class="glyphicon glyphicon-warning-sign" aria-hidden="true" style="font-size:40px;color:orange;"></span>
                 <br/>
                 Les dates de retour et de départ sont séparées <b>de moins de 30 minutes</b><br/>
-                Si le quêteur a vraiment quêter moins de 30 minutes alors tout va bien, vous pouvez enregistré le retour normalement<br/>
+                Si le quêteur a vraiment quêter moins de 30 minutes alors tout va bien, vous pouvez enregistrer le retour normalement<br/>
                 Si vous avez enchainé départ et retour pour diverses raisons, l'efficacité du point de quête, du quêteur, et l'efficacité globale vont être faussées par la très grande valeur pour ce tronc.<br/>
                 Pour corriger la situation :
                 <ol>
@@ -141,7 +175,7 @@
                   <li>éditez en mode admin le troncQueteur</li>
                   <li>Divisé le montant total du tronc par le taux horaire moyen (entre 20 et 40€) et séparé les dates de départ et retour de ce nombre d'heure.</li>
                 </ol>
-                <strong>Cela permettra de ne pas faussé les taux horaires du point de quête, du quêteur et le taux horaire globale.</strong>
+                <strong>Cela permettra de ne pas fausser les taux horaires du point de quête, du quêteur et le taux horaire globale.</strong>
 
               </div>
             </div>
@@ -175,30 +209,7 @@
                   <li>Et renseigner la date ci-dessous (elle ne peut être postérièure à la date de retour et égale à 00h00min</li>
                 </ul>
 
-                <div class="form-group" ng-class="{'has-error':retourTroncForm.depart.$invalid}">
-                  <label for="depart" class="control-label">Horaire Départ Réelle</label>
 
-                  <!-- pas de
-
-                  ng-min="rt.current.tronc_queteur.depart_theorique"
-
-                  car on peut préparer le tronc pour 10h et le gars se pointe à 9h et veut partir tout de suite.
-
-                  -->
-                  <input name="depart"
-                           id="depart"
-                         type="datetime-local"
-                        class="form-control"
-                     ng-model="rt.current.tronc_queteur.depart"
-                       ng-min="rt.check_dates_not_in_the_past ? rt.current.tronc_queteur.depart_theorique : null"
-                       ng-max="rt.current.tronc_queteur.retour"
-                  ng-required="rt.current.tronc_queteur.dateDepartIsMissing === true"/>
-
-                  <span class="help-block" ng-show="retourTroncForm.depart.$error.required">Required</span>
-
-                  <span class="help-block">Le départ doit être après l'heure de départ théorique : {{rt.current.tronc_queteur.depart_theoriqueStr}}<br/>
-                  Le départ théorique peut être modifié par l'administrateur local (quêteur->recherche du quêteur (nivol:{{rt.current.tronc_queteur.queteur.nivol}})->selection du tronc (id:{{rt.current.tronc_queteur.id}})->mode admin</span>
-                </div>
 
               </div>
             </div>
