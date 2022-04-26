@@ -126,10 +126,88 @@ $cloudFunctions["troncSetDepartOrRetour"]=array(
   )
 );
 
+$GLOBALS['cloudFunctions']=$cloudFunctions;
 
-
-
-function createCloudFunctionServiceAccount($cloudFunctionName)
+function getCurrentProject()
 {
-  $shellCommand = "gcloud iam service-accounts create \"cf-".strtolower($cloudFunctionName)."\" --description=\"Service Account for the cloud function '$cloudFunctionName'\" --display-name=\"Service Account for the cloud function '$cloudFunctionName'\"";
+  return str_replace(array("\r", "\n"), '', shell_exec("gcloud config get-value project"));
+}
+
+function setCurrentProject($projectId)
+{
+  $CURRENT_PROJECT=getCurrentProject();
+  
+  if($CURRENT_PROJECT != $projectId)
+  {
+    echo "GCP Project was '$CURRENT_PROJECT', updating it to '$projectId'";
+    #set current project to target project"
+    echo shell_exec("gcloud config set project $projectId");
+  }
+}
+
+
+function createOneCloudFunctionServiceAccount($cloudFunctionName, $currentProjectId)
+{
+  $targetProjectName  = $GLOBALS['cloudFunctions'][$cloudFunctionName]['project'];
+  $currentProjectName = explode("-",$currentProjectId)[0];
+
+  if($currentProjectName==$targetProjectName)
+  {
+    $shellCommand = "gcloud iam service-accounts create \"cf-".strtolower($cloudFunctionName)."\" ".
+      "--description=\"Service Account for the cloud function '$cloudFunctionName'\" ".
+      "--display-name=\"Service Account for the cloud function '$cloudFunctionName'\"";
+
+    echo "=============================";
+    echo $shellCommand."\n";
+    //echo shell_exec($shellCommand);
+    echo "\n=============================\n";
+  }
+  else
+  {
+    echo "$cloudFunctionName is running in project $targetProjectName not in $currentProjectName, nothing done\n\n";
+  }
+}
+
+function createCloudFunctionServiceAccounts($currentProjectId)
+{
+
+  $cloudFunctions=$GLOBALS['cloudFunctions'];
+  $functionNames = array_keys($cloudFunctions);
+  foreach ($functionNames as $functionName)
+  {
+    createOneCloudFunctionServiceAccount($functionName, $currentProjectId );
+  }
+}
+
+
+function initCloudFunctionsGrantRoles($currentProjectId)
+{
+  $cloudFunctions=$GLOBALS['cloudFunctions'];
+  $functionNames = array_keys($cloudFunctions);
+  foreach ($functionNames as $functionName)
+  {
+    initOneCloudFunctionsGrantRoles($functionName, $currentProjectId );
+  }
+}
+
+
+function initOneCloudFunctionsGrantRoles($cloudFunctionName, $currentProjectId)
+{
+  $oneFunction              = $GLOBALS['cloudFunctions'][$cloudFunctionName];
+  $targetProjectName        = $oneFunction['project'];
+  $currentProjectIdExploded = explode("-",$currentProjectId, 2);
+  $currentProjectName       = $currentProjectIdExploded[0];
+  $countryAndEnv            = $currentProjectIdExploded[1];
+
+  $roles = $oneFunction['roles']['$currentProjectName'];
+  foreach($roles as $role)
+  {
+    $shellCommand = "gcloud projects add-iam-policy-binding $currentProjectId ".
+      "--member serviceAccount:cf-".strtolower($cloudFunctionName)."@$targetProjectName-$countryAndEnv.iam.gserviceaccount.com ".
+      "--role $role";
+    echo "=============================";
+    echo $shellCommand."\n";
+    //echo shell_exec($shellCommand);
+    echo "\n=============================\n";
+  }
 }
