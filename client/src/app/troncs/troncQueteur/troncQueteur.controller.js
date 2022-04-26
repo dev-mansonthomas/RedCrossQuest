@@ -527,11 +527,52 @@
         vm.current.fillTronc=true;
       }
 
-      var cbIndex=0;
+
+
+      //cb details is fetched ordered by amount asc in SQL
+      //if there's some basic amount missing, we're filling it with quantity=0
+
+      var newCbDetails = [];
+      for(var i=1;i<11;i++)
+      {
+        newCbDetails[i] = {id:0,tronc_queteur_id:0,ul_id:0,quantity:0,amount:i};
+      }
+      //deal with integer amount first
+      for(var j=0;j<vm.current.tronc_queteur.don_cb_details.length; j++)
+      {
+        if(Number.isInteger(vm.current.tronc_queteur.don_cb_details[j].amount))
+        {
+          if(vm.current.tronc_queteur.don_cb_details[j].amount < 11)
+          {//if it's a basic amount (integer between 1 and 10), then overwrite the default set in the previous loop
+            newCbDetails[vm.current.tronc_queteur.don_cb_details[j].amount] = vm.current.tronc_queteur.don_cb_details[j];
+          }
+        }
+      }
+      //reverse walk the array to insert non integer value without messing up the order for the next iteration of the loop
+      //here we still assume the array index is equals to cbd.amount
+      for(var x=vm.current.tronc_queteur.don_cb_details.length-1;x>=0; x--)
+      {
+        if(!Number.isInteger(vm.current.tronc_queteur.don_cb_details[x].amount) && vm.current.tronc_queteur.don_cb_details[x].amount < 10)
+        {
+          newCbDetails.splice(Math.floor(vm.current.tronc_queteur.don_cb_details[x].amount),0, vm.current.tronc_queteur.don_cb_details[x]);
+        }
+      }
+
       vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
-        cbd.index=cbIndex++;
+        if(cbd.amount>10)
+        {
+          newCbDetails.push(cbd);
+        }
       });
 
+      //empty existing array
+      vm.current.tronc_queteur.don_cb_details.length=0;
+
+      var cbIndex=0;
+      newCbDetails.forEach(function(cbd){
+        cbd.index=cbIndex++;
+        vm.current.tronc_queteur.don_cb_details.push(cbd);
+      });
 
       //this code is supposed to scroll the page to the form to set the coins
       //but this generate a bug, the first time, it re-init the form, you have to type or scan the qrcode again

@@ -6,8 +6,13 @@ use DI\Annotation\Inject;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
+use Queteur;
 use RedCrossQuest\BusinessService\TroncQueteurBusinessService;
+use RedCrossQuest\DBService\PointQueteDBService;
+use RedCrossQuest\DBService\QueteurDBService;
 use RedCrossQuest\DBService\TroncQueteurDBService;
+use RedCrossQuest\Entity\PointQueteEntity;
+use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\Entity\TroncQueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
@@ -27,10 +32,21 @@ class PrepareTroncQueteur extends Action
    */
   private $troncQueteurBusinessService;
 
+
+  /**
+   * @varQueteurDBService            $queteurDBService
+   */
+  private   $queteurDBService;
+  /**
+   * @varPointQueteDBService         $pointQueteDBService
+   */
+  private $pointQueteDBService;
+
   /**
    * @var PubSubService           $pubSubService
    */
   private $pubSubService;
+
 
   /**
    * @Inject("settings")
@@ -43,17 +59,23 @@ class PrepareTroncQueteur extends Action
    * @param ClientInputValidator          $clientInputValidator
    * @param TroncQueteurDBService         $troncQueteurDBService
    * @param TroncQueteurBusinessService   $troncQueteurBusinessService
+   * @param QueteurDBService              $queteurDBService
+   * @param PointQueteDBService           $pointQueteDBService
    * @param PubSubService                 $pubSubService
    */
   public function __construct(LoggerInterface             $logger,
                               ClientInputValidator        $clientInputValidator,
                               TroncQueteurDBService       $troncQueteurDBService,
                               TroncQueteurBusinessService $troncQueteurBusinessService,
+                              QueteurDBService            $queteurDBService,
+                              PointQueteDBService         $pointQueteDBService,
                               PubSubService               $pubSubService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->troncQueteurDBService       = $troncQueteurDBService;
     $this->troncQueteurBusinessService = $troncQueteurBusinessService;
+    $this->queteurDBService            = $queteurDBService;
+    $this->pointQueteDBService         = $pointQueteDBService;
     $this->pubSubService               = $pubSubService;
   }
 
@@ -87,7 +109,27 @@ class PrepareTroncQueteur extends Action
         $this->troncQueteurDBService->setDepartToNow($insertResponse->lastInsertId, $ulId, $userId);
       }
 
-      $tq = $this->troncQueteurDBService->getTroncQueteurById($insertResponse->lastInsertId, $ulId);
+      $tq         = $this->troncQueteurDBService->getTroncQueteurById($insertResponse->lastInsertId, $ulId);
+      $queteur    = $this->queteurDBService     ->getQueteurById     ($tq->queteur_id              , $ulId);
+      $pointQuete = $this->pointQueteDBService  ->getPointQueteById  ($tq->point_quete_id          , $ulId, 1);
+
+
+      $queteurLightArray = ['first_name'=>$queteur->first_name, 'last_name'=>$queteur->last_name];
+      $queteurLight = new QueteurEntity($queteurLightArray, $this->logger);
+
+      $pointQueteLightArray = ['name'=>$pointQuete->name];
+      $pointQueteLight = new PointQueteEntity($pointQueteLightArray, $this->logger);
+
+      $queteurLight   ->genericPreparePubSubPublishing();
+      $pointQueteLight->genericPreparePubSubPublishing();
+
+      unset($pointQueteLight->max_people);
+      unset($queteurLight->referent_volunteerQueteur);
+      unset($queteurLight->user);
+
+      $tq->queteur     = $queteurLight;
+      $tq->point_quete = $pointQueteLight;
+
       $tq->preparePubSubPublishing();
       
       $messageProperties  = [

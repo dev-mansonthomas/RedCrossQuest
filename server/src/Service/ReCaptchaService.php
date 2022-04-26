@@ -59,12 +59,11 @@ class ReCaptchaService
    * @param $token            string    the token sent by the client
    * @param $actionRequired   string    what action is expected by the server
    * @param $username         string    the username of the client when applicable
-   * @param $parsedBody       array     Reference to the parsedBody for logging purpose if an error occurs
+   * @param array|null $parsedBody array     Reference to the parsedBody for logging purpose if an error occurs
    *
    * @return                  int       0: Success, 1: token empty/null/too long, 2: wrong action, 3: score too low, 4: response is an error, 5: exception occurred while performing the check.
-   *
    */
-  public function verify(string $token, string $actionRequired, string $username, array &$parsedBody):int
+  public function verify(string $token, string $actionRequired, string $username, ?array &$parsedBody=[]):int
   {
     //Google App Engine do not fill the REMOTE_ADDR, instead :
     /*
