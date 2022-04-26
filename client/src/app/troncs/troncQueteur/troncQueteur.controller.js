@@ -587,6 +587,14 @@
                                                  vm.current.tronc_queteur.queteur.first_name +' '+vm.current.tronc_queteur.queteur.last_name);
 
 
+      if(vm.current.readOnlyView)
+      {//load details only if the form is currently readonly
+        if(vm.current.tronc_queteur.coins_money_bag_id)
+          vm.getCoinsBagDetails(vm.current.tronc_queteur.coins_money_bag_id);
+        if(vm.current.tronc_queteur.bills_money_bag_id)
+          vm.getBillsBagDetails(vm.current.tronc_queteur.bills_money_bag_id);
+      }
+
 
       TroncQueteurHistoryResource.getTroncQueteurHistoryForTroncQueteurId({tronc_queteur_id:tronc_queteur.id}).$promise.then(handleTroncQueteurHistory).catch(function(e){
         $log.error("error searching for TroncQueteurHistoryForTroncQueteurId", e);
@@ -908,13 +916,25 @@
       //$log.error(JSON.stringify([$item, $model, $label, $event, coins]));
       if(coins)
       {
-        vm.current.coinsMoneyBagDetails = MoneyBagResource.coinsMoneyBagDetails({'id':$item});
+        vm.getCoinsBagDetails($item);
       }
       else
       {
-        vm.current.billsMoneyBagDetails = MoneyBagResource.billsMoneyBagDetails({'id':$item});
+        vm.getBillsBagDetails($item);
       }
     };
+
+    vm.getCoinsBagDetails=function(id)
+    {
+      vm.current.coinsMoneyBagDetails = MoneyBagResource.coinsMoneyBagDetails({'id':id});
+    };
+
+    vm.getBillsBagDetails=function(id)
+    {
+      vm.current.billsMoneyBagDetails = MoneyBagResource.billsMoneyBagDetails({'id':id});
+    };
+
+
   }
 })();
 

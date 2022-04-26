@@ -1268,12 +1268,12 @@
               <tr>
                 <td></td>
                 <td>Actuel</td>
-                <td>Après ce tronc</td>
+                <td ng-hide="tq.current.readOnlyView">Après ce tronc</td>
               </tr>
               <tr>
                 <th>Total</th>
                 <td>{{tq.current.coinsMoneyBagDetails.amount| currency : "€" : 2}}</td>
-                <td>{{tq.current.coinsMoneyBagDetails.amount +
+                <td ng-hide="tq.current.readOnlyView">{{tq.current.coinsMoneyBagDetails.amount +
                   tq.current.tronc_queteur.euro2   * 2     +
                   tq.current.tronc_queteur.euro1   * 1     +
                   tq.current.tronc_queteur.cents50 * 0.5   +
@@ -1286,7 +1286,7 @@
               <tr>
                 <th>Poids</th>
                 <td>{{tq.current.coinsMoneyBagDetails.weight | currency : "g" : 2 }}</td>
-                <td>{{tq.current.coinsMoneyBagDetails.weight +
+                <td ng-hide="tq.current.readOnlyView">{{tq.current.coinsMoneyBagDetails.weight +
                   tq.current.tronc_queteur.euro2   *  8.5  +
                   tq.current.tronc_queteur.euro1   *  7.5  +
                   tq.current.tronc_queteur.cents50 *  7.8  +
@@ -1307,12 +1307,12 @@
               <tr>
                 <td></td>
                 <td>Actuel</td>
-                <td>Après ce tronc</td>
+                <td ng-hide="tq.current.readOnlyView">Après ce tronc</td>
               </tr>
               <tr>
                 <th>Total</th>
                 <td>{{tq.current.billsMoneyBagDetails.amount| currency : "€" : 2}}</td>
-                <td>{{tq.current.billsMoneyBagDetails.amount +
+                <td ng-hide="tq.current.readOnlyView">{{tq.current.billsMoneyBagDetails.amount +
                  tq.current.tronc_queteur.euro5   * 5   +
                  tq.current.tronc_queteur.euro10  * 10  +
                  tq.current.tronc_queteur.euro20  * 20  +
@@ -1324,7 +1324,7 @@
               <tr>
                 <th>Poids</th>
                 <td>{{tq.current.billsMoneyBagDetails.weight| currency : "g" : 2}}</td>
-                <td>{{tq.current.billsMoneyBagDetails.weight +
+                <td ng-hide="tq.current.readOnlyView">{{tq.current.billsMoneyBagDetails.weight +
                  tq.current.tronc_queteur.euro5   *  1.1 +
                  tq.current.tronc_queteur.euro10  *  1.1 +
                  tq.current.tronc_queteur.euro20  *  1   +
