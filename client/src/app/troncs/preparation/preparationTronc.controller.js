@@ -10,7 +10,7 @@
     .controller('PreparationTroncController', PreparationTroncController);
 
   /** @ngInject */
-  function PreparationTroncController($rootScope, $scope, $log,$uibModal, $timeout, $location,  $localStorage,
+  function PreparationTroncController($rootScope, $scope, $log, $uibModal, $timeout, $location,  $localStorage,
                                       QueteurResource, PointQueteResource   ,
                                       TroncResource  , TroncQueteurResource ,
                                       QRDecodeService,
@@ -64,6 +64,9 @@
       vm.current                = {};
       vm.current.saveInProgress = false;
       vm.current.ul_id          = $localStorage.currentUser.ulId;
+      //lat,long used for the google map links to reach the pointQuete from the UL
+      vm.current.ul_latitude    = $localStorage.guiSettings.ul.latitude;
+      vm.current.ul_longitude   = $localStorage.guiSettings.ul.longitude;
 
       vm.current.horaireDepartTheorique           = new Date();
       vm.current.horaireDepartTheoriqueNotBefore  = vm.current.horaireDepartTheorique  ;
