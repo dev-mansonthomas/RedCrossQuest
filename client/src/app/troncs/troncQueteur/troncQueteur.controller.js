@@ -199,7 +199,7 @@
     {
       if(vm.current.tronc_queteur)
       {
-        let total = 0;
+        var total = 0;
         vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
           if(cbd.quantity && !cbd.delete)
             total+=cbd.quantity;
@@ -213,7 +213,7 @@
     {
       if(vm.current.tronc_queteur)
       {
-        let total = 0;
+        var total = 0;
         vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
           if(cbd.quantity && cbd.amount && !cbd.delete)//otherwise we get empty total
             total+=cbd.quantity*cbd.amount;
@@ -287,7 +287,7 @@
         {
           vm.confirmButtonDisabled=true;
           //remove deleted item that didn't exist in DB (ex: added, then removed, then save)
-          vm.current.tronc_queteur.don_cb_details = vm.current.tronc_queteur.don_cb_details.filter(function(value, index, arr) {
+          vm.current.tronc_queteur.don_cb_details = vm.current.tronc_queteur.don_cb_details.filter(function(value) {
             return !(value.delete && !value.id)
           });
 
@@ -350,7 +350,7 @@
           return true;
         }
       }
-      let modified = false;
+      var modified = false;
       if(vm.current.tronc_queteur.don_cb_details)
       {
         vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
@@ -527,7 +527,7 @@
         vm.current.fillTronc=true;
       }
 
-      let cbIndex=0;
+      var cbIndex=0;
       vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
         cbd.index=cbIndex++;
       });
@@ -736,8 +736,8 @@
     vm.hasCBDetailsForDuplicateAmount=function()
     {
       //find if there's at least two lines with the same amount (they should be merged with the quantity summed or removed if it's an error)
-      let typeOfAmount = [];
-      let nonDeletedCBD = 0;
+      var typeOfAmount = [];
+      var nonDeletedCBD = 0;
       if(vm.current.tronc_queteur.don_cb_details)
       {
         vm.current.tronc_queteur.don_cb_details.forEach(function(cbd) {
