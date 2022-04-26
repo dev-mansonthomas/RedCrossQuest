@@ -91,7 +91,8 @@ LIMIT 1
       return new TroncQueteurEntity($row, $this->logger);
     }, false);
 
-    $troncQueteurEntity->don_cb_details = $this->creditCardDBService->getCreditCardEntriesForTroncQueteur($troncQueteurEntity->id, $ulId);
+    if($troncQueteurEntity != null && $troncQueteurEntity->id != null)//sometime I get an exception that $troncQueteurEntity->id is null and the method below doesn't allow null value. Can't reproduce, event with the same value
+      $troncQueteurEntity->don_cb_details = $this->creditCardDBService->getCreditCardEntriesForTroncQueteur($troncQueteurEntity->id, $ulId);
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     return $troncQueteurEntity;
