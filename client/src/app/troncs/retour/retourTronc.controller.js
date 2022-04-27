@@ -31,6 +31,7 @@
       }
       vm.current = {};
       vm.current.departDateEditable=false;
+      vm.current.departDateModified=false;
     };
     vm.initForm();
 
@@ -209,10 +210,17 @@
       });
     };
 
+    vm.departDateChanged=function()
+    {
+      vm.current.departDateModified=true;
+      $log.debug("Depart Date has been changed");
+
+    };
+
     vm.save = function save()
     {
       $log.debug("Saving the return date");
-      vm.current.tronc_queteur.$saveReturnDate({dateDepartIsMissing:vm.current.tronc_queteur.dateDepartIsMissing}, savedSuccessfullyFunction, onSaveError);
+      vm.current.tronc_queteur.$saveReturnDate({dateDepartIsMissing:vm.current.tronc_queteur.dateDepartIsMissing,departDateModified:vm.current.departDateModified}, savedSuccessfullyFunction, onSaveError);
     };
 
 

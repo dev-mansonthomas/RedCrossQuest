@@ -45,10 +45,12 @@ class SaveReturnDateOnTroncQueteur extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withBoolean("dateDepartIsMissing", $this->queryParams, false, false)
+        ClientInputValidatorSpecs::withBoolean("dateDepartIsMissing", $this->queryParams, false, false),
+        ClientInputValidatorSpecs::withBoolean("departDateModified" , $this->queryParams, false, false),
       ]);
 
     $dateDepartIsMissing = $this->validatedData["dateDepartIsMissing"];
+    $departDateModified  = $this->validatedData["departDateModified" ];
 
     $ulId      = $this->decodedToken->getUlId       ();
     $userId    = $this->decodedToken->getUid        ();
@@ -58,9 +60,9 @@ class SaveReturnDateOnTroncQueteur extends Action
 
     // When scanning a Tronc for a 'Retour' and the Depart date is missing, the user can fill the missing departure date and record the return date at the same time.
     // If so, we add a parameter dateDepartIsMissing=true to notify backend that the depart must be updated
-    if($dateDepartIsMissing)
+    if($dateDepartIsMissing || $departDateModified)
     {
-      $this->logger->info("Setting date depart that was missing for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart));
+      $this->logger->info("Setting date depart that was missing or modified for tronc_queteur", array("id"=>$tq->id, "depart" => $tq->depart, "dateDepartIsMissing"=>$dateDepartIsMissing, "departDateModified"=>$departDateModified));
       $this->troncQueteurDBService->setDepartToCustomDate($tq, $ulId, $userId);
     }
     $this->troncQueteurDBService->updateRetour($tq, $ulId, $userId);
