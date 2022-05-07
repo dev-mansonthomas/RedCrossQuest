@@ -46,6 +46,39 @@
               </div>
               <span class="help-block">Scan QR Code, avec mode secours saisie manuelle</span>
             </div>
+
+
+            <div class="row visible-lg-block" ng-show="!(dt.current.tronc_queteur.id>0)" ng-cloak>
+              <div class="col-md-12">
+                <span class="label label-primary">Liste des troncs prêts au départ</span>
+
+                <table class="table table-hover table-condensed histo">
+                  <thead>
+                  <tr>
+                    <th>Sélect            </th>
+                    <th>Tronc             </th>
+                    <th>Prénom            </th>
+                    <th>Nom               </th>
+                    <th>Départ Théo       </th>
+                    <th>TroncQueteur      </th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr ng-repeat="t in dt.current.troncsForDepart.rows" ng-class-odd="'oddRows'" ng-class-even="'evenRows'">
+                    <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="dt.troncDecodedAndFoundInDB(t)"><span class="glyphicon glyphicon-floppy-disk"  aria-hidden="true"></span></button></td>
+                    <td style="text-align: center">{{::t.id }}</td>
+                    <td>{{::t.first_name  }}</td>
+                    <td>{{::t.last_name   }}</td>
+                    <td>{{::t.depart_theorique | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td style="text-align: center"><a ng-href="/#!/tronc_queteur/edit/{{::t.tronc_queteur_id}}" target='_blank'>{{::t.tronc_queteur_id}}</a></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
             <div class="form-group" ng-show="dt.current.tronc_queteur.id>0">
               <label for="lieuDeQuete" class="control-label">Lieu de Quête</label>
               <select name="lieuDeQuete" id="lieuDeQuete" class="form-control" ng-model="dt.current.tronc_queteur.point_quete.id" disabled
@@ -114,8 +147,8 @@
 
         <div class="row" ng-show="dt.current.tronc_queteur && dt.savedSuccessfully && !dt.current.tronc_queteur.troncFromPreviousYear">
           <div class="col-md-8 col-md-offset-2">
-            <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="dt.initForm();"><span aria-hidden="true">&times;</span></button>
+            <div class="alert alert-success" role="alert" style="text-align: center;">
+              <button type="button" class="close" aria-label="Close" ng-click="dt.initForm();"><span aria-hidden="true">&times;</span></button>
               <span class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="font-size:40px;color:green;"></span> <b>{{dt.current.tronc_queteur.queteur.first_name}} {{dt.current.tronc_queteur.queteur.last_name}}</b> est <span ng-show="dt.current.tronc_queteur.departAlreadyRegistered">déjà</span> enregistré comme parti à l'horaire indiqué ci-dessus.<br/>
               Vous pouvez scanner dès maintenant le prochain départ de tronc.    <br/>
 

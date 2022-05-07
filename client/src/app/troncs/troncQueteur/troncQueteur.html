@@ -394,6 +394,40 @@
 
         </div>
 
+        <div class="row visible-lg-block" ng-show="!(tq.current.tronc_queteur.id>0)"  ng-cloak>
+          <div class="col-md-8 col-md-offset-4">
+
+            <span class="label label-primary">Liste des troncs prêts au départ</span>
+
+            <table class="table table-hover table-condensed histo" ng-cloak>
+              <thead>
+              <tr>
+                <th>Sélect            </th>
+                <th>ID                </th>
+                <th>Prénom            </th>
+                <th>Nom               </th>
+                <th>Départ            </th>
+                <th>Retour            </th>
+                <th>TroncQueteur      </th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <tr ng-repeat="t in tq.current.troncsForComptage.rows" ng-class-odd="'oddRows'" ng-class-even="'evenRows'"  ng-cloak>
+                <td><button type="button" ng-model="singleModel" class="btn btn-primary" uib-btn-checkbox ng-click="tq.troncDecodedAndFoundInDB(t)"><span class="glyphicon glyphicon-floppy-disk"  aria-hidden="true"></span></button></td>
+                <td>{{::t.id}}</td>
+                <td>{{::t.first_name  }}</td>
+                <td>{{::t.last_name   }}</td>
+                <td>{{::t.depart | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td>{{::t.retour | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td><a ng-href="/#!/tronc_queteur/edit/{{::t.tronc_queteur_id}}" target='_blank'>{{::t.tronc_queteur_id}}</a></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
         <div class="row" ng-show="tq.current.tronc_queteur.id > 0">
 
           <div class="form-group col-md-4" ng-class="{'has-error':troncQueteurForm.horaireDepartTheorique.$invalid}">

@@ -32,6 +32,7 @@
       vm.current  = {};
       vm.previous = {};
       vm.current.ul_id=$localStorage.currentUser.ulId;
+      vm.current.troncsForDepart = TroncResource.troncForDepart();
     };
     vm.initForm();
 
@@ -39,7 +40,9 @@
     vm.pointsQuete = PointQueteResource.query();
 
 
-    var troncDecodedAndFoundInDB = function(tronc)
+
+
+    vm.troncDecodedAndFoundInDB = function(tronc)
     {
       //if(typeof tronc ==="string")
       //  return;
@@ -88,7 +91,8 @@
           }
           $log.debug("deleting troncId to allow a new scan directly");
           delete vm.current.troncId;
-
+          //reloading the list of tronc available for départ
+          vm.current.troncsForDepart = TroncResource.troncForDepart();
 
         },function(error)
         {
@@ -118,7 +122,7 @@
         try
         {
           vm.current.troncId = newValue.id;
-          troncDecodedAndFoundInDB(newValue);
+          vm.troncDecodedAndFoundInDB(newValue);
         }
         catch(exception)
         {
@@ -194,7 +198,7 @@
           $log.debug(JSON.stringify(reason) +' ' + troncId+' '+ulId);
 
         };
-        QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
+        QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, vm.troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
 
 
       }

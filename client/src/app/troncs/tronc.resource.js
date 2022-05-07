@@ -16,6 +16,25 @@ angular.module('redCrossQuestClient').factory('TroncResource', function($resourc
       query:{
         isArray: false
       },
+      troncForDepart:{
+        isArray: false,
+        params: {
+          id:'depart',
+        }
+      },
+      troncForRetour:{
+        isArray: false,
+        params: {
+          id:'retour',
+        }
+      },
+      troncForComptage:{
+        isArray: false,
+        params: {
+          id:'comptage',
+        }
+      },
+
     markAllAsPrinted: {
     method: 'POST',
       params: {

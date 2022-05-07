@@ -69,6 +69,15 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
   font-weight: bold;
 }
 
+.oddRows
+{
+  background-color: #e8e8e8 !important;
+}
+.oddRows td, .evenRows td
+{
+  vertical-align: middle !important;
+}
+
 
 .tronc-queteur-print
 {

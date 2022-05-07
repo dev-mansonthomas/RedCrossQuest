@@ -10,6 +10,9 @@ use RedCrossQuest\routes\routesActions\troncs\GetTronc;
 use RedCrossQuest\routes\routesActions\troncs\InsertTronc;
 use RedCrossQuest\routes\routesActions\troncs\ListTroncs;
 use RedCrossQuest\routes\routesActions\troncs\UpdateTronc;
+use RedCrossQuest\routes\routesActions\troncs\GetTroncForDepart;
+use RedCrossQuest\routes\routesActions\troncs\GetTroncForReturn;
+use RedCrossQuest\routes\routesActions\troncs\GetTroncForComptage;
 
 /********************************* TRONC ****************************************/
 
@@ -90,6 +93,136 @@ use RedCrossQuest\routes\routesActions\troncs\UpdateTronc;
  */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', ListTroncs::class);
 
+
+/**
+ * get the list of Tronc available for departure
+ *
+ * @OA\Get(
+ *     path="/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}",
+ *     tags={"Troncs"},
+ *     summary="Get a specific Tronc",
+ *     description="When a user click on the link in the email to reinitialize its email, there's a UUID passed in the URL. From it, the process of reinitialization is validated and the username of the user is fetch",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *         @OA\JsonContent(
+ *          type="object",
+ *           @OA\Items(ref="#/components/schemas/PageableResponseEntity"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/depart', GetTroncForDepart::class);
+
+/**
+ * get the list of Tronc available for return
+ *
+ * @OA\Get(
+ *     path="/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}",
+ *     tags={"Troncs"},
+ *     summary="Get a specific Tronc",
+ *     description="When a user click on the link in the email to reinitialize its email, there's a UUID passed in the URL. From it, the process of reinitialization is validated and the username of the user is fetch",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *         @OA\JsonContent(
+ *          type="object",
+ *           @OA\Items(ref="#/components/schemas/PageableResponseEntity"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/retour', GetTroncForReturn::class);
+
+/**
+ * get the list of Tronc available for return
+ *
+ * @OA\Get(
+ *     path="/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}",
+ *     tags={"Troncs"},
+ *     summary="Get a specific Tronc",
+ *     description="When a user click on the link in the email to reinitialize its email, there's a UUID passed in the URL. From it, the process of reinitialization is validated and the username of the user is fetch",
+ *    @OA\Parameter(
+ *         name="role-id",
+ *         in="path",
+ *         description="Current User Role",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *    @OA\Parameter(
+ *         name="ul-id",
+ *         in="path",
+ *         description="User's Unite Locale ID",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Success",
+ *         @OA\JsonContent(
+ *          type="object",
+ *           @OA\Items(ref="#/components/schemas/PageableResponseEntity"),
+ *         ),
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="General Error",
+ *         @OA\JsonContent(ref="#/components/schemas/ErrorModel")
+ *     )
+ * )
+ */
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/comptage', GetTroncForComptage::class);
+
 /**
  * récupère le détails d'un tronc (a enrichir avec les troncs_queteurs associés)
  *
@@ -140,7 +273,7 @@ $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', ListTroncs::class);
  *     )
  * )
  */
-$app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id}', GetTronc::class);
+$app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs/{id:\d+}', GetTronc::class);
 
 /**
  * Update le tronc, seulement pour l'admin

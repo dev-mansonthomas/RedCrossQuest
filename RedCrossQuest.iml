@@ -49,7 +49,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/nesbot/carbon" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/nikic/fast-route" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/nyholm/psr7" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/opis/closure" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/invoker" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/php-di" />
@@ -115,6 +114,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/clock" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/beste/clock" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/beste/json" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/laravel/serializable-closure" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Python 2.7 (RedCrossQuestUtilityBackend) interpreter library" level="application" />

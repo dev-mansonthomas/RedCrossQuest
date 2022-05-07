@@ -81,7 +81,6 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php80" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-intl-grapheme" />
       <path value="$PROJECT_DIR$/server/vendor/starkbank/ecdsa" />
-      <path value="$PROJECT_DIR$/server/vendor/opis/closure" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/http-client" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/http-client-contracts" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/serializer" />
@@ -109,6 +108,7 @@
       <path value="$PROJECT_DIR$/server/vendor/lcobucci/clock" />
       <path value="$PROJECT_DIR$/server/vendor/beste/clock" />
       <path value="$PROJECT_DIR$/server/vendor/beste/json" />
+      <path value="$PROJECT_DIR$/server/vendor/laravel/serializable-closure" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

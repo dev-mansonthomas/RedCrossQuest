@@ -32,8 +32,11 @@
       vm.current = {};
       vm.current.departDateEditable=false;
       vm.current.departDateModified=false;
+      vm.current.troncsForRetour = TroncResource.troncForRetour();
     };
     vm.initForm();
+
+
 
     var tronc_queteur_id = $routeParams.id;
 
@@ -72,7 +75,7 @@
         try
         {
           $log.debug("new value for tronc");
-          troncDecodedAndFoundInDB (newValue, true);
+          vm.troncDecodedAndFoundInDB (newValue, true);
         }
         catch(exception)
         {
@@ -163,8 +166,8 @@
       return 0;
     };
 
-    //function used when scanning QR Code or using autocompletion
-    function troncDecodedAndFoundInDB (tronc, doNotReassingTronc)
+    //function used when scanning QR Code or using autocompletion or clicking on the table
+    vm.troncDecodedAndFoundInDB=function(tronc, doNotReassingTronc)
     {
       if(vm.current.readOnlyView!==true)
       { //if true, it means we're coming from the queteur form just to view the data.
@@ -180,7 +183,7 @@
           TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
         }
       }
-    }
+    };
 
 
 
@@ -260,7 +263,7 @@
           alert("Vous n'êtes pas autorisé à effectuer cette action") ;
           $log.debug(JSON.stringify(reason) +' ' + troncId+' '+ulId);
         };
-        QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
+        QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, vm.troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
 
 
       }

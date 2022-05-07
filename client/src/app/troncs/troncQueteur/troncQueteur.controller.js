@@ -55,6 +55,7 @@
       vm.current = {};
       vm.current.readOnlyView  = false;
       vm.current.adminEditMode = false;
+      vm.current.troncsForComptage = TroncResource.troncForComptage();
 
       if (angular.isDefined(tronc_queteur_id) &&  tronc_queteur_id !== 0)
       {
@@ -428,7 +429,7 @@
         vm.errorWhileSaving = false;
         vm.errorWhileSavingDetails=null;
         vm.confirmButtonDisabled=false;
-
+        vm.current.troncsForComptage = TroncResource.troncForComptage();
         $timeout(function () { vm.savedSuccessfully=false; }, 10000);
       }
     }
@@ -450,7 +451,7 @@
         try
         {
           $log.debug("new value for tronc "+newValue);
-          troncDecodedAndFoundInDB (newValue, true);
+          vm.troncDecodedAndFoundInDB (newValue, true);
         }
         catch(exception)
         {
@@ -620,7 +621,7 @@
 
 
     //function used when scanning QR Code or using autocompletion
-    function troncDecodedAndFoundInDB (tronc, doNotReassingTronc)
+    vm.troncDecodedAndFoundInDB=function(tronc, doNotReassingTronc)
     {
       if(vm.current.readOnlyView !== true)
       { //if true, it means we're coming from the queteur form just to view the data.
@@ -636,7 +637,7 @@
           TroncQueteurResource.getLastTroncQueteurFromTroncId({'tronc_id':tronc.id}, handleTroncQueteur);
         }
       }
-    }
+    };
 
 
 
@@ -837,7 +838,7 @@
         {
           alert(reason +' ' + troncId+' '+ulId) ;
         };
-        QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
+        QRDecodeService.decodeTronc(data, checkTroncNotAlreadyDecocededFunction, vm.troncDecodedAndFoundInDB, troncDecodedAndNotFoundInDB);
 
       }
       vm.decodedData = data;
