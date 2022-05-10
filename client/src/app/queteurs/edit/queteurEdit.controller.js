@@ -114,7 +114,7 @@
           }
           try
           {
-            vm.current.mobile = parseInt(vm.current.mobile.slice(1));
+            vm.current.mobile = parseInt(vm.current.mobile.charAt(0) ==='+' ? vm.current.mobile.slice(1):vm.current.mobile);
           }
           catch(e)
           {

@@ -64,7 +64,7 @@ class UpdateQueteur extends Action
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
     $this->queteurDBService->update($queteurEntity, $ulId, $roleId, $userId);
-    if($queteurEntity->nivol != $oldQueteurEntity->nivol)
+    if($queteurEntity->nivol != $oldQueteurEntity->nivol && array_key_exists('user' , $this->parsedBody) && $this->parsedBody['user']['id']>0)
     {
       $user = $this->userDBService->getUserInfoWithQueteurId($queteurEntity->id, $ulId, $roleId);
       $this->userDBService->updateNivol($user->id, $queteurEntity->nivol, $ulId, $roleId);
