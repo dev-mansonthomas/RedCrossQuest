@@ -1,9 +1,9 @@
-CREATE USER 'spotfire_prod'@'44.230.83.28'  IDENTIFIED BY '*D2Yi!VxPfoDVkawqcL7/Lt?=*tZ_=kmM+Vt<NrX.ph6Cy4A.52dPiXv8-6KSsTK2f-GL:yZ+jQF5vyAR-z:Y_-q;LJ+FvTvFEpoudtWSfy';
-CREATE USER 'spotfire_prod'@'54.189.206.52' IDENTIFIED BY '*D2Yi!VxPfoDVkawqcL7/Lt?=*tZ_=kmM+Vt<NrX.ph6Cy4A.52dPiXv8-6KSsTK2f-GL:yZ+jQF5vyAR-z:Y_-q;LJ+FvTvFEpoudtWSfy';
-CREATE USER 'spotfire_prod'@'54.214.94.26'  IDENTIFIED BY '*D2Yi!VxPfoDVkawqcL7/Lt?=*tZ_=kmM+Vt<NrX.ph6Cy4A.52dPiXv8-6KSsTK2f-GL:yZ+jQF5vyAR-z:Y_-q;LJ+FvTvFEpoudtWSfy';
-CREATE USER 'spotfire_prod'@'54.204.62.233' IDENTIFIED BY '*D2Yi!VxPfoDVkawqcL7/Lt?=*tZ_=kmM+Vt<NrX.ph6Cy4A.52dPiXv8-6KSsTK2f-GL:yZ+jQF5vyAR-z:Y_-q;LJ+FvTvFEpoudtWSfy';
-CREATE USER 'spotfire_prod'@'50.19.56.150'  IDENTIFIED BY '*D2Yi!VxPfoDVkawqcL7/Lt?=*tZ_=kmM+Vt<NrX.ph6Cy4A.52dPiXv8-6KSsTK2f-GL:yZ+jQF5vyAR-z:Y_-q;LJ+FvTvFEpoudtWSfy';
-CREATE USER 'spotfire_prod'@'92.94.209.196' IDENTIFIED BY '*D2Yi!VxPfoDVkawqcL7/Lt?=*tZ_=kmM+Vt<NrX.ph6Cy4A.52dPiXv8-6KSsTK2f-GL:yZ+jQF5vyAR-z:Y_-q;LJ+FvTvFEpoudtWSfy';
+CREATE USER 'spotfire_prod'@'44.230.83.28'  IDENTIFIED BY '¤spotfire_prod_pwd¤';
+CREATE USER 'spotfire_prod'@'54.189.206.52' IDENTIFIED BY '¤spotfire_prod_pwd¤';
+CREATE USER 'spotfire_prod'@'54.214.94.26'  IDENTIFIED BY '¤spotfire_prod_pwd¤';
+CREATE USER 'spotfire_prod'@'54.204.62.233' IDENTIFIED BY '¤spotfire_prod_pwd¤';
+CREATE USER 'spotfire_prod'@'50.19.56.150'  IDENTIFIED BY '¤spotfire_prod_pwd¤';
+CREATE USER 'spotfire_prod'@'92.94.209.196' IDENTIFIED BY '¤spotfire_prod_pwd¤';
 
 
 -- GRANT SELECT,SHOW VIEW ON information_schema.* to 'spotfire_prod'@'44.230.83.28', 'spotfire_prod'@'54.189.206.52', 'spotfire_prod'@'54.214.94.26', 'spotfire_prod'@'54.204.62.233', 'spotfire_prod'@'50.19.56.150', 'spotfire_prod'@'92.94.209.196';

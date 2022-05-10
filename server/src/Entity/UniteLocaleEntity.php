@@ -226,6 +226,13 @@ class UniteLocaleEntity  extends Entity
    */
   public $registration_in_progress;
 
+  /**
+   * @OA\Property()
+   * @var string $tresorier_spreadsheet_id The Google Spreadsheet ID that is being updated with troncQueteurData
+   */
+  public $tresorier_spreadsheet_id;
+
+
 
   protected array $_fieldList = ['id','name','phone','latitude','longitude','address','postal_code','city','external_id','email','id_structure_rattachement','date_demarrage_activite','date_demarrage_rcq','mode','publicDashboard',
     'president_man'         ,
@@ -252,7 +259,8 @@ class UniteLocaleEntity  extends Entity
     'registration_approved' ,
     'reject_reason'         ,
     'approval_date'         ,
-    'registration_in_progress'];
+    'registration_in_progress',
+    'tresorier_spreadsheet_id'];
 
   /**
    * Accept an array of data matching properties of this class
@@ -350,5 +358,6 @@ class UniteLocaleEntity  extends Entity
     $this->getDate   ('created'                    , $data);
     $this->getDate   ('approval_date'              , $data);
     $this->getString ('reject_reason'              , $data, 200);
+    $this->getString ('tresorier_spreadsheet_id'   , $data, 200);
   }
 }

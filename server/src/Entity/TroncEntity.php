@@ -99,7 +99,7 @@ class TroncEntity extends Entity
   public function __construct(array &$data, LoggerInterface $logger)
   {
     parent::__construct($logger);
-    $this->getInteger('id'                , $data);
+    $this->getInteger('id'                , $data, 0);
     $this->getInteger('ul_id'             , $data);
     $this->getDate   ('created'           , $data);
     $this->getBoolean('enabled'           , $data);

@@ -797,9 +797,8 @@ ORDER BY q.last_name ASC
    * Get one queteur by its ID
    * UL_ID is optional as this method is used by the login process, which don't know yet the UL_ID
    * @param int $queteur_id The ID of the queteur
-   * @param int $ul_id Id of the UL that get the user
+   * @param int|null $ul_id Id of the UL that get the user
    * @return QueteurEntity  The queteur
-   * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations
    */
   public function getQueteurById(int $queteur_id, int $ul_id=null)

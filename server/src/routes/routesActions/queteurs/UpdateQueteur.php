@@ -10,6 +10,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
+use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\Entity\QueteurEntity;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
@@ -20,7 +21,14 @@ class UpdateQueteur extends Action
   /**
    * @var QueteurDBService          $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
+
+
+  /**
+   * @var UserDBService $userDBService
+   */
+  private UserDBService $userDBService;
+
 
   /**
    * @param LoggerInterface $logger
@@ -29,10 +37,12 @@ class UpdateQueteur extends Action
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
-                              QueteurDBService        $queteurDBService)
+                              QueteurDBService        $queteurDBService,
+                              UserDBService           $userDBService)
   {
     parent::__construct($logger, $clientInputValidator);
     $this->queteurDBService     = $queteurDBService;
+    $this->userDBService        = $userDBService;
 
   }
 
@@ -48,9 +58,17 @@ class UpdateQueteur extends Action
 
     $queteurEntity = new QueteurEntity($this->parsedBody, $this->logger);
 
+    $oldQueteurEntity = $this->queteurDBService->getQueteurById($queteurEntity->id, $roleId == 9? null : $ulId);
+
+
     //restore the leading +
     $queteurEntity->mobile = "+".$queteurEntity->mobile;
     $this->queteurDBService->update($queteurEntity, $ulId, $roleId, $userId);
+    if($queteurEntity->nivol != $oldQueteurEntity->nivol)
+    {
+      $user = $this->userDBService->getUserInfoWithQueteurId($queteurEntity->id, $ulId, $roleId);
+      $this->userDBService->updateNivol($user->id, $queteurEntity->nivol, $ulId, $roleId);
+    }
 
     return $this->response;
   }

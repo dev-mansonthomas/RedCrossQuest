@@ -49,6 +49,7 @@
       vm.current = new TroncResource();
       vm.current.saveInProgress=false;
       vm.current.type=1;
+      vm.current.ul_id=$localStorage.currentUser.ulId;
       vm.current.enabled=true;
       $rootScope.$emit('title-updated', 'Création d\'un nouveau Tronc');
     }

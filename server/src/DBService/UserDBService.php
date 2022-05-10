@@ -538,4 +538,44 @@ AND   `ul_id`           = :ul_id
     $count = $this->executeQueryForUpdate($sql, $parameters);
     return $count == 1;
   }
+
+
+  /**
+   * Update the NIVOL for the user, when the queteur's nivol is updated
+   * @param int $userId the id of the user that is being updated
+   * @param string $nivol the new nivol
+   * @param int|null $ul_id the ul_id of the connected user that performs the update
+   * @throws Exception
+   */
+  public function updateNivol(int $userId, string $nivol,  int $ul_id, int $roleId)
+  {
+    $sql = "
+UPDATE  `users` u,
+        `queteur` q
+SET     u.`nivol`      = :nivol
+WHERE   u.`id`         = :id
+AND     u.`queteur_id` = q.`id`
+";
+    $parameters = ["id" => $userId, "nivol"=>$nivol];
+    
+    if($roleId!=9)
+    {
+      $sql .= "
+AND  q.`ul_id` = :ul_id";
+      $sql .="
+LIMIT 1
+";
+      $parameters["ul_id"] = $ul_id;
+    }
+
+
+    $count = $this->executeQueryForUpdate($sql, $parameters);
+    if($count != 1)
+    {
+      $this->logger->error("Error while updating the user's NIVOL", ['userId'=>$userId,  'nivol'=>$nivol,  'ul_id'=>$ul_id,  'roleId'=>$roleId]);
+      throw new Exception("Error while updating the user's NIVOL");
+    }
+
+  }
+
 }

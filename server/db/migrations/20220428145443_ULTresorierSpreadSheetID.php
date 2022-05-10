@@ -29,7 +29,7 @@ class ULTresorierSpreadSheetID extends AbstractMigration
     {
       $ul_table = $this->table('ul');
       $ul_table
-        ->addColumn('tresorier_spreadsheet_id', 'string', array('limit' => 255 ))
+        ->addColumn('tresorier_spreadsheet_id', 'string', array('limit' => 255, 'null'=>true ))
         ->update();
     }
 }
