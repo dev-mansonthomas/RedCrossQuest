@@ -53,7 +53,7 @@
           <div class="col-md-1">
             <div class="form-group" ng-class="{'has-error':pointQueteForm.pqPostalCode.$invalid}">
               <label for="pqPostalCode" class="control-label" style="font-size: 11px;">Code Postal</label>
-              <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="pqe.current.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'  ng-disabled="pqe.currentUserRole < 4"/>
+              <input type="text" id="pqPostalCode" name="pqPostalCode" ng-model="pqe.current.postal_code" maxlength="15" class="form-control" required autocomplete='postal-code'  ng-pattern="/^[0-9]{1,5}$/" ng-disabled="pqe.currentUserRole < 4"/>
             </div>
           </div>
           <div class="col-md-3">
