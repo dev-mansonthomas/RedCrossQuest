@@ -128,13 +128,14 @@
             class="form-control"
             ng-model="qrcQueteurs.listQueteurIds"
             ng-pattern="qrcQueteurs.listQueteurIdsRegExp"
+            ng-maxlength="100"
             placeholder="Listes des ID des Quêteurs à imprimer séparé par une virgule"
           />
             <span class="help-block">
               exemple:
               <ul>
                 <li>3453 pour imprimé 1 QRCode</li>
-                <li>3453,6478,3892,38894 pour imprimé 4 QRCodes</li>
+                <li>3453,6478,3892,38894 pour imprimé 4 QRCodes. Maximum 100 caractères.</li>
               </ul>
               Sous le QRCode, il est marqué QUETEUR-00000XXX-000000<b>YYYYY</b> => c'est le <b>YYYY</b> qu'il faut reporter dans ce champ
             </span>

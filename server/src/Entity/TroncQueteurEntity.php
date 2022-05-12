@@ -75,27 +75,27 @@ class TroncQueteurEntity extends Entity
 
   /**
    * @OA\Property()
-   * @var Carbon $depart_theorique theoretical Departure Date of the volunteer
+   * @var ?Carbon $depart_theorique theoretical Departure Date of the volunteer
    */
   public $depart_theorique ;
   /**
    * @OA\Property()
-   * @var Carbon $depart Real departure date
+   * @var Carbon|null $depart Real departure date
    */
-  public $depart           ;
+  public $depart     ;
   /**
    * @OA\Property()
-   * @var Carbon $retour Return date
+   * @var ?Carbon $retour Return date
    */
-  public $retour           ;
+  public  $retour           ;
   /**
    * @OA\Property()
-   * @var Carbon $comptage Coins & Bills counting date
+   * @var ?Carbon $comptage Coins & Bills counting date
    */
-  public $comptage         ;
+  public  $comptage         ;
   /**
    * @OA\Property()
-   * @var Carbon $last_update Last time the TroncQueteur row is updated
+   * @var Carbon|null $last_update Last time the TroncQueteur row is updated
    */
   public $last_update      ;
   /**

@@ -68,7 +68,7 @@ class ListQueteurs extends Action
       ClientInputValidatorSpecs::withBoolean("rcqUser"            , $this->queryParams, false , false),
       ClientInputValidatorSpecs::withBoolean("rcqUserActif"       , $this->queryParams, false , false),
       ClientInputValidatorSpecs::withBoolean("benevoleOnly"       , $this->queryParams, false , false),
-      ClientInputValidatorSpecs::withString ("queteurIds"         , $this->queryParams, 50 , false    ),
+      ClientInputValidatorSpecs::withString ("queteurIds"         , $this->queryParams, 100, false    ),
       ClientInputValidatorSpecs::withInteger('QRSearchType'       , $this->queryParams, 5   , false    ),
       ClientInputValidatorSpecs::withInteger('admin_ul_id'        , $this->queryParams, 1000, false    )
     ];

@@ -273,5 +273,14 @@ class Entity
         }
       }
     }
+    //fix "Typed property RedCrossQuestEntityTroncEntity::$depart must not be accessed before initialization"
+    //if(!isset($this->$key))
+    //{
+      //Fix the following error, but gives a bad default value. Typed property RedCrossQuestEntityTroncEntity::$depart must be an instance of CarbonCarbon, null used
+      //$this->$key = null;
+      //this allows the GDRP export data to work, but gives an incorrect value, which is likely to have a wide set of side effects
+      //$this->$key = Carbon::minValue();
+
+    //}
   }
 }
