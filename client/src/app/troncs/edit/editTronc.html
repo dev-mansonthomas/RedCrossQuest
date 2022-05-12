@@ -42,7 +42,7 @@
                        id="nombreTronc"
                      name="nombreTronc"
                      class="form-control"
-                     min="1"
+                     min="!tronc.current.id && tronc.currentUserRole >=4?1:0"
                      max="50"
                      ng-model="tronc.current.nombreTronc"
                      autofocus
