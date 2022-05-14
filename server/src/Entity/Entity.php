@@ -14,6 +14,7 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
+use Throwable;
 
 class Entity
 {
@@ -59,24 +60,30 @@ class Entity
     $csvRow="";
     foreach($this->_fieldList as $field)
     {
-      $value = $this->{$field};
-      if(gettype($value) ==='boolean')
+      try
       {
-        $csvRow.= ($value?1:0).";";
-      }
-      else
-      {
-        if(is_array($value))
+        $value = $this->{$field};
+        if(gettype($value) ==='boolean')
         {
-          $csvRow.= implode("-",$value).";";
+          $csvRow.= ($value?1:0).";";
         }
         else
         {
-          $csvRow.= $value.";";
+          if(is_array($value))
+          {
+            $csvRow.= implode("-",$value).";";
+          }
+          else
+          {
+            $csvRow.= $value.";";
+          }
+
         }
-
       }
-
+      catch(Throwable $e)
+      {
+        $this->logger->error("error while serializing as CSV",["name"=>$field, "value"=>$value, "throwable"=>print_r($e,true), "entity"=>print_r($entity, true)]);
+      }
     }
     return $csvRow. PHP_EOL;
   }

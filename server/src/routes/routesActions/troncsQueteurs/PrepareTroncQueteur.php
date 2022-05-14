@@ -87,6 +87,7 @@ class PrepareTroncQueteur extends Action
   {
     $ulId      = $this->decodedToken->getUlId       ();
     $userId    = $this->decodedToken->getUid        ();
+    $roleId    = $this->decodedToken->getRoleId     ();
 
     $tq    = new TroncQueteurEntity($this->parsedBody, $this->logger);
     $this->logger->debug("Preparation Tronc - Depart Theorique - before hasQueteAlreadyStarted", ["dt"=>$tq->depart_theorique]);
@@ -109,38 +110,39 @@ class PrepareTroncQueteur extends Action
         $this->troncQueteurDBService->setDepartToNow($insertResponse->lastInsertId, $ulId, $userId);
       }
 
-      $tq         = $this->troncQueteurDBService->getTroncQueteurById($insertResponse->lastInsertId, $ulId);
-      $queteur    = $this->queteurDBService     ->getQueteurById     ($tq->queteur_id              , $ulId);
-      $pointQuete = $this->pointQueteDBService  ->getPointQueteById  ($tq->point_quete_id          , $ulId, 1);
-
-
-      $queteurLightArray = ['first_name'=>$queteur->first_name, 'last_name'=>$queteur->last_name];
-      $queteurLight = new QueteurEntity($queteurLightArray, $this->logger);
-
-      $pointQueteLightArray = ['name'=>$pointQuete->name];
-      $pointQueteLight = new PointQueteEntity($pointQueteLightArray, $this->logger);
-
-      $queteurLight   ->genericPreparePubSubPublishing();
-      $pointQueteLight->genericPreparePubSubPublishing();
-
-      unset($pointQueteLight->max_people);
-      unset($queteurLight->referent_volunteerQueteur);
-      unset($queteurLight->user);
-
-      $tq->queteur     = $queteurLight;
-      $tq->point_quete = $pointQueteLight;
-
-      $tq->preparePubSubPublishing();
-      
-      $messageProperties  = [
-        'ulId'          => "".$ulId,
-        'uId'           => "".$userId,
-        'queteurId'     => "".$tq->queteur_id,
-        'troncQueteurId'=> "".$tq->id
-      ];
 
       try
       {
+        $tq         = $this->troncQueteurDBService->getTroncQueteurById($insertResponse->lastInsertId, $ulId, $roleId);
+        $queteur    = $this->queteurDBService     ->getQueteurById     ($tq->queteur_id              , $ulId);
+        $pointQuete = $this->pointQueteDBService  ->getPointQueteById  ($tq->point_quete_id          , $ulId, $roleId);
+
+
+        $queteurLightArray = ['first_name'=>$queteur->first_name, 'last_name'=>$queteur->last_name];
+        $queteurLight = new QueteurEntity($queteurLightArray, $this->logger);
+
+        $pointQueteLightArray = ['name'=>$pointQuete->name];
+        $pointQueteLight = new PointQueteEntity($pointQueteLightArray, $this->logger);
+
+        $queteurLight   ->genericPreparePubSubPublishing();
+        $pointQueteLight->genericPreparePubSubPublishing();
+
+        unset($pointQueteLight->max_people);
+        unset($queteurLight->referent_volunteerQueteur);
+        unset($queteurLight->user);
+
+        $tq->queteur     = $queteurLight;
+        $tq->point_quete = $pointQueteLight;
+
+        $tq->preparePubSubPublishing();
+
+        $messageProperties  = [
+          'ulId'          => "".$ulId,
+          'uId'           => "".$userId,
+          'queteurId'     => "".$tq->queteur_id,
+          'troncQueteurId'=> "".$tq->id
+        ];
+        
         $this->pubSubService->publish(
           $this->settings['PubSub']['tronc_queteur_create_topic'],
           $tq,

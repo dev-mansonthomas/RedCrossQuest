@@ -179,7 +179,7 @@ ORDER BY t.id DESC
    * @throws Exception if tronc_queteur not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getTroncQueteurById(int $id, int $ulId):TroncQueteurEntity
+  public function getTroncQueteurById(int $id, int $ulId, int $roleId):TroncQueteurEntity
   {
     $sql = "
 SELECT 
@@ -224,10 +224,20 @@ t.`ul_id`             ,
  `don_cheque_number`         
 FROM  `tronc_queteur` as t
 WHERE  t.id         = :id
-AND    t.ul_id      = :ul_id
-LIMIT 1
 ";
-    $parameters = ["id" => $id, "ul_id" => $ulId];
+    $parameters = ["id" => $id];
+
+    if($roleId != 9)
+    {
+      $sql .= "
+AND   `ul_id`           = :ul_id      
+";
+      $parameters["ul_id"] = $ulId;
+    }
+
+    $sql.="
+LIMIT 1";
+
     /**
      * @var TroncQueteurEntity  $troncQueteurEntity
      */
@@ -250,7 +260,7 @@ LIMIT 1
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations, possibly : parsing error in the entity
    */
-  public function getTroncsQueteur(int $queteur_id, int $ulId):array
+  public function getTroncsQueteur(int $queteur_id, int $ulId, int $roleId):array
   {
     $sql = "
 SELECT 
@@ -287,16 +297,24 @@ t.`ul_id`             ,
  `deleted`            ,
  `coins_money_bag_id` ,
  `bills_money_bag_id` ,
- `don_cb_total_number`         ,       
+ `don_cb_total_number`,       
  `don_cheque_number`         
-
 FROM  `tronc_queteur` as t
-WHERE  t.queteur_id = :queteur_id
-AND    t.ul_id      = :ul_id
-ORDER BY t.id desc 
+WHERE  t.queteur_id = :queteur_id 
+";
+    $parameters = ["queteur_id" => $queteur_id];
+
+    if($roleId !=9)
+    {
+      $sql .="
+AND    t.ul_id            = :ul_id
+";
+      $parameters["ul_id"] = $ulId;
+    }
+    $sql .= "
+    ORDER BY t.id desc
 ";
 
-    $parameters = ["queteur_id" => $queteur_id, "ul_id" => $ulId];
     return $this->executeQueryForArray($sql, $parameters, function($row) {
       return new TroncQueteurEntity($row, $this->logger);
     });
@@ -834,7 +852,7 @@ AND  (tq.depart IS NULL OR
    * @throws Exception if tronc_queteur not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getTroncQueteurHistoryById(int $id, int $ulId):array
+  public function getTroncQueteurHistoryById(int $id, int $ulId, int $roleId):array
   {
     $sql = "
 SELECT 
@@ -881,11 +899,22 @@ t.`ul_id`                     ,
 `don_cheque_number`         
 FROM  `tronc_queteur_historique`  as t
 WHERE  t.tronc_queteur_id = :tronc_queteur_id
-AND    t.ul_id            = :ul_id
-ORDER BY t.id DESC
 ";
 
-    $parameters = ["tronc_queteur_id" => $id, "ul_id" => $ulId];
+    $parameters = ["tronc_queteur_id" => $id];
+
+    if($roleId !=9)
+    {
+      $sql .="
+AND    t.ul_id            = :ul_id
+";
+      $parameters["ul_id"] = $ulId;
+    }
+
+    $sql .= "
+ORDER BY t.id DESC";
+
+
     return $this->executeQueryForArray($sql, $parameters, function($row) {
       return new TroncQueteurEntity($row, $this->logger);
     });

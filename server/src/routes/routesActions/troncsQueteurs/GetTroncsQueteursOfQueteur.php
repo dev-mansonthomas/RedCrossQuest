@@ -49,8 +49,9 @@ class GetTroncsQueteursOfQueteur extends Action
       ]);
 
     $queteur_id    = $this->validatedData["queteur_id"];
-    $ulId          = $this->decodedToken->getUlId ();
-    $troncsQueteur = $this->troncQueteurDBService->getTroncsQueteur($queteur_id, $ulId);
+    $ulId          = $this->decodedToken->getUlId   ();
+    $roleId        = $this->decodedToken->getRoleId ();
+    $troncsQueteur = $this->troncQueteurDBService->getTroncsQueteur($queteur_id, $ulId, $roleId);
 
     $this->response->getBody()->write(json_encode($troncsQueteur));
 

@@ -90,17 +90,17 @@ class AssociateRegistrationWithExistingQueteur extends Action
     $queteurEntity->registration_approved = true;
     $this->queteurDBService->associateRegistrationWithExistingQueteur($queteurEntity, $userId, $ulId);
 
-    //publishing message to pubsub so that firebase is updated
-    $responseMessageIds = null;
-    $messageProperties  = [
-      'ulId'          => "".$ulId,
-      'uId'           => "".$userId,
-      'queteurId'     => "".$queteurEntity->id,
-      'registrationId'=> "".$queteurEntity->registration_id
-    ];
 
     try
     {
+      //publishing message to pubsub so that firebase is updated
+      $responseMessageIds = null;
+      $messageProperties  = [
+        'ulId'          => "".$ulId,
+        'uId'           => "".$userId,
+        'queteurId'     => "".$queteurEntity->id,
+        'registrationId'=> "".$queteurEntity->registration_id
+      ];
 
       $this->emailBusinessService->sendRedQuestApprovalDecision($queteurEntity, $queteurEntity->registration_approved);
 

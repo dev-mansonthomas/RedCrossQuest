@@ -81,6 +81,7 @@ class SaveCoinsOnTroncQueteur extends Action
 
     $ulId      = $this->decodedToken->getUlId       ();
     $userId    = $this->decodedToken->getUid        ();
+    $roleId    = $this->decodedToken->getRoleId     ();
     
     /** @var TroncQueteurEntity */
     $tq = new TroncQueteurEntity($this->parsedBody, $this->logger);
@@ -105,23 +106,25 @@ class SaveCoinsOnTroncQueteur extends Action
 
     $this->troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
 
-
-    $tqUpdated = $this->troncQueteurDBService->getTroncQueteurById($tq->id, $ulId);
-    $tqUpdated->preparePubSubPublishing();
-    if($adminMode)
-    {
-      $tqUpdated->saveAsAdmin=1;
-    }
-
-    $messageProperties  = [
-      'ulId'          => "".$ulId,
-      'uId'           => "".$userId,
-      'queteurId'     => "".$tqUpdated->queteur_id,
-      'troncQueteurId'=> "".$tqUpdated->id
-    ];
-
     try
     {
+      $tqUpdated = $this->troncQueteurDBService->getTroncQueteurById($tq->id, $ulId,$roleId);
+      var_dump($tqUpdated);
+      
+      $tqUpdated->preparePubSubPublishing();
+      if($adminMode)
+      {
+        $tqUpdated->saveAsAdmin=1;
+      }
+
+      $messageProperties  = [
+        'ulId'          => "".$ulId,
+        'uId'           => "".$userId,
+        'queteurId'     => "".$tqUpdated->queteur_id,
+        'troncQueteurId'=> "".$tqUpdated->id
+      ];
+
+
       $this->pubSubService->publish(
         $this->settings['PubSub']['tronc_queteur_update_topic'],
         $tqUpdated,

@@ -270,7 +270,7 @@
       }
       else
       {
-        if(vm.current.id === vm.current.referent_volunteer)
+        if(typeof vm.current.id !== 'undefined' && vm.current.id === vm.current.referent_volunteer)
         {
           vm.current.referent_volunteerQueteur=null;
           vm.current.referent_volunteer=null;

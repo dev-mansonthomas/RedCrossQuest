@@ -16,8 +16,10 @@ use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UniteLocaleSettingsDBService;
 use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\DBService\YearlyGoalDBService;
+use RedCrossQuest\Entity\Entity;
 use RedCrossQuest\Entity\PageableRequestEntity;
 use RedCrossQuest\Service\Logger;
+use Throwable;
 use ZipArchive;
 
 class ExportDataBusinessService

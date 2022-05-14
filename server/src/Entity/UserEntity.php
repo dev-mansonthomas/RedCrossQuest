@@ -75,10 +75,10 @@ class UserEntity extends Entity
   public $last_successful_login_date  ;
   /**
    * @OA\Property()
-   * @var int $init_password_date when the password was last re initiated
+   * @var int $init_passwd_date when the password was last re initiated
    */
 
-  public $init_password_date          ;
+  public $init_passwd_date          ;
   /**
    * @OA\Property()
    * @var string $first_name first name of the user
@@ -91,7 +91,7 @@ class UserEntity extends Entity
    */
   public $last_name                   ;
 
-  protected array $_fieldList = ['id','nivol','queteur_id','password','password_defined','role','created','updated','active','last_failure_login_date','nb_of_failure','last_successful_login_date','init_password_date','first_name','last_name'];
+  protected array $_fieldList = ['id','nivol','queteur_id','password','password_defined','role','created','updated','active','last_failure_login_date','nb_of_failure','last_successful_login_date','init_passwd_date','first_name','last_name'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class
@@ -117,7 +117,7 @@ class UserEntity extends Entity
     $this->getDate   ('last_failure_login_date'   , $data);
     $this->getInteger('nb_of_failure'             , $data);
     $this->getDate   ('last_successful_login_date', $data);
-    $this->getDate   ('init_password_date'        , $data);
+    $this->getDate   ('init_passwd_date'          , $data);
 
     $this->getString ('first_name'                , $data, 100);
     $this->getString ('last_name'                 , $data, 100);

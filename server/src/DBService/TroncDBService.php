@@ -90,7 +90,7 @@ WHERE  t.ul_id = :ul_id
      * @throws Exception if the tronc is not found
      * @throws PDOException if the query fails to execute on the server
      */
-    public function getTroncById(int $tronc_id, int $ulId):?TroncEntity
+    public function getTroncById(int $tronc_id, int $ulId, int $roleId):?TroncEntity
     {
       $sql = "
 SELECT `id`,
@@ -101,10 +101,21 @@ SELECT `id`,
        `type`
 FROM  `tronc` as t
 WHERE  t.id    = :tronc_id
-AND    t.ul_id = :ul_id
+
+";
+      $parameters = ["tronc_id" => $tronc_id];
+
+      if($roleId != 9)
+      {
+        $sql .= "
+AND   `ul_id`           = :ul_id      
+";
+        $parameters["ul_id"] = $ulId;
+      }
+      $sql .= "
 LIMIT 1
 ";
-      $parameters = ["tronc_id" => $tronc_id, "ul_id" => $ulId];
+
 
       /** @noinspection PhpIncompatibleReturnTypeInspection */
       return $this->executeQueryForObject($sql, $parameters, function($row) {

@@ -296,13 +296,12 @@ LIMIT 1
   {
 
     $sql = "
-SELECT u.id, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
+SELECT u.id, u.nivol, u.queteur_id, LENGTH(u.password) >1 as password_defined, u.role, 
        u.nb_of_failure, u.last_failure_login_date, u.last_successful_login_date,
        u.init_passwd_date, u.active, u.created, u.updated, q.first_name, q.last_name
 FROM   users u, queteur q
 WHERE  u.queteur_id = q.id
 AND    q.ul_id      = :ul_id
-LIMIT 1
 ";
 
     $parameters = ["ul_id"=>$ulId];

@@ -61,25 +61,26 @@ class SaveAsAdminOnTroncQueteur extends Action
   {
     $ulId      = $this->decodedToken->getUlId       ();
     $userId    = $this->decodedToken->getUid        ();
+    $roleId    = $this->decodedToken->getRoleId     ();
 
     /** @var TroncQueteurEntity */
     $tq = new TroncQueteurEntity($this->parsedBody, $this->logger);
 
     $this->troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
-
-    $tqUpdated = $this->troncQueteurDBService->getTroncQueteurById($tq->id, $ulId);
-    $tqUpdated->preparePubSubPublishing();
-    $tqUpdated->saveAsAdmin=1;
-
-    $messageProperties  = [
-      'ulId'          => "".$ulId,
-      'uId'           => "".$userId,
-      'queteurId'     => "".$tqUpdated->queteur_id,
-      'troncQueteurId'=> "".$tqUpdated->id
-    ];
-
+    
     try
     {
+      $tqUpdated = $this->troncQueteurDBService->getTroncQueteurById($tq->id, $ulId,$roleId);
+      $tqUpdated->preparePubSubPublishing();
+      $tqUpdated->saveAsAdmin=1;
+
+      $messageProperties  = [
+        'ulId'          => "".$ulId,
+        'uId'           => "".$userId,
+        'queteurId'     => "".$tqUpdated->queteur_id,
+        'troncQueteurId'=> "".$tqUpdated->id
+      ];
+
       $this->pubSubService->publish(
         $this->settings['PubSub']['tronc_queteur_update_topic'],
         $tqUpdated,

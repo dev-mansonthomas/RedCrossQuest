@@ -49,8 +49,9 @@ class GetTronc extends Action
 
     $ulId    = $this->decodedToken->getUlId();
     $troncId = $this->validatedData["id"];
+    $roleId  = $this->decodedToken->getRoleId     ();
 
-    $tronc = $this->troncDBService->getTroncById($troncId, $ulId);
+    $tronc = $this->troncDBService->getTroncById($troncId, $ulId, $roleId);
     if($tronc != null)
     {
       $this->response->getBody()->write(json_encode($tronc));

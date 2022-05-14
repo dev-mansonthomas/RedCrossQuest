@@ -82,7 +82,7 @@ class TroncQueteurEntity extends Entity
    * @OA\Property()
    * @var Carbon|null $depart Real departure date
    */
-  public $depart     ;
+  public $depart    = null;
   /**
    * @OA\Property()
    * @var ?Carbon $retour Return date
@@ -450,6 +450,7 @@ class TroncQueteurEntity extends Entity
      */
     function preparePubSubPublishing():void
     {
+      //$this->logger->error("DEBUG 1", ["tq"=>print_r($this, true)]);
       $this->depart_theorique = $this->depart_theorique !== null ? $this->depart_theorique ->toDateTimeString() : null;
       $this->depart           = $this->depart           !== null ? $this->depart           ->toDateTimeString() : null;
       $this->retour           = $this->retour           !== null ? $this->retour           ->toDateTimeString() : null;
@@ -458,7 +459,8 @@ class TroncQueteurEntity extends Entity
 
       unset($this->tronc);
       unset($this->rowCount);
-
+      //$this->logger->error("DEBUG 2", ["tq"=>print_r($this, true)]);
       $this->genericPreparePubSubPublishing();
+      //$this->logger->error("DEBUG 3", ["tq"=>print_r($this, true)]);
     }
 }

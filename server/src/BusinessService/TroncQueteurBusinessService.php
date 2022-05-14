@@ -82,7 +82,7 @@ class TroncQueteurBusinessService
 
     if($troncQueteur->tronc_id)
     {
-      $troncQueteur->tronc       = $this->troncDBService      ->getTroncById      ($troncQueteur->tronc_id       , $ulId);
+      $troncQueteur->tronc       = $this->troncDBService      ->getTroncById      ($troncQueteur->tronc_id       , $ulId, $roleId);
       //$this->logger->debug("getLastTroncQueteurFromTroncId - Tronc", ["T"=>$troncQueteur->tronc]);
     }
     return  $troncQueteur;
@@ -97,13 +97,13 @@ class TroncQueteurBusinessService
    */
   public function getTroncQueteurFromTroncQueteurId(int $tronc_queteur_id, int $ulId, int $roleId):TroncQueteurEntity
   {
-    $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId);
+    $troncQueteur               = $this->troncQueteurDBService ->getTroncQueteurById($tronc_queteur_id            , $ulId, $roleId);
     //$this->logger->debug("getTroncQueteurFromTroncQueteurId - TQ", ["TQ"=>$troncQueteur]);
     $troncQueteur->queteur      = $this->queteurDBService      ->getQueteurById     ($troncQueteur->queteur_id    , $roleId ==9 ? null: $ulId);
     //$this->logger->debug("getTroncQueteurFromTroncQueteurId - Queteur", ["Q"=>$troncQueteur->queteur ]);
     $troncQueteur->point_quete  = $this->pointQueteDBService   ->getPointQueteById  ($troncQueteur->point_quete_id, $ulId, $roleId);
     //$this->logger->debug("getTroncQueteurFromTroncQueteurId - PointQuete", ["PQ"=>$troncQueteur->point_quete]);
-    $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId);
+    $troncQueteur->tronc        = $this->troncDBService        ->getTroncById       ($troncQueteur->tronc_id      , $ulId, $roleId);
     //$this->logger->debug("getTroncQueteurFromTroncQueteurId - Tronc", ["T"=>$troncQueteur->tronc]);
 
     return  $troncQueteur;

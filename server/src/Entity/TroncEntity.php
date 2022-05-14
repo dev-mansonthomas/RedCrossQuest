@@ -88,7 +88,8 @@ class TroncEntity extends Entity
 
 
 
-  protected array $_fieldList = ['id','ul_id','created','enabled','notes','nombreTronc', 'tronc_queteur_id', 'first_name', 'last_name', 'depart', 'retour'];
+  protected array $_fieldList = ['id','ul_id','created','enabled','notes','nombreTronc'];
+  //do not put ", 'tronc_queteur_id', 'first_name', 'last_name', 'depart', 'retour'" fields as it generate serialization error, when serlializing in CSV
   /**
      * Accept an array of data matching properties of this class
      * and create the class
