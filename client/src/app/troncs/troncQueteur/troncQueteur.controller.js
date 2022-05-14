@@ -398,7 +398,6 @@
     {
       var listOfFields=[
         'point_quete_id',
-        'deleted',
         'horaireDepartTheorique',
         'horaireDepart',
         'retour',
@@ -413,6 +412,12 @@
           return true;
         }
       }
+      //radiobutton don't have the pristine variable that changes when modifying the radio.
+      if(vm.current.deleted_ori !== vm.current.tronc_queteur.deleted)
+      {
+        return true;
+      }
+
       return false;
     }
 
@@ -464,6 +469,7 @@
     function handleTroncQueteur(tronc_queteur)
     {
       vm.current.tronc_queteur        = tronc_queteur;
+      vm.current.deleted_ori          = tronc_queteur.deleted;
       vm.current.dateRetourNotFilled  = false;
       vm.current.fillTronc            = false;
 
