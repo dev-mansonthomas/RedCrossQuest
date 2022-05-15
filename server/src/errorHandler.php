@@ -25,7 +25,10 @@ return function (ContainerInterface $c, App $app)
         'URI'       => $request->getUri    (),
         'httpMethod'=> $request->getMethod (),
         'headers'   => $request->getHeaders(),
-        'body'      => $request->getBody   ()->getContents(),
+        'bodyType'          => gettype($request->getBody   ()),
+        'bodyClass'         => get_class($request->getBody   ()),
+        'bodyContentType'   => gettype($request->getBody   ()->getContents()),
+        'body'              => gettype($request->getBody   ()) == "object" ? print_r($request->getBody   (), true): $request->getBody   ()->getContents(),
         Logger::$EXCEPTION => $exception));
 
 

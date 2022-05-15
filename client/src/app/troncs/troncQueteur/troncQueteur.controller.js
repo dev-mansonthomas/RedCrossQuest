@@ -70,7 +70,8 @@
 
     vm.activateAdminEditMode = function()
     {
-      vm.current.adminEditMode=true;
+      vm.current.adminEditMode = true;
+      vm.current.fillTronc     = true;
       vm.coinsAndCBAndChequeMandatoryInAdminModeFunction();
     };
 
@@ -212,7 +213,7 @@
 
     vm.computeTotalAmountForCB=function()
     {
-      if(vm.current.tronc_queteur)
+      if(vm.current.tronc_queteur && vm.current.tronc_queteur.don_cb_details)
       {
         var total = 0;
         vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
@@ -291,10 +292,11 @@
           vm.current.tronc_queteur.don_cb_details = vm.current.tronc_queteur.don_cb_details.filter(function(value) {
             return !(value.delete && !value.id)
           });
-
           if(vm.current.adminEditMode && vm.currentUserRole >= 4)
           {
-            vm.current.tronc_queteur.$saveCoinsAsAdmin(savedSuccessfully, onSaveError);
+            //if you use vm.current.tronc_queteur.$saveCoinsAsAdmin(, the ojbect tronc_queteur is cleared after the first post, which makes the saveAsAdmin in the "savedSuccessfully" function fails.
+            TroncQueteurResource.saveCoinsAsAdmin(vm.current.tronc_queteur, savedSuccessfully, onSaveError);
+            //vm.current.tronc_queteur.$saveCoinsAsAdmin(savedSuccessfully, onSaveError);
           }
           else
           {

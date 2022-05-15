@@ -34,7 +34,7 @@ class SpotfireAccessDBService extends DBService
 
      // $this->logger->info('spotfireAccess Token:', [$currentValidToken->token]);
 
-      return (object)["token"=>$currentValidToken->token];
+      return (object)["token"=>$currentValidToken->token, "token_expiration"=>$currentValidToken->token_expiration];
     }
 
 
@@ -43,9 +43,10 @@ class SpotfireAccessDBService extends DBService
     $deleteSQL="
     DELETE FROM spotfire_access
     WHERE user_id = :user_id
+    AND   ul_id   = :ul_id
     ";
 
-    $parameters = ["user_id"=> $userId ];
+    $parameters = ["user_id"=> $userId,  "ul_id"=> $ulId];
 
     $this->executeQueryForUpdate($deleteSQL, $parameters);
 
@@ -82,7 +83,7 @@ VALUES
     $currentDate = Carbon::now();
     $currentDate->setTimezone("Europe/Paris");
 
-    return (object)["creationTime"=>$currentDate, "token"=>$token];
+    return $this->getValidToken($userId, $ulId);
   }
 
 

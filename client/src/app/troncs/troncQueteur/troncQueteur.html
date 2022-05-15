@@ -270,7 +270,7 @@
       <span class="help-block" ng-show="tq.currentUserRole < 4">
         <ul>
           <li>Si vous vouliez vraiment compter ce tronc, les préparation/départ/retour ont du échoués (ca fait beaucoup d'échec quand même...)</li>
-          <li>Si vous voulez vraiment éditer ce tronc de l'année dernière, <a ng-href="/#!/tronc_queteur/edit/{{tq.current.tronc_queteur.id}}"> cliquez ici </a>, cliquez sur le bouton "Mode Edition Admin" et sauvegarder</li>
+          <li>Si vous voulez vraiment éditer ce tronc de l'année dernière, <a ng-href="/#!/tronc_queteur/edit/{{tq.current.tronc_queteur.id}}"> cliquez ici </a>, cliquez sur le bouton "Mode Édition Admin" et sauvegarder</li>
         </ul>
       </span>
     </div>
@@ -336,7 +336,7 @@
                     ng-show="tq.current.adminEditMode == false"
                     ng-click="tq.activateAdminEditMode();"
                     style="width:100%;height:70px;">
-              Mode Edition Admin
+              Mode Édition Admin
             </button>
             <!-- This is to check if one coin/bill/cb/cheque field has been set > 0 to make all field mandatory
             THis is to avoid troncqueteur without coinMoneyBagID

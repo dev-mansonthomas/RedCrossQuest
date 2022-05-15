@@ -16,6 +16,7 @@ use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\Logger;
 use RedCrossQuest\Service\PubSubService;
+use Throwable;
 
 
 class SaveAsAdminOnTroncQueteur extends Action
@@ -63,10 +64,18 @@ class SaveAsAdminOnTroncQueteur extends Action
     $userId    = $this->decodedToken->getUid        ();
     $roleId    = $this->decodedToken->getRoleId     ();
 
-    /** @var TroncQueteurEntity */
-    $tq = new TroncQueteurEntity($this->parsedBody, $this->logger);
+    try
+    {
+      /** @var TroncQueteurEntity */
+      $tq = new TroncQueteurEntity($this->parsedBody, $this->logger);
 
-    $this->troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
+      $this->troncQueteurDBService->updateTroncQueteurAsAdmin($tq, $ulId, $userId);
+    }
+    catch(Throwable $exception)
+    {
+      $this->logger->error("Error while updateTroncQueteurAsAdmin",["tq"=>$tq]);
+      return $this->response->withStatus(500, "Error while updating TroncQueteur as admin") ;
+    }
     
     try
     {

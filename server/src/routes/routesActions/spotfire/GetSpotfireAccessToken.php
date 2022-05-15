@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\SpotfireAccessDBService;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
+use Throwable;
 
 
 class GetSpotfireAccessToken extends Action
@@ -48,18 +49,22 @@ class GetSpotfireAccessToken extends Action
    */
   protected function action(): Response
   {
-    $ulId           = $this->decodedToken->getUlId  ();
-    $userId         = $this->decodedToken->getUid();
+    $ulId           = $this->decodedToken->getUlId();
+    $userId         = $this->decodedToken->getUid ();
 
-    $validToken = $this->spotfireAccessDBService->getValidToken($userId, $ulId);
-
-    if($validToken == null)
+    try
     {
-      $validToken = $this->spotfireAccessDBService->grantAccess($userId ,$ulId,   $this->settings['appSettings']['sessionLength' ])->token;
+      $validToken = $this->spotfireAccessDBService->grantAccess($userId ,$ulId,   $this->settings['appSettings']['sessionLength' ]);
+
+      $this->response->getBody()->write(json_encode(new GetSpotfireTokenResponse($validToken->token, $validToken->token_expiration)));
+
+      return $this->response;
+    }
+    catch(Throwable $exception)
+    {
+      $this->logger->error("Error while getting Spotfire access token",["decodedToken" => $this->decodedToken, "validToken"=>$validToken]);
+      return $this->response->withStatus(500, "Error while getting Spotfire access token") ;
     }
 
-    $this->response->getBody()->write(json_encode(new GetSpotfireTokenResponse($validToken->token, $validToken->token_expiration)));
-
-    return $this->response;
   }
 }
