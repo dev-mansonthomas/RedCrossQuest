@@ -11,7 +11,7 @@
     "bl": "^5.0.0",
     "latest-version": "^6.0.0",
     "natives": "^1.1.6",
-    "npm": "^8.5.0"
+    "npm": "^8.11.0"
   },
   "scripts": {
     "test": "gulp test"
