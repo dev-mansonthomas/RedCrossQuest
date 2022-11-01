@@ -24,7 +24,7 @@
     "eslint-plugin-angular": "~4.1.0",
     "estraverse": "~5.3.0",
     "fancy-log": "^2.0.0",
-    "gulp": "~3.9.1",
+    "gulp": "~4.0.2",
     "gulp-angular-filesort": "^1.2.1",
     "gulp-angular-templatecache": "^3.0.0",
     "gulp-autoprefixer": "~8.0.0",
