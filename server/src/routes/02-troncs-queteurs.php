@@ -87,6 +87,7 @@ use RedCrossQuest\routes\routesActions\troncsQueteurs\TroncQueteurPreparationChe
  *     )
  * )
  */
+/** @noinspection PhpUndefinedVariableInspection */
 $app->get('/{role-id:[2-9]}/ul/{ul-id}/tronc_queteur/preparationChecks', TroncQueteurPreparationChecks::class);
 
 

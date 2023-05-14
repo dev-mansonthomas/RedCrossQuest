@@ -26,10 +26,10 @@ class CreditCardDBService extends DBService
    * @return CreditCardEntity[]  The list of CreditCard
    * @throws Exception if some parsing error occurs
    */
-  public function getCreditCardEntriesForTroncQueteur(int $troncQueteurId, int $ulId):array
+  public function getCreditCardEntriesForTroncQueteur(int $troncQueteurId, int $ulId, int $roleId):array
   {
 
-    $parameters = ["tronc_queteur_id"=>$troncQueteurId, "ul_id" => $ulId];
+    $parameters = ["tronc_queteur_id"=>$troncQueteurId];
 
     $sql = "
 SELECT  c.`id`,
@@ -39,9 +39,20 @@ SELECT  c.`id`,
         c.`amount`
 FROM `credit_card` AS c
 WHERE c.tronc_queteur_id = :tronc_queteur_id
-AND   c.ul_id            = :ul_id
+";
+
+    if($roleId != 9)
+    {
+      $sql .= "
+AND   c.ul_id            = :ul_id      
+";
+      $parameters["ul_id"] = $ulId;
+    }
+
+    $sql .="
 ORDER BY c.amount ASC
 ";
+
 
     return $this->executeQueryForArray($sql, $parameters, function($row) {
       return new CreditCardEntity($row, $this->logger);

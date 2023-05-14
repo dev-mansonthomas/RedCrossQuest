@@ -70,6 +70,7 @@ use RedCrossQuest\routes\routesActions\pointsQuetes\UpdatePointQuete;
  *     )
  * )
  */
+/** @noinspection PhpUndefinedVariableInspection */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/pointQuetes/{id:\d+}', GetPointQuete::class);
 /**
  *

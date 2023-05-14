@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 
-class HtmlManagementDashboards extends Action
+class VoidAction extends Action
 {
 
   /**
@@ -28,7 +28,7 @@ class HtmlManagementDashboards extends Action
    */
   protected function action(): Response
   {
-    $this->logger->debug("/rest/html/management/dashboards called");
+    $this->logger->debug($this->request->getUri()." called");
     $this->response->getBody()->write('');
     return $this->response;
   }

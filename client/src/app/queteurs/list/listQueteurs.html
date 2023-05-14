@@ -237,10 +237,6 @@
           </div>
         </div>
       </uib-accordion>
-
-
-
-
     </form>
   </div>
 
@@ -280,6 +276,12 @@
           <span ng-show="!queteur.retour           &&  queteur.depart"                    class="glyphicon glyphicon-coins"       aria-hidden="true" style="height: 20px!important;color:gold" tooltip-popup-close-delay='1000' uib-tooltip='En train de quêter, départ à {{::queteur.depart}} avec le tronc {{::queteur.tronc_id}}'></span>
           <span ng-show=" queteur.depart_theorique &&  queteur.retour &&  queteur.depart" class="glyphicon glyphicon-thumbs-up"   aria-hidden="true" style="height: 20px!important;color:purple" tooltip-popup-close-delay='1000' uib-tooltip='Rentré de quête à {{::queteur.retour }} avec le tronc {{::queteur.tronc_id}}'></span>
           <span ng-show="!queteur.depart_theorique && !queteur.retour && !queteur.depart" class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="height: 20px!important;color:grey" tooltip-popup-close-delay='1000' uib-tooltip="Pas actif aujourd'hui"></span>
+          <span ng-show="q.currentUserRole >= 2"
+                class="glyphicon glyphicon-cogwheel"
+                aria-hidden="true"
+                style="height: 20px!important;color:grey"
+                tooltip-popup-close-delay='1000'
+                uib-tooltip="Ré-affectation" ng-click="q.showReassign();"></span>
         </td>
       </tr>
       </tbody>

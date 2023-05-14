@@ -27,7 +27,8 @@ class DailyStatsBeforeRCQDBService extends DBService
    */
   public function getCurrentQueteStartDate():string
   {
-    return $this->queteDates[date("Y")][0];
+    //TODO remove hardcoded value
+    return "2023-06-03";// $this->queteDates[date("Y")][0];
   }
 
 

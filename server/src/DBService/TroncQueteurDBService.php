@@ -28,11 +28,12 @@ class TroncQueteurDBService extends DBService
    *
    * @param int $tronc_id The ID of the tronc
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param int $roleId the role of the user performing the action
    * @return TroncQueteurEntity|null  The tronc
    * @throws Exception if tronc not found
    * @throws PDOException if the query fails to execute on the server
    */
-  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId):?TroncQueteurEntity
+  public function getLastTroncQueteurByTroncId(int $tronc_id, int $ulId, int $roleId):?TroncQueteurEntity
   {
     $sql = "
 SELECT 
@@ -92,7 +93,7 @@ LIMIT 1
     }, false);
 
     if($troncQueteurEntity != null && $troncQueteurEntity->id != null)//sometime I get an exception that $troncQueteurEntity->id is null and the method below doesn't allow null value. Can't reproduce, event with the same value
-      $troncQueteurEntity->don_cb_details = $this->creditCardDBService->getCreditCardEntriesForTroncQueteur($troncQueteurEntity->id, $ulId);
+      $troncQueteurEntity->don_cb_details = $this->creditCardDBService->getCreditCardEntriesForTroncQueteur($troncQueteurEntity->id, $ulId, $roleId);
 
     /** @noinspection PhpIncompatibleReturnTypeInspection */
     return $troncQueteurEntity;
@@ -227,13 +228,13 @@ WHERE  t.id         = :id
 ";
     $parameters = ["id" => $id];
 
-    if($roleId != 9)
-    {
-      $sql .= "
-AND   `ul_id`           = :ul_id      
-";
-      $parameters["ul_id"] = $ulId;
-    }
+      if($roleId != 9)
+      {
+        $sql .= "
+  AND   `ul_id`           = :ul_id      
+  ";
+        $parameters["ul_id"] = $ulId;
+      }
 
     $sql.="
 LIMIT 1";
@@ -245,7 +246,7 @@ LIMIT 1";
       return new TroncQueteurEntity($row, $this->logger);
     }, false);
 
-    $troncQueteurEntity->don_cb_details = $this->creditCardDBService->getCreditCardEntriesForTroncQueteur($troncQueteurEntity->id, $ulId);
+    $troncQueteurEntity->don_cb_details = $this->creditCardDBService->getCreditCardEntriesForTroncQueteur($troncQueteurEntity->id, $ulId, $roleId);
 
     return $troncQueteurEntity;
 

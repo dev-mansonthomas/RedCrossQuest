@@ -61,6 +61,7 @@ use RedCrossQuest\routes\routesActions\troncQueteurHistory\GetTroncQueteurHistor
  *     )
  * )
  */
+/** @noinspection PhpUndefinedVariableInspection */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/tronc_queteur_history', GetTroncQueteurHistoryFromTQID::class);
 
 

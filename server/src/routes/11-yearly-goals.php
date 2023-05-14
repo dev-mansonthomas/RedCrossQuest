@@ -70,6 +70,7 @@ use RedCrossQuest\routes\routesActions\yearlyGoals\UpdateYearlyGoals;
  *     )
  * )
  */
+/** @noinspection PhpUndefinedVariableInspection */
 $app->get('/{role-id:[4-9]}/ul/{ul-id}/yearlyGoals', ListYearlyGoals::class);
 
 /**

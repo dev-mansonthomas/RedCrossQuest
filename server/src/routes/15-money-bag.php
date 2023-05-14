@@ -78,6 +78,7 @@ use RedCrossQuest\routes\routesActions\moneyBag\SearchMoneyBagId;
  *     )
  * )
  */
+/** @noinspection PhpUndefinedVariableInspection */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/moneyBag'              , SearchMoneyBagId::class);
 
 

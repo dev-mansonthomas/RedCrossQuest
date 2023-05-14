@@ -55,6 +55,7 @@ use RedCrossQuest\routes\routesActions\settings\UpdateRedQuestSettings;
  *     )
  * )
  */
+/** @noinspection PhpUndefinedVariableInspection */
 $app->get('/{role-id:[4-9]}/settings/ul/{ul-id}', GetULSettings::class);
 
 /**

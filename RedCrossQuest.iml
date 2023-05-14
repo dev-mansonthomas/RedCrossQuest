@@ -115,6 +115,7 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/beste/clock" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/beste/json" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/laravel/serializable-closure" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/longrunning" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Python 2.7 (RedCrossQuestUtilityBackend) interpreter library" level="application" />

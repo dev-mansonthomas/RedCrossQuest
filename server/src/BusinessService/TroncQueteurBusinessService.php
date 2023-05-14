@@ -61,7 +61,7 @@ class TroncQueteurBusinessService
    */
   public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId):?TroncQueteurEntity
   {
-    $troncQueteur = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id, $ulId);
+    $troncQueteur = $this->troncQueteurDBService ->getLastTroncQueteurByTroncId($tronc_id, $ulId, $roleId);
 
     //$this->logger->debug("getLastTroncQueteurFromTroncId - TQ", ["TQ"=>$troncQueteur]);
 

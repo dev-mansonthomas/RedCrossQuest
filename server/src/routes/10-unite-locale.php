@@ -56,6 +56,7 @@ use RedCrossQuest\routes\routesActions\unitesLocales\ListUniteLocaleRegistration
  *     )
  * )
  */
+/** @noinspection PhpUndefinedVariableInspection */
 $app->get('/{role-id:[9]}/ul/registrations', ListUniteLocaleRegistration::class);
 
 /**
