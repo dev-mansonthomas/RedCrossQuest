@@ -58,6 +58,9 @@
         "platform": {
             "php": "7.4",
             "ext-sodium": "7.4"
+        },
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     }
 }
