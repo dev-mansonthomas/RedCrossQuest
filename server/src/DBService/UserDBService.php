@@ -561,9 +561,7 @@ AND     u.`queteur_id` = q.`id`
     {
       $sql .= "
 AND  q.`ul_id` = :ul_id";
-      $sql .="
-LIMIT 1
-";
+
       $parameters["ul_id"] = $ul_id;
     }
 
