@@ -43,10 +43,4 @@ $app->get ('/issueNav[/{params:.*}]'  , VoidAction::class);
 $app->get ('/config[/{params:.*}]'    , VoidAction::class);
 $app->get ('/.env'                    , VoidAction::class);
 $app->get ('/resetPassword'           , VoidAction::class);
-$app->get ('/resetPassword'           , VoidAction::class);
-
-
-
-
-
 $app->post('/tinymce[/{params:.*}]' , VoidAction::class);
