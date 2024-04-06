@@ -138,7 +138,22 @@ class RegisterNewUL extends Action
     $nivolPresident  = str_pad( $ulEntity->president_nivol, 12, "0", STR_PAD_LEFT);
     $uri             = "admin/pegass?page=1&type=volunteer&identifier=$nivolPresident";
 
-    $redCallResponse = $this->redCallService->get($uri);
+    try
+    {
+      $redCallResponse = $this->redCallService->get($uri);
+    }
+    catch(Exception $e)
+    {
+      $this->logger->error("Error while calling RedCall",
+         [
+           'uri'              => $uri,
+           'ulEntity'         => $ulEntity ,
+           Logger::$EXCEPTION => $e
+         ]);
+
+      throw $e;
+    }
+
 
     $this->logger->debug("RedCallResponse", ['URI'=>$uri,'RedCallResponse'=>$redCallResponse, "ULEntityHTTP_POST"   => $ulEntity]);
 

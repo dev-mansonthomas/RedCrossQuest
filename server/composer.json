@@ -37,9 +37,9 @@
         "ramsey/uuid": "^4.2.3",
         "robmorgan/phinx": "^0.12.10",
         "sendgrid/sendgrid": "^7.11.4",
-        "slim/php-view": "^3.1.0",
-        "slim/psr7": "^1.3.0",
-        "slim/slim": "^4.9.0",
+        "slim/php-view": "^3.2.0",
+        "slim/psr7": "1.6",
+        "slim/slim": "^4.11.0",
         "symfony/http-client": "^v5.3.14",
         "symfony/validator": "^v5.4.3",
         "zircote/swagger-php": "^4.2.8"
