@@ -112,7 +112,7 @@ class RegisterNewUL extends Action
       $response401->getBody()->write(json_encode(["error" =>"5"]));
       return $response401;
     }
-
+    /* Access to RedCall API has been disabled in 2024 due to RGPD investation (without asking me about the usage I'm doing of it)
    $checkCode = $this->checkPresident($ulEntity);
 
     if($checkCode>0)
@@ -121,7 +121,7 @@ class RegisterNewUL extends Action
       $response401->getBody()->write(json_encode(["error" =>"$checkCode"]));
       return $response401;
     }
-
+    */
     $ulEntity->registration_token = Uuid::uuid4()->toString();
 
     $registrationId = $this->uniteLocaleDBService->registerNewUL($ulEntity);
