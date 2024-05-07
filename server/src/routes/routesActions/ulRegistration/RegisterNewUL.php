@@ -100,6 +100,8 @@ class RegisterNewUL extends Action
 
     $ulEntity = new UniteLocaleEntity($this->parsedBody, $this->logger);
 
+    $this->logger->debug("RegisterUL starts",
+                         ["ulRegistration"=>$ulEntity]);
     try
     {
       $this->userDBService->checkExistingUserWithNivol($ulEntity->admin_nivol);
