@@ -7,7 +7,7 @@ namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
 use Carbon\Carbon;
-use DI\Annotation\Inject;
+use DI\Attribute\Inject;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -42,9 +42,9 @@ class SaveCoinsOnTroncQueteur extends Action
 
 
   /**
-   * @Inject("settings")
    * @var array settings
    */
+  #[Inject("settings")]
   protected $settings;
 
   /**
@@ -119,7 +119,7 @@ class SaveCoinsOnTroncQueteur extends Action
     try
     {
       $tqUpdated = $this->troncQueteurDBService->getTroncQueteurById($tq->id, $ulId,$roleId);
-      var_dump($tqUpdated);
+      //var_dump($tqUpdated);
       
       $tqUpdated->preparePubSubPublishing();
       if($adminMode)

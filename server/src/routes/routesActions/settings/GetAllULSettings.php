@@ -6,7 +6,7 @@
 namespace RedCrossQuest\routes\routesActions\settings;
 
 
-use DI\Annotation\Inject;
+use DI\Attribute\Inject;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -49,21 +49,21 @@ class GetAllULSettings extends Action
 
 
   /**
-   * @Inject("settings")
    * @var array $settings
    */
+  #[Inject("settings")]
   protected $settings;
 
   /**
-   * @Inject("RCQVersion")
    * @var string $RCQVersion
    */
+  #[Inject("RCQVersion")]
   protected $RCQVersion;
 
   /**
-   * @Inject("googleMapsApiKey")
    * @var string $googleMapsApiKey
    */
+  #[Inject("googleMapsApiKey")]
   private $googleMapsApiKey;
 
   /**

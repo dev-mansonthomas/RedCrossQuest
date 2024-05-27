@@ -62,6 +62,8 @@ class TroncQueteurEntity extends Entity
    */
   public $tronc;
 
+  public ?int $rowCount;
+
   /**
    * @OA\Property()
    * @var int $point_quete_id Point de Quete ID
@@ -451,11 +453,11 @@ class TroncQueteurEntity extends Entity
     function preparePubSubPublishing():void
     {
       //$this->logger->error("DEBUG 1", ["tq"=>print_r($this, true)]);
-      $this->depart_theorique = $this->depart_theorique !== null ? $this->depart_theorique ->toDateTimeString() : null;
-      $this->depart           = $this->depart           !== null ? $this->depart           ->toDateTimeString() : null;
-      $this->retour           = $this->retour           !== null ? $this->retour           ->toDateTimeString() : null;
-      $this->comptage         = $this->comptage         !== null ? $this->comptage         ->toDateTimeString() : null;
-      $this->last_update      = $this->last_update      !== null ? $this->last_update      ->toDateTimeString() : null;
+      $this->depart_theorique = $this->depart_theorique ?->toDateTimeString();
+      $this->depart           = $this->depart           ?->toDateTimeString();
+      $this->retour           = $this->retour           ?->toDateTimeString();
+      $this->comptage         = $this->comptage         ?->toDateTimeString();
+      $this->last_update      = $this->last_update      ?->toDateTimeString();
 
       unset($this->tronc);
       unset($this->rowCount);
