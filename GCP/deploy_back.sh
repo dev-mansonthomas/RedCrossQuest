@@ -55,8 +55,8 @@ echo "cloud_sql_proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INST
 cloud_sql_proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
 CLOUD_PROXY_PID=$!
 
-read -n1 -r -p "Wait for cloud proxy to establish the connection..." key
-
+#read -n1 -r -p "Wait for cloud proxy to establish the connection..." key
+sleep 5
 
 # Get the correct app.yaml for the env
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml               server/app.yaml

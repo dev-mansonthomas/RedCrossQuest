@@ -80,6 +80,13 @@ class TroncEntity extends Entity
    */
   public Carbon $depart ;
 
+
+  /**
+   * @OA\Property()
+   * @var ?Carbon $depart_theorique The depart date from the troncQueteur
+   */
+  public ?Carbon $depart_theorique ;
+
   /**
    * @OA\Property()
    * @var Carbon $retour the Return date from the troncQueteur

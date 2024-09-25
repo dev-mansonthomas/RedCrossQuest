@@ -23,7 +23,7 @@ if (PHP_SAPI == 'cli-server')
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
 // use annotation to inject settings
-$containerBuilder->useAnnotations(true);
+$containerBuilder->useAttributes(true);
 $containerBuilder->enableCompilation (sys_get_temp_dir().'/cache');
 
 // Set up settings

@@ -73,7 +73,7 @@ return function (ContainerBuilder $containerBuilder)
     "RCQVersion" => function ():string
     {
       //version stays here, so that I don't have to update all the settings files
-      return "2022.0";
+      return "2024.0";
     },
     /**
      * Custom Logger that automatically add context data to each log entries.

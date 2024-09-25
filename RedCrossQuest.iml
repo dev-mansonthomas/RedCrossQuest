@@ -15,7 +15,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-http/promise" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-http/message" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-http/discovery" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-http/message-factory" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-http/httplug" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/paragonie/constant_time_encoding" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-http/client-common" />
@@ -35,8 +34,6 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/apiclient" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/auth" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/firebase/php-jwt" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/crc32" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/longrunning" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/google/common-protos" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/ramsey/uuid" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/ramsey/collection" />
@@ -54,12 +51,10 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/php-di" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/jolicode/slack-php-api" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/log" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/phpdoc-reader" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-client" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/php-di/invoker" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/robmorgan/phinx" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/cache" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/clock" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/lcobucci/jwt" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-server-middleware" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/http-server-handler" />
@@ -96,10 +91,8 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/translation-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/validator" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php80" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php81" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/serializer" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php73" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/mtdowling/jmespath.php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/slim/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/jane-php/json-schema-runtime" />
@@ -107,13 +100,19 @@
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/jane-php/open-api-runtime" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/slim/php-view" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/egulias/email-validator" />
-      <excludeFolder url="file://$MODULE_DIR$/server/vendor/riverline/multipart-parser" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/nikic/fast-route" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/fig/http-message-util" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/zircote/swagger-php" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/server/vendor/grpc/grpc" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/beste/in-memory-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/carbonphp/carbon-doctrine-types" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/doctrine/deprecations" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/psr/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/polyfill-php83" />
+      <excludeFolder url="file://$MODULE_DIR$/server/vendor/symfony/process" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Python 2.7 (RedCrossQuestUtilityBackend) interpreter library" level="application" />

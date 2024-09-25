@@ -6,6 +6,7 @@
 namespace RedCrossQuest\routes\routesActions\spotfire;
 
 
+use DI\Attribute\Inject;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -19,9 +20,9 @@ class GetSpotfireAccessToken extends Action
 {
 
   /**
-   * @Inject("settings")
    * @var array settings
    */
+  #[Inject("settings")]
   protected $settings;
   
   /**

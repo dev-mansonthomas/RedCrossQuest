@@ -21,7 +21,6 @@ use RedCrossQuest\Service\Logger;
 use Slim\Psr7\Response;
 
 /**
- * @property array whiteList
  * @property mixed logger
  * @property string bearer
  * @property int bearerStrLen
@@ -46,6 +45,9 @@ class AuthorisationMiddleware implements MiddlewareInterface
   /** @var Configuration           $JWTConfiguration*/
   private Configuration           $JWTConfiguration;
 
+  private LoggerInterface  $logger;
+  private String $bearer = "Bearer ";
+  private int $bearerStrLen = 0;
   /**
    * init of the constructor
    * @param Container $container the container
@@ -55,11 +57,8 @@ class AuthorisationMiddleware implements MiddlewareInterface
    */
   public function __construct(Container $container)
   {
-    //Define the urls that you want to exclude from Authentication, aka public urls
-    $this->whiteList = array('\/authenticate');
     $this->logger    = $container->get(LoggerInterface::class);
 
-    $this->bearer      = "Bearer ";
     $this->bearerStrLen=strlen($this->bearer);
     $this->JWTConfiguration = $container->get(Configuration::class);
   }

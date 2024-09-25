@@ -2,7 +2,7 @@
 namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 
 
-use DI\Annotation\Inject;
+use DI\Attribute\Inject;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -26,9 +26,9 @@ class TroncQueteurPreparationChecks extends Action
   private $troncQueteurBusinessService;
 
   /**
-   * @Inject("settings")
    * @var array settings
    */
+  #[Inject("settings")]
   protected $settings;
 
   /**

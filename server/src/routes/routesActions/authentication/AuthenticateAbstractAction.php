@@ -2,7 +2,7 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 use DateTimeImmutable;
-use DI\Annotation\Inject;
+use DI\Attribute\Inject;
 use Google\ApiCore\ApiException;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token;
@@ -17,9 +17,9 @@ use RedCrossQuest\Service\ClientInputValidator;
 abstract class AuthenticateAbstractAction extends Action
 {
   /**
-   * @Inject("settings")
    * @var array settings
    */
+  #[Inject("settings")]
   protected array $settings;
   /** @var Configuration           $JWTConfiguration*/
   private Configuration           $JWTConfiguration;

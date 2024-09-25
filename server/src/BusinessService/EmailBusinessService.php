@@ -262,10 +262,24 @@ class EmailBusinessService
           <li>Information sur mon unité locale</li>
       </ul>
     </li>
-    <li><a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'>Le forum interactif Slack</a>
+    <li><a href='https://chat.google.com/room/AAAAwTetl4k?cls=7' target='_blank'>Le support avec Google Chat</a>
         <ul>
-          <li>Messagerie instantanée organisé par thème : posez votre question, la communauté ou le support vous répond</li>
-          <li>Échanger vos astuces pour négocier avec les banques, motiver vos bénévoles</li>    
+          <li>Posez votre question, la communauté ou le support vous répond</li>
+          <li>Échanger vos astuces pour négocier avec les banques, motiver vos bénévoles</li>
+          <li>Si le lien ne fonctionne pas c'est que vous êtes connecté à un autre compte gmail, essayer un de ces liens <br/>
+          
+<a href='https://mail.google.com/chat/u/0/#chat/space/AAAAwTetl4k' target='_blank'>Lien 0</a>, 
+<a href='https://mail.google.com/chat/u/1/#chat/space/AAAAwTetl4k' target='_blank'>Lien 1</a>, 
+<a href='https://mail.google.com/chat/u/2/#chat/space/AAAAwTetl4k' target='_blank'>Lien 2</a>, 
+<a href='https://mail.google.com/chat/u/3/#chat/space/AAAAwTetl4k' target='_blank'>Lien 3</a>, 
+<a href='https://mail.google.com/chat/u/4/#chat/space/AAAAwTetl4k' target='_blank'>Lien 4</a>, 
+<a href='https://mail.google.com/chat/u/5/#chat/space/AAAAwTetl4k' target='_blank'>Lien 5</a>, 
+<a href='https://mail.google.com/chat/u/6/#chat/space/AAAAwTetl4k' target='_blank'>Lien 6</a>, 
+<a href='https://mail.google.com/chat/u/7/#chat/space/AAAAwTetl4k' target='_blank'>Lien 7</a>, 
+<a href='https://mail.google.com/chat/u/8/#chat/space/AAAAwTetl4k' target='_blank'>Lien 8</a>, 
+<a href='https://mail.google.com/chat/u/9/#chat/space/AAAAwTetl4k' target='_blank'>Lien 9</a>           
+                     
+          </li>    
       </ul>
     </li>
     <li><a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>L'espace intranet</a>

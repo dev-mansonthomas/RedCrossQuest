@@ -135,12 +135,18 @@ class Entity
     if($data != null && array_key_exists($key, $data))
     {
       $value = $data[$key];
-      if(strlen($value) > 20)  // latitude, longitude(18,15) note: 12345.678, you will set the Datatype to DOUBLE(8, 3) where 8 is the total no. of digits excluding the decimal point, and 3 is the no. of digits to follow the decimal.
+      
+      if($value === null)
+        $this->$key = null;
+      else
       {
-        throw new InvalidArgumentException("Invalid float value" .json_encode(['key'=>$key, 'value'=>$value]) );
+        # ?? '' : if $value is null ==> pass empty string, which is ok for this case.
+        if(strlen($value) > 20)  // latitude, longitude(18,15) note: 12345.678, you will set the Datatype to DOUBLE(8, 3) where 8 is the total no. of digits excluding the decimal point, and 3 is the no. of digits to follow the decimal.
+        {
+          throw new InvalidArgumentException("Invalid float value" .json_encode(['key'=>$key, 'value'=>$value]) );
+        }
+        $this->$key = (float) $value;
       }
-
-      $this->$key = $data[$key] === null ? null : (float) $data[$key];
     }
   }
 
@@ -234,14 +240,14 @@ class Entity
       {
         $stringValue = $data[$key];
 
-        if(strlen($stringValue) > 27)
-        {
-          throw new InvalidArgumentException("Invalid DATE value, length higher than the max permitted size " .json_encode(['key'=>$key, 'value'=>$stringValue, 'maxSize'=>27]) );
-        }
-
         if($stringValue != null)
         {
-          if(strpos($stringValue, 'T') !== false)
+          if(strlen($stringValue) > 27)
+          {
+            throw new InvalidArgumentException("Invalid DATE value, length higher than the max permitted size " .json_encode(['key'=>$key, 'value'=>$stringValue, 'maxSize'=>27]) );
+          }
+
+          if(str_contains($stringValue, 'T'))
           {
             //json javascript date : "2017-06-04T23:00:00.000Z"
             //                        2019-11-05T21:51:21.000000Z
@@ -250,7 +256,7 @@ class Entity
             {
               $this->$key = Carbon::parse($stringValue);
              // $this->$key->setTimezone("UTC");
-              $this->logger->debug("json javascript parsed for '$key' : '".$this->$key."' stringValue='$stringValue");
+              //$this->logger->debug("json javascript parsed for '$key' : '".$this->$key."' stringValue='$stringValue");
             }
             catch(Exception $e)
             {
