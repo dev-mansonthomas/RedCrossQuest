@@ -52,9 +52,9 @@ The web application allows to:
     <p>Once collecting is done, count the money: coins and bills</p>
     <img src="README/main/tronc_queteur_1.png" alt="Once collecting is done, count the money: coins and bills"/>
     <p>Credit Card and bank notes</p>
-    <img src="README/main/tronc_queteur_1.png" alt="Credit Card and bank notes"/>
+    <img src="README/main/tronc_queteur_2.png" alt="Credit Card and bank notes"/>
     <p>Bank money bag assignment and free notes</p>
-    <img src="README/main/tronc_queteur_1.png" alt="Bank money bag assignment and free notes"/>
+    <img src="README/main/tronc_queteur_3.png" alt="Bank money bag assignment and free notes"/>
 </details>
 
 <details>
