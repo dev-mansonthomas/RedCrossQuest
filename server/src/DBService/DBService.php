@@ -8,9 +8,9 @@ use RedCrossQuest\Service\Logger;
 abstract class DBService
 {
   /** @var PDO */
-  protected $db;
+  protected PDO $db;
   /** @var Logger */
-  protected $logger;
+  protected Logger $logger;
 
   public function __construct(PDO $db, Logger $logger)
   {
