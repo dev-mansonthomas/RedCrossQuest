@@ -15,8 +15,7 @@ return [
     ],
     'db'          => [
       'dsn'  => getenv('MYSQL_DSN'     ),
-      'user' => getenv('MYSQL_USER'    ),
-      'pwd'  => getenv('MYSQL_PASSWORD')
+      'user' => getenv('MYSQL_USER'    )
     ],
     'PubSub'      => [
       'tronc_queteur_topic'        => 'tronc_queteur'       ,
@@ -24,12 +23,10 @@ return [
       'queteur_approval_topic'     => 'queteur_approval_topic'
     ],
     'jwt'         => [
-      'secret'   => getenv('JWT_SECRET'     ),
       'issuer'   => getenv('JWT_ISSUER'     ),
       'audience' => getenv('JWT_ISSUER'     )
     ],
     'ReCaptcha'   => [
-      'secret'                => getenv('RECAPTCHA_SECRET'),
       'lowestAcceptableScore' => 0.7
     ],
     'appSettings' => [
@@ -37,13 +34,11 @@ return [
       'appUrl'           => getenv('APP_URL')                ,
       'resetPwdPath'     => '#!/resetPassword?key='                   ,
       'deploymentType'   => getenv('APP_ENV')                ,   //D:Dev, T:Testing, P:Production,
-      'gmapAPIKey'       => getenv('GOOGLE_MAPS_API')        ,
       'RGPD'             => 'https://goo.gl/UpTLAK'                   ,
       'RGPDVideo'        => 'https://firebasestorage.googleapis.com/path_to_video',
       'graphPath'        => 'graph-display.html'                      ,
       'queteurDashboard' => 'Merci'                                   ,
       'email'            => [
-        'sendgrid.api_key'    => getenv('SENDGRID_API_KEY'),
         'sendgrid.sender'     => getenv('SENDGRID_SENDER' ),
         'thanksMailBatchSize' => 10
       ],

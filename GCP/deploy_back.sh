@@ -65,7 +65,6 @@ sed -i '' -e "s/¤COUNTRY¤/${COUNTRY}/g"                 server/app.yaml
 sed -i '' -e "s/¤ENV¤/${ENV}/g"                         server/app.yaml
 sed -i '' -e "s/¤MYSQL_INSTANCE¤/${MYSQL_INSTANCE}/g"   server/app.yaml
 sed -i '' -e "s/¤MYSQL_USER¤/${MYSQL_USER}/g"           server/app.yaml
-sed -i '' -e "s/¤MYSQL_PASSWORD¤/${MYSQL_PASSWORD}/g"   server/app.yaml
 sed -i '' -e "s/¤MYSQL_DB¤/${MYSQL_DB}/g"               server/app.yaml
 
 #cat server/app.yaml
