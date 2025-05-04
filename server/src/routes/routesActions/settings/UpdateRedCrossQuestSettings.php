@@ -22,7 +22,7 @@ class UpdateRedCrossQuestSettings extends Action
   /**
    * @var ULPreferencesFirestoreDBService  $ULPreferencesFirestoreDBService
    */
-  private $ULPreferencesFirestoreDBService;
+  private ULPreferencesFirestoreDBService $ULPreferencesFirestoreDBService;
 
 
 

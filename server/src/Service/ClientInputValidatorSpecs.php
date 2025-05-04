@@ -9,35 +9,35 @@ class ClientInputValidatorSpecs
   /**
    * @var string
    */
-  public $methodName;
+  public string $methodName;
   /**
    * @var string
    */
-  public $parameterName;
+  public string $parameterName;
   /**
    * @var array that contains $parameterName as key to get the value that will be validated. InputArray can be null or the parameterName not be available as a key in the array
    */
-  public $inputArray;
+  public array $inputArray;
   /**
    * @var int
    */
-  public $maxLength;
+  public int $maxLength;
   /**
    * @var bool
    */
-  public $notNull;
+  public bool $notNull;
   /**
    * @var string
    */
-  public $validationType;
+  public string $validationType;
   /**
    * @var string
    */
-  public $defaultValue;
+  public string $defaultValue;
   /**
    * @var string
    */
-  public $maxValue;
+  public string $maxValue;
 
 
   public function __construct(string $methodName, string $parameterName, bool $notNull, ?array &$inputArray)

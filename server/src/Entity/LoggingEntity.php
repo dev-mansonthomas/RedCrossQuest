@@ -9,14 +9,14 @@ use RedCrossQuest\Middleware\DecodedToken;
 class LoggingEntity
 {
   /**
-   * @property array JWT decoded token as an associative array. It contains all the infos required to have the right context for the logging entry
+   * @property array $decodedToken JWT decoded token as an associative array. It contains all the infos required to have the right context for the logging entry
    */
-  private $decodedToken;
+  private array $decodedToken;
 
   /**
-   * @property array Other information
+   * @property array $otherDataOther information
    */
-  private $otherData;
+  private array $otherData;
   
   public function __construct(DecodedToken $decodedToken = null, array $otherData = array())
   {

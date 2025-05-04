@@ -3,6 +3,7 @@ namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
 use Exception;
+use OpenApi\Annotations as OA;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -15,27 +16,27 @@ class SpotfireAccessEntity extends Entity
    * @OA\Property()
    * @var int $id the SpotfireAccess ID
    */
-  public $id                          ;
+  public int $id                          ;
   /**
    * @OA\Property()
    * @var string $token the token
    */
-  public $token                       ;
+  public string $token                       ;
   /**
    * @OA\Property()
    * @var Carbon $token_expiration the token expiration date
    */
-  public $token_expiration            ;
+  public Carbon $token_expiration            ;
   /**
    * @OA\Property()
    * @var int $ul_id the current user's UL ID
    */
-  public $ul_id                       ;
+  public int $ul_id                       ;
   /**
    * @OA\Property()
    * @var int $user_id the current user's ID
    */
-  public $user_id                     ;
+  public int $user_id                     ;
 
   protected array $_fieldList = ['id','token','token_expiration','ul_id','user_id'];
   /**

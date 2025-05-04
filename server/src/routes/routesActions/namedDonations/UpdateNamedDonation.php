@@ -20,7 +20,7 @@ class UpdateNamedDonation extends Action
   /**
    * @var NamedDonationDBService        $namedDonationDBService
    */
-  private $namedDonationDBService;
+  private NamedDonationDBService $namedDonationDBService;
 
   /**
    * @param LoggerInterface $logger

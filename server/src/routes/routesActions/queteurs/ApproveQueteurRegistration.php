@@ -22,23 +22,23 @@ class ApproveQueteurRegistration extends Action
   /**
    * @var QueteurDBService          $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
 
   /**
    * @var EmailBusinessService    $emailBusinessService
    */
-  private $emailBusinessService;
+  private EmailBusinessService $emailBusinessService;
 
   /**
    * @var PubSubService           $pubSubService
    */
-  private $pubSubService;
+  private PubSubService $pubSubService;
 
   /**
    * @var array settings
    */
   #[Inject("settings")]
-  protected $settings;
+  protected array $settings;
 
   /**
    * @param LoggerInterface $logger

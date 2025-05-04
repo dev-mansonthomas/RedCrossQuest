@@ -10,16 +10,16 @@ class PageableRequestEntity
   /**
    * @var int $pageNumber The number of the page to be displayed
    */
-  public $pageNumber          ;
+  public int $pageNumber          ;
   /**
    * @var int $rowsPerPage Number of rows per pages
    */
-  public $rowsPerPage            ;
+  public int $rowsPerPage            ;
 
   /**
    * @var array $filterMap key=>value (string=>string) filters
    */
-  public $filterMap;
+  public array $filterMap;
 
   protected array $_fieldList = ['pageNumber', 'rowPerPage', 'filterMap'];
 

@@ -2,6 +2,7 @@
 namespace RedCrossQuest\Entity;
 
 use Exception;
+use OpenApi\Annotations as OA;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -13,88 +14,88 @@ class BillsMoneyBagSummaryEntity extends Entity
    * @OA\Property()
    * @var float $amount total amount of money in the bag
    */
-  public $amount       ;
+  public float $amount       ;
   /**
    * @OA\Property()
    * @var float $weight total weight of money in the bag
    */
-  public $weight       ;
+  public float $weight       ;
   /**
    * @OA\Property()
    * @var int $total_euro2 Sum in € of coins of 5€
    */
-  public $total_euro5  ;
+  public int $total_euro5  ;
   /**
    * @OA\Property()
    * @var int $total_euro10 Sum in € of coins of 10€
    */
-  public $total_euro10 ;
+  public int $total_euro10 ;
   /**
    * @OA\Property()
    * @var int $total_euro20 Sum in € of coins of 20€
    */
-  public $total_euro20 ;
+  public int $total_euro20 ;
   /**
    * @OA\Property()
    * @var int $total_euro50 Sum in € of coins of 50€
    */
-  public $total_euro50 ;
+  public int $total_euro50 ;
   /**
    * @OA\Property()
    * @var int $total_euro100 Sum in € of coins of 100€
    */
-  public $total_euro100;
+  public int $total_euro100;
   /**
    * @OA\Property()
    * @var int $total_euro200 Sum in € of coins of 200€
    */
-  public $total_euro200;
+  public int $total_euro200;
   /**
    * @OA\Property()
    * @var int $total_euro500 Sum in € of coins of 500€
    */
-  public $total_euro500;
+  public int $total_euro500;
   /**
    * @OA\Property()
    * @var int $count_euro5 Count of bills of 5€
    */
-  public $count_euro5  ;
+  public int $count_euro5  ;
   /**
    * @OA\Property()
    * @var int $count_euro10 Count of bills of 10€
    */
-  public $count_euro10 ;
+  public int $count_euro10 ;
   /**
    * @OA\Property()
    * @var int $count_euro20 Count of bills of 20€
    */
-  public $count_euro20 ;
+  public int $count_euro20 ;
   /**
    * @OA\Property()
    * @var int $count_euro50 Count of bills of 50€
    */
-  public $count_euro50 ;
+  public int $count_euro50 ;
   /**
    * @OA\Property()
    * @var int $count_euro100 Count of bills of 100€
    */
-  public $count_euro100;
+  public int $count_euro100;
   /**
    * @OA\Property()
    * @var int $count_euro200 Count of bills of 200€
    */
-  public $count_euro200;
+  public int $count_euro200;
   /**
    * @OA\Property()
    * @var int $count_euro500 Count of bills of 500€
    */
-  public $count_euro500;
+  public int $count_euro500;
 
   /**
    * @OA\Property()
    * @var string $bills_money_bag_id The ID of the MoneyBag
    */
-  public $bills_money_bag_id;
+  public string $bills_money_bag_id;
 
 
   protected array $_fieldList = [

@@ -25,30 +25,30 @@ use ZipArchive;
 class ExportDataBusinessService
 {
   /** @var LoggerInterface $logger */
-  protected $logger;
+  protected LoggerInterface $logger;
   /** @var QueteurDBService $queteurDBService*/
-  protected $queteurDBService;
+  protected QueteurDBService $queteurDBService;
   /** @var PointQueteDBService $pointQueteDBService*/
-  protected $pointQueteDBService;
+  protected PointQueteDBService $pointQueteDBService;
   /** @var UserDBService $userDBService*/
-  protected $userDBService;
+  protected UserDBService $userDBService;
   /** @var DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService*/
-  protected $dailyStatsBeforeRCQDBService;
+  protected DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService;
   /** @var TroncDBService $troncDBService*/
-  protected $troncDBService;
+  protected TroncDBService $troncDBService;
   /** @var NamedDonationDBService $namedDonationDBService*/
-  protected $namedDonationDBService;
+  protected NamedDonationDBService $namedDonationDBService;
   /** @var TroncQueteurDBService $troncQueteurDBService */
-  protected $troncQueteurDBService;
+  protected TroncQueteurDBService $troncQueteurDBService;
   /** @var UniteLocaleDBService $uniteLocaleDBService*/
-  protected $uniteLocaleDBService;
+  protected UniteLocaleDBService $uniteLocaleDBService;
   /** @var UniteLocaleSettingsDBService $uniteLocaleSettingsDBService*/
-  protected $uniteLocaleSettingsDBService;
+  protected UniteLocaleSettingsDBService $uniteLocaleSettingsDBService;
   /** @var YearlyGoalDBService $yearlyGoalDBService*/
-  protected $yearlyGoalDBService;
+  protected YearlyGoalDBService $yearlyGoalDBService;
 
 
-  protected $unwanted_array = array(    'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A' , 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+  protected array $unwanted_array = array(    'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A' , 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
                                         'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I' , 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
                                         'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
                                         'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i' , 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
@@ -117,11 +117,11 @@ class ExportDataBusinessService
   /**
    * Export UL data
    *
-   * @param integer $ulId  The ID of the Unité Locale
-   * @param string $year  if 0, export all data, if not, export data from the specified year if applicable
+   * @param integer $ulId The ID of the Unité Locale
+   * @param string|null $year if 0, export all data, if not, export data from the specified year if applicable
    * @return array filename of the generated file, and the number of lines exported
    *
-   * @throws Exception   if something wrong happen
+   * @throws Exception if something wrong happen
    */
   public function exportData(int $ulId, ?string $year):array
   {
@@ -164,7 +164,7 @@ class ExportDataBusinessService
       $dateTime = date('Y-m-d-H-i-s', time());
       $ulNameForFileName = strtr(strtr($subjectName, [' '=> '']), $this->unwanted_array );
 
-      if(substr($ulNameForFileName, -1) == ".")
+      if(str_ends_with($ulNameForFileName, "."))
       {
         $ulNameForFileName = substr($ulNameForFileName, 0, strlen($ulNameForFileName) - 1);
       }
@@ -218,7 +218,7 @@ class ExportDataBusinessService
    * @param string $uniquePrefix A prefix for the file :  ul_id or queteur_id + UUID
    * @return int the number of line generated in all CSV files
    */
-  private function dataToFile(array $exportData, string $uniquePrefix)
+  private function dataToFile(array $exportData, string $uniquePrefix):int
   {
     $nbOfLine=0;
     foreach ($exportData as $tableName => $oneDataTable)

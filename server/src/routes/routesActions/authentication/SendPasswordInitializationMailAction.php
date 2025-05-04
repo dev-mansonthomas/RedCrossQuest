@@ -23,19 +23,19 @@ class SendPasswordInitializationMailAction extends Action
   /**
    * @var ReCaptchaService
    */
-  private $reCaptchaService;
+  private ReCaptchaService $reCaptchaService;
   /**
    * @var UserDBService
    */
-  private $userDBService;
+  private UserDBService $userDBService;
   /**
    * @var QueteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
   /**
    * @var EmailBusinessService
    */
-  private $emailBusinessService;
+  private EmailBusinessService $emailBusinessService;
   
   /**
    * @param LoggerInterface $logger

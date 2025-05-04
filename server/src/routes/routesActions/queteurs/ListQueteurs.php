@@ -17,7 +17,7 @@ class ListQueteurs extends Action
   /**
    * @var QueteurDBService          $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
 
 
   /**

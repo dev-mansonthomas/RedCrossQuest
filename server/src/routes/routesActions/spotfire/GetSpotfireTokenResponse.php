@@ -3,6 +3,7 @@ namespace RedCrossQuest\routes\routesActions\spotfire;
 
 
 use Carbon\Carbon;
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(schema="GetSpotfireTokenResponse", required={"validToken"})
@@ -13,14 +14,14 @@ class GetSpotfireTokenResponse
    * @OA\Property()
    * @var string $validToken Spotfire valid token
    */
-  public $validToken;
+  public string $validToken;
   /**
    * @OA\Property()
    * @var Carbon $tokenExpiration Spotfire token expiration date
    */
-  public $tokenExpiration;
+  public Carbon $tokenExpiration;
 
-  protected $_fieldList = ["validToken", "tokenExpiration"];
+  protected array $_fieldList = ["validToken", "tokenExpiration"];
 
   public function __construct(string $validToken, Carbon $tokenExpiration)
   {

@@ -23,20 +23,20 @@ class GetUserInfoFromUUIDAction extends Action
   /**
    * @var ReCaptchaService
    */
-  private $reCaptchaService;
+  private ReCaptchaService $reCaptchaService;
   /**
    * @var UserDBService
    */
-  private $userDBService;
+  private UserDBService $userDBService;
   /**
    * @var QueteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
   /**
    * @var array settings
    */
   #[Inject("settings")]
-  protected $settings;
+  protected array $settings;
 
   /**
    * @param LoggerInterface $logger

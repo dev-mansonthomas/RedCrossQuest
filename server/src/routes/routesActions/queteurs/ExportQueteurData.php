@@ -20,17 +20,17 @@ class ExportQueteurData extends Action
   /**
    * @var QueteurDBService              $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
 
   /**
    * @var ExportDataBusinessService     $exportDataBusinessService
    */
-  private $exportDataBusinessService;
+  private ExportDataBusinessService $exportDataBusinessService;
 
   /**
    * @var EmailBusinessService          $emailBusinessService
    */
-  private $emailBusinessService;
+  private EmailBusinessService $emailBusinessService;
 
   /**
    * @param LoggerInterface $logger

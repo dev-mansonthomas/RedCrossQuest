@@ -20,7 +20,7 @@ class GetQueteurRegistration extends Action
   /**
    * @var QueteurDBService          $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
 
   /**
    * @param LoggerInterface $logger

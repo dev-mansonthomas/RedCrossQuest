@@ -176,7 +176,7 @@ LIMIT 1
    * @param int $queteurId the Id of the queteur from which we want to retrieve the user
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
-   * @return UserEntity an instance of UserEntity, null if nothing is found
+   * @return UserEntity|null an instance of UserEntity, null if nothing is found
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
@@ -220,7 +220,7 @@ LIMIT 1
    * @param int $userId the Id of the user
    * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId the roleId of the connected user, to override UL Limitation for superadmin
-   * @return UserEntity an instance of UserEntity, null if nothing is found
+   * @return UserEntity|null an instance of UserEntity, null if nothing is found
    * @throws Exception In case a validation is failing while creating  the user entity.
    * @throws PDOException if the query fails to execute on the server
    */
@@ -261,7 +261,7 @@ LIMIT 1
    * used in Password reset process
    * get user info for UUID if the init_passwd_date is after current time.
    * @param string $uuid the UUID to retrieve the user info
-   * @return USerEntity the info of the user
+   * @return UserEntity|null the info of the user
    * @throws Exception in case of incorrect number of rows updated
    * @throws PDOException if the query fails to execute on the server
    */
@@ -543,7 +543,7 @@ AND   `ul_id`           = :ul_id
    * Update the NIVOL for the user, when the queteur's nivol is updated
    * @param int $userId the id of the user that is being updated
    * @param string $nivol the new nivol
-   * @param int|null $ul_id the ul_id of the connected user that performs the update
+   * @param int $ul_id the ul_id of the connected user that performs the update
    * @throws Exception
    */
   public function updateNivol(int $userId, string $nivol,  int $ul_id, int $roleId)

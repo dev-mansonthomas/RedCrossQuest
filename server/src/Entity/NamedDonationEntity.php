@@ -15,191 +15,191 @@ class NamedDonationEntity extends Entity
    * @OA\Property()
    * @var int $id NamedDonation ID
    */
-  public $id               ;
+  public int $id               ;
 
   /**
    * @OA\Property()
    * @var int $ul_id UL ID
    */
-  public $ul_id            ;
+  public int $ul_id            ;
   /**
    * @OA\Property()
    * @var string $ref_recu_fiscal The business ID of the NamedDonation. It's the official id from the RedCross, used as reference for tax deduction
    */
-  public $ref_recu_fiscal  ;
+  public string $ref_recu_fiscal  ;
 
   /**
    * @OA\Property()
    * @var string $first_name Donor first name
    */
-  public $first_name       ;
+  public string $first_name       ;
   /**
    * @OA\Property()
-   * @var string $first_name Donor last name
+   * @var string $last_name Donor last name
    */
-  public $last_name        ;
+  public string $last_name        ;
   /**
    * @OA\Property()
-   * @var string $first_name Donation date
+   * @var string $donation_date Donation date
    */
-  public $donation_date    ;
+  public string $donation_date    ;
   /**
    * @OA\Property()
-   * @var string $first_name Donor address
+   * @var string $address Donor address
    */
-  public $address          ;
+  public string $address          ;
   /**
    * @OA\Property()
-   * @var string $first_name Donor postal code
+   * @var string $postal_code Donor postal code
    */
-  public $postal_code      ;
+  public string $postal_code      ;
   /**
    * @OA\Property()
-   * @var string $first_name Donor city
+   * @var string $city Donor city
    */
-  public $city             ;
+  public string $city             ;
   /**
    * @OA\Property()
-   * @var string $first_name Donor Phone
+   * @var string $phone Donor Phone
    */
-  public $phone            ;
+  public string $phone            ;
   /**
    * @OA\Property()
-   * @var string $first_name Donor email
+   * @var string $email Donor email
    */
-  public $email            ;
+  public string $email            ;
 
   /**
    * @OA\Property()
    * @var int $euro500 Number of 500€ bills
    */
-  public $euro500          ;
+  public int $euro500          ;
   /**
    * @OA\Property()
    * @var int $euro200 Number of 200€ bills
    */
-  public $euro200          ;
+  public int $euro200          ;
   /**
    * @OA\Property()
    * @var int $euro100 Number of 100€ bills
    */
-  public $euro100          ;
+  public int $euro100          ;
   /**
    * @OA\Property()
    * @var int $euro50 Number of 50€ bills
    */
-  public $euro50           ;
+  public int $euro50           ;
   /**
    * @OA\Property()
    * @var int $euro20 Number of 20€ bills
    */
-  public $euro20           ;
+  public int $euro20           ;
   /**
    * @OA\Property()
    * @var int $euro10 Number of 10€ bills
    */
-  public $euro10           ;
+  public int $euro10           ;
   /**
    * @OA\Property()
    * @var int $euro5 Number of 5€ bills
    */
-  public $euro5            ;
+  public int $euro5            ;
   /**
    * @OA\Property()
    * @var int $euro2 Number of 2€ coins
    */
-  public $euro2            ;
+  public int $euro2            ;
   /**
    * @OA\Property()
    * @var int $euro1 Number of 1€ coins
    */
-  public $euro1            ;
+  public int $euro1            ;
   /**
    * @OA\Property()
    * @var int $cents50 Number of 50cts coins
    */
-  public $cents50          ;
+  public int $cents50          ;
   /**
    * @OA\Property()
    * @var int $cents20 Number of 20cts coins
    */
-  public $cents20          ;
+  public int $cents20          ;
   /**
    * @OA\Property()
    * @var int $cents10 Number of 10cts coins
    */
-  public $cents10          ;
+  public int $cents10          ;
   /**
    * @OA\Property()
    * @var int $cents5 Number of 5cts coins
    */
-  public $cents5           ;
+  public int $cents5           ;
   /**
    * @OA\Property()
    * @var int $cents2 Number of 2cts coins
    */
-  public $cents2           ;
+  public int $cents2           ;
   /**
    * @OA\Property()
    * @var int $cent1 Number of 1ct coins
    */
-  public $cent1            ;
+  public int $cent1            ;
   /**
    * @OA\Property()
    * @var float $don_cheque total amount of bank note collected
    */
-  public $don_cheque       ;
+  public float $don_cheque       ;
   /**
    * @OA\Property()
    * @var float $don_cheque total amount of credit card payment collected
    */
-  public $don_creditcard   ;
+  public float $don_creditcard   ;
 
   /**
    * @OA\Property()
    * @var string $notes notes about the donation
    */
-  public $notes             ;
+  public string $notes             ;
 
   /**
    * @OA\Property()
    * @var string $type {id:1,label:'Espèce'}, {id:2,label:'Chèque'}, {id:3,label:'Virement, Prélèvement, Carte Bancaire'}
    */
-  public $type              ;
+  public string $type              ;
 
   /**
    * @OA\Property()
    * @var string $forme {id:1,label:'Déclaration de don manuel'},{id:2,label:'Acte sous seing privé'}
    */
-  public $forme             ;
+  public string $forme             ;
 
   /**
    * @OA\Property()
-   * @var boolean $deleted if the NamedDonation is marked as deleted or not
+   * @var bool $deleted if the NamedDonation is marked as deleted or not
    */
-  public $deleted           ;
+  public bool $deleted           ;
 
   /**
    * @OA\Property()
    * @var string $coins_money_bag_id Identifier of the bag that contains the coins of this troncQueteur. It's used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.
    */
-  public $coins_money_bag_id;
+  public string $coins_money_bag_id;
   /**
    * @OA\Property()
    * @var string $bills_money_bag_id Identifier of the bag that contains the bills of this troncQueteur. It's used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.
    */
-  public $bills_money_bag_id;
+  public string $bills_money_bag_id;
 
   /**
    * @OA\Property()
    * @var Carbon $last_update Last time the NamedDonation row is updated
    */
-  public $last_update      ;
+  public Carbon $last_update      ;
   /**
    * @OA\Property()
    * @var int $last_update_user_id UserId of the user that performed the last update on this NamedDonation
    */
-  public $last_update_user_id;
+  public int $last_update_user_id;
 
   protected array $_fieldList = ['id','ul_id','ref_recu_fiscal','first_name','last_name','donation_date','address','postal_code','city','phone','email','euro500','euro200','euro100','euro50','euro20','euro10','euro5','euro2','euro1','cents50','cents20','cents10','cents5','cents2','cent1','don_cheque','don_creditcard','notes','type','forme','deleted','coins_money_bag_id','bills_money_bag_id','last_update','last_update_user_id'];
 

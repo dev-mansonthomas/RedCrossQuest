@@ -23,12 +23,12 @@ class GetSpotfireAccessToken extends Action
    * @var array settings
    */
   #[Inject("settings")]
-  protected $settings;
+  protected array $settings;
   
   /**
    * @var SpotfireAccessDBService       $spotfireAccessDBService
    */
-  private $spotfireAccessDBService;
+  private SpotfireAccessDBService $spotfireAccessDBService;
 
   /**
    * @param LoggerInterface $logger

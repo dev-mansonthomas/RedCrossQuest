@@ -14,12 +14,12 @@ class GetULSettings extends Action
   /**
    * @var ULPreferencesFirestoreDBService  $ULPreferencesFirestoreDBService
    */
-  private $ULPreferencesFirestoreDBService;
+  private ULPreferencesFirestoreDBService $ULPreferencesFirestoreDBService;
 
   /**
    * UniteLocaleSettingsDBService    $uniteLocaleSettingsDBService
    */
-  private $uniteLocaleSettingsDBService;
+  private UniteLocaleSettingsDBService $uniteLocaleSettingsDBService;
 
   /**
    * @param LoggerInterface $logger

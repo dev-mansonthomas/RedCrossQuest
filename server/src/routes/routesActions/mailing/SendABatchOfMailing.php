@@ -20,13 +20,13 @@ class SendABatchOfMailing extends Action
   /**
    * @var UniteLocaleDBService $uniteLocaleDBService
    */
-  private $uniteLocaleDBService;
+  private UniteLocaleDBService $uniteLocaleDBService;
 
 
   /**
    * @var EmailBusinessService $emailBusinessService
    */
-  private $emailBusinessService;
+  private EmailBusinessService $emailBusinessService;
 
   /**
    * @param LoggerInterface $logger

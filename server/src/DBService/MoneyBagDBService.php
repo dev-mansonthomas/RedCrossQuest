@@ -57,9 +57,8 @@ ORDER BY t.money_bag_id DESC
    *
    * @param int $ulId the id of the unite locale
    * @param string $coinsMoneyBagId The id of the coins bag
-   * @return CoinsMoneyBagSummaryEntity  The tronc
+   * @return CoinsMoneyBagSummaryEntity|null The tronc
    * @throws Exception if some parsing fails
-   * @throws PDOException if the query fails to execute on the server
    */
   public function getCoinsMoneyBagDetails(int $ulId, string $coinsMoneyBagId):?CoinsMoneyBagSummaryEntity
   {
@@ -152,9 +151,8 @@ nd.cent1
    *
    * @param int $ulId the id of the unite locale
    * @param string $billsMoneyBagId The id of the bills bag
-   * @return BillsMoneyBagSummaryEntity  The tronc
+   * @return BillsMoneyBagSummaryEntity|null The tronc
    * @throws Exception if some parsing fails
-   * @throws PDOException if the query fails to execute on the server
    */
   public function getBillsMoneyBagDetails(int $ulId, string $billsMoneyBagId):?BillsMoneyBagSummaryEntity
   {

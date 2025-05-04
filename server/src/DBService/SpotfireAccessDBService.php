@@ -87,14 +87,12 @@ VALUES
   }
 
 
-
   /**
    * Try to get an existing valid token
    *
    * @param int $userId The ID of the connected user (should be taken from DecodedJWT)
-   * @param int $ulId  Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @return SpotfireAccessEntity the info of the spotfire token
-   * @throws PDOException if the query fails to execute on the server
+   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @return SpotfireAccessEntity|null the info of the spotfire token
    * @throws Exception in other situations, possibly : parsing error in the entity
    */
   public function getValidToken(int $userId, int $ulId):?SpotfireAccessEntity

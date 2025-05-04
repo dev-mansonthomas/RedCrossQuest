@@ -7,32 +7,32 @@ class DecodedToken
    * True if authenticated
    * @var bool $authenticated
    */
-  private $authenticated ;
+  private bool $authenticated ;
   /**
    * Error code set ini AuthorisationMiddleware
    * @var string $errorCode
    */
-  private $errorCode     ;
+  private string $errorCode     ;
   /**
    * Username (NIVOL)
    * @var string $username
    */
-  private $username      ;
+  private string $username      ;
   /**
    * Id of the user
    * @var int $uid
    */
-  private $uid           ;
+  private int $uid           ;
   /**
    * ID of the UL of The User
    * @var int $ulId
    */
-  private $ulId          ;
+  private int $ulId          ;
   /**
    * Name of the UL of the User
    * @var string $ulName
    */
-  private $ulName        ;
+  private string $ulName        ;
   /**
    * Mode of use of RCQ.
    * 1 : RCQ is used to record dailyStats (dailystats before RCQ)
@@ -40,30 +40,30 @@ class DecodedToken
    * 3 : Deprecated, was aimed for Country Side UL, functionality moved to RedQuest
    * @var int $ulMode
    */
-  private $ulMode        ;
+  private int $ulMode        ;
   /**
    * id of the queteur of the connected user
    * @var int $queteurId
    */
-  private $queteurId     ;
+  private int $queteurId     ;
   /**
    * Role of the connected user :  1:viewer,2:operator,3:counter,4:admin,9:superadmin
    * @var int $roleId
    */
-  private $roleId        ;
+  private int $roleId        ;
   /**
    * Environment code:
    * 'D':dev, 'T':test, 'P':prod
    * @var string $d
    */
-  private $d             ;
+  private string $d             ;
 
 
   /**
    * Init teh DecodedToken as an authentication failure (this->authenticated=false) with an error code
    * @param string $errorCode  the error code associated with the failed authentication request
    */
-  public function __construct($errorCode)
+  public function __construct(string $errorCode)
   {
     $this->authenticated = false;
     $this->errorCode     = $errorCode;
@@ -142,7 +142,7 @@ class DecodedToken
   /**
    * @param bool $authenticated
    */
-  public function setAuthenticated($authenticated)
+  public function setAuthenticated(bool $authenticated): void
   {
     $this->authenticated = $authenticated;
   }
@@ -150,7 +150,7 @@ class DecodedToken
   /**
    * @param string $errorCode
    */
-  public function setErrorCode($errorCode)
+  public function setErrorCode(string $errorCode): void
   {
     $this->errorCode = $errorCode;
   }
@@ -158,7 +158,7 @@ class DecodedToken
   /**
    * @param string $username
    */
-  public function setUsername($username)
+  public function setUsername(string $username): void
   {
     $this->username = $username;
   }
@@ -166,7 +166,7 @@ class DecodedToken
   /**
    * @param int $uid
    */
-  public function setUid($uid)
+  public function setUid(int $uid): void
   {
     $this->uid = $uid;
   }
@@ -174,7 +174,7 @@ class DecodedToken
   /**
    * @param int $ulId
    */
-  public function setUlId($ulId)
+  public function setUlId(int $ulId): void
   {
     $this->ulId = $ulId;
   }
@@ -182,7 +182,7 @@ class DecodedToken
   /**
    * @param int $queteurId
    */
-  public function setQueteurId($queteurId)
+  public function setQueteurId(int $queteurId): void
   {
     $this->queteurId = $queteurId;
   }
@@ -190,7 +190,7 @@ class DecodedToken
   /**
    * @param int $roleId
    */
-  public function setRoleId($roleId)
+  public function setRoleId(int $roleId): void
   {
     $this->roleId = $roleId;
   }
@@ -198,7 +198,7 @@ class DecodedToken
   /**
    * @param string $ulName
    */
-  public function setUlName($ulName)
+  public function setUlName(string $ulName): void
   {
     $this->ulName = $ulName;
   }
