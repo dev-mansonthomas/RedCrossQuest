@@ -10,7 +10,7 @@
 namespace RedCrossQuest\Service;
 
 use InvalidArgumentException;
-use Psr\Log\LoggerInterface;
+use RedCrossQuest\Service\Logger;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\Length;
@@ -24,22 +24,22 @@ use Symfony\Component\Validator\Validation;
 class ClientInputValidator
 {
   /** @var string */
-  public static $EMAIL_VALIDATION="email";
+  public static string $EMAIL_VALIDATION="email";
   /** @var string */
-  public static $UUID_VALIDATION="uuid";
+  public static string $UUID_VALIDATION="uuid";
 
   /** @var string */
-  public static $STRING_VALIDATION ="validateString";
+  public static string $STRING_VALIDATION ="validateString";
   /** @var string */
-  public static $INTEGER_VALIDATION="validateInteger";
+  public static string $INTEGER_VALIDATION="validateInteger";
   /** @var string */
-  public static $BOOLEAN_VALIDATION="validateBoolean";
+  public static string $BOOLEAN_VALIDATION="validateBoolean";
 
 
-  /** @var LoggerInterface */
-  protected $logger;
+  /** @var Logger */
+  protected Logger $logger;
 
-  public function __construct(LoggerInterface $logger)
+  public function __construct(Logger $logger)
   {
     $this->logger         = $logger;
   }
@@ -75,17 +75,17 @@ class ClientInputValidator
 
     if($notNull)
     {
-      $validators[count($validators)] = new NotBlank();
+      $validators[] = new NotBlank();
     }
 
     if($validationType == ClientInputValidator::$EMAIL_VALIDATION)
     {
-      $validators[count($validators)] = new Email(['mode'=>'strict']);
+      $validators[] = new Email(['mode' => 'strict']);
     }
 
     if($validationType == ClientInputValidator::$UUID_VALIDATION)
     {
-      $validators[count($validators)] = new Uuid(['strict' => true]);
+      $validators[] = new Uuid(['strict' => true]);
     }
 
     $violations = $validator->validate($inputValue, $validators);
@@ -139,7 +139,7 @@ class ClientInputValidator
 
     if($notNull)
     {
-      $validators[count($validators)] = new NotBlank();
+      $validators[] = new NotBlank();
     }
 
     $rangeCheck = ['min'=>0];
@@ -149,7 +149,7 @@ class ClientInputValidator
       $rangeCheck['max'] = $maxValue;
     }
 
-    $validators[count($validators)] = new Range($rangeCheck);
+    $validators[] = new Range($rangeCheck);
 
 
     $violations = $validator->validate($inputValue, $validators);
@@ -173,7 +173,7 @@ class ClientInputValidator
    * @param array|null $inputArray The reference to the array containing the $parameterName as a key (or not)
    * @param bool $notNull If true, the value can't be null
    * @param bool $defaultValue If the value is null and it's allowed ($notNull=true), then the function will return this bool value instead of null
-   * @return boolean true or false
+   * @return bool|null true or false
    */
   public function validateBoolean(string $parameterName, ?array &$inputArray, bool $notNull, bool $defaultValue=null):?bool
   {

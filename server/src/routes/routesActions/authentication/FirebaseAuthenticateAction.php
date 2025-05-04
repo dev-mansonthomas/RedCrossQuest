@@ -29,29 +29,29 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
   /**
    * @var ReCaptchaService
    */
-  private $reCaptchaService;
+  private ReCaptchaService $reCaptchaService;
   /**
    * @var UserDBService
    */
-  private $userDBService;
+  private UserDBService $userDBService;
   /**
    * @var QueteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
   /**
    * @var UniteLocaleDBService
    */
-  private $uniteLocaleDBService;
+  private UniteLocaleDBService $uniteLocaleDBService;
 
   /**
    * @var SpotfireAccessDBService
    */
-  private $spotfireAccessDBService;
+  private SpotfireAccessDBService $spotfireAccessDBService;
   
   /**
    * @var Firebase\Auth  $firebaseAuth
    */
-  private $firebaseAuth;
+  private Firebase\Auth $firebaseAuth;
 
 
   /**
@@ -73,7 +73,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
                               QueteurDBService        $queteurDBService,
                               UniteLocaleDBService    $uniteLocaleDBService,
                               SpotfireAccessDBService $spotfireAccessDBService,
-                              Firebase\Auth           $firebaseAuth)
+                              Firebase\Auth           $firebaseAuth)  //TODO update deprecated code
   {
     parent::__construct($logger, $clientInputValidator, $secretManagerService);
     
@@ -124,7 +124,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
     {
       $verifiedIdToken = $this->firebaseAuth->verifyIdToken($token);
     }
-    catch (InvalidToken $e)
+    catch (InvalidToken $e)    //TODO update deprecated code
     {
       $response401 = $this->response->withStatus(401);
       $response401->getBody()->write(json_encode(["error" =>"Authentication error"]));

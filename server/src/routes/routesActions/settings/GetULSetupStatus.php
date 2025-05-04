@@ -13,7 +13,7 @@ class GetULSetupStatus extends Action
   /**
    * @var SettingsBusinessService  $settingsBusinessService
    */
-  private $settingsBusinessService;
+  private SettingsBusinessService $settingsBusinessService;
 
   /**
    * @param LoggerInterface $logger

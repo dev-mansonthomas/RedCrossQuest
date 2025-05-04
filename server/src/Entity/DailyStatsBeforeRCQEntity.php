@@ -3,6 +3,7 @@ namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
 use Exception;
+use OpenApi\Annotations as OA;
 use Psr\Log\LoggerInterface;
 
 /**

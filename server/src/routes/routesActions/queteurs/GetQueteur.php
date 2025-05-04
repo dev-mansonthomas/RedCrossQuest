@@ -21,12 +21,12 @@ class GetQueteur extends Action
   /**
    * @var QueteurDBService          $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
 
   /**
    * @var UserDBService $userDBService
    */
-  private $userDBService;
+  private UserDBService $userDBService;
 
   /**
    * @param LoggerInterface $logger

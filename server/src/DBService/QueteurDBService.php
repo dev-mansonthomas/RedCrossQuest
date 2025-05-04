@@ -967,7 +967,7 @@ AND   `ul_id`           = :ul_id
     $this->executeQueryForUpdate($sql, $parameters);
   }
 
-  public static $insertQueteurSQL = "
+  public static string $insertQueteurSQL = "
 INSERT INTO `queteur`
 (
   `first_name`,
@@ -1014,7 +1014,7 @@ VALUES
    * @param QueteurEntity $queteur The queteur to update
    * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param int $roleId role id of the user of RCQ that creates the queteur. If roleId is 9, superAdmin, then it allows the queteur to be created in any Unite Local of the super Admin choice
-   * @return int the primary key of the new queteur
+   * @return int|null the primary key of the new queteur
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception
    */
@@ -1050,7 +1050,7 @@ VALUES
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception
    */
-  public function getNumberOfQueteur(int $ulId)
+  public function getNumberOfQueteur(int $ulId): int
   {
     $sql="
     SELECT 1
@@ -1071,7 +1071,7 @@ VALUES
    * @return QueteurEntity[]  the list of Queteurs matching the query
    * @throws Exception in other situations
    */
-  public function searchSimilarQueteur(int $ulId, ?string $firstName, ?string $lastName, ?string $nivol)
+  public function searchSimilarQueteur(int $ulId, ?string $firstName, ?string $lastName, ?string $nivol): array
   {
     $parameters      = ["ul_id" => $ulId];
     $searchFirstName = "";
@@ -1155,7 +1155,7 @@ $searchNivol
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations
    */
-  public function anonymize(int $queteurId, int $ulId, int $roleId, int $userId)
+  public function anonymize(int $queteurId, int $ulId, int $roleId, int $userId): string
   {
     $this->logger->debug("anonymize Queteur", ["queteurId"=>$queteurId, "roleId"=> $roleId, "ulId"=> $ulId, "userId"=>$userId]);
 
@@ -1206,7 +1206,7 @@ AND   `ul_id`           = :ul_id
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception
    */
-  public function markAllAsPrinted(int $ulId)
+  public function markAllAsPrinted(int $ulId): void
   {
 
     $sql = "

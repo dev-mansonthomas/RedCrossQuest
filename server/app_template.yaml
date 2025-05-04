@@ -1,5 +1,7 @@
 runtime: php83
 entrypoint: serve public/rest/index.php
+automatic_scaling:
+  max_instances: 20
 
 env_variables:
   # Replace USER, PASSWORD, DATABASE, and CONNECTION_NAME with the

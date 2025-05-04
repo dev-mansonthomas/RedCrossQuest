@@ -50,8 +50,8 @@ abstract class DBService
    * @param string $sql
    * @param array $parameters
    * @param $mappingCallBack
-   * @param int $pageNumber
-   * @param int $rowsPerPage
+   * @param int|null $pageNumber
+   * @param int|null $rowsPerPage
    * @return array
    * @throws Exception
    */
@@ -98,7 +98,7 @@ abstract class DBService
    * @param array $parameters
    * @param $mappingCallBack
    * @param bool $throwExceptionIfNotFound if true, if the query returns no row, an exception is thrown
-   * @return object instantiated by the callback $mappingCallBack
+   * @return object|null instantiated by the callback $mappingCallBack
    * @throws Exception
    */
   protected function executeQueryForObject(string $sql, array $parameters, $mappingCallBack, ?bool $throwExceptionIfNotFound=false):?object
@@ -142,7 +142,7 @@ abstract class DBService
    * @param string $sql
    * @param array $parameters
    * @param bool $returnLastInsertedId if true, if the query returns no row, an exception is thrown
-   * @return int the last_inserted_id if requested by setting $returnLastInsertedId to true
+   * @return int|null the last_inserted_id if requested by setting $returnLastInsertedId to true
    * @throws Exception
    */
   protected function executeQueryForInsert(string $sql, array $parameters, ?bool $returnLastInsertedId=false):?int
@@ -229,7 +229,7 @@ abstract class DBService
    * In some case, a service wants to coordinate multiple updates on several sql update/insert on one or several tables.
    * That's why this method is public
    */
-  public function transactionStart()
+  public function transactionStart(): void
   {
     $this->db->beginTransaction();
   }
@@ -239,7 +239,7 @@ abstract class DBService
    * In some case, a service wants to coordinate multiple updates on several sql update/insert on one or several tables.
    * That's why this method is public
    */
-  public function transactionCommit()
+  public function transactionCommit(): void
   {
     $this->db->commit();
   }
@@ -249,7 +249,7 @@ abstract class DBService
    * In some case, a service wants to coordinate multiple updates on several sql update/insert on one or several tables.
    * That's why this method is public
    */
-  public function transactionRollback()
+  public function transactionRollback(): void
   {
     $this->db->rollBack();
   }

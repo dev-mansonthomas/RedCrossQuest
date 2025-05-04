@@ -20,30 +20,30 @@ class EmailBusinessService
   /**
    * @var Logger
    */
-  protected $logger;
+  protected Logger $logger;
 
-  protected $appSettings;
+  protected Array $appSettings;
   /**
    * @var MailingDBService
    * */
-  protected $mailingDBService;
+  protected MailingDBService $mailingDBService;
 
   /**
    * @var UniteLocaleDBService
    * */
-  protected $uniteLocaleDBService;
+  protected UniteLocaleDBService $uniteLocaleDBService;
 
   /**
    * @var MailService
    * */
-  protected $mailService;
+  protected MailService $mailService;
 
 
   public function __construct(Logger                $logger,
                               MailService           $mailService,
                               MailingDBService      $mailingDBService,
                               UniteLocaleDBService  $uniteLocaleDBService,
-                              $appSettings)
+                              array $appSettings)
   {
 
     $this->logger               = $logger;
@@ -113,7 +113,7 @@ class EmailBusinessService
     <li><a href='https://redquest.croix-rouge.fr' target='_blank'>RedQuest</a>
         <ul>
           <li>Le site compagnon du quêteur</li>
-          <li>Qu'est ce que la Croix Rouge, ses principes, pourquoi on fait la quête, ou va l'argent et toutes les questions qu'on peut poser au quêteur</li>    
+          <li>Qu'est-ce que la Croix Rouge, ses principes, pourquoi on fait la quête, ou va l'argent et toutes les questions qu'on peut poser au quêteur</li>    
           <li>Les astuces pour bien quêter</li>
           <li>Le système de Badge (ou <a href='https://fr.wikipedia.org/wiki/Ludification' target='_blank'>gamification</a>) : récompenser virtuellement les quêteurs pour leurs contributions pour les inciter à se donner encore plus</li>
           <li>Un classement (configurable) des quêteurs de l'UL (pas de classement, 10 premiers, classement complet)</li>
@@ -122,10 +122,24 @@ class EmailBusinessService
           <li>Information sur mon unité locale</li>
       </ul>
     </li>
-    <li><a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'>Le forum interactif Slack</a>
+    <li><a href='https://chat.google.com/room/AAAAwTetl4k?cls=7' target='_blank'>Le support avec Google Chat</a>
         <ul>
-          <li>Messagerie instantanée organisé par thème : posez votre question, la communauté ou le support vous répond</li>
-          <li>Échanger vos astuces pour négocier avec les banques, motiver vos bénévoles</li>    
+          <li>Posez votre question, la communauté ou le support vous répond</li>
+          <li>Échanger vos astuces pour négocier avec les banques, motiver vos bénévoles</li>
+          <li>Si le lien ne fonctionne pas c'est que vous êtes connecté à un autre compte gmail, essayer un de ces liens <br/>
+          
+<a href='https://mail.google.com/chat/u/0/#chat/space/AAAAwTetl4k' target='_blank'>Lien 0</a>, 
+<a href='https://mail.google.com/chat/u/1/#chat/space/AAAAwTetl4k' target='_blank'>Lien 1</a>, 
+<a href='https://mail.google.com/chat/u/2/#chat/space/AAAAwTetl4k' target='_blank'>Lien 2</a>, 
+<a href='https://mail.google.com/chat/u/3/#chat/space/AAAAwTetl4k' target='_blank'>Lien 3</a>, 
+<a href='https://mail.google.com/chat/u/4/#chat/space/AAAAwTetl4k' target='_blank'>Lien 4</a>, 
+<a href='https://mail.google.com/chat/u/5/#chat/space/AAAAwTetl4k' target='_blank'>Lien 5</a>, 
+<a href='https://mail.google.com/chat/u/6/#chat/space/AAAAwTetl4k' target='_blank'>Lien 6</a>, 
+<a href='https://mail.google.com/chat/u/7/#chat/space/AAAAwTetl4k' target='_blank'>Lien 7</a>, 
+<a href='https://mail.google.com/chat/u/8/#chat/space/AAAAwTetl4k' target='_blank'>Lien 8</a>, 
+<a href='https://mail.google.com/chat/u/9/#chat/space/AAAAwTetl4k' target='_blank'>Lien 9</a>           
+                     
+          </li>    
       </ul>
     </li>
     <li><a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>L'espace intranet</a>
@@ -198,7 +212,7 @@ class EmailBusinessService
    */
   public function newULRegistrationEmailForPresidentWithToken(UniteLocaleEntity $ulRegistration): void
   {
-    $this->logger->info("newULRegistrationEmail:'", ['ulRegistration' =>$ulRegistration]);
+    $this->logger->info("newULRegistrationEmailForPresident:'", ['ulRegistration' =>$ulRegistration]);
 
     $url=$this->appSettings['appUrl'];
 
@@ -466,9 +480,9 @@ class EmailBusinessService
 <ul>
 <li>Les données stockées dans RedCrossQuest & RedQuest sont le strict nécessaire à la bonne organisation de la quête de la Croix Rouge</li>
 <li>Les données sont stockées sur les serveurs de la Croix Rouge française qui se situent en europe</li>
-<li>Il n'y a pas de suivi temps réel de vos coordonnées GPS. On défini avant votre départ, l'endroit ou vous allez quêter qui lui à des coordonnées GPS pour l'affichage sur une carte</li>
+<li>Il n'y a pas de suivi temps réel de vos coordonnées GPS. On définit avant votre départ l'endroit où vous allez quêter qui lui à des coordonnées GPS pour l'affichage sur une carte</li>
 <li>Si vous avez des questions, n'hésitez pas à contacter l'unité locale pour laquelle vous avez Quêté.</li>
-<li>Il vous est possible de demander l'anonymisation de vos données à votre unité locale. Vous receverez alors une confirmation par email avec un Jeton. Avec ce jeton, vous pourrez l'année suivante, si vous revenez quêter dans la meme unité locale, revaloriser vos noms/prénoms et retrouver vos statistiques/badges dans RedQuest</li>
+<li>Il vous est possible de demander l'anonymisation de vos données à votre unité locale. Vous recevrez alors une confirmation par email avec un Jeton. Avec ce jeton, vous pourrez l'année suivante, si vous revenez quêter dans la meme unité locale, revaloriser vos noms/prénoms et retrouver vos statistiques/badges dans RedQuest</li>
 </ul>
 <br/>".$this->getMailFooter($uniteLocaleEntity, false, $queteur),
       $uniteLocaleEntity->admin_email,
@@ -505,9 +519,9 @@ class EmailBusinessService
 <strong>Attention :</strong> <br/>
 <ul>
 <li>Cette archive contient <strong>les données personnelles</strong> de vos bénévoles et bénévoles d'un jour</li>
-<li>Prenez toutes les précautions nécessaire pour que ces données ne soient pas diffusées en dehors du minimum de personnes ayant besoin d'avoir accès a ces informations.</li>
+<li>Prenez toutes les précautions nécessaires pour que ces données ne soient pas diffusées en dehors du minimum de personnes ayant besoin d'avoir accès a ces informations.</li>
 <li>Ces données ont été collectés pour les Journées Nationale, n'utilisez pas ces données hors du cadre des Journées Nationales !</li>
-<li>Après utilisation des données, pensez a supprimer le fichier zip et la version décompressée. Si on vous vole votre ordi, ou vous le perdez, vous seriez responsable d'une fuite de données</li>
+<li>Après utilisation des données, pensez à supprimer le fichier zip et la version décompressée. Si on vous vole votre ordi, ou vous le perdez, vous seriez responsable d'une fuite de données</li>
 <li>Si vous devez conserver ces données, stockez les dans un espace de stockage sécurisé</li>
 </ul>
 <br/>".$this->getMailFooter($uniteLocaleEntity, false, $queteur),
@@ -594,7 +608,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
 <p>
   Si vous revenez prêter main forte à l'unité locale de '".$queteur->ul_name."', vous pouvez communiquer ce Token à l'unité locale de '".$queteur->ul_name."'
   Il permettra de retrouver votre fiche anonymisée et de revaloriser votre fiche avec vos données pour une nouvelle participation à la quête!
-  Vous retrouver ainsi vos statistiques des années passées.
+  Vous retrouvez ainsi vos statistiques des années passées.
   (ce token n'est valable que pour l'unité locale de '".$queteur->ul_name."', un nouveau compte sera créé si vous quêter avec une autre unité locale)
 </p>
 <p>
@@ -660,16 +674,16 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
         $mailingInfoEntity->last_name,
         $this->getMailHeader($title, $mailingInfoEntity->first_name)."
 <br/>
-Encore une fois nous tenions à te remercier pour ta participation aux journées nationales ".(Carbon::now())->year." de la Croix-Rouge française !<br/>
+Encore une fois, nous tenions à te remercier pour ta participation aux journées nationales ".(Carbon::now())->year." de la Croix-Rouge française !<br/>
 <br/>
 Nous t'avons préparé un petit résumé de ce que ta participation représente pour l'unité locale de ".$uniteLocaleEntity->name.". <br/>
 Tu y trouveras également un message de remerciement de son Président. <br/>
 <br/>
-Pour cela, il suffit de cliquer sur l'image ci-dessous:<br/>
+Pour cela, il suffit de cliquer sur l'image ci-dessous :<br/>
 <a href='$url' target='_blank'>
 <img src='https://redcrossquest.croix-rouge.fr/assets/images/RedCrossQuest-Merci.jpg' alt='Cliquez ICI'>
 </a><br/>
-<small style='color:silver;'>ou recopie l'adresse suivante dans ton navigateur:<br/>
+<small style='color:silver;'>ou recopie l'adresse suivante dans ton navigateur :<br/>
 <a href='$url' style='color:grey;'>$url</a>
 </small>
 <br/>
@@ -939,7 +953,7 @@ Si vous pensez qu'il y a une erreur, veuillez contacter votre Unité Locale.
     {
       $message = "
 <br/>
-Félicitations ! L'inscription de votre Unité Locale à RedCrossQuest/RedQuest a été validée!<br/>
+Félicitations ! L'inscription de votre Unité Locale à RedCrossQuest/RedQuest a été validée !<br/>
  <br/>
 L'administrateur a reçu un email lui permettant d'initialiser son mot de passe pour le site de production et le site de test.
 <ul>
@@ -947,7 +961,7 @@ L'administrateur a reçu un email lui permettant d'initialiser son mot de passe 
     <li>Une fois connecté, vous aurez une liste d'instructions à suivre pour finir le paramétrage de l'application et vous préparer</li>
     <li>Procédez au paramétrage complet sur le site de <strong>production</strong>.</li>
     <li>En production, vous ne pourrez pas préparer ou faire partir un tronc avant la date de début de quête</li>    
-    <li>Sur le site de test, vous pouvez faire vos tests, former vos bénévoles. Créez quelques points de quête, troncs, bénévoles et familiarisez vous à l'outil. (cycle complet de quête disponible)</li>
+    <li>Sur le site de test, vous pouvez faire vos tests, former vos bénévoles. Créez quelques points de quête, troncs, bénévoles et familiarisez-vous à l'outil. (cycle complet de quête disponible)</li>
     <li>Seul le compte de l'administrateur a été créé, il revient à l'administrateur de créer les comptes du président et du trésorier</li>    
     <li>IMPORTANT : Le support est apporté via <a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'> forum interactif Slack</a> et <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié. Rejoignez ces deux outils au plus vite.</li>
     <li>Vous disposez aussi d'un site de Test <a href='https://test.redcrossquest.croix-rouge.fr' target='_blank'>https://test.redcrossquest.croix-rouge.fr</a> sur lequel vous pouvez vous entrainer.</li>    

@@ -10,10 +10,9 @@ class YearlyGoalDBService extends DBService
   /**
    * Get all goals for UL $ulId and a particular year
    *
-   * @param int     $ulId The ID of the Unite Locale
-   * @param string  $year The year for which we wants the yearly goals
-   * @return YearlyGoalEntity  The YearlyGoalEntity
-   * @throws PDOException if the query fails to execute on the server
+   * @param int $ulId The ID of the Unite Locale
+   * @param string $year The year for which we wants the yearly goals
+   * @return YearlyGoalEntity|null The YearlyGoalEntity
    * @throws Exception in other situations, possibly : parsing error in the entity
    */
   public function getYearlyGoals(int $ulId, string $year):?YearlyGoalEntity
@@ -172,10 +171,9 @@ VALUES
   /**
    * Get all goals for UL $ulId (and if specified, a particular year, all if not)
    *
-   * @param int     $ulId The ID of the Unite Locale
-   * @param string  $year The year for which we wants the yearly goals
+   * @param int $ulId The ID of the Unite Locale
+   * @param string|null $year The year for which we wants the yearly goals
    * @return YearlyGoalEntity[]  The YearlyGoalEntity
-   * @throws PDOException if the query fails to execute on the server
    * @throws Exception in other situations, possibly : parsing error in the entity
    */
   public function getYearlyGoalsForExportData(int $ulId, ?string $year):array

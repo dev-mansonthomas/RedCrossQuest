@@ -2,6 +2,8 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
+use OpenApi\Annotations as OA;
+
 /**
  * @OA\Schema(schema="CreateQueteurResponse", required={"queteurId"})
  */
@@ -11,9 +13,9 @@ class CreateQueteurResponse
    * @OA\Property()
    * @var int $queteurId the id of the newly created queteur
    */
-  public $queteurId;
+  public int $queteurId;
 
-  protected $_fieldList = ["queteurId"];
+  protected array $_fieldList = ["queteurId"];
 
   public function __construct(int $queteurId)
   {

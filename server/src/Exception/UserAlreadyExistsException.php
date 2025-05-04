@@ -5,11 +5,12 @@ namespace RedCrossQuest\Exception;
 
 
 use Exception;
+use RedCrossQuest\Entity\UserEntity;
 use Throwable;
 
 class UserAlreadyExistsException extends Exception
 {
-  public $users;
+  public UserEntity $users;
 
   public function __construct($message = "", $code = 0, Throwable $previous = null)
   {

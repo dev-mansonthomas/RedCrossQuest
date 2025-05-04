@@ -15,17 +15,17 @@ use RedCrossQuest\routes\routesActions\settings\GetULSetupStatusResponse;
 class SettingsBusinessService
 {
   /** @var LoggerInterface */
-  protected $logger;
+  protected LoggerInterface $logger;
   /** @var QueteurDBService */
-  protected $queteurDBService;
+  protected QueteurDBService $queteurDBService;
   /** @var PointQueteDBService */
-  protected $pointQueteDBService;
+  protected PointQueteDBService $pointQueteDBService;
   /** @var UserDBService */
-  protected $userDBService;
+  protected UserDBService $userDBService;
   /** @var DailyStatsBeforeRCQDBService */
-  protected $dailyStatsBeforeRCQDBService;
+  protected DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService;
   /** @var TroncDBService */
-  protected $troncDBService;
+  protected TroncDBService $troncDBService;
 
   public function __construct(LoggerInterface $logger, QueteurDBService $queteurDBService,
                               UserDBService $userDBService, PointQueteDBService $pointQueteDBService,

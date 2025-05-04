@@ -2,6 +2,8 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
+use OpenApi\Annotations as OA;
+
 /**
  * @OA\Schema(schema="GetUserInfoFromUUIDResponse", required={"success"})
  */
@@ -12,15 +14,15 @@ class GetUserInfoFromUUIDResponse
    * @OA\Property()
    * @var bool $success the action did succeed or not
    */
-  public $success;
+  public bool $success;
 
   /**
    * @OA\Property()
    * @var string  $nivol The nivol corresponding to the UUID
    */
-  public $nivol;
+  public ?string $nivol;
 
-  protected $_fieldList = ['success', 'nivol'];
+  protected array $_fieldList = ['success', 'nivol'];
 
   public function __construct(bool $success, string $nivol=null)
   {

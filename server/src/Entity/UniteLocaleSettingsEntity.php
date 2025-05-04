@@ -1,19 +1,20 @@
 <?php
 namespace RedCrossQuest\Entity;
 
+use Carbon\Carbon;
 use Exception;
 use Psr\Log\LoggerInterface;
 
 class UniteLocaleSettingsEntity  extends Entity
 {
-  public $id;
-  public $ul_id;
-  public $settings;
-  public $created;
-  public $updated;
-  public $last_update_user_id;
-  public $token_benevole;
-  public $token_benevole_1j;
+  public int $id;
+  public int $ul_id;
+  public mixed $settings;
+  public Carbon $created;
+  public Carbon $updated;
+  public int $last_update_user_id;
+  public string $token_benevole;
+  public string $token_benevole_1j;
 
   protected array $_fieldList = ['id','ul_id','settings','created','updated','last_update_user_id','token_benevole','token_benevole_1j'];
 

@@ -5,6 +5,7 @@ namespace RedCrossQuest\Entity;
 
 use Carbon\Carbon;
 use Exception;
+use OpenApi\Annotations as OA;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -17,24 +18,24 @@ class UniteLocaleEntity  extends Entity
    * @OA\Property()
    * @var int $id UL ID
    */
-  public $id;
+  public int $id;
   /**
    * @OA\Property()
    * @var string $name Name of the UL
    */
-  public $name;
+  public string $name;
 
   /**
    * @OA\Property()
    * @var string $phone phone to contact the UL
    */
-  public $phone;
+  public string $phone;
 
   /**
    * @OA\Property()
    * @var float $latitude latitude of the base of the UL
    */
-  public $latitude;
+  public float $latitude;
 
   /**
    * @OA\Property()
@@ -45,142 +46,142 @@ class UniteLocaleEntity  extends Entity
    * @OA\Property()
    * @var string $address Street number and name of the UL
    */
-  public $address;
+  public string $address;
   /**
    * @OA\Property()
    * @var string $postal_code Postal code of the UL
    */
-  public $postal_code;
+  public string $postal_code;
   /**
    * @OA\Property()
    * @var string $city City of the UL
    */
-  public $city;
+  public string $city;
   /**
    * @OA\Property()
    * @var integer $external_id Id of the UL in the RedCross Ref
    */
-  public $external_id;
+  public int $external_id;
   /**
    * @OA\Property()
    * @var string $email email to contact the UL
    */
-  public $email;
+  public string $email;
   /**
    * @OA\Property()
    * @var integer $id_structure_rattachement ID of the parent structure of the UL
    */
-  public $id_structure_rattachement;
+  public int $id_structure_rattachement;
   /**
    * @OA\Property()
    * @var Carbon $date_demarrage_activite Date of creation of the UL
    */
-  public $date_demarrage_activite;
+  public Carbon $date_demarrage_activite;
   /**
    * @OA\Property()
    * @var Carbon $date_demarrage_rcq Date of the first use of RCQ
    */
-  public $date_demarrage_rcq;
+  public Carbon $date_demarrage_rcq;
   /**
    * @OA\Property()
    * @var integer $mode Mode of use of RCQ. Might be deprecated.
    */
-  public $mode;
+  public int $mode;
   /**
    * @OA\Property()
    * @var string $publicDashboard Which Spotfire public Dashboard is used. The one with the total amount (RCQ-Public-MontantsVisibles) or without (RCQ-Public-MontantsCachés)
    */
-  public $publicDashboard;
+  public string $publicDashboard;
   /**
    * @OA\Property()
    * @var boolean $president_man Is the President a Man
    */
-  public $president_man;
+  public bool $president_man;
   /**
    * @OA\Property()
    * @var string $president_nivol Nivol of the president
    */
-  public $president_nivol;
+  public string $president_nivol;
   /**
    * @OA\Property()
    * @var string $president_first_name first name of the President
    */
-  public $president_first_name;
+  public string $president_first_name;
   /**
    * @OA\Property()
    * @var string $president_last_name last name of the President
    */
-  public $president_last_name;
+  public string $president_last_name;
   /**
    * @OA\Property()
    * @var string $president_email email of the President
    */
-  public $president_email;
+  public string $president_email;
   /**
    * @OA\Property()
    * @var string $president_mobile mobile of the President
    */
-  public $president_mobile;
+  public string $president_mobile;
   /**
    * @OA\Property()
    * @var boolean $tresorier_man Is the Treasurer a Man
    */
-  public $tresorier_man;
+  public bool $tresorier_man;
   /**
    * @OA\Property()
    * @var string $tresorier_nivol Nivol of the treasurer
    */
-  public $tresorier_nivol;
+  public string $tresorier_nivol;
   /**
    * @OA\Property()
    * @var string $tresorier_first_name first name of the Treasurer
    */
-  public $tresorier_first_name;
+  public string $tresorier_first_name;
   /**
    * @OA\Property()
    * @var string $tresorier_last_name last name of the Treasurer
    */
-  public $tresorier_last_name;
+  public string $tresorier_last_name;
   /**
    * @OA\Property()
    * @var string $tresorier_email email of the Treasurer
    */
-  public $tresorier_email;
+  public string $tresorier_email;
   /**
    * @OA\Property()
    * @var string $tresorier_mobile mobile of the Treasurer
    */
-  public $tresorier_mobile;
+  public string $tresorier_mobile;
   /**
    * @OA\Property()
    * @var boolean $admin_man Is the Admin a Man
    */
-  public $admin_man;
+  public bool $admin_man;
   /**
    * @OA\Property()
    * @var string $admin_nivol Nivol of the admin
    */
-  public $admin_nivol;
+  public string $admin_nivol;
   /**
    * @OA\Property()
    * @var string $admin_first_name first name of the Admin
    */
-  public $admin_first_name;
+  public string $admin_first_name;
   /**
    * @OA\Property()
    * @var string $admin_last_name last name of the Admin
    */
-  public $admin_last_name;
+  public string $admin_last_name;
   /**
    * @OA\Property()
    * @var string $admin_email email of the Admin
    */
-  public $admin_email;
+  public string $admin_email;
   /**
    * @OA\Property()
    * @var string $admin_mobile mobile of the Admin
    */
-  public $admin_mobile;
+  public string $admin_mobile;
 
   /***UL REGISTRATION***/
 
@@ -188,49 +189,49 @@ class UniteLocaleEntity  extends Entity
    * @OA\Property()
    * @var int $registration_id the registration id
    */
-  public $registration_id;
+  public int $registration_id;
 
   /**
    * @OA\Property()
    * @var int $registration_token the registration token, sent to the president by email, must be passed back to the form to get the validation.
    */
-  public $registration_token;
+  public int $registration_token;
 
   /**
    * @OA\Property()
    * @var Carbon $created the registration create date
    */
-  public $created;
+  public Carbon $created;
 
   /**
    * @OA\Property()
    * @var bool $registration_approved if the approval is not done (null), approved or rejected
    */
-  public $registration_approved;
+  public bool $registration_approved;
 
   /**
    * @OA\Property()
    * @var string $reject_reason the reason of rejection
    */
-  public $reject_reason;
+  public string $reject_reason;
 
   /**
    * @OA\Property()
    * @var Carbon $approval_date Date of approval/rejection
    */
-  public $approval_date;
+  public Carbon $approval_date;
 
   /**
    * @OA\Property()
    * @var int $registration_in_progress The value is 36 if a registration is in progress (lenght of the registration token) or null otherwise
    */
-  public $registration_in_progress;
+  public int $registration_in_progress;
 
   /**
    * @OA\Property()
    * @var string $tresorier_spreadsheet_id The Google Spreadsheet ID that is being updated with troncQueteurData
    */
-  public $tresorier_spreadsheet_id;
+  public string $tresorier_spreadsheet_id;
 
 
 

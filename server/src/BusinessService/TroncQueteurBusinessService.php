@@ -2,7 +2,7 @@
 namespace RedCrossQuest\BusinessService;
 use Carbon\Carbon;
 use Exception;
-use Psr\Log\LoggerInterface;
+use RedCrossQuest\Service\Logger;
 use RedCrossQuest\DBService\DailyStatsBeforeRCQDBService;
 use RedCrossQuest\DBService\PointQueteDBService;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -23,21 +23,21 @@ use RedCrossQuest\Entity\TroncQueteurEntity;
 
 class TroncQueteurBusinessService
 {
-  /** @var LoggerInterface $logger*/
-  protected $logger;
+  /** @var Logger $logger*/
+  protected Logger $logger;
   /** @var TroncQueteurDBService $troncQueteurDBService*/
-  protected $troncQueteurDBService;
+  protected TroncQueteurDBService $troncQueteurDBService;
   /** @var QueteurDBService $queteurDBService*/
-  protected $queteurDBService     ;
+  protected QueteurDBService $queteurDBService     ;
   /** @var PointQueteDBService $pointQueteDBService*/
-  protected $pointQueteDBService  ;
+  protected PointQueteDBService $pointQueteDBService  ;
   /** @var TroncDBService $troncDBService*/
-  protected $troncDBService       ;
+  protected TroncDBService $troncDBService       ;
 
   /** @var DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService */
-  protected $dailyStatsBeforeRCQDBService;
+  protected DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService;
   
-  public function __construct(LoggerInterface         $logger,
+  public function __construct(Logger                  $logger,
                               TroncQueteurDBService   $troncQueteurDBService,
                               QueteurDBService        $queteurDBService,
                               PointQueteDBService     $pointQueteDBService,
@@ -56,7 +56,7 @@ class TroncQueteurBusinessService
    * @param int $tronc_id
    * @param int $ulId
    * @param int $roleId
-   * @return TroncQueteurEntity
+   * @return TroncQueteurEntity|null
    * @throws Exception
    */
   public function   getLastTroncQueteurFromTroncId(int $tronc_id, int $ulId, int $roleId):?TroncQueteurEntity

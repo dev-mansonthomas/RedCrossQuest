@@ -20,7 +20,7 @@ class GetPointQuete extends Action
   /**
    * @var PointQueteDBService     $pointQueteDBService
    */
-  private $pointQueteDBService;
+  private PointQueteDBService $pointQueteDBService;
 
   /**
    * @param LoggerInterface $logger

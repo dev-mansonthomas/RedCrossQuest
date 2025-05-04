@@ -21,7 +21,7 @@ class UpdateULSettings extends Action
   /**
    * @var UniteLocaleDBService          $uniteLocaleDBService
    */
-  private $uniteLocaleDBService;
+  private UniteLocaleDBService $uniteLocaleDBService;
 
 
 

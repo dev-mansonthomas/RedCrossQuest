@@ -19,7 +19,7 @@ class GetMailingSummary extends Action
   /**
    * @var MailingDBService               $mailingDBService
    */
-  private $mailingDBService;
+  private MailingDBService $mailingDBService;
 
   /**
    * @param LoggerInterface $logger

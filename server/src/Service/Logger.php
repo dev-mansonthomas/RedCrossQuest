@@ -8,17 +8,17 @@ use RedCrossQuest\Entity\LoggingEntity;
 class Logger implements LoggerInterface
 {
   /** @var LoggerInterface $psrLogger*/
-  private $psrLogger;
+  private LoggerInterface $psrLogger;
   /** @var SlackService $slackService */
-  private $slackService;
-  /** @var string $rcqInfo*/
-  private $rcqInfo;
+  private SlackService $slackService;
+  /** @var array $rcqInfo*/
+  private array $rcqInfo;
   /** @var bool $online*/
-  private $online;
+  private bool $online;
   /** @var string $localLogFile*/
-  private $localLogFile;
+  private string $localLogFile;
 
-  public static $EXCEPTION="exception";
+  public static string $EXCEPTION="exception";
 
   public function __construct(LoggerInterface $psrLogger, string $rcqVersion, string $rcqEnv, bool $online)
   {
@@ -45,7 +45,7 @@ class Logger implements LoggerInterface
    * The other solution with PHP-DI 6 is to use lazy loading, which requires other dependencies
    * @param SlackService $slackService
    */
-  public function setSlackService(SlackService $slackService)
+  public function setSlackService(SlackService $slackService): void
   {
     $this->slackService = $slackService;
   }

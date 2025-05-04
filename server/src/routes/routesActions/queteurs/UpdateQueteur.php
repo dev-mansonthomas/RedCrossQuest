@@ -33,7 +33,8 @@ class UpdateQueteur extends Action
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param QueteurDBService          $queteurDBService
+   * @param QueteurDBService $queteurDBService
+   * @param UserDBService $userDBService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,

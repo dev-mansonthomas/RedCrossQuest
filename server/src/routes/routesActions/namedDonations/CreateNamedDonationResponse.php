@@ -8,9 +8,9 @@ class CreateNamedDonationResponse
   /**
    * @var int $namedDonationId the id of the newly created namedDonation
    */
-  public $namedDonationId;
+  public int $namedDonationId;
 
-  protected $_fieldList = ["namedDonationId"];
+  protected array $_fieldList = ["namedDonationId"];
 
   public function __construct(int $namedDonationId)
   {

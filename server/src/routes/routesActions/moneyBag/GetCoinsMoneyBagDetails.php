@@ -14,7 +14,7 @@ class GetCoinsMoneyBagDetails extends Action
   /**
    * @var MoneyBagDBService           $moneyBagDBService
    */
-  private $moneyBagDBService;
+  private MoneyBagDBService $moneyBagDBService;
 
 
   /**

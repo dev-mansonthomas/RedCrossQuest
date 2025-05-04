@@ -53,7 +53,6 @@ class AuthorisationMiddleware implements MiddlewareInterface
    * @param Container $container the container
    * @throws DependencyException
    * @throws NotFoundException
-   * @throws ApiException
    */
   public function __construct(Container $container)
   {
@@ -164,8 +163,8 @@ class AuthorisationMiddleware implements MiddlewareInterface
          $path === '/rest/ul_registration/check_registration_code' ||
          $path === '/rest/ul_registration/create_ul_in_lower_env'  ||
          $path === '/rest/html/management/dashboards'              ||
-         strpos($path,'/rest/thanks_mailing/') === 0 ||
-         strpos($path,'/rest/redQuest/'      ) === 0   )
+         str_starts_with($path, '/rest/thanks_mailing/')           ||
+         str_starts_with($path, '/rest/redQuest/'))
       {
         $this->logger->info("Non authenticate route", array( "path"=>$path, "uuid"=>$uuid));
         return $handler->handle($request);

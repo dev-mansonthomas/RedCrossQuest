@@ -8,15 +8,15 @@ use RedCrossQuest\Service\Logger;
 abstract class FirestoreDBService
 {
   /** @var FirestoreClient $firstoreClient*/
-  protected $firestoreClient;
+  protected FirestoreClient $firestoreClient;
   /** @var Logger $logger*/
-  protected $logger;
+  protected Logger $logger;
 
   /** @var string $FIRESTORE_COLLECTION*/
-  protected $FIRESTORE_COLLECTION;
+  protected string $FIRESTORE_COLLECTION;
 
   /** @var CollectionReference $firestoreCollection*/
-  protected $firestoreCollection;
+  protected CollectionReference $firestoreCollection;
 
   public function __construct(FirestoreClient $firestoreClient, Logger $logger)
   {

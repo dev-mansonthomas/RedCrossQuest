@@ -11,34 +11,34 @@ use Psr\Log\LoggerInterface;
 class ULPreferencesEntity extends Entity
 {
   /** @var string $FIRESTORE_DOC_ID firestore internal ID*/
-  public $FIRESTORE_DOC_ID          ;
+  public string $FIRESTORE_DOC_ID          ;
   /** @var int $ul_id UL ID*/
-  public $ul_id                     ;
+  public int $ul_id                     ;
   /** @var bool $rq_display_daily_stats Display in RedQuest the dailystats or not*/
-  public $rq_display_daily_stats    ;
+  public bool $rq_display_daily_stats    ;
   /** @var string $rq_display_queteur_ranking Display the ranking of queteur : no, 1st page, all pages (see statics var)*/
-  public $rq_display_queteur_ranking;
+  public string $rq_display_queteur_ranking;
   /** @var bool $use_bank_bag use bank moneybag or not (mandatory field in tronc_queteur comptage)*/
-  public $use_bank_bag              ;
+  public bool $use_bank_bag              ;
 
   /** @var bool $check_dates_not_in_the_past if true: the checks on Date Depart/Retour are done normally.
    * If false, the checks are skipped to allow dates in the past. Some unit needs to input the troncs the day after
    the feature */
-  public $check_dates_not_in_the_past;
+  public bool $check_dates_not_in_the_past;
 
   /** @var bool $rq_autonomous_depart_and_return Can volunteers set the depart & return date themselves with RedQuest*/
-  public $rq_autonomous_depart_and_return;
+  public bool $rq_autonomous_depart_and_return;
 
 
   /** @var string $token_benevole  token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
-  public $token_benevole                 ;
+  public string $token_benevole                 ;
   /** @var string $token_benevole_1j token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
-  public $token_benevole_1j              ;
+  public string $token_benevole_1j              ;
 
 
-  public static $RQ_DISPLAY_QUETE_STATS_NONE      = "NONE"    ;
-  public static $RQ_DISPLAY_QUETE_STATS_1ST_PAGE  = "1ST_PAGE";
-  public static $RQ_DISPLAY_QUETE_STATS_ALL       = "ALL"     ;
+  public static string $RQ_DISPLAY_QUETE_STATS_NONE      = "NONE"    ;
+  public static string $RQ_DISPLAY_QUETE_STATS_1ST_PAGE  = "1ST_PAGE";
+  public static string $RQ_DISPLAY_QUETE_STATS_ALL       = "ALL"     ;
   
   protected array $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'check_dates_not_in_the_past', 'rq_autonomous_depart_and_return', 'token_benevole', 'token_benevole_1j'];
 

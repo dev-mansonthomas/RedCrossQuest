@@ -22,17 +22,17 @@ class AnonymizeQueteur extends Action
   /**
    * @var QueteurDBService          $queteurDBService
    */
-  private $queteurDBService;
+  private QueteurDBService $queteurDBService;
 
   /**
    * @var UserDBService           $userDBService
    */
-  private $userDBService;
+  private UserDBService $userDBService;
 
   /**
    * @var EmailBusinessService    $emailBusinessService
    */
-  private $emailBusinessService;
+  private EmailBusinessService $emailBusinessService;
 
   /**
    * @param LoggerInterface $logger

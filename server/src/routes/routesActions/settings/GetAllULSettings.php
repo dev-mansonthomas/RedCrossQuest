@@ -25,46 +25,46 @@ class GetAllULSettings extends Action
   /**
    * @var ULPreferencesFirestoreDBService $uniteLocalePrefsFirestoreService,
    */
-  private $uniteLocalePrefsFirestoreService;
+  private ULPreferencesFirestoreDBService $uniteLocalePrefsFirestoreService;
 
   /**
    * @var UniteLocaleDBService          $uniteLocaleDBService
    */
-  private $uniteLocaleDBService;
+  private UniteLocaleDBService $uniteLocaleDBService;
 
   /**
    * @var UserDBService                 $userDBService
    */
-  private $userDBService;
+  private UserDBService $userDBService;
 
   /**
    * @var DailyStatsBeforeRCQDBService                 $dailyStatsBeforeRCQDBService
    */
-  private $dailyStatsBeforeRCQDBService;
+  private DailyStatsBeforeRCQDBService $dailyStatsBeforeRCQDBService;
 
   /**
    * UniteLocaleSettingsDBService    $uniteLocaleSettingsDBService
    */
-  private $uniteLocaleSettingsDBService;
+  private UniteLocaleSettingsDBService $uniteLocaleSettingsDBService;
 
 
   /**
    * @var array $settings
    */
   #[Inject("settings")]
-  protected $settings;
+  protected array $settings;
 
   /**
    * @var string $RCQVersion
    */
   #[Inject("RCQVersion")]
-  protected $RCQVersion;
+  protected string $RCQVersion;
 
   /**
    * @var string $googleMapsApiKey
    */
   #[Inject("googleMapsApiKey")]
-  private $googleMapsApiKey;
+  private string $googleMapsApiKey;
 
   /**
    * @param LoggerInterface $logger

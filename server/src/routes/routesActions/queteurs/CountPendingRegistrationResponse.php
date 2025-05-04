@@ -2,6 +2,8 @@
 namespace RedCrossQuest\routes\routesActions\queteurs;
 
 
+use OpenApi\Annotations as OA;
+
 /**
  * @OA\Schema(schema="CountPendingRegistrationResponse", required={"count"})
  */
@@ -11,9 +13,9 @@ class CountPendingRegistrationResponse
    * @OA\Property()
    * @var int $count the count of pending registration
    */
-  public $count;
+  public int $count;
 
-  protected $_fieldList = ["count"];
+  protected array $_fieldList = ["count"];
 
   public function __construct(int $count)
   {
