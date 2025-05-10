@@ -44,7 +44,16 @@ angular.module('redCrossQuestClient').factory('QueteurResource', function ($reso
      markAllAsPrinted: {
         method: 'PUT',
         params: {
-          action: 'markAllAsPrinted'
+          action: 'markAllAsPrinted',
+          printed:true
+        }
+      },
+
+      markAllAsNotPrinted: {
+        method: 'PUT',
+        params: {
+          action: 'markAllAsPrinted',
+          printed:false
         }
       },
 

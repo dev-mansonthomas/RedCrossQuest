@@ -187,15 +187,15 @@ class UniteLocaleEntity  extends Entity
 
   /**
    * @OA\Property()
-   * @var int $registration_id the registration id
+   * @var int|null $registration_id the registration id
    */
-  public int $registration_id;
+  public ?int $registration_id;
 
   /**
    * @OA\Property()
-   * @var int $registration_token the registration token, sent to the president by email, must be passed back to the form to get the validation.
+   * @var string|null $registration_token the registration token, sent to the president by email, must be passed back to the form to get the validation.
    */
-  public int $registration_token;
+  public ?string $registration_token;
 
   /**
    * @OA\Property()
@@ -223,9 +223,9 @@ class UniteLocaleEntity  extends Entity
 
   /**
    * @OA\Property()
-   * @var int $registration_in_progress The value is 36 if a registration is in progress (lenght of the registration token) or null otherwise
+   * @var int|null $registration_in_progress The value is 36 if a registration is in progress (lenght of the registration token) or null otherwise
    */
-  public int $registration_in_progress;
+  public ?int $registration_in_progress;
 
   /**
    * @OA\Property()

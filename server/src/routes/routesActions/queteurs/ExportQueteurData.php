@@ -57,7 +57,8 @@ class ExportQueteurData extends Action
    */
   protected function action(): Response
   {
-    $ulId     = $this->decodedToken->getUlId();
+    $ulId   = $this->decodedToken->getUlId  ();
+    $roleId = $this->decodedToken->getRoleId();
 
     $this->validateSentData([
       ClientInputValidatorSpecs::withInteger("id", $this->args, 1000000 , false, 0)
@@ -65,8 +66,8 @@ class ExportQueteurData extends Action
 
     $queteurId  = $this->validatedData["id"];
 
-    $queteurEntity = $this->queteurDBService         ->getQueteurById   ($queteurId, $ulId);
-    $exportReport  = $this->exportDataBusinessService->exportDataQueteur($queteurId, $ulId);
+    $queteurEntity = $this->queteurDBService         ->getQueteurById   ($queteurId, $roleId == 9? null : $ulId);
+    $exportReport  = $this->exportDataBusinessService->exportDataQueteur($queteurId,  $roleId == 9? $queteurEntity->ul_id : $ulId);
 
     $status = $this->emailBusinessService->sendExportDataQueteur($queteurEntity, $exportReport['fileName']);
 

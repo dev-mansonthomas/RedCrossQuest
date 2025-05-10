@@ -183,8 +183,8 @@
                 <td style="{{queteur.isEqual(sim.first_name, queteur.current.first_name)?'background-color:#FFFF00':''}}">{{sim.first_name}}</td>
                 <td style="{{queteur.isEqual(sim.last_name , queteur.current.last_name )?'background-color:#FFFF00':''}}">{{sim.last_name}}</td>
                 <td style="{{queteur.isEqual(sim.nivol     , queteur.current.nivol     )?'background-color:#FFFF00':''}}">{{sim.nivol}}</td>
-                <td>{{sim.mobile}}</td>
-                <td>{{sim.email}}</td>
+                <td style="{{queteur.isEqual(sim.mobile    , queteur.current.mobile    )?'background-color:#FFFF00':''}}">{{sim.mobile}}</td>
+                <td style="{{queteur.isEqual(sim.email     , queteur.current.email     )?'background-color:#FFFF00':''}}">{{sim.email}}</td>
                 <td>{{sim.active == 1 ? 'Oui':'Non'}}</td>
                 <td ng-show="queteur.isRegistration">
                   <a  ng-click="queteur.associateRegistrationWithExistingQueteur(sim.id);" ng-show="queteur.current.registration_approved!=false" class="btn btn-success" style="font-size: 10px;">Valider l'inscription et l'associer à ce quêteur</a>
@@ -238,7 +238,9 @@
                      type="email"
                  ng-model="queteur.current.email"
                 required
-                autocomplete="email"/>
+             autocomplete="email"
+                ng-change="queteur.searchSimilar();"
+              />
 
               <!--  ng-pattern="queteur.current.user.id>0 && queteur.current.user.active?'^[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+@croix-rouge.fr$':''" -->
             </div>
@@ -263,7 +265,16 @@
             <label for="mobile" class="control-label">Téléphone</label>
             <div class="input-group">
               <span class="input-group-addon glyphicon glyphicon-iphone" aria-hidden="true" id="basic-addon2" style="top:0px;">&nbsp;+</span>
-              <input name="mobile" id="mobile" class="form-control"  type="number" ng-model="queteur.current.mobile" required ng-pattern="queteur.current.secteur >= 5? '33[1,6,7,9][0-9]{8,8}':'33[6-7][0-9]{8,8}'" autocomplete="tel-national"/>
+              <input name="mobile"
+                       id="mobile"
+                     class="form-control"
+                      type="number"
+                  ng-model="queteur.current.mobile"
+                  required
+                ng-pattern="queteur.current.secteur >= 5? '33[1,6,7,9][0-9]{8,8}':'33[6-7][0-9]{8,8}'"
+              autocomplete="tel-national"
+                 ng-change="queteur.searchSimilar();"
+              />
             </div>
             <span class="help-block" ng-show="queteurForm.mobile.$invalid">Format : {{queteur.current.secteur >= 5?'+33[1 ou 6 ou 7 ou 9]01020304':'+33601020304 ou +33701020304'}} <br/><sub>(Ne <b>pas</b> mettre le +). Seul les numéros français sont autorisés</sub><br/>Si le quêteur n'a pas de mobile, mettre le téléphone de son parrain.</span>
           </div>
@@ -565,9 +576,8 @@
 
       <uib-accordion close-others="true" ng-show="!queteur.isRegistration   == true &&
                                  queteur.current.id       > 0     &&
-                                 queteur.currentUserRole  >= 4    &&
-                                !queteur.current.anonymization_token"  ng-cloak>
-        <div uib-accordion-group class="panel-info" heading="GDPR" is-open="false">
+                                 queteur.currentUserRole  >= 4"  ng-cloak>
+        <div uib-accordion-group class="panel-info" heading="RGPD" is-open="false">
 
 
 
@@ -577,7 +587,7 @@
               <button class="btn btn-info"
                       ng-click="queteur.exportQueteurData();"
                       style="width:100%;height:70px;">
-                <strong>GDPR: Export des données du Quêteur</strong>
+                <strong>RGPD: Export des données du Quêteur</strong>
               </button>
               <span class="help-block">
                 <p>Cliquez sur ce bouton si le quêteur vous demande l'export de ses données RedCrossQuest/RedQuest.</p>
@@ -641,7 +651,7 @@ Nb de Ligne : {{queteur.current.exportDataResult.numberOfRows}}
               <button class="btn btn-warning"
                       ng-click="queteur.anonymize();"
                       style="width:100%;height:70px;">
-                <strong>GDPR: Anonymiser les données du Quêteur</strong>
+                <strong>RGPD: Anonymiser les données du Quêteur</strong>
               </button>
               <span class="help-block">
             <p>Cliquez sur ce bouton si le quêteur vous demande la suppression de ses données dans RedCrossQuest.</p>

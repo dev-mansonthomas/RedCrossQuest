@@ -3,6 +3,7 @@ namespace RedCrossQuest\routes\routesActions\settings;
 
 
 use OpenApi\Annotations as OA;
+use RedCrossQuest\Entity\ULPreferencesEntity;
 use RedCrossQuest\Entity\UniteLocaleEntity;
 use RedCrossQuest\Entity\UniteLocaleSettingsEntity;
 use RedCrossQuest\Entity\UserEntity;
@@ -50,9 +51,9 @@ class GetAllULSettingsResponse
 
   /**
    * @OA\Property()
-   * @var UniteLocaleSettingsEntity $ul_settings Settings of user's UL
+   * @var ULPreferencesEntity $ul_settings Settings of user's UL
    */
-  public UniteLocaleSettingsEntity $ul_settings;
+  public ULPreferencesEntity $ul_settings;
 
   /**
    * @OA\Property()

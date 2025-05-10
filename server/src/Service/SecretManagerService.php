@@ -2,7 +2,8 @@
 namespace RedCrossQuest\Service;
 
 use Google\ApiCore\ApiException;
-use Google\Cloud\SecretManager\V1beta1\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\Client\SecretManagerServiceClient;
+use Google\Cloud\SecretManager\V1\AccessSecretVersionRequest;
 use InvalidArgumentException;
 
  /**
@@ -12,8 +13,7 @@ use InvalidArgumentException;
 class SecretManagerService
 {
   protected $settings;
-  /** @var Logger */
-  protected $logger;
+
   /** @var SecretManagerServiceClient */
   protected $secretManagerServiceClient;
 
@@ -47,10 +47,9 @@ class SecretManagerService
      "p" => "prod"
     ];
 
-  public function __construct($settings, Logger $logger)
+  public function __construct($settings)
   {
     $this->settings  = $settings;
-    $this->logger    = $logger;
     $this->online    = $this->settings['online'];
 
     $env = strtolower($this->settings['appSettings']['deploymentType']);
@@ -58,7 +57,7 @@ class SecretManagerService
                        strpos(strtolower($this->settings['appSettings']['appUrl']), 'rcq'      ) > 0))
     {
       $this->secretNamePrefix="local-";
-      $this->logger->warning("using local mode for secret names");
+      //$this->logger->warning("using local mode for secret names");
     }
 
     $this->PROJECT_ID = "rcq-fr-".$this->envs[$env];
@@ -86,8 +85,7 @@ class SecretManagerService
       }
       catch (ApiException $apiException)
       {
-        $this->logger->critical("Error while retrieving secret",
-          array("secret_name"=>$secretName, "secret_id"=>$secretId, Logger::$EXCEPTION=>$apiException));
+        error_log("Error while retrieving secret secret_name:'$secretName', secret_id:'$secretId'");
 
         throw $apiException;
       }
@@ -107,15 +105,16 @@ class SecretManagerService
   }
 
   /**
-   *
-   *
    * @param string $secretName Take a parameter name, as define in this class static variable
-   * @return string the formatted SecretManager name of the secret  (projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."JWT_SECRET/versions/latest)
+   * @return AccessSecretVersionRequest the formatted SecretManager name of the secret  (projects/$PROJECT_ID/secrets/".$this->secretNamePrefix."JWT_SECRET/versions/latest)
    */
-  private function getSecretName(string $secretName):string
+  private function getSecretName(string $secretName):AccessSecretVersionRequest
   {
     //projects/$PROJECT_ID/secrets/&#42;/versions/latest
-    return "projects/$this->PROJECT_ID/secrets/".$this->secretNamePrefix.$secretName."/versions/latest";
+    $request = new AccessSecretVersionRequest();
+    $name = "projects/$this->PROJECT_ID/secrets/".$this->secretNamePrefix.$secretName."/versions/latest";
+    $request->setName($name);
+    return $request;
   }
 
   /**

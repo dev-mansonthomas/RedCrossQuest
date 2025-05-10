@@ -14,9 +14,9 @@ class QueteurEntity  extends Entity
 {
   /**
    * @OA\Property()
-   * @var int $id queteur Id
+   * @var int|null $id queteur Id
    */
-  public int $id;
+  public ?int $id;
   /**
    * @OA\Property()
    * @var string $email email of the queteur
@@ -35,9 +35,9 @@ class QueteurEntity  extends Entity
 
   /**
    * @OA\Property()
-   * @var int $secteur id of the secteur : "1">Action Sociale  "2">Secours "3">Non Bénévole "4">Ancien Bénévole, Inactif ou Adhérent "5">Commerçant "6">Special
+   * @var int|null $secteur id of the secteur : "1">Action Sociale  "2">Secours "3">Non Bénévole "4">Ancien Bénévole, Inactif ou Adhérent "5">Commerçant "6">Special
    */
-  public int $secteur                     ;
+  public ?int $secteur                     ;
   /**
    * @OA\Property()
    * @var string $nivol NIVOL of the queteur (Business ID for red cross volunteer)
@@ -66,9 +66,9 @@ class QueteurEntity  extends Entity
   public string $notes                       ;
   /**
    * @OA\Property()
-   * @var int $ul_id Id of the UL to which the queteur belongs
+   * @var int|null $ul_id Id of the UL to which the queteur belongs
    */
-  public int $ul_id                       ;
+  public ?int $ul_id                       ;
   /**
    * @OA\Property()
    * @var string $ul_name Name of the UL to which the queteur belongs
@@ -87,15 +87,15 @@ class QueteurEntity  extends Entity
 
   /**
    * @OA\Property()
-   * @var int $point_quete_id Current Point De Quete ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var int|null $point_quete_id Current Point De Quete ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
-  public int $point_quete_id              ;
+  public ?int $point_quete_id              ;
 
   /**
    * @OA\Property()
-   * @var int $tronc_id Current Tronc ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var int|null $tronc_id Current Tronc ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
-  public int $tronc_id              ;
+  public ?int $tronc_id              ;
   /**
    * @OA\Property()
    * @var string $point_quete_name  Current Point De Quete name   (when searching queteur, search can be perform by status (about to leave, on the street, returned))
@@ -103,19 +103,19 @@ class QueteurEntity  extends Entity
   public string $point_quete_name            ;
   /**
    * @OA\Property()
-   * @var Carbon $depart_theorique Theoretical Start date of going on the streets    (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var Carbon|null $depart_theorique Theoretical Start date of going on the streets    (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
-  public Carbon $depart_theorique            ;
+  public ?Carbon $depart_theorique            ;
   /**
    * @OA\Property()
-   * @var Carbon $depart Real start date of going on the streets.  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var Carbon|null $depart Real start date of going on the streets.  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
-  public Carbon $depart                      ;
+  public ?Carbon $depart                      ;
   /**
    * @OA\Property()
-   * @var Carbon $retour Return date from the streets.      (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var Carbon|null $retour Return date from the streets.      (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
-  public Carbon $retour                      ;
+  public ?Carbon $retour                      ;
 
   /**
    * @OA\Property()
@@ -139,9 +139,9 @@ class QueteurEntity  extends Entity
   public bool $qr_code_printed             ;
   /**
    * @OA\Property()
-   * @var string $referent_volunteer Who has referred the queteur (non red cross volunteer helping for the fund raising)
+   * @var int|null $referent_volunteer Who has referred the queteur (non red cross volunteer helping for the fund raising)
    */
-  public string $referent_volunteer          ;
+  public ?int $referent_volunteer          ;
 
   /**
    * @OA\Property()
@@ -159,9 +159,9 @@ class QueteurEntity  extends Entity
    *     property="user",
    *          ref="#/components/schemas/UserEntity"
    * )
-   * @property UserEntity $user   if the Queteur is also a user of RedCrossQuest, this object is initialised
+   * @property UserEntity|null $user   if the Queteur is also a user of RedCrossQuest, this object is initialised
    */
-  public UserEntity $user;
+  public ?UserEntity $user;
 
   /**
    * @OA\Property()
@@ -170,9 +170,9 @@ class QueteurEntity  extends Entity
   public string $anonymization_token         ;
   /**
    * @OA\Property()
-   * @property Carbon $anonymization_date the date of the anonymization
+   * @property Carbon|null $anonymization_date the date of the anonymization
    */
-  public Carbon $anonymization_date          ;
+  public ?Carbon $anonymization_date          ;
 
 
   //registration_queteur specific fields
@@ -199,14 +199,14 @@ class QueteurEntity  extends Entity
   public string $reject_reason               ;
   /**
    * @OA\Property()
-   * @property int $queteur_id    When this object represent a registration, and a queteur is created or linked, the id of the created/linked queteur
+   * @property int|null $queteur_id    When this object represent a registration, and a queteur is created or linked, the id of the created/linked queteur
    */
-  public int $queteur_id                  ;
+  public ?int $queteur_id                  ;
   /**
    * @OA\Property()
-   * @property int $registration_id   When this object represent a registration, the id of the registration
+   * @property int|null $registration_id   When this object represent a registration, the id of the registration
    */
-  public int $registration_id             ;
+  public ?int $registration_id             ;
 
 
   /**

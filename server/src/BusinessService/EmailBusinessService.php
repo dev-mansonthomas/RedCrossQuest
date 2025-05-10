@@ -95,9 +95,9 @@ class EmailBusinessService
 <br/>
  Cet email confirme l'inscription de votre unité locale à l'application RedCrossQuest le $registrationDateString.<br/><br/>
  
- Merci de bien vouloir rejoindre <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié, ainsi que le <a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'> forum interactif Slack</a><br/>
+ Merci de bien vouloir rejoindre <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié, ainsi que le <a href='https://intranet.croix-rouge.fr/jcms/p2_34616767/fr/rejoignez-l-espace-google-chat-dedie-a-redcrossquest-et-redquest' target='_blank'> groupe Google Chat</a><br/>
  
- Pour rappel, RedCrossQuest/RedQuest, ce sont deux sites web dédiés à la gestion de la quête, un forum d'entraide (Slack) et un site intranet<br/>
+ Pour rappel, RedCrossQuest/RedQuest, ce sont deux sites web dédiés à la gestion de la quête, le groupe Google Chat et un site intranet.<br/>
  <ul>
     <li><a href='https://redcrossquest.croix-rouge.fr' target='_blank'>RedCrossQuest</a>
       <ul>
@@ -249,9 +249,9 @@ class EmailBusinessService
  <hr style=''>
 <span style='color:silver;font-weight:bold;font-size:16px;font; text-decoration: underline; '>Ci-après, l'email qui a été envoyé à l'administrateur :</span> <br/><br/> 
  
- Merci de bien vouloir rejoindre <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié, ainsi que le <a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'> forum interactif Slack</a><br/>
+ Merci de bien vouloir rejoindre <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié, ainsi que le <a href='https://intranet.croix-rouge.fr/jcms/p2_34616767/fr/rejoignez-l-espace-google-chat-dedie-a-redcrossquest-et-redquest' target='_blank'> groupe Google Chat</a><br/>
  
- Pour rappel, RedCrossQuest/RedQuest, ce sont deux sites web dédiés à la gestion de la quête, un forum d'entraide (Slack) et un site intranet<br/>
+ Pour rappel, RedCrossQuest/RedQuest, ce sont deux sites web dédiés à la gestion de la quête, le groupe Google Chat et un site intranet.<br/>
  <ul>
     <li><a href='https://redcrossquest.croix-rouge.fr' target='_blank'>RedCrossQuest</a>
       <ul>
@@ -280,7 +280,7 @@ class EmailBusinessService
         <ul>
           <li>Posez votre question, la communauté ou le support vous répond</li>
           <li>Échanger vos astuces pour négocier avec les banques, motiver vos bénévoles</li>
-          <li>Si le lien ne fonctionne pas c'est que vous êtes connecté à un autre compte gmail, essayer un de ces liens <br/>
+          <li>Si le lien ne fonctionne pas, c'est que vous êtes connecté à un autre compte gmail, essayer un de ces liens: <br/>
           
 <a href='https://mail.google.com/chat/u/0/#chat/space/AAAAwTetl4k' target='_blank'>Lien 0</a>, 
 <a href='https://mail.google.com/chat/u/1/#chat/space/AAAAwTetl4k' target='_blank'>Lien 1</a>, 
@@ -963,7 +963,7 @@ L'administrateur a reçu un email lui permettant d'initialiser son mot de passe 
     <li>En production, vous ne pourrez pas préparer ou faire partir un tronc avant la date de début de quête</li>    
     <li>Sur le site de test, vous pouvez faire vos tests, former vos bénévoles. Créez quelques points de quête, troncs, bénévoles et familiarisez-vous à l'outil. (cycle complet de quête disponible)</li>
     <li>Seul le compte de l'administrateur a été créé, il revient à l'administrateur de créer les comptes du président et du trésorier</li>    
-    <li>IMPORTANT : Le support est apporté via <a href='https://join.slack.com/t/redcrossquest-forum/shared_invite/zt-703rcrd2-K2yT_j19vW8FBk34F~AQdw' target='_blank'> forum interactif Slack</a> et <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié. Rejoignez ces deux outils au plus vite.</li>
+    <li>IMPORTANT : Le support est apporté via <a href='https://intranet.croix-rouge.fr/jcms/p2_34616767/fr/rejoignez-l-espace-google-chat-dedie-a-redcrossquest-et-redquest' target='_blank'> le groupe Google Chat</a> et <a href='https://intranet.croix-rouge.fr/jcms/p2_3891464/fr/redcrossquest' target='_blank'>l'espace intranet</a> dédié. Rejoignez ces deux outils au plus vite.</li>
     <li>Vous disposez aussi d'un site de Test <a href='https://test.redcrossquest.croix-rouge.fr' target='_blank'>https://test.redcrossquest.croix-rouge.fr</a> sur lequel vous pouvez vous entrainer.</li>    
 </ul>
 

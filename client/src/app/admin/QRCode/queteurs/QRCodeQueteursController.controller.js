@@ -22,6 +22,7 @@
     vm.ulName = $localStorage.currentUser.ulName;
     vm.QRSearchType = 2;
     vm.confirmMarkAllAsRead = false;
+    vm.confirmMarkAllAsNotPrinted = false;
     vm.listQueteurIdsRegExp=/^(\d+( )?,( )?)*\d+$/;
     vm.deploymentType = $localStorage.currentUser.d;
 
@@ -91,6 +92,19 @@
     };
 
 
+    vm.markAllAsNotPrinted=function()
+    {
+      vm.confirmMarkAllAsNotPrinted = true;
+    };
+    vm.doMarkAllAsNotPrinted=function()
+    {
+      QueteurResource.markAllAsNotPrinted(vm.onSaveSuccess, vm.onSaveError);
+      vm.updateQRCodeType='NON';
+    };
+    vm.cancelMarkAllAsNotPrinted=function()
+    {
+      vm.confirmMarkAllAsNotPrinted = false;
+    };
 
     vm.markAllAsPrinted=function()
     {
@@ -99,6 +113,7 @@
     vm.doMarkAllAsPrinted=function()
     {
       QueteurResource.markAllAsPrinted(vm.onSaveSuccess, vm.onSaveError);
+      vm.updateQRCodeType='';
     };
     vm.cancelMarkAllAsPrinted=function()
     {
@@ -109,6 +124,7 @@
     {
       vm.savedSuccessfully=true;
       vm.confirmMarkAllAsRead=false;
+      vm.confirmMarkAllAsNotPrinted=false;
       $timeout(function () { vm.savedSuccessfully=false; }, 10000);
       vm.search();
     };

@@ -12,9 +12,9 @@ class PointQueteEntity  extends Entity
 {
   /**
    * @OA\Property()
-   * @var int $id pointQuete Id
+   * @var int|null $id pointQuete Id
    */
-  public int $id                ;
+  public ?int $id                ;
   /**
    * @OA\Property()
    * @var int $ul_id UniteLocal ID

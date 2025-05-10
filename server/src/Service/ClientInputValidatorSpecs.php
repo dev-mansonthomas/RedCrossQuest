@@ -27,13 +27,13 @@ class ClientInputValidatorSpecs
    */
   public bool $notNull;
   /**
-   * @var string
+   * @var string | null
    */
-  public string $validationType;
+  public ?string $validationType=null;
   /**
-   * @var string
+   * @var int|string|null
    */
-  public string $defaultValue;
+  public int|string|null $defaultValue;
   /**
    * @var string
    */

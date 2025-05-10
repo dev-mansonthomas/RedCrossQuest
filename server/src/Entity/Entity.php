@@ -62,6 +62,9 @@ class Entity
     {
       try
       {
+        if (!property_exists($this, $field)) {
+          continue;
+        }
         $value = $this->{$field};
         if(gettype($value) ==='boolean')
         {
@@ -73,16 +76,23 @@ class Entity
           {
             $csvRow.= implode("-",$value).";";
           }
+          elseif ($value instanceof Carbon)
+          {
+            $csvRow .= $value->format('Y-m-d H:i:s') . ";";
+          }
+          elseif (is_object($value))
+          {
+            $csvRow .= "[object " . get_class($value) . "]" . ";";  // sécurité mémoire
+          }
           else
           {
             $csvRow.= $value.";";
           }
-
         }
       }
       catch(Throwable $e)
       {
-        $this->logger->error("error while serializing as CSV",["name"=>$field, "value"=>$value, "throwable"=>print_r($e,true), "entity"=>print_r($entity, true)]);
+        error_log("CSV ERROR field=$field in class " . get_class($this) . " - Exception: " . $e->getMessage());
       }
     }
     return $csvRow. PHP_EOL;
@@ -120,7 +130,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array|null $data the associative array
    */
-  protected function getInteger(string $key, ?array &$data, int $defaultValue=null):void
+  protected function getInteger(string $key, ?array &$data, ?int $defaultValue=null):void
   {
     $this->$key = $this->clientInputValidator->validateInteger($key, $data, 100000000, false, $defaultValue);
   }
@@ -283,6 +293,11 @@ class Entity
               throw $e;
             }
           }
+        }
+        else
+        {//to avoid error error like : Typed property RedCrossQuest\Entity\TroncQueteurEntity::$retour must not be accessed before initialization
+          //PHP 7.4+ impose qu’un typed property soit assignée avant tout accès, même si nullable
+          $this->$key = null;
         }
       }
     }

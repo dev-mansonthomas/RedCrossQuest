@@ -73,7 +73,7 @@ return function (ContainerBuilder $containerBuilder)
     "RCQVersion" => function ():string
     {
       //version stays here, so that I don't have to update all the settings files
-      return "2024.0";
+      return "2025.0";
     },
     /**
      * Custom Logger that automatically add context data to each log entries.
@@ -88,19 +88,16 @@ return function (ContainerBuilder $containerBuilder)
       $jwtSecret     = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$JWT_SECRET);
       $signer        = new Sha256();
       $key           = InMemory::plainText($jwtSecret);
-      $configuration = Configuration::forSymmetricSigner($signer, $key);
 
-      $configuration->setValidationConstraints(
-          new Lcobucci\JWT\Validation\Constraint\IssuedBy    ($c->get('settings')['jwt']['issuer'  ]),
-          new Lcobucci\JWT\Validation\Constraint\PermittedFor($c->get('settings')['jwt']['audience']),
-          new Lcobucci\JWT\Validation\Constraint\SignedWith  ($signer, $key)
+      return Configuration::forSymmetricSigner($signer, $key)->withValidationConstraints(
+        new Lcobucci\JWT\Validation\Constraint\IssuedBy    ($c->get('settings')['jwt']['issuer'  ]),
+        new Lcobucci\JWT\Validation\Constraint\PermittedFor($c->get('settings')['jwt']['audience']),
+        new Lcobucci\JWT\Validation\Constraint\SignedWith  ($signer, $key)
       );
-
-      return $configuration;
     },
     SecretManagerService::class => function (ContainerInterface $c):SecretManagerService
     {
-      return new SecretManagerService($c->get('settings'), $c->get(LoggerInterface::class));
+      return new SecretManagerService($c->get('settings'));
     },
     SlackService::class =>function(ContainerInterface $c):SlackService
     {

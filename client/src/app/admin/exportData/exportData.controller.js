@@ -44,6 +44,9 @@
 
     vm.send = function()
     {
+      if (document.activeElement) {
+        document.activeElement.blur();
+      }
       vm.running  = true;
       vm.status   = null;
       //vm.password = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);

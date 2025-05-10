@@ -87,15 +87,15 @@
     <form novalidate name="QueteurQRCodeForm">
     <div class="row no-print">
       <div class="col-md-3">
+        Nombre de QRCodes: <span class="badge">{{qrcQueteurs.list.length}}</span>
+
         <button type="button" id="markAllAsPrinted" name="markAllAsPrinted" class="btn btn-warning" ng-click="qrcQueteurs.markAllAsPrinted();">Marquer tous les QRCode des <br/>Quêteurs comme étant imprimés</button>
-        <br/><br/>
         <button class="btn btn-danger"
                 ng-show="qrcQueteurs.confirmMarkAllAsRead"
                 ng-click="qrcQueteurs.doMarkAllAsPrinted();"
-                style="width:100%;height:70px;">
+                style="width:100%;height:55px;margin-top:10px;">
           Je confirme que je veux marquer <br/>les QRCode comme étant imprimés
         </button>
-        Nombre de QRCodes: <span class="badge">{{qrcQueteurs.list.length}}</span>
       </div>
       <div class="col-md-3">
         <div class="form-group">
@@ -110,11 +110,10 @@
             <input type="radio" name="QRSearchType" id="searchTypeRadio3" ng-model="qrcQueteurs.QRSearchType" value="2" required ng-checked="qrcQueteurs.QRSearchType==2"> Non Imprimé
           </label>
         </div>
-        <br/>
         <button class="btn btn-info"
                 ng-show="qrcQueteurs.confirmMarkAllAsRead"
                 ng-click="qrcQueteurs.cancelMarkAllAsPrinted();"
-                style="width:100%;height:70px;">
+                style="width:100%;height:55px;margin-top:24px;">
           Ooups, je me suis trompé
         </button>
 
@@ -147,7 +146,7 @@
       <div class="col-md-8 col-md-offset-2">
         <div class="alert alert-success alert-dismissible" role="alert" style="text-align: center;">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="qrcQueteurs.savedSuccessfully=false"><span aria-hidden="true">&times;</span></button>
-          Les QR Code ont bien été marqué comme imprimés !
+          Les QR Code ont bien été marqué comme {{qrcQueteurs.updateQRCodeType}} imprimés !
         </div>
       </div>
     </div>
@@ -162,7 +161,30 @@
     </div>
 
     <div class="row no-print">
-      <div class="col-md-1 col-md-offset-10">
+      <div class="col-md-3">
+        <button type="button"
+                id="markAllAsNotPrinted"
+                name="markAllAsNotPrinted"
+                class="btn btn-warning"
+                ng-click="qrcQueteurs.markAllAsNotPrinted();">Marquer tous les QRCode des <br/>Quêteurs comme étant <b>NON</b> imprimés</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-danger"
+                ng-show="qrcQueteurs.confirmMarkAllAsNotPrinted"
+                ng-click="qrcQueteurs.doMarkAllAsNotPrinted();"
+                style="height:55px">
+          Je confirme que je veux marquer <br/>les QRCode comme étant <b>NON</b> imprimés
+        </button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-info"
+                ng-show="qrcQueteurs.confirmMarkAllAsNotPrinted"
+                ng-click="qrcQueteurs.cancelMarkAllAsNotPrinted();"
+                style="height:55px;">
+          Ooups, je me suis trompé
+        </button>
+      </div>
+      <div class="col-md-1">
         <button class="btn btn-primary" ng-click="qrcQueteurs.search();"
         ng-disabled="QueteurQRCodeForm.$invalid"
         >Rechercher</button>

@@ -17,7 +17,7 @@ class TroncInUseEntity  extends Entity
    */
   public int $id;
   public Carbon $depart_theorique;
-  public Carbon $depart;
+  public ?Carbon $depart;
   /**
    * @OA\Property()
    * @var int $queteur_id queteur ID

@@ -125,6 +125,14 @@ class MailService
         $email->addAttachment(new SendGrid\Mail\Attachment(base64_encode(file_get_contents(sys_get_temp_dir()."/".$fileName)),"application/zip", "$fileName"));
       }
 
+      // Add unique headers to prevent Gmail thread grouping
+      $randomHex = bin2hex(random_bytes(16));
+      $email->addHeader('Message-ID', sprintf('<%s@redcrossquest.com>', $randomHex));
+      $email->addHeader('X-Entity-Ref-ID', $randomHex);
+      // Prevent In-Reply-To / References headers that cause threading
+      // SendGrid does not add them unless set explicitly, so nothing to remove
+
+
 
       $response = (new SendGrid($this->sendgridAPIKey))->send($email);
 
