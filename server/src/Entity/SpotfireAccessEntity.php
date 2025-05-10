@@ -14,9 +14,9 @@ class SpotfireAccessEntity extends Entity
 {
   /**
    * @OA\Property()
-   * @var int $id the SpotfireAccess ID
+   * @var int|null $id the SpotfireAccess ID
    */
-  public int $id                          ;
+  public ?int $id                          ;
   /**
    * @OA\Property()
    * @var string $token the token
@@ -29,14 +29,14 @@ class SpotfireAccessEntity extends Entity
   public Carbon $token_expiration            ;
   /**
    * @OA\Property()
-   * @var int $ul_id the current user's UL ID
+   * @var int|null $ul_id the current user's UL ID
    */
-  public int $ul_id                       ;
+  public ?int $ul_id                       ;
   /**
    * @OA\Property()
-   * @var int $user_id the current user's ID
+   * @var int|null $user_id the current user's ID
    */
-  public int $user_id                     ;
+  public ?int $user_id                     ;
 
   protected array $_fieldList = ['id','token','token_expiration','ul_id','user_id'];
   /**

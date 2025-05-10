@@ -23,7 +23,7 @@ class SendPasswordInitializationMailResponse
 
   protected array $_fieldList = ['success', 'email'];
 
-  public function __construct(bool $success, string $email=null)
+  public function __construct(bool $success, ?string $email=null)
   {
     $this->success  = $success;
     $this->email    = $email;

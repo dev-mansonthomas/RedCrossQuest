@@ -44,6 +44,14 @@ class InsertTronc extends Action
   {
     $ulId             = $this->decodedToken->getUlId();
     $troncEntity      = new TroncEntity($this->parsedBody, $this->logger);
+    // It seems that sometime Gulp proxy duplicate requests, this avoid an error in such case
+    if ($troncEntity->nombreTronc <= 0) {
+      $this->logger->warning("Ignoring POST with nombreTronc <= 0", [
+        'notes' => $troncEntity->notes
+      ]);
+      return $this->response->withStatus(202); // Accepted but ignored
+    }
+
     $this->troncDBService->insert($troncEntity, $ulId);
     return $this->response;
   }

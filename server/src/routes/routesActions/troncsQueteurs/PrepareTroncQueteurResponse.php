@@ -34,7 +34,7 @@ class PrepareTroncQueteurResponse
    * @param bool $troncInUse
    * @param TroncInUseEntity[]|null $troncInUseInfo
    */
-  public function __construct(bool $troncInUse, $troncInUseInfo=null)
+  public function __construct(bool $troncInUse, ?array $troncInUseInfo=null)
   {
     $this->troncInUse      = $troncInUse;
     $this->troncInUseInfo  = $troncInUseInfo;

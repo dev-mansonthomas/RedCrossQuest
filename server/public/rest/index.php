@@ -24,7 +24,10 @@ if (PHP_SAPI == 'cli-server')
 $containerBuilder = new ContainerBuilder();
 // use annotation to inject settings
 $containerBuilder->useAttributes(true);
-$containerBuilder->enableCompilation (sys_get_temp_dir().'/cache');
+
+//don't use sys_get_temp_dir() for the cache, as a new folder is generated for each call, it's not a cache then
+$compiledPath = '/tmp/php-di-compiled';
+$containerBuilder->enableCompilation($compiledPath);
 
 // Set up settings
 $settings = require __DIR__ . '/../../src/settings.php';

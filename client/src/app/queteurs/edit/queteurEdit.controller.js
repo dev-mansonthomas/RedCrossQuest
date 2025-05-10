@@ -503,9 +503,16 @@
 
     vm.searchSimilar=function()
     {
-      if((!vm.current.id || vm.isRegistration) && (vm.current.first_name || vm.current.last_name || vm.current.nivol))
+      if((!vm.current.id || vm.isRegistration) && (vm.current.first_name || vm.current.last_name || vm.current.nivol || vm.current.mobile || vm.current.email))
       {
-        QueteurResource.searchSimilarQueteurs({ 'first_name': vm.current.first_name,'last_name': vm.current.last_name,'nivol': vm.current.nivol }).$promise.then(function(queteurs)
+        QueteurResource.searchSimilarQueteurs(
+          { 'first_name': vm.current.first_name,
+            'last_name': vm.current.last_name,
+            'nivol': vm.current.nivol,
+            'email': vm.current.email,
+            'mobile': vm.current.mobile
+          }
+        ).$promise.then(function(queteurs)
         {
           vm.current.similarQueteurs = queteurs;
         }).catch(function(e){
@@ -552,17 +559,14 @@
       vm.current.$anonymize(vm.handleQueteur, vm.errorWhileSavingFunction);
     };
 
-    vm.isEqual = function(string1, string2)
-    {
-      if(string1)
-        string1=string1.toUpperCase();
+    vm.isEqual = function(string1, string2) {
+      string1 = (string1 != null) ? String(string1).toUpperCase() : '';
+      string2 = (string2 != null) ? String(string2).toUpperCase() : '';
 
-      if(string2)
-        string2=string2.toUpperCase();
-
-      return  string1 === string2;
-
+      return string1 === string2;
     };
+
+
 
 
   }

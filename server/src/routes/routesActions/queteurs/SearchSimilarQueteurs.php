@@ -47,20 +47,25 @@ class SearchSimilarQueteurs extends Action
     $this->validateSentData([
       ClientInputValidatorSpecs::withString("first_name", $this->queryParams, 100 , false),
       ClientInputValidatorSpecs::withString("last_name" , $this->queryParams, 100 , false),
-      ClientInputValidatorSpecs::withString("nivol"     , $this->queryParams, 15  , false)
+      ClientInputValidatorSpecs::withString("nivol"     , $this->queryParams, 15  , false),
+      ClientInputValidatorSpecs::withString("email"     , $this->queryParams, 255 , false, ClientInputValidator::$EMAIL_VALIDATION),
+      ClientInputValidatorSpecs::withString("mobile"    , $this->queryParams, 20  , false),
+
     ]);
 
     $firstName  = $this->validatedData["first_name"];
     $lastName   = $this->validatedData["last_name"];
     $nivol      = $this->validatedData["nivol"];
+    $email      = $this->validatedData["email"];
+    $mobile     = $this->validatedData["mobile"];
 
-    if(empty($firstName) && empty($lastName) && empty($nivol))
+    if(empty($firstName) && empty($lastName) && empty($nivol) && empty($email) && empty($mobile))
     {//if nothing is give, return empty array
       $this->response->getBody()->write(json_encode([]));
       return $this->response;
     }
 
-    $queteurs = $this->queteurDBService->searchSimilarQueteur($ulId, $firstName, $lastName, $nivol);
+    $queteurs = $this->queteurDBService->searchSimilarQueteur($ulId, $firstName, $lastName, $nivol, $email, $mobile);
     $this->response->getBody()->write(json_encode($queteurs));
 
     return $this->response;

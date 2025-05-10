@@ -118,7 +118,7 @@ class TroncQueteurBusinessService
    * @return bool true if the quete has already started (or it's not production)
    * @throws Exception
    */
-  public function hasQueteAlreadyStarted(string $deployment, Carbon $dateToCheck=null):bool
+  public function hasQueteAlreadyStarted(string $deployment, ?Carbon $dateToCheck=null):bool
   {
     if(strlen($deployment) !=1)
     {

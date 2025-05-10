@@ -23,14 +23,14 @@ class TroncQueteurEntity extends Entity
 
   /**
    * @OA\Property()
-   * @var int $id TroncQueteur ID
+   * @var int|null $id TroncQueteur ID
    */
-  public int $id               ;
+  public ?int $id               ;
   /**
    * @OA\Property()
-   * @var int $ul_id UL ID
+   * @var int|null $ul_id UL ID
    */
-  public int $ul_id            ;
+  public ?int $ul_id            ;
   /**
    * @OA\Property()
    * @var int $queteur_id queteur ID
@@ -77,161 +77,166 @@ class TroncQueteurEntity extends Entity
   public int $tronc_id         ;
 
   /**
+   * string type : see $this->preparePubSubPublishing()
    * @OA\Property()
-   * @var ?Carbon $depart_theorique theoretical Departure Date of the volunteer
+   * @var Carbon|string|null $depart_theorique theoretical Departure Date of the volunteer
    */
-  public ?Carbon $depart_theorique ;
+  public Carbon|string|null $depart_theorique ;
+  /**
+   * string type : see $this->preparePubSubPublishing()
+   * @OA\Property()
+   * @var Carbon|string|null $depart Real departure date
+   */
+  public Carbon|string|null $depart    = null;
+  /**
+   *  string type : see $this->preparePubSubPublishing()
+   * @OA\Property()
+   * @var Carbon|string|null $retour Return date
+   */
+  public Carbon|string|null $retour           ;
+  /**
+   *  string type : see $this->preparePubSubPublishing()
+   * @OA\Property()
+   * @var Carbon|string|null $comptage Coins & Bills counting date
+   */
+  public Carbon|string|null $comptage         ;
   /**
    * @OA\Property()
-   * @var Carbon|null $depart Real departure date
+   * @var Carbon|string|null $last_update Last time the TroncQueteur row is updated
    */
-  public ?Carbon $depart    = null;
+  public Carbon|string|null $last_update      ;
+  /**
+   *  string type : see $this->preparePubSubPublishing()
+   * @OA\Property()
+   * @var int|null $last_update_user_id UserId of the user that performed the last update on this object
+   */
+  public ?int $last_update_user_id;
   /**
    * @OA\Property()
-   * @var ?Carbon $retour Return date
+   * @var int|null $euro500 Number of 500€ bills
    */
-  public ?Carbon $retour           ;
+  public ?int $euro500          ;
   /**
    * @OA\Property()
-   * @var ?Carbon $comptage Coins & Bills counting date
+   * @var int|null $euro200 Number of 200€ bills
    */
-  public ?Carbon $comptage         ;
+  public ?int $euro200          ;
   /**
    * @OA\Property()
-   * @var Carbon|null $last_update Last time the TroncQueteur row is updated
+   * @var int|null $euro100 Number of 100€ bills
    */
-  public ?Carbon $last_update      ;
+  public ?int $euro100          ;
   /**
    * @OA\Property()
-   * @var int $last_update_user_id UserId of the user that performed the last update on this object
+   * @var int|null $euro50 Number of 50€ bills
    */
-  public int $last_update_user_id;
+  public ?int $euro50           ;
   /**
    * @OA\Property()
-   * @var int $euro500 Number of 500€ bills
+   * @var int|null $euro20 Number of 20€ bills
    */
-  public int $euro500          ;
+  public ?int $euro20           ;
   /**
    * @OA\Property()
-   * @var int $euro200 Number of 200€ bills
+   * @var int|null $euro10 Number of 10€ bills
    */
-  public int $euro200          ;
+  public ?int $euro10           ;
   /**
    * @OA\Property()
-   * @var int $euro100 Number of 100€ bills
+   * @var int|null $euro5 Number of 5€ bills
    */
-  public int $euro100          ;
+  public ?int $euro5            ;
   /**
    * @OA\Property()
-   * @var int $euro50 Number of 50€ bills
+   * @var int|null $euro2 Number of 2€ coins
    */
-  public int $euro50           ;
+  public ?int $euro2            ;
   /**
    * @OA\Property()
-   * @var int $euro20 Number of 20€ bills
+   * @var int|null $euro1 Number of 1€ coins
    */
-  public int $euro20           ;
+  public ?int $euro1            ;
   /**
    * @OA\Property()
-   * @var int $euro10 Number of 10€ bills
+   * @var int|null $cents50 Number of 50cts coins
    */
-  public int $euro10           ;
+  public ?int $cents50          ;
   /**
    * @OA\Property()
-   * @var int $euro5 Number of 5€ bills
+   * @var int|null $cents20 Number of 20cts coins
    */
-  public int $euro5            ;
+  public ?int $cents20          ;
   /**
    * @OA\Property()
-   * @var int $euro2 Number of 2€ coins
+   * @var int|null $cents10 Number of 10cts coins
    */
-  public int $euro2            ;
+  public ?int $cents10          ;
   /**
    * @OA\Property()
-   * @var int $euro1 Number of 1€ coins
+   * @var int|null $cents5 Number of 5cts coins
    */
-  public int $euro1            ;
+  public ?int $cents5           ;
   /**
    * @OA\Property()
-   * @var int $cents50 Number of 50cts coins
+   * @var int|null $cents2 Number of 2cts coins
    */
-  public int $cents50          ;
+  public ?int $cents2           ;
   /**
    * @OA\Property()
-   * @var int $cents20 Number of 20cts coins
+   * @var int|null $cent1 Number of 1ct coins
    */
-  public int $cents20          ;
+  public ?int $cent1            ;
   /**
    * @OA\Property()
-   * @var int $cents10 Number of 10cts coins
+   * @var float|null $don_cheque total amount of bank note collected
    */
-  public int $cents10          ;
+  public ?float $don_cheque       ;
   /**
    * @OA\Property()
-   * @var int $cents5 Number of 5cts coins
+   * @var float|null $don_cheque total amount of credit card payment collected
    */
-  public int $cents5           ;
-  /**
-   * @OA\Property()
-   * @var int $cents2 Number of 2cts coins
-   */
-  public int $cents2           ;
-  /**
-   * @OA\Property()
-   * @var int $cent1 Number of 1ct coins
-   */
-  public int $cent1            ;
-  /**
-   * @OA\Property()
-   * @var float $don_cheque total amount of bank note collected
-   */
-  public float $don_cheque       ;
-  /**
-   * @OA\Property()
-   * @var float $don_cheque total amount of credit card payment collected
-   */
-  public float $don_creditcard   ;
+  public ?float $don_creditcard   ;
   /**
    * @OA\Property(deprecated=true)
-   * @var int $foreign_coins Number of foreign coins
+   * @var int|null $foreign_coins Number of foreign coins
    */
-  public int $foreign_coins    ;
+  public ?int $foreign_coins    ;
   /**
    * @OA\Property(deprecated=true)
-   * @var int $foreign_banknote Number of foreign bills
+   * @var int|null $foreign_banknote Number of foreign bills
    */
-  public int $foreign_banknote ;
+  public ?int $foreign_banknote ;
   /**
    * @OA\Property()
-   * @var string $notes_depart_theorique Textual notes about the start
+   * @var string|null $notes_depart_theorique Textual notes about the start
    */
-  public string $notes_depart_theorique      ;
+  public ?string $notes_depart_theorique      ;
   /**
    * @OA\Property()
-   * @var string $notes_depart_theorique Textual notes about the return
+   * @var string|null $notes_depart_theorique Textual notes about the return
    */
-  public string $notes_retour                ;
+  public ?string $notes_retour                ;
   /**
    * @OA\Property()
-   * @var string $notes_retour_comptage_pieces Textual notes about the counting of money
+   * @var string|null $notes_retour_comptage_pieces Textual notes about the counting of money
    */
-  public string $notes_retour_comptage_pieces;
+  public ?string $notes_retour_comptage_pieces;
   /**
    * @OA\Property()
-   * @var string $notes_update Textual notes about the update of a tronc
+   * @var string|null $notes_update Textual notes about the update of a tronc
    */
-  public string $notes_update                ;
+  public ?string $notes_update                ;
 
   /**
    * @OA\Property()
-   * @var string $last_name Queteur Last Name  (only used when getting tronc_queteur for a tronc)
+   * @var string|null $last_name Queteur Last Name  (only used when getting tronc_queteur for a tronc)
    */
-  public string $last_name        ;
+  public ?string $last_name        ;
   /**
    * @OA\Property()
-   * @var string $first_name Queteur first name  (only used when getting tronc_queteur for a tronc)
+   * @var string|null $first_name Queteur first name  (only used when getting tronc_queteur for a tronc)
    */
-  public string $first_name       ;
+  public ?string $first_name       ;
   /**
    * @OA\Property()
    * @var boolean $deleted if true, the troncQueteur is marked as deleted and does not count in the stats.
@@ -241,12 +246,12 @@ class TroncQueteurEntity extends Entity
    * @OA\Property()
    * @var int $tronc_queteur_id TroncQueteur ID (when this object is used to retrieve data from tronc_queteur_historique, this ID refers to the current row in tronc_queteur table)
    */
-  public int $tronc_queteur_id;
+  public ?int $tronc_queteur_id;
   /**
    * @OA\Property()
    * @var Carbon $insert_date When this historic version of the TroncQueteur has been inserted (when this object is used to retrieve data from tronc_queteur_historique)
    */
-  public Carbon $insert_date     ;
+  public ?Carbon $insert_date     ;
   /**
    * @OA\Property()
    * @var boolean $preparationAndDepart If it's a preparation and depart (that is: the tronc_queteur is stored and the depart is right now) this property must be set to true.
@@ -264,14 +269,14 @@ class TroncQueteurEntity extends Entity
   public string $bills_money_bag_id;
   /**
    * @OA\Property()
-   * @var int $don_cb_total_number Number of donation per credit card
+   * @var int|null $don_cb_total_number Number of donation per credit card
    */
-  public int $don_cb_total_number       ;
+  public ?int $don_cb_total_number       ;
   /**
    * @OA\Property()
-   * @var int $don_cheque_number Number of donation per bank note
+   * @var int|null $don_cheque_number Number of donation per bank note
    */
-  public int $don_cheque_number         ;
+  public ?int $don_cheque_number         ;
 
   /**
    * @OA\Property()
@@ -282,19 +287,19 @@ class TroncQueteurEntity extends Entity
 
   /**
    * @OA\Property()
-   * @var float $amount Sum in € of coins, bill, credit card & bank note. Used when Extracting Data of an UL.
+   * @var float|null $amount Sum in € of coins, bill, credit card & bank note. Used when Extracting Data of an UL.
    */
-  public float $amount;
+  public ?float $amount;
   /**
    * @OA\Property()
-   * @var float $weight Sum in kg of coins, bill. Used when Extracting Data of an UL. Used when Extracting Data of an UL.
+   * @var float|null $weight Sum in kg of coins, bill. Used when Extracting Data of an UL. Used when Extracting Data of an UL.
    */
-  public float $weight;
+  public ?float $weight;
   /**
    * @OA\Property()
-   * @var float $time_spent_in_hours number of hours spent on the street collecting money. Used when Extracting Data of an UL.
+   * @var float|null $time_spent_in_hours number of hours spent on the street collecting money. Used when Extracting Data of an UL.
    */
-  public float $time_spent_in_hours;
+  public ?float $time_spent_in_hours;
 
 
   //when searching for a tronc on Depart screen

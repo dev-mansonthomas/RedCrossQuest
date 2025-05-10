@@ -42,9 +42,15 @@ class MarkAllQueteurQRCodeAsPrinted extends Action
   protected function action(): Response
   {
     $ulId     = $this->decodedToken->getUlId();
+    $printed = $this->request->getQueryParams()['printed']??null;
 
-    $this->queteurDBService->markAllAsPrinted($ulId);
-
+    if (!in_array($printed, ['true', 'false'], true))
+    {
+      $error = ['error' => "Invalid value for 'printed'. Expected 'true' or 'false'."];
+      return $this->response->withStatus(400)->withHeader('Content-Type', 'application/json')->write(json_encode($error));
+    }
+    $printedBoolean = $printed === 'true';
+    $this->queteurDBService->markAllAsPrinted($ulId, $printedBoolean);
     return $this->response;
   }
 }

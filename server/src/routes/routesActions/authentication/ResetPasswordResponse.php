@@ -17,13 +17,13 @@ class ResetPasswordResponse
 
   /**
    * @OA\Property()
-   * @var string  $email The email of the reset password
+   * @var string|null  $email The email of the reset password
    */
   public ?string $email;
 
   protected array $_fieldList = ['success', 'email'];
 
-  public function __construct(bool $success, string $email=null)
+  public function __construct(bool $success, ?string $email=null)
   {
     $this->success  = $success;
     $this->email    = $email;

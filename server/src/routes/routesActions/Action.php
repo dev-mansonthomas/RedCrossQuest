@@ -95,7 +95,7 @@ abstract class Action
     {
       return $this->action();
     }
-    catch (Exception $e)
+    catch (\Throwable $e)
     {
       //protect password from being dumped in the logs.
       $validatedData = $this->validatedData;
@@ -103,11 +103,14 @@ abstract class Action
       {
         $validatedData["password"] = strlen($validatedData["password"]);
       }
-      $this->logger->error("Uncaught exception on Action",
-        [ "actionClass"  => get_class($this),
-          "validatedData"=> $validatedData,
-          Logger::$EXCEPTION    => $e
-        ]);
+      $this->logger->error("Uncaught exception on Action", [
+        "actionClass"    => get_class($this),
+        "validatedData"  => $validatedData,
+        "exceptionClass" => get_class($e),
+        "message"        => $e->getMessage(),
+        "trace"          => $e->getTraceAsString(),
+      ]);
+
       throw new HttpInternalServerErrorException($this->request, $e->getMessage(), $e);
     }
   }

@@ -20,7 +20,6 @@
       <path value="$PROJECT_DIR$/server/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/server/vendor/grpc/grpc" />
       <path value="$PROJECT_DIR$/server/vendor/beste/clock" />
-      <path value="$PROJECT_DIR$/server/vendor/beste/in-memory-cache" />
       <path value="$PROJECT_DIR$/server/vendor/beste/json" />
       <path value="$PROJECT_DIR$/server/vendor/phpmailer/phpmailer" />
       <path value="$PROJECT_DIR$/server/vendor/ralouphie/getallheaders" />
@@ -76,7 +75,6 @@
       <path value="$PROJECT_DIR$/server/vendor/symfony/config" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-intl-idn" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/options-resolver" />
-      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/translation-contracts" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/translation" />
@@ -95,17 +93,23 @@
       <path value="$PROJECT_DIR$/server/vendor/league/uri" />
       <path value="$PROJECT_DIR$/server/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/server/vendor/league/uri-interfaces" />
-      <path value="$PROJECT_DIR$/server/vendor/symfony/process" />
       <path value="$PROJECT_DIR$/server/vendor/google/recaptcha" />
       <path value="$PROJECT_DIR$/server/vendor/google/gax" />
       <path value="$PROJECT_DIR$/server/vendor/google/cloud" />
       <path value="$PROJECT_DIR$/server/vendor/google/grpc-gcp" />
-      <path value="$PROJECT_DIR$/server/vendor/google/common-protos" />
       <path value="$PROJECT_DIR$/server/vendor/google/apiclient" />
       <path value="$PROJECT_DIR$/server/vendor/google/auth" />
       <path value="$PROJECT_DIR$/server/vendor/google/protobuf" />
       <path value="$PROJECT_DIR$/server/vendor/google/apiclient-services" />
       <path value="$PROJECT_DIR$/server/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/server/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/server/vendor/google/crc32" />
+      <path value="$PROJECT_DIR$/server/vendor/google/longrunning" />
+      <path value="$PROJECT_DIR$/server/vendor/php-di/phpdoc-reader" />
+      <path value="$PROJECT_DIR$/server/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/server/vendor/league/container" />
+      <path value="$PROJECT_DIR$/server/vendor/cakephp/chronos" />
+      <path value="$PROJECT_DIR$/server/vendor/beste/in-memory-cache" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.3" />

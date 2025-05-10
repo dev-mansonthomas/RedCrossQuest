@@ -82,7 +82,9 @@ class SendPasswordInitializationMailAction extends Action
 
     Logger::dataForLogging(new LoggingEntity(null , ["username"=>$username]));
 
+
     $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/sendInit", $username, $this->parsedBody);
+
 
     if($reCaptchaResponseCode > 0)
     {// error
@@ -109,22 +111,19 @@ class SendPasswordInitializationMailAction extends Action
     }
 
 
-    if(isset($uuid) && $uuid!==null)
+    if(isset($uuid))
     {
       $queteur = $this->queteurDBService->getQueteurByNivol($username);
       $this->emailBusinessService->sendInitEmail($queteur, $uuid);
       $this->logger->debug("sendInit: mail with uuid sent ", array('username' => $username, 'uuid'=>$uuid));
-
-      $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true)));
-      return $this->response;
 
     }
     else
     {//the user do not have an account
       $this->logger->info("sendInit: user do not have an account ", array('username' => $username));
       //Send identical response
-      $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true)));
-      return $this->response;
     }
+    $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true)));
+    return $this->response;
   }
 }

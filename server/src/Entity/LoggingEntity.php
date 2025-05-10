@@ -18,7 +18,7 @@ class LoggingEntity
    */
   private array $otherData;
   
-  public function __construct(DecodedToken $decodedToken = null, array $otherData = array())
+  public function __construct(?DecodedToken $decodedToken = null, array $otherData = array())
   {
     $this->decodedToken = isset($decodedToken) ? $decodedToken->toArray() : [];
     $this->otherData    = $otherData;

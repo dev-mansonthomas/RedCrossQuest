@@ -49,11 +49,11 @@ class ClientInputValidator
    * @param  array|null   $inputArray      The reference to the array containing the $parameterName as a key (or not)
    * @param  int          $maxLength       the max length of the string
    * @param  bool         $notNull         Is the value allowed to be null or not
-   * @param  string|null  $validationType  Type of validation (UUID, EMAIL)
+   * @param string|null $validationType  Type of validation (UUID, EMAIL)
    * @return string|null                   The trimmed value
    */
 
-  public function validateString(string $parameterName, ?array &$inputArray, int $maxLength, bool $notNull, $validationType=null):?string
+  public function validateString(string $parameterName, ?array &$inputArray, int $maxLength, bool $notNull, ?string $validationType=null):?string
   {
     if($inputArray == null || !array_key_exists($parameterName, $inputArray))
     {
@@ -114,9 +114,9 @@ class ClientInputValidator
    * @param int $defaultValue If the value is null, return this value instead.
    * @return int|null The passed value casted to int
    */
-  public function validateInteger(string $parameterName, ?array &$inputArray, $maxValue=0, $notNull=true, $defaultValue=0):?int
+  public function validateInteger(string $parameterName, ?array &$inputArray, int $maxValue=0, bool $notNull=true, ?int $defaultValue=0):?int
   {
-    if($inputArray === null || $inputArray === "" || !array_key_exists($parameterName, $inputArray))
+    if($inputArray === null || !array_key_exists($parameterName, $inputArray))
     {
       $inputValue = null;
     }
@@ -175,7 +175,7 @@ class ClientInputValidator
    * @param bool $defaultValue If the value is null and it's allowed ($notNull=true), then the function will return this bool value instead of null
    * @return bool|null true or false
    */
-  public function validateBoolean(string $parameterName, ?array &$inputArray, bool $notNull, bool $defaultValue=null):?bool
+  public function validateBoolean(string $parameterName, ?array &$inputArray, bool $notNull, ?bool $defaultValue=null):?bool
   {
     if($inputArray === null || $inputArray === "" || !array_key_exists($parameterName, $inputArray))
     {

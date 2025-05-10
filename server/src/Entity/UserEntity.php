@@ -13,9 +13,9 @@ class UserEntity extends Entity
 {
   /**
    * @OA\Property()
-   * @var int $id user Id
+   * @var int|null $id user Id (null when creating the user)
    */
-  public int $id                          ;
+  public ?int $id                          ;
   /**
    * @OA\Property()
    * @var string $nivol nivol of the user that is used as login with angularjs app. (Angular 8+ will use firebase and email)
@@ -23,14 +23,14 @@ class UserEntity extends Entity
   public string $nivol                       ;
   /**
    * @OA\Property()
-   * @var int $queteur_id Queteur ID (where name, email, mobile is stored)
+   * @var int|null $queteur_id Queteur ID (where name, email, mobile is stored)
    */
-  public int $queteur_id                  ;
+  public ?int $queteur_id                  ;
   /**
    * @OA\Property()
-   * @var int $password hash of the use password
+   * @var string $password hash of the use password
    */
-  public int $password                    ;
+  public string $password                    ;
   /**
    * @OA\Property()
    * @var boolean $password_defined true if the password has been defined. when we don't need the password, but just to know if it's defined (queteurEdit)
@@ -38,10 +38,10 @@ class UserEntity extends Entity
   public bool $password_defined            ;
   /**
    * @OA\Property()
-   * @var int $role Role of the user : {id:1,label:'Lecture Seule' },{id:2,label:'Opérateur'},{id:3,label:'Compteur'},{id:4,label:'Administrateur'}
+   * @var int|null $role Role of the user : {id:1,label:'Lecture Seule' },{id:2,label:'Opérateur'},{id:3,label:'Compteur'},{id:4,label:'Administrateur'}
    */
 
-  public int $role                        ;
+  public ?int $role                        ;
   /**
    * @OA\Property()
    * @var Carbon $created user creation date
@@ -61,14 +61,14 @@ class UserEntity extends Entity
   public bool $active                      ;
   /**
    * @OA\Property()
-   * @var Carbon $last_failure_login_date last login failure
+   * @var Carbon|null $last_failure_login_date last login failure
    */
-  public Carbon $last_failure_login_date     ;
+  public ?Carbon $last_failure_login_date     ;
   /**
    * @OA\Property()
-   * @var int $nb_of_failure number of failure since last login
+   * @var int|null $nb_of_failure number of failure since last login
    */
-  public int $nb_of_failure               ;//since last successful login
+  public ?int $nb_of_failure               ;//since last successful login
   /**
    * @OA\Property()
    * @var Carbon $last_successful_login_date last successfull login date
@@ -76,10 +76,10 @@ class UserEntity extends Entity
   public Carbon $last_successful_login_date  ;
   /**
    * @OA\Property()
-   * @var int $init_passwd_date when the password was last re initiated
+   * @var Carbon|null $init_passwd_date when the password was last re initiated
    */
 
-  public int $init_passwd_date          ;
+  public ?Carbon $init_passwd_date          ;
   /**
    * @OA\Property()
    * @var string $first_name first name of the user

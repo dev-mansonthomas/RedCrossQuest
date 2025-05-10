@@ -23,136 +23,136 @@ class TroncDBService extends DBService
    * @throws Exception in other situations, possibly : parsing error in the entity
    *
    */
-//?string $query, ?bool $active, ?int $type
+  //?string $query, ?bool $active, ?int $type
   public function getTroncs(PageableRequestEntity $pageableRequestEntity, int $ulId):PageableResponseEntity
-    {
-      /** @var string $query */
-      $query  = $pageableRequestEntity->filterMap['q'];
-      /** @var bool $active */
-      $active = $pageableRequestEntity->filterMap['active'];
-      /** @var int $type */
-      $type   = $pageableRequestEntity->filterMap['type'];
+  {
+    /** @var string $query */
+    $query  = $pageableRequestEntity->filterMap['q'];
+    /** @var bool $active */
+    $active = $pageableRequestEntity->filterMap['active'];
+    /** @var int $type */
+    $type   = $pageableRequestEntity->filterMap['type'];
 
-      $parameters = ["ul_id"  => $ulId];
-      $sql = "
+    $parameters = ["ul_id"  => $ulId];
+    $sql = "
 SELECT `id`,
-       `ul_id`,
-       `created`,
-       `enabled`,
-       `notes`,
-       `type`
+     `ul_id`,
+     `created`,
+     `enabled`,
+     `notes`,
+     `type`
 FROM   `tronc` as t
 WHERE  t.ul_id = :ul_id
 ";
 
-      if($active !==   null)
-      {
-        $parameters[ "enabled"] = $active===true?"1":"0";
-        $sql .="
-        AND    enabled = :enabled
-";
-      }
-
-      if($query != null)
-      {
-        $parameters[ "query"] =$query;
-        $sql .="
-        AND CONVERT(id, CHAR) like concat(:query,'%')
-";
-      }
-
-      if( $type != null)
-      {
-        $parameters[ "type"] =$type;
-        $sql .="
-        AND `type` = :type
-";
-      }
-
+    if($active !==   null)
+    {
+      $parameters[ "enabled"] = $active===true?"1":"0";
       $sql .="
-      ORDER BY id ASC
+      AND    enabled = :enabled
 ";
-      $count   = $this->getCountForSQLQuery ($sql, $parameters);
-      $results = $this->executeQueryForArray($sql, $parameters, function($row) {
-        return new TroncEntity($row, $this->logger);
-      }, $pageableRequestEntity->pageNumber, $pageableRequestEntity->rowsPerPage);
-
-      return new PageableResponseEntity($count, $results, $pageableRequestEntity->pageNumber, $pageableRequestEntity->rowsPerPage);
     }
 
-    
-    /**
-     * Get one tronc by its ID
-     *
-     * @param int $tronc_id The ID of the tronc
-     * @param int $ulId the ID of the UniteLocal
-     * @return TroncEntity|null  The tronc
-     * @throws Exception if the tronc is not found
-     * @throws PDOException if the query fails to execute on the server
-     */
-    public function getTroncById(int $tronc_id, int $ulId, int $roleId):?TroncEntity
+    if($query != null)
     {
-      $sql = "
+      $parameters[ "query"] =$query;
+      $sql .="
+      AND CONVERT(id, CHAR) like concat(:query,'%')
+";
+    }
+
+    if( $type != null)
+    {
+      $parameters[ "type"] =$type;
+      $sql .="
+      AND `type` = :type
+";
+    }
+
+    $sql .="
+    ORDER BY id ASC
+";
+    $count   = $this->getCountForSQLQuery ($sql, $parameters);
+    $results = $this->executeQueryForArray($sql, $parameters, function($row) {
+      return new TroncEntity($row, $this->logger);
+    }, $pageableRequestEntity->pageNumber, $pageableRequestEntity->rowsPerPage);
+
+    return new PageableResponseEntity($count, $results, $pageableRequestEntity->pageNumber, $pageableRequestEntity->rowsPerPage);
+  }
+
+    
+  /**
+   * Get one tronc by its ID
+   *
+   * @param int $tronc_id The ID of the tronc
+   * @param int $ulId the ID of the UniteLocal
+   * @return TroncEntity|null  The tronc
+   * @throws Exception if the tronc is not found
+   * @throws PDOException if the query fails to execute on the server
+   */
+  public function getTroncById(int $tronc_id, int $ulId, int $roleId):?TroncEntity
+  {
+    $sql = "
 SELECT `id`,
-       `ul_id`,
-       `created`,
-       `enabled`,
-       `notes`,
-       `type`
+     `ul_id`,
+     `created`,
+     `enabled`,
+     `notes`,
+     `type`
 FROM  `tronc` as t
 WHERE  t.id    = :tronc_id
 
 ";
-      $parameters = ["tronc_id" => $tronc_id];
+    $parameters = ["tronc_id" => $tronc_id];
 
-      if($roleId != 9)
-      {
-        $sql .= "
+    if($roleId != 9)
+    {
+      $sql .= "
 AND   `ul_id`           = :ul_id      
 ";
-        $parameters["ul_id"] = $ulId;
-      }
-      $sql .= "
+      $parameters["ul_id"] = $ulId;
+    }
+    $sql .= "
 LIMIT 1
 ";
 
 
-      /** @noinspection PhpIncompatibleReturnTypeInspection */
-      return $this->executeQueryForObject($sql, $parameters, function($row) {
-        return new TroncEntity($row, $this->logger);
-      }, false);
-    }
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    return $this->executeQueryForObject($sql, $parameters, function($row) {
+      return new TroncEntity($row, $this->logger);
+    }, false);
+  }
 
 
-  /**
-   * Update one tronc
-   *
-   * @param TroncEntity $tronc The tronc to update
-   * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
-   * @throws PDOException if the query fails to execute on the server
-   * @throws Exception
-   */
-    public function update(TroncEntity $tronc, int $ulId):void
-    {
-      $sql = "
+/**
+ * Update one tronc
+ *
+ * @param TroncEntity $tronc The tronc to update
+ * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+ * @throws PDOException if the query fails to execute on the server
+ * @throws Exception
+ */
+  public function update(TroncEntity $tronc, int $ulId):void
+  {
+    $sql = "
 UPDATE `tronc`
 SET
-      `notes`       = :notes,
-      `enabled`     = :enabled,
-      `type`        = :type
+    `notes`       = :notes,
+    `enabled`     = :enabled,
+    `type`        = :type
 WHERE `id`          = :id
 AND   `ul_id`       = :ul_id
 ";
-      $parameters = [
-        "notes"      => $tronc->notes,
-        "enabled"    => $tronc->enabled===true?"1":"0",
-        "id"         => $tronc->id,
-        "type"       => $tronc->type,
-        "ul_id"      => $ulId
-      ];
+    $parameters = [
+      "notes"      => $tronc->notes,
+      "enabled"    => $tronc->enabled===true?"1":"0",
+      "id"         => $tronc->id,
+      "type"       => $tronc->type,
+      "ul_id"      => $ulId
+    ];
 
-      $this->executeQueryForUpdate($sql, $parameters);
-    }
+    $this->executeQueryForUpdate($sql, $parameters);
+  }
 
   /**
    * Insert one Tronc
@@ -176,11 +176,11 @@ INSERT INTO `tronc`
 )
 VALUES
 ";
-    if($tronc->nombreTronc > 50 || !is_int($tronc->nombreTronc))
+    if($tronc->nombreTronc <= 0  || $tronc->nombreTronc > 50  )
     {
       throw new InvalidArgumentException("Invalid number of tronc to be created ".$tronc->nombreTronc);
     }
-    for($i=0;$i<$tronc->nombreTronc;$i++)
+    for($i=0 ; $i<$tronc->nombreTronc ; $i++)
     {
       $sql .="(:ul_id, NOW(), :enabled, :notes, :type)".($i<$tronc->nombreTronc-1?",":"");
     }

@@ -24,7 +24,7 @@ class GetUserInfoFromUUIDResponse
 
   protected array $_fieldList = ['success', 'nivol'];
 
-  public function __construct(bool $success, string $nivol=null)
+  public function __construct(bool $success, ?string $nivol=null)
   {
     $this->success  = $success;
     $this->nivol    = $nivol;

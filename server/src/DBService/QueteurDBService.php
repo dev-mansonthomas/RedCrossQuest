@@ -801,7 +801,7 @@ ORDER BY q.last_name ASC
    * @return QueteurEntity  The queteur
    * @throws Exception in other situations
    */
-  public function getQueteurById(int $queteur_id, int $ul_id=null)
+  public function getQueteurById(int $queteur_id, ?int $ul_id=null)
   {
     $sql = "
 SELECT  q.`id`,
@@ -1068,15 +1068,20 @@ VALUES
    * @param string|null $firstName what's being typed in first_name field
    * @param string|null $lastName what's being typed in last_name field
    * @param string|null $nivol what's being typed in nivol field
+   * @param string|null $email what's being typed in email field
+   * @param string|null $mobile what's being typed in mobile field
    * @return QueteurEntity[]  the list of Queteurs matching the query
    * @throws Exception in other situations
    */
-  public function searchSimilarQueteur(int $ulId, ?string $firstName, ?string $lastName, ?string $nivol): array
+  public function searchSimilarQueteur(int $ulId, ?string $firstName, ?string $lastName, ?string $nivol, ?string $email, ?string $mobile): array
   {
     $parameters      = ["ul_id" => $ulId];
     $searchFirstName = "";
     $searchLastName  = "";
     $searchNivol     = "";
+    $searchEmail     = "";
+    $searchMobile    = "";
+
     $numberOfParameters = 0;
 
     if($firstName != null)
@@ -1123,6 +1128,42 @@ $OR UPPER(q.`nivol`) like UPPER(:nivol)
       $parameters["nivol"] = "%".$nivol."%";
     }
 
+    if($email != null)
+    {
+      if($numberOfParameters>0)
+      {
+        $OR="OR";
+      }
+      else
+      {
+        $OR="";
+      }
+
+      $searchEmail = "
+$OR UPPER(q.`email`) like UPPER(:email)
+";
+      $parameters["email"] = "%".$email."%";
+    }
+
+    if($mobile != null)
+    {
+      if($numberOfParameters>0)
+      {
+        $OR="OR";
+      }
+      else
+      {
+        $OR="";
+      }
+
+      $searchMobile = "
+$OR UPPER(q.`mobile`) like UPPER(:mobile)
+";
+      $parameters["mobile"] = "%".$mobile."%";
+    }
+
+
+
     $sql="    
 SELECT  q.`id`,
         q.`first_name`,
@@ -1137,8 +1178,11 @@ AND (
 $searchFirstName
 $searchLastName
 $searchNivol
+$searchEmail
+$searchMobile
 )
 ";
+    $this->logger->error("similar query",[$sql, $parameters]);
     return $this->executeQueryForArray($sql, $parameters, function($row) {
       return new QueteurEntity($row, $this->logger);
     });
@@ -1203,19 +1247,21 @@ AND   `ul_id`           = :ul_id
   /**
    * Mark All Queteur as printed
    * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
+   * @param bool $printed :  mark queteur as printed or not printed
    * @throws PDOException if the query fails to execute on the server
    * @throws Exception
    */
-  public function markAllAsPrinted(int $ulId): void
+  public function markAllAsPrinted(int $ulId, bool $printed): void
   {
 
     $sql = "
 UPDATE `queteur`
-SET    `qr_code_printed` = 1
+SET    `qr_code_printed` = :printed
 WHERE  `ul_id`           = :ul_id
 ";
     $parameters["ul_id"] = $ulId;
-
+    $parameters["printed"] = $printed?1:0;
+    
     $this->executeQueryForUpdate($sql, $parameters);
   }
 
