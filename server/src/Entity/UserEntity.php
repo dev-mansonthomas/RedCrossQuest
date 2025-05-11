@@ -71,9 +71,9 @@ class UserEntity extends Entity
   public ?int $nb_of_failure               ;//since last successful login
   /**
    * @OA\Property()
-   * @var Carbon $last_successful_login_date last successfull login date
+   * @var Carbon|null $last_successful_login_date last successfull login date
    */
-  public Carbon $last_successful_login_date  ;
+  public ?Carbon $last_successful_login_date  ;
   /**
    * @OA\Property()
    * @var Carbon|null $init_passwd_date when the password was last re initiated

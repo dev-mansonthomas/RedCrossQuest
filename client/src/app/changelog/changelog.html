@@ -49,7 +49,28 @@ ROLE       : {{cl.currentUserRole}}</pre>
         <div class="col-md-8">
 
           <uib-accordion close-others="false">
-            <div uib-accordion-group class="panel-default" heading="Version 2022" is-open="true">
+            <div uib-accordion-group class="panel-default" heading="Version 2025" is-open="true">
+              <ul>
+                <li><b>Interface Graphique (ce site web quoi...) :</b>
+                  <ol>
+                    <li>Slack vers Google Chat : la page de changelog et email mentionne maintenant Google Chat et plus Slack</li>
+                    <li>Nouveau bouton qui permet de marquer tous les QRCode des quêteurs comme NON imprimés.</li>
+                    <li>Ajout de quêteur/validation inscription RedQuest : la recherche de doublons se fait sur l'email et le téléphone en plus de nom/prénom/nivol</li>
+                    <li>Mise à jour des dépendances techniques</li>
+                  </ol>
+                </li>
+                <li><b>Coté Serveur :</b>
+                  <ol>
+                    <li>Mise à jour coté serveur liées aux améliorations ci-dessus </li>
+                    <li>Mise à jour des librairies utilisées par RedCrossQuest, ce qui améliore généralement la sécurité et les performances</li>
+                    <li>Amélioration du logging</li>
+                    <li>Les emails envoyés par la plateforme apparaissent maintenant dans des conversation gmail différentes</li>
+                    <li>Fix sur le cache de compilation des classes, ce qui devrait améliorer les performances</li>
+                  </ol>
+                </li>
+              </ul>
+            </div>
+            <div uib-accordion-group class="panel-default" heading="Version 2022" is-open="false">
               <ul>
                 <li><b>Interface Graphique (ce site web quoi...) :</b>
                   <ol>
@@ -67,7 +88,7 @@ ROLE       : {{cl.currentUserRole}}</pre>
                 <li><b>Coté Serveur :</b>
                   <ol>
                     <li>Mise à jour coté serveur liées aux améliorations ci-dessus </li>
-                    <li>Mise à jours des librairies utilisées par RedCrossQuest, ce qui améliore généralement la sécurité et les performances</li>
+                    <li>Mise à jour des librairies utilisées par RedCrossQuest, ce qui améliore généralement la sécurité et les performances</li>
                   </ol>
                 </li>
               </ul>

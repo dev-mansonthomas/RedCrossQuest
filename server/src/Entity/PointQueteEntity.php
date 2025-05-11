@@ -17,9 +17,9 @@ class PointQueteEntity  extends Entity
   public ?int $id                ;
   /**
    * @OA\Property()
-   * @var int $ul_id UniteLocal ID
+   * @var int|null $ul_id UniteLocal ID
    */
-  public int $ul_id             ;
+  public ?int $ul_id             ;
   /**
    * @OA\Property()
    * @var string $code Code for the point de Quete: short string
@@ -37,24 +37,24 @@ class PointQueteEntity  extends Entity
   public float $latitude          ;
   /**
    * @OA\Property()
-   * @var float $id GPS longitude (get from google maps API)
+   * @var float $longitude GPS longitude (get from google maps API)
    */
   public float $longitude         ;
   /**
    * @OA\Property()
-   * @var string $address Street number and name of the address
+   * @var string|null $address Street number and name of the address
    */
-  public string $address           ;
+  public ?string $address           ;
   /**
    * @OA\Property()
-   * @var string $postal_code Postal code part of the address
+   * @var string|null $postal_code Postal code part of the address
    */
-  public string $postal_code       ;
+  public ?string $postal_code       ;
   /**
    * @OA\Property()
-   * @var string $city City part of the address
+   * @var string|null $city City part of the address
    */
-  public string $city              ;
+  public ?string $city              ;
   /**
    * @OA\Property()
    * @var int $max_people Maximum number of people advised to go on PointDeQuete.(no control are done on this, it's advisory)
@@ -87,19 +87,19 @@ class PointQueteEntity  extends Entity
   public bool $enabled           ;
   /**
    * @OA\Property()
-   * @var int $type id of the type of PointQuete        {id:1,label:'Voie Publique / Feux Rouge'},{id:2,label:'Piéton'},{id:3,label:'Commerçant'},{id:4,label:'Base UL'},{id:5,label:'Autre'}
+   * @var int|null $type id of the type of PointQuete        {id:1,label:'Voie Publique / Feux Rouge'},{id:2,label:'Piéton'},{id:3,label:'Commerçant'},{id:4,label:'Base UL'},{id:5,label:'Autre'}
    */
-  public int $type              ;
+  public ?int $type              ;
   /**
    * @OA\Property()
-   * @var int $time_to_reach number of minutes required to reached the pointDeQuete
+   * @var int|null $time_to_reach number of minutes required to reached the pointDeQuete
    */
-  public int $time_to_reach     ;
+  public ?int $time_to_reach     ;
   /**
    * @OA\Property()
-   * @var int $transport_to_reach id of the transport type  {id:1,label:'A Pied'},{id:2,label:'Voiture'}{id:3,label:'Vélo'},{id:4,label:'Train/Tram'},{id:5,label:'Autre'}
+   * @var int|null $transport_to_reach id of the transport type  {id:1,label:'A Pied'},{id:2,label:'Voiture'}{id:3,label:'Vélo'},{id:4,label:'Train/Tram'},{id:5,label:'Autre'}
    */
-  public int $transport_to_reach;
+  public ?int $transport_to_reach;
 
   protected array $_fieldList = ['id','ul_id','code','name','latitude','longitude','address','postal_code','city','max_people','advice','localization','minor_allowed','created','enabled','type','time_to_reach','transport_to_reach'];
 
