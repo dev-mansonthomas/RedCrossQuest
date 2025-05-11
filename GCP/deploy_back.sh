@@ -15,17 +15,9 @@ then
   exit 1
 fi
 
-
-#Conflict of Node version 10 is required for RedCrossQuest, and RedQuest /Cloud Functions can use 14
-#PATH="/usr/local/opt/node@14/bin/:$PATH"
-. $(brew --prefix nvm)/nvm.sh
-nvm use v10.24.1
-
-
 #load properties
 # shellcheck source=/Users/thomasmanson/.cred/
 . ~/.cred/rcq-${COUNTRY}-${ENV}.properties
-
 
 #load common functions
 if [[ -f common.sh ]]
@@ -53,7 +45,7 @@ setProject "rcq-${COUNTRY}-${ENV}"
 #the instance name can't be reused, so we increment a counter rcq-db-inst-fr-test-2
 #
 . ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
-echo "cloud_sql_proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &"
+echo "cloud-sql-proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &"
 cloud_sql_proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
 CLOUD_PROXY_PID=$!
 

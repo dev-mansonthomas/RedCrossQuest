@@ -8,8 +8,6 @@
 ##########################################################################
 service: front
 runtime: python312
-api_version: 1
-threadsafe: true
 automatic_scaling:
   max_instances: 20
 handlers:
@@ -18,6 +16,5 @@ handlers:
     upload: dist/index.html
     http_headers:
       X-Frame-Options: DENY
-  - url: /(.*)
+  - url: /
     static_dir: dist
-    upload: dist/(.*)
