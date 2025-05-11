@@ -55,9 +55,9 @@ class QueteurEntity  extends Entity
   public Carbon $created                     ;
   /**
    * @OA\Property()
-   * @var Carbon $updated queteur last update date
+   * @var Carbon|null $updated queteur last update date
    */
-  public Carbon $updated                     ;
+  public ?Carbon $updated                     ;
   /**
    * @OA\Property()
    * @deprecated

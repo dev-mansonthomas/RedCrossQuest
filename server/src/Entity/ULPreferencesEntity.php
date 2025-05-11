@@ -30,10 +30,10 @@ class ULPreferencesEntity extends Entity
   public bool $rq_autonomous_depart_and_return;
 
 
-  /** @var string $token_benevole  token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
-  public string $token_benevole                 ;
-  /** @var string $token_benevole_1j token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
-  public string $token_benevole_1j              ;
+  /** @var string|null $token_benevole  token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
+  public ?string $token_benevole    = null                ;
+  /** @var string|null $token_benevole_1j token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
+  public ?string $token_benevole_1j = null              ;
 
 
   public static string $RQ_DISPLAY_QUETE_STATS_NONE      = "NONE"    ;

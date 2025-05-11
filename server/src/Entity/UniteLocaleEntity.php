@@ -79,9 +79,9 @@ class UniteLocaleEntity  extends Entity
   public Carbon $date_demarrage_activite;
   /**
    * @OA\Property()
-   * @var Carbon $date_demarrage_rcq Date of the first use of RCQ
+   * @var Carbon|null $date_demarrage_rcq Date of the first use of RCQ
    */
-  public Carbon $date_demarrage_rcq;
+  public ?Carbon $date_demarrage_rcq;
   /**
    * @OA\Property()
    * @var integer $mode Mode of use of RCQ. Might be deprecated.

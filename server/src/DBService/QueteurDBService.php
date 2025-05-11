@@ -1126,6 +1126,7 @@ $OR UPPER(q.`last_name`) like UPPER(:last_name)
 $OR UPPER(q.`nivol`) like UPPER(:nivol)
 ";
       $parameters["nivol"] = "%".$nivol."%";
+      $numberOfParameters++;
     }
 
     if($email != null)
@@ -1143,6 +1144,7 @@ $OR UPPER(q.`nivol`) like UPPER(:nivol)
 $OR UPPER(q.`email`) like UPPER(:email)
 ";
       $parameters["email"] = "%".$email."%";
+      $numberOfParameters++;
     }
 
     if($mobile != null)
@@ -1182,7 +1184,7 @@ $searchEmail
 $searchMobile
 )
 ";
-    $this->logger->error("similar query",[$sql, $parameters]);
+    
     return $this->executeQueryForArray($sql, $parameters, function($row) {
       return new QueteurEntity($row, $this->logger);
     });
