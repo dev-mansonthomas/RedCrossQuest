@@ -26,10 +26,10 @@ fi
 #if it does not exists, it means we're being called by ../gcp-deploy.sh (so not the same working dir), and it includes the common.sh
 setProject "rcq-${COUNTRY}-${ENV}"
 
-
 #Conflict of Node version 10 is required for RedCrossQuest, and RedQuest /Cloud Functions can use 14
-PATH="/usr/local/opt/node@10/bin/:$PATH"
-
+#PATH="/usr/local/opt/node@14/bin/:$PATH"
+. $(brew --prefix nvm)/nvm.sh
+nvm use v10.24.1
 
 #load properties
 . ~/.cred/rcq-${COUNTRY}-${ENV}.properties
