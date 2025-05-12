@@ -8,18 +8,18 @@ namespace RedCrossQuest\Entity;
 class PageableRequestEntity
 {
   /**
-   * @var int $pageNumber The number of the page to be displayed
+   * @var ?int $pageNumber The number of the page to be displayed
    */
-  public int $pageNumber          ;
+  public ?int $pageNumber          ;
   /**
-   * @var int $rowsPerPage Number of rows per pages
+   * @var ?int $rowsPerPage Number of rows per pages
    */
-  public int $rowsPerPage            ;
+  public ?int $rowsPerPage            ;
 
   /**
-   * @var array $filterMap key=>value (string=>string) filters
+   * @var ?array $filterMap key=>value (string=>string) filters
    */
-  public array $filterMap;
+  public ?array $filterMap;
 
   protected array $_fieldList = ['pageNumber', 'rowPerPage', 'filterMap'];
 

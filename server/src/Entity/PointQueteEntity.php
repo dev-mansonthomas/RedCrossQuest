@@ -12,92 +12,92 @@ class PointQueteEntity  extends Entity
 {
   /**
    * @OA\Property()
-   * @var int|null $id pointQuete Id
+   * @var ?int $id pointQuete Id
    */
   public ?int $id                ;
   /**
    * @OA\Property()
-   * @var int|null $ul_id UniteLocal ID
+   * @var ?int $ul_id UniteLocal ID
    */
   public ?int $ul_id             ;
   /**
    * @OA\Property()
-   * @var string $code Code for the point de Quete: short string
+   * @var ?string $code Code for the point de Quete: short string
    */
-  public string $code              ;
+  public ?string $code              ;
   /**
    * @OA\Property()
-   * @var string $name Name identifying the point de Quete
+   * @var ?string $name Name identifying the point de Quete
    */
-  public string $name              ;
+  public ?string $name              ;
   /**
    * @OA\Property()
-   * @var float $latitude GPS latitude (get from google maps API)
+   * @var ?float $latitude GPS latitude (get from google maps API)
    */
-  public float $latitude          ;
+  public ?float $latitude          ;
   /**
    * @OA\Property()
-   * @var float $longitude GPS longitude (get from google maps API)
+   * @var ?float $longitude GPS longitude (get from google maps API)
    */
-  public float $longitude         ;
+  public ?float $longitude         ;
   /**
    * @OA\Property()
-   * @var string|null $address Street number and name of the address
+   * @var ?string $address Street number and name of the address
    */
   public ?string $address           ;
   /**
    * @OA\Property()
-   * @var string|null $postal_code Postal code part of the address
+   * @var ?string $postal_code Postal code part of the address
    */
   public ?string $postal_code       ;
   /**
    * @OA\Property()
-   * @var string|null $city City part of the address
+   * @var ?string $city City part of the address
    */
   public ?string $city              ;
   /**
    * @OA\Property()
-   * @var int $max_people Maximum number of people advised to go on PointDeQuete.(no control are done on this, it's advisory)
+   * @var ?int $max_people Maximum number of people advised to go on PointDeQuete.(no control are done on this, it's advisory)
    */
-  public int $max_people        ;
+  public ?int $max_people        ;
   /**
    * @OA\Property()
-   * @var string $advice Advise on the PointDeQuete
+   * @var ?string $advice Advise on the PointDeQuete
    */
-  public string $advice            ;
+  public ?string $advice            ;
   /**
    * @OA\Property()
-   * @var string $localization notes on how to reach the PointDeQuete location
+   * @var ?string $localization notes on how to reach the PointDeQuete location
    */
-  public string $localization      ;
+  public ?string $localization      ;
   /**
    * @OA\Property()
-   * @var boolean $minor_allowed are underage
+   * @var ?boolean $minor_allowed are underage
    */
-  public bool $minor_allowed     ;
+  public ?bool $minor_allowed     ;
   /**
    * @OA\Property()
-   * @var Carbon $created when was the pointDeQuete created
+   * @var ?Carbon $created when was the pointDeQuete created
    */
-  public Carbon $created           ;
+  public ?Carbon $created           ;
   /**
    * @OA\Property()
-   * @var boolean $enabled Is the pointDeQuete enabled or not
+   * @var ?boolean $enabled Is the pointDeQuete enabled or not
    */
-  public bool $enabled           ;
+  public ?bool $enabled           ;
   /**
    * @OA\Property()
-   * @var int|null $type id of the type of PointQuete        {id:1,label:'Voie Publique / Feux Rouge'},{id:2,label:'Piéton'},{id:3,label:'Commerçant'},{id:4,label:'Base UL'},{id:5,label:'Autre'}
+   * @var ?int $type id of the type of PointQuete        {id:1,label:'Voie Publique / Feux Rouge'},{id:2,label:'Piéton'},{id:3,label:'Commerçant'},{id:4,label:'Base UL'},{id:5,label:'Autre'}
    */
   public ?int $type              ;
   /**
    * @OA\Property()
-   * @var int|null $time_to_reach number of minutes required to reached the pointDeQuete
+   * @var ?int $time_to_reach number of minutes required to reached the pointDeQuete
    */
   public ?int $time_to_reach     ;
   /**
    * @OA\Property()
-   * @var int|null $transport_to_reach id of the transport type  {id:1,label:'A Pied'},{id:2,label:'Voiture'}{id:3,label:'Vélo'},{id:4,label:'Train/Tram'},{id:5,label:'Autre'}
+   * @var ?int $transport_to_reach id of the transport type  {id:1,label:'A Pied'},{id:2,label:'Voiture'}{id:3,label:'Vélo'},{id:4,label:'Train/Tram'},{id:5,label:'Autre'}
    */
   public ?int $transport_to_reach;
 

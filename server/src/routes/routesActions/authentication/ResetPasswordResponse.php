@@ -11,9 +11,9 @@ class ResetPasswordResponse
 {
   /**
    * @OA\Property()
-   * @var bool $success the action did succeed or not
+   * @var ?bool $success the action did succeed or not
    */
-  public bool $success;
+  public ?bool $success;
 
   /**
    * @OA\Property()

@@ -11,9 +11,9 @@ class AssociateRegistrationWithExistingQueteurResponse
 {
   /**
    * @OA\Property()
-   * @var int $queteurId the id of the newly created pointQuete
+   * @var ?int $queteurId the id of the newly created pointQuete
    */
-  public int $queteurId;
+  public ?int $queteurId;
 
   protected array $_fieldList = ["queteurId"];
 

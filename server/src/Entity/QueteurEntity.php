@@ -14,140 +14,140 @@ class QueteurEntity  extends Entity
 {
   /**
    * @OA\Property()
-   * @var int|null $id queteur Id
+   * @var ?int $id queteur Id
    */
   public ?int $id;
   /**
    * @OA\Property()
-   * @var string $email email of the queteur
+   * @var ?string $email email of the queteur
    */
-  public string $email                       ;
+  public ?string $email                       ;
   /**
    * @OA\Property()
-   * @var string $first_name first name of the queteur
+   * @var ?string $first_name first name of the queteur
    */
-  public string $first_name                  ;
+  public ?string $first_name                  ;
   /**
    * @OA\Property()
-   * @var string $last_name last name of the queteur
+   * @var ?string $last_name last name of the queteur
    */
-  public string $last_name                   ;
+  public ?string $last_name                   ;
 
   /**
    * @OA\Property()
-   * @var int|null $secteur id of the secteur : "1">Action Sociale  "2">Secours "3">Non Bénévole "4">Ancien Bénévole, Inactif ou Adhérent "5">Commerçant "6">Special
+   * @var ?int $secteur id of the secteur : "1">Action Sociale  "2">Secours "3">Non Bénévole "4">Ancien Bénévole, Inactif ou Adhérent "5">Commerçant "6">Special
    */
   public ?int $secteur                     ;
   /**
    * @OA\Property()
-   * @var string $nivol NIVOL of the queteur (Business ID for red cross volunteer)
+   * @var ?string $nivol NIVOL of the queteur (Business ID for red cross volunteer)
    */
-  public string $nivol                       ;
+  public ?string $nivol                       ;
   /**
    * @OA\Property()
-   * @var string $mobile mobile phone of the queteur (starts with 336 or 337)
+   * @var ?string $mobile mobile phone of the queteur (starts with 336 or 337)
    */
-  public string $mobile                      ;
+  public ?string $mobile                      ;
   /**
    * @OA\Property()
-   * @var Carbon $created queteur creation date
+   * @var ?Carbon $created queteur creation date
    */
-  public Carbon $created                     ;
+  public ?Carbon $created                     ;
   /**
    * @OA\Property()
-   * @var Carbon|null $updated queteur last update date
+   * @var ?Carbon $updated queteur last update date
    */
   public ?Carbon $updated                     ;
   /**
    * @OA\Property()
    * @deprecated
-   * @var string $notes notes about the queteur (deprecated). Originally target to describe food allergy, and specifics about the queteur. But the RGPD risk (health data, bad usage of free text field), made the Red Cross to ask to remove this field.
+   * @var ?string $notes notes about the queteur (deprecated). Originally target to describe food allergy, and specifics about the queteur. But the RGPD risk (health data, bad usage of free text field), made the Red Cross to ask to remove this field.
    */
-  public string $notes                       ;
+  public ?string $notes                       ;
   /**
    * @OA\Property()
-   * @var int|null $ul_id Id of the UL to which the queteur belongs
+   * @var ?int $ul_id Id of the UL to which the queteur belongs
    */
   public ?int $ul_id                       ;
   /**
    * @OA\Property()
-   * @var string $ul_name Name of the UL to which the queteur belongs
+   * @var ?string $ul_name Name of the UL to which the queteur belongs
    */
-  public string $ul_name                     ;
+  public ?string $ul_name                     ;
   /**
    * @OA\Property()
-   * @var float $ul_longitude Longitude of the UL
+   * @var ?float $ul_longitude Longitude of the UL
    */
-  public float $ul_longitude                ;
+  public ?float $ul_longitude                ;
   /**
    * @OA\Property()
-   * @var float $ul_latitude Latitude of the UL
+   * @var ?float $ul_latitude Latitude of the UL
    */
-  public float $ul_latitude                 ;
+  public ?float $ul_latitude                 ;
 
   /**
    * @OA\Property()
-   * @var int|null $point_quete_id Current Point De Quete ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var ?int $point_quete_id Current Point De Quete ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
   public ?int $point_quete_id              ;
 
   /**
    * @OA\Property()
-   * @var int|null $tronc_id Current Tronc ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var ?int $tronc_id Current Tronc ID  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
   public ?int $tronc_id              ;
   /**
    * @OA\Property()
-   * @var string $point_quete_name  Current Point De Quete name   (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var ?string $point_quete_name  Current Point De Quete name   (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
-  public string $point_quete_name            ;
+  public ?string $point_quete_name            ;
   /**
    * @OA\Property()
-   * @var Carbon|null $depart_theorique Theoretical Start date of going on the streets    (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var ?Carbon $depart_theorique Theoretical Start date of going on the streets    (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
   public ?Carbon $depart_theorique            ;
   /**
    * @OA\Property()
-   * @var Carbon|null $depart Real start date of going on the streets.  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var ?Carbon $depart Real start date of going on the streets.  (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
   public ?Carbon $depart                      ;
   /**
    * @OA\Property()
-   * @var Carbon|null $retour Return date from the streets.      (when searching queteur, search can be perform by status (about to leave, on the street, returned))
+   * @var ?Carbon $retour Return date from the streets.      (when searching queteur, search can be perform by status (about to leave, on the street, returned))
    */
   public ?Carbon $retour                      ;
 
   /**
    * @OA\Property()
-   * @var boolean $active Is the queteur still marked as active
+   * @var ?boolean $active Is the queteur still marked as active
    */
-  public bool $active                      ;
+  public ?bool $active                      ;
   /**
    * @OA\Property()
-   * @var boolean $man Is the queteur a man
+   * @var ?boolean $man Is the queteur a man
    */
-  public bool $man                         ;
+  public ?bool $man                         ;
   /**
    * @OA\Property()
-   * @var Carbon $birthdate Queteur Birthdate. It's used to determine if the queteur is underage or not. Some PointDeQuete a restricted to adults.
+   * @var ?Carbon $birthdate Queteur Birthdate. It's used to determine if the queteur is underage or not. Some PointDeQuete a restricted to adults.
    */
-  public Carbon $birthdate                   ;
+  public ?Carbon $birthdate                   ;
   /**
    * @OA\Property()
-   * @var boolean $qr_code_printed Is the Queteur QRCode printed or not
+   * @var ?boolean $qr_code_printed Is the Queteur QRCode printed or not
    */
-  public bool $qr_code_printed             ;
+  public ?bool $qr_code_printed             ;
   /**
    * @OA\Property()
-   * @var int|null $referent_volunteer Who has referred the queteur (non red cross volunteer helping for the fund raising)
+   * @var ?int $referent_volunteer Who has referred the queteur (non red cross volunteer helping for the fund raising)
    */
   public ?int $referent_volunteer          ;
 
   /**
    * @OA\Property()
-   * @var string $referent_volunteerQueteur Concatenation of first name, last_name and nivol
+   * @var ?string $referent_volunteerQueteur Concatenation of first name, last_name and nivol
    */
-  public string $referent_volunteerQueteur;
+  public ?string $referent_volunteerQueteur;
   /**
    * @OA\Property()
    * @property  $referent_volunteer_entity
@@ -165,12 +165,12 @@ class QueteurEntity  extends Entity
 
   /**
    * @OA\Property()
-   * @property string $anonymization_token if the queteur data has been anonymised, A GUID is sent to the queteur, so that he can revalue the data the next year and keep it scores.
+   * @property ?string $anonymization_token if the queteur data has been anonymised, A GUID is sent to the queteur, so that he can revalue the data the next year and keep it scores.
    */
-  public string $anonymization_token         ;
+  public ?string $anonymization_token         ;
   /**
    * @OA\Property()
-   * @property Carbon|null $anonymization_date the date of the anonymization
+   * @property ?Carbon $anonymization_date the date of the anonymization
    */
   public ?Carbon $anonymization_date          ;
 
@@ -178,40 +178,40 @@ class QueteurEntity  extends Entity
   //registration_queteur specific fields
   /**
    * @OA\Property()
-   * @property string $ul_registration_token  Token used for registration, when the registration is recorded, the value is taken from ul_settings of the UL the queteur is registering for.
+   * @property ?string $ul_registration_token  Token used for registration, when the registration is recorded, the value is taken from ul_settings of the UL the queteur is registering for.
    * When listing registration, it's this value that is used to filter registration for the current unite locale
    */
-  public string $ul_registration_token       ;
+  public ?string $ul_registration_token       ;
   /**
    * @OA\Property()
-   * @property string $queteur_registration_token  it's an UUID generated by the Cloud Function that record the registration from RedQuest. It's used to retrieves the information from the RedQuest app, while waiting for validation.
+   * @property ?string $queteur_registration_token  it's an UUID generated by the Cloud Function that record the registration from RedQuest. It's used to retrieves the information from the RedQuest app, while waiting for validation.
    */
-  public string $queteur_registration_token  ;
+  public ?string $queteur_registration_token  ;
   /**
    * @OA\Property()
-   * @property boolean $registration_approved  has the registration been approved (can be null, true, false)
+   * @property ?boolean $registration_approved  has the registration been approved (can be null, true, false)
    */
-  public bool $registration_approved       ;
+  public ?bool $registration_approved       ;
   /**
    * @OA\Property()
-   * @property string $reject_reason    in case of rejection, the reason
+   * @property ?string $reject_reason    in case of rejection, the reason
    */
-  public string $reject_reason               ;
+  public ?string $reject_reason               ;
   /**
    * @OA\Property()
-   * @property int|null $queteur_id    When this object represent a registration, and a queteur is created or linked, the id of the created/linked queteur
+   * @property ?int $queteur_id    When this object represent a registration, and a queteur is created or linked, the id of the created/linked queteur
    */
   public ?int $queteur_id                  ;
   /**
    * @OA\Property()
-   * @property int|null $registration_id   When this object represent a registration, the id of the registration
+   * @property ?int $registration_id   When this object represent a registration, the id of the registration
    */
   public ?int $registration_id             ;
 
 
   /**
    * @OA\Property()
-   * @property string $firebase_sign_in_provider   When this object represent a registration, the id of the registration
+   * @property ?string $firebase_sign_in_provider   When this object represent a registration, the id of the registration
    *
    *
   EmailAuthProviderID: password
@@ -225,19 +225,19 @@ class QueteurEntity  extends Entity
   MicrosoftAuthProviderID: hotmail.com
    *
    */
-  public string $firebase_sign_in_provider             ;
+  public ?string $firebase_sign_in_provider             ;
 
   /**
    * @OA\Property()
-   * @property string $firebase_uid   When this object represent a registration, the id of the registration
+   * @property ?string $firebase_uid   When this object represent a registration, the id of the registration
    */
-  public string $firebase_uid             ;
+  public ?string $firebase_uid             ;
 
   /**
    * @OA\Property()
-   * @property string $benevole_referent   When this object represent a registration, the id of the registration
+   * @property ?string $benevole_referent   When this object represent a registration, the id of the registration
    */
-  public string $benevole_referent             ;
+  public ?string $benevole_referent             ;
 
   protected array $_fieldList = [
     'id','email','first_name','last_name','secteur','nivol','mobile','created','updated',

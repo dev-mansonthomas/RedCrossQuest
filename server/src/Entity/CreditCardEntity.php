@@ -13,37 +13,37 @@ class CreditCardEntity  extends Entity
 {
   /**
    * @OA\Property()
-   * @var integer $id Id of the CreditCard Entry
+   * @var ?int $id Id of the CreditCard Entry
    */
-  public int $id               ;
+  public ?int $id               ;
 
   /**
    * @OA\Property()
-   * @var integer $tronc_queteur_id ID of the TroncQueteur the CreditCard Entry is attached to
+   * @var ?int $tronc_queteur_id ID of the TroncQueteur the CreditCard Entry is attached to
    */
-  public int $tronc_queteur_id  ;
+  public ?int $tronc_queteur_id  ;
 
   /**
    * @OA\Property()
-   * @var integer $ul_id UL ID of the CreditCard Entry
+   * @var ?int $ul_id UL ID of the CreditCard Entry
    */
-  public int $ul_id        ;
+  public ?int $ul_id        ;
 
   /**
    * @OA\Property()
-   * @var int $quantity Number of credit card ticket of that amount
+   * @var ?int $quantity Number of credit card ticket of that amount
    */
-  public int $quantity       ;
+  public ?int $quantity       ;
 
   /**
    * @OA\Property()
-   * @var float $amount amount of money per credit card ticket
+   * @var ?float $amount amount of money per credit card ticket
    */
-  public float $amount       ;
+  public ?float $amount       ;
 
   /**
    * @OA\Property()
-   * @var bool $delete should this line be deleted
+   * @var ?bool $delete should this line be deleted
    */
   public ?bool $delete = false ;
 

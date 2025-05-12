@@ -29,7 +29,7 @@ class Entity
 
 
   /***
-    @var string[]
+    @var ?string[]
    */
   protected array $_fieldList;
 

@@ -11,9 +11,9 @@ class AuthenticationResponse
 {
   /**
    * @OA\Property()
-   * @var string token  JWT
+   * @var ?string token  JWT
    */
-  public string $token;
+  public ?string $token;
 
   protected array $_fieldList = ['token'];
 

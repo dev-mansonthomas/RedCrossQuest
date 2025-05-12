@@ -12,9 +12,9 @@ class GetULSettingsResponse
 {
   /**
    * @OA\Property()
-   * @var UniteLocaleSettingsEntity $ul_settings Settings of user's UL
+   * @var UniteLocaleSettingsEntity|null $ul_settings Settings of user's UL
    */
-  public UniteLocaleSettingsEntity $ul_settings;
+  public ?UniteLocaleSettingsEntity $ul_settings;
 
 
   protected array $_fieldList = ["ul_settings"];

@@ -11,9 +11,9 @@ class CountInactiveQueteursResponse
 {
   /**
    * @OA\Property()
-   * @var int $count the count of pending registration
+   * @var int|null $count the count of pending registration
    */
-  public int $count;
+  public ?int $count;
 
   protected array $_fieldList = ["count"];
 

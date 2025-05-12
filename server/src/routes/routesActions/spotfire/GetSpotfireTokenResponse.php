@@ -12,14 +12,14 @@ class GetSpotfireTokenResponse
 {
   /**
    * @OA\Property()
-   * @var string $validToken Spotfire valid token
+   * @var string|null $validToken Spotfire valid token
    */
-  public string $validToken;
+  public ?string $validToken;
   /**
    * @OA\Property()
-   * @var Carbon $tokenExpiration Spotfire token expiration date
+   * @var Carbon|null $tokenExpiration Spotfire token expiration date
    */
-  public Carbon $tokenExpiration;
+  public ?Carbon $tokenExpiration;
 
   protected array $_fieldList = ["validToken", "tokenExpiration"];
 

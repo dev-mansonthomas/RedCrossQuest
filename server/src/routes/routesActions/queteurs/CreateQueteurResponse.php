@@ -11,9 +11,9 @@ class CreateQueteurResponse
 {
   /**
    * @OA\Property()
-   * @var int $queteurId the id of the newly created queteur
+   * @var int|null $queteurId the id of the newly created queteur
    */
-  public int $queteurId;
+  public ?int $queteurId;
 
   protected array $_fieldList = ["queteurId"];
 

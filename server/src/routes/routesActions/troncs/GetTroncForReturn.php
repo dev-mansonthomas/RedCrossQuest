@@ -20,7 +20,7 @@ class GetTroncForReturn extends Action
   /**
    * @var TroncDBService          $troncDBService
    */
-  private $troncDBService;
+  private TroncDBService $troncDBService;
 
   /**
    * @param LoggerInterface $logger

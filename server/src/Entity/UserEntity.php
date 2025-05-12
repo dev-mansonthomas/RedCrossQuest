@@ -13,52 +13,52 @@ class UserEntity extends Entity
 {
   /**
    * @OA\Property()
-   * @var int|null $id user Id (null when creating the user)
+   * @var ?int $id user Id (null when creating the user)
    */
   public ?int $id                          ;
   /**
    * @OA\Property()
-   * @var string $nivol nivol of the user that is used as login with angularjs app. (Angular 8+ will use firebase and email)
+   * @var ?string $nivol nivol of the user that is used as login with angularjs app. (Angular 8+ will use firebase and email)
    */
-  public string $nivol                       ;
+  public ?string $nivol                       ;
   /**
    * @OA\Property()
-   * @var int|null $queteur_id Queteur ID (where name, email, mobile is stored)
+   * @var ?int $queteur_id Queteur ID (where name, email, mobile is stored)
    */
   public ?int $queteur_id                  ;
   /**
    * @OA\Property()
-   * @var string $password hash of the use password
+   * @var ?string $password hash of the use password
    */
-  public string $password                    ;
+  public ?string $password                    ;
   /**
    * @OA\Property()
-   * @var boolean $password_defined true if the password has been defined. when we don't need the password, but just to know if it's defined (queteurEdit)
+   * @var ?boolean $password_defined true if the password has been defined. when we don't need the password, but just to know if it's defined (queteurEdit)
    */
-  public bool $password_defined            ;
+  public ?bool $password_defined            ;
   /**
    * @OA\Property()
-   * @var int|null $role Role of the user : {id:1,label:'Lecture Seule' },{id:2,label:'Opérateur'},{id:3,label:'Compteur'},{id:4,label:'Administrateur'}
+   * @var ?int $role Role of the user : {id:1,label:'Lecture Seule' },{id:2,label:'Opérateur'},{id:3,label:'Compteur'},{id:4,label:'Administrateur'}
    */
 
   public ?int $role                        ;
   /**
    * @OA\Property()
-   * @var Carbon $created user creation date
+   * @var ?Carbon $created user creation date
    */
 
-  public Carbon $created                     ;
+  public ?Carbon $created                     ;
   /**
    * @OA\Property()
-   * @var Carbon $updated user last update date
+   * @var ?Carbon $updated user last update date
    */
-  public Carbon $updated                     ;
+  public ?Carbon $updated                     ;
   /**
    * @OA\Property()
-   * @var boolean $active is the user active or not
+   * @var ?boolean $active is the user active or not
    */
 
-  public bool $active                      ;
+  public ?bool $active                      ;
   /**
    * @OA\Property()
    * @var Carbon|null $last_failure_login_date last login failure
@@ -66,7 +66,7 @@ class UserEntity extends Entity
   public ?Carbon $last_failure_login_date     ;
   /**
    * @OA\Property()
-   * @var int|null $nb_of_failure number of failure since last login
+   * @var ?int $nb_of_failure number of failure since last login
    */
   public ?int $nb_of_failure               ;//since last successful login
   /**
@@ -82,15 +82,15 @@ class UserEntity extends Entity
   public ?Carbon $init_passwd_date          ;
   /**
    * @OA\Property()
-   * @var string $first_name first name of the user
+   * @var ?string $first_name first name of the user
    */
 
-  public string $first_name                  ;
+  public ?string $first_name                  ;
   /**
    * @OA\Property()
-   * @var string $last_name last name of the user
+   * @var ?string $last_name last name of the user
    */
-  public string $last_name                   ;
+  public ?string $last_name                   ;
 
   protected array $_fieldList = ['id','nivol','queteur_id','password','password_defined','role','created','updated','active','last_failure_login_date','nb_of_failure','last_successful_login_date','init_passwd_date','first_name','last_name'];
   /**

@@ -10,27 +10,27 @@ class ExportDataQueteurResponse
 {
   /**
    * @OA\Property()
-   * @var int $status mail api status code
+   * @var int|null $status mail api status code
    */
-  public int $status;
+  public ?int $status;
 
   /**
    * @OA\Property()
-   * @var string  $email The email where the export has been sent
+   * @var string|null  $email The email where the export has been sent
    */
-  public string $email;
+  public ?string $email;
 
   /**
    * @OA\Property()
-   * @var string  $fileName the name of the export file
+   * @var string|null  $fileName the name of the export file
    */
-  public string $fileName;
+  public ?string $fileName;
 
   /**
    * @OA\Property()
-   * @var int $numberOfRows The email where the export has been sent
+   * @var int|null $numberOfRows The email where the export has been sent
    */
-  public int $numberOfRows;
+  public ?int $numberOfRows;
 
   protected array $_fieldList = ["status", "email", "fileName", "numberOfRows"];
 

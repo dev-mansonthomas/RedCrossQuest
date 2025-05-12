@@ -8,9 +8,9 @@ class PrepareTroncQueteurQueteNotStartedResponse
   /**
    * @var bool $queteHasNotStartedYet the id of the newly created queteur
    */
-  public $queteHasNotStartedYet = true;
+  public ?bool $queteHasNotStartedYet = true;
 
-  protected $_fieldList = ["queteHasNotStartedYet"];
+  protected array $_fieldList = ["queteHasNotStartedYet"];
 
   public function __construct()
   {

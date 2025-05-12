@@ -13,193 +13,193 @@ class NamedDonationEntity extends Entity
 {
   /**
    * @OA\Property()
-   * @var int $id NamedDonation ID
+   * @var ?int $id NamedDonation ID
    */
-  public int $id               ;
+  public ?int $id               ;
 
   /**
    * @OA\Property()
-   * @var int $ul_id UL ID
+   * @var ?int $ul_id UL ID
    */
-  public int $ul_id            ;
+  public ?int $ul_id            ;
   /**
    * @OA\Property()
-   * @var string $ref_recu_fiscal The business ID of the NamedDonation. It's the official id from the RedCross, used as reference for tax deduction
+   * @var ?int $ref_recu_fiscal The business ID of the NamedDonation. It's the official id from the RedCross, used as reference for tax deduction
    */
-  public string $ref_recu_fiscal  ;
+  public ?int $ref_recu_fiscal  ;
 
   /**
    * @OA\Property()
-   * @var string $first_name Donor first name
+   * @var ?string $first_name Donor first name
    */
-  public string $first_name       ;
+  public ?string $first_name       ;
   /**
    * @OA\Property()
-   * @var string $last_name Donor last name
+   * @var ?string $last_name Donor last name
    */
-  public string $last_name        ;
+  public ?string $last_name        ;
   /**
    * @OA\Property()
-   * @var string $donation_date Donation date
+   * @var ?string $donation_date Donation date
    */
-  public string $donation_date    ;
+  public ?string $donation_date    ;
   /**
    * @OA\Property()
-   * @var string $address Donor address
+   * @var ?string $address Donor address
    */
-  public string $address          ;
+  public ?string $address          ;
   /**
    * @OA\Property()
-   * @var string $postal_code Donor postal code
+   * @var ?string $postal_code Donor postal code
    */
-  public string $postal_code      ;
+  public ?string $postal_code      ;
   /**
    * @OA\Property()
-   * @var string $city Donor city
+   * @var ?string $city Donor city
    */
-  public string $city             ;
+  public ?string $city             ;
   /**
    * @OA\Property()
-   * @var string $phone Donor Phone
+   * @var ?string $phone Donor Phone
    */
-  public string $phone            ;
+  public ?string $phone            ;
   /**
    * @OA\Property()
-   * @var string $email Donor email
+   * @var ?string $email Donor email
    */
-  public string $email            ;
+  public ?string $email            ;
 
   /**
    * @OA\Property()
-   * @var int $euro500 Number of 500€ bills
+   * @var ?int $euro500 Number of 500€ bills
    */
-  public int $euro500          ;
+  public ?int $euro500          ;
   /**
    * @OA\Property()
-   * @var int $euro200 Number of 200€ bills
+   * @var ?int $euro200 Number of 200€ bills
    */
-  public int $euro200          ;
+  public ?int $euro200          ;
   /**
    * @OA\Property()
-   * @var int $euro100 Number of 100€ bills
+   * @var ?int $euro100 Number of 100€ bills
    */
-  public int $euro100          ;
+  public ?int $euro100          ;
   /**
    * @OA\Property()
-   * @var int $euro50 Number of 50€ bills
+   * @var ?int $euro50 Number of 50€ bills
    */
-  public int $euro50           ;
+  public ?int $euro50           ;
   /**
    * @OA\Property()
-   * @var int $euro20 Number of 20€ bills
+   * @var ?int $euro20 Number of 20€ bills
    */
-  public int $euro20           ;
+  public ?int $euro20           ;
   /**
    * @OA\Property()
-   * @var int $euro10 Number of 10€ bills
+   * @var ?int $euro10 Number of 10€ bills
    */
-  public int $euro10           ;
+  public ?int $euro10           ;
   /**
    * @OA\Property()
-   * @var int $euro5 Number of 5€ bills
+   * @var ?int $euro5 Number of 5€ bills
    */
-  public int $euro5            ;
+  public ?int $euro5            ;
   /**
    * @OA\Property()
-   * @var int $euro2 Number of 2€ coins
+   * @var ?int $euro2 Number of 2€ coins
    */
-  public int $euro2            ;
+  public ?int $euro2            ;
   /**
    * @OA\Property()
-   * @var int $euro1 Number of 1€ coins
+   * @var ?int $euro1 Number of 1€ coins
    */
-  public int $euro1            ;
+  public ?int $euro1            ;
   /**
    * @OA\Property()
-   * @var int $cents50 Number of 50cts coins
+   * @var ?int $cents50 Number of 50cts coins
    */
-  public int $cents50          ;
+  public ?int $cents50          ;
   /**
    * @OA\Property()
-   * @var int $cents20 Number of 20cts coins
+   * @var ?int $cents20 Number of 20cts coins
    */
-  public int $cents20          ;
+  public ?int $cents20          ;
   /**
    * @OA\Property()
-   * @var int $cents10 Number of 10cts coins
+   * @var ?int $cents10 Number of 10cts coins
    */
-  public int $cents10          ;
+  public ?int $cents10          ;
   /**
    * @OA\Property()
-   * @var int $cents5 Number of 5cts coins
+   * @var ?int $cents5 Number of 5cts coins
    */
-  public int $cents5           ;
+  public ?int $cents5           ;
   /**
    * @OA\Property()
-   * @var int $cents2 Number of 2cts coins
+   * @var ?int $cents2 Number of 2cts coins
    */
-  public int $cents2           ;
+  public ?int $cents2           ;
   /**
    * @OA\Property()
-   * @var int $cent1 Number of 1ct coins
+   * @var ?int $cent1 Number of 1ct coins
    */
-  public int $cent1            ;
+  public ?int $cent1            ;
   /**
    * @OA\Property()
-   * @var float $don_cheque total amount of bank note collected
+   * @var ?float $don_cheque total amount of bank note collected
    */
-  public float $don_cheque       ;
+  public ?float $don_cheque       ;
   /**
    * @OA\Property()
-   * @var float $don_cheque total amount of credit card payment collected
+   * @var ?float $don_cheque total amount of credit card payment collected
    */
-  public float $don_creditcard   ;
+  public ?float $don_creditcard   ;
 
   /**
    * @OA\Property()
-   * @var string $notes notes about the donation
+   * @var ?string $notes notes about the donation
    */
-  public string $notes             ;
+  public ?string $notes             ;
 
   /**
    * @OA\Property()
-   * @var string $type {id:1,label:'Espèce'}, {id:2,label:'Chèque'}, {id:3,label:'Virement, Prélèvement, Carte Bancaire'}
+   * @var ?int $type {id:1,label:'Espèce'}, {id:2,label:'Chèque'}, {id:3,label:'Virement, Prélèvement, Carte Bancaire'}
    */
-  public string $type              ;
+  public ?int $type              ;
 
   /**
    * @OA\Property()
-   * @var string $forme {id:1,label:'Déclaration de don manuel'},{id:2,label:'Acte sous seing privé'}
+   * @var ?int $forme {id:1,label:'Déclaration de don manuel'},{id:2,label:'Acte sous seing privé'}
    */
-  public string $forme             ;
+  public ?int $forme             ;
 
   /**
    * @OA\Property()
-   * @var bool $deleted if the NamedDonation is marked as deleted or not
+   * @var ?bool $deleted if the NamedDonation is marked as deleted or not
    */
-  public bool $deleted           ;
+  public ?bool $deleted           ;
 
   /**
    * @OA\Property()
-   * @var string $coins_money_bag_id Identifier of the bag that contains the coins of this troncQueteur. It's used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.
+   * @var ?string $coins_money_bag_id Identifier of the bag that contains the coins of this troncQueteur. It's used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.
    */
-  public string $coins_money_bag_id;
+  public ?string $coins_money_bag_id;
   /**
    * @OA\Property()
-   * @var string $bills_money_bag_id Identifier of the bag that contains the bills of this troncQueteur. It's used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.
+   * @var ?string $bills_money_bag_id Identifier of the bag that contains the bills of this troncQueteur. It's used to track the total amount and weight of the bag. The amount must be exact to avoid bank penalty. The bank is also setting limits so that the bag is not teared apart with an excess of weight.
    */
-  public string $bills_money_bag_id;
+  public ?string $bills_money_bag_id;
 
   /**
    * @OA\Property()
-   * @var Carbon $last_update Last time the NamedDonation row is updated
+   * @var ?Carbon $last_update Last time the NamedDonation row is updated
    */
-  public Carbon $last_update      ;
+  public ?Carbon $last_update      ;
   /**
    * @OA\Property()
-   * @var int $last_update_user_id UserId of the user that performed the last update on this NamedDonation
+   * @var ?int $last_update_user_id UserId of the user that performed the last update on this NamedDonation
    */
-  public int $last_update_user_id;
+  public ?int $last_update_user_id;
 
   protected array $_fieldList = ['id','ul_id','ref_recu_fiscal','first_name','last_name','donation_date','address','postal_code','city','phone','email','euro500','euro200','euro100','euro50','euro20','euro10','euro5','euro2','euro1','cents50','cents20','cents10','cents5','cents2','cent1','don_cheque','don_creditcard','notes','type','forme','deleted','coins_money_bag_id','bills_money_bag_id','last_update','last_update_user_id'];
 

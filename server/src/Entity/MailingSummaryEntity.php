@@ -12,14 +12,14 @@ class MailingSummaryEntity extends Entity
 {
   /**
    * @OA\Property()
-   * @var int $secteur Id of the Secteur {id:1,label:'Action Sociale'},{id:2,label:'Secours'},{id:3,label:'Bénévole d\'un Jour'},{id:4,label:'Ancien Bénévole, Inactif ou Adhérent'},{id:5,label:'Commerçant'},{id:6,label:'Spécial'}
+   * @var ?int $secteur Id of the Secteur {id:1,label:'Action Sociale'},{id:2,label:'Secours'},{id:3,label:'Bénévole d\'un Jour'},{id:4,label:'Ancien Bénévole, Inactif ou Adhérent'},{id:5,label:'Commerçant'},{id:6,label:'Spécial'}
    */
-  public int $secteur          ;
+  public ?int $secteur          ;
   /**
    * @OA\Property()
-   * @var int $count Number of
+   * @var ?int $count Number of
    */
-  public int $count            ;
+  public ?int $count            ;
 
   protected array $_fieldList = ['secteur', 'count'];
   /**

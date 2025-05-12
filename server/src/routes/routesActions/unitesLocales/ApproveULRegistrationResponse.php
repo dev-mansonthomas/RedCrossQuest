@@ -9,41 +9,41 @@ class ApproveULRegistrationResponse
 {
   /**
    * @OA\Property()
-   * @var int $user_id The created User Id
+   * @var int|null $user_id The created User Id
    */
-  public $user_id;
+  public ?int $user_id;
 
   /**
    * @OA\Property()
-   * @var int $queteur_id the created queteur ID
+   * @var int|null $queteur_id the created queteur ID
    */
-  public $queteur_id;
+  public ?int $queteur_id;
 
   /**
    * @OA\Property()
-   * @var int $ul_id the approved UL ID
+   * @var int|null $ul_id the approved UL ID
    */
-  public $ul_id;
+  public ?int $ul_id;
 
   /**
    * @OA\Property()
-   * @var int $registration_id the approved UL Registration ID
+   * @var int|null $registration_id the approved UL Registration ID
    */
-  public $registration_id;
+  public ?int $registration_id;
 
   /**
    * @OA\Property()
-   * @var string $create_queteur_sql for test environment
+   * @var string|null $create_queteur_sql for test environment
    */
-  public $create_queteur_sql;
+  public ?string $create_queteur_sql;
 
   /**
    * @OA\Property()
-   * @var string $update_ul_sql for test environment
+   * @var string|null $update_ul_sql for test environment
    */
-  public $update_ul_sql;
+  public ?string $update_ul_sql;
 
-  protected $_fieldList = ["user_id", "queteur_id", "ul_id","registration_id", "create_queteur_sql","update_ul_sql"];
+  protected array $_fieldList = ["user_id", "queteur_id", "ul_id","registration_id", "create_queteur_sql","update_ul_sql"];
 
   public function __construct(int $user_id, int $queteur_id, int $ul_id, int $registration_id,  string $create_queteur_sql, string $update_ul_sql)
   {

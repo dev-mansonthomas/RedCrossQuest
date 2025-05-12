@@ -15,51 +15,51 @@ class GetAllULSettingsResponse
 {
   /**
    * @OA\Property()
-   * @var string $mapKey Google Maps API Key
+   * @var string|null $mapKey Google Maps API Key
    */
-  public string $mapKey;
+  public ?string $mapKey;
 
   /**
    * @OA\Property()
-   * @var string $RGPDVideo Link to the RGPD Vidéo
+   * @var string|null $RGPDVideo Link to the RGPD Vidéo
    */
-  public string $RGPDVideo;
+  public ?string $RGPDVideo;
 
   /**
    * @OA\Property()
-   * @var string $RedQuestDomain Domain name of the RedQuest application
+   * @var string|null $RedQuestDomain Domain name of the RedQuest application
    */
-  public string $RedQuestDomain;
+  public ?string $RedQuestDomain;
 
   /**
    * @OA\Property()
-   * @var string $RCQVersion Version of RCQ Backend
+   * @var string|null $RCQVersion Version of RCQ Backend
    */
-  public string $RCQVersion;
+  public ?string $RCQVersion;
 
   /**
    * @OA\Property()
-   * @var string $FirstDay date of the first day of the fundraising of this year. Format YYYY-MM-DD.
+   * @var string|null $FirstDay date of the first day of the fundraising of this year. Format YYYY-MM-DD.
    */
-  public string $FirstDay;
+  public ?string $FirstDay;
 
   /**
    * @OA\Property()
-   * @var UniteLocaleEntity $ul The details of user's UL
+   * @var UniteLocaleEntity|null $ul The details of user's UL
    */
-  public UniteLocaleEntity $ul;
+  public ?UniteLocaleEntity $ul;
 
   /**
    * @OA\Property()
-   * @var ULPreferencesEntity $ul_settings Settings of user's UL
+   * @var ULPreferencesEntity|null $ul_settings Settings of user's UL
    */
-  public ULPreferencesEntity $ul_settings;
+  public ?ULPreferencesEntity $ul_settings;
 
   /**
    * @OA\Property()
-   * @var UserEntity $user Info about the current User
+   * @var UserEntity|null $user Info about the current User
    */
-  public UserEntity $user;
+  public ?UserEntity $user;
 
   protected array $_fieldList = ["mapKey", "RGPDVideo", "RedQuestDomain","RCQVersion", "FirstDay","ul", "ul_settings", "user"];
 

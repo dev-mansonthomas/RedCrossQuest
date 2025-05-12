@@ -10,33 +10,33 @@ class PageableResponseEntity
 {
   /**
    * @OA\Property()
-   * @var int $pageNumber The number of the page to be displayed
+   * @var ?int $pageNumber The number of the page to be displayed
    */
-  public int $pageNumber          ;
+  public ?int $pageNumber          ;
   /**
    * @OA\Property()
-   * @var int $rowsPerPage Number of rows per pages
+   * @var ?int $rowsPerPage Number of rows per pages
    */
-  public int $rowsPerPage            ;
+  public ?int $rowsPerPage            ;
 
   /**
    * @OA\Property()
-   * @var array $rows number=>object
+   * @var ?array $rows number=>object
    */
-  public array $rows;
+  public ?array $rows;
 
   /**
    * @OA\Property()
-   * @var int $count The number of rows matching the query
+   * @var ?int $count The number of rows matching the query
    */
-  public int $count          ;
+  public ?int $count          ;
 
   /**
    * to store additional info, like total, counts
    * @OA\Property()
-   * @var array $additionalInfo string=>object
+   * @var ?array $additionalInfo string=>object
    */
-  public array $additionalInfo;
+  public ?array $additionalInfo;
 
   protected array $_fieldList = ['pageNumber', 'rowPerPage', 'rows', 'count', 'additionalInfo'];
 

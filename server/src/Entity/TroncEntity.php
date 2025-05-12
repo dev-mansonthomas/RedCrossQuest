@@ -13,73 +13,73 @@ class TroncEntity extends Entity
 {
   /**
    * @OA\Property()
-   * @var int $id tronc ID
+   * @var ?int $id tronc ID
    */
-  public int $id      ;
+  public ?int $id      ;
 
   /**
    * @OA\Property()
-   * @var int $ul_id unite local ID
+   * @var ?int $ul_id unite local ID
    */
-  public int $ul_id   ;
+  public ?int $ul_id   ;
 
   /**
    * @OA\Property()
-   * @var Carbon $created Time of creation of the tronc
+   * @var ?Carbon $created Time of creation of the tronc
    */
-  public Carbon $created ;
+  public ?Carbon $created ;
   /**
    * @OA\Property()
-   * @var bool $enabled Tronc is enabled or not
+   * @var ?bool $enabled Tronc is enabled or not
    */
-  public bool $enabled ;
+  public ?bool $enabled ;
   /**
    * @OA\Property()
-   * @var string $notes textual notes about the tronc
+   * @var ?string $notes textual notes about the tronc
    */
-  public string $notes   ;
+  public ?string $notes   ;
 
   /**
    *
    * @OA\Property()
-   * @var int $type Type of tronc {id:1,label:'Tronc'},{id:2,label:'Tronc chez un commerçant'},{id:3,label:'Autre'}
+   * @var ?int $type Type of tronc {id:1,label:'Tronc'},{id:2,label:'Tronc chez un commerçant'},{id:3,label:'Autre'}
    */
-  public int $type    ;
+  public ?int $type    ;
   /**
    * @OA\Property()
-   * @var int $nombreTronc Used at creation only, specify the number of tronc to create
+   * @var ?int $nombreTronc Used at creation only, specify the number of tronc to create
    */
-  public int $nombreTronc;
+  public ?int $nombreTronc;
 
 
-
-  /**
-   * GetTroncForDepart, GetTroncForRetour, GetTroncForComptage where we search Tronc that match the state (depart, retour, comptage)
-   * @OA\Property()
-   * @var int $tronc_queteur_id id of associated TroncQueteur
-   */
-  public int $tronc_queteur_id ;
 
   /**
    * GetTroncForDepart, GetTroncForRetour, GetTroncForComptage where we search Tronc that match the state (depart, retour, comptage)
    * @OA\Property()
-   * @var string $first_name First Name of the associated Queteur
+   * @var ?int $tronc_queteur_id id of associated TroncQueteur
    */
-  public string $first_name;
+  public ?int $tronc_queteur_id ;
 
   /**
    * GetTroncForDepart, GetTroncForRetour, GetTroncForComptage where we search Tronc that match the state (depart, retour, comptage)
    * @OA\Property()
-   * @var string $last_name Last Name of the associated Queteur
+   * @var ?string $first_name First Name of the associated Queteur
    */
-  public string $last_name;
+  public ?string $first_name;
+
+  /**
+   * GetTroncForDepart, GetTroncForRetour, GetTroncForComptage where we search Tronc that match the state (depart, retour, comptage)
+   * @OA\Property()
+   * @var ?string $last_name Last Name of the associated Queteur
+   */
+  public ?string $last_name;
 
 
   /**
    * @OA\Property()
-   * @var Carbon $depart The depart date from the troncQueteur
+   * @var ?Carbon $depart The depart date from the troncQueteur
    */
-  public Carbon $depart ;
+  public ?Carbon $depart ;
 
 
   /**
@@ -90,9 +90,9 @@ class TroncEntity extends Entity
 
   /**
    * @OA\Property()
-   * @var Carbon $retour the Return date from the troncQueteur
+   * @var ?Carbon $retour the Return date from the troncQueteur
    */
-  public Carbon $retour ;
+  public ?Carbon $retour ;
 
 
 

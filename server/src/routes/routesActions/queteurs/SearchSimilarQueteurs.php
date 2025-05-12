@@ -48,7 +48,7 @@ class SearchSimilarQueteurs extends Action
       ClientInputValidatorSpecs::withString("first_name", $this->queryParams, 100 , false),
       ClientInputValidatorSpecs::withString("last_name" , $this->queryParams, 100 , false),
       ClientInputValidatorSpecs::withString("nivol"     , $this->queryParams, 15  , false),
-      ClientInputValidatorSpecs::withString("email"     , $this->queryParams, 255 , false, ClientInputValidator::$EMAIL_VALIDATION),
+      ClientInputValidatorSpecs::withString("email"     , $this->queryParams, 255 , false),
       ClientInputValidatorSpecs::withString("mobile"    , $this->queryParams, 20  , false),
 
     ]);

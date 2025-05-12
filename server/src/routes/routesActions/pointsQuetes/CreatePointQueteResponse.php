@@ -11,9 +11,9 @@ class CreatePointQueteResponse
 {
   /**
    * @OA\Property()
-   * @var int $id the id of the newly created pointQuete
+   * @var ?int $id the id of the newly created pointQuete
    */
-  public int $id;
+  public ?int $id;
 
   protected array $_fieldList = ["id"];
 

@@ -10,29 +10,29 @@ use Psr\Log\LoggerInterface;
  */
 class ULPreferencesEntity extends Entity
 {
-  /** @var string $FIRESTORE_DOC_ID firestore internal ID*/
-  public string $FIRESTORE_DOC_ID          ;
-  /** @var int $ul_id UL ID*/
-  public int $ul_id                     ;
-  /** @var bool $rq_display_daily_stats Display in RedQuest the dailystats or not*/
-  public bool $rq_display_daily_stats    ;
-  /** @var string $rq_display_queteur_ranking Display the ranking of queteur : no, 1st page, all pages (see statics var)*/
-  public string $rq_display_queteur_ranking;
-  /** @var bool $use_bank_bag use bank moneybag or not (mandatory field in tronc_queteur comptage)*/
-  public bool $use_bank_bag              ;
+  /** @var ?string $FIRESTORE_DOC_ID firestore internal ID*/
+  public ?string $FIRESTORE_DOC_ID          ;
+  /** @var ?int $ul_id UL ID*/
+  public ?int $ul_id                     ;
+  /** @var ?bool $rq_display_daily_stats Display in RedQuest the dailystats or not*/
+  public ?bool $rq_display_daily_stats    ;
+  /** @var ?string $rq_display_queteur_ranking Display the ranking of queteur : no, 1st page, all pages (see statics var)*/
+  public ?string $rq_display_queteur_ranking;
+  /** @var ?bool $use_bank_bag use bank moneybag or not (mandatory field in tronc_queteur comptage)*/
+  public ?bool $use_bank_bag              ;
 
-  /** @var bool $check_dates_not_in_the_past if true: the checks on Date Depart/Retour are done normally.
+  /** @var ?bool $check_dates_not_in_the_past if true: the checks on Date Depart/Retour are done normally.
    * If false, the checks are skipped to allow dates in the past. Some unit needs to input the troncs the day after
    the feature */
-  public bool $check_dates_not_in_the_past;
+  public ?bool $check_dates_not_in_the_past;
 
-  /** @var bool $rq_autonomous_depart_and_return Can volunteers set the depart & return date themselves with RedQuest*/
-  public bool $rq_autonomous_depart_and_return;
+  /** @var ?bool $rq_autonomous_depart_and_return Can volunteers set the depart & return date themselves with RedQuest*/
+  public ?bool $rq_autonomous_depart_and_return;
 
 
-  /** @var string|null $token_benevole  token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
+  /** @var ?string $token_benevole  token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
   public ?string $token_benevole    = null                ;
-  /** @var string|null $token_benevole_1j token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
+  /** @var ?string $token_benevole_1j token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
   public ?string $token_benevole_1j = null              ;
 
 

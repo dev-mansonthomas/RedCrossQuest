@@ -13,51 +13,51 @@ class TroncInUseEntity  extends Entity
 {
   /**
    * @OA\Property()
-   * @var int $id TroncQueteur ID
+   * @var ?int $id TroncQueteur ID
    */
-  public int $id;
-  public Carbon $depart_theorique;
+  public ?int $id;
+  public ?Carbon $depart_theorique;
   public ?Carbon $depart;
   /**
    * @OA\Property()
-   * @var int $queteur_id queteur ID
+   * @var ?int $queteur_id queteur ID
    */
-  public int $queteur_id;
+  public ?int $queteur_id;
   /**
    * @OA\Property()
-   * @var int $tronc_id Tronc ID
+   * @var ?int $tronc_id Tronc ID
    */
-  public int $tronc_id;
+  public ?int $tronc_id;
   /**
    * @OA\Property()
-   * @var string $first_name Queteur First Name
+   * @var ?string $first_name Queteur First Name
    */
-  public string $first_name;
+  public ?string $first_name;
   /**
    * @OA\Property()
-   * @var string $last_name Queteur Last Name
+   * @var ?string $last_name Queteur Last Name
    */
-  public string $last_name;
+  public ?string $last_name;
   /**
    * @OA\Property()
-   * @var string $email Queteur email
+   * @var ?string $email Queteur email
    */
-  public string $email;
+  public ?string $email;
   /**
    * @OA\Property()
-   * @var string $mobile Queteur mobile
+   * @var ?string $mobile Queteur mobile
    */
-  public string $mobile;
+  public ?string $mobile;
   /**
    * @OA\Property()
-   * @var string $nivol Queteur Nivol
+   * @var ?string $nivol Queteur Nivol
    */
-  public string $nivol;
+  public ?string $nivol;
   /**
    * @OA\Property()
-   * @var string $status Status of the check : TRONC_IN_USE (other people have this tronc assigned (and depart or retour is null, deleted=false)) or QUETEUR_HAS_ALREADY_HAS_A_TRONC (a tronc_queteur row exist and have the queteur_id)
+   * @var ?string $status Status of the check : TRONC_IN_USE (other people have this tronc assigned (and depart or retour is null, deleted=false)) or QUETEUR_HAS_ALREADY_HAS_A_TRONC (a tronc_queteur row exist and have the queteur_id)
    */
-  public string $status;
+  public ?string $status;
 
   protected array $_fieldList = ['id','depart_theorique','depart','queteur_id','tronc_id','first_name','last_name','email','mobile','nivol', 'status'];
   /**

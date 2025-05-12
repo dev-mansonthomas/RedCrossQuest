@@ -12,13 +12,13 @@ class GetUserInfoFromUUIDResponse
 {
   /**
    * @OA\Property()
-   * @var bool $success the action did succeed or not
+   * @var ?bool $success the action did succeed or not
    */
-  public bool $success;
+  public ?bool $success;
 
   /**
    * @OA\Property()
-   * @var string  $nivol The nivol corresponding to the UUID
+   * @var ?string  $nivol The nivol corresponding to the UUID
    */
   public ?string $nivol;
 

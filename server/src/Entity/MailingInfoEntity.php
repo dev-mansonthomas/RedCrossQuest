@@ -6,10 +6,10 @@ use Psr\Log\LoggerInterface;
 
 class MailingInfoEntity extends Entity
 {
-  public int $id;
-  public string $email                       ;
-  public string $first_name                  ;
-  public string $last_name                   ;
+  public ?int $id;
+  public ?string $email                       ;
+  public ?string $first_name                  ;
+  public ?string $last_name                   ;
   /**
   "1">Action Sociale
   "2">Secours
@@ -18,13 +18,13 @@ class MailingInfoEntity extends Entity
   "5">Commerçant
   "6">Special
    */
-  public int $secteur                     ;
-  public bool $man                         ;
-  public string $spotfire_access_token       ;
+  public ?int $secteur                     ;
+  public ?bool $man                         ;
+  public ?string $spotfire_access_token       ;
 
   // not retrieved from DB
 
-  public int $status                      ;
+  public ?int $status                      ;
 
   protected array $_fieldList = ['id', 'email', 'first_name', 'last_name', 'secteur', 'man', 'spotfire_access_token', 'status'];
 

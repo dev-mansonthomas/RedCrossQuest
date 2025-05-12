@@ -13,42 +13,42 @@ class DailyStatsBeforeRCQEntity  extends Entity
 {
   /**
    * @OA\Property()
-   * @var integer $id Id of the stat
+   * @var ?integer $id Id of the stat
    */
-  public int $id           ;
+  public ?int $id           ;
   /**
    * @OA\Property()
-   * @var integer $ul_id UL ID of the stat
+   * @var ?integer $ul_id UL ID of the stat
    */
-  public int $ul_id        ;
+  public ?int $ul_id        ;
   /**
    * @OA\Property()
-   * @var Carbon $date The day of the stats
+   * @var ?Carbon $date The day of the stats
    */
-  public Carbon $date         ;
+  public ?Carbon $date         ;
   /**
    * @OA\Property()
-   * @var float $amount total amount of money collected on that day
+   * @var ?float $amount total amount of money collected on that day
    */
-  public float $amount       ;
+  public ?float $amount       ;
 
   /**
    * @OA\Property()
-   * @var int $nb_benevole Number of volunteers involved in the quete for that day
+   * @var ?int $nb_benevole Number of volunteers involved in the quete for that day
    */
-  public int $nb_benevole       ;
+  public ?int $nb_benevole       ;
 
   /**
    * @OA\Property()
-   * @var int $nb_benevole_1j Number of 1day volunteers involved in the quete for that day
+   * @var ?int $nb_benevole_1j Number of 1day volunteers involved in the quete for that day
    */
-  public int $nb_benevole_1j       ;
+  public ?int $nb_benevole_1j       ;
 
   /**
    * @OA\Property()
-   * @var int $nb_heure Number of cumulated hours of quete for that day
+   * @var ?int $nb_heure Number of cumulated hours of quete for that day
    */
-  public int $nb_heure       ;
+  public ?int $nb_heure       ;
 
 
   protected array $_fieldList = ['id', 'ul_id', 'date', 'amount', 'nb_benevole', 'nb_benevole_1j', 'nb_heure'];
