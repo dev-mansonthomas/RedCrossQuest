@@ -1,0 +1,107 @@
+# =============================================================================
+# RedCrossQuest - local development stack
+# Usage: `make up` (or `docker compose up -d --build`)
+#
+# The MySQL instance is NOT owned by this stack. It lives in the `rcq_mysql`
+# Docker container managed by the dashboard project (host port 3316).
+# run_local.sh performs a pre-flight check to ensure it is up.
+# =============================================================================
+name: rcq
+
+x-php-env: &php-env
+  MYSQL_DSN:       ${MYSQL_DSN}
+  MYSQL_USER:      ${MYSQL_USER}
+  APP_ENV:         ${APP_ENV}
+  APP_URL:         ${APP_URL}
+  JWT_ISSUER:      ${JWT_ISSUER}
+  SENDGRID_SENDER: ${SENDGRID_SENDER}
+  REDQUEST_DOMAIN: ${REDQUEST_DOMAIN}
+  GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+  GOOGLE_CLOUD_PROJECT:           ${GOOGLE_CLOUD_PROJECT}
+  PHP_DISPLAY_ERRORS:             ${PHP_DISPLAY_ERRORS:-On}
+  XDEBUG_MODE:                    ${XDEBUG_MODE:-off}
+
+services:
+  # --------------------------------------------------------------------------
+  # PHP-FPM - GAE `php83` runtime equivalent
+  # --------------------------------------------------------------------------
+  php-fpm:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: dev
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.3}
+    container_name: rcq-php-fpm
+    restart: unless-stopped
+    environment:
+      <<: *php-env
+    volumes:
+      - ./server:/app/server
+      - composer-cache:/tmp/composer
+      - php-di-cache:/tmp/php-di-compiled
+      # Host's ~/.cred directory holds the GCP service account JSON and other
+      # credentials. Mounted read-only at /run/secrets inside the container.
+      - ${HOME}/.cred:/run/secrets:ro
+    extra_hosts:
+      # Reach host services (cloud-sql-proxy, IDE Xdebug listener, ...)
+      - "host.docker.internal:host-gateway"
+      # Mirror the host's /etc/hosts entry (127.0.0.1 rcq) so the MYSQL_DSN
+      # value `mysql:host=rcq;port=3316;...` works identically on host and
+      # in container. rcq -> host-gateway -> rcq_mysql container (port 3316).
+      - "rcq:host-gateway"
+    networks: [rcq_net]
+
+  # --------------------------------------------------------------------------
+  # Nginx - mirrors the Google `serve` wrapper used by GAE php83
+  # --------------------------------------------------------------------------
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: rcq-nginx
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT_API:-8080}:8080"
+    volumes:
+      - ./server:/app/server:ro
+    depends_on:
+      - php-fpm
+    networks: [rcq_net]
+
+  # --------------------------------------------------------------------------
+  # Node 10 client - gulp serve (front) with REST proxy to the nginx container
+  # --------------------------------------------------------------------------
+  node-client:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+      args:
+        NODE_VERSION: ${NODE_VERSION:-10.24.1}
+    container_name: rcq-node
+    platform: linux/amd64       # Node 10 has no arm64 image
+    restart: unless-stopped
+    environment:
+      BACKEND_HOST: nginx
+      BACKEND_PORT: 8080
+      CHOKIDAR_USEPOLLING: "true"   # reliable file-watch on macOS bind mounts
+    ports:
+      - "${HOST_PORT_FRONT:-3000}:3000"
+      - "${HOST_PORT_FRONT_UI:-3001}:3001"
+    volumes:
+      - ./client:/app/client
+      - node-modules:/app/client/node_modules
+      - bower-components:/app/client/bower_components
+    depends_on:
+      - nginx
+    networks: [rcq_net]
+
+networks:
+  rcq_net:
+    driver: bridge
+
+volumes:
+  composer-cache:
+  php-di-cache:
+  node-modules:
+  bower-components:

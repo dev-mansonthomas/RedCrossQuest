@@ -102,3 +102,10 @@ server/vendor/
 /.idea/dictionaries/tmanson.xml
 /server/src/settings.php
 docs/
+
+### Docker local dev environment
+.env
+.env.*
+!.env.example
+.cred/
+server/phinx.yml
