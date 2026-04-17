@@ -67,11 +67,31 @@ sed -i '' -e "s/¤MYSQL_DB¤/${MYSQL_DB}/g"               server/app.yaml
 cp ~/.cred/phinx.yml                          server/phinx.yml
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-settings.php server/src/settings.php
 
+# Phinx runs inside the `php-fpm` Docker image shipped with the repo
+# (composer deps + PDO drivers already installed). The host keeps running
+# cloud-sql-proxy on 127.0.0.1:3310 for dev / 3307 for test / 3308 for prod.
+# Inside the container, those ports are reachable via host.docker.internal
+# (mapped in docker-compose.yml via `extra_hosts: host-gateway`).
+# We rewrite the copied phinx.yml accordingly, on a per-run basis.
+sed -i '' -e 's/host: *127\.0\.0\.1/host: host.docker.internal/g' server/phinx.yml
+sed -i '' -e 's/host: *localhost/host: host.docker.internal/g'    server/phinx.yml
+
+command -v docker >/dev/null || { echo "Docker CLI not found on PATH"; exit 1; }
+docker compose version >/dev/null 2>&1 || { echo "Docker Compose v2 required"; exit 1; }
+
+# Ensure the image exists (first run builds it)
+docker compose build php-fpm
 
 #DB Migration
-cd server
-php vendor/bin/phinx migrate -e rcq-${COUNTRY}-${ENV}
-cd -
+# --no-deps: don't start the local MariaDB, we target the Cloud SQL proxy.
+# Composer install is needed once; it's idempotent afterwards.
+docker compose run --rm --no-deps \
+    -w /app/server \
+    php-fpm bash -lc '
+        set -e
+        [[ -d vendor ]] || composer install --no-interaction --no-progress
+        php vendor/bin/phinx migrate -c /app/server/phinx.yml -e rcq-'"${COUNTRY}"'-'"${ENV}"'
+    '
 
 #deployment
 cd server
@@ -81,8 +101,15 @@ cd -
 #remove app.yaml
 rm server/app.yaml
 
-#restore default file
-cp server/phinx-template.yml        server/phinx.yml
+#restore local dev phinx.yml (Docker profile: host=mariadb)
+if [[ -f docker/config/phinx.docker.yml && -f .env ]]; then
+  # shellcheck disable=SC1091
+  set -a; . ./.env; set +a
+  sed "s|%%MYSQL_ROOT_PASSWORD%%|${MYSQL_ROOT_PASSWORD}|g" \
+    docker/config/phinx.docker.yml > server/phinx.yml
+else
+  cp server/phinx-template.yml        server/phinx.yml
+fi
 
 # DO NOT USE VARIABLE for the next line, we do want to restore the local dev version
 cp ~/.cred/rcq-fr-local-settings.php  server/src/settings.php

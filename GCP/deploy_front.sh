@@ -26,10 +26,12 @@ fi
 #if it does not exists, it means we're being called by ../gcp-deploy.sh (so not the same working dir), and it includes the common.sh
 setProject "rcq-${COUNTRY}-${ENV}"
 
-#Conflict of Node version 10 is required for RedCrossQuest, and RedQuest /Cloud Functions can use 14
-#PATH="/usr/local/opt/node@14/bin/:$PATH"
-. $(brew --prefix nvm)/nvm.sh
-nvm use v10.24.1
+# Node 10.24.1 is required by client/package.json engines.
+# We no longer rely on a host-installed Node/nvm: the build runs inside the
+# `node-client` Docker image shipped with the repo (see docker/node/Dockerfile).
+# Requires Docker Desktop to be running on the host.
+command -v docker >/dev/null || { echo "Docker CLI not found on PATH"; exit 1; }
+docker compose version >/dev/null 2>&1 || { echo "Docker Compose v2 required"; exit 1; }
 
 #load properties
 . ~/.cred/rcq-${COUNTRY}-${ENV}.properties
@@ -40,11 +42,30 @@ nvm use v10.24.1
 ##############################################################
 ##############################################################
 
-echo "***** client build *****"
-#Build the AngularJS frontend
-cd client  || exit 1
-./build.sh
-cd -  || exit 1
+echo "***** client build (Docker node-client) *****"
+# Ensure the node-client image exists (first run will build it)
+docker compose build node-client
+
+# Run the equivalent of the legacy client/build.sh inside the container.
+# --no-deps avoids starting mariadb/php-fpm just for a front build.
+# --entrypoint "" bypasses the socat forwarder shipped for `gulp serve`.
+docker compose run --rm --no-deps \
+    --entrypoint "" \
+    -w /app/client \
+    node-client bash -lc '
+        set -e
+        rm -rf ./dist/*
+        npm install --no-audit --no-fund
+        npm audit fix || true
+        bower install --allow-root
+        echo "{\"deployDate\": 20200202020202, \"deployNotes\": \"DEPLOY_NOTES\"}" > src/deploy.json
+        DEPLOY_DATE=$(date +%Y%m%d%H%M%S)
+        echo "setting version to $DEPLOY_DATE"
+        sed -i "s/20200202020202/${DEPLOY_DATE}/g" src/deploy.json
+        ./buildVersionNotes.php || true
+        gulp build
+        echo "{\"deployDate\": 20200202020202, \"deployNotes\": \"DEPLOY_NOTES\"}" > src/deploy.json
+    '
 
 echo "***** renaming index.html *****"
 cd client/dist  || exit 1
