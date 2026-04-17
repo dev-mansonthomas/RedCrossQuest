@@ -112,7 +112,7 @@ class SaveCoinsOnTroncQueteur extends Action
     }
     catch(Throwable $exception)
     {
-      $this->logger->error("Error while updateCoinsCount",["tq"=>$tq]);
+      $this->logger->error("Error while updateCoinsCount",["tq"=>$tq, Logger::$EXCEPTION => $exception]);
       return $this->response->withStatus(500, "Error while updating TroncQueteur as admin") ;
     }
 

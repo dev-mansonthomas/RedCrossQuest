@@ -83,9 +83,9 @@ class SendPasswordInitializationMailAction extends Action
     Logger::dataForLogging(new LoggingEntity(null , ["username"=>$username]));
 
 
-    $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/sendInit", $username, $this->parsedBody);
-
-
+    //$reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/sendInit", $username, $this->parsedBody);
+    //TODO change for ReCaptachV2 or other
+    $reCaptchaResponseCode = 0;
     if($reCaptchaResponseCode > 0)
     {// error
 

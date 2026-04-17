@@ -443,10 +443,10 @@ class TroncQueteurEntity extends Entity
     }
 
   /***
-   * @param $value float the value to check
+   * @param $value ?float the value to check
    * @return bool true if the value is > 0
    */
-    function checkPositive(float $value):bool
+    function checkPositive(?float $value):bool
     {
       return $value != null && $value > 0;
     }

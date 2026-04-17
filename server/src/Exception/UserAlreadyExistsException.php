@@ -10,7 +10,7 @@ use Throwable;
 
 class UserAlreadyExistsException extends Exception
 {
-  public UserEntity $users;
+  public array $users;
 
   public function __construct($message = "", $code = 0, Throwable $previous = null)
   {

@@ -122,15 +122,15 @@
         <div class="row">
           <div class="col-md-4">
             <div ng-class="{'has-error':recuFiscalForm.donation_date.$invalid}">
-              <label for="donation_date" class="control-label">Horaire réelle de Retour</label>
+              <label for="donation_date" class="control-label">Date du don</label>
               <input name="donation_date"
                      id="donation_date"
-                     type="datetime-local"
+                     type="date"
                      class="form-control"
                      ng-model="rfe.current.recu_fiscal.donation_date"
                      ng-max="rfe.current.donation_dateMax"
                      required/>
-              <span class="help-block" ng-show="recuFiscalForm.donation_date.$invalid">
+                <span class="help-block" ng-show="recuFiscalForm.donation_date.$invalid">
                   La date de donation ne doit pas être dans le futur
                 </span>
             </div>

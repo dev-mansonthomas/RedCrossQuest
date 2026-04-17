@@ -82,8 +82,9 @@ class ResetPassword extends Action
 
     Logger::dataForLogging(new LoggingEntity(null, ["uuid"=>$uuid]));
 
-    $reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/resetPassword", "getInfoFromUUID", $this->parsedBody);
-
+    //$reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/resetPassword", "getInfoFromUUID", $this->parsedBody);
+    //TODO change for ReCaptachV2 or other
+    $reCaptchaResponseCode = 0;
     if($reCaptchaResponseCode > 0)
     {// error
       $response401 = $this->response->withStatus(401);
