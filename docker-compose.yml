@@ -1,49 +1,27 @@
 # =============================================================================
 # RedCrossQuest - local development stack
 # Usage: `make up` (or `docker compose up -d --build`)
+#
+# The MySQL instance is NOT owned by this stack. It lives in the `rcq_mysql`
+# Docker container managed by the dashboard project (host port 3316).
+# run_local.sh performs a pre-flight check to ensure it is up.
 # =============================================================================
 name: rcq
 
 x-php-env: &php-env
-  MYSQL_DSN:      ${MYSQL_DSN}
-  MYSQL_USER:     root
-  APP_ENV:        ${APP_ENV}
-  APP_URL:        ${APP_URL}
-  JWT_ISSUER:     ${JWT_ISSUER}
+  MYSQL_DSN:       ${MYSQL_DSN}
+  MYSQL_USER:      ${MYSQL_USER}
+  APP_ENV:         ${APP_ENV}
+  APP_URL:         ${APP_URL}
+  JWT_ISSUER:      ${JWT_ISSUER}
   SENDGRID_SENDER: ${SENDGRID_SENDER}
   REDQUEST_DOMAIN: ${REDQUEST_DOMAIN}
   GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-  GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
-  PHP_DISPLAY_ERRORS: ${PHP_DISPLAY_ERRORS:-On}
-  XDEBUG_MODE:        ${XDEBUG_MODE:-off}
-  MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  GOOGLE_CLOUD_PROJECT:           ${GOOGLE_CLOUD_PROJECT}
+  PHP_DISPLAY_ERRORS:             ${PHP_DISPLAY_ERRORS:-On}
+  XDEBUG_MODE:                    ${XDEBUG_MODE:-off}
 
 services:
-  # --------------------------------------------------------------------------
-  # MariaDB - drop-in replacement for Cloud SQL MySQL in local dev
-  # --------------------------------------------------------------------------
-  mariadb:
-    image: mariadb:${MARIADB_VERSION:-11.4}
-    container_name: rcq-mariadb
-    restart: unless-stopped
-    environment:
-      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MARIADB_DATABASE:      ${MYSQL_DATABASE}
-      MARIADB_USER:          ${MYSQL_USER}
-      MARIADB_PASSWORD:      ${MYSQL_PASSWORD}
-    ports:
-      - "${HOST_PORT_DB:-3306}:3306"
-    volumes:
-      - mariadb-data:/var/lib/mysql
-      - ./docker/mariadb/my.cnf:/etc/mysql/conf.d/rcq.cnf:ro
-      - ./docker/mariadb/initdb:/docker-entrypoint-initdb.d:ro
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    networks: [rcq_net]
-
   # --------------------------------------------------------------------------
   # PHP-FPM - GAE `php83` runtime equivalent
   # --------------------------------------------------------------------------
@@ -62,12 +40,16 @@ services:
       - ./server:/app/server
       - composer-cache:/tmp/composer
       - php-di-cache:/tmp/php-di-compiled
-      - ./.cred:/run/secrets:ro
+      # Host's ~/.cred directory holds the GCP service account JSON and other
+      # credentials. Mounted read-only at /run/secrets inside the container.
+      - ${HOME}/.cred:/run/secrets:ro
     extra_hosts:
+      # Reach host services (cloud-sql-proxy, IDE Xdebug listener, ...)
       - "host.docker.internal:host-gateway"
-    depends_on:
-      mariadb:
-        condition: service_healthy
+      # Mirror the host's /etc/hosts entry (127.0.0.1 rcq) so the MYSQL_DSN
+      # value `mysql:host=rcq;port=3316;...` works identically on host and
+      # in container. rcq -> host-gateway -> rcq_mysql container (port 3316).
+      - "rcq:host-gateway"
     networks: [rcq_net]
 
   # --------------------------------------------------------------------------
@@ -119,7 +101,6 @@ networks:
     driver: bridge
 
 volumes:
-  mariadb-data:
   composer-cache:
   php-di-cache:
   node-modules:

@@ -47,7 +47,7 @@ echo "***** client build (Docker node-client) *****"
 docker compose build node-client
 
 # Run the equivalent of the legacy client/build.sh inside the container.
-# --no-deps avoids starting mariadb/php-fpm just for a front build.
+# --no-deps avoids starting php-fpm/nginx just for a front build.
 # --entrypoint "" bypasses the socat forwarder shipped for `gulp serve`.
 docker compose run --rm --no-deps \
     --entrypoint "" \

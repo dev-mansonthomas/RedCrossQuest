@@ -22,20 +22,26 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git unzip zip curl ca-certificates \
         libzip-dev libbz2-dev libsodium-dev libssl-dev \
-        libonig-dev libicu-dev libxml2-dev \
+        libonig-dev libicu-dev libxml2-dev libgmp-dev \
         pkg-config autoconf build-essential \
         default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Native PHP extensions required by composer.json (ext-PDO, ext-bz2, ext-sodium, ext-zip, ext-json)
+# Native PHP extensions required by composer.json (ext-PDO, ext-bz2, ext-sodium,
+# ext-zip, ext-json, ext-gmp — pulled by sendgrid/sendgrid + starkbank/ecdsa).
 # `json` and `sodium` are bundled since PHP 8.x; we still configure `sodium`.
 RUN docker-php-ext-configure zip \
  && docker-php-ext-install -j"$(nproc)" \
-        pdo pdo_mysql bz2 zip sodium intl opcache bcmath
+        pdo pdo_mysql bz2 zip sodium intl opcache bcmath gmp
 
 # PECL extensions used in production (Stackdriver / Firestore gRPC client)
-# Parallel compilation to match local `MAKEFLAGS="-j$(sysctl -n hw.ncpu)"` workflow
-RUN MAKEFLAGS="-j$(nproc)" pecl install grpc protobuf \
+# gRPC is a huge C++ codebase (~3500 source files) that consumes ~1.5 GB of
+# RAM per parallel job. Allocate at least 16 GB to Docker Desktop before
+# building, otherwise drop this to `-j2` to avoid OOM.
+# protobuf is pinned to the last 4.x release: 5.x removes
+# FieldDescriptor::getLabel() which google/gax 1.36 still calls
+# (google/cloud-logging batch writer → fatal at shutdown).
+RUN MAKEFLAGS="-j$(nproc)" pecl install grpc protobuf-4.31.1 \
  && docker-php-ext-enable grpc protobuf
 
 # Composer (pinned via official multi-arch image)

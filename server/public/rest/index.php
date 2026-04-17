@@ -1,5 +1,19 @@
 <?php
-error_reporting(E_ALL );
+error_reporting(E_ALL);
+
+// Silence the `getLabel is deprecated` E_USER_WARNING raised by the
+// protobuf 4.x FieldDescriptor, called from google/gax 1.36 Serializer.
+// It is emitted during the shutdown handler of LoggingClient::psrBatchLogger
+// (after the Slim response is sent) and pollutes the HTTP body. Drop this
+// handler once google/gax is upgraded to a version that no longer calls
+// the deprecated method.
+set_error_handler(static function (int $errno, string $errstr): bool {
+    if ($errno === E_USER_WARNING && str_contains($errstr, 'getLabel is deprecated')) {
+        return true;
+    }
+    return false;
+});
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Psr\Log\LoggerInterface;

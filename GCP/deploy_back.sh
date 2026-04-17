@@ -101,15 +101,8 @@ cd -
 #remove app.yaml
 rm server/app.yaml
 
-#restore local dev phinx.yml (Docker profile: host=mariadb)
-if [[ -f docker/config/phinx.docker.yml && -f .env ]]; then
-  # shellcheck disable=SC1091
-  set -a; . ./.env; set +a
-  sed "s|%%MYSQL_ROOT_PASSWORD%%|${MYSQL_ROOT_PASSWORD}|g" \
-    docker/config/phinx.docker.yml > server/phinx.yml
-else
-  cp server/phinx-template.yml        server/phinx.yml
-fi
+#restore local dev phinx.yml from the repo template
+cp server/phinx-template.yml          server/phinx.yml
 
 # DO NOT USE VARIABLE for the next line, we do want to restore the local dev version
 cp ~/.cred/rcq-fr-local-settings.php  server/src/settings.php

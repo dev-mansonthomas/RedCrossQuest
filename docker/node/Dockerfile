@@ -12,6 +12,15 @@
 ARG NODE_VERSION=10.24.1
 FROM node:${NODE_VERSION}-buster
 
+# Debian Buster reached EOL on 2024-06-30. The default apt mirrors
+# (deb.debian.org / security.debian.org) no longer serve buster — switch to
+# archive.debian.org and disable "Valid-Until" checks on the frozen snapshots.
+RUN printf 'deb http://archive.debian.org/debian buster main\n\
+deb http://archive.debian.org/debian-security buster/updates main\n' \
+        > /etc/apt/sources.list \
+    && echo 'Acquire::Check-Valid-Until "false";' \
+        > /etc/apt/apt.conf.d/99no-check-valid-until
+
 # Global tooling used by client/build.sh and client/gulp-serve.sh
 # --unsafe-perm is required for gulp 3.x post-install scripts running as root
 RUN apt-get update && apt-get install -y --no-install-recommends \

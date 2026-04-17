@@ -8,9 +8,13 @@ démarrage quotidienne, voir [`run_local.md`](./run_local.md).
 - Reproduire fidèlement le runtime **Google App Engine `php83`** (Nginx +
   PHP-FPM 8.3 + extensions identiques).
 - Supprimer toute dépendance à un toolchain local (brew, nvm, sphp, PECL,
-  Apache/httpd, MariaDB/MySQL, Composer global…).
+  Apache/httpd, Composer global…).
 - Rendre le stack **portable** (macOS Intel/ARM, Linux, CI) et modulaire
   (passage futur à PHP 8.5 via un simple `--build-arg PHP_VERSION=8.5`).
+
+> **La base MySQL n'appartient pas à ce stack.** Elle tourne dans le
+> conteneur `rcq_mysql` (port hôte `3316`) fourni par le projet _dashboard_.
+> `run_local.sh` se contente de vérifier qu'il est démarré.
 
 ## Architecture
 
@@ -21,12 +25,13 @@ démarrage quotidienne, voir [`run_local.md`](./run_local.md).
 │  Node 10.24.1    │ /rest│  basePath /rest  │      │  grpc, protobuf, │
 │                  │      │                  │      │  xdebug, sodium  │
 └──────────────────┘      └──────────────────┘      └────────┬─────────┘
-         │                                                    │
-         └────────────── network rcq_net ────────────────────┤
+         │                                                    │ rcq:3316
+         └────────────── network rcq_net ────────────────────┤  (host-gateway)
                                                               ▼
                                                      ┌──────────────────┐
-                                                     │  mariadb (3306)  │
-                                                     │  schema: rcq     │
+                                                     │ rcq_mysql (3316) │
+                                                     │  (EXTERNE: projet│
+                                                     │   dashboard)     │
                                                      └──────────────────┘
 ```
 
@@ -34,8 +39,8 @@ démarrage quotidienne, voir [`run_local.md`](./run_local.md).
 |---------------|--------------------------------|-------------------|-------------------------------------------|
 | `php-fpm`     | `php:8.3-fpm-bookworm` (custom)| —                 | Runtime PHP-FPM, cible `dev` = + xdebug   |
 | `nginx`       | `nginx:1.27-alpine` (custom)   | `8080`            | Reproduction du wrapper GAE `serve`       |
-| `mariadb`     | `mariadb:11.4`                 | `3306`            | MySQL local (dev uniquement)              |
 | `node-client` | `node:10-buster` (custom)      | `3000`, `3001`    | Build & `gulp serve` du front AngularJS   |
+| `rcq_mysql`   | _externe_ (projet dashboard)   | `3316`            | MySQL partagé entre les projets RCQ       |
 
 ## Mapping avec GAE
 
@@ -43,8 +48,9 @@ démarrage quotidienne, voir [`run_local.md`](./run_local.md).
 |--------------------------------------|-------------------------------------------------------|
 | `runtime: php83` (Nginx + PHP-FPM)   | `nginx` + `php-fpm` containers                        |
 | `entrypoint: serve public/rest/…`    | `nginx` vhost pointe sur `/app/server/public/rest/`   |
-| Cloud SQL Unix socket                | TCP vers `mariadb:3306` (DSN dans `.env`)             |
-| Secret Manager                       | `.cred/` monté read-only + `GOOGLE_APPLICATION_CREDENTIALS` |
+| Cloud SQL Unix socket                | TCP vers `rcq:3316` (host-gateway → conteneur `rcq_mysql`) |
+| Secret Manager (prod)                | Secret Manager (dev) via `GOOGLE_APPLICATION_CREDENTIALS` ; secrets préfixés `local-` (cf. `SecretManagerService`) |
+| `env_variables:` dans `app.yaml`     | `environment:` dans `docker-compose.yml` (alimenté par `.env`) |
 | Extensions natives bundled           | `pecl install grpc protobuf` + `docker-php-ext-install` |
 
 ## Modularité / évolutivité
@@ -54,7 +60,6 @@ Tous les composants versionnés sont paramétrables via `.env` :
 ```dotenv
 PHP_VERSION=8.3         # bump to 8.5 when GAE exposes php85
 NODE_VERSION=10.24.1    # bump when the front is migrated off AngularJS 1.x
-MARIADB_VERSION=11.4
 ```
 
 Après modification : `make rebuild && make up`.
@@ -63,7 +68,7 @@ Après modification : `make rebuild && make up`.
 
 ```
 .
-├── docker-compose.yml               Orchestration (4 services, 1 network)
+├── docker-compose.yml               Orchestration (3 services, 1 network)
 ├── .env.example                     Template de config — copié en .env
 ├── run_local.sh                     Bootstrap one-shot
 ├── Makefile                         Cibles développeur (`make help`)
@@ -78,16 +83,17 @@ Après modification : `make rebuild && make up`.
     │   ├── Dockerfile
     │   ├── nginx.conf
     │   └── rcq-backend.conf         basePath /rest, FastCGI -> php-fpm:9000
-    ├── node/
-    │   ├── Dockerfile               Node 10 + gulp/bower + socat
-    │   └── entrypoint.sh            forward localhost:8080 -> nginx:8080
-    ├── mariadb/
-    │   ├── my.cnf                   sql_mode compatible Spotfire
-    │   └── initdb/01-create-schema.sql
-    └── config/
-        ├── settings.docker.php      Copié en server/src/settings.php
-        └── phinx.docker.yml         Copié en server/phinx.yml
+    └── node/
+        ├── Dockerfile               Node 10 + gulp/bower + socat
+        └── entrypoint.sh            forward localhost:8080 -> nginx:8080
 ```
+
+`server/src/settings.php` est semé depuis `server/src/settings.sample.php`
+au premier lancement (jamais écrasé). Ce fichier utilise `getenv()` pour
+toute sa configuration, comme sur GAE — les mots de passe sont récupérés
+à l'exécution via **Google Secret Manager** (préfixe `local-` détecté
+automatiquement par `SecretManagerService` quand l'`appUrl` contient
+`localhost` ou `rcq`).
 
 ## Intégration avec le workflow GCP
 
@@ -110,13 +116,28 @@ Les scripts `GCP/deploy_back.sh` et `GCP/deploy_front.sh` ont été adaptés :
 
 | Volume              | Contenu                                       |
 |---------------------|-----------------------------------------------|
-| `mariadb-data`      | Données MySQL (conservées entre `make down`)  |
 | `composer-cache`    | Cache `/tmp/composer`                         |
 | `php-di-cache`      | Cache PHP-DI compilé (`/tmp/php-di-compiled`) |
 | `node-modules`      | `client/node_modules` (isolé du bind mount)   |
 | `bower-components`  | `client/bower_components`                     |
 
-`make clean` supprime les containers et volumes (⚠️ détruit la DB locale).
+`make clean` supprime les containers et volumes. **La base MySQL n'est
+pas affectée** (elle vit dans le conteneur externe `rcq_mysql`).
+
+## Connexion à la base
+
+| Élément                 | Valeur                                           |
+|-------------------------|--------------------------------------------------|
+| Conteneur               | `rcq_mysql` (projet dashboard, non géré ici)     |
+| Port hôte               | `3316`                                           |
+| Hostname applicatif     | `rcq` (entrée `/etc/hosts` côté hôte, `extra_hosts` côté conteneur) |
+| Schéma local            | `rcq_fr_dev_db`                                  |
+| Utilisateur applicatif  | `rcq-fr-dev-user`                                |
+| Mot de passe            | Secret Manager, clé `local-MYSQL_PASSWORD` (projet `rcq-fr-dev`) |
+
+Le DSN `mysql:host=rcq;port=3316;dbname=rcq_fr_dev_db;charset=utf8mb4`
+fonctionne à l'identique depuis l'hôte (DBeaver, `mysql` CLI) et depuis
+le conteneur `php-fpm` grâce à l'alias `rcq:host-gateway`.
 
 ## Xdebug / IntelliJ
 
@@ -132,6 +153,10 @@ Le conteneur résout `host.docker.internal` → host gateway (configuré dans
 
 ## Sécurité
 
-- `.env` et `.cred/` sont dans `.gitignore` ET `.dockerignore`.
+- `.env`, `server/src/settings.php` et `server/phinx.yml` sont dans
+  `.gitignore` ET `.dockerignore`.
 - Aucun secret n'est baké dans les images.
-- `server/phinx.yml` est également git-ignoré (contient `pass:`).
+- Les credentials GCP vivent dans `~/.cred/` sur l'hôte, monté read-only
+  sur `/run/secrets` dans `php-fpm`.
+- Les mots de passe sont récupérés à l'exécution depuis GCP Secret Manager
+  — jamais écrits sur disque ni committés.

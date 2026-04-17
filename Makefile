@@ -9,13 +9,12 @@ SHELL := /usr/bin/env bash
 DC       := docker compose
 PHP_EXEC := $(DC) exec -T php-fpm
 NODE_EXEC:= $(DC) exec -T node-client
-DB_EXEC  := $(DC) exec -T mariadb
 
 .PHONY: help init up down restart build rebuild logs ps \
         composer-install composer-update composer npm bower \
         phinx-migrate phinx-rollback phinx \
         gulp-serve gulp-build \
-        shell-php shell-node shell-db db-cli \
+        shell-php shell-node \
         clean nuke doctor
 
 help: ## Show available targets
@@ -24,7 +23,7 @@ help: ## Show available targets
 # ----------------------------------------------------------------------------
 # Lifecycle
 # ----------------------------------------------------------------------------
-init: ## One-shot bootstrap: .env + build + deps + migrations + up
+init: ## One-shot bootstrap: .env + build + deps + up (Phinx migrations run manually)
 	@./run_local.sh
 
 up: ## Start the stack in the background
@@ -66,16 +65,20 @@ bower: ## bower in the node-client container: `make bower cmd="install"`
 	$(NODE_EXEC) bower --allow-root $(cmd)
 
 # ----------------------------------------------------------------------------
-# Database migrations (Phinx)
+# Database migrations (Phinx) — run against the host's own phinx.yml; pick the
+# environment with `env=<name>` (defaults to whatever `default_environment`
+# points to in your phinx.yml).
 # ----------------------------------------------------------------------------
-phinx-migrate: ## Run all pending phinx migrations
-	$(PHP_EXEC) php vendor/bin/phinx migrate -c /app/server/phinx.yml -e docker
+PHINX_ENV := $(if $(env),-e $(env),)
 
-phinx-rollback: ## Rollback the last migration
-	$(PHP_EXEC) php vendor/bin/phinx rollback -c /app/server/phinx.yml -e docker
+phinx-migrate: ## Run all pending phinx migrations (override env with env=<name>)
+	$(PHP_EXEC) php vendor/bin/phinx migrate -c /app/server/phinx.yml $(PHINX_ENV)
 
-phinx: ## Arbitrary phinx cmd: `make phinx cmd="status"`
-	$(PHP_EXEC) php vendor/bin/phinx $(cmd) -c /app/server/phinx.yml -e docker
+phinx-rollback: ## Rollback the last migration (override env with env=<name>)
+	$(PHP_EXEC) php vendor/bin/phinx rollback -c /app/server/phinx.yml $(PHINX_ENV)
+
+phinx: ## Arbitrary phinx cmd: `make phinx cmd="status" [env=local]`
+	$(PHP_EXEC) php vendor/bin/phinx $(cmd) -c /app/server/phinx.yml $(PHINX_ENV)
 
 # ----------------------------------------------------------------------------
 # Front-end
@@ -95,16 +98,10 @@ shell-php: ## Open a shell in the php-fpm container
 shell-node: ## Open a shell in the node-client container
 	$(DC) exec node-client bash
 
-shell-db: ## Open a shell in the mariadb container
-	$(DC) exec mariadb bash
-
-db-cli: ## Open an interactive mysql client connected to `rcq`
-	$(DC) exec mariadb mariadb -uroot -p$${MYSQL_ROOT_PASSWORD:-CRFCRF} rcq
-
 # ----------------------------------------------------------------------------
 # Maintenance
 # ----------------------------------------------------------------------------
-clean: ## Remove containers + named volumes (destroys local DB!)
+clean: ## Remove containers + named volumes (composer/npm caches only; DB is external)
 	$(DC) down -v
 
 nuke: clean ## Remove containers, volumes AND images
@@ -115,4 +112,4 @@ doctor: ## Quick diagnostic of the running stack
 	@echo "== services =="       && $(DC) ps
 	@echo "== PHP info =="       && $(PHP_EXEC) php -v || true
 	@echo "== Node info =="      && $(NODE_EXEC) node -v || true
-	@echo "== Maria info =="     && $(DB_EXEC) mariadb --version || true
+	@echo "== rcq_mysql =="      && docker ps --filter name=rcq_mysql --format '{{.Names}}\t{{.Status}}' || true
