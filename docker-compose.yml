@@ -1,0 +1,126 @@
+# =============================================================================
+# RedCrossQuest - local development stack
+# Usage: `make up` (or `docker compose up -d --build`)
+# =============================================================================
+name: rcq
+
+x-php-env: &php-env
+  MYSQL_DSN:      ${MYSQL_DSN}
+  MYSQL_USER:     root
+  APP_ENV:        ${APP_ENV}
+  APP_URL:        ${APP_URL}
+  JWT_ISSUER:     ${JWT_ISSUER}
+  SENDGRID_SENDER: ${SENDGRID_SENDER}
+  REDQUEST_DOMAIN: ${REDQUEST_DOMAIN}
+  GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+  GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
+  PHP_DISPLAY_ERRORS: ${PHP_DISPLAY_ERRORS:-On}
+  XDEBUG_MODE:        ${XDEBUG_MODE:-off}
+  MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+services:
+  # --------------------------------------------------------------------------
+  # MariaDB - drop-in replacement for Cloud SQL MySQL in local dev
+  # --------------------------------------------------------------------------
+  mariadb:
+    image: mariadb:${MARIADB_VERSION:-11.4}
+    container_name: rcq-mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MARIADB_DATABASE:      ${MYSQL_DATABASE}
+      MARIADB_USER:          ${MYSQL_USER}
+      MARIADB_PASSWORD:      ${MYSQL_PASSWORD}
+    ports:
+      - "${HOST_PORT_DB:-3306}:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./docker/mariadb/my.cnf:/etc/mysql/conf.d/rcq.cnf:ro
+      - ./docker/mariadb/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [rcq_net]
+
+  # --------------------------------------------------------------------------
+  # PHP-FPM - GAE `php83` runtime equivalent
+  # --------------------------------------------------------------------------
+  php-fpm:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: dev
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.3}
+    container_name: rcq-php-fpm
+    restart: unless-stopped
+    environment:
+      <<: *php-env
+    volumes:
+      - ./server:/app/server
+      - composer-cache:/tmp/composer
+      - php-di-cache:/tmp/php-di-compiled
+      - ./.cred:/run/secrets:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks: [rcq_net]
+
+  # --------------------------------------------------------------------------
+  # Nginx - mirrors the Google `serve` wrapper used by GAE php83
+  # --------------------------------------------------------------------------
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: rcq-nginx
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT_API:-8080}:8080"
+    volumes:
+      - ./server:/app/server:ro
+    depends_on:
+      - php-fpm
+    networks: [rcq_net]
+
+  # --------------------------------------------------------------------------
+  # Node 10 client - gulp serve (front) with REST proxy to the nginx container
+  # --------------------------------------------------------------------------
+  node-client:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+      args:
+        NODE_VERSION: ${NODE_VERSION:-10.24.1}
+    container_name: rcq-node
+    platform: linux/amd64       # Node 10 has no arm64 image
+    restart: unless-stopped
+    environment:
+      BACKEND_HOST: nginx
+      BACKEND_PORT: 8080
+      CHOKIDAR_USEPOLLING: "true"   # reliable file-watch on macOS bind mounts
+    ports:
+      - "${HOST_PORT_FRONT:-3000}:3000"
+      - "${HOST_PORT_FRONT_UI:-3001}:3001"
+    volumes:
+      - ./client:/app/client
+      - node-modules:/app/client/node_modules
+      - bower-components:/app/client/bower_components
+    depends_on:
+      - nginx
+    networks: [rcq_net]
+
+networks:
+  rcq_net:
+    driver: bridge
+
+volumes:
+  mariadb-data:
+  composer-cache:
+  php-di-cache:
+  node-modules:
+  bower-components:

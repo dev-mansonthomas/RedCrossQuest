@@ -1,0 +1,38 @@
+# VCS
+.git
+.gitignore
+.github
+
+# IDE
+.idea
+*.iml
+.vscode
+
+# Dependencies (built inside containers)
+server/vendor
+client/node_modules
+client/bower_components
+client/dist
+client/.tmp
+
+# Secrets - must never leak into images
+.env
+.env.*
+!.env.example
+**/.cred
+server/app.yaml
+server/phinx.yml
+server/src/settings.php
+
+# Artifacts
+**/*.log
+server/logs/*
+!server/logs/.gitkeep
+
+# macOS / tooling
+.DS_Store
+Thumbs.db
+
+# Docker itself (avoid recursion)
+docker-compose*.yml
+docker/**/data
