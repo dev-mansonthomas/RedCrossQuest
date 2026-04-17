@@ -25,7 +25,7 @@ help: ## Show available targets
 # Lifecycle
 # ----------------------------------------------------------------------------
 init: ## One-shot bootstrap: .env + build + deps + migrations + up
-	@./run.sh
+	@./run_local.sh
 
 up: ## Start the stack in the background
 	$(DC) up -d

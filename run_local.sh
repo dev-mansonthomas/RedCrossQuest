@@ -6,9 +6,9 @@
 #   * builds images, installs composer + npm + bower deps
 #   * starts the stack and runs Phinx migrations
 #
-# Usage:  ./run.sh              (full bootstrap)
-#         ./run.sh --skip-deps  (skip composer/npm/bower install)
-#         ./run.sh --rebuild    (force --no-cache build)
+# Usage:  ./run_local.sh              (full bootstrap)
+#         ./run_local.sh --skip-deps  (skip composer/npm/bower install)
+#         ./run_local.sh --rebuild    (force --no-cache build)
 # =============================================================================
 set -euo pipefail
 
