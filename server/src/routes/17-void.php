@@ -2,7 +2,7 @@
 
 /********************************* Application Settings Exposed to GUI ****************************************/
 
-use RedCrossQuest\routes\routesActions\void\VoidAction;
+use RedCrossQuest\routes\routesActions\voidAction\VoidAction;
 
 
 /**

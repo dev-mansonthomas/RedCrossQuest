@@ -60,9 +60,9 @@ class MailService
                            string $recipientFirstName,
                            string $recipientLastName,
                            string $content,
-                           string $bcc=null,
-                           string $fileName=null,
-                           string $replyTo=null):int
+                           ?string $bcc=null,
+                           ?string $fileName=null,
+                           ?string $replyTo=null):int
   {
     $deployment        = self::getDeploymentInfo();
     $deploymentLogging = $deployment == '' ? "*PROD*": $deployment;

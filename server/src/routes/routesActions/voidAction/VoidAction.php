@@ -1,6 +1,6 @@
 <?php
 
-namespace RedCrossQuest\routes\routesActions\void;
+namespace RedCrossQuest\routes\routesActions\voidAction;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
