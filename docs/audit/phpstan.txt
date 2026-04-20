@@ -1,0 +1,1906 @@
+Cannot load Xdebug - it was already loaded
+ ------ -------------------------------------------------------------- 
+  Line   public/rest/index.php                                         
+ ------ -------------------------------------------------------------- 
+  59     Call to an undefined method                                   
+         Psr\Log\LoggerInterface::setSlackService().                   
+         🪪  method.notFound                                           
+  60     Parameter #1 $logger of method                                
+         RedCrossQuest\Service\SlackService::setLogger() expects       
+         RedCrossQuest\Service\Logger, Psr\Log\LoggerInterface given.  
+         🪪  argument.type                                             
+ ------ -------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/BusinessService/EmailBusinessService.php                           
+ ------ ----------------------------------------------------------------------- 
+  467    Method                                                                 
+         RedCrossQuest\BusinessService\EmailBusinessService::sendExportDataQue  
+         teur() should return string but returns int.                           
+         🪪  return.type                                                        
+  507    Method                                                                 
+         RedCrossQuest\BusinessService\EmailBusinessService::sendExportDataUL(  
+         ) should return string but returns int.                                
+         🪪  return.type                                                        
+  696    Parameter #2 $status_code of method                                    
+         RedCrossQuest\DBService\MailingDBService::insertQueteurMailingStatus(  
+         ) expects string, int given.                                           
+         🪪  argument.type                                                      
+  700    Property RedCrossQuest\Entity\MailingInfoEntity::$status (int|null)    
+         does not accept string.                                                
+         🪪  assign.propertyType                                                
+  701    Parameter #2 $status_code of method                                    
+         RedCrossQuest\DBService\MailingDBService::insertQueteurMailingStatus(  
+         ) expects string, int given.                                           
+         🪪  argument.type                                                      
+  792    Loose comparison using != between non-empty-string and '' will always  
+         evaluate to true.                                                      
+         🪪  notEqual.alwaysTrue                                                
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/BusinessService/SettingsBusinessService.php                        
+ ------ ----------------------------------------------------------------------- 
+  87     Property                                                               
+         RedCrossQuest\routes\routesActions\settings\GetULSetupStatusResponse:  
+         :$BasePointQueteCreated (bool|null) does not accept int.               
+         🪪  assign.propertyType                                                
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------- 
+  Line   src/DBService/QueteurDBService.php                               
+ ------ ----------------------------------------------------------------- 
+  385    Strict comparison using !== between string and null will always  
+         evaluate to true.                                                
+         🪪  notIdentical.alwaysTrue                                      
+ ------ ----------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/DBService/TroncQueteurDBService.php                                
+ ------ ----------------------------------------------------------------------- 
+  345    Property Carbon\Carbon::$tz (Carbon\CarbonTimeZone) does not accept    
+         string.                                                                
+         🪪  assign.propertyType                                                
+  516    If condition is always true.                                           
+         🪪  if.alwaysTrue                                                      
+         💡  If RedCrossQuest\Entity\TroncQueteurEntity::isMoneyFilled() is     
+         impure, add @phpstan-impure PHPDoc tag above its declaration. Learn m  
+         ore: https://phpstan.org/blog/remembering-and-forgetting-returned-val  
+         ues                                                                    
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/DBService/UniteLocaleDBService.php                                 
+ ------ ----------------------------------------------------------------------- 
+  294    Strict comparison using === between string and null will always        
+         evaluate to false.                                                     
+         🪪  identical.alwaysFalse                                              
+  339    PHPDoc tag @param references unknown parameter: $query                 
+         🪪  parameter.notFound                                                 
+  339    PHPDoc tag @return with type array<RedCrossQuest\Entity\UniteLocaleEn  
+         tity> is incompatible with native type int.                            
+         🪪  return.phpDocType                                                  
+  369    Strict comparison using === between string and null will always        
+         evaluate to false.                                                     
+         🪪  identical.alwaysFalse                                              
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/BillsMoneyBagSummaryEntity.php                              
+ ------ ----------------------------------------------------------------------- 
+  134    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  135    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  136    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  137    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  138    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  139    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  140    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  141    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  142    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  143    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  144    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  145    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  146    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  147    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  148    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  149    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\BillsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/CoinsMoneyBagSummaryEntity.php                              
+ ------ ----------------------------------------------------------------------- 
+  147    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  148    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  149    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  150    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  151    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  152    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  153    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  154    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  155    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  156    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  157    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  158    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  159    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  160    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  161    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  162    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  163    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  164    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CoinsMoneyBagSummaryEntity::__construct()         
+         expects array, array|null given.                                       
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/CreditCardEntity.php                                        
+ ------ ----------------------------------------------------------------------- 
+  65     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CreditCardEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  66     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CreditCardEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  67     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CreditCardEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  68     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CreditCardEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  69     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\CreditCardEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  70     Method RedCrossQuest\Entity\Entity::getBoolean() invoked with 3        
+         parameters, 2 required.                                                
+         🪪  arguments.count                                                    
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/DailyStatsBeforeRCQEntity.php                               
+ ------ ----------------------------------------------------------------------- 
+  67     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\DailyStatsBeforeRCQEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  68     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\DailyStatsBeforeRCQEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  70     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\DailyStatsBeforeRCQEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  71     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\DailyStatsBeforeRCQEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  72     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\DailyStatsBeforeRCQEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  73     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\DailyStatsBeforeRCQEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/Entity.php                                                  
+ ------ ----------------------------------------------------------------------- 
+  44     Parameter #1 $logger of class                                          
+         RedCrossQuest\Service\ClientInputValidator constructor expects         
+         RedCrossQuest\Service\Logger, Psr\Log\LoggerInterface given.           
+         🪪  argument.type                                                      
+  172    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\Entity::getString() expects array, array|null     
+         given.                                                                 
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  184    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\Entity::getEmail() expects array, array|null      
+         given.                                                                 
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  198    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\Entity::getJson() expects array, array|null       
+         given.                                                                 
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  217    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\Entity::getBoolean() expects array, array|null    
+         given.                                                                 
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------------------- 
+  Line   src/Entity/LoggingEntity.php                                          
+ ------ ---------------------------------------------------------------------- 
+  14     Property RedCrossQuest\Entity\LoggingEntity::$decodedToken            
+         (array|null) is never assigned null so it can be removed from the     
+         property type.                                                        
+         🪪  property.unusedType                                               
+  19     Property RedCrossQuest\Entity\LoggingEntity::$otherData (array|null)  
+         is never assigned null so it can be removed from the property type.   
+         🪪  property.unusedType                                               
+ ------ ---------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/MailingInfoEntity.php                                       
+ ------ ----------------------------------------------------------------------- 
+  42     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\MailingInfoEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  46     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\MailingInfoEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/MailingSummaryEntity.php                                    
+ ------ ----------------------------------------------------------------------- 
+  36     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\MailingSummaryEntity::__construct() expects       
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  37     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\MailingSummaryEntity::__construct() expects       
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/NamedDonationEntity.php                                     
+ ------ ----------------------------------------------------------------------- 
+  219    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  220    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  222    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  227    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  232    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  233    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  234    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  235    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  236    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  237    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  238    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  239    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  240    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  241    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  242    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  243    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  244    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  245    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  246    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  248    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  249    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  253    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  254    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  262    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\NamedDonationEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/PointQueteEntity.php                                        
+ ------ ----------------------------------------------------------------------- 
+  118    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  119    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  122    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  123    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  125    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  127    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  135    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  136    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  137    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\PointQueteEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/QueteurEntity.php                                           
+ ------ ----------------------------------------------------------------------- 
+  153    PHPDoc tag @property has invalid value ($referent_volunteer_entity):   
+         Unexpected token "$referent_volunteer_entity", expected type at        
+         offset 40 on line 3                                                    
+         🪪  phpDoc.parseError                                                  
+  263    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  267    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  273    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  275    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  276    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  278    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  280    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  290    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  300    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  301    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\QueteurEntity::__construct() expects array,       
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/SpotfireAccessEntity.php                                    
+ ------ ----------------------------------------------------------------------- 
+  53     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\SpotfireAccessEntity::__construct() expects       
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  56     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\SpotfireAccessEntity::__construct() expects       
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  57     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\SpotfireAccessEntity::__construct() expects       
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/TroncEntity.php                                             
+ ------ ----------------------------------------------------------------------- 
+  111    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncEntity::__construct() expects array,         
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  112    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncEntity::__construct() expects array,         
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  116    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncEntity::__construct() expects array,         
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  117    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncEntity::__construct() expects array,         
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  118    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncEntity::__construct() expects array,         
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/TroncInUseEntity.php                                        
+ ------ ----------------------------------------------------------------------- 
+  74     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncInUseEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  77     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncInUseEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  78     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncInUseEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/TroncQueteurEntity.php                                      
+ ------ ----------------------------------------------------------------------- 
+  191    PHPDoc tag @var has invalid value (?float|null $don_cheque total       
+         amount of bank note collected): Unexpected token "|", expected         
+         TOKEN_OTHER at offset 40 on line 3                                     
+         🪪  phpDoc.parseError                                                  
+  196    PHPDoc tag @var has invalid value (?float|null $don_cheque total       
+         amount of credit card payment collected): Unexpected token "|",        
+         expected TOKEN_OTHER at offset 40 on line 3                            
+         🪪  phpDoc.parseError                                                  
+  290    PHPDoc tag @var has invalid value (?float|null $amount Sum in € of     
+         coins, bill, credit card & bank note. Used when Extracting Data of an  
+         UL.): Unexpected token "|", expected TOKEN_OTHER at offset 40 on line  
+         3                                                                      
+         🪪  phpDoc.parseError                                                  
+  295    PHPDoc tag @var has invalid value (?float|null $weight Sum in kg of    
+         coins, bill. Used when Extracting Data of an UL. Used when Extracting  
+         Data of an UL.): Unexpected token "|", expected TOKEN_OTHER at offset  
+         40 on line 3                                                           
+         🪪  phpDoc.parseError                                                  
+  300    PHPDoc tag @var has invalid value (?float|null $time_spent_in_hours    
+         number of hours spent on the street collecting money. Used when        
+         Extracting Data of an UL.): Unexpected token "|", expected             
+         TOKEN_OTHER at offset 40 on line 3                                     
+         🪪  phpDoc.parseError                                                  
+  342    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  343    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  344    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  345    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  346    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  355    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  357    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  358    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  359    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  360    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  361    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  362    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  363    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  364    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  365    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  366    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  367    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  368    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  369    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  370    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  371    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  373    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  374    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  377    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  378    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  390    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  398    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  400    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  401    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  404    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  405    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  406    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\TroncQueteurEntity::__construct() expects array,  
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  468    Cannot unset property RedCrossQuest\Entity\TroncQueteurEntity::$tronc  
+         because it might have hooks in a subclass.                             
+         🪪  unset.possiblyHookedProperty                                       
+  469    Cannot unset property                                                  
+         RedCrossQuest\Entity\TroncQueteurEntity::$rowCount because it might    
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/ULPreferencesEntity.php                                     
+ ------ ----------------------------------------------------------------------- 
+  56     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\ULPreferencesEntity::__construct() expects        
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/UniteLocaleEntity.php                                       
+ ------ ----------------------------------------------------------------------- 
+  278    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  280    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  282    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  283    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  287    Cannot unset property RedCrossQuest\Entity\UniteLocaleEntity::$phone   
+         because it might have hooks in a subclass.                             
+         🪪  unset.possiblyHookedProperty                                       
+  288    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$latitude because it might     
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+  289    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$longitude because it might    
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+  290    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$address because it might      
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+  291    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$external_id because it might  
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+  292    Cannot unset property RedCrossQuest\Entity\UniteLocaleEntity::$email   
+         because it might have hooks in a subclass.                             
+         🪪  unset.possiblyHookedProperty                                       
+  293    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$id_structure_rattachement     
+         because it might have hooks in a subclass.                             
+         🪪  unset.possiblyHookedProperty                                       
+  294    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$date_demarrage_activite       
+         because it might have hooks in a subclass.                             
+         🪪  unset.possiblyHookedProperty                                       
+  295    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$date_demarrage_rcq because    
+         it might have hooks in a subclass.                                     
+         🪪  unset.possiblyHookedProperty                                       
+  296    Cannot unset property RedCrossQuest\Entity\UniteLocaleEntity::$mode    
+         because it might have hooks in a subclass.                             
+         🪪  unset.possiblyHookedProperty                                       
+  297    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$publicDashboard because it    
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  298    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$president_man because it      
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  299    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$president_nivol because it    
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  300    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$president_first_name because  
+         it might have hooks in a subclass.                                     
+         🪪  unset.possiblyHookedProperty                                       
+  301    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$president_last_name because   
+         it might have hooks in a subclass.                                     
+         🪪  unset.possiblyHookedProperty                                       
+  302    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$president_email because it    
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  303    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$president_mobile because it   
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  304    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$tresorier_man because it      
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  305    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$tresorier_nivol because it    
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  306    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$tresorier_first_name because  
+         it might have hooks in a subclass.                                     
+         🪪  unset.possiblyHookedProperty                                       
+  307    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$tresorier_last_name because   
+         it might have hooks in a subclass.                                     
+         🪪  unset.possiblyHookedProperty                                       
+  308    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$tresorier_email because it    
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  309    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$tresorier_mobile because it   
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  310    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$admin_man because it might    
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+  311    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$admin_nivol because it might  
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+  312    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$admin_first_name because it   
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  313    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$admin_last_name because it    
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  314    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$admin_email because it might  
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+  315    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$admin_mobile because it       
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  316    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$registration_token because    
+         it might have hooks in a subclass.                                     
+         🪪  unset.possiblyHookedProperty                                       
+  317    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$registration_approved         
+         because it might have hooks in a subclass.                             
+         🪪  unset.possiblyHookedProperty                                       
+  318    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$created because it might      
+         have hooks in a subclass.                                              
+         🪪  unset.possiblyHookedProperty                                       
+  319    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$approval_date because it      
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  320    Cannot unset property                                                  
+         RedCrossQuest\Entity\UniteLocaleEntity::$reject_reason because it      
+         might have hooks in a subclass.                                        
+         🪪  unset.possiblyHookedProperty                                       
+  327    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  328    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  330    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  332    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  335    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleEntity::__construct() expects array,   
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/UniteLocaleSettingsEntity.php                               
+ ------ ----------------------------------------------------------------------- 
+  31     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleSettingsEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  32     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleSettingsEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  36     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UniteLocaleSettingsEntity::__construct() expects  
+         array, array|null given.                                               
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/UserEntity.php                                              
+ ------ ----------------------------------------------------------------------- 
+  107    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UserEntity::__construct() expects array,          
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  109    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UserEntity::__construct() expects array,          
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  114    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UserEntity::__construct() expects array,          
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  119    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\UserEntity::__construct() expects array,          
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Entity/YearlyGoalEntity.php                                        
+ ------ ----------------------------------------------------------------------- 
+  91     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  92     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  93     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  94     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  96     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  97     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  98     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  99     Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  100    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  101    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  102    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  103    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+  104    Parameter &$data by-ref type of method                                 
+         RedCrossQuest\Entity\YearlyGoalEntity::__construct() expects array,    
+         array|null given.                                                      
+         🪪  parameterByRef.type                                                
+         💡  You can change the parameter out type with @param-out PHPDoc tag.  
+ ------ ----------------------------------------------------------------------- 
+
+ ------ -------------------------------------------------------------- 
+  Line   src/Exception/UserAlreadyExistsException.php                  
+ ------ -------------------------------------------------------------- 
+  15     Deprecated in PHP 8.4: Parameter #3 $previous (Throwable) is  
+         implicitly nullable via default value null.                   
+         🪪  parameter.implicitlyNullable                              
+ ------ -------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Middleware/AuthorisationMiddleware.php                             
+ ------ ----------------------------------------------------------------------- 
+  24     PHPDoc tag @property has invalid value (mixed logger): Unexpected      
+         token "logger", expected variable at offset 23 on line 2               
+         🪪  phpDoc.parseError                                                  
+  25     PHPDoc tag @property has invalid value (string bearer): Unexpected     
+         token "bearer", expected variable at offset 50 on line 3               
+         🪪  phpDoc.parseError                                                  
+  26     PHPDoc tag @property has invalid value (int bearerStrLen): Unexpected  
+         token "bearerStrLen", expected variable at offset 74 on line 4         
+         🪪  phpDoc.parseError                                                  
+  92     Call to an undefined method                                            
+         Lcobucci\JWT\Configuration::checkConstraint().                         
+         🪪  method.notFound                                                    
+  104    Call to an undefined method Lcobucci\JWT\Token::claims().              
+         🪪  method.notFound                                                    
+  105    Call to an undefined method Lcobucci\JWT\Token::claims().              
+         🪪  method.notFound                                                    
+  106    Call to an undefined method Lcobucci\JWT\Token::claims().              
+         🪪  method.notFound                                                    
+  107    Call to an undefined method Lcobucci\JWT\Token::claims().              
+         🪪  method.notFound                                                    
+  108    Call to an undefined method Lcobucci\JWT\Token::claims().              
+         🪪  method.notFound                                                    
+  109    Call to an undefined method Lcobucci\JWT\Token::claims().              
+         🪪  method.notFound                                                    
+  110    Call to an undefined method Lcobucci\JWT\Token::claims().              
+         🪪  method.notFound                                                    
+  111    Call to an undefined method Lcobucci\JWT\Token::claims().              
+         🪪  method.notFound                                                    
+  203    Call to function is_scalar() with string will always evaluate to       
+         true.                                                                  
+         🪪  function.alreadyNarrowedType                                       
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Service/ClientInputValidator.php                                   
+ ------ ----------------------------------------------------------------------- 
+  147    Call to function is_int() with int will always evaluate to true.       
+         🪪  function.alreadyNarrowedType                                       
+  180    Strict comparison using === between array and '' will always evaluate  
+         to false.                                                              
+         🪪  identical.alwaysFalse                                              
+  259    Parameter #3 $maxValue of method                                       
+         RedCrossQuest\Service\ClientInputValidator::validateInteger() expects  
+         int, string given.                                                     
+         🪪  argument.type                                                      
+  261    Parameter #4 $defaultValue of method                                   
+         RedCrossQuest\Service\ClientInputValidator::validateBoolean() expects  
+         bool|null, int|string|null given.                                      
+         🪪  argument.type                                                      
+ ------ ----------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   src/Service/ClientInputValidatorSpecs.php                            
+ ------ --------------------------------------------------------------------- 
+  62     Property RedCrossQuest\Service\ClientInputValidatorSpecs::$maxValue  
+         (string) does not accept int.                                        
+         🪪  assign.propertyType                                              
+  70     Property                                                             
+         RedCrossQuest\Service\ClientInputValidatorSpecs::$defaultValue       
+         (int|string|null) does not accept bool|null.                         
+         🪪  assign.propertyType                                              
+ ------ --------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Service/Logger.php                                                 
+ ------ ----------------------------------------------------------------------- 
+  308    Comparison operation ">" between array<int|string, int<1, max>> and 0  
+         results in an error.                                                   
+         🪪  greater.invalid                                                    
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ---------------------------------------------------------------------- 
+  Line   src/Service/MailService.php                                           
+ ------ ---------------------------------------------------------------------- 
+  63     Deprecated in PHP 8.4: Parameter #8 $bcc (string) is implicitly       
+         nullable via default value null.                                      
+         🪪  parameter.implicitlyNullable                                      
+  64     Deprecated in PHP 8.4: Parameter #9 $fileName (string) is implicitly  
+         nullable via default value null.                                      
+         🪪  parameter.implicitlyNullable                                      
+  65     Deprecated in PHP 8.4: Parameter #10 $replyTo (string) is implicitly  
+         nullable via default value null.                                      
+         🪪  parameter.implicitlyNullable                                      
+ ------ ---------------------------------------------------------------------- 
+
+ ------ --------------------------------------------- 
+  Line   src/Service/RedCallService.php               
+ ------ --------------------------------------------- 
+  46     Negated boolean expression is always false.  
+         🪪  booleanNot.alwaysFalse                   
+ ------ --------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Service/SecretManagerService.php                                   
+ ------ ----------------------------------------------------------------------- 
+  30     Property                                                               
+         RedCrossQuest\Service\SecretManagerService::$SECRET_NAME_ID_MAPPING    
+         is unused.                                                             
+         🪪  property.unused                                                    
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+  88     Part $secretId                                                         
+         (Google\Cloud\SecretManager\V1\AccessSecretVersionRequest) of          
+         encapsed string cannot be cast to string.                              
+         🪪  encapsedStringPart.nonString                                       
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/Service/SlackService.php                                           
+ ------ ----------------------------------------------------------------------- 
+  21     Property RedCrossQuest\Service\SlackService::$rcqVersion is never      
+         read, only written.                                                    
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ------------------------------------------------------------------- 
+  Line   src/dependencies.php                                               
+ ------ ------------------------------------------------------------------- 
+  418    Anonymous function should return Kreait\Firebase\Auth but returns  
+         Kreait\Firebase\Contract\Auth.                                     
+         🪪  return.type                                                    
+ ------ ------------------------------------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/00-authentication.php     
+ ------ ------------------------------------- 
+  68     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  114    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  155    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  195    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  240    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/01-troncs.php             
+ ------ ------------------------------------- 
+  95     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  139    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  182    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  225    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  277    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  332    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  387    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/02-troncs-queteurs.php    
+ ------ ------------------------------------- 
+  91     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  138    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  193    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  250    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  297    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  346    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  393    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  446    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  498    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  551    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  601    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  651    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  704    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/03-points-quetes.php      
+ ------ ------------------------------------- 
+  74     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  115    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  192    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  248    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  293    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/04-queteurs.php           
+ ------ ------------------------------------- 
+  174    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  215    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  265    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  333    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  370    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  421    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  473    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  524    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  574    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  629    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  683    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  737    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  790    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  838    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  883    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/05-dailyStats.php         
+ ------ ------------------------------------- 
+  73     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  128    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  175    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/06-users.php              
+ ------ ------------------------------------- 
+  78     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  132    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  186    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/07-spotfire-access.php    
+ ------ ------------------------------------- 
+  60     Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------------- 
+  Line   src/routes/08-troncs-queteurs-history.php  
+ ------ ------------------------------------------- 
+  65     Variable $app might not be defined.        
+         🪪  variable.undefined                     
+ ------ ------------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/09-settings.php           
+ ------ ------------------------------------- 
+  59     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  101    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  143    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  181    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  221    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/10-unite-locale.php       
+ ------ ------------------------------------- 
+  60     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  102    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  152    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  194    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  245    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  295    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/11-yearly-goals.php       
+ ------ ------------------------------------- 
+  74     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  134    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  187    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/12-named_donation.php     
+ ------ ------------------------------------- 
+  100    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  151    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  205    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  255    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/13-mailing.php            
+ ------ ------------------------------------- 
+  103    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  108    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  114    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/14-exportData.php         
+ ------ ------------------------------------- 
+  64     Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/15-money-bag.php          
+ ------ ------------------------------------- 
+  82     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  135    Variable $app might not be defined.  
+         🪪  variable.undefined               
+  187    Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ --------------------------------------------- 
+  Line   src/routes/16-unite-locale-registration.php  
+ ------ --------------------------------------------- 
+  49     Variable $app might not be defined.          
+         🪪  variable.undefined                       
+  76     Variable $app might not be defined.          
+         🪪  variable.undefined                       
+  103    Variable $app might not be defined.          
+         🪪  variable.undefined                       
+  131    Variable $app might not be defined.          
+         🪪  variable.undefined                       
+ ------ --------------------------------------------- 
+
+ ------ ------------------------------------- 
+  Line   src/routes/17-void.php               
+ ------ ------------------------------------- 
+  35     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  36     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  37     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  38     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  39     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  40     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  41     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  42     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  43     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  44     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  45     Variable $app might not be defined.  
+         🪪  variable.undefined               
+  46     Variable $app might not be defined.  
+         🪪  variable.undefined               
+ ------ ------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/authentication/AuthenticateAction.php         
+ ------ ----------------------------------------------------------------------- 
+  29     Property                                                               
+         RedCrossQuest\routes\routesActions\authentication\AuthenticateAction:  
+         :$reCaptchaService is never read, only written.                        
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+  100    Comparison operation ">" between 0 and 0 is always false.              
+         🪪  greater.alwaysFalse                                                
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/authentication/FirebaseAuthenticateAction.ph  
+         p                                                                      
+ ------ ----------------------------------------------------------------------- 
+  32     Property                                                               
+         RedCrossQuest\routes\routesActions\authentication\FirebaseAuthenticat  
+         eAction::$reCaptchaService is never read, only written.                
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+  78     Parameter #3 $JWTConfiguration of method                               
+         RedCrossQuest\routes\routesActions\authentication\AuthenticateAbstrac  
+         tAction::__construct() expects Lcobucci\JWT\Configuration,             
+         RedCrossQuest\Service\SecretManagerService given.                      
+         🪪  argument.type                                                      
+  127    Caught class Firebase\Auth\Token\Exception\InvalidToken not found.     
+         🪪  class.notFound                                                     
+         💡  Learn more at https://phpstan.org/user-guide/discovering-symbols   
+  136    Call to an undefined method                                            
+         Lcobucci\JWT\UnencryptedToken::getClaim().                             
+         🪪  method.notFound                                                    
+  137    Call to an undefined method                                            
+         Lcobucci\JWT\UnencryptedToken::getClaim().                             
+         🪪  method.notFound                                                    
+  144    Instanceof between RedCrossQuest\Entity\UserEntity and                 
+         RedCrossQuest\Entity\UserEntity will always evaluate to true.          
+         🪪  instanceof.alwaysTrue                                              
+  151    Call to an undefined method Lcobucci\JWT\Token::__toString().          
+         🪪  method.notFound                                                    
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/authentication/GetUserInfoFromUUIDAction.php  
+ ------ ----------------------------------------------------------------------- 
+  26     Property                                                               
+         RedCrossQuest\routes\routesActions\authentication\GetUserInfoFromUUID  
+         Action::$reCaptchaService is never read, only written.                 
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+  92     Comparison operation ">" between 0 and 0 is always false.              
+         🪪  greater.alwaysFalse                                                
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/authentication/ResetPassword.php              
+ ------ ----------------------------------------------------------------------- 
+  27     Property                                                               
+         RedCrossQuest\routes\routesActions\authentication\ResetPassword::$reC  
+         aptchaService is never read, only written.                             
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+  88     Comparison operation ">" between 0 and 0 is always false.              
+         🪪  greater.alwaysFalse                                                
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/authentication/SendPasswordInitializationMai  
+         lAction.php                                                            
+ ------ ----------------------------------------------------------------------- 
+  26     Property                                                               
+         RedCrossQuest\routes\routesActions\authentication\SendPasswordInitial  
+         izationMailAction::$reCaptchaService is never read, only written.      
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+  89     Comparison operation ">" between 0 and 0 is always false.              
+         🪪  greater.alwaysFalse                                                
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ------------------------------------------------------------------ 
+  Line   src/routes/routesActions/exportData/ExportData.php                
+ ------ ------------------------------------------------------------------ 
+  65     Parameter #1 $status of class                                     
+         RedCrossQuest\routes\routesActions\exportData\ExportDataResponse  
+         constructor expects int, string given.                            
+         🪪  argument.type                                                 
+ ------ ------------------------------------------------------------------ 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/queteurs/ExportQueteurData.php                
+ ------ ----------------------------------------------------------------------- 
+  74     Parameter #1 $status of class                                          
+         RedCrossQuest\routes\routesActions\queteurs\ExportDataQueteurResponse  
+         constructor expects int, string given.                                 
+         🪪  argument.type                                                      
+ ------ ----------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   src/routes/routesActions/queteurs/MarkAllQueteurQRCodeAsPrinted.php  
+ ------ --------------------------------------------------------------------- 
+  50     Call to an undefined method                                          
+         Psr\Http\Message\ResponseInterface::write().                         
+         🪪  method.notFound                                                  
+ ------ --------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/settings/GetAllULSettings.php                 
+ ------ ----------------------------------------------------------------------- 
+  67     Property                                                               
+         RedCrossQuest\routes\routesActions\settings\GetAllULSettings::$google  
+         MapsApiKey is never written, only read.                                
+         🪪  property.onlyRead                                                  
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+  142    Cannot unset property                                                  
+         RedCrossQuest\Entity\ULPreferencesEntity::$FIRESTORE_DOC_ID because    
+         it might have hooks in a subclass.                                     
+         🪪  unset.possiblyHookedProperty                                       
+ ------ ----------------------------------------------------------------------- 
+
+ ------ --------------------------------------------------------------------- 
+  Line   src/routes/routesActions/settings/GetULSettings.php                  
+ ------ --------------------------------------------------------------------- 
+  56     Cannot unset property                                                
+         RedCrossQuest\Entity\ULPreferencesEntity::$FIRESTORE_DOC_ID because  
+         it might have hooks in a subclass.                                   
+         🪪  unset.possiblyHookedProperty                                     
+ ------ --------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------- 
+  Line   src/routes/routesActions/settings/UpdateULSettings.php           
+ ------ ----------------------------------------------------------------- 
+  52     Method RedCrossQuest\DBService\UniteLocaleDBService::updateUL()  
+         invoked with 3 parameters, 2 required.                           
+         🪪  arguments.count                                              
+ ------ ----------------------------------------------------------------- 
+
+ ------ -------------------------------------------------------------- 
+  Line   src/routes/routesActions/spotfire/GetSpotfireAccessToken.php  
+ ------ -------------------------------------------------------------- 
+  66     Variable $validToken might not be defined.                    
+         🪪  variable.undefined                                        
+ ------ -------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------- 
+  Line   src/routes/routesActions/troncsQueteurs/PrepareTroncQueteur.php  
+ ------ ----------------------------------------------------------------- 
+  156    Variable $messageProperties might not be defined.                
+         🪪  variable.undefined                                           
+ ------ ----------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/troncsQueteurs/PrepareTroncQueteurResponse.p  
+         hp                                                                     
+ ------ ----------------------------------------------------------------------- 
+  16     PHPDoc tag @var for property                                           
+         RedCrossQuest\routes\routesActions\troncsQueteurs\PrepareTroncQueteur  
+         Response::$troncInUse with type bool|null is not subtype of native     
+         type bool.                                                             
+         🪪  property.phpDocType                                                
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/troncsQueteurs/SaveAsAdminOnTroncQueteur.php  
+ ------ ----------------------------------------------------------------------- 
+  76     Variable $tq might not be defined.                                     
+         🪪  variable.undefined                                                 
+  84     Access to an undefined property                                        
+         RedCrossQuest\Entity\TroncQueteurEntity::$saveAsAdmin.                 
+         🪪  property.notFound                                                  
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und  
+         efined-property                                                        
+  103    Variable $messageProperties might not be defined.                      
+         🪪  variable.undefined                                                 
+  104    Variable $tqUpdated might not be defined.                              
+         🪪  variable.undefined                                                 
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/troncsQueteurs/SaveCoinsOnTroncQueteur.php    
+ ------ ----------------------------------------------------------------------- 
+  115    Variable $tq might not be defined.                                     
+         🪪  variable.undefined                                                 
+  127    Access to an undefined property                                        
+         RedCrossQuest\Entity\TroncQueteurEntity::$saveAsAdmin.                 
+         🪪  property.notFound                                                  
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und  
+         efined-property                                                        
+  148    Variable $messageProperties might not be defined.                      
+         🪪  variable.undefined                                                 
+  149    Variable $tqUpdated might not be defined.                              
+         🪪  variable.undefined                                                 
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/troncsQueteurs/TroncQueteurPreparationChecks  
+         .php                                                                   
+ ------ ----------------------------------------------------------------------- 
+  26     Property                                                               
+         RedCrossQuest\routes\routesActions\troncsQueteurs\TroncQueteurPrepara  
+         tionChecks::$troncQueteurBusinessService is never read, only written.  
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/ulRegistration/CreateUniteLocaleInLowerEnv.p  
+         hp                                                                     
+ ------ ----------------------------------------------------------------------- 
+  34     Property                                                               
+         RedCrossQuest\routes\routesActions\ulRegistration\CreateUniteLocaleIn  
+         LowerEnv::$reCaptchaService is never read, only written.               
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/ulRegistration/RegisterNewUL.php              
+ ------ ----------------------------------------------------------------------- 
+  138    Method                                                                 
+         RedCrossQuest\routes\routesActions\ulRegistration\RegisterNewUL::chec  
+         kPresident() is unused.                                                
+         🪪  method.unused                                                      
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/ulRegistration/ValidateULRegistration.php     
+ ------ ----------------------------------------------------------------------- 
+  48     Property                                                               
+         RedCrossQuest\routes\routesActions\ulRegistration\ValidateULRegistrat  
+         ion::$redCallService is never read, only written.                      
+         🪪  property.onlyWritten                                               
+         💡  See:                                                               
+         https://phpstan.org/developing-extensions/always-read-written-propert  
+         ies                                                                    
+  174    Variable $ulEntity might not be defined.                               
+         🪪  variable.undefined                                                 
+  221    Variable $lowerEnv might not be defined.                               
+         🪪  variable.undefined                                                 
+  227    Variable $lowerEnv might not be defined.                               
+         🪪  variable.undefined                                                 
+ ------ ----------------------------------------------------------------------- 
+
+ ------ ----------------------------------------------------------------------- 
+  Line   src/routes/routesActions/unitesLocales/ApproveULRegistration.php       
+ ------ ----------------------------------------------------------------------- 
+  137    Access to an undefined property                                        
+         RedCrossQuest\Entity\UniteLocaleEntity::$response.                     
+         🪪  property.notFound                                                  
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und  
+         efined-property                                                        
+ ------ ----------------------------------------------------------------------- 
+
+ ------ -------------------------------------------------------------- 
+  Line   src/settings.php                                              
+ ------ -------------------------------------------------------------- 
+  82     Array has 2 duplicate keys with value 2025 ("2025", "2025").  
+         🪪  array.duplicateKey                                        
+ ------ -------------------------------------------------------------- 
+
+ [ERROR] Found 396 errors                                                       
+

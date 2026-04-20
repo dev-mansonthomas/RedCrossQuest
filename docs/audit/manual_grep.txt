@@ -1,0 +1,1308 @@
+=== Casts non-canoniques (integer|boolean|double|binary) ===
+  (aucun)
+
+=== __sleep / __wakeup ===
+  (aucun)
+
+=== DATE_RFC7231 / DateTimeInterface::RFC7231 ===
+  (aucun)
+
+=== disable_classes INI ===
+  (aucun)
+
+=== get_defined_functions ===
+  (aucun)
+
+=== Slim setArgument / setArguments ===
+  (aucun)
+
+=== null comme array offset (approx) ===
+  (aucun)
+
+=== Backtick shell_exec alias ===
+src/DBService/UniteLocaleDBService.php:26:SELECT  `ul`.`id`,
+src/DBService/UniteLocaleDBService.php:27:        `ul`.`name`,
+src/DBService/UniteLocaleDBService.php:28:        `ul`.`phone`,
+src/DBService/UniteLocaleDBService.php:29:        `ul`.`latitude`,
+src/DBService/UniteLocaleDBService.php:30:        `ul`.`longitude`,
+src/DBService/UniteLocaleDBService.php:31:        `ul`.`address`,
+src/DBService/UniteLocaleDBService.php:32:        `ul`.`postal_code`,
+src/DBService/UniteLocaleDBService.php:33:        `ul`.`city`,
+src/DBService/UniteLocaleDBService.php:34:        `ul`.`external_id`,
+src/DBService/UniteLocaleDBService.php:35:        `ul`.`email`,
+src/DBService/UniteLocaleDBService.php:36:        `ul`.`id_structure_rattachement`,
+src/DBService/UniteLocaleDBService.php:37:        `ul`.`date_demarrage_activite`,
+src/DBService/UniteLocaleDBService.php:38:        `ul`.`date_demarrage_rcq`,
+src/DBService/UniteLocaleDBService.php:39:        `ul`.`mode`,
+src/DBService/UniteLocaleDBService.php:40:        `ul`.`publicDashboard`,
+src/DBService/UniteLocaleDBService.php:41:        `ul`.`president_man`,
+src/DBService/UniteLocaleDBService.php:42:        `ul`.`president_nivol`,
+src/DBService/UniteLocaleDBService.php:43:        `ul`.`president_first_name`,
+src/DBService/UniteLocaleDBService.php:44:        `ul`.`president_last_name`,
+src/DBService/UniteLocaleDBService.php:45:        `ul`.`president_email`,
+src/DBService/UniteLocaleDBService.php:46:        `ul`.`president_mobile`,
+src/DBService/UniteLocaleDBService.php:47:        `ul`.`tresorier_man`,
+src/DBService/UniteLocaleDBService.php:48:        `ul`.`tresorier_nivol`,
+src/DBService/UniteLocaleDBService.php:49:        `ul`.`tresorier_first_name`,
+src/DBService/UniteLocaleDBService.php:50:        `ul`.`tresorier_last_name`,
+src/DBService/UniteLocaleDBService.php:51:        `ul`.`tresorier_email`,
+src/DBService/UniteLocaleDBService.php:52:        `ul`.`tresorier_mobile`,
+src/DBService/UniteLocaleDBService.php:53:        `ul`.`admin_man`,
+src/DBService/UniteLocaleDBService.php:54:        `ul`.`admin_nivol`,
+src/DBService/UniteLocaleDBService.php:55:        `ul`.`admin_first_name`,
+src/DBService/UniteLocaleDBService.php:56:        `ul`.`admin_last_name`,
+src/DBService/UniteLocaleDBService.php:57:        `ul`.`admin_email`,
+src/DBService/UniteLocaleDBService.php:58:        `ul`.`admin_mobile`,
+src/DBService/UniteLocaleDBService.php:59:        `ul`.`tresorier_spreadsheet_id`
+src/DBService/UniteLocaleDBService.php:60:FROM    `ul`
+src/DBService/UniteLocaleDBService.php:61:WHERE   `ul`.id    = :ul_id
+src/DBService/UniteLocaleDBService.php:72:UPDATE `ul`
+src/DBService/UniteLocaleDBService.php:74:  `email`                   = :email,
+src/DBService/UniteLocaleDBService.php:75:  `name`                    = :name,
+src/DBService/UniteLocaleDBService.php:76:  `phone`                   = :phone,
+src/DBService/UniteLocaleDBService.php:77:  `address`                 = :address,
+src/DBService/UniteLocaleDBService.php:78:  `postal_code`             = :postal_code ,
+src/DBService/UniteLocaleDBService.php:79:  `city`                    = :city,
+src/DBService/UniteLocaleDBService.php:80:  `longitude`               = :longitude,
+src/DBService/UniteLocaleDBService.php:81:  `latitude`                = :latitude,
+src/DBService/UniteLocaleDBService.php:82:  `publicDashboard`         = :publicDashboard,
+src/DBService/UniteLocaleDBService.php:83:  `president_man`           = :president_man,       
+src/DBService/UniteLocaleDBService.php:84:  `president_nivol`         = :president_nivol,     
+src/DBService/UniteLocaleDBService.php:85:  `president_first_name`    = :president_first_name,
+src/DBService/UniteLocaleDBService.php:86:  `president_last_name`     = :president_last_name, 
+src/DBService/UniteLocaleDBService.php:87:  `president_email`         = :president_email,     
+src/DBService/UniteLocaleDBService.php:88:  `president_mobile`        = :president_mobile,    
+src/DBService/UniteLocaleDBService.php:89:  `tresorier_man`           = :tresorier_man,       
+src/DBService/UniteLocaleDBService.php:90:  `tresorier_nivol`         = :tresorier_nivol,     
+src/DBService/UniteLocaleDBService.php:91:  `tresorier_first_name`    = :tresorier_first_name,
+src/DBService/UniteLocaleDBService.php:92:  `tresorier_last_name`     = :tresorier_last_name, 
+src/DBService/UniteLocaleDBService.php:93:  `tresorier_email`         = :tresorier_email,     
+src/DBService/UniteLocaleDBService.php:94:  `tresorier_mobile`        = :tresorier_mobile,    
+src/DBService/UniteLocaleDBService.php:95:  `admin_man`               = :admin_man,           
+src/DBService/UniteLocaleDBService.php:96:  `admin_nivol`             = :admin_nivol,         
+src/DBService/UniteLocaleDBService.php:97:  `admin_first_name`        = :admin_first_name,    
+src/DBService/UniteLocaleDBService.php:98:  `admin_last_name`         = :admin_last_name,     
+src/DBService/UniteLocaleDBService.php:99:  `admin_email`             = :admin_email,         
+src/DBService/UniteLocaleDBService.php:100:  `admin_mobile`            = :admin_mobile      
+src/DBService/UniteLocaleDBService.php:101:WHERE `id`                  = :id
+src/DBService/UniteLocaleDBService.php:159:  `date_demarrage_rcq`   = NOW()  
+src/DBService/UniteLocaleDBService.php:160:WHERE `id`               = :id";
+src/DBService/UniteLocaleDBService.php:181:UPDATE `ul_registration`
+src/DBService/UniteLocaleDBService.php:183:  `registration_approved` = :registration_approved,
+src/DBService/UniteLocaleDBService.php:184:  `reject_reason`         = :reject_reason,
+src/DBService/UniteLocaleDBService.php:185:  `approval_date`         = NOW()       
+src/DBService/UniteLocaleDBService.php:186:WHERE `id`                = :id
+src/DBService/UniteLocaleDBService.php:210:INSERT INTO  `ul_registration`
+src/DBService/UniteLocaleDBService.php:212:  `ul_id`               ,
+src/DBService/UniteLocaleDBService.php:213:  `president_man`       ,
+src/DBService/UniteLocaleDBService.php:214:  `president_nivol`     ,
+src/DBService/UniteLocaleDBService.php:215:  `president_first_name`,
+src/DBService/UniteLocaleDBService.php:216:  `president_last_name` ,
+src/DBService/UniteLocaleDBService.php:217:  `president_email`     ,
+src/DBService/UniteLocaleDBService.php:218:  `president_mobile`    ,
+src/DBService/UniteLocaleDBService.php:219:  `tresorier_man`       ,
+src/DBService/UniteLocaleDBService.php:220:  `tresorier_nivol`     ,
+src/DBService/UniteLocaleDBService.php:221:  `tresorier_first_name`,
+src/DBService/UniteLocaleDBService.php:222:  `tresorier_last_name` ,
+src/DBService/UniteLocaleDBService.php:223:  `tresorier_email`     ,
+src/DBService/UniteLocaleDBService.php:224:  `tresorier_mobile`    ,
+src/DBService/UniteLocaleDBService.php:225:  `admin_man`           ,
+src/DBService/UniteLocaleDBService.php:226:  `admin_nivol`         ,
+src/DBService/UniteLocaleDBService.php:227:  `admin_first_name`    ,
+src/DBService/UniteLocaleDBService.php:228:  `admin_last_name`     ,
+src/DBService/UniteLocaleDBService.php:229:  `admin_email`         ,
+src/DBService/UniteLocaleDBService.php:230:  `admin_mobile`        ,
+src/DBService/UniteLocaleDBService.php:231:  `registration_token`
+src/DBService/UniteLocaleDBService.php:298:SELECT  `ul`.`id`,
+src/DBService/UniteLocaleDBService.php:299:        `ul`.`name`,
+src/DBService/UniteLocaleDBService.php:300:        `ul`.`phone`,
+src/DBService/UniteLocaleDBService.php:301:        `ul`.`latitude`,
+src/DBService/UniteLocaleDBService.php:302:        `ul`.`longitude`,
+src/DBService/UniteLocaleDBService.php:303:        `ul`.`address`,
+src/DBService/UniteLocaleDBService.php:304:        `ul`.`postal_code`,
+src/DBService/UniteLocaleDBService.php:305:        `ul`.`city`,
+src/DBService/UniteLocaleDBService.php:306:        `ul`.`external_id`,
+src/DBService/UniteLocaleDBService.php:307:        `ul`.`email`,
+src/DBService/UniteLocaleDBService.php:308:        `ul`.`id_structure_rattachement`,
+src/DBService/UniteLocaleDBService.php:309:        `ul`.`date_demarrage_activite`,
+src/DBService/UniteLocaleDBService.php:310:        `ul`.`date_demarrage_rcq`,
+src/DBService/UniteLocaleDBService.php:311:        `ul`.`mode`,
+src/DBService/UniteLocaleDBService.php:312:        `ul`.`publicDashboard`
+src/DBService/UniteLocaleDBService.php:313:FROM    `ul`
+src/DBService/UniteLocaleDBService.php:314:WHERE   UPPER(ul.`name`                ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:315:  OR    UPPER(ul.`postal_code`         ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:316:  OR    UPPER(ul.`city`                ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:317:  OR    UPPER(ul.`president_first_name`) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:318:  OR    UPPER(ul.`president_last_name` ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:319:  OR    UPPER(ul.`admin_first_name`    ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:320:  OR    UPPER(ul.`admin_last_name`     ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:321:  OR    UPPER(ul.`tresorier_first_name`) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:322:  OR    UPPER(ul.`tresorier_last_name` ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:343:FROM   ul_registration `ulr`
+src/DBService/UniteLocaleDBService.php:344:WHERE  `ulr`.id                    = :registration_id
+src/DBService/UniteLocaleDBService.php:345:AND    `ulr`.ul_id                 = :ul_id
+src/DBService/UniteLocaleDBService.php:346:AND    `ulr`.registration_token    = :registration_token
+src/DBService/UniteLocaleDBService.php:347:AND    `ulr`.registration_approved is null
+src/DBService/UniteLocaleDBService.php:348:AND    `ulr`.approval_date         is null
+src/DBService/UniteLocaleDBService.php:384:SELECT  `ul` .`id`,
+src/DBService/UniteLocaleDBService.php:385:        `ul` .`name`,
+src/DBService/UniteLocaleDBService.php:386:        `ul` .`postal_code`,
+src/DBService/UniteLocaleDBService.php:387:        `ul` .`city`,
+src/DBService/UniteLocaleDBService.php:388:        LENGTH(`ulr`.registration_token) as registration_in_progress,
+src/DBService/UniteLocaleDBService.php:389:        `ulr`.id                         as registration_id
+src/DBService/UniteLocaleDBService.php:390:FROM    `ul`
+src/DBService/UniteLocaleDBService.php:391:LEFT OUTER JOIN  `ul_registration` ulr on `ul`.`id` = ulr.ul_id
+src/DBService/UniteLocaleDBService.php:392:WHERE   `ul` .`date_demarrage_rcq` is NULL
+src/DBService/UniteLocaleDBService.php:393:and     `ulr`.approval_date        is NULL
+src/DBService/UniteLocaleDBService.php:395:        UPPER(ul.`name`       ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:396:  OR    UPPER(ul.`postal_code`) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:397:  OR    UPPER(ul.`city`       ) like concat('%', UPPER(:query), '%')
+src/DBService/UniteLocaleDBService.php:399:AND  `ul`.id > 1
+src/DBService/UniteLocaleDBService.php:400:ORDER BY `ul`.`name`
+src/DBService/UniteLocaleDBService.php:440:SELECT  `ul`.`id`,
+src/DBService/UniteLocaleDBService.php:441:        `ul`.`name`,
+src/DBService/UniteLocaleDBService.php:442:        `ul`.`phone`,
+src/DBService/UniteLocaleDBService.php:443:        `ul`.`latitude`,
+src/DBService/UniteLocaleDBService.php:444:        `ul`.`longitude`,
+src/DBService/UniteLocaleDBService.php:445:        `ul`.`address`,
+src/DBService/UniteLocaleDBService.php:446:        `ul`.`postal_code`,
+src/DBService/UniteLocaleDBService.php:447:        `ul`.`city`,
+src/DBService/UniteLocaleDBService.php:448:        `ul`.`external_id`,
+src/DBService/UniteLocaleDBService.php:449:        `ul`.`email`,
+src/DBService/UniteLocaleDBService.php:450:        `ul`.`id_structure_rattachement`,
+src/DBService/UniteLocaleDBService.php:451:        `ul`.`date_demarrage_activite`,
+src/DBService/UniteLocaleDBService.php:452:        `ul`.`date_demarrage_rcq`,
+src/DBService/UniteLocaleDBService.php:453:        `ul`.`mode`,
+src/DBService/UniteLocaleDBService.php:454:        `ul`.`publicDashboard`,
+src/DBService/UniteLocaleDBService.php:455:        ulr.`id` as registration_id,
+src/DBService/UniteLocaleDBService.php:456:        ulr.`president_man`,
+src/DBService/UniteLocaleDBService.php:457:        ulr.`president_nivol`,
+src/DBService/UniteLocaleDBService.php:458:        ulr.`president_first_name`,
+src/DBService/UniteLocaleDBService.php:459:        ulr.`president_last_name`,
+src/DBService/UniteLocaleDBService.php:460:        ulr.`president_email`,
+src/DBService/UniteLocaleDBService.php:461:        ulr.`president_mobile`,
+src/DBService/UniteLocaleDBService.php:462:        ulr.`tresorier_man`,
+src/DBService/UniteLocaleDBService.php:463:        ulr.`tresorier_nivol`,
+src/DBService/UniteLocaleDBService.php:464:        ulr.`tresorier_first_name`,
+src/DBService/UniteLocaleDBService.php:465:        ulr.`tresorier_last_name`,
+src/DBService/UniteLocaleDBService.php:466:        ulr.`tresorier_email`,
+src/DBService/UniteLocaleDBService.php:467:        ulr.`tresorier_mobile`,
+src/DBService/UniteLocaleDBService.php:468:        ulr.`admin_man`,
+src/DBService/UniteLocaleDBService.php:469:        ulr.`admin_nivol`,
+src/DBService/UniteLocaleDBService.php:470:        ulr.`admin_first_name`,
+src/DBService/UniteLocaleDBService.php:471:        ulr.`admin_last_name`,
+src/DBService/UniteLocaleDBService.php:472:        ulr.`admin_email`,
+src/DBService/UniteLocaleDBService.php:473:        ulr.`admin_mobile`,
+src/DBService/UniteLocaleDBService.php:474:        ulr.`created`
+src/DBService/UniteLocaleDBService.php:475:FROM    `ul`, `ul_registration` ulr
+src/DBService/UniteLocaleDBService.php:476:WHERE   ulr.ul_id = `ul`.id
+src/DBService/UniteLocaleDBService.php:501:SELECT  `ul`.`id`,
+src/DBService/UniteLocaleDBService.php:502:        `ul`.`name`,
+src/DBService/UniteLocaleDBService.php:503:        `ul`.`phone`,
+src/DBService/UniteLocaleDBService.php:504:        `ul`.`latitude`,
+src/DBService/UniteLocaleDBService.php:505:        `ul`.`longitude`,
+src/DBService/UniteLocaleDBService.php:506:        `ul`.`address`,
+src/DBService/UniteLocaleDBService.php:507:        `ul`.`postal_code`,
+src/DBService/UniteLocaleDBService.php:508:        `ul`.`city`,
+src/DBService/UniteLocaleDBService.php:509:        `ul`.`external_id`,
+src/DBService/UniteLocaleDBService.php:510:        `ul`.`email`,
+src/DBService/UniteLocaleDBService.php:511:        `ul`.`id_structure_rattachement`,
+src/DBService/UniteLocaleDBService.php:512:        `ul`.`date_demarrage_activite`,
+src/DBService/UniteLocaleDBService.php:513:        `ul`.`date_demarrage_rcq`,
+src/DBService/UniteLocaleDBService.php:514:        `ul`.`mode`,
+src/DBService/UniteLocaleDBService.php:515:        `ul`.`publicDashboard`,
+src/DBService/UniteLocaleDBService.php:516:        ulr.`id` as registration_id,
+src/DBService/UniteLocaleDBService.php:517:        ulr.`president_man`,
+src/DBService/UniteLocaleDBService.php:518:        ulr.`president_nivol`,
+src/DBService/UniteLocaleDBService.php:519:        ulr.`president_first_name`,
+src/DBService/UniteLocaleDBService.php:520:        ulr.`president_last_name`,
+src/DBService/UniteLocaleDBService.php:521:        ulr.`president_email`,
+src/DBService/UniteLocaleDBService.php:522:        ulr.`president_mobile`,
+src/DBService/UniteLocaleDBService.php:523:        ulr.`tresorier_man`,
+src/DBService/UniteLocaleDBService.php:524:        ulr.`tresorier_nivol`,
+src/DBService/UniteLocaleDBService.php:525:        ulr.`tresorier_first_name`,
+src/DBService/UniteLocaleDBService.php:526:        ulr.`tresorier_last_name`,
+src/DBService/UniteLocaleDBService.php:527:        ulr.`tresorier_email`,
+src/DBService/UniteLocaleDBService.php:528:        ulr.`tresorier_mobile`,
+src/DBService/UniteLocaleDBService.php:529:        ulr.`admin_man`,
+src/DBService/UniteLocaleDBService.php:530:        ulr.`admin_nivol`,
+src/DBService/UniteLocaleDBService.php:531:        ulr.`admin_first_name`,
+src/DBService/UniteLocaleDBService.php:532:        ulr.`admin_last_name`,
+src/DBService/UniteLocaleDBService.php:533:        ulr.`admin_email`,
+src/DBService/UniteLocaleDBService.php:534:        ulr.`admin_mobile`,
+src/DBService/UniteLocaleDBService.php:535:        ulr.`created`,
+src/DBService/UniteLocaleDBService.php:536:        ulr.`registration_approved`,
+src/DBService/UniteLocaleDBService.php:537:        ulr.`reject_reason`,
+src/DBService/UniteLocaleDBService.php:538:        ulr.`approval_date`
+src/DBService/UniteLocaleDBService.php:539:FROM    `ul`, `ul_registration` ulr
+src/DBService/UniteLocaleDBService.php:540:WHERE   ulr.ul_id = `ul`.id
+src/DBService/YearlyGoalDBService.php:21:SELECT  y.`id`,
+src/DBService/YearlyGoalDBService.php:22:        y.`ul_id`,
+src/DBService/YearlyGoalDBService.php:23:        y.`year`,
+src/DBService/YearlyGoalDBService.php:24:        y.`amount`,
+src/DBService/YearlyGoalDBService.php:25:        y.`day_1_percentage`,
+src/DBService/YearlyGoalDBService.php:26:        y.`day_2_percentage`,
+src/DBService/YearlyGoalDBService.php:27:        y.`day_3_percentage`,
+src/DBService/YearlyGoalDBService.php:28:        y.`day_4_percentage`,
+src/DBService/YearlyGoalDBService.php:29:        y.`day_5_percentage`,
+src/DBService/YearlyGoalDBService.php:30:        y.`day_6_percentage`,
+src/DBService/YearlyGoalDBService.php:31:        y.`day_7_percentage`,
+src/DBService/YearlyGoalDBService.php:32:        y.`day_8_percentage`,
+src/DBService/YearlyGoalDBService.php:33:        y.`day_9_percentage`
+src/DBService/YearlyGoalDBService.php:34:FROM `yearly_goal` AS y
+src/DBService/YearlyGoalDBService.php:56:update  `yearly_goal`
+src/DBService/YearlyGoalDBService.php:58:`amount`           = :amount,
+src/DBService/YearlyGoalDBService.php:59:`day_1_percentage` = :day_1_percentage,
+src/DBService/YearlyGoalDBService.php:60:`day_2_percentage` = :day_2_percentage,
+src/DBService/YearlyGoalDBService.php:61:`day_3_percentage` = :day_3_percentage,
+src/DBService/YearlyGoalDBService.php:62:`day_4_percentage` = :day_4_percentage,
+src/DBService/YearlyGoalDBService.php:63:`day_5_percentage` = :day_5_percentage,
+src/DBService/YearlyGoalDBService.php:64:`day_6_percentage` = :day_6_percentage,
+src/DBService/YearlyGoalDBService.php:65:`day_7_percentage` = :day_7_percentage,
+src/DBService/YearlyGoalDBService.php:66:`day_8_percentage` = :day_8_percentage,
+src/DBService/YearlyGoalDBService.php:67:`day_9_percentage` = :day_9_percentage
+src/DBService/YearlyGoalDBService.php:68:where   `id`       = :id
+src/DBService/YearlyGoalDBService.php:69:AND     `ul_id`    = :ulId   
+src/DBService/YearlyGoalDBService.php:99:INSERT INTO `yearly_goal`
+src/DBService/YearlyGoalDBService.php:101:  `ul_id`,
+src/DBService/YearlyGoalDBService.php:102:  `year`,
+src/DBService/YearlyGoalDBService.php:103:  `amount`,
+src/DBService/YearlyGoalDBService.php:104:  `day_1_percentage`,
+src/DBService/YearlyGoalDBService.php:105:  `day_2_percentage`,
+src/DBService/YearlyGoalDBService.php:106:  `day_3_percentage`,
+src/DBService/YearlyGoalDBService.php:107:  `day_4_percentage`,
+src/DBService/YearlyGoalDBService.php:108:  `day_5_percentage`,
+src/DBService/YearlyGoalDBService.php:109:  `day_6_percentage`,
+src/DBService/YearlyGoalDBService.php:110:  `day_7_percentage`,
+src/DBService/YearlyGoalDBService.php:111:  `day_8_percentage`,
+src/DBService/YearlyGoalDBService.php:112:  `day_9_percentage`
+src/DBService/YearlyGoalDBService.php:191:SELECT  y.`id`,
+src/DBService/YearlyGoalDBService.php:192:        y.`ul_id`,
+src/DBService/YearlyGoalDBService.php:193:        y.`year`,
+src/DBService/YearlyGoalDBService.php:194:        y.`amount`,
+src/DBService/YearlyGoalDBService.php:195:        y.`day_1_percentage`,
+src/DBService/YearlyGoalDBService.php:196:        y.`day_2_percentage`,
+src/DBService/YearlyGoalDBService.php:197:        y.`day_3_percentage`,
+src/DBService/YearlyGoalDBService.php:198:        y.`day_4_percentage`,
+src/DBService/YearlyGoalDBService.php:199:        y.`day_5_percentage`,
+src/DBService/YearlyGoalDBService.php:200:        y.`day_6_percentage`,
+src/DBService/YearlyGoalDBService.php:201:        y.`day_7_percentage`,
+src/DBService/YearlyGoalDBService.php:202:        y.`day_8_percentage`,
+src/DBService/YearlyGoalDBService.php:203:        y.`day_9_percentage`
+src/DBService/YearlyGoalDBService.php:204:FROM `yearly_goal` AS y
+src/DBService/MailingDBService.php:176:INSERT INTO `queteur_mailing_status`
+src/DBService/MailingDBService.php:178:  `queteur_id`,
+src/DBService/MailingDBService.php:179:  `year`,
+src/DBService/MailingDBService.php:180:  `status_code`,
+src/DBService/MailingDBService.php:181:  `email_send_date`
+src/DBService/MailingDBService.php:214:UPDATE `queteur`
+src/DBService/MailingDBService.php:215:SET   `spotfire_access_token`     = :spotfire_access_token                      
+src/DBService/MailingDBService.php:216:WHERE `id`    = :id
+src/DBService/MailingDBService.php:217:AND   `ul_id` = :ul_id  
+src/DBService/MailingDBService.php:239:UPDATE `queteur_mailing_status` qms
+src/DBService/MailingDBService.php:241:ON          qms.`queteur_id` = q.`id`
+src/DBService/MailingDBService.php:242:SET   qms.`spotfire_opened`       = 1,
+src/DBService/MailingDBService.php:243:      qms.`spotfire_open_date`    = NOW()                      
+src/DBService/MailingDBService.php:244:WHERE   q.`spotfire_access_token` = :guid
+src/DBService/SpotfireAccessDBService.php:56:INSERT INTO `spotfire_access`
+src/DBService/SpotfireAccessDBService.php:58:  `token`,
+src/DBService/SpotfireAccessDBService.php:59:  `token_expiration`,
+src/DBService/SpotfireAccessDBService.php:60:  `ul_id`,
+src/DBService/SpotfireAccessDBService.php:61:  `user_id`
+src/DBService/DailyStatsBeforeRCQDBService.php:57:SELECT  d.`id`,
+src/DBService/DailyStatsBeforeRCQDBService.php:58:        d.`ul_id`,
+src/DBService/DailyStatsBeforeRCQDBService.php:59:        d.`date`,
+src/DBService/DailyStatsBeforeRCQDBService.php:60:        d.`amount`,
+src/DBService/DailyStatsBeforeRCQDBService.php:61:        d.`nb_benevole`,
+src/DBService/DailyStatsBeforeRCQDBService.php:62:        d.`nb_benevole_1j`,
+src/DBService/DailyStatsBeforeRCQDBService.php:63:        d.`nb_heure`
+src/DBService/DailyStatsBeforeRCQDBService.php:64:FROM `daily_stats_before_rcq` AS d
+src/DBService/DailyStatsBeforeRCQDBService.php:85:update  `daily_stats_before_rcq`
+src/DBService/DailyStatsBeforeRCQDBService.php:86:set     `amount`        = :amount,
+src/DBService/DailyStatsBeforeRCQDBService.php:87:        `nb_benevole`   = :nb_benevole,
+src/DBService/DailyStatsBeforeRCQDBService.php:88:        `nb_benevole_1j`= :nb_benevole_1j,
+src/DBService/DailyStatsBeforeRCQDBService.php:89:        `nb_heure`      = :nb_heure
+src/DBService/DailyStatsBeforeRCQDBService.php:90:where   `id`      = :id
+src/DBService/DailyStatsBeforeRCQDBService.php:91:AND     `ul_id`   = :ulId   
+src/DBService/DailyStatsBeforeRCQDBService.php:116:INSERT INTO `daily_stats_before_rcq`
+src/DBService/DailyStatsBeforeRCQDBService.php:118:  `ul_id`,
+src/DBService/DailyStatsBeforeRCQDBService.php:119:  `date`,
+src/DBService/DailyStatsBeforeRCQDBService.php:120:  `amount`
+src/DBService/NamedDonationDBService.php:49:(       UPPER(`first_name`      ) like concat('%', UPPER(:query), '%')
+src/DBService/NamedDonationDBService.php:50:  OR    UPPER(`last_name`       ) like concat('%', UPPER(:query), '%')
+src/DBService/NamedDonationDBService.php:51:  OR    UPPER(`email`           ) like concat('%', UPPER(:query), '%')
+src/DBService/NamedDonationDBService.php:52:  OR    UPPER(`phone`           ) like concat('%', UPPER(:query), '%')
+src/DBService/NamedDonationDBService.php:53:  OR    UPPER(`ref_recu_fiscal` ) like concat('%', UPPER(:query), '%')
+src/DBService/NamedDonationDBService.php:66:SELECT `id`,
+src/DBService/NamedDonationDBService.php:67:       `ul_id`,
+src/DBService/NamedDonationDBService.php:68:       `ref_recu_fiscal`,
+src/DBService/NamedDonationDBService.php:69:       `first_name`,
+src/DBService/NamedDonationDBService.php:70:       `last_name`,
+src/DBService/NamedDonationDBService.php:71:       `donation_date`,
+src/DBService/NamedDonationDBService.php:72:       `don_cheque`,
+src/DBService/NamedDonationDBService.php:73:       `address`,
+src/DBService/NamedDonationDBService.php:74:       `postal_code`,
+src/DBService/NamedDonationDBService.php:75:       `city`,
+src/DBService/NamedDonationDBService.php:76:       `phone`,
+src/DBService/NamedDonationDBService.php:77:       `email`,
+src/DBService/NamedDonationDBService.php:78:       `euro500`,
+src/DBService/NamedDonationDBService.php:79:       `euro200`,
+src/DBService/NamedDonationDBService.php:80:       `euro100`,
+src/DBService/NamedDonationDBService.php:81:       `euro50`,
+src/DBService/NamedDonationDBService.php:82:       `euro20`,
+src/DBService/NamedDonationDBService.php:83:       `euro10`,
+src/DBService/NamedDonationDBService.php:84:       `euro5`,
+src/DBService/NamedDonationDBService.php:85:       `euro2`,
+src/DBService/NamedDonationDBService.php:86:       `euro1`,
+src/DBService/NamedDonationDBService.php:87:       `cents50`,
+src/DBService/NamedDonationDBService.php:88:       `cents20`,
+src/DBService/NamedDonationDBService.php:89:       `cents10`,
+src/DBService/NamedDonationDBService.php:90:       `cents5`,
+src/DBService/NamedDonationDBService.php:91:       `cents2`,
+src/DBService/NamedDonationDBService.php:92:       `cent1`,
+src/DBService/NamedDonationDBService.php:93:       `notes`,
+src/DBService/NamedDonationDBService.php:94:       `type`,
+src/DBService/NamedDonationDBService.php:95:       `forme`,
+src/DBService/NamedDonationDBService.php:96:       `don_creditcard`,
+src/DBService/NamedDonationDBService.php:97:       `deleted`,
+src/DBService/NamedDonationDBService.php:98:       `coins_money_bag_id`,
+src/DBService/NamedDonationDBService.php:99:       `bills_money_bag_id`,
+src/DBService/NamedDonationDBService.php:100:       `last_update`,
+src/DBService/NamedDonationDBService.php:101:       `last_update_user_id`
+src/DBService/NamedDonationDBService.php:102:FROM `named_donation`
+src/DBService/NamedDonationDBService.php:103:WHERE `ul_id`   = :ul_id
+src/DBService/NamedDonationDBService.php:104:AND   `deleted` = :deleted
+src/DBService/NamedDonationDBService.php:107:ORDER BY `id` DESC
+src/DBService/NamedDonationDBService.php:138:AND   `ul_id`   = :ul_id';
+src/DBService/NamedDonationDBService.php:142:SELECT `id`,
+src/DBService/NamedDonationDBService.php:143:       `ul_id`,
+src/DBService/NamedDonationDBService.php:144:       `ref_recu_fiscal`,
+src/DBService/NamedDonationDBService.php:145:       `first_name`,
+src/DBService/NamedDonationDBService.php:146:       `last_name`,
+src/DBService/NamedDonationDBService.php:147:       `donation_date`,
+src/DBService/NamedDonationDBService.php:148:       `don_cheque`,
+src/DBService/NamedDonationDBService.php:149:       `address`,
+src/DBService/NamedDonationDBService.php:150:       `postal_code`,
+src/DBService/NamedDonationDBService.php:151:       `city`,
+src/DBService/NamedDonationDBService.php:152:       `phone`,
+src/DBService/NamedDonationDBService.php:153:       `email`,
+src/DBService/NamedDonationDBService.php:154:       `euro500`,
+src/DBService/NamedDonationDBService.php:155:       `euro200`,
+src/DBService/NamedDonationDBService.php:156:       `euro100`,
+src/DBService/NamedDonationDBService.php:157:       `euro50`,
+src/DBService/NamedDonationDBService.php:158:       `euro20`,
+src/DBService/NamedDonationDBService.php:159:       `euro10`,
+src/DBService/NamedDonationDBService.php:160:       `euro5`,
+src/DBService/NamedDonationDBService.php:161:       `euro2`,
+src/DBService/NamedDonationDBService.php:162:       `euro1`,
+src/DBService/NamedDonationDBService.php:163:       `cents50`,
+src/DBService/NamedDonationDBService.php:164:       `cents20`,
+src/DBService/NamedDonationDBService.php:165:       `cents10`,
+src/DBService/NamedDonationDBService.php:166:       `cents5`,
+src/DBService/NamedDonationDBService.php:167:       `cents2`,
+src/DBService/NamedDonationDBService.php:168:       `cent1`,
+src/DBService/NamedDonationDBService.php:169:       `notes`,
+src/DBService/NamedDonationDBService.php:170:       `type`,
+src/DBService/NamedDonationDBService.php:171:       `forme`,
+src/DBService/NamedDonationDBService.php:172:       `don_creditcard`,
+src/DBService/NamedDonationDBService.php:173:       `deleted`,
+src/DBService/NamedDonationDBService.php:174:       `coins_money_bag_id`,
+src/DBService/NamedDonationDBService.php:175:       `bills_money_bag_id`,  
+src/DBService/NamedDonationDBService.php:176:       `last_update_user_id`,
+src/DBService/NamedDonationDBService.php:177:       `last_update`
+src/DBService/NamedDonationDBService.php:178:FROM `named_donation`
+src/DBService/NamedDonationDBService.php:179:WHERE `id`      = :id
+src/DBService/NamedDonationDBService.php:240:INSERT INTO `named_donation`
+src/DBService/NamedDonationDBService.php:242:  `ul_id`,
+src/DBService/NamedDonationDBService.php:243:  `ref_recu_fiscal`,
+src/DBService/NamedDonationDBService.php:244:  `first_name`,
+src/DBService/NamedDonationDBService.php:245:  `last_name`,
+src/DBService/NamedDonationDBService.php:246:  `donation_date`,
+src/DBService/NamedDonationDBService.php:247:  `don_cheque`,
+src/DBService/NamedDonationDBService.php:248:  `address`,
+src/DBService/NamedDonationDBService.php:249:  `postal_code`,
+src/DBService/NamedDonationDBService.php:250:  `city`,
+src/DBService/NamedDonationDBService.php:251:  `phone`,
+src/DBService/NamedDonationDBService.php:252:  `email`,
+src/DBService/NamedDonationDBService.php:253:  `euro500`,
+src/DBService/NamedDonationDBService.php:254:  `euro200`,
+src/DBService/NamedDonationDBService.php:255:  `euro100`,
+src/DBService/NamedDonationDBService.php:256:  `euro50`,
+src/DBService/NamedDonationDBService.php:257:  `euro20`,
+src/DBService/NamedDonationDBService.php:258:  `euro10`,
+src/DBService/NamedDonationDBService.php:259:  `euro5`,
+src/DBService/NamedDonationDBService.php:260:  `euro2`,
+src/DBService/NamedDonationDBService.php:261:  `euro1`,
+src/DBService/NamedDonationDBService.php:262:  `cents50`,
+src/DBService/NamedDonationDBService.php:263:  `cents20`,
+src/DBService/NamedDonationDBService.php:264:  `cents10`,
+src/DBService/NamedDonationDBService.php:265:  `cents5`,
+src/DBService/NamedDonationDBService.php:266:  `cents2`,
+src/DBService/NamedDonationDBService.php:267:  `cent1`,
+src/DBService/NamedDonationDBService.php:268:  `notes`,
+src/DBService/NamedDonationDBService.php:269:  `type`,
+src/DBService/NamedDonationDBService.php:270:  `forme`,
+src/DBService/NamedDonationDBService.php:271:  `don_creditcard`,
+src/DBService/NamedDonationDBService.php:272:  `deleted`,
+src/DBService/NamedDonationDBService.php:273:  `coins_money_bag_id`,
+src/DBService/NamedDonationDBService.php:274:  `bills_money_bag_id`,
+src/DBService/NamedDonationDBService.php:275:  `last_update_user_id`,
+src/DBService/NamedDonationDBService.php:276:  `last_update`
+src/DBService/NamedDonationDBService.php:372:UPDATE `named_donation`
+src/DBService/NamedDonationDBService.php:375:  `ref_recu_fiscal`     = :ref_recu_fiscal,     
+src/DBService/NamedDonationDBService.php:376:  `first_name`          = :first_name,          
+src/DBService/NamedDonationDBService.php:377:  `last_name`           = :last_name,           
+src/DBService/NamedDonationDBService.php:378:  `donation_date`       = :donation_date,                
+src/DBService/NamedDonationDBService.php:379:  `don_cheque`          = :don_cheque,          
+src/DBService/NamedDonationDBService.php:380:  `address`             = :address,             
+src/DBService/NamedDonationDBService.php:381:  `postal_code`         = :postal_code,         
+src/DBService/NamedDonationDBService.php:382:  `city`                = :city,                
+src/DBService/NamedDonationDBService.php:383:  `phone`               = :phone,               
+src/DBService/NamedDonationDBService.php:384:  `email`               = :email,               
+src/DBService/NamedDonationDBService.php:385:  `euro500`             = :euro500,             
+src/DBService/NamedDonationDBService.php:386:  `euro200`             = :euro200,             
+src/DBService/NamedDonationDBService.php:387:  `euro100`             = :euro100,             
+src/DBService/NamedDonationDBService.php:388:  `euro50`              = :euro50,              
+src/DBService/NamedDonationDBService.php:389:  `euro20`              = :euro20,              
+src/DBService/NamedDonationDBService.php:390:  `euro10`              = :euro10,              
+src/DBService/NamedDonationDBService.php:391:  `euro5`               = :euro5,               
+src/DBService/NamedDonationDBService.php:392:  `euro2`               = :euro2,               
+src/DBService/NamedDonationDBService.php:393:  `euro1`               = :euro1,               
+src/DBService/NamedDonationDBService.php:394:  `cents50`             = :cents50,             
+src/DBService/NamedDonationDBService.php:395:  `cents20`             = :cents20,             
+src/DBService/NamedDonationDBService.php:396:  `cents10`             = :cents10,             
+src/DBService/NamedDonationDBService.php:397:  `cents5`              = :cents5,              
+src/DBService/NamedDonationDBService.php:398:  `cents2`              = :cents2,              
+src/DBService/NamedDonationDBService.php:399:  `cent1`               = :cent1,               
+src/DBService/NamedDonationDBService.php:400:  `notes`               = :notes,               
+src/DBService/NamedDonationDBService.php:401:  `type`                = :type,                
+src/DBService/NamedDonationDBService.php:402:  `forme`               = :forme,               
+src/DBService/NamedDonationDBService.php:403:  `don_creditcard`      = :don_creditcard,      
+src/DBService/NamedDonationDBService.php:404:  `deleted`             = :deleted,             
+src/DBService/NamedDonationDBService.php:405:  `coins_money_bag_id`  = :coins_money_bag_id,  
+src/DBService/NamedDonationDBService.php:406:  `bills_money_bag_id`  = :bills_money_bag_id,  
+src/DBService/NamedDonationDBService.php:407:  `last_update_user_id` = :last_update_user_id, 
+src/DBService/NamedDonationDBService.php:408:  `last_update`         = NOW()                 
+src/DBService/NamedDonationDBService.php:409:WHERE `id`    = :id
+src/DBService/NamedDonationDBService.php:410:AND   `ul_id` = :ul_id  
+src/DBService/TroncDBService.php:38:SELECT `id`,
+src/DBService/TroncDBService.php:39:     `ul_id`,
+src/DBService/TroncDBService.php:40:     `created`,
+src/DBService/TroncDBService.php:41:     `enabled`,
+src/DBService/TroncDBService.php:42:     `notes`,
+src/DBService/TroncDBService.php:43:     `type`
+src/DBService/TroncDBService.php:44:FROM   `tronc` as t
+src/DBService/TroncDBService.php:68:      AND `type` = :type
+src/DBService/TroncDBService.php:96:SELECT `id`,
+src/DBService/TroncDBService.php:97:     `ul_id`,
+src/DBService/TroncDBService.php:98:     `created`,
+src/DBService/TroncDBService.php:99:     `enabled`,
+src/DBService/TroncDBService.php:100:     `notes`,
+src/DBService/TroncDBService.php:101:     `type`
+src/DBService/TroncDBService.php:102:FROM  `tronc` as t
+src/DBService/TroncDBService.php:111:AND   `ul_id`           = :ul_id      
+src/DBService/TroncDBService.php:138:UPDATE `tronc`
+src/DBService/TroncDBService.php:140:    `notes`       = :notes,
+src/DBService/TroncDBService.php:141:    `enabled`     = :enabled,
+src/DBService/TroncDBService.php:142:    `type`        = :type
+src/DBService/TroncDBService.php:143:WHERE `id`          = :id
+src/DBService/TroncDBService.php:144:AND   `ul_id`       = :ul_id
+src/DBService/TroncDBService.php:169:INSERT INTO `tronc`
+src/DBService/TroncDBService.php:171:   `ul_id`,
+src/DBService/TroncDBService.php:172:   `created`,
+src/DBService/TroncDBService.php:173:   `enabled`,
+src/DBService/TroncDBService.php:174:   `notes`,
+src/DBService/TroncDBService.php:175:   `type`
+src/DBService/TroncDBService.php:227:UPDATE `tronc`
+src/DBService/TroncDBService.php:228:SET    `qr_code_printed` = 1
+src/DBService/TroncDBService.php:229:WHERE  `ul_id`           = :ul_id
+src/DBService/TroncDBService.php:251:SELECT t.`id`, tq.`id` as `tronc_queteur_id`, q.`first_name`, q.`last_name`, tq.`depart_theorique`,
+src/DBService/TroncDBService.php:252:       t.`ul_id`, t.`created`, t.`enabled`, t.`notes`, t.`type`
+src/DBService/TroncDBService.php:256:where tq.`tronc_id`   = t.`id`
+src/DBService/TroncDBService.php:257:AND   tq.`queteur_id` = q.`id`
+src/DBService/TroncDBService.php:258:AND   t.`enabled`     = true
+src/DBService/TroncDBService.php:259:AND   tq.`deleted`    = false
+src/DBService/TroncDBService.php:260:AND   YEAR(tq.`depart_theorique`) = YEAR(CURRENT_DATE())
+src/DBService/TroncDBService.php:261:and   tq.`depart`     is null
+src/DBService/TroncDBService.php:262:AND   t.`ul_id`       = :ul_id
+src/DBService/TroncDBService.php:263:ORDER BY tq.`depart_theorique` DESC, tq.`id` desc
+src/DBService/TroncDBService.php:289:SELECT t.`id`, tq.`id` as `tronc_queteur_id`, q.`first_name`, q.`last_name`, tq.`depart`,
+src/DBService/TroncDBService.php:290:       t.`ul_id`, t.`created`, t.`enabled`, t.`notes`, t.`type`
+src/DBService/TroncDBService.php:294:where tq.`tronc_id`   = t.`id`
+src/DBService/TroncDBService.php:295:AND   tq.`queteur_id` = q.`id`
+src/DBService/TroncDBService.php:296:AND   t.`enabled`     = true
+src/DBService/TroncDBService.php:297:AND   tq.`deleted`    = false
+src/DBService/TroncDBService.php:298:AND   YEAR(tq.`depart_theorique`) = YEAR(CURRENT_DATE())
+src/DBService/TroncDBService.php:299:AND   tq.`depart`     is not null
+src/DBService/TroncDBService.php:300:AND   tq.`retour`     is null
+src/DBService/TroncDBService.php:301:AND   t.`ul_id`       = :ul_id
+src/DBService/TroncDBService.php:302:ORDER BY tq.`depart` DESC, tq.`id` desc
+src/DBService/TroncDBService.php:328:SELECT t.`id`, tq.`id` as `tronc_queteur_id`, q.`first_name`, q.`last_name`, tq.`depart`, tq.`retour`,
+src/DBService/TroncDBService.php:329:       t.`ul_id`, t.`created`, t.`enabled`, t.`notes`, t.`type`
+src/DBService/TroncDBService.php:333:where tq.`tronc_id`   = t.`id`
+src/DBService/TroncDBService.php:334:AND   tq.`queteur_id` = q.`id`
+src/DBService/TroncDBService.php:335:AND   t.`enabled`     = true
+src/DBService/TroncDBService.php:336:AND   tq.`deleted`    = false
+src/DBService/TroncDBService.php:337:AND   YEAR(tq.`depart_theorique`) = YEAR(CURRENT_DATE())
+src/DBService/TroncDBService.php:338:AND   tq.`depart`     is not null
+src/DBService/TroncDBService.php:339:AND   tq.`retour`     is not null
+src/DBService/TroncDBService.php:340:AND   tq.`comptage`   is null  
+src/DBService/TroncDBService.php:341:AND   t.`ul_id`       = :ul_id
+src/DBService/TroncDBService.php:342:ORDER BY tq.`retour` DESC, tq.`id` desc
+src/DBService/UserDBService.php:25:select  u.`id`        ,
+src/DBService/UserDBService.php:26:        u.`nivol`     ,
+src/DBService/UserDBService.php:27:        u.`queteur_id`,
+src/DBService/UserDBService.php:28:        u.`role`      ,
+src/DBService/UserDBService.php:29:        u.`created`   ,
+src/DBService/UserDBService.php:30:        u.`updated`   ,
+src/DBService/UserDBService.php:31:        u.`active`    ,
+src/DBService/UserDBService.php:32:        q.`first_name`,
+src/DBService/UserDBService.php:33:        q.`last_name` ,
+src/DBService/UserDBService.php:34:        q.`email`     ,
+src/DBService/UserDBService.php:35:        q.`secteur`   ,
+src/DBService/UserDBService.php:36:        q.`nivol`     ,
+src/DBService/UserDBService.php:37:        q.`mobile`    ,
+src/DBService/UserDBService.php:38:        q.`created`   ,
+src/DBService/UserDBService.php:39:        q.`updated`   ,
+src/DBService/UserDBService.php:40:        q.`ul_id`     ,
+src/DBService/UserDBService.php:41:        q.`man`       ,
+src/DBService/UserDBService.php:42:        q.`active`     
+src/DBService/UserDBService.php:80:INSERT INTO `users`
+src/DBService/UserDBService.php:82:`nivol`,
+src/DBService/UserDBService.php:83:`queteur_id`,
+src/DBService/UserDBService.php:84:`password`,
+src/DBService/UserDBService.php:85:`role`,
+src/DBService/UserDBService.php:86:`created`,
+src/DBService/UserDBService.php:87:`updated`,
+src/DBService/UserDBService.php:88:`active`,
+src/DBService/UserDBService.php:89:`last_failure_login_date`,
+src/DBService/UserDBService.php:90:`nb_of_failure`,
+src/DBService/UserDBService.php:91:`last_successful_login_date`,
+src/DBService/UserDBService.php:92:`init_passwd_uuid`,
+src/DBService/UserDBService.php:93:`init_passwd_date`)
+src/DBService/UserDBService.php:333:UPDATE  `users`
+src/DBService/UserDBService.php:367:UPDATE  `users`
+src/DBService/UserDBService.php:396:UPDATE  `users`
+src/DBService/UserDBService.php:417:UPDATE  `users`
+src/DBService/UserDBService.php:450:UPDATE        `users`    u
+src/DBService/UserDBService.php:451:  INNER JOIN  `queteur`  q
+src/DBService/UserDBService.php:514:UPDATE        `users`    u
+src/DBService/UserDBService.php:515:  INNER JOIN  `queteur`  q
+src/DBService/UserDBService.php:532:AND   `ul_id`           = :ul_id      
+src/DBService/UserDBService.php:552:UPDATE  `users` u,
+src/DBService/UserDBService.php:553:        `queteur` q
+src/DBService/UserDBService.php:554:SET     u.`nivol`      = :nivol
+src/DBService/UserDBService.php:555:WHERE   u.`id`         = :id
+src/DBService/UserDBService.php:556:AND     u.`queteur_id` = q.`id`
+src/DBService/UserDBService.php:563:AND  q.`ul_id` = :ul_id";
+src/DBService/QueteurDBService.php:112:FROM `queteur_registration` qr, ul_settings us
+src/DBService/QueteurDBService.php:162:SELECT qr.`id`,
+src/DBService/QueteurDBService.php:163:       qr.`first_name`,
+src/DBService/QueteurDBService.php:164:       qr.`last_name`,
+src/DBService/QueteurDBService.php:165:       qr.`man`,
+src/DBService/QueteurDBService.php:166:       qr.`birthdate`,
+src/DBService/QueteurDBService.php:167:       qr.`email`,
+src/DBService/QueteurDBService.php:168:       qr.`secteur`,
+src/DBService/QueteurDBService.php:169:       qr.`nivol`,
+src/DBService/QueteurDBService.php:170:       qr.`mobile`,
+src/DBService/QueteurDBService.php:171:       qr.`created`,
+src/DBService/QueteurDBService.php:172:       qr.`ul_registration_token`,
+src/DBService/QueteurDBService.php:173:       qr.`queteur_registration_token`,
+src/DBService/QueteurDBService.php:174:       qr.`registration_approved`,
+src/DBService/QueteurDBService.php:175:       qr.`reject_reason`,
+src/DBService/QueteurDBService.php:176:       qr.`queteur_id`,
+src/DBService/QueteurDBService.php:177:       qr.`benevole_referent`
+src/DBService/QueteurDBService.php:178:FROM `queteur_registration` qr, ul_settings us
+src/DBService/QueteurDBService.php:212:SELECT qr.`id`,
+src/DBService/QueteurDBService.php:213:       qr.`first_name`,
+src/DBService/QueteurDBService.php:214:       qr.`last_name`,
+src/DBService/QueteurDBService.php:215:       qr.`man`,
+src/DBService/QueteurDBService.php:216:       qr.`birthdate`,
+src/DBService/QueteurDBService.php:217:       qr.`email`,
+src/DBService/QueteurDBService.php:218:       qr.`secteur`,
+src/DBService/QueteurDBService.php:219:       qr.`nivol`,
+src/DBService/QueteurDBService.php:220:       qr.`mobile`,
+src/DBService/QueteurDBService.php:221:       qr.`created`,
+src/DBService/QueteurDBService.php:222:       qr.`ul_registration_token`,
+src/DBService/QueteurDBService.php:223:       qr.`queteur_registration_token`,
+src/DBService/QueteurDBService.php:224:       qr.`registration_approved`,
+src/DBService/QueteurDBService.php:225:       qr.`reject_reason`,
+src/DBService/QueteurDBService.php:226:       qr.`queteur_id`,
+src/DBService/QueteurDBService.php:227:       qr.`firebase_sign_in_provider`,
+src/DBService/QueteurDBService.php:228:       qr.`firebase_uid`,
+src/DBService/QueteurDBService.php:229:       qr.`benevole_referent`,
+src/DBService/QueteurDBService.php:230:       u.`id`        as ul_id,
+src/DBService/QueteurDBService.php:231:       u.`name`      as ul_name,
+src/DBService/QueteurDBService.php:232:       u.`longitude` as ul_longitude,
+src/DBService/QueteurDBService.php:233:       u.`latitude`  as ul_latitude
+src/DBService/QueteurDBService.php:234:FROM `queteur_registration` qr, 
+src/DBService/QueteurDBService.php:235:            `ul_settings`   us,
+src/DBService/QueteurDBService.php:236:            `ul`            u
+src/DBService/QueteurDBService.php:237:where us.`ul_id` = :ul_id
+src/DBService/QueteurDBService.php:238:AND   us.`ul_id` = u.`id`
+src/DBService/QueteurDBService.php:241:  qr.`ul_registration_token` = us.`token_benevole`
+src/DBService/QueteurDBService.php:243:  qr.`ul_registration_token` = us.`token_benevole_1j`
+src/DBService/QueteurDBService.php:245:AND qr.`id` = :id
+src/DBService/QueteurDBService.php:269:UPDATE `queteur_registration`
+src/DBService/QueteurDBService.php:271:  `approval_date`           = NOW(),
+src/DBService/QueteurDBService.php:272:  `registration_approved`   = :registration_approved,
+src/DBService/QueteurDBService.php:273:  `reject_reason`           = :reject_reason ,
+src/DBService/QueteurDBService.php:274:  `queteur_id`              = :queteur_id,
+src/DBService/QueteurDBService.php:275:  `approver_user_id`        = :user_id 
+src/DBService/QueteurDBService.php:276:WHERE `id`                  = :id
+src/DBService/QueteurDBService.php:304:UPDATE `queteur_registration`
+src/DBService/QueteurDBService.php:306:  `approval_date`           = NOW(),
+src/DBService/QueteurDBService.php:307:  `registration_approved`   = true,
+src/DBService/QueteurDBService.php:308:  `reject_reason`           = '' ,
+src/DBService/QueteurDBService.php:309:  `queteur_id`              = :queteur_id,
+src/DBService/QueteurDBService.php:310:  `approver_user_id`        = :user_id 
+src/DBService/QueteurDBService.php:311:WHERE `id`                  = :id
+src/DBService/QueteurDBService.php:327:UPDATE `queteur`
+src/DBService/QueteurDBService.php:329:    `active`  = true,
+src/DBService/QueteurDBService.php:330:    `updated` = NOW(),
+src/DBService/QueteurDBService.php:331:    `firebase_sign_in_provider` = :firebase_sign_in_provider,
+src/DBService/QueteurDBService.php:332:    `firebase_uid`              = :firebase_uid
+src/DBService/QueteurDBService.php:333:WHERE `id`    = :id
+src/DBService/QueteurDBService.php:364:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:365:        q.`email`,
+src/DBService/QueteurDBService.php:366:        q.`first_name`,
+src/DBService/QueteurDBService.php:367:        q.`last_name`,
+src/DBService/QueteurDBService.php:368:        q.`secteur`,
+src/DBService/QueteurDBService.php:369:        q.`nivol`,
+src/DBService/QueteurDBService.php:370:        q.`mobile`,
+src/DBService/QueteurDBService.php:371:        q.`created`,
+src/DBService/QueteurDBService.php:372:        q.`updated`,
+src/DBService/QueteurDBService.php:373:        q.`ul_id`,
+src/DBService/QueteurDBService.php:374:        q.`notes`,
+src/DBService/QueteurDBService.php:375:        q.`active`,
+src/DBService/QueteurDBService.php:376:        q.`man`,
+src/DBService/QueteurDBService.php:377:        q.`birthdate`,
+src/DBService/QueteurDBService.php:378:        q.`qr_code_printed`
+src/DBService/QueteurDBService.php:379:FROM `queteur` q
+src/DBService/QueteurDBService.php:389:(       UPPER(q.`first_name`) like concat('%', UPPER(:query), '%')
+src/DBService/QueteurDBService.php:390:  OR    UPPER(q.`last_name` ) like concat('%', UPPER(:query ), '%')
+src/DBService/QueteurDBService.php:391:  OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:query     ), '%')
+src/DBService/QueteurDBService.php:392:  OR    CONVERT(q.`id`, CHAR)     like concat(:query,'%')
+src/DBService/QueteurDBService.php:472:(       UPPER(q.`first_name`) like concat('%', UPPER(:query), '%')
+src/DBService/QueteurDBService.php:473:  OR    UPPER(q.`last_name` ) like concat('%', UPPER(:query), '%')
+src/DBService/QueteurDBService.php:474:  OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:query), '%')
+src/DBService/QueteurDBService.php:475:  OR    CONVERT(q.`id`, CHAR) like concat(           :query , '%')
+src/DBService/QueteurDBService.php:484:AND q.`secteur` = :secteur
+src/DBService/QueteurDBService.php:492:AND q.`secteur` IN (1,2,4)
+src/DBService/QueteurDBService.php:600:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:601:        q.`email`,
+src/DBService/QueteurDBService.php:602:        q.`first_name`,
+src/DBService/QueteurDBService.php:603:        q.`last_name`,
+src/DBService/QueteurDBService.php:604:        q.`secteur`,
+src/DBService/QueteurDBService.php:605:        q.`nivol`,
+src/DBService/QueteurDBService.php:606:        q.`mobile`,
+src/DBService/QueteurDBService.php:607:        q.`created`,
+src/DBService/QueteurDBService.php:608:        q.`updated`,
+src/DBService/QueteurDBService.php:609:        q.`ul_id`,
+src/DBService/QueteurDBService.php:610:        q.`notes`,
+src/DBService/QueteurDBService.php:611:        q.`active`,
+src/DBService/QueteurDBService.php:612:        q.`man`,
+src/DBService/QueteurDBService.php:613:        q.`birthdate`,
+src/DBService/QueteurDBService.php:614:        q.`qr_code_printed`
+src/DBService/QueteurDBService.php:628:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:629:        q.`email`,
+src/DBService/QueteurDBService.php:630:        q.`first_name`,
+src/DBService/QueteurDBService.php:631:        q.`last_name`,
+src/DBService/QueteurDBService.php:632:        q.`secteur`,
+src/DBService/QueteurDBService.php:633:        q.`nivol`,
+src/DBService/QueteurDBService.php:634:        q.`mobile`,
+src/DBService/QueteurDBService.php:635:        q.`created`,
+src/DBService/QueteurDBService.php:636:        q.`updated`,
+src/DBService/QueteurDBService.php:637:        q.`ul_id`,
+src/DBService/QueteurDBService.php:638:        q.`notes`,
+src/DBService/QueteurDBService.php:639:        q.`active`,
+src/DBService/QueteurDBService.php:640:        q.`man`,
+src/DBService/QueteurDBService.php:641:        q.`birthdate`,
+src/DBService/QueteurDBService.php:642:        q.`qr_code_printed`,
+src/DBService/QueteurDBService.php:643:       tq.`point_quete_id`,
+src/DBService/QueteurDBService.php:644:       tq.`tronc_id`,
+src/DBService/QueteurDBService.php:646:       tq.`depart_theorique`,       
+src/DBService/QueteurDBService.php:647:       tq.`depart`, 
+src/DBService/QueteurDBService.php:648:       tq.`retour`,
+src/DBService/QueteurDBService.php:692:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:693:        q.`email`,
+src/DBService/QueteurDBService.php:694:        q.`first_name`,
+src/DBService/QueteurDBService.php:695:        q.`last_name`,
+src/DBService/QueteurDBService.php:696:        q.`secteur`,
+src/DBService/QueteurDBService.php:697:        q.`nivol`,
+src/DBService/QueteurDBService.php:698:        q.`mobile`,
+src/DBService/QueteurDBService.php:699:        q.`created`,
+src/DBService/QueteurDBService.php:700:        q.`updated`,
+src/DBService/QueteurDBService.php:701:        q.`ul_id`,
+src/DBService/QueteurDBService.php:702:        q.`notes`,
+src/DBService/QueteurDBService.php:703:        q.`active`,
+src/DBService/QueteurDBService.php:704:        q.`man`,
+src/DBService/QueteurDBService.php:705:        q.`birthdate`,
+src/DBService/QueteurDBService.php:706:        q.`qr_code_printed`,
+src/DBService/QueteurDBService.php:707:       tq.`point_quete_id`,
+src/DBService/QueteurDBService.php:709:       tq.`point_quete_id`, 
+src/DBService/QueteurDBService.php:710:       tq.`depart_theorique`, 
+src/DBService/QueteurDBService.php:711:       tq.`depart`, 
+src/DBService/QueteurDBService.php:712:       tq.`retour`,
+src/DBService/QueteurDBService.php:713:       tq.`tronc_id`,
+src/DBService/QueteurDBService.php:748:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:749:        q.`email`,
+src/DBService/QueteurDBService.php:750:        q.`first_name`,
+src/DBService/QueteurDBService.php:751:        q.`last_name`,
+src/DBService/QueteurDBService.php:752:        q.`secteur`,
+src/DBService/QueteurDBService.php:753:        q.`nivol`,
+src/DBService/QueteurDBService.php:754:        q.`mobile`,
+src/DBService/QueteurDBService.php:755:        q.`created`,
+src/DBService/QueteurDBService.php:756:        q.`updated`,
+src/DBService/QueteurDBService.php:757:        q.`ul_id`,
+src/DBService/QueteurDBService.php:758:        q.`notes`,
+src/DBService/QueteurDBService.php:759:        q.`active`,
+src/DBService/QueteurDBService.php:760:        q.`man`,
+src/DBService/QueteurDBService.php:761:        q.`birthdate`,
+src/DBService/QueteurDBService.php:762:        q.`qr_code_printed`,
+src/DBService/QueteurDBService.php:763:       tq.`point_quete_id`,
+src/DBService/QueteurDBService.php:764:       tq.`depart_theorique`,
+src/DBService/QueteurDBService.php:765:       tq.`depart`,
+src/DBService/QueteurDBService.php:766:       tq.`retour`,
+src/DBService/QueteurDBService.php:767:       tq.`tronc_id`,       
+src/DBService/QueteurDBService.php:807:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:808:        q.`email`,
+src/DBService/QueteurDBService.php:809:        q.`first_name`,
+src/DBService/QueteurDBService.php:810:        q.`last_name`,
+src/DBService/QueteurDBService.php:811:        q.`secteur`,
+src/DBService/QueteurDBService.php:812:        q.`nivol`,
+src/DBService/QueteurDBService.php:813:        q.`mobile`,
+src/DBService/QueteurDBService.php:814:        q.`created`,
+src/DBService/QueteurDBService.php:815:        q.`updated`,
+src/DBService/QueteurDBService.php:816:        q.`notes`,
+src/DBService/QueteurDBService.php:817:        q.`ul_id`,
+src/DBService/QueteurDBService.php:818:        q.`active`,
+src/DBService/QueteurDBService.php:819:        q.`man`,
+src/DBService/QueteurDBService.php:820:        q.`birthdate`,
+src/DBService/QueteurDBService.php:821:        q.`qr_code_printed`,
+src/DBService/QueteurDBService.php:822:        q.`referent_volunteer`,
+src/DBService/QueteurDBService.php:823:        q.`anonymization_token`,
+src/DBService/QueteurDBService.php:824:        q.`anonymization_date`,
+src/DBService/QueteurDBService.php:825:        q.`firebase_sign_in_provider`,
+src/DBService/QueteurDBService.php:826:        q.`firebase_uid`,
+src/DBService/QueteurDBService.php:828:        u.`name`       as 'ul_name',
+src/DBService/QueteurDBService.php:829:        u.`latitude`   as 'ul_latitude',
+src/DBService/QueteurDBService.php:830:        u.`longitude`  as 'ul_longitude'
+src/DBService/QueteurDBService.php:831:FROM  `queteur` AS q, 
+src/DBService/QueteurDBService.php:832:          `ul`  AS u
+src/DBService/QueteurDBService.php:881:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:882:        q.`email`,
+src/DBService/QueteurDBService.php:883:        q.`first_name`,
+src/DBService/QueteurDBService.php:884:        q.`last_name`,
+src/DBService/QueteurDBService.php:885:        q.`secteur`,
+src/DBService/QueteurDBService.php:886:        q.`nivol`,
+src/DBService/QueteurDBService.php:887:        q.`mobile`,
+src/DBService/QueteurDBService.php:888:        q.`created`,
+src/DBService/QueteurDBService.php:889:        q.`updated`,
+src/DBService/QueteurDBService.php:890:        q.`notes`,
+src/DBService/QueteurDBService.php:891:        q.`ul_id`,
+src/DBService/QueteurDBService.php:892:        q.`active`,
+src/DBService/QueteurDBService.php:893:        q.`man`,
+src/DBService/QueteurDBService.php:894:        q.`birthdate`,
+src/DBService/QueteurDBService.php:895:        q.`qr_code_printed`,
+src/DBService/QueteurDBService.php:896:        q.`referent_volunteer`,
+src/DBService/QueteurDBService.php:897:        u.`name`       as 'ul_name',
+src/DBService/QueteurDBService.php:898:        u.`latitude`   as 'ul_latitude',
+src/DBService/QueteurDBService.php:899:        u.`longitude`  as 'ul_longitude'
+src/DBService/QueteurDBService.php:900:FROM  `queteur` AS q, 
+src/DBService/QueteurDBService.php:901:          `ul`  AS u
+src/DBService/QueteurDBService.php:927:UPDATE `queteur`
+src/DBService/QueteurDBService.php:929:  `first_name`          = :first_name,
+src/DBService/QueteurDBService.php:930:  `last_name`           = :last_name,
+src/DBService/QueteurDBService.php:931:  `email`               = :email ,
+src/DBService/QueteurDBService.php:932:  `secteur`             = :secteur,
+src/DBService/QueteurDBService.php:933:  `nivol`               = :nivol,
+src/DBService/QueteurDBService.php:934:  `mobile`              = :mobile,
+src/DBService/QueteurDBService.php:935:  `updated`             = NOW(),
+src/DBService/QueteurDBService.php:936:  `birthdate`           = :birthdate,
+src/DBService/QueteurDBService.php:937:  `man`                 = :man,
+src/DBService/QueteurDBService.php:938:  `active`              = :active,
+src/DBService/QueteurDBService.php:939:  `referent_volunteer`  = :referent_volunteer,
+src/DBService/QueteurDBService.php:940:  `anonymization_token` = null,
+src/DBService/QueteurDBService.php:941:  `anonymization_date`  = null
+src/DBService/QueteurDBService.php:943:WHERE `id`              = :id
+src/DBService/QueteurDBService.php:962:AND   `ul_id`           = :ul_id      
+src/DBService/QueteurDBService.php:971:INSERT INTO `queteur`
+src/DBService/QueteurDBService.php:973:  `first_name`,
+src/DBService/QueteurDBService.php:974:  `last_name`,
+src/DBService/QueteurDBService.php:975:  `email`,
+src/DBService/QueteurDBService.php:976:  `secteur`,
+src/DBService/QueteurDBService.php:977:  `nivol`,
+src/DBService/QueteurDBService.php:978:  `mobile`,
+src/DBService/QueteurDBService.php:979:  `created`,
+src/DBService/QueteurDBService.php:980:  `updated`,
+src/DBService/QueteurDBService.php:981:  `ul_id`,
+src/DBService/QueteurDBService.php:982:  `birthdate`,
+src/DBService/QueteurDBService.php:983:  `man`,
+src/DBService/QueteurDBService.php:984:  `active`,
+src/DBService/QueteurDBService.php:985:  `qr_code_printed`,
+src/DBService/QueteurDBService.php:986:  `referent_volunteer`,
+src/DBService/QueteurDBService.php:987:  `firebase_uid`,
+src/DBService/QueteurDBService.php:988:  `firebase_sign_in_provider`
+src/DBService/QueteurDBService.php:1090:UPPER(q.`first_name`) like UPPER(:first_name)
+src/DBService/QueteurDBService.php:1108:$OR UPPER(q.`last_name`) like UPPER(:last_name)
+src/DBService/QueteurDBService.php:1126:$OR UPPER(q.`nivol`) like UPPER(:nivol)
+src/DBService/QueteurDBService.php:1144:$OR UPPER(q.`email`) like UPPER(:email)
+src/DBService/QueteurDBService.php:1162:$OR UPPER(q.`mobile`) like UPPER(:mobile)
+src/DBService/QueteurDBService.php:1170:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:1171:        q.`first_name`,
+src/DBService/QueteurDBService.php:1172:        q.`last_name`,
+src/DBService/QueteurDBService.php:1173:        q.`email`,
+src/DBService/QueteurDBService.php:1174:        q.`mobile`,
+src/DBService/QueteurDBService.php:1175:        q.`nivol`,
+src/DBService/QueteurDBService.php:1177:FROM  `queteur` AS q
+src/DBService/QueteurDBService.php:1211:UPDATE `queteur`
+src/DBService/QueteurDBService.php:1213:  `first_name`           = 'Quêteur',
+src/DBService/QueteurDBService.php:1214:  `last_name`            = 'Anonimisé',
+src/DBService/QueteurDBService.php:1215:  `email`                = '' ,
+src/DBService/QueteurDBService.php:1216:  `secteur`              = 0,
+src/DBService/QueteurDBService.php:1217:  `nivol`                = '',
+src/DBService/QueteurDBService.php:1218:  `mobile`               = '',
+src/DBService/QueteurDBService.php:1219:  `updated`              = NOW(),
+src/DBService/QueteurDBService.php:1220:  `notes`                = '',
+src/DBService/QueteurDBService.php:1221:  `birthdate`            = '1922-12-22',
+src/DBService/QueteurDBService.php:1222:  `man`                  = 0,
+src/DBService/QueteurDBService.php:1223:  `active`               = 0,
+src/DBService/QueteurDBService.php:1224:  `anonymization_token`  = :token,
+src/DBService/QueteurDBService.php:1225:  `anonymization_date`   = NOW(),
+src/DBService/QueteurDBService.php:1226:  `anonymization_user_id`= :user_id
+src/DBService/QueteurDBService.php:1227:WHERE `id`               = :id
+src/DBService/QueteurDBService.php:1238:AND   `ul_id`           = :ul_id      
+src/DBService/QueteurDBService.php:1260:UPDATE `queteur`
+src/DBService/QueteurDBService.php:1261:SET    `qr_code_printed` = :printed
+src/DBService/QueteurDBService.php:1262:WHERE  `ul_id`           = :ul_id
+src/DBService/QueteurDBService.php:1285:SELECT  q.`id`,
+src/DBService/QueteurDBService.php:1286:        q.`email`,
+src/DBService/QueteurDBService.php:1287:        q.`first_name`,
+src/DBService/QueteurDBService.php:1288:        q.`last_name`,
+src/DBService/QueteurDBService.php:1289:        q.`secteur`,
+src/DBService/QueteurDBService.php:1290:        q.`nivol`,
+src/DBService/QueteurDBService.php:1291:        q.`mobile`,
+src/DBService/QueteurDBService.php:1292:        q.`created`,
+src/DBService/QueteurDBService.php:1293:        q.`updated`,
+src/DBService/QueteurDBService.php:1294:        q.`notes`,
+src/DBService/QueteurDBService.php:1295:        q.`ul_id`,
+src/DBService/QueteurDBService.php:1296:        q.`active`,
+src/DBService/QueteurDBService.php:1297:        q.`man`,
+src/DBService/QueteurDBService.php:1298:        q.`birthdate`,
+src/DBService/QueteurDBService.php:1299:        q.`qr_code_printed`,
+src/DBService/QueteurDBService.php:1300:        q.`referent_volunteer`,
+src/DBService/QueteurDBService.php:1301:        u.`name`       as 'ul_name',
+src/DBService/QueteurDBService.php:1302:        u.`latitude`   as 'ul_latitude',
+src/DBService/QueteurDBService.php:1303:        u.`longitude`  as 'ul_longitude'
+src/DBService/QueteurDBService.php:1304:FROM  `queteur` AS q, 
+src/DBService/QueteurDBService.php:1305:          `ul`  AS u
+src/DBService/QueteurDBService.php:1306:WHERE  UPPER(q.`anonymization_token`)   = UPPER(:anonymization_token)
+src/DBService/QueteurDBService.php:1307:AND    q.`ul_id`   = u.id
+src/DBService/TroncQueteurDBService.php:40: t.`id`               ,
+src/DBService/TroncQueteurDBService.php:41: t.`ul_id`            ,
+src/DBService/TroncQueteurDBService.php:42: `queteur_id`         ,
+src/DBService/TroncQueteurDBService.php:43: `point_quete_id`     ,
+src/DBService/TroncQueteurDBService.php:44: `tronc_id`           ,
+src/DBService/TroncQueteurDBService.php:45: `depart_theorique`   ,
+src/DBService/TroncQueteurDBService.php:46: `depart`             ,
+src/DBService/TroncQueteurDBService.php:47: `retour`             ,
+src/DBService/TroncQueteurDBService.php:48: `comptage`           ,
+src/DBService/TroncQueteurDBService.php:49: `last_update`        ,
+src/DBService/TroncQueteurDBService.php:50: `last_update_user_id`,
+src/DBService/TroncQueteurDBService.php:51: `euro500`            ,
+src/DBService/TroncQueteurDBService.php:52: `euro200`            ,
+src/DBService/TroncQueteurDBService.php:53: `euro100`            ,
+src/DBService/TroncQueteurDBService.php:54: `euro50`             ,
+src/DBService/TroncQueteurDBService.php:55: `euro20`             ,
+src/DBService/TroncQueteurDBService.php:56: `euro10`             ,
+src/DBService/TroncQueteurDBService.php:57: `euro5`              ,
+src/DBService/TroncQueteurDBService.php:58: `euro2`              ,
+src/DBService/TroncQueteurDBService.php:59: `euro1`              ,
+src/DBService/TroncQueteurDBService.php:60: `cents50`            ,
+src/DBService/TroncQueteurDBService.php:61: `cents20`            ,
+src/DBService/TroncQueteurDBService.php:62: `cents10`            ,
+src/DBService/TroncQueteurDBService.php:63: `cents5`             ,
+src/DBService/TroncQueteurDBService.php:64: `cents2`             ,
+src/DBService/TroncQueteurDBService.php:65: `cent1`              ,
+src/DBService/TroncQueteurDBService.php:66: `foreign_coins`      ,
+src/DBService/TroncQueteurDBService.php:67: `foreign_banknote`   ,
+src/DBService/TroncQueteurDBService.php:68: `notes_depart_theorique`      ,
+src/DBService/TroncQueteurDBService.php:69: `notes_retour`                ,
+src/DBService/TroncQueteurDBService.php:70: `notes_retour_comptage_pieces`,
+src/DBService/TroncQueteurDBService.php:71: `notes_update`                ,
+src/DBService/TroncQueteurDBService.php:72: `don_cheque`                  ,
+src/DBService/TroncQueteurDBService.php:73: `don_creditcard`              ,
+src/DBService/TroncQueteurDBService.php:74: `deleted`                     ,
+src/DBService/TroncQueteurDBService.php:75: `coins_money_bag_id`          ,
+src/DBService/TroncQueteurDBService.php:76: `bills_money_bag_id`          ,
+src/DBService/TroncQueteurDBService.php:77: `don_cb_total_number`         ,       
+src/DBService/TroncQueteurDBService.php:78: `don_cheque_number`         
+src/DBService/TroncQueteurDBService.php:79:FROM  `tronc_queteur` as t
+src/DBService/TroncQueteurDBService.php:116: t.`id`              ,
+src/DBService/TroncQueteurDBService.php:117: t.`ul_id`           ,
+src/DBService/TroncQueteurDBService.php:118: `queteur_id`        ,
+src/DBService/TroncQueteurDBService.php:119: `point_quete_id`    ,
+src/DBService/TroncQueteurDBService.php:120: `tronc_id`          ,
+src/DBService/TroncQueteurDBService.php:121: `depart_theorique`  ,
+src/DBService/TroncQueteurDBService.php:122: `depart`            ,
+src/DBService/TroncQueteurDBService.php:123: `retour`            ,
+src/DBService/TroncQueteurDBService.php:124: `comptage`           ,
+src/DBService/TroncQueteurDBService.php:125: `last_update`        ,
+src/DBService/TroncQueteurDBService.php:126: `last_update_user_id`,
+src/DBService/TroncQueteurDBService.php:127: `euro500`           ,
+src/DBService/TroncQueteurDBService.php:128: `euro200`           ,
+src/DBService/TroncQueteurDBService.php:129: `euro100`           ,
+src/DBService/TroncQueteurDBService.php:130: `euro50`            ,
+src/DBService/TroncQueteurDBService.php:131: `euro20`            ,
+src/DBService/TroncQueteurDBService.php:132: `euro10`            ,
+src/DBService/TroncQueteurDBService.php:133: `euro5`             ,
+src/DBService/TroncQueteurDBService.php:134: `euro2`             ,
+src/DBService/TroncQueteurDBService.php:135: `euro1`             ,
+src/DBService/TroncQueteurDBService.php:136: `cents50`           ,
+src/DBService/TroncQueteurDBService.php:137: `cents20`           ,
+src/DBService/TroncQueteurDBService.php:138: `cents10`           ,
+src/DBService/TroncQueteurDBService.php:139: `cents5`            ,
+src/DBService/TroncQueteurDBService.php:140: `cents2`            ,
+src/DBService/TroncQueteurDBService.php:141: `cent1`             ,
+src/DBService/TroncQueteurDBService.php:142: `foreign_coins`     ,
+src/DBService/TroncQueteurDBService.php:143: `foreign_banknote`  ,
+src/DBService/TroncQueteurDBService.php:144: `notes_depart_theorique`      ,
+src/DBService/TroncQueteurDBService.php:145: `notes_retour`                ,
+src/DBService/TroncQueteurDBService.php:146: `notes_retour_comptage_pieces`,
+src/DBService/TroncQueteurDBService.php:147: `notes_update`                ,
+src/DBService/TroncQueteurDBService.php:148: q.`last_name`                 ,
+src/DBService/TroncQueteurDBService.php:149: q.`first_name`                ,
+src/DBService/TroncQueteurDBService.php:150: `don_cheque`                  ,
+src/DBService/TroncQueteurDBService.php:151: `don_creditcard`              ,
+src/DBService/TroncQueteurDBService.php:152: `deleted`                     ,
+src/DBService/TroncQueteurDBService.php:153: `coins_money_bag_id`          ,
+src/DBService/TroncQueteurDBService.php:154: `bills_money_bag_id`          ,
+src/DBService/TroncQueteurDBService.php:155: `don_cb_total_number`         ,       
+src/DBService/TroncQueteurDBService.php:156: `don_cheque_number`         
+src/DBService/TroncQueteurDBService.php:158:FROM  `tronc_queteur` as t, 
+src/DBService/TroncQueteurDBService.php:159:      `queteur` as q
+src/DBService/TroncQueteurDBService.php:187:t.`id`                ,
+src/DBService/TroncQueteurDBService.php:188:t.`ul_id`             ,
+src/DBService/TroncQueteurDBService.php:189: `queteur_id`         ,
+src/DBService/TroncQueteurDBService.php:190: `point_quete_id`     ,
+src/DBService/TroncQueteurDBService.php:191: `tronc_id`           ,
+src/DBService/TroncQueteurDBService.php:192: `depart_theorique`   ,
+src/DBService/TroncQueteurDBService.php:193: `depart`             ,
+src/DBService/TroncQueteurDBService.php:194: `retour`             ,
+src/DBService/TroncQueteurDBService.php:195: `comptage`           ,
+src/DBService/TroncQueteurDBService.php:196: `last_update`        ,
+src/DBService/TroncQueteurDBService.php:197: `last_update_user_id`,
+src/DBService/TroncQueteurDBService.php:198: `euro500`            ,
+src/DBService/TroncQueteurDBService.php:199: `euro200`            ,
+src/DBService/TroncQueteurDBService.php:200: `euro100`            ,
+src/DBService/TroncQueteurDBService.php:201: `euro50`             ,
+src/DBService/TroncQueteurDBService.php:202: `euro20`             ,
+src/DBService/TroncQueteurDBService.php:203: `euro10`             ,
+src/DBService/TroncQueteurDBService.php:204: `euro5`              ,
+src/DBService/TroncQueteurDBService.php:205: `euro2`              ,
+src/DBService/TroncQueteurDBService.php:206: `euro1`              ,
+src/DBService/TroncQueteurDBService.php:207: `cents50`            ,
+src/DBService/TroncQueteurDBService.php:208: `cents20`            ,
+src/DBService/TroncQueteurDBService.php:209: `cents10`            ,
+src/DBService/TroncQueteurDBService.php:210: `cents5`             ,
+src/DBService/TroncQueteurDBService.php:211: `cents2`             ,
+src/DBService/TroncQueteurDBService.php:212: `cent1`              ,
+src/DBService/TroncQueteurDBService.php:213: `foreign_coins`      ,
+src/DBService/TroncQueteurDBService.php:214: `foreign_banknote`   ,
+src/DBService/TroncQueteurDBService.php:215: `notes_depart_theorique`      ,
+src/DBService/TroncQueteurDBService.php:216: `notes_retour`                ,
+src/DBService/TroncQueteurDBService.php:217: `notes_retour_comptage_pieces`,
+src/DBService/TroncQueteurDBService.php:218: `notes_update`                ,
+src/DBService/TroncQueteurDBService.php:219: `don_cheque`                  ,
+src/DBService/TroncQueteurDBService.php:220: `don_creditcard`              ,
+src/DBService/TroncQueteurDBService.php:221: `deleted`                     ,
+src/DBService/TroncQueteurDBService.php:222: `coins_money_bag_id`          ,
+src/DBService/TroncQueteurDBService.php:223: `bills_money_bag_id`          ,
+src/DBService/TroncQueteurDBService.php:224: `don_cb_total_number`         ,       
+src/DBService/TroncQueteurDBService.php:225: `don_cheque_number`         
+src/DBService/TroncQueteurDBService.php:226:FROM  `tronc_queteur` as t
+src/DBService/TroncQueteurDBService.php:234:  AND   `ul_id`           = :ul_id      
+src/DBService/TroncQueteurDBService.php:268:t.`id`                ,
+src/DBService/TroncQueteurDBService.php:269:t.`ul_id`             ,
+src/DBService/TroncQueteurDBService.php:270: `queteur_id`         ,
+src/DBService/TroncQueteurDBService.php:271: `point_quete_id`     ,
+src/DBService/TroncQueteurDBService.php:272: `tronc_id`           ,
+src/DBService/TroncQueteurDBService.php:273: `depart_theorique`   ,
+src/DBService/TroncQueteurDBService.php:274: `depart`             ,
+src/DBService/TroncQueteurDBService.php:275: `retour`             ,
+src/DBService/TroncQueteurDBService.php:276: `comptage`           ,
+src/DBService/TroncQueteurDBService.php:277: `last_update`        ,
+src/DBService/TroncQueteurDBService.php:278: `last_update_user_id`,
+src/DBService/TroncQueteurDBService.php:279: `euro500`            ,
+src/DBService/TroncQueteurDBService.php:280: `euro200`            ,
+src/DBService/TroncQueteurDBService.php:281: `euro100`            ,
+src/DBService/TroncQueteurDBService.php:282: `euro50`             ,
+src/DBService/TroncQueteurDBService.php:283: `euro20`             ,
+src/DBService/TroncQueteurDBService.php:284: `euro10`             ,
+src/DBService/TroncQueteurDBService.php:285: `euro5`              ,
+src/DBService/TroncQueteurDBService.php:286: `euro2`              ,
+src/DBService/TroncQueteurDBService.php:287: `euro1`              ,
+src/DBService/TroncQueteurDBService.php:288: `cents50`            ,
+src/DBService/TroncQueteurDBService.php:289: `cents20`            ,
+src/DBService/TroncQueteurDBService.php:290: `cents10`            ,
+src/DBService/TroncQueteurDBService.php:291: `cents5`             ,
+src/DBService/TroncQueteurDBService.php:292: `cents2`             ,
+src/DBService/TroncQueteurDBService.php:293: `cent1`              ,
+src/DBService/TroncQueteurDBService.php:294: `foreign_coins`      ,
+src/DBService/TroncQueteurDBService.php:295: `foreign_banknote`   ,
+src/DBService/TroncQueteurDBService.php:296: `don_cheque`         ,
+src/DBService/TroncQueteurDBService.php:297: `don_creditcard`     ,
+src/DBService/TroncQueteurDBService.php:298: `deleted`            ,
+src/DBService/TroncQueteurDBService.php:299: `coins_money_bag_id` ,
+src/DBService/TroncQueteurDBService.php:300: `bills_money_bag_id` ,
+src/DBService/TroncQueteurDBService.php:301: `don_cb_total_number`,       
+src/DBService/TroncQueteurDBService.php:302: `don_cheque_number`         
+src/DBService/TroncQueteurDBService.php:303:FROM  `tronc_queteur` as t
+src/DBService/TroncQueteurDBService.php:337:UPDATE `tronc_queteur`           tq
+src/DBService/TroncQueteurDBService.php:338:SET    `depart`             = :depart,
+src/DBService/TroncQueteurDBService.php:339:       `last_update`        = NOW(),
+src/DBService/TroncQueteurDBService.php:340:       `last_update_user_id`= :userId            
+src/DBService/TroncQueteurDBService.php:341:WHERE tq.`id`               = :id
+src/DBService/TroncQueteurDBService.php:372:UPDATE `tronc_queteur`        tq
+src/DBService/TroncQueteurDBService.php:373:SET    `depart`             = :depart,
+src/DBService/TroncQueteurDBService.php:374:       `last_update`        = NOW(),
+src/DBService/TroncQueteurDBService.php:375:       `last_update_user_id`= :userId            
+src/DBService/TroncQueteurDBService.php:376:WHERE tq.`id`               = :id
+src/DBService/TroncQueteurDBService.php:405:UPDATE `tronc_queteur`           tq
+src/DBService/TroncQueteurDBService.php:406:SET    `depart`             = null,
+src/DBService/TroncQueteurDBService.php:407:       `last_update`        = NOW(),
+src/DBService/TroncQueteurDBService.php:408:       `last_update_user_id`= :userId            
+src/DBService/TroncQueteurDBService.php:409:WHERE tq.`id`               = :id
+src/DBService/TroncQueteurDBService.php:410:AND   tq.`retour`           is null
+src/DBService/TroncQueteurDBService.php:411:AND   tq.`ul_id`            = :ul_id
+src/DBService/TroncQueteurDBService.php:437:UPDATE `tronc_queteur`           tq
+src/DBService/TroncQueteurDBService.php:438:SET    `retour`             = null,
+src/DBService/TroncQueteurDBService.php:439:       `last_update`        = NOW(),
+src/DBService/TroncQueteurDBService.php:440:       `last_update_user_id`= :userId            
+src/DBService/TroncQueteurDBService.php:441:WHERE tq.`id`               = :id
+src/DBService/TroncQueteurDBService.php:442:AND   tq.`comptage`         is null
+src/DBService/TroncQueteurDBService.php:443:AND   tq.`ul_id`            = :ul_id
+src/DBService/TroncQueteurDBService.php:467:UPDATE `tronc_queteur`            tq
+src/DBService/TroncQueteurDBService.php:468:SET    `retour`               = :retour,
+src/DBService/TroncQueteurDBService.php:469:       `last_update`          = NOW(),
+src/DBService/TroncQueteurDBService.php:470:       `last_update_user_id`  = :userId,
+src/DBService/TroncQueteurDBService.php:471:       `notes_retour`         = :notes_retour            
+src/DBService/TroncQueteurDBService.php:472:WHERE tq.`id`                 = :id
+src/DBService/TroncQueteurDBService.php:528:UPDATE `tronc_queteur`            tq
+src/DBService/TroncQueteurDBService.php:530: `euro500`                      = :euro500,           
+src/DBService/TroncQueteurDBService.php:531: `euro200`                      = :euro200,           
+src/DBService/TroncQueteurDBService.php:532: `euro100`                      = :euro100,           
+src/DBService/TroncQueteurDBService.php:533: `euro50`                       = :euro50 ,           
+src/DBService/TroncQueteurDBService.php:534: `euro20`                       = :euro20 ,           
+src/DBService/TroncQueteurDBService.php:535: `euro10`                       = :euro10 ,           
+src/DBService/TroncQueteurDBService.php:536: `euro5`                        = :euro5  ,           
+src/DBService/TroncQueteurDBService.php:537: `euro2`                        = :euro2  ,           
+src/DBService/TroncQueteurDBService.php:538: `euro1`                        = :euro1  ,           
+src/DBService/TroncQueteurDBService.php:539: `cents50`                      = :cents50,           
+src/DBService/TroncQueteurDBService.php:540: `cents20`                      = :cents20,           
+src/DBService/TroncQueteurDBService.php:541: `cents10`                      = :cents10,           
+src/DBService/TroncQueteurDBService.php:542: `cents5`                       = :cents5 ,           
+src/DBService/TroncQueteurDBService.php:543: `cents2`                       = :cents2 ,           
+src/DBService/TroncQueteurDBService.php:544: `cent1`                        = :cent1  ,           
+src/DBService/TroncQueteurDBService.php:545: `foreign_coins`                = :foreign_coins,     
+src/DBService/TroncQueteurDBService.php:546: `foreign_banknote`             = :foreign_banknote,  
+src/DBService/TroncQueteurDBService.php:547: `don_cheque`                   = :don_cheque,
+src/DBService/TroncQueteurDBService.php:548: `don_creditcard`               = :don_creditcard,
+src/DBService/TroncQueteurDBService.php:549: `don_cb_total_number`          = :don_cb_total_number         ,  
+src/DBService/TroncQueteurDBService.php:551: `last_update`                  = NOW(),
+src/DBService/TroncQueteurDBService.php:552: `last_update_user_id`          = :userId,
+src/DBService/TroncQueteurDBService.php:553: `notes_retour_comptage_pieces` = :notes_retour_comptage_pieces, 
+src/DBService/TroncQueteurDBService.php:554: `coins_money_bag_id`           = :coins_money_bag_id,
+src/DBService/TroncQueteurDBService.php:555: `bills_money_bag_id`           = :bills_money_bag_id,       
+src/DBService/TroncQueteurDBService.php:556: `don_cheque_number`            = :don_cheque_number        
+src/DBService/TroncQueteurDBService.php:558:WHERE tq.`id`                   = :id
+src/DBService/TroncQueteurDBService.php:611:UPDATE `tronc_queteur`             tq
+src/DBService/TroncQueteurDBService.php:613:  `depart_theorique`   = :depart_theorique,
+src/DBService/TroncQueteurDBService.php:614:  `depart`             = :depart,
+src/DBService/TroncQueteurDBService.php:615:  `retour`             = :retour,
+src/DBService/TroncQueteurDBService.php:616:  `point_quete_id`     = :point_quete_id,
+src/DBService/TroncQueteurDBService.php:617:  `deleted`            = :deleted,
+src/DBService/TroncQueteurDBService.php:618:  `last_update`        = NOW(),
+src/DBService/TroncQueteurDBService.php:619:  `last_update_user_id`= :userId,
+src/DBService/TroncQueteurDBService.php:620:  `notes_update`       = :notes_update
+src/DBService/TroncQueteurDBService.php:621:WHERE tq.`id`          = :id
+src/DBService/TroncQueteurDBService.php:686:INSERT INTO `tronc_queteur`
+src/DBService/TroncQueteurDBService.php:688:   `ul_id`,
+src/DBService/TroncQueteurDBService.php:689:   `queteur_id`, 
+src/DBService/TroncQueteurDBService.php:690:   `point_quete_id`, 
+src/DBService/TroncQueteurDBService.php:691:   `tronc_id`, 
+src/DBService/TroncQueteurDBService.php:692:   `depart_theorique`,
+src/DBService/TroncQueteurDBService.php:693:   `last_update`,
+src/DBService/TroncQueteurDBService.php:694:   `last_update_user_id`,
+src/DBService/TroncQueteurDBService.php:695:   `notes_depart_theorique`
+src/DBService/TroncQueteurDBService.php:860:t.`id`                        ,
+src/DBService/TroncQueteurDBService.php:861:t.`ul_id`                     ,
+src/DBService/TroncQueteurDBService.php:862:`insert_date`                 ,
+src/DBService/TroncQueteurDBService.php:863:`tronc_queteur_id`            ,
+src/DBService/TroncQueteurDBService.php:864:`queteur_id`                  ,
+src/DBService/TroncQueteurDBService.php:865:`point_quete_id`              ,
+src/DBService/TroncQueteurDBService.php:866:`tronc_id`                    ,
+src/DBService/TroncQueteurDBService.php:867:`depart_theorique`            ,
+src/DBService/TroncQueteurDBService.php:868:`depart`                      ,
+src/DBService/TroncQueteurDBService.php:869:`retour`                      ,
+src/DBService/TroncQueteurDBService.php:870:`comptage`                    ,
+src/DBService/TroncQueteurDBService.php:871:`last_update`                 ,
+src/DBService/TroncQueteurDBService.php:872:`last_update_user_id`         ,
+src/DBService/TroncQueteurDBService.php:873:`euro500`                     ,
+src/DBService/TroncQueteurDBService.php:874:`euro200`                     ,
+src/DBService/TroncQueteurDBService.php:875:`euro100`                     ,
+src/DBService/TroncQueteurDBService.php:876:`euro50`                      ,
+src/DBService/TroncQueteurDBService.php:877:`euro20`                      ,
+src/DBService/TroncQueteurDBService.php:878:`euro10`                      ,
+src/DBService/TroncQueteurDBService.php:879:`euro5`                       ,
+src/DBService/TroncQueteurDBService.php:880:`euro2`                       ,
+src/DBService/TroncQueteurDBService.php:881:`euro1`                       ,
+src/DBService/TroncQueteurDBService.php:882:`cents50`                     ,
+src/DBService/TroncQueteurDBService.php:883:`cents20`                     ,
+src/DBService/TroncQueteurDBService.php:884:`cents10`                     ,
+src/DBService/TroncQueteurDBService.php:885:`cents5`                      ,
+src/DBService/TroncQueteurDBService.php:886:`cents2`                      ,
+src/DBService/TroncQueteurDBService.php:887:`cent1`                       ,
+src/DBService/TroncQueteurDBService.php:888:`foreign_coins`               ,
+src/DBService/TroncQueteurDBService.php:889:`foreign_banknote`            ,
+src/DBService/TroncQueteurDBService.php:890:`notes_depart_theorique`      ,
+src/DBService/TroncQueteurDBService.php:891:`notes_retour`                ,
+src/DBService/TroncQueteurDBService.php:892:`notes_retour_comptage_pieces`,
+src/DBService/TroncQueteurDBService.php:893:`notes_update`                ,
+src/DBService/TroncQueteurDBService.php:894:`don_cheque`                  ,
+src/DBService/TroncQueteurDBService.php:895:`don_creditcard`              ,
+src/DBService/TroncQueteurDBService.php:896:`deleted`                     ,
+src/DBService/TroncQueteurDBService.php:897:`coins_money_bag_id`          ,
+src/DBService/TroncQueteurDBService.php:898:`bills_money_bag_id`          ,
+src/DBService/TroncQueteurDBService.php:899:`don_cb_total_number`         ,       
+src/DBService/TroncQueteurDBService.php:900:`don_cheque_number`         
+src/DBService/TroncQueteurDBService.php:901:FROM  `tronc_queteur_historique`  as t
+src/DBService/PointQueteDBService.php:47:SELECT pq.`id`,
+src/DBService/PointQueteDBService.php:48:    pq.`ul_id`,
+src/DBService/PointQueteDBService.php:49:    pq.`code`,
+src/DBService/PointQueteDBService.php:50:    pq.`name`,
+src/DBService/PointQueteDBService.php:51:    pq.`latitude`,
+src/DBService/PointQueteDBService.php:52:    pq.`longitude`,
+src/DBService/PointQueteDBService.php:53:    pq.`address`,
+src/DBService/PointQueteDBService.php:54:    pq.`postal_code`,
+src/DBService/PointQueteDBService.php:55:    pq.`city`,
+src/DBService/PointQueteDBService.php:56:    pq.`max_people`,
+src/DBService/PointQueteDBService.php:57:    pq.`advice`,
+src/DBService/PointQueteDBService.php:58:    pq.`localization`,
+src/DBService/PointQueteDBService.php:59:    pq.`minor_allowed`,
+src/DBService/PointQueteDBService.php:60:    pq.`created`,
+src/DBService/PointQueteDBService.php:61:    pq.`enabled`,
+src/DBService/PointQueteDBService.php:62:    pq.`type`,
+src/DBService/PointQueteDBService.php:63:    pq.`time_to_reach`,
+src/DBService/PointQueteDBService.php:64:    pq.`transport_to_reach`
+src/DBService/PointQueteDBService.php:65:FROM `point_quete` AS pq
+src/DBService/PointQueteDBService.php:110:(       UPPER(pq.`name`   ) like concat('%', UPPER(:query), '%')
+src/DBService/PointQueteDBService.php:111:  OR    UPPER(pq.`code`   ) like concat('%', UPPER(:query), '%')
+src/DBService/PointQueteDBService.php:112:  OR    UPPER(pq.`address`) like concat('%', UPPER(:query), '%')
+src/DBService/PointQueteDBService.php:113:  OR    UPPER(pq.`city`   ) like concat('%', UPPER(:query), '%')
+src/DBService/PointQueteDBService.php:122:AND pq.`type` = :type
+src/DBService/PointQueteDBService.php:129:SELECT pq.`id`,
+src/DBService/PointQueteDBService.php:130:    pq.`ul_id`,
+src/DBService/PointQueteDBService.php:131:    pq.`code`,
+src/DBService/PointQueteDBService.php:132:    pq.`name`,
+src/DBService/PointQueteDBService.php:133:    pq.`latitude`,
+src/DBService/PointQueteDBService.php:134:    pq.`longitude`,
+src/DBService/PointQueteDBService.php:135:    pq.`address`,
+src/DBService/PointQueteDBService.php:136:    pq.`postal_code`,
+src/DBService/PointQueteDBService.php:137:    pq.`city`,
+src/DBService/PointQueteDBService.php:138:    pq.`max_people`,
+src/DBService/PointQueteDBService.php:139:    pq.`advice`,
+src/DBService/PointQueteDBService.php:140:    pq.`localization`,
+src/DBService/PointQueteDBService.php:141:    pq.`minor_allowed`,
+src/DBService/PointQueteDBService.php:142:    pq.`created`,
+src/DBService/PointQueteDBService.php:143:    pq.`enabled`,
+src/DBService/PointQueteDBService.php:144:    pq.`type`,
+src/DBService/PointQueteDBService.php:145:    pq.`time_to_reach`,
+src/DBService/PointQueteDBService.php:146:    pq.`transport_to_reach`
+src/DBService/PointQueteDBService.php:147:FROM `point_quete` AS pq
+src/DBService/PointQueteDBService.php:193:SELECT  pq.`id`,
+src/DBService/PointQueteDBService.php:194:        pq.`ul_id`,
+src/DBService/PointQueteDBService.php:195:        pq.`code`,
+src/DBService/PointQueteDBService.php:196:        pq.`name`,
+src/DBService/PointQueteDBService.php:197:        pq.`latitude`,
+src/DBService/PointQueteDBService.php:198:        pq.`longitude`,
+src/DBService/PointQueteDBService.php:199:        pq.`address`,
+src/DBService/PointQueteDBService.php:200:        pq.`postal_code`,
+src/DBService/PointQueteDBService.php:201:        pq.`city`,
+src/DBService/PointQueteDBService.php:202:        pq.`max_people`,
+src/DBService/PointQueteDBService.php:203:        pq.`advice`,
+src/DBService/PointQueteDBService.php:204:        pq.`localization`,
+src/DBService/PointQueteDBService.php:205:        pq.`minor_allowed`,
+src/DBService/PointQueteDBService.php:206:        pq.`created`,
+src/DBService/PointQueteDBService.php:207:        pq.`enabled`,
+src/DBService/PointQueteDBService.php:208:        pq.`type`,
+src/DBService/PointQueteDBService.php:209:        pq.`time_to_reach`,
+src/DBService/PointQueteDBService.php:210:        pq.`transport_to_reach`
+src/DBService/PointQueteDBService.php:211:FROM `point_quete` AS pq
+src/DBService/PointQueteDBService.php:233:UPDATE `point_quete`
+src/DBService/PointQueteDBService.php:235:`code`              =  :code                 ,
+src/DBService/PointQueteDBService.php:236:`name`              =  :name                 ,
+src/DBService/PointQueteDBService.php:237:`latitude`          =  :latitude             ,
+src/DBService/PointQueteDBService.php:238:`longitude`         =  :longitude            ,
+src/DBService/PointQueteDBService.php:239:`address`           =  :address              ,
+src/DBService/PointQueteDBService.php:240:`postal_code`       =  :postal_code          ,
+src/DBService/PointQueteDBService.php:241:`city`              =  :city                 ,
+src/DBService/PointQueteDBService.php:242:`max_people`        =  :max_people           ,
+src/DBService/PointQueteDBService.php:243:`advice`            =  :advice               ,
+src/DBService/PointQueteDBService.php:244:`localization`      =  :localization         ,
+src/DBService/PointQueteDBService.php:245:`minor_allowed`     =  :minor_allowed        ,
+src/DBService/PointQueteDBService.php:246:`enabled`           =  :enabled              ,
+src/DBService/PointQueteDBService.php:247:`type`              =  :type                 ,
+src/DBService/PointQueteDBService.php:248:`time_to_reach`     =  :time_to_reach        ,
+src/DBService/PointQueteDBService.php:249:`transport_to_reach`=  :transport_to_reach    
+src/DBService/PointQueteDBService.php:250:WHERE `id`              = :id
+src/DBService/PointQueteDBService.php:274:AND   `ul_id`           = :ul_id      
+src/DBService/PointQueteDBService.php:293:  INSERT INTO `point_quete`
+src/DBService/PointQueteDBService.php:295:  `code`              ,
+src/DBService/PointQueteDBService.php:296:  `name`              ,
+src/DBService/PointQueteDBService.php:297:  `latitude`          ,
+src/DBService/PointQueteDBService.php:298:  `longitude`         ,
+src/DBService/PointQueteDBService.php:299:  `address`           ,
+src/DBService/PointQueteDBService.php:300:  `postal_code`       ,
+src/DBService/PointQueteDBService.php:301:  `city`              ,
+src/DBService/PointQueteDBService.php:302:  `max_people`        ,
+src/DBService/PointQueteDBService.php:303:  `advice`            ,
+src/DBService/PointQueteDBService.php:304:  `localization`      ,
+src/DBService/PointQueteDBService.php:305:  `minor_allowed`     ,
+src/DBService/PointQueteDBService.php:306:  `enabled`           ,
+src/DBService/PointQueteDBService.php:307:  `type`              ,
+src/DBService/PointQueteDBService.php:308:  `time_to_reach`     ,
+src/DBService/PointQueteDBService.php:309:  `transport_to_reach`,
+src/DBService/PointQueteDBService.php:310:  `ul_id`             ,
+src/DBService/PointQueteDBService.php:311:  `created`
+src/DBService/CreditCardDBService.php:35:SELECT  c.`id`,
+src/DBService/CreditCardDBService.php:36:        c.`tronc_queteur_id`,
+src/DBService/CreditCardDBService.php:37:        c.`ul_id`,
+src/DBService/CreditCardDBService.php:38:        c.`quantity`,
+src/DBService/CreditCardDBService.php:39:        c.`amount`
+src/DBService/CreditCardDBService.php:40:FROM `credit_card` AS c
+src/DBService/CreditCardDBService.php:106:update  `credit_card`
+src/DBService/CreditCardDBService.php:107:set     `amount`        = :amount,
+src/DBService/CreditCardDBService.php:108:        `quantity`      = :quantity
+src/DBService/CreditCardDBService.php:109:where   `id`      = :id
+src/DBService/CreditCardDBService.php:110:AND     `ul_id`   = :ulId   
+src/DBService/CreditCardDBService.php:133:DELETE  FROM `credit_card`
+src/DBService/CreditCardDBService.php:134:WHERE   `id`      = :id
+src/DBService/CreditCardDBService.php:135:AND     `ul_id`   = :ulId   
+src/DBService/CreditCardDBService.php:157:INSERT INTO `credit_card`
+src/DBService/CreditCardDBService.php:159:  `tronc_queteur_id`, 
+src/DBService/CreditCardDBService.php:160:  `ul_id`,
+src/DBService/CreditCardDBService.php:161:  `quantity`,
+src/DBService/CreditCardDBService.php:162:  `amount`
+src/DBService/UniteLocaleSettingsDBService.php:23:SELECT  `id`,
+src/DBService/UniteLocaleSettingsDBService.php:24:        `ul_id`,
+src/DBService/UniteLocaleSettingsDBService.php:25:        `settings`,
+src/DBService/UniteLocaleSettingsDBService.php:26:        `created`,
+src/DBService/UniteLocaleSettingsDBService.php:27:        `updated`,
+src/DBService/UniteLocaleSettingsDBService.php:28:        `last_update_user_id`,
+src/DBService/UniteLocaleSettingsDBService.php:29:        `token_benevole`,
+src/DBService/UniteLocaleSettingsDBService.php:30:        `token_benevole_1j`
+src/DBService/UniteLocaleSettingsDBService.php:31:FROM    `ul_settings` 
+src/DBService/UniteLocaleSettingsDBService.php:32:WHERE   `ul_id` = :ul_id
+

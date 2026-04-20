@@ -1,0 +1,36 @@
+Cannot load Xdebug - it was already loaded
+............................................................  60 / 186 (32%)
+............................................................ 120 / 186 (65%)
+................E........................................... 180 / 186 (97%)
+......                                                       186 / 186 (100%)
+
+
+
+PHP CODE SNIFFER REPORT SUMMARY
+-----------------------------------------------------------------------------
+FILE                                                         ERRORS  WARNINGS
+-----------------------------------------------------------------------------
+/app/server/src/routes/routesActions/void/VoidAction.php     1       0
+-----------------------------------------------------------------------------
+A TOTAL OF 1 ERROR AND 0 WARNINGS WERE FOUND IN 1 FILE
+-----------------------------------------------------------------------------
+
+Time: 2 secs; Memory: 45.2MB
+
+Cannot load Xdebug - it was already loaded
+E 1 / 1 (100%)
+
+
+
+FILE: /app/server/src/routes/routesActions/void/VoidAction.php
+--------------------------------------------------------------------------------
+FOUND 1 ERROR AFFECTING 1 LINE
+--------------------------------------------------------------------------------
+ 3 | ERROR | 'void' is a reserved keyword as of PHP version 7.1 and should not
+   |       | be used to name a class, interface or trait or as part of a
+   |       | namespace (T_NAMESPACE)
+   |       | (PHPCompatibility.Keywords.ForbiddenNamesAsDeclared.voidFound)
+--------------------------------------------------------------------------------
+
+Time: 244ms; Memory: 45.2MB
+
