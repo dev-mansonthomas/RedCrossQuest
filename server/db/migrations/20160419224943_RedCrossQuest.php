@@ -69,22 +69,22 @@ class RedCrossQuest extends AbstractMigration
 
 
       $queteur_table->insert(
-       [`id`                      =>   0,
-        `first_name`              =>   'No One',
-        `last_name`               =>   'No One',
-        `minor`                   =>   0,
-        `email`                   =>   'N/A',
-        `password`                =>   null,
-        `password_salt`           =>   null,
-        `secteur`                 =>   0,
-        `nivol`                   =>   null,
-        `mobile`                  =>   'N/A',
-        `created`                 =>   NOW(),
-        `updated`                 =>   NOW(),
-        `parent_authorization`    =>   null,
-        `temporary_volunteer_form`=>   null,
-        `notes`                   =>   'user created to satisfy foreign key2',
-        `ul_id`                   =>   1])
+       ['id'                      =>   0,
+        'first_name'              =>   'No One',
+        'last_name'               =>   'No One',
+        'minor'                   =>   0,
+        'email'                   =>   'N/A',
+        'password'                =>   null,
+        'password_salt'           =>   null,
+        'secteur'                 =>   0,
+        'nivol'                   =>   null,
+        'mobile'                  =>   'N/A',
+        'created'                 =>   date('Y-m-d H:i:s'),
+        'updated'                 =>   date('Y-m-d H:i:s'),
+        'parent_authorization'    =>   null,
+        'temporary_volunteer_form'=>   null,
+        'notes'                   =>   'user created to satisfy foreign key2',
+        'ul_id'                   =>   1])
         ->saveData();
 
       $this->execute("update queteur set id = 0 where id = 1");

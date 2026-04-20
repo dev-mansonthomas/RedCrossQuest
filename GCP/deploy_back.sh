@@ -39,18 +39,27 @@ setProject "rcq-${COUNTRY}-${ENV}"
 
 #open proxy connection to MySQL instance
 #We use 3310, so that the deployment do not conflict with existing proxy connection on port 3307 (test) & 3308 (prod)
-#cloud_sql_proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:rcq-${COUNTRY}-${ENV}=tcp:3310 &
+#
+# cloud-sql-proxy v2 (shipped with the gcloud SDK) uses a positional instance
+# argument and `--port` instead of the legacy `-instances=...=tcp:PORT` flag.
+command -v cloud-sql-proxy >/dev/null || { echo "cloud-sql-proxy not found (install it with: gcloud components install cloud-sql-proxy)"; exit 1; }
 
 #to save money, the MySQL instance is deleted when not used
 #the instance name can't be reused, so we increment a counter rcq-db-inst-fr-test-2
 #
 . ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
-echo "cloud-sql-proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &"
-cloud_sql_proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
-CLOUD_PROXY_PID=$!
+CLOUD_SQL_INSTANCE="rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}"
 
-#read -n1 -r -p "Wait for cloud proxy to establish the connection..." key
-sleep 5
+# Reuse an already-running proxy if port 3310 is bound (ports are reserved, the
+# proxy is meant to stay up between deploys).
+if lsof -iTCP:3310 -sTCP:LISTEN -t >/dev/null 2>&1; then
+  echo "cloud-sql-proxy already listening on 127.0.0.1:3310 - reusing existing process"
+else
+  echo "cloud-sql-proxy ${CLOUD_SQL_INSTANCE} --port 3310 &"
+  cloud-sql-proxy "${CLOUD_SQL_INSTANCE}" --port 3310 &
+  #read -n1 -r -p "Wait for cloud proxy to establish the connection..." key
+  sleep 5
+fi
 
 # Get the correct app.yaml for the env
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml               server/app.yaml
@@ -107,7 +116,7 @@ cp server/phinx-template.yml          server/phinx.yml
 # DO NOT USE VARIABLE for the next line, we do want to restore the local dev version
 cp ~/.cred/rcq-fr-local-settings.php  server/src/settings.php
 
-kill -15 $CLOUD_PROXY_PID
+#cloud-sql-proxy is intentionally left running across deploys (ports are reserved).
 
 #switch back to dev project (for stackdriver & storage)
 gcloud config set project rcq-${COUNTRY}-dev

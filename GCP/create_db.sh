@@ -99,7 +99,10 @@ then
 
 fi
 
-cloud_sql_proxy -instances=rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}=tcp:3310 &
+# cloud-sql-proxy v2 (shipped with the gcloud SDK) uses a positional instance
+# argument and `--port` instead of the legacy `-instances=...=tcp:PORT` flag.
+command -v cloud-sql-proxy >/dev/null || { echo "cloud-sql-proxy not found (install it with: gcloud components install cloud-sql-proxy)"; exit 1; }
+cloud-sql-proxy "rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}" --port 3310 &
 CLOUD_PROXY_PID=$!
 
 echo "wait for proxy to initialize"
@@ -145,6 +148,8 @@ cat ./tmp/CreateUser.sql | mysql
 
 #restore the backup
 cp ~/.my.cnf.bak ~/.my.cnf
-kill -15 ${CLOUD_PROXY_PID}
+if [[ -n "${CLOUD_PROXY_PID:-}" ]] && kill -0 "${CLOUD_PROXY_PID}" 2>/dev/null; then
+  kill -15 "${CLOUD_PROXY_PID}"
+fi
 rm ./tmp/*
 
