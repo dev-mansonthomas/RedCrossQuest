@@ -188,12 +188,12 @@ final class TroncQueteurEntity extends Entity
   public ?int $cent1            ;
   /**
    * @OA\Property()
-   * @var ?float|null $don_cheque total amount of bank note collected
+   * @var ?float $don_cheque total amount of bank note collected
    */
   public ?float $don_cheque       ;
   /**
    * @OA\Property()
-   * @var ?float|null $don_cheque total amount of credit card payment collected
+   * @var ?float $don_creditcard total amount of credit card payment collected
    */
   public ?float $don_creditcard   ;
   /**
@@ -287,17 +287,17 @@ final class TroncQueteurEntity extends Entity
 
   /**
    * @OA\Property()
-   * @var ?float|null $amount Sum in € of coins, bill, credit card & bank note. Used when Extracting Data of an UL.
+   * @var ?float $amount Sum in € of coins, bill, credit card & bank note. Used when Extracting Data of an UL.
    */
   public ?float $amount;
   /**
    * @OA\Property()
-   * @var ?float|null $weight Sum in kg of coins, bill. Used when Extracting Data of an UL. Used when Extracting Data of an UL.
+   * @var ?float $weight Sum in kg of coins, bill. Used when Extracting Data of an UL. Used when Extracting Data of an UL.
    */
   public ?float $weight;
   /**
    * @OA\Property()
-   * @var ?float|null $time_spent_in_hours number of hours spent on the street collecting money. Used when Extracting Data of an UL.
+   * @var ?float $time_spent_in_hours number of hours spent on the street collecting money. Used when Extracting Data of an UL.
    */
   public ?float $time_spent_in_hours;
 

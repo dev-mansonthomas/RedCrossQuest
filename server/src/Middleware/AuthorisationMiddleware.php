@@ -20,11 +20,6 @@ use RedCrossQuest\Entity\LoggingEntity;
 use RedCrossQuest\Service\Logger;
 use Slim\Psr7\Response;
 
-/**
- * @property mixed logger
- * @property string bearer
- * @property int bearerStrLen
- */
 class AuthorisationMiddleware implements MiddlewareInterface
 {
   private static array $errorMessage = [

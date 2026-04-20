@@ -150,7 +150,7 @@ class QueteurEntity  extends Entity
   public ?string $referent_volunteerQueteur;
   /**
    * @OA\Property()
-   * @property  $referent_volunteer_entity
+   * @var mixed $referent_volunteer_entity
    */
   public $referent_volunteer_entity   ;
 
