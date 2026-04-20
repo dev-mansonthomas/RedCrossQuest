@@ -130,7 +130,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array|null $data the associative array
    */
-  protected function getInteger(string $key, ?array &$data, ?int $defaultValue=null):void
+  protected function getInteger(string $key, ?array $data, ?int $defaultValue=null):void
   {
     $this->$key = $this->clientInputValidator->validateInteger($key, $data, 100000000, false, $defaultValue);
   }
@@ -140,7 +140,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array|null $data the associative array
    */
-  protected function getFloat(string $key, ?array &$data):void
+  protected function getFloat(string $key, ?array $data):void
   {
     if($data != null && array_key_exists($key, $data))
     {
@@ -167,7 +167,7 @@ class Entity
    * @param array  $data      the associative array
    * @param int    $maxSize   the max acceptable length of the string
    */
-  protected function getString(string $key, array &$data, int $maxSize):void
+  protected function getString(string $key, array $data, int $maxSize):void
   {
     $value = $this->clientInputValidator->validateString($key, $data, $maxSize , false );
     $this->$key = $value == null ? '' : $value;
@@ -179,7 +179,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getEmail(string $key, array &$data):void
+  protected function getEmail(string $key, array $data):void
   {
     $this->$key = $this->clientInputValidator->validateString($key, $data, 255 , false , ClientInputValidator::$EMAIL_VALIDATION);
   }
@@ -193,7 +193,7 @@ class Entity
    * @param int    $maxSize   the max acceptable length of the string
    * @throws Exception if json_decode throws an error
    */
-  protected function getJson(string $key, array &$data, int $maxSize):void
+  protected function getJson(string $key, array $data, int $maxSize):void
   {
     $value = $this->clientInputValidator->validateString($key, $data, $maxSize , false );
     try
@@ -212,7 +212,7 @@ class Entity
    * @param string $key the key of the data to be returned
    * @param array  $data the associative array
    */
-  protected function getBoolean(string $key, array &$data):void
+  protected function getBoolean(string $key, array $data):void
   {
     $this->$key = $this->clientInputValidator->validateBoolean($key, $data, false, false );
   }
