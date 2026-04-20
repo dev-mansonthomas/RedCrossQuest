@@ -38,9 +38,10 @@ RUN docker-php-ext-configure zip \
 # gRPC is a huge C++ codebase (~3500 source files) that consumes ~1.5 GB of
 # RAM per parallel job. Allocate at least 16 GB to Docker Desktop before
 # building, otherwise drop this to `-j2` to avoid OOM.
-# protobuf is pinned to the last 4.x release: 5.x removes
-# FieldDescriptor::getLabel() which google/gax 1.36 still calls
-# (google/cloud-logging batch writer → fatal at shutdown).
+# protobuf is pinned to 4.x to match the ABI of the composer
+# `google/protobuf` 4.x package (google/gax 1.42 no longer calls the
+# removed FieldDescriptor::getLabel(), so the 4.31.1 pin is not required
+# anymore — but staying on 4.x keeps compiled-in message classes stable).
 RUN MAKEFLAGS="-j$(nproc)" pecl install grpc protobuf-4.31.1 \
  && docker-php-ext-enable grpc protobuf
 
