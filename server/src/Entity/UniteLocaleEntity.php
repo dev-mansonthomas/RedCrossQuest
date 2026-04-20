@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  * @OA\Schema(schema="UniteLocaleEntity", required={"name","phone","latitude","longitude","address","postal_code","city","external_id","email","id_structure_rattachement","date_demarrage_activite",})
  */
 
-class UniteLocaleEntity  extends Entity
+final class UniteLocaleEntity  extends Entity
 {
   /**
    * @OA\Property()

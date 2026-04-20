@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Data is stored in Firestore, not MySQL
  */
-class ULPreferencesEntity extends Entity
+final class ULPreferencesEntity extends Entity
 {
   /** @var ?string $FIRESTORE_DOC_ID firestore internal ID*/
   public ?string $FIRESTORE_DOC_ID          ;

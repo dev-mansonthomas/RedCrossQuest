@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  * @OA\Schema(schema="TroncQueteurEntity", required={"ul_id"})
  */
 
-class TroncQueteurEntity extends Entity
+final class TroncQueteurEntity extends Entity
 {
   /***
    * ID of the tronc_queteur
