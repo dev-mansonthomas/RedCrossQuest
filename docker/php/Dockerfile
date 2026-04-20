@@ -1,14 +1,11 @@
 # syntax=docker/dockerfile:1.7
 # -----------------------------------------------------------------------------
-# RedCrossQuest - PHP-FPM image mirroring the Google App Engine `php83` runtime
+# RedCrossQuest - PHP-FPM image mirroring the Google App Engine `php85` runtime
 # -----------------------------------------------------------------------------
-# GAE `php83` = Ubuntu + Nginx + PHP-FPM + Google `serve` wrapper.
+# GAE `php85` = Ubuntu + Nginx + PHP-FPM + Google `serve` wrapper.
 # We reproduce the PHP side here; Nginx lives in its own image.
-#
-# Forward compatibility: bump PHP_VERSION to 8.5 once GAE exposes `php85`.
-#   docker build --build-arg PHP_VERSION=8.5 ...
 # -----------------------------------------------------------------------------
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=8.5
 
 # ============================== base stage ===================================
 FROM php:${PHP_VERSION}-fpm-bookworm AS base
@@ -29,20 +26,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Native PHP extensions required by composer.json (ext-PDO, ext-bz2, ext-sodium,
 # ext-zip, ext-json, ext-gmp — pulled by sendgrid/sendgrid + starkbank/ecdsa).
-# `json` and `sodium` are bundled since PHP 8.x; we still configure `sodium`.
+# `json`, `sodium` and `opcache` are bundled statically in php:8.5-fpm and
+# are loaded by default (no `docker-php-ext-enable` required).
 RUN docker-php-ext-configure zip \
- && docker-php-ext-install -j"$(nproc)" \
-        pdo pdo_mysql bz2 zip sodium intl opcache bcmath gmp
+ && docker-php-ext-install \
+        pdo pdo_mysql bz2 zip sodium intl bcmath gmp
 
-# PECL extensions used in production (Stackdriver / Firestore gRPC client)
+# PECL extensions used in production (Stackdriver / Firestore gRPC client).
 # gRPC is a huge C++ codebase (~3500 source files) that consumes ~1.5 GB of
 # RAM per parallel job. Allocate at least 16 GB to Docker Desktop before
 # building, otherwise drop this to `-j2` to avoid OOM.
-# protobuf is pinned to 4.x to match the ABI of the composer
-# `google/protobuf` 4.x package (google/gax 1.42 no longer calls the
-# removed FieldDescriptor::getLabel(), so the 4.31.1 pin is not required
-# anymore — but staying on 4.x keeps compiled-in message classes stable).
-RUN MAKEFLAGS="-j$(nproc)" pecl install grpc protobuf-4.31.1 \
+# protobuf PECL major tracks the composer `google/protobuf` major: 5.x
+# matches the composer 5.x package ABI required by google/gax 1.42.
+RUN MAKEFLAGS="-j$(nproc)" pecl install grpc protobuf \
  && docker-php-ext-enable grpc protobuf
 
 # Composer (pinned via official multi-arch image)

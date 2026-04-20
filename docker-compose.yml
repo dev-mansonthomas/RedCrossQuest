@@ -23,7 +23,7 @@ x-php-env: &php-env
 
 services:
   # --------------------------------------------------------------------------
-  # PHP-FPM - GAE `php83` runtime equivalent
+  # PHP-FPM - GAE `php85` runtime equivalent
   # --------------------------------------------------------------------------
   php-fpm:
     build:
@@ -31,7 +31,7 @@ services:
       dockerfile: docker/php/Dockerfile
       target: dev
       args:
-        PHP_VERSION: ${PHP_VERSION:-8.3}
+        PHP_VERSION: ${PHP_VERSION:-8.5}
     container_name: rcq-php-fpm
     restart: unless-stopped
     environment:

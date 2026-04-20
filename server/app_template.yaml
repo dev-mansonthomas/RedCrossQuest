@@ -1,4 +1,4 @@
-runtime: php83
+runtime: php85
 entrypoint: serve public/rest/index.php
 automatic_scaling:
   max_instances: 20
