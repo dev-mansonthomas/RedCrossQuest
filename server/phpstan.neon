@@ -1,0 +1,18 @@
+parameters:
+    # Target PHP 8.5 to surface pending deprecations before the runtime bump.
+    phpVersion: 80500
+    level: 5
+    paths:
+        - src
+        - public
+    excludePaths:
+        - vendor
+        - logs
+        - openapi
+        - db
+    # Codebase has legacy mixed typing; ignore until tackled in PR 4.
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+
+includes:
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
