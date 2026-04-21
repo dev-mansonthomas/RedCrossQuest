@@ -1,6 +1,41 @@
 <?php
 error_reporting(E_ALL);
 
+// --- FAIL-FAST: reject obvious scans before DI container boot ---
+// Avoids DI init + Slack post on every vulnerability probe.
+// Rules are deliberately narrow: paths here are never valid for RCQ.
+(function (): void {
+  $uri  = $_SERVER['REQUEST_URI']     ?? '';
+  $path = parse_url($uri, PHP_URL_PATH) ?: $uri;
+  $ua   = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+  // 1. unsubstituted Angular $resource placeholders (e.g. /rest/:roleId/...)
+  if (str_contains($path, '/:')) { http_response_code(404); exit; }
+
+  // 2. known third-party product probes (Jira / XWiki / Magento / misc)
+  static $scanPrefixes = [
+    '/rest/api-docs', '/rest/wikis/', '/rest/id-pools/', '/rest/getPlaylists',
+    '/rest/V1/', '/rest/rights/', '/rest/users/1/settings',
+    '/rest/issueNav/', '/rest/xxxxxxxxxxxxxxx/',
+  ];
+  foreach ($scanPrefixes as $p) {
+    if (str_starts_with($path, $p)) { http_response_code(404); exit; }
+  }
+
+  // 3. UA-based blocklist (belt + suspenders with GAE firewall rules)
+  if (str_contains($ua, 'research.hadrian.io')) { http_response_code(404); exit; }
+
+  // 4. POST/PUT with empty body on /rest/* : every legit write-endpoint expects
+  //    a payload. Scanners probing endpoints with empty bodies (Content-Length: 0
+  //    or missing) trigger downstream validation errors -> 500 -> Slack noise.
+  $method = $_SERVER['REQUEST_METHOD'] ?? '';
+  if ($method === 'POST' || $method === 'PUT') {
+    $cl = $_SERVER['CONTENT_LENGTH'] ?? null;
+    if ($cl === null || $cl === '' || $cl === '0') { http_response_code(400); exit; }
+  }
+})();
+// --- /FAIL-FAST ---
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Psr\Log\LoggerInterface;

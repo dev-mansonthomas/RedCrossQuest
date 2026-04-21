@@ -4,6 +4,7 @@
 namespace RedCrossQuest\routes\routesActions;
 
 use Exception;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
@@ -94,6 +95,19 @@ abstract class Action
     try
     {
       return $this->action();
+    }
+    catch (InvalidArgumentException $e)
+    {//client input validation failure: return 400 Bad Request directly, logged as
+      //warning (not error/Slack). Scanners probing auth endpoints with empty or
+      //invalid fields produce these. Return a Response rather than throwing so
+      //that upstream middlewares do not re-log it as a server error.
+      $this->logger->warning("Client input validation failed on Action", [
+        "actionClass" => get_class($this),
+        "message"     => $e->getMessage(),
+      ]);
+      $response = $response->withStatus(400);
+      $response->getBody()->write(json_encode(['error' => 'bad_request'], JSON_UNESCAPED_UNICODE));
+      return $response;
     }
     catch (\Throwable $e)
     {

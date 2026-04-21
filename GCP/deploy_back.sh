@@ -50,8 +50,8 @@ command -v cloud-sql-proxy >/dev/null || { echo "cloud-sql-proxy not found (inst
 . ~/.cred/rcq-${COUNTRY}-${ENV}-db-setup.properties
 CLOUD_SQL_INSTANCE="rcq-${COUNTRY}-${ENV}:europe-west1:${MYSQL_INSTANCE}"
 
-# Reuse an already-running proxy if port 3310 is bound (ports are reserved, the
-# proxy is meant to stay up between deploys).
+# Reuse an already-running proxy if port 3310 is bound (previous interrupted
+# deploy may have left one behind). The trap below will clean it up at exit.
 if lsof -iTCP:3310 -sTCP:LISTEN -t >/dev/null 2>&1; then
   echo "cloud-sql-proxy already listening on 127.0.0.1:3310 - reusing existing process"
 else
@@ -60,6 +60,19 @@ else
   #read -n1 -r -p "Wait for cloud proxy to establish the connection..." key
   sleep 5
 fi
+
+# Stop cloud-sql-proxy on port 3310 when the script exits (success, failure, or
+# interrupt). Ports 3307 / 3308 / others are explicitly NOT touched - only the
+# deploy-scoped proxy bound to 3310 is terminated.
+cleanup_cloud_sql_proxy() {
+  local pid
+  pid=$(lsof -iTCP:3310 -sTCP:LISTEN -t 2>/dev/null | head -1)
+  if [[ -n "${pid}" ]]; then
+    echo "stopping cloud-sql-proxy on port 3310 (pid=${pid})"
+    kill "${pid}" 2>/dev/null || true
+  fi
+}
+trap cleanup_cloud_sql_proxy EXIT
 
 # Get the correct app.yaml for the env
 cp ~/.cred/rcq-${COUNTRY}-${ENV}-app.yaml               server/app.yaml
@@ -110,13 +123,20 @@ cd -
 #remove app.yaml
 rm server/app.yaml
 
+#apply GAE firewall DENY rules (idempotent, blocks known scan sources)
+if [[ -f GCP/gae_firewall_rules.sh ]]; then
+  bash GCP/gae_firewall_rules.sh "rcq-${COUNTRY}-${ENV}"
+elif [[ -f gae_firewall_rules.sh ]]; then
+  bash gae_firewall_rules.sh "rcq-${COUNTRY}-${ENV}"
+fi
+
 #restore local dev phinx.yml from the repo template
 cp server/phinx-template.yml          server/phinx.yml
 
 # DO NOT USE VARIABLE for the next line, we do want to restore the local dev version
 cp ~/.cred/rcq-fr-local-settings.php  server/src/settings.php
 
-#cloud-sql-proxy is intentionally left running across deploys (ports are reserved).
+#cloud-sql-proxy on port 3310 is stopped by the EXIT trap defined above.
 
 #switch back to dev project (for stackdriver & storage)
 gcloud config set project rcq-${COUNTRY}-dev
