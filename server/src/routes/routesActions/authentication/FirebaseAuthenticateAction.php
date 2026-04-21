@@ -5,8 +5,9 @@ namespace RedCrossQuest\routes\routesActions\authentication;
 
 
 use Exception;
-use Firebase\Auth\Token\Exception\InvalidToken;
 use Kreait\Firebase;
+use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
+use Lcobucci\JWT\Configuration;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\QueteurDBService;
@@ -14,22 +15,15 @@ use RedCrossQuest\DBService\SpotfireAccessDBService;
 use RedCrossQuest\DBService\UniteLocaleDBService;
 use RedCrossQuest\DBService\UserDBService;
 use RedCrossQuest\Entity\LoggingEntity;
-use RedCrossQuest\Entity\UserEntity;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
-use RedCrossQuest\Service\ReCaptchaService;
-use RedCrossQuest\Service\SecretManagerService;
 
 
 class FirebaseAuthenticateAction extends AuthenticateAbstractAction
 {
 
 
-  /**
-   * @var ReCaptchaService
-   */
-  private ReCaptchaService $reCaptchaService;
   /**
    * @var UserDBService
    */
@@ -57,8 +51,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param SecretManagerService $secretManagerService,
-   * @param ReCaptchaService $reCaptchaService
+   * @param Configuration $JWTConfiguration
    * @param UserDBService $userDBService
    * @param QueteurDBService $queteurDBService
    * @param UniteLocaleDBService $uniteLocaleDBService
@@ -67,17 +60,15 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
-                              SecretManagerService    $secretManagerService,
-                              ReCaptchaService        $reCaptchaService,
+                              Configuration           $JWTConfiguration,
                               UserDBService           $userDBService,
                               QueteurDBService        $queteurDBService,
                               UniteLocaleDBService    $uniteLocaleDBService,
                               SpotfireAccessDBService $spotfireAccessDBService,
                               Firebase\Auth           $firebaseAuth)  //TODO update deprecated code
   {
-    parent::__construct($logger, $clientInputValidator, $secretManagerService);
-    
-    $this->reCaptchaService       = $reCaptchaService;
+    parent::__construct($logger, $clientInputValidator, $JWTConfiguration);
+
     $this->userDBService          = $userDBService;
     $this->queteurDBService       = $queteurDBService;
     $this->uniteLocaleDBService   = $uniteLocaleDBService;
@@ -124,7 +115,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
     {
       $verifiedIdToken = $this->firebaseAuth->verifyIdToken($token);
     }
-    catch (InvalidToken $e)    //TODO update deprecated code
+    catch (FailedToVerifyToken $e)
     {
       $response401 = $this->response->withStatus(401);
       $response401->getBody()->write(json_encode(["error" =>"Authentication error"]));
@@ -133,39 +124,25 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
 
       return $response401;
     }
-    $uid    = $verifiedIdToken->getClaim('sub');
-    $email  = $verifiedIdToken->getClaim('email');
+    $claims = $verifiedIdToken->claims();
+    $uid    = $claims->get('sub');
+    $email  = $claims->get('email');
 
-    //$firebaseUser = $this->firebase->getAuth()->getUser($uid);
     $this->logger->debug("Firebase JWT checked successfully", array('uid' => $uid, 'verifiedIdToken'=>$verifiedIdToken));
 
-    $user           = $this->userDBService->getUserInfoWithEmail($email);
+    $user     = $this->userDBService->getUserInfoWithEmail($email);
+    $queteur  = $this->queteurDBService->getQueteurById($user->queteur_id);
+    $ul       = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
 
-    if($user instanceof UserEntity)
-    {
-      $queteur  = $this->queteurDBService->getQueteurById($user->queteur_id);
-      $ul       = $this->uniteLocaleDBService->getUniteLocaleById($queteur->ul_id);
+    $jwtToken = $this->getToken($queteur, $ul, $user);
 
-      $jwtToken = $this->getToken($queteur, $ul, $user);
+    $this->response->getBody()->write(json_encode( new AuthenticationResponse($jwtToken->toString())));
+    $this->userDBService->registerSuccessfulLogin($user->id);
 
-      $this->response->getBody()->write(json_encode( new AuthenticationResponse($jwtToken->__toString())));
-      $this->userDBService->registerSuccessfulLogin($user->id);
+    //generate a spotfire token at the same time
+    //Token will be retrieved by client on a separate REST Call
+    $this->spotfireAccessDBService->grantAccess($user->id, $queteur->ul_id, $this->settings['appSettings']['sessionLength']);
 
-      //generate a spotfire token at the same time
-      //Token will be retrieved by client on a separate REST Call
-      $this->spotfireAccessDBService->grantAccess($user->id, $queteur->ul_id, $this->settings['appSettings']['sessionLength']);
-
-      return $this->response;
-    }
-    else
-    {
-      $this->logger->error("Authentication failed, user is not registered in RCQ or not active", array("user_id"=> $user->id, "email" =>$email));
-      $this->userDBService->registerFailedLogin($user->id);
-
-      $response401 = $this->response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error"=>'username or password error. Code 2.1']));
-
-      return $response401;
-    }
+    return $this->response;
   }
 }

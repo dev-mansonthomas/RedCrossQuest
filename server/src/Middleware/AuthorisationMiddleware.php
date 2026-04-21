@@ -10,6 +10,9 @@ use DI\NotFoundException;
 use Exception;
 use Google\ApiCore\ApiException;
 use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\UnencryptedToken;
+use Lcobucci\JWT\Validation\ConstraintViolation;
+use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -78,37 +81,47 @@ class AuthorisationMiddleware implements MiddlewareInterface
     $token       = $this->JWTConfiguration->parser()->parse((string) $tokenStr);
     $constraints = $this->JWTConfiguration->validationConstraints();
 
-    if(!$this->JWTConfiguration->validator()->validate($token, ...$constraints))
+    if(!$token instanceof UnencryptedToken)
     {
-      //rerun the validations, but this time we get the failings validations for logging
-      $violations = [];
-      foreach($constraints as $constraint)
-      {
-        $this->JWTConfiguration->checkConstraint($constraint, $token , $violations);
-      }
-      
+      $this->logger->error(AuthorisationMiddleware::$errorMessage['0011']);
+      return new DecodedToken('0011');
+    }
+
+    try
+    {
+      $this->JWTConfiguration->validator()->assert($token, ...$constraints);
+    }
+    catch(RequiredConstraintsViolated $violationsException)
+    {
+      $violations = array_map(
+        static fn(ConstraintViolation $v): string => $v->getMessage(),
+        $violationsException->violations()
+      );
+
       $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0009'],$tokenStr), ["JWTViolations"=>$violations]);
 
       return new DecodedToken( '0009');
     }
+
     try
     {
+      $claims = $token->claims();
       $decodedToken = DecodedToken::withData(
         true   ,
         ''       ,
-        $token->claims()->get("username" ),
-        $token->claims()->get("id"       ),
-        $token->claims()->get("ulId"     ),
-        $token->claims()->get("ulName"   ),
-        $token->claims()->get("ulMode"   ),
-        $token->claims()->get("queteurId"),
-        $token->claims()->get("roleId"   ),
-        $token->claims()->get("d"        )
+        $claims->get("username" ),
+        $claims->get("id"       ),
+        $claims->get("ulId"     ),
+        $claims->get("ulName"   ),
+        $claims->get("ulMode"   ),
+        $claims->get("queteurId"),
+        $claims->get("roleId"   ),
+        $claims->get("d"        )
       );
 
     }
     catch(Exception $error)
-    { //getClaim can raise exception if the claim is not here
+    { //claims()->get can raise exception if the claim is not here
       $this->logger->error(AuthorisationMiddleware::$errorMessage['0011'], array(Logger::$EXCEPTION=>$error));
       throw $error;
     }
@@ -194,14 +207,7 @@ class AuthorisationMiddleware implements MiddlewareInterface
       if(count($explodedPath) == 2) //explode with limit 2 will return one element + the rest of the string, so array size is maximum 2 but can be less
       {
         $roleIdStr = $explodedPath[0];
-
-        if(!is_scalar($roleIdStr))
-        {
-          $this->logger->error(sprintf(AuthorisationMiddleware::$errorMessage['0004'], $roleIdStr, $path, json_encode($decodedToken)));
-          return $this->denyRequest('0004');
-        }
-
-        $roleId = intval($roleIdStr);
+        $roleId    = intval($roleIdStr);
       }
       else
       {
