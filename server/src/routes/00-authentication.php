@@ -65,6 +65,7 @@ use RedCrossQuest\routes\routesActions\authentication\SendPasswordInitialization
  */
 
 /** @noinspection PhpUndefinedVariableInspection */
+/** @var \Slim\App $app */
 $app->post('/firebase-authenticate', FirebaseAuthenticateAction::class);
 
 /**

@@ -171,6 +171,7 @@ use RedCrossQuest\routes\routesActions\queteurs\UpdateQueteur;
  * )
  */
 /** @noinspection PhpUndefinedVariableInspection */
+/** @var \Slim\App $app */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/queteurs'                                , ListQueteurs::class);
 /**
  *

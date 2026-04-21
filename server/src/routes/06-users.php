@@ -75,6 +75,7 @@ use RedCrossQuest\routes\routesActions\users\UpdateUser;
  * )
  */
 /** @noinspection PhpUndefinedVariableInspection */
+/** @var \Slim\App $app */
 $app->put ('/{role-id:[4-9]}/ul/{ul-id}/users/{id}'               , UpdateUser::class);
 /**
  *

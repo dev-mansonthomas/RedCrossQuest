@@ -100,6 +100,7 @@ use RedCrossQuest\routes\routesActions\mailing\SendABatchOfMailing;
  * )
  */
 /** @noinspection PhpUndefinedVariableInspection */
+/** @var \Slim\App $app */
 $app->get('/{role-id:[4-9]}/ul/{ul-id}/mailing', GetMailingSummary::class);
 
 /**

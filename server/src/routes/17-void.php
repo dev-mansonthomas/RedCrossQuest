@@ -32,6 +32,7 @@ use RedCrossQuest\routes\routesActions\voidAction\VoidAction;
  */
 /** @noinspection PhpUndefinedVariableInspection */
 
+/** @var \Slim\App $app */
 $app->get ('/html[/{params:.*}]'      , VoidAction::class);
 $app->get ('/api[/{params:.*}]'       , VoidAction::class);
 $app->get ('/V1[/{params:.*}]'        , VoidAction::class);

@@ -92,6 +92,7 @@ use RedCrossQuest\routes\routesActions\troncs\GetTroncForComptage;
  * )
  */
 /** @noinspection PhpUndefinedVariableInspection */
+/** @var \Slim\App $app */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/troncs', ListTroncs::class);
 
 

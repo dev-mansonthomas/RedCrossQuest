@@ -61,6 +61,7 @@ use RedCrossQuest\routes\routesActions\exportData\ExportData;
  * )
  */
 /** @noinspection PhpUndefinedVariableInspection */
+/** @var \Slim\App $app */
 $app->post('/{role-id:[4-9]}/ul/{ul-id}/exportData', ExportData::class);
 
 

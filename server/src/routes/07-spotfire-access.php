@@ -57,6 +57,7 @@ use RedCrossQuest\routes\routesActions\spotfire\GetSpotfireAccessToken;
  * )
  */
 /** @noinspection PhpUndefinedVariableInspection */
+/** @var \Slim\App $app */
 $app->get('/{role-id:[1-9]}/ul/{ul-id}/graph', GetSpotfireAccessToken::class);
 
 

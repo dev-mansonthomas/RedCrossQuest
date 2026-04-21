@@ -46,6 +46,7 @@ use RedCrossQuest\routes\routesActions\ulRegistration\ValidateULRegistration;
  * )
  */
 /** @noinspection PhpUndefinedVariableInspection */
+/** @var \Slim\App $app */
 $app->get('/ul_registration', SearchUnregisteredUniteLocale::class);
 
 /**
