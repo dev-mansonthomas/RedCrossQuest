@@ -41,20 +41,7 @@ class RedCallService
   {
 
     $data = $method.$this->settings['base_uri'].$uri.$body;
-    $hash = hash_hmac( $this->settings['hashing_algorithm'], $data, $this->redCallSecret, false);
-
-    if(!$hash)
-    {
-      $this->logger->error("Error while computing HMAC Hash",
-        [
-          "algo"=>$this->settings['hashing_algorithm'],
-          "data"=> $data
-        ]);
-      throw new Exception("Error while computing RedCall hash");
-    }
-
-    return $hash;
-    
+    return hash_hmac( $this->settings['hashing_algorithm'], $data, $this->redCallSecret, false);
   }
 
   /**

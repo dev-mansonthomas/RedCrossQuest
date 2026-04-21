@@ -17,16 +17,11 @@ use RedCrossQuest\Entity\UserEntity;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
-use RedCrossQuest\Service\ReCaptchaService;
 
 
 class AuthenticateAction extends AuthenticateAbstractAction
 {
 
-  /**
-   * @var ReCaptchaService
-   */
-  private ReCaptchaService $reCaptchaService;
   /**
    * @var UserDBService
    */
@@ -49,7 +44,6 @@ class AuthenticateAction extends AuthenticateAbstractAction
    * @param LoggerInterface         $logger
    * @param ClientInputValidator    $clientInputValidator
    * @param Configuration           $JWTConfiguration
-   * @param ReCaptchaService        $reCaptchaService
    * @param UserDBService           $userDBService
    * @param QueteurDBService        $queteurDBService
    * @param UniteLocaleDBService    $uniteLocaleDBService
@@ -58,15 +52,13 @@ class AuthenticateAction extends AuthenticateAbstractAction
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
                               Configuration           $JWTConfiguration,
-                              ReCaptchaService        $reCaptchaService,
                               UserDBService           $userDBService,
                               QueteurDBService        $queteurDBService,
                               UniteLocaleDBService    $uniteLocaleDBService,
                               SpotfireAccessDBService $spotfireAccessDBService)
   {
     parent::__construct($logger, $clientInputValidator, $JWTConfiguration);
-    
-    $this->reCaptchaService       = $reCaptchaService;
+
     $this->userDBService          = $userDBService;
     $this->queteurDBService       = $queteurDBService;
     $this->uniteLocaleDBService   = $uniteLocaleDBService;
@@ -88,26 +80,10 @@ class AuthenticateAction extends AuthenticateAbstractAction
 
     $username = $this->validatedData["username"];
     $password = $this->validatedData["password"];
-    $token    = $this->validatedData["token"   ];
 
     Logger::dataForLogging(new LoggingEntity(null,  ["username"=>$username]));
 
-    $this->logger->debug("ReCaptcha checking user for login", array('username' => $username, 'token' => $token));
-
-    //$reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/login", $username, $this->parsedBody);
-    //TODO change for ReCaptachV2 or other
-    $reCaptchaResponseCode = 0;
-    if($reCaptchaResponseCode > 0)
-    {// error
-
-      $this->logger->error("authenticate: ReCaptcha error ",
-        array('username' => $username, 'token' => $token, 'ReCode'=>$reCaptchaResponseCode));
-
-      $response401 = $this->response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>"An error occurred - ReCode $reCaptchaResponseCode"]));
-
-      return $response401;
-    }
+    //TODO re-enable a captcha check here (ReCaptcha v2 or equivalent) before hitting the DB.
 
     $user           = $this->userDBService->getUserInfoWithNivol($username);
 

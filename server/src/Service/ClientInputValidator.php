@@ -144,7 +144,7 @@ class ClientInputValidator
 
     $rangeCheck = ['min'=>0];
 
-    if(is_int($maxValue) && $maxValue >0)
+    if($maxValue > 0)
     {
       $rangeCheck['max'] = $maxValue;
     }
@@ -177,7 +177,7 @@ class ClientInputValidator
    */
   public function validateBoolean(string $parameterName, ?array &$inputArray, bool $notNull, ?bool $defaultValue=null):?bool
   {
-    if($inputArray === null || $inputArray === "" || !array_key_exists($parameterName, $inputArray))
+    if($inputArray === null || !array_key_exists($parameterName, $inputArray))
     {
       $inputValue = null;
     }

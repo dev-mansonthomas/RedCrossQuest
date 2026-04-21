@@ -17,8 +17,6 @@ class SlackService
   private $rcqEnv;
   /** @var bool $online*/
   private $online;
-  /** @var string $rcqVersion*/
-  private $rcqVersion;
 
   private $envs=[
     "d" => "dev" ,
@@ -26,11 +24,10 @@ class SlackService
     "p" => "prod"
   ];
 
-  public function __construct(string $slackToken, string $rcqVersion, string $rcqEnv, bool $online)
+  public function __construct(string $slackToken, string $rcqEnv, bool $online)
   {
     $this->online     = $online;
     $this->rcqEnv     = $rcqEnv;
-    $this->rcqVersion = $rcqVersion;
 
     if($this->online)
     {

@@ -513,15 +513,12 @@ AND   tq.ul_id                = :ul_id
     }
     else
     {// admin mode
-      if($tq->isMoneyFilled())
-      {
-        //coalesce: si comptage est null, alors prends now()
-        // cela permet de Si les données argent sont rempli
-        //  qu'il n'y a pas de date de comptage de rempli, alors on met a jour la date de comptage.
-        //  S'il y avait déjà une date, on ne la met pas à jour (il y a last_update et la table d'historisation)
-        //
-        $comptage = " `comptage`                     = COALESCE(comptage, NOW()),";
-      }
+      //coalesce: si comptage est null, alors prends now()
+      // cela permet de Si les données argent sont rempli
+      //  qu'il n'y a pas de date de comptage de rempli, alors on met a jour la date de comptage.
+      //  S'il y avait déjà une date, on ne la met pas à jour (il y a last_update et la table d'historisation)
+      //
+      $comptage = " `comptage`                     = COALESCE(comptage, NOW()),";
     }
 
     $sql = "

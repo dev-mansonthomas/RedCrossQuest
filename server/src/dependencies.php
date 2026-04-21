@@ -102,7 +102,7 @@ return function (ContainerBuilder $containerBuilder)
     SlackService::class =>function(ContainerInterface $c):SlackService
     {
       $slackToken = $c->get(SecretManagerService::class)->getSecret(SecretManagerService::$SLACK_TOKEN);
-      return new SlackService($slackToken, (string)$c->get("RCQVersion"), $c->get('settings')['appSettings']['deploymentType'], $c->get('settings')['online']);
+      return new SlackService($slackToken, $c->get('settings')['appSettings']['deploymentType'], $c->get('settings')['online']);
     },
     "googleMapsApiKey" => function (ContainerInterface $c):string
     {

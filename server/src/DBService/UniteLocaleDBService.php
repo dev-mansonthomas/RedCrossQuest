@@ -291,9 +291,6 @@ VALUES
    */
   public function searchUniteLocale(string $query):array
   {
-    if ($query === null)
-      return [];
-
     $sql = "
 SELECT  `ul`.`id`,
         `ul`.`name`,
@@ -366,9 +363,6 @@ AND    `ulr`.approval_date         is null
    */
   public function searchUnRegisteredUniteLocale(string $query):array
   {
-    if ($query === null)
-      return [];
-
     /**
      * Select all UL that are not yet registred or the registration is incomplete
      *

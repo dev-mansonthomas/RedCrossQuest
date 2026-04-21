@@ -16,15 +16,10 @@ use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
-use RedCrossQuest\Service\ReCaptchaService;
 
 
 class ResetPassword extends Action
 {
-  /**
-   * @var ReCaptchaService
-   */
-  private ReCaptchaService $reCaptchaService;
   /**
    * @var UserDBService
    */
@@ -43,21 +38,18 @@ class ResetPassword extends Action
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param ReCaptchaService $reCaptchaService
    * @param UserDBService $userDBService
    * @param QueteurDBService $queteurDBService
    * @param EmailBusinessService $emailBusinessService
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
-                              ReCaptchaService        $reCaptchaService,
                               UserDBService           $userDBService,
                               QueteurDBService        $queteurDBService,
                               EmailBusinessService    $emailBusinessService)
   {
     parent::__construct($logger, $clientInputValidator);
-    
-    $this->reCaptchaService       = $reCaptchaService;
+
     $this->userDBService          = $userDBService;
     $this->queteurDBService       = $queteurDBService;
     $this->emailBusinessService   = $emailBusinessService;
@@ -78,20 +70,10 @@ class ResetPassword extends Action
 
     $uuid     = $this->validatedData["uuid"];
     $password = $this->validatedData["password"];
-    $token    = $this->validatedData["token"];
 
     Logger::dataForLogging(new LoggingEntity(null, ["uuid"=>$uuid]));
 
-    //$reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/resetPassword", "getInfoFromUUID", $this->parsedBody);
-    //TODO change for ReCaptachV2 or other
-    $reCaptchaResponseCode = 0;
-    if($reCaptchaResponseCode > 0)
-    {// error
-      $response401 = $this->response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>"an error occurred. Code $reCaptchaResponseCode"]));
-
-      return $response401;
-    }
+    //TODO re-enable a captcha check here (ReCaptcha v2 or equivalent) before hitting the DB.
 
     $user          = $this->userDBService->getUserInfoWithUUID($uuid);
 

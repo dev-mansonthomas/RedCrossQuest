@@ -26,8 +26,6 @@ class SecretManagerService
   public static $SLACK_TOKEN          = "SLACK_TOKEN";
   public static $REDCALL_SECRET       = "REDCALL_SECRET";
 
-  /** @var array */
-  private $SECRET_NAME_ID_MAPPING;
   /** @var string */
   private $PROJECT_ID;
 

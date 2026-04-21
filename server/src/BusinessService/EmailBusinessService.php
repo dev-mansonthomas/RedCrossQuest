@@ -789,7 +789,7 @@ En vous remerciant,
 
     $presidentSignature  = "";
     $presidentSignature2 = "";
-    if($thankYouEmail && $uniteLocaleEntity->president_first_name != null && $uniteLocaleEntity->president_first_name != "")
+    if($thankYouEmail && $uniteLocaleEntity->president_first_name != null)
     {
       $presidentSignature  = ucfirst($uniteLocaleEntity->president_first_name)." ".ucfirst($uniteLocaleEntity->president_last_name).", ";
       $presidentSignature2 = "Président de ";

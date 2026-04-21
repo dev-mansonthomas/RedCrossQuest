@@ -382,10 +382,10 @@ WHERE q.ul_id = :ul_id
 
     $parameters = ["ul_id" => $ulId];
 
-    if ($query !== null)
+    if ($query !== "")
     {
       $sql .= "
-AND  
+AND
 (       UPPER(q.`first_name`) like concat('%', UPPER(:query), '%')
   OR    UPPER(q.`last_name` ) like concat('%', UPPER(:query ), '%')
   OR    UPPER(q.`nivol`     ) like concat('%', UPPER(:query     ), '%')

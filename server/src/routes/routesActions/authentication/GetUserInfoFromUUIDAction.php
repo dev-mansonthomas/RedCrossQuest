@@ -4,7 +4,6 @@
 namespace RedCrossQuest\routes\routesActions\authentication;
 
 
-use DI\Attribute\Inject;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -15,15 +14,10 @@ use RedCrossQuest\routes\routesActions\Action;
 use RedCrossQuest\Service\ClientInputValidator;
 use RedCrossQuest\Service\ClientInputValidatorSpecs;
 use RedCrossQuest\Service\Logger;
-use RedCrossQuest\Service\ReCaptchaService;
 
 
 class GetUserInfoFromUUIDAction extends Action
 {
-  /**
-   * @var ReCaptchaService
-   */
-  private ReCaptchaService $reCaptchaService;
   /**
    * @var UserDBService
    */
@@ -32,29 +26,21 @@ class GetUserInfoFromUUIDAction extends Action
    * @var QueteurDBService
    */
   private QueteurDBService $queteurDBService;
-  /**
-   * @var array settings
-   */
-  #[Inject("settings")]
-  protected array $settings;
 
   /**
    * @param LoggerInterface $logger
    * @param ClientInputValidator $clientInputValidator
-   * @param ReCaptchaService $reCaptchaService
    * @param UserDBService $userDBService
    * @param QueteurDBService $queteurDBService
    *
    */
   public function __construct(LoggerInterface         $logger,
                               ClientInputValidator    $clientInputValidator,
-                              ReCaptchaService        $reCaptchaService,
                               UserDBService           $userDBService,
                               QueteurDBService        $queteurDBService)
   {
     parent::__construct($logger, $clientInputValidator);
-    
-    $this->reCaptchaService       = $reCaptchaService;
+
     $this->userDBService          = $userDBService;
     $this->queteurDBService       = $queteurDBService;
   }
@@ -73,29 +59,10 @@ class GetUserInfoFromUUIDAction extends Action
       ]);
 
     $uuid  = $this->validatedData["uuid"];
-    $token = $this->validatedData["token"];
 
     Logger::dataForLogging(new LoggingEntity(null, ["uuid"=>$uuid]));
 
-    $appUrl = $this->settings['appSettings']['appUrl'];
-    if($appUrl == "http://localhost:3000/")
-    {//ReCaptcha fails systematically for localhost ==> disable
-      $reCaptchaResponseCode = 0;
-    }
-    else
-    {
-      //$reCaptchaResponseCode = $this->reCaptchaService->verify($token, "rcq/getUserInfoWithUUID", "getInfoFromUUID", $this->parsedBody);
-    }
-    //TODO change for ReCaptachV2 or other
-    $reCaptchaResponseCode = 0;
-
-    if($reCaptchaResponseCode > 0)
-    {// error
-      $response401 = $this->response->withStatus(401);
-      $response401->getBody()->write(json_encode(["error" =>"an error occurred. Code $reCaptchaResponseCode"]));
-
-      return $response401;
-    }
+    //TODO re-enable a captcha check here (ReCaptcha v2 or equivalent) before hitting the DB.
 
     if (strlen($uuid) != 36)
     {
