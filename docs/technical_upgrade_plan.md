@@ -190,3 +190,33 @@ Le méta-package `google/cloud` v0.286 inclut ~150 packages inutilisés (BigQuer
 | 2 | `server/composer.json`, `server/composer.lock`, `server/src/Middleware/*`, `server/src/routes/*` (si `setArgument`) |
 | 3 | `server/composer.json`, `server/composer.lock`, `server/public/rest/index.php`, `docker/php/Dockerfile` (bump grpc) |
 | 4 | `docker/php/Dockerfile`, `docker-compose.yml`, `server/composer.json`, `server/app_template.yaml`, `run_local.sh`, `run_local.md`, `docker.md` |
+
+---
+
+## 7. PR 5 — Nettoyage PHPStan level 5 (en cours)
+
+Après PR 1-4, un cycle de nettoyage statique a été ouvert pour faire descendre le compteur PHPStan level 5 de **173 → 42** erreurs. Le détail complet (catégorisation, pistes de correction, tests E2E associés) est consigné dans **[`docs/todo_phpstan.md`](todo_phpstan.md)**.
+
+### Commits déjà mergés sur `technical_upgrade`
+
+| Sous-PR | SHA | Titre court | Δ findings |
+|---|---|---|---:|
+| 5a | `3ccdd59` | bootstrap phpstan level 5 + premiers quick fixes | -5 |
+| 5b | `eb77083` | harmonize return types in BusinessService | -4 |
+| 5c | `f945648` | PHPDoc cleanup (various) | ≈0 |
+| 5e.1 | `3fa5071` | annotate route files with `@var Slim\App $app` | -94 |
+| 5f.1 | `e0fb086` | remove dead code and unused ReCaptcha/rcqVersion properties | -21 |
+| 5d | `774c4e5` | migrate to `lcobucci/jwt` v5 API | -16 |
+
+### Sous-PRs à planifier (42 erreurs restantes)
+
+| Sous-PR | Portée | Attendu | Risque |
+|---|---|---:|---|
+| **5g** | Bugs de portée variable (`variable.undefined` dans TroncQueteur/ULRegistration/Spotfire) | -11 | 🟠 (chemins d'erreur runtime) |
+| **5h** | Mismatches de types `int`/`string`, Carbon tz, validators | -14 | 🟠 (touche Export, Mailing) |
+| **5i** | Propriétés orphelines, PHPDoc, méthodes non appelées | -9 | 🟢 |
+| **5j** | Bugs isolés (`ResponseInterface::write`, cast proto en string) | -2 | 🔴 (bug prod à patcher séparément) |
+
+### Rappel tests E2E avant merge
+
+Voir la checklist détaillée dans `docs/todo_phpstan.md` — résumé : Login, Reset password, Save/Prepare TroncQueteur (quêteur + admin), Export queteur, UL Registration + validation, Spotfire token.
