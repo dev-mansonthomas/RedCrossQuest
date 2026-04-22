@@ -7,12 +7,7 @@
     "type": "git",
     "url": "https://github.com/dev-mansonthomas/RedCrossQuest.git"
   },
-  "dependencies": {
-    "bl": "^5.0.0",
-    "latest-version": "^6.0.0",
-    "natives": "^1.1.6",
-    "npm": "^8.19.3"
-  },
+  "dependencies": {},
   "scripts": {
     "test": "gulp test"
   },
