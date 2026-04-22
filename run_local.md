@@ -81,6 +81,22 @@ make npm cmd="install --save-dev lodash"
 make bower cmd="install angular-ui-router"
 ```
 
+> ⚠️ **Ne jamais lancer `npm install` / `bower install` directement depuis
+> l'hôte.** Le front est figé sur Node 10.24.1 + Gulp 3.9.1 + Bower 1.8.14
+> (voir `client/package.json` `engines` et `docker/node/Dockerfile`). Sur
+> macOS récent, Windows ou Linux modernes, ces outils ne s'installent plus
+> proprement (node-gyp exige Python 2, libsass legacy, etc.). Les targets
+> `make npm` / `make bower` / `make gulp-serve` passent systématiquement
+> par le conteneur `node-client` où la toolchain est reproductible.
+>
+> Équivalent direct si on ne veut pas passer par `make` :
+>
+> ```bash
+> docker compose exec node-client npm  <args>
+> docker compose exec node-client bower <args> --allow-root
+> docker compose exec node-client gulp  <task>
+> ```
+
 ### Base de données / migrations
 
 La base MySQL est externe (conteneur `rcq_mysql`, projet dashboard). Ce

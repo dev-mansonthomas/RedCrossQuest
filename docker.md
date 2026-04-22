@@ -160,3 +160,26 @@ Le conteneur résout `host.docker.internal` → host gateway (configuré dans
   sur `/run/secrets` dans `php-fpm`.
 - Les mots de passe sont récupérés à l'exécution depuis GCP Secret Manager
   — jamais écrits sur disque ni committés.
+
+## Toolchain frontend (node-client)
+
+Le service `node-client` fige la toolchain AngularJS legacy :
+
+- **Node 10.24.1** (EOL 2021 — nécessaire pour `gulp-sass@3` + `node-sass`)
+- **Gulp 3.9.1** (EOL 2022 — incompatible avec Node 12+)
+- **Bower 1.8.14** (déprécié depuis 2017, mais toujours requis par
+  `client/bower.json`)
+- **Python 2** (installé pour `node-gyp` legacy)
+- L'image est construite en `linux/amd64` uniquement ; sur Apple
+  Silicon, Docker Compose utilise `platform: linux/amd64` pour
+  forcer l'émulation.
+
+> ⚠️ **Ne jamais faire `npm install` / `bower install` / `gulp` depuis
+> l'hôte.** L'OS hôte (Node 20+, Python 3, macOS ARM) ne peut plus
+> compiler `node-sass` ni certains modules natifs. Toute action sur
+> les dépendances frontend doit passer par `make npm` / `make bower`
+> / `make gulp-serve` (ou `docker compose exec node-client <cmd>`).
+>
+> L'audit d'upgrade frontend complet (vulnérabilités, plan de sortie
+> de Node 10 / Gulp 3) est consigné dans
+> [`docs/frontend_upgrade_audit.md`](docs/frontend_upgrade_audit.md).
