@@ -139,13 +139,6 @@
       controllerAs: 'rq'
     })
 
-      // ============== Graph Spotfire ==============
-      .when('/graph', {
-        templateUrl : 'app/graph/graph.html',
-        controller  : 'GraphController',
-        controllerAs: 'g'
-      })
-
       // ============== Points Quetes ==============
       .when('/pointsQuetes', {
         templateUrl : 'app/admin/pointQuete/list/listPointQuete.html',

@@ -71,30 +71,6 @@ echo "***** renaming index.html *****"
 cd client/dist  || exit 1
 mv index-*.html index.html
 
-echo "***** renaming graph-display and reference to it *****"
-GRAPH_FILE_NAME=$(ls graph-display-*.html)
-regex="graph-display-([a-f0-9]*)\.html"
-
-#change the reference to this ID in the app*.js file  graph-display-([a-f0-9]*)\.html -> graph.html
-if [[ $GRAPH_FILE_NAME =~ $regex ]]
-then
-    echo "$GRAPH_FILE_NAME serial is ${BASH_REMATCH[1]}"
-    SERIAL_ID=${BASH_REMATCH[1]}
-    sed -i "" "s/-${SERIAL_ID}//g" scripts/app*.js
-else
-    echo "$GRAPH_FILE_NAME doesn't match $regex"
-fi
-#rename the file
-mv graph-display-*.html graph-display.html
-
-
-#TODO : update the path from test to prod
-
-echo "***** updating path to dxp in graph display *****"
-# Update the URL of Spotfire DXP to match the country & environment
-sed -i '' "s/__country__/${COUNTRY}/g" graph-display.html
-sed -i '' "s/__env__/${ENV}/g"         graph-display.html
-
 echo "***** editing ReCaptCha key *****"
 #Updating Google reCaptcha public ID
 #hardcoded value that works for dev env.

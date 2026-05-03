@@ -42,7 +42,7 @@
 
             </button>
             <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-              <li role="menuitem"><a ng-href="/#!/graph"         ng-show="vm.currentUserRole>0 && vm.currentUlMode >= 1"><span class="glyphicon glyphicon-charts   big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Graphiques</a></li>
+              <li role="menuitem"><a ng-href="{{vm.graphUrl}}" target="_blank" rel="noopener" ng-show="vm.currentUserRole>0 && vm.currentUlMode >= 1"><span class="glyphicon glyphicon-charts   big-icon" aria-hidden="true"></span>&nbsp;&nbsp;Graphiques</a></li>
               <li class="divider"></li>
               <li role="menuitem"><a ng-href="/#!/pointsQuetes"   ><span class="glyphicon glyphicon-nearby-circle"  aria-hidden="true"></span> Points de Quêtes</a></li>
             </ul>

@@ -29,6 +29,10 @@
       vm.currentUserRole = $localStorage.currentUser.roleId;
       vm.currentUlMode   = $localStorage.currentUser.ulMode;
       vm.deploymentType  = $localStorage.currentUser.d;
+      vm.graphUrl        = 'https://'
+        + (vm.deploymentType === 'D' ? 'dev.'  :
+          (vm.deploymentType === 'T' ? 'test.' : ''))
+        + 'graph.redcrossquest.com';
       vm.pendingQueteurRegistrationCount = 0;
       vm.currentPath     = $location.path();
       vm.frontEndVersion = $localStorage.frontEndVersion;

@@ -36,7 +36,6 @@ return [
       'deploymentType'   => getenv('APP_ENV')                ,   //D:Dev, T:Testing, P:Production,
       'RGPD'             => 'https://goo.gl/UpTLAK'                   ,
       'RGPDVideo'        => 'https://firebasestorage.googleapis.com/path_to_video',
-      'graphPath'        => 'graph-display.html'                      ,
       'queteurDashboard' => 'Merci'                                   ,
       'email'            => [
         'sendgrid.sender'     => getenv('SENDGRID_SENDER' ),

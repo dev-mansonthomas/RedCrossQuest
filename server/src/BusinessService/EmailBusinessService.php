@@ -659,7 +659,9 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
       $this->mailingDBService->updateQueteurWithSpotfireAccessToken($mailingInfoEntity->spotfire_access_token, $mailingInfoEntity->id, $uniteLocaleEntity->id);
     }
 
-    $url = $this->appSettings['appUrl'].$this->appSettings['graphPath']."?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
+    $deploymentType = $this->appSettings['deploymentType'];
+    $graphSubdomain = $deploymentType === 'D' ? 'dev.' : ($deploymentType === 'T' ? 'test.' : '');
+    $url = "https://".$graphSubdomain."graph.redcrossquest.com/?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
 
     try
     {
