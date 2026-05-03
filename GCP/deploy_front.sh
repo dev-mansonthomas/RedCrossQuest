@@ -65,6 +65,18 @@ docker compose run --rm --no-deps \
         ./buildVersionNotes.php || true
         gulp build
         echo "{\"deployDate\": 20200202020202, \"deployNotes\": \"DEPLOY_NOTES\"}" > src/deploy.json
+
+        # Ship bower assets that gulp does not bundle, but that the built
+        # CSS/HTML reference verbatim (no path rewrite). Done inside the
+        # container because bower_components lives in a Docker named volume
+        # and is empty on the host (cf. docker-compose.yml).
+        echo "***** fixing bower libraries (inside container) *****"
+        mkdir -p dist/bower_components/angular-i18n/ \
+                 dist/bower_components/zxcvbn/dist/ \
+                 dist/bower_components/bootstrap-sass/assets/fonts/bootstrap/
+        cp bower_components/angular-i18n/angular-locale_fr-fr.js    dist/bower_components/angular-i18n/
+        cp bower_components/zxcvbn/dist/zxcvbn.js                   dist/bower_components/zxcvbn/dist/zxcvbn.js
+        cp bower_components/bootstrap-sass/assets/fonts/bootstrap/* dist/bower_components/bootstrap-sass/assets/fonts/bootstrap/
     '
 
 echo "***** renaming index.html *****"
@@ -75,13 +87,6 @@ echo "***** editing ReCaptCha key *****"
 #Updating Google reCaptcha public ID
 #hardcoded value that works for dev env.
 sed -i '' "s/6Lckj9EUAAAAAN1apUxCdkjZRwaj1UTnYRy-I3uj/${GOOGLE_RECAPTCHA_KEY}/g"         index.html
-
-echo "***** fixing bower libraries *****"
-# TODO see how to fix this in GULP
-mkdir -p bower_components/angular-i18n/ bower_components/zxcvbn/dist/    bower_components/bootstrap-sass/assets/fonts/bootstrap/
-cp ../../client/bower_components/angular-i18n/angular-locale_fr-fr.js    bower_components/angular-i18n/
-cp ../../client/bower_components/zxcvbn/dist/zxcvbn.js                   bower_components/zxcvbn/dist/zxcvbn.js
-cp ../../client/bower_components/bootstrap-sass/assets/fonts/bootstrap/* bower_components/bootstrap-sass/assets/fonts/bootstrap/
 
 cd - || exit 1
 
