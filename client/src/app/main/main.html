@@ -91,6 +91,21 @@
           </ul>
         </div>
 
+
+        <div uib-accordion-group class="panel-{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}} ng-scope ng-isolate-scope panel" heading="Définissez vos objectifs de quête">
+          <ul>
+            <li><b>Pourquoi :</b> Cela vous permettra de comparer dans les graphiques le chiffre réalisé avec votre objectif.</li>
+            <li><b>Durée :</b> 1 minute</li>
+            <li><b>Comment :</b> Menu Administration->Objectifs de quête
+              <ol>
+                <li>Choisissez l'année, puis cliquez sur Rechercher, un bouton apparait <b>"Renseigner les objectifs de l'année XXXX"</b>, cliquez sur ce bouton</li>
+                <li>Saisissez votre objectif pour l'année, dans le champ "Objectif de l'année", puis cliquez sur le bouton <b>"Sauvegarder"</b></li>
+                <li>Vous pouvez changer la répartition par jour si vous le souhaitez, mais la répartition par défaut est une bonne approximation.</li>                
+              </ol>
+            </li>
+          </ul>
+        </div>
+
         <div uib-accordion-group class="panel-{{main.setupStatus.dailyStatsIncomplete?'warning':'default'}} ng-scope ng-isolate-scope panel" heading="Définissez vos résultats journaliers des années précédentes">
           <ul>
             <li><b>Pourquoi :</b> Ces données vous permettront de comparer les chiffres journaliers de cette année avec les précédentes années et ainsi de vous situer par rapport à votre objectif</li>

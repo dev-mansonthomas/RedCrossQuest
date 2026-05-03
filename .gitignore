@@ -108,3 +108,4 @@ server/vendor/
 !.env.example
 .cred/
 server/phinx.yml
+docs/audit/phpstan.json
