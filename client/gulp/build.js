@@ -5,7 +5,7 @@ var gulp = require('gulp');
 var conf = require('./conf');
 var useref = require('gulp-useref');
 var $ = require('gulp-load-plugins')({
-  pattern: ['gulp-*', 'main-bower-files', 'del']
+  pattern: ['gulp-*', 'del']
 });
 
 gulp.task('partials', function () {
@@ -62,7 +62,7 @@ gulp.task('html', gulp.series('inject', 'partials', function htmlBundle() {
     .pipe(jsFilter.restore)
     .pipe(cssFilter)
     .pipe($.sourcemaps.init())
-    .pipe($.replace('../../bower_components/bootstrap-sass/assets/fonts/bootstrap/', '../fonts/'))
+    .pipe($.replace('../../node_modules/bootstrap-sass/assets/fonts/bootstrap/', '../fonts/'))
     .pipe($.cleanCss({ processImport: false }))
     .pipe($.sourcemaps.write('maps'))
     .pipe(cssFilter.restore)
@@ -81,14 +81,13 @@ gulp.task('html', gulp.series('inject', 'partials', function htmlBundle() {
     .pipe($.size({ title: path.join(conf.paths.dist, '/'), showFiles: true }));
 }));
 
-// Only applies for fonts from bower dependencies
-// Custom fonts are handled by the "other" task
+// Only applies for fonts from npm dependencies (currently just bootstrap-sass
+// glyphicons). Custom fonts are handled by the "other" task.
 // `encoding: false` keeps font binaries intact - vinyl-fs defaults to UTF-8
 // in gulp 5 and would otherwise replace bytes >= 0x80 with U+FFFD, doubling
 // the file size and producing OTS parsing errors in the browser.
 gulp.task('fonts', function () {
-  return gulp.src($.mainBowerFiles(), { allowEmpty: true, encoding: false })
-    .pipe($.filter('**/*.{eot,svg,ttf,woff,woff2}'))
+  return gulp.src('node_modules/bootstrap-sass/assets/fonts/**/*.{eot,svg,ttf,woff,woff2}', { encoding: false })
     .pipe($.flatten())
     .pipe(gulp.dest(path.join(conf.paths.dist, '/fonts/')));
 });

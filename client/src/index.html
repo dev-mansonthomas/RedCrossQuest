@@ -10,7 +10,7 @@
 
     <!-- build:css({.tmp/serve,src}) styles/vendor.css -->
     <!-- bower:css -->
-    <!-- run `gulp inject` to automatically populate bower styles dependencies -->
+    <!-- vendor css from node_modules/ is injected here by gulp inject -->
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -36,14 +36,9 @@
 
     <!-- build:js(src) scripts/vendor.js -->
     <!-- bower:js -->
-    <!-- run `gulp inject` to automatically populate bower script dependencies -->
+    <!-- vendor js from node_modules/ is injected here by gulp inject -->
     <!-- endbower -->
-    <script src="../bower_components/angular-qr-scanner-updated/src/jsqrcode-combined.min.js"></script>
-    <script src="../bower_components/ngmap/build/scripts/ng-map.min.js"></script>
-    <script src="../bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
-
     <!-- endbuild -->
-    <script src="../bower_components/angular-i18n/angular-locale_fr-fr.js"></script>
 
     <!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
     <!-- inject:js -->

@@ -6,9 +6,6 @@ var conf = require('./conf');
 
 var $ = require('gulp-load-plugins')();
 
-var wiredep = require('wiredep').stream;
-var _ = require('lodash');
-
 var browserSync = require('browser-sync');
 
 gulp.task('inject', gulp.series(gulp.parallel('scripts', 'styles'), function injectAll() {
@@ -30,10 +27,30 @@ gulp.task('inject', gulp.series(gulp.parallel('scripts', 'styles'), function inj
     addRootSlash: false
   };
 
+  // Vendor injection (replaces wiredep). gulp.src reads files from the
+  // project root with base '.' so file.relative is e.g.
+  // 'node_modules/jquery/dist/jquery.js'. With relative:true gulp-inject then
+  // emits '../node_modules/...' tags relative to src/index.html, mirroring the
+  // path layout the previous '../bower_components/...' tags used.
+  // We keep the legacy <!-- bower:js --> / <!-- bower:css --> markers and pin
+  // their `endtag` to <!-- endbower --> (gulp-inject's default endtag is
+  // <!-- endinject --> regardless of `name`, which would otherwise greedily
+  // swallow the unrelated <!-- inject:js --> block further down).
+  var vendorJs = gulp.src(conf.vendor.js, { read: false, base: '.' });
+  var vendorCss = gulp.src(conf.vendor.css, { read: false, base: '.' });
+
+  var vendorInjectOptions = {
+    starttag: '<!-- bower:{{ext}} -->',
+    endtag: '<!-- endbower -->',
+    relative: true,
+    addRootSlash: false
+  };
+
   return gulp.src(path.join(conf.paths.src, '/*.html'))
     .pipe($.inject(injectStyles, injectOptions))
     .pipe($.inject(injectScripts, injectOptions))
-    .pipe(wiredep(_.extend({}, conf.wiredep)))
+    .pipe($.inject(vendorJs, vendorInjectOptions))
+    .pipe($.inject(vendorCss, vendorInjectOptions))
     .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve')));
 }));
 

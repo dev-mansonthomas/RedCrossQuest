@@ -3,20 +3,16 @@
 var path = require('path');
 var conf = require('./gulp/conf');
 
-var _ = require('lodash');
-var wiredep = require('wiredep');
-
 var pathSrcHtml = [
   path.join(conf.paths.src, '/**/*.html')
 ];
 
 function listFiles() {
-  var wiredepOptions = _.extend({}, conf.wiredep, {
-    dependencies: true,
-    devDependencies: true
-  });
-
-  var patterns = wiredep(wiredepOptions).js
+  // Vendor JS comes from the explicit list in gulp/conf.js (was wiredep + bower).
+  // angular-mocks is required by Karma test specs but isn't part of the runtime
+  // vendor bundle, so it is appended here only.
+  var patterns = conf.vendor.js
+    .concat(['node_modules/angular-mocks/angular-mocks.js'])
     .concat([
       path.join(conf.paths.src, '/app/**/*.module.js'),
       path.join(conf.paths.src, '/app/**/*.js'),

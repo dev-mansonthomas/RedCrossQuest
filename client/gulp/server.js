@@ -14,12 +14,12 @@ var createProxyMiddleware = require('http-proxy-middleware').createProxyMiddlewa
 function browserSyncInit(baseDir, browser) {
   browser = browser === undefined ? 'default' : browser;
 
-  // Expose bower_components for both dev (src) and dist serves. The built
-  // index.html still references `../bower_components/{angular-i18n,zxcvbn}/*`
-  // verbatim; in production GCP/deploy_front.sh copies these into dist/, but
-  // for local serve:dist we route them straight from the source tree.
+  // Expose node_modules so dev-mode injected vendor scripts (../node_modules/...)
+  // resolve. Only useful for `serve` (raw src + .tmp) since `serve:dist` is fully
+  // bundled by useref/rev and no longer references node_modules at runtime, but
+  // routing it in both cases is harmless and matches the previous bower setup.
   var routes = {
-    '/bower_components': 'bower_components'
+    '/node_modules': 'node_modules'
   };
 
   var server = {
