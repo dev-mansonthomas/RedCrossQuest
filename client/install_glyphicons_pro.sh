@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # =============================================================================
 # Install Glyphicons Pro on top of the bootstrap-sass package installed by
-# bower, inside the dockerised node-client container.
+# npm, inside the dockerised node-client container.
 #
 #  * Clones https://github.com/dev-mansonthomas/bootstrap3-glyphicons-pro to
 #    get the 3 patched SCSS files (_bootstrap.scss, _variables.scss, and the
 #    new _glyphicons-pro.scss partial).
 #  * Copies the paid font files from the local Google Drive directory (the
 #    assets are licensed and must NOT be committed).
-#  * Pushes everything into the `bower-components` Docker volume via the
-#    running `rcq-node` container, then restarts gulp so SCSS is recompiled.
+#  * Pushes everything into the `node-modules` Docker volume via the running
+#    `rcq-node` container, then restarts gulp so SCSS is recompiled.
 #
 # Usage:
 #   ./client/install_glyphicons_pro.sh
@@ -21,7 +21,7 @@ set -euo pipefail
 
 CONTAINER="${CONTAINER:-rcq-node}"
 SERVICE="${SERVICE:-node-client}"
-BOWER_ROOT="/app/client/bower_components/bootstrap-sass/assets"
+BOOTSTRAP_ROOT="/app/client/node_modules/bootstrap-sass/assets"
 DEFAULT_FONTS="$HOME/Google Drive/My Drive/03-CRF/RedCrossQuest/Paid Stuff/Glyphicons Pro/glyphicons_pro_1_9_2/glyphicons/web/bootstrap_example/fonts"
 FONT_LOCATION="${GLYPHICONS_FONTS_DIR:-$DEFAULT_FONTS}"
 
@@ -49,9 +49,9 @@ docker exec -u root "$CONTAINER" bash -eu -c "
     cd /tmp/glyphiconspro
     git clone --depth 1 https://github.com/dev-mansonthomas/bootstrap3-glyphicons-pro.git
     SRC=/tmp/glyphiconspro/bootstrap3-glyphicons-pro/src/bootstrap-sass/assets/stylesheets
-    cp \"\$SRC/_bootstrap.scss\"                $BOWER_ROOT/stylesheets/_bootstrap.scss
-    cp \"\$SRC/bootstrap/_variables.scss\"      $BOWER_ROOT/stylesheets/bootstrap/_variables.scss
-    cp \"\$SRC/bootstrap/_glyphicons-pro.scss\" $BOWER_ROOT/stylesheets/bootstrap/_glyphicons-pro.scss
+    cp \"\$SRC/_bootstrap.scss\"                $BOOTSTRAP_ROOT/stylesheets/_bootstrap.scss
+    cp \"\$SRC/bootstrap/_variables.scss\"      $BOOTSTRAP_ROOT/stylesheets/bootstrap/_variables.scss
+    cp \"\$SRC/bootstrap/_glyphicons-pro.scss\" $BOOTSTRAP_ROOT/stylesheets/bootstrap/_glyphicons-pro.scss
 "
 
 # -----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ docker exec -u root "$CONTAINER" bash -eu -c "
 say "Copying font files from: $FONT_LOCATION"
 # `docker cp "src/." "container:dst/"` replicates directory content, honouring
 # spaces in the host path.
-docker cp "$FONT_LOCATION/." "$CONTAINER:$BOWER_ROOT/fonts/bootstrap/"
+docker cp "$FONT_LOCATION/." "$CONTAINER:$BOOTSTRAP_ROOT/fonts/bootstrap/"
 
 # -----------------------------------------------------------------------------
 # 3. Restart gulp so SCSS is recompiled with the glyphicons-pro partial

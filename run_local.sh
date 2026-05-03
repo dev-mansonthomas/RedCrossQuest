@@ -4,7 +4,7 @@
 #   * creates .env from .env.example (if missing)
 #   * seeds server/src/settings.php from settings.sample.php (if missing)
 #   * verifies the external `rcq_mysql` container is up (dashboard project)
-#   * builds images, installs composer + npm + bower deps
+#   * builds images, installs composer + npm deps
 #   * starts php-fpm + nginx + node-client
 #   * overlays Glyphicons Pro (licensed fonts from host Google Drive)
 #
@@ -12,7 +12,7 @@
 #   make phinx cmd=migrate      (or status / rollback / ...)
 #
 # Usage:  ./run_local.sh              (full bootstrap)
-#         ./run_local.sh --skip-deps  (skip composer/npm/bower install)
+#         ./run_local.sh --skip-deps  (skip composer/npm install)
 #         ./run_local.sh --rebuild    (force --no-cache build)
 # =============================================================================
 set -euo pipefail
@@ -130,8 +130,8 @@ docker compose up -d php-fpm nginx node-client
 # -----------------------------------------------------------------------------
 # 7. Install deps
 # -----------------------------------------------------------------------------
-# The node-client entrypoint auto-runs `npm install` + `bower install` when
-# the respective directories are empty, so we only need to drive composer here.
+# The node-client entrypoint auto-runs `npm install` when node_modules/ is
+# empty, so we only need to drive composer here.
 if [[ $SKIP_DEPS -eq 0 ]]; then
     say "composer install (server)"
     docker compose exec -T php-fpm composer install --no-interaction --no-progress
@@ -140,21 +140,21 @@ fi
 # -----------------------------------------------------------------------------
 # 7bis. Glyphicons Pro overlay (licensed assets, mandatory)
 # -----------------------------------------------------------------------------
-# Wait for the node-client entrypoint to finish `bower install` so that
-# bower_components/bootstrap-sass exists, then overlay the paid Glyphicons Pro
+# Wait for the node-client entrypoint to finish `npm install` so that
+# node_modules/bootstrap-sass exists, then overlay the paid Glyphicons Pro
 # SCSS + fonts. If the licensed fonts are missing on the host,
 # install_glyphicons_pro.sh aborts with an explicit error and so do we.
-BOWER_DIR=/app/client/bower_components/bootstrap-sass/assets/fonts/bootstrap
-GLYPHICONS_MARKER="$BOWER_DIR/glyphicons-regular.woff2"
+BOOTSTRAP_DIR=/app/client/node_modules/bootstrap-sass/assets/fonts/bootstrap
+GLYPHICONS_MARKER="$BOOTSTRAP_DIR/glyphicons-regular.woff2"
 
 if docker exec rcq-node test -f "$GLYPHICONS_MARKER" 2>/dev/null; then
     say "Glyphicons Pro already installed in node-client volume"
 else
-    say "Waiting for 'bower install' to finish in node-client"
+    say "Waiting for 'npm install' to finish in node-client"
     tries=0
-    until docker exec rcq-node test -d "$BOWER_DIR" 2>/dev/null; do
+    until docker exec rcq-node test -d "$BOOTSTRAP_DIR" 2>/dev/null; do
         ((tries++))
-        [[ $tries -gt 180 ]] && die "Timed out waiting for 'bower install' (>3 min). Inspect 'docker compose logs node-client'."
+        [[ $tries -gt 180 ]] && die "Timed out waiting for 'npm install' (>3 min). Inspect 'docker compose logs node-client'."
         sleep 1
     done
     say "Installing Glyphicons Pro overlay"

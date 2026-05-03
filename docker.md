@@ -84,7 +84,7 @@ Après modification : `make rebuild && make up`.
     │   ├── nginx.conf
     │   └── rcq-backend.conf         basePath /rest, FastCGI -> php-fpm:9000
     └── node/
-        ├── Dockerfile               Node 10 + gulp/bower + socat
+        ├── Dockerfile               Node 22 + gulp-cli + socat
         └── entrypoint.sh            forward localhost:8080 -> nginx:8080
 ```
 
@@ -119,7 +119,6 @@ Les scripts `GCP/deploy_back.sh` et `GCP/deploy_front.sh` ont été adaptés :
 | `composer-cache`    | Cache `/tmp/composer`                         |
 | `php-di-cache`      | Cache PHP-DI compilé (`/tmp/php-di-compiled`) |
 | `node-modules`      | `client/node_modules` (isolé du bind mount)   |
-| `bower-components`  | `client/bower_components`                     |
 
 `make clean` supprime les containers et volumes. **La base MySQL n'est
 pas affectée** (elle vit dans le conteneur externe `rcq_mysql`).
@@ -163,23 +162,28 @@ Le conteneur résout `host.docker.internal` → host gateway (configuré dans
 
 ## Toolchain frontend (node-client)
 
-Le service `node-client` fige la toolchain AngularJS legacy :
+Le service `node-client` héberge la toolchain AngularJS modernisée :
 
-- **Node 10.24.1** (EOL 2021 — nécessaire pour `gulp-sass@3` + `node-sass`)
-- **Gulp 3.9.1** (EOL 2022 — incompatible avec Node 12+)
-- **Bower 1.8.14** (déprécié depuis 2017, mais toujours requis par
-  `client/bower.json`)
-- **Python 2** (installé pour `node-gyp` legacy)
-- L'image est construite en `linux/amd64` uniquement ; sur Apple
-  Silicon, Docker Compose utilise `platform: linux/amd64` pour
-  forcer l'émulation.
+- **Node 22** (LTS, image `node:22-bookworm-slim`, multi-arch
+  amd64 + arm64 — natif sur Apple Silicon, plus de `platform:
+  linux/amd64`).
+- **Gulp 5** + `gulp-cli@3` (Gulp 3 + `node-sass` retirés au profit de
+  `gulp-sass@5` + `sass` dart-sass).
+- **Chromium** + `karma-chrome-launcher` headless pour les tests Karma
+  (PhantomJS retiré).
+- **`git`** (utilisé par npm pour résoudre les forks GitHub
+  `angular-qr-*-updated`).
+- **Plus de Bower** : les 24 dépendances front sont dans
+  `client/package.json` ; le pipeline `gulp` injecte les vendors via
+  `gulp-inject` + une liste explicite de chemins `node_modules/`
+  (cf. `client/gulp/conf.js`).
 
-> ⚠️ **Ne jamais faire `npm install` / `bower install` / `gulp` depuis
-> l'hôte.** L'OS hôte (Node 20+, Python 3, macOS ARM) ne peut plus
-> compiler `node-sass` ni certains modules natifs. Toute action sur
-> les dépendances frontend doit passer par `make npm` / `make bower`
-> / `make gulp-serve` (ou `docker compose exec node-client <cmd>`).
+> ⚠️ **Ne jamais faire `npm install` / `gulp` depuis l'hôte.** Le
+> conteneur fige les versions et l'OS sous-jacent ; certains modules
+> natifs (chromium-launcher, dart-sass binary) varient avec l'arch
+> hôte. Passer par `make npm` / `make gulp-serve` (ou
+> `docker compose exec node-client <cmd>`).
 >
-> L'audit d'upgrade frontend complet (vulnérabilités, plan de sortie
-> de Node 10 / Gulp 3) est consigné dans
+> L'audit d'upgrade frontend (vulnérabilités, plan de migration
+> historique) est consigné dans
 > [`docs/frontend_upgrade_audit.md`](docs/frontend_upgrade_audit.md).

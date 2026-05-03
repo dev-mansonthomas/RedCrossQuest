@@ -4,6 +4,15 @@
 > Date : 2026-04-21.
 > Contrainte produit : **rester sur AngularJS** (pas de migration Angular 2+). Objectif : monter AngularJS de 1.7.x → 1.8.3 (dernière release), stabiliser la toolchain, éliminer les vulnérabilités critiques.
 
+> **Statut au 2026-05-04** : F1 → F5 ci-dessous tous **réalisés**.
+> AngularJS bumpé à 1.8.3, deps runtime nettoyées, toolchain
+> modernisée (Node 22 + Gulp 5 + dart-sass + Chromium headless),
+> Bower complètement retiré (24 deps migrées vers `client/package.json`,
+> `wiredep` + `main-bower-files` remplacés par `gulp-inject` + une
+> liste explicite dans `client/gulp/conf.js`). L'audit ci-dessous
+> conserve l'état d'origine pour traçabilité ; voir le tableau §4
+> pour le suivi par sous-PR.
+
 ---
 
 ## 1. État actuel
@@ -105,17 +114,27 @@ Dominées par le sous-arbre `gulp-3` + `@npmcli/*` (tiré par `npm@^8.19.3` list
 
 ## 4. Plan d'action priorisé
 
-| # | Action | Impact | Effort | PR cible |
+| # | Action | Impact | Effort | Statut |
 |---|---|---|---|---|
-| F1 | `bower.json` : `resolutions.angular` → `~1.8.3` + `bower install` | runtime ✅ | 1h | `feat(client): bump AngularJS 1.7 → 1.8` |
-| F2 | Nettoyer `package.json.dependencies` (retirer `bl`, `npm`, `latest-version`, `natives`) | audit -20% | 30 min | `chore(client): prune unused runtime deps` |
-| F3 | Documenter dans `run_local.md` que `npm install` doit être fait **uniquement** via `docker compose run --rm node-client npm install` | sécurité supply-chain | 15 min | même commit que F2 |
-| F4 | Smoke tests E2E manuels (Login, Export, TroncQueteur prepare+save, UL registration) après F1 | validation | 1-2h | post-F1 |
-| F5 | *(long terme)* Gulp 3 → 4, Node 10 → 20, Bower → npm/vite | debt | 3-5 j | hors scope `technical_upgrade` — à planifier en sprint dédié |
+| F1 | `bower.json` : `resolutions.angular` → `~1.8.3` + `bower install` | runtime ✅ | 1h | **✅ done** (PR `technical_upgrade`) |
+| F2 | Nettoyer `package.json.dependencies` (retirer `bl`, `npm`, `latest-version`, `natives`) | audit -20% | 30 min | **✅ done** (PR `technical_upgrade`) |
+| F3 | Documenter dans `run_local.md` que `npm install` doit être fait **uniquement** via le conteneur `node-client` | sécurité supply-chain | 15 min | **✅ done** (PR `technical_upgrade`) |
+| F4 | Smoke tests E2E manuels (Login, Export, TroncQueteur prepare+save, UL registration) après F1 | validation | 1-2h | **✅ done** (manuel, post-F1) |
+| F5 | Gulp 3 → 5, Node 10 → 22, Bower → npm + `gulp-inject` | debt | 3-5 j | **✅ done** (PR `fix_gulp_replace` + PR `bower_to_npm`) |
 
-### 4.1 Cible fin `technical_upgrade`
+### 4.1 Statut final
 
-Limiter la branche `technical_upgrade` aux étapes **F1 + F2 + F3**. La dette toolchain (F5) dépasse le cadre d'une « montée technique stable ».
+Toutes les étapes F1 → F5 sont livrées. Détails :
+- **F5a — toolchain** (`fix_gulp_replace`) : Node 10 → 22, Gulp 3 → 5,
+  `gulp-sass@3` + `node-sass` → `gulp-sass@5` + `sass`, PhantomJS →
+  `karma-chrome-launcher` + Chromium headless, conversion de
+  l'API gulp aux signatures `gulp.series`/`gulp.parallel`.
+- **F5b — bower → npm** (`bower_to_npm`) : 24 deps front migrées vers
+  `client/package.json` (dont 2 forks GitHub `angular-qr-*-updated`),
+  `wiredep` + `main-bower-files` retirés, vendor list explicite dans
+  `client/gulp/conf.js`, `gulp-inject` injecte directement depuis
+  `node_modules/`. `bower.json` / `.bowerrc` supprimés, plomberie
+  Docker / Makefile / `deploy_front.sh` nettoyée.
 
 ---
 
