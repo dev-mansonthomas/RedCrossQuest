@@ -90,7 +90,6 @@ services:
     volumes:
       - ./client:/app/client
       - node-modules:/app/client/node_modules
-      - bower-components:/app/client/bower_components
     depends_on:
       - nginx
     networks: [rcq_net]
@@ -103,4 +102,3 @@ volumes:
   composer-cache:
   php-di-cache:
   node-modules:
-  bower-components:

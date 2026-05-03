@@ -57,7 +57,6 @@ docker compose run --rm --no-deps \
         rm -rf ./dist/*
         npm install --no-audit --no-fund
         npm audit fix || true
-        bower install --allow-root
         echo "{\"deployDate\": 20200202020202, \"deployNotes\": \"DEPLOY_NOTES\"}" > src/deploy.json
         DEPLOY_DATE=$(date +%Y%m%d%H%M%S)
         echo "setting version to $DEPLOY_DATE"
@@ -66,17 +65,15 @@ docker compose run --rm --no-deps \
         gulp build
         echo "{\"deployDate\": 20200202020202, \"deployNotes\": \"DEPLOY_NOTES\"}" > src/deploy.json
 
-        # Ship bower assets that gulp does not bundle, but that the built
-        # CSS/HTML reference verbatim (no path rewrite). Done inside the
-        # container because bower_components lives in a Docker named volume
-        # and is empty on the host (cf. docker-compose.yml).
-        echo "***** fixing bower libraries (inside container) *****"
-        mkdir -p dist/bower_components/angular-i18n/ \
-                 dist/bower_components/zxcvbn/dist/ \
-                 dist/bower_components/bootstrap-sass/assets/fonts/bootstrap/
-        cp bower_components/angular-i18n/angular-locale_fr-fr.js    dist/bower_components/angular-i18n/
-        cp bower_components/zxcvbn/dist/zxcvbn.js                   dist/bower_components/zxcvbn/dist/zxcvbn.js
-        cp bower_components/bootstrap-sass/assets/fonts/bootstrap/* dist/bower_components/bootstrap-sass/assets/fonts/bootstrap/
+        # zxcvbn is loaded asynchronously at runtime by resetPassword.controller.js
+        # from node_modules/zxcvbn/dist/zxcvbn.js (cf. ZXCVBN_SRC). Mirror the
+        # path under dist/ so the relative URL still resolves on GAE, where
+        # only dist/ is shipped. Other vendor assets (angular-i18n locale,
+        # bootstrap-sass glyphicons, animate.css, ...) are bundled by gulp
+        # into vendor.{js,css} or copied to dist/fonts/ at build time.
+        echo "***** copying runtime-loaded zxcvbn into dist/ *****"
+        mkdir -p dist/node_modules/zxcvbn/dist/
+        cp node_modules/zxcvbn/dist/zxcvbn.js dist/node_modules/zxcvbn/dist/zxcvbn.js
     '
 
 echo "***** renaming index.html *****"

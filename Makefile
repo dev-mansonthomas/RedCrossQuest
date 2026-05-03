@@ -11,7 +11,7 @@ PHP_EXEC := $(DC) exec -T php-fpm
 NODE_EXEC:= $(DC) exec -T node-client
 
 .PHONY: help init up down restart build rebuild logs ps \
-        composer-install composer-update composer npm bower \
+        composer-install composer-update composer npm \
         phinx-migrate phinx-rollback phinx \
         gulp-serve gulp-build \
         shell-php shell-node \
@@ -60,9 +60,6 @@ composer: ## Arbitrary composer cmd: `make composer cmd="require foo/bar"`
 
 npm: ## npm in the node-client container: `make npm cmd="install"`
 	$(NODE_EXEC) npm $(cmd)
-
-bower: ## bower in the node-client container: `make bower cmd="install"`
-	$(NODE_EXEC) bower --allow-root $(cmd)
 
 # ----------------------------------------------------------------------------
 # Database migrations (Phinx) — run against the host's own phinx.yml; pick the

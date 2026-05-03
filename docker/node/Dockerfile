@@ -10,7 +10,8 @@
 ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-bookworm-slim
 
-# git: required by bower (resolves a few deps from GitHub).
+# git: required by npm to resolve a couple of deps shipped as GitHub tarballs
+#   (see angular-qr-*-updated forks in client/package.json).
 # socat: forwards localhost:8080 -> nginx:8080 (see entrypoint.sh).
 # chromium + fonts: karma-chrome-launcher needs a real browser binary to run
 #   the unit-test suite headlessly (replaces the now-defunct PhantomJS).
@@ -19,7 +20,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         chromium fonts-liberation \
     && rm -rf /var/lib/apt/lists/* \
     && npm install -g --no-audit --no-fund \
-        bower@1.8.14 \
         gulp-cli@3.0.0
 
 # Tell karma-chrome-launcher where to find Chromium on Debian Bookworm.
@@ -31,9 +31,6 @@ ENV CHROME_BIN=/usr/bin/chromium
 COPY docker/node/entrypoint.sh /usr/local/bin/rcq-entrypoint
 RUN chmod +x /usr/local/bin/rcq-entrypoint
 ENTRYPOINT ["/usr/local/bin/rcq-entrypoint"]
-
-# Bower cannot run as root by default; allow it (dev container, no risk)
-RUN echo '{"allow_root": true}' > /root/.bowerrc
 
 WORKDIR /app/client
 

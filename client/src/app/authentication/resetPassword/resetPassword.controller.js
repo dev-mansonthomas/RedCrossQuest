@@ -4,7 +4,7 @@
   /**Load zxcvbn library*/
 
   (function () {
-    var ZXCVBN_SRC = 'bower_components/zxcvbn/dist/zxcvbn.js';
+    var ZXCVBN_SRC = 'node_modules/zxcvbn/dist/zxcvbn.js';
 
     var async_load = function () {
       var first, s;
