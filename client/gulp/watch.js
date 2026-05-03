@@ -6,34 +6,27 @@ var conf = require('./conf');
 
 var browserSync = require('browser-sync');
 
-function isOnlyChange(event) {
-  return event.type === 'changed';
-}
+gulp.task('watch', gulp.series('inject', function watchAll(done) {
 
-gulp.task('watch', ['inject'], function () {
+  gulp.watch([path.join(conf.paths.src, '/*.html'), 'bower.json'], gulp.series('inject-reload'));
 
-  gulp.watch([path.join(conf.paths.src, '/*.html'), 'bower.json'], ['inject-reload']);
-
-  gulp.watch([
+  // gulp 4 watch returns a chokidar instance: subscribe to specific events.
+  // Pure file changes -> recompile only styles; add/unlink -> full inject.
+  var stylesWatcher = gulp.watch([
     path.join(conf.paths.src, '/app/**/*.css'),
     path.join(conf.paths.src, '/app/**/*.scss')
-  ], function(event) {
-    if(isOnlyChange(event)) {
-      gulp.start('styles-reload');
-    } else {
-      gulp.start('inject-reload');
-    }
-  });
+  ]);
+  stylesWatcher.on('change', function () { gulp.series('styles-reload')(); });
+  stylesWatcher.on('add',    function () { gulp.series('inject-reload')(); });
+  stylesWatcher.on('unlink', function () { gulp.series('inject-reload')(); });
 
-  gulp.watch(path.join(conf.paths.src, '/app/**/*.js'), function(event) {
-    if(isOnlyChange(event)) {
-      gulp.start('scripts-reload');
-    } else {
-      gulp.start('inject-reload');
-    }
-  });
+  var scriptsWatcher = gulp.watch(path.join(conf.paths.src, '/app/**/*.js'));
+  scriptsWatcher.on('change', function () { gulp.series('scripts-reload')(); });
+  scriptsWatcher.on('add',    function () { gulp.series('inject-reload')(); });
+  scriptsWatcher.on('unlink', function () { gulp.series('inject-reload')(); });
 
-  gulp.watch(path.join(conf.paths.src, '/app/**/*.html'), function(event) {
-    browserSync.reload(event.path);
-  });
-});
+  gulp.watch(path.join(conf.paths.src, '/app/**/*.html'))
+    .on('change', function (filePath) { browserSync.reload(filePath); });
+
+  done();
+}));

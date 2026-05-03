@@ -1,37 +1,29 @@
 # syntax=docker/dockerfile:1.7
 # -----------------------------------------------------------------------------
-# RedCrossQuest - Node 10 image for the AngularJS 1.7 client
+# RedCrossQuest - Node image for the AngularJS 1.8 client
 # -----------------------------------------------------------------------------
-# Pinned to 10.24.1 as required by client/package.json engines field.
-# Base image `node:10-buster` is still pullable from Docker Hub; we add Python 2
-# because gulp-sass 3 and node-gyp transitively need it.
-#
-# Apple Silicon users: image is available as linux/amd64 only; run via emulation.
-#   docker-compose sets `platform: linux/amd64` for this service.
+# Node 22 LTS. AngularJS 1.8 is browser-only and does not constrain the
+# build host. Dart Sass replaces node-sass so no native compilation step is
+# needed - python and g++ are not required.
+# Image is multi-arch (amd64 + arm64) so Apple Silicon runs natively.
 # -----------------------------------------------------------------------------
-ARG NODE_VERSION=10.24.1
-FROM node:${NODE_VERSION}-buster
+ARG NODE_VERSION=22
+FROM node:${NODE_VERSION}-bookworm-slim
 
-# Debian Buster reached EOL on 2024-06-30. The default apt mirrors
-# (deb.debian.org / security.debian.org) no longer serve buster — switch to
-# archive.debian.org and disable "Valid-Until" checks on the frozen snapshots.
-RUN printf 'deb http://archive.debian.org/debian buster main\n\
-deb http://archive.debian.org/debian-security buster/updates main\n' \
-        > /etc/apt/sources.list \
-    && echo 'Acquire::Check-Valid-Until "false";' \
-        > /etc/apt/apt.conf.d/99no-check-valid-until
-
-# Global tooling used by client/build.sh and client/gulp-serve.sh
-# --unsafe-perm is required for gulp 3.x post-install scripts running as root
+# git: required by bower (resolves a few deps from GitHub).
+# socat: forwards localhost:8080 -> nginx:8080 (see entrypoint.sh).
+# chromium + fonts: karma-chrome-launcher needs a real browser binary to run
+#   the unit-test suite headlessly (replaces the now-defunct PhantomJS).
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        python2 make g++ git socat \
-    && ln -sf /usr/bin/python2 /usr/bin/python \
+        git socat ca-certificates \
+        chromium fonts-liberation \
     && rm -rf /var/lib/apt/lists/* \
-    && npm config set unsafe-perm true \
     && npm install -g --no-audit --no-fund \
-        gulp@3.9.1 \
         bower@1.8.14 \
-        node-gyp@5.1.1
+        gulp-cli@3.0.0
+
+# Tell karma-chrome-launcher where to find Chromium on Debian Bookworm.
+ENV CHROME_BIN=/usr/bin/chromium
 
 # gulp/server.js hardcodes `http://localhost:8080/` as the REST proxy target
 # (client/gulp/server.js:36). In Docker the backend lives on `nginx:8080`.

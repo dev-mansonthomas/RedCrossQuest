@@ -37,16 +37,18 @@ function runTests (singleRun, done) {
     preprocessors: preprocessors
   };
 
+  // karma 6.x exposes a Promise-returning `Server` constructor: the second
+  // callback argument was kept for backward compatibility.
   var server = new karma.Server(localConfig, function(failCount) {
     done(failCount ? new Error("Failed " + failCount + " tests.") : null);
-  })
+  });
   server.start();
 }
 
-gulp.task('test', ['scripts'], function(done) {
+gulp.task('test', gulp.series('scripts', function test(done) {
   runTests(true, done);
-});
+}));
 
-gulp.task('test:auto', ['watch'], function(done) {
+gulp.task('test:auto', gulp.series('watch', function testAuto(done) {
   runTests(false, done);
-});
+}));

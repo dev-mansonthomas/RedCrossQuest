@@ -61,10 +61,20 @@ module.exports = function(config) {
       whitelist: [path.join(conf.paths.src, '/**/!(*.html|*.spec|*.mock).js')]
     },
 
-    browsers : ['PhantomJS'],
+    browsers : ['ChromeHeadlessNoSandbox'],
+
+    customLaunchers: {
+      // --no-sandbox is required when Karma runs inside a Docker container
+      // (default Chromium sandbox is incompatible with the container's
+      // capabilities). Safe in this build-only context.
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-dev-shm-usage']
+      }
+    },
 
     plugins : [
-      'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
       'karma-angular-filesort',
       'karma-coverage',
       'karma-jasmine',
@@ -91,20 +101,6 @@ module.exports = function(config) {
   pathSrcHtml.forEach(function(path) {
     configuration.preprocessors[path] = ['ng-html2js'];
   });
-
-  // This block is needed to execute Chrome on Travis
-  // If you ever plan to use Chrome and Travis, you can keep it
-  // If not, you can safely remove it
-  // https://github.com/karma-runner/karma/issues/1144#issuecomment-53633076
-  if(configuration.browsers[0] === 'Chrome' && process.env.TRAVIS) {
-    configuration.customLaunchers = {
-      'chrome-travis-ci': {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
-    };
-    configuration.browsers = ['chrome-travis-ci'];
-  }
 
   config.set(configuration);
 };

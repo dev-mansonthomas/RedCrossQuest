@@ -77,9 +77,8 @@ services:
       context: .
       dockerfile: docker/node/Dockerfile
       args:
-        NODE_VERSION: ${NODE_VERSION:-10.24.1}
+        NODE_VERSION: ${NODE_VERSION:-22}
     container_name: rcq-node
-    platform: linux/amd64       # Node 10 has no arm64 image
     restart: unless-stopped
     environment:
       BACKEND_HOST: nginx
