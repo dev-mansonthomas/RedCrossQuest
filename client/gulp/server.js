@@ -16,8 +16,8 @@ function browserSyncInit(baseDir, browser) {
 
   // Expose node_modules so dev-mode injected vendor scripts (../node_modules/...)
   // resolve. Only useful for `serve` (raw src + .tmp) since `serve:dist` is fully
-  // bundled by useref/rev and no longer references node_modules at runtime, but
-  // routing it in both cases is harmless and matches the previous bower setup.
+  // bundled by useref/rev and no longer references node_modules at runtime;
+  // routing it in both cases is harmless.
   var routes = {
     '/node_modules': 'node_modules'
   };
