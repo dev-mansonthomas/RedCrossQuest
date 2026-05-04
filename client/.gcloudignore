@@ -1,26 +1,24 @@
+# Patterns that must not be uploaded by `gcloud app deploy client/app.yaml`.
+# Only dist/ is needed at runtime (cf. client/app.yaml: static_files dist/...);
+# everything else is build-time scaffolding.
 node_modules
-bower_components
 .tmp
 e2e
 gulp
 src
-build.sh
-sync.sh
 gulpfile.js
 index.html
 karma.conf.js
 package*.json
 protractor.conf.js
 .DS_Store
-.bowerrc
 .editorconfig
 .eslintrc
 .gitignore
 .yo-rc.json
 
-
-
-!dist/bower_components
+# Re-include rules below are kept for defensive purposes: should anyone ever
+# add a broader exclude (e.g. `*.html`) above, dist/ assets must still ship.
 !dist/*.html
 !dist/*.js
 !dist/*.css
