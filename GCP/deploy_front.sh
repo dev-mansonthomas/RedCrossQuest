@@ -84,9 +84,13 @@ cd client/dist  || exit 1
 mv index-*.html index.html
 
 echo "***** editing ReCaptCha key *****"
-#Updating Google reCaptcha public ID
-#hardcoded value that works for dev env.
-sed -i '' "s/6Lckj9EUAAAAAN1apUxCdkjZRwaj1UTnYRy-I3uj/${GOOGLE_RECAPTCHA_KEY}/g"         index.html
+# Replace the dev reCAPTCHA public key (hardcoded in client/src/index.html
+# for local dev convenience) with the env-specific one. The `-i.bak && rm`
+# pattern is portable across BSD sed (macOS) and GNU sed (Linux runners
+# such as GitHub Actions or Cloud Build); plain `sed -i ''` is BSD-only and
+# `sed -i` without an arg is GNU-only.
+sed -i.bak "s/6Lckj9EUAAAAAN1apUxCdkjZRwaj1UTnYRy-I3uj/${GOOGLE_RECAPTCHA_KEY}/g" index.html
+rm -f index.html.bak
 
 cd - || exit 1
 
