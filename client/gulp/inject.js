@@ -30,18 +30,17 @@ gulp.task('inject', gulp.series(gulp.parallel('scripts', 'styles'), function inj
   // Vendor injection (replaces wiredep). gulp.src reads files from the
   // project root with base '.' so file.relative is e.g.
   // 'node_modules/jquery/dist/jquery.js'. With relative:true gulp-inject then
-  // emits '../node_modules/...' tags relative to src/index.html, mirroring the
-  // path layout the previous '../bower_components/...' tags used.
-  // We keep the legacy <!-- bower:js --> / <!-- bower:css --> markers and pin
-  // their `endtag` to <!-- endbower --> (gulp-inject's default endtag is
+  // emits '../node_modules/...' tags relative to src/index.html.
+  // The starttag/endtag pair is pinned to <!-- vendor:{ext} --> /
+  // <!-- endvendor --> because gulp-inject's default endtag is
   // <!-- endinject --> regardless of `name`, which would otherwise greedily
-  // swallow the unrelated <!-- inject:js --> block further down).
+  // swallow the unrelated <!-- inject:js --> block further down.
   var vendorJs = gulp.src(conf.vendor.js, { read: false, base: '.' });
   var vendorCss = gulp.src(conf.vendor.css, { read: false, base: '.' });
 
   var vendorInjectOptions = {
-    starttag: '<!-- bower:{{ext}} -->',
-    endtag: '<!-- endbower -->',
+    starttag: '<!-- vendor:{{ext}} -->',
+    endtag: '<!-- endvendor -->',
     relative: true,
     addRootSlash: false
   };
