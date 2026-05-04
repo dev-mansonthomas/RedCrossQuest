@@ -99,9 +99,15 @@ gulp.task('other', function () {
     return file.stat.isFile();
   });
 
+  // deploy.json is excluded here: it is fully owned by the `versionNotes`
+  // task, which writes the real (date + minified version notes) JSON
+  // directly into dist/. Including it via `other` would copy the
+  // placeholder src/deploy.json first and rely on task ordering to
+  // overwrite it - a brittle race we'd rather not have.
   return gulp.src([
     path.join(conf.paths.src, '/**/*'),
-    path.join('!' + conf.paths.src, '/**/*.{html,css,js,scss}')
+    path.join('!' + conf.paths.src, '/**/*.{html,css,js,scss}'),
+    path.join('!' + conf.paths.src, '/deploy.json')
   ], { encoding: false })
     .pipe(fileFilter)
     .pipe(gulp.dest(path.join(conf.paths.dist, '/')));
