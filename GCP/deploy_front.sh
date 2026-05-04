@@ -54,8 +54,13 @@ docker compose run --rm --no-deps \
     node-client bash -lc '
         set -e
         rm -rf ./dist/*
-        npm install --no-audit --no-fund
-        npm audit fix || true
+        # `npm ci` is the deterministic install (fails if package.json and
+        # package-lock.json are out of sync, never mutates the lockfile,
+        # always starts from a clean node_modules). The previous
+        # `npm install` + `npm audit fix` pair could silently bump versions
+        # mid-deploy, producing a different artefact from what was tested
+        # locally.
+        npm ci --no-audit --no-fund
         # `gulp build` produces dist/deploy.json with the current UTC build
         # timestamp and the minified versionNotes.html (versionNotes task in
         # client/gulp/build.js). The legacy sed + buildVersionNotes.php dance
