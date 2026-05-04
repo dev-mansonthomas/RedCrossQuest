@@ -11,13 +11,13 @@ $FUNC_NAME=$argv[4];
 
 if($COUNTRY != "fr")
 {
-  echo "'${COUNTRY}' the first parameter (country) is not valid. Valid values are ['fr']";
+  echo "'{$COUNTRY}' the first parameter (country) is not valid. Valid values are ['fr']";
   exit(1);
 }
 
 if($ENV != "dev" && $ENV != "test" && $ENV != "prod" )
 {
-  echo "'${ENV}' the second parameter (env) is not valid. Valid values are ['dev', 'test', 'prod']";
+  echo "'{$ENV}' the second parameter (env) is not valid. Valid values are ['dev', 'test', 'prod']";
   exit(2);
 }
 
@@ -33,7 +33,7 @@ if($CREATE_OR_UPDATE == "create")
   #create service accounts and then grant roles
   $PROJECT_NAME="rcq";
   $PROJECT_ID="$PROJECT_NAME-$COUNTRY-$ENV";
-  echo "switching to ${PROJECT_ID}";
+  echo "switching to {$PROJECT_ID}";
 
   setCurrentProject($PROJECT_ID);
 
@@ -80,7 +80,7 @@ else
 
 $PROJECT_NAME="rcq";
 $PROJECT_ID="$PROJECT_NAME-$COUNTRY-$ENV";
-echo "switching to ${PROJECT_ID}";
+echo "switching to {$PROJECT_ID}";
 
 if($FUNC_NAME == "")
 {
