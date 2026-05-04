@@ -1,9 +1,11 @@
 'use strict';
 
+var fs = require('fs');
 var path = require('path');
 var gulp = require('gulp');
 var conf = require('./conf');
 var useref = require('gulp-useref');
+var htmlMinifier = require('html-minifier');
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'del']
 });
@@ -109,4 +111,40 @@ gulp.task('clean', function () {
   return $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/')]);
 });
 
-gulp.task('build', gulp.parallel('html', 'fonts', 'other'));
+// Produces dist/deploy.json with the current build timestamp and the
+// minified content of versionNotes.html. Replaces the legacy
+// client/buildVersionNotes.php + sed dance from build.sh / deploy_front.sh
+// (PHP is not available in the node-client image since the toolchain
+// modernization). Runs after `other` because that task copies the
+// placeholder src/deploy.json to dist/, which we then overwrite.
+gulp.task('versionNotes', function (done) {
+  var versionNotesPath = path.join(__dirname, '..', 'versionNotes.html');
+  var deployJsonOut = path.join(conf.paths.dist, 'deploy.json');
+
+  var notes = fs.readFileSync(versionNotesPath, 'utf8');
+  var minified = htmlMinifier.minify(notes, {
+    collapseWhitespace: true,
+    removeComments: true,
+    keepClosingSlash: true,
+    conservativeCollapse: true
+  });
+
+  // YYYYMMDDHHMMSS in UTC. Legacy bash `date +%Y%m%d%H%M%S` used the host
+  // timezone; UTC is deterministic across build environments and matches
+  // what GAE reports for deploy events.
+  var d = new Date();
+  var pad = function (n) { return String(n).padStart(2, '0'); };
+  var deployDate = Number(
+    d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate()) +
+    pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds())
+  );
+
+  fs.mkdirSync(path.dirname(deployJsonOut), { recursive: true });
+  fs.writeFileSync(deployJsonOut, JSON.stringify({
+    deployDate: deployDate,
+    deployNotes: minified
+  }));
+  done();
+});
+
+gulp.task('build', gulp.series(gulp.parallel('html', 'fonts', 'other'), 'versionNotes'));

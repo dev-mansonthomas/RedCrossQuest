@@ -57,13 +57,12 @@ docker compose run --rm --no-deps \
         rm -rf ./dist/*
         npm install --no-audit --no-fund
         npm audit fix || true
-        echo "{\"deployDate\": 20200202020202, \"deployNotes\": \"DEPLOY_NOTES\"}" > src/deploy.json
-        DEPLOY_DATE=$(date +%Y%m%d%H%M%S)
-        echo "setting version to $DEPLOY_DATE"
-        sed -i "s/20200202020202/${DEPLOY_DATE}/g" src/deploy.json
-        ./buildVersionNotes.php || true
+        # `gulp build` produces dist/deploy.json with the current UTC build
+        # timestamp and the minified versionNotes.html (versionNotes task in
+        # client/gulp/build.js). The legacy sed + buildVersionNotes.php dance
+        # was removed when the build moved into the node-client image, which
+        # has no PHP runtime.
         gulp build
-        echo "{\"deployDate\": 20200202020202, \"deployNotes\": \"DEPLOY_NOTES\"}" > src/deploy.json
 
         # zxcvbn is loaded asynchronously at runtime by resetPassword.controller.js
         # from node_modules/zxcvbn/dist/zxcvbn.js (cf. ZXCVBN_SRC). Mirror the
