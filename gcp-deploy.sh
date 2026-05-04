@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# TODO : do the deploy outside of the source folder (copy the necessary files in a temp folder and run gcloud app deploy from there)
+# Each `gcloud app deploy` invocation below uses a yaml whose containing
+# folder (client/, server/, GCP/) is the source directory; client/ and
+# server/ each ship a .gcloudignore that scopes the upload to the runtime
+# artefacts (dist/ and php source respectively). No upload happens from
+# the repo root, so no root .gcloudignore is needed.
 COUNTRY=$1
 ENV=$2
 TARGET=$3
