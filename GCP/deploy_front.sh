@@ -26,10 +26,9 @@ fi
 #if it does not exists, it means we're being called by ../gcp-deploy.sh (so not the same working dir), and it includes the common.sh
 setProject "rcq-${COUNTRY}-${ENV}"
 
-# Node 10.24.1 is required by client/package.json engines.
-# We no longer rely on a host-installed Node/nvm: the build runs inside the
-# `node-client` Docker image shipped with the repo (see docker/node/Dockerfile).
-# Requires Docker Desktop to be running on the host.
+# The front build runs inside the `node-client` Docker image shipped with
+# the repo (see docker/node/Dockerfile, currently Node 22 + Gulp 5).
+# We no longer rely on a host-installed Node/nvm; only Docker is required.
 command -v docker >/dev/null || { echo "Docker CLI not found on PATH"; exit 1; }
 docker compose version >/dev/null 2>&1 || { echo "Docker Compose v2 required"; exit 1; }
 
