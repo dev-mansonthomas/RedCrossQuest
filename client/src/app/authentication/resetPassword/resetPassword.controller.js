@@ -4,7 +4,9 @@
   /**Load zxcvbn library*/
 
   (function () {
-    var ZXCVBN_SRC = 'node_modules/zxcvbn/dist/zxcvbn.js';
+    // Staged at build time by gulp `vendorAssets` task (cf. client/gulp/build.js)
+    // and at dev time served from src/ via the same path through gulp serve.
+    var ZXCVBN_SRC = 'scripts/vendor/zxcvbn.js';
 
     var async_load = function () {
       var first, s;

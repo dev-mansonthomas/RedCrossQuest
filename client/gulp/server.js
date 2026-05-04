@@ -18,8 +18,13 @@ function browserSyncInit(baseDir, browser) {
   // resolve. Only useful for `serve` (raw src + .tmp) since `serve:dist` is fully
   // bundled by useref/rev and no longer references node_modules at runtime;
   // routing it in both cases is harmless.
+  // /scripts/vendor mirrors the layout produced by the gulp `vendorAssets`
+  // task at build time (dist/scripts/vendor/zxcvbn.js), so the runtime path
+  // hardcoded in resetPassword.controller.js (ZXCVBN_SRC) resolves both in
+  // dev (via this route) and in prod (via the static file under dist/).
   var routes = {
-    '/node_modules': 'node_modules'
+    '/node_modules': 'node_modules',
+    '/scripts/vendor': 'node_modules/zxcvbn/dist'
   };
 
   var server = {

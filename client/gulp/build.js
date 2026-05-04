@@ -94,6 +94,17 @@ gulp.task('fonts', function () {
     .pipe(gulp.dest(path.join(conf.paths.dist, '/fonts/')));
 });
 
+// zxcvbn is loaded asynchronously at runtime by resetPassword.controller.js
+// (cf. ZXCVBN_SRC). Stage it under dist/scripts/vendor/ so the deployed bundle
+// contains a clean `scripts/vendor/zxcvbn.js` path rather than leaking a
+// `node_modules/...` URL into production. The previous approach copied it
+// directly from deploy_front.sh after `gulp build`, which split the build
+// description across two repositories of truth.
+gulp.task('vendorAssets', function () {
+  return gulp.src('node_modules/zxcvbn/dist/zxcvbn.js')
+    .pipe(gulp.dest(path.join(conf.paths.dist, '/scripts/vendor/')));
+});
+
 gulp.task('other', function () {
   var fileFilter = $.filter(function (file) {
     return file.stat.isFile();
@@ -153,4 +164,4 @@ gulp.task('versionNotes', function (done) {
   done();
 });
 
-gulp.task('build', gulp.series(gulp.parallel('html', 'fonts', 'other'), 'versionNotes'));
+gulp.task('build', gulp.series(gulp.parallel('html', 'fonts', 'other', 'vendorAssets'), 'versionNotes'));

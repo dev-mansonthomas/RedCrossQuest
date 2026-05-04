@@ -67,16 +67,6 @@ docker compose run --rm --no-deps \
         # was removed when the build moved into the node-client image, which
         # has no PHP runtime.
         gulp build
-
-        # zxcvbn is loaded asynchronously at runtime by resetPassword.controller.js
-        # from node_modules/zxcvbn/dist/zxcvbn.js (cf. ZXCVBN_SRC). Mirror the
-        # path under dist/ so the relative URL still resolves on GAE, where
-        # only dist/ is shipped. Other vendor assets (angular-i18n locale,
-        # bootstrap-sass glyphicons, animate.css, ...) are bundled by gulp
-        # into vendor.{js,css} or copied to dist/fonts/ at build time.
-        echo "***** copying runtime-loaded zxcvbn into dist/ *****"
-        mkdir -p dist/node_modules/zxcvbn/dist/
-        cp node_modules/zxcvbn/dist/zxcvbn.js dist/node_modules/zxcvbn/dist/zxcvbn.js
     '
 
 echo "***** renaming index.html *****"
