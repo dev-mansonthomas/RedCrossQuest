@@ -8,7 +8,9 @@ var browserSync = require('browser-sync');
 
 gulp.task('watch', gulp.series('inject', function watchAll(done) {
 
-  gulp.watch([path.join(conf.paths.src, '/*.html'), 'bower.json'], gulp.series('inject-reload'));
+  // package.json triggers a re-inject so vendor list changes (gulp/conf.js
+  // is keyed off node_modules/) are picked up without restarting `gulp serve`.
+  gulp.watch([path.join(conf.paths.src, '/*.html'), 'package.json'], gulp.series('inject-reload'));
 
   // gulp 4 watch returns a chokidar instance: subscribe to specific events.
   // Pure file changes -> recompile only styles; add/unlink -> full inject.
