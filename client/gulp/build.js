@@ -52,6 +52,14 @@ gulp.task('html', gulp.series('inject', 'partials', function htmlBundle() {
   // the stream around revReplace.
   var mapFilter = $.filter(function (file) { return file.extname !== '.map'; }, { restore: true });
 
+  // We intentionally keep gulp-sourcemaps (rather than the native
+  // gulp.src/dest `sourcemaps:` option introduced in gulp 4): the native
+  // option only loads/writes existing sourcemap comments at the src/dest
+  // boundary, but in this pipeline `useref` concatenates many node_modules
+  // and src/ files into fresh `vendor.js` / `app.js` streams that have no
+  // pre-existing sourcemap. We therefore need the mid-pipeline `init()`
+  // (just before terser / cleanCss) to create the initial map from the
+  // concatenated content; only gulp-sourcemaps offers that.
   return gulp.src(path.join(conf.paths.tmp, '/serve/*.html'))
     .pipe($.inject(partialsInjectFile, partialsInjectOptions))
     .pipe(useref())
