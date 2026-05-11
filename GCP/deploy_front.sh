@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# Fail-fast: a failed docker / npm / gulp / gcloud step aborts the deploy
+# instead of producing a half-built dist/ or skipping the gcloud app
+# deploy silently (cf. May-2025 prod front not updated even though the
+# script reported success).
+set -euo pipefail
 
 COUNTRY=$1
 ENV=$2
