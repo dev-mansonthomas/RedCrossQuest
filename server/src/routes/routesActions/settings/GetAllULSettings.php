@@ -110,36 +110,40 @@ class GetAllULSettings extends Action
       $this->dailyStatsBeforeRCQDBService->getCurrentQueteStartDate()
     );
 
+    // ul_settings is always populated (UI flags like use_bank_bag / check_dates_not_in_the_past
+    // are needed by tronc views accessible to roleId==1 queteurs). The sensitive parts
+    // (token_benevole*, ul officer details) are restricted to roleId>1 below.
+    $guiSettings->ul_settings = $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
+
+    if($guiSettings->ul_settings == null)
+    {//initialization of a new UL
+
+      $data = [];
+
+      $data['use_bank_bag'                   ] = true;
+      $data['rq_autonomous_depart_and_return'] = false;
+      $data['rq_display_daily_stats'         ] = true;
+      $data['rq_display_queteur_ranking'     ] = ULPreferencesEntity::$RQ_DISPLAY_QUETE_STATS_ALL;
+      $data['ul_id'                          ] = $ulId;
+
+      $ulPreferenceEntity = ULPreferencesEntity::withArray($data, $this->logger);
+
+      $this->uniteLocalePrefsFirestoreService ->updateUlPrefs($ulId, $ulPreferenceEntity);
+
+      $guiSettings->ul_settings = $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
+    }
+
+    if(isset($guiSettings->ul_settings))
+      unset($guiSettings->ul_settings->FIRESTORE_DOC_ID);
+
     if($roleId>1)
     {
       $guiSettings->ul          = $this->uniteLocaleDBService             ->getUniteLocaleById   ($ulId);
-      $guiSettings->ul_settings = $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
-
-      if($guiSettings->ul_settings == null)
-      {//initialization of a new UL
-
-        $data = [];
-
-        $data['use_bank_bag'                   ] = true;
-        $data['rq_autonomous_depart_and_return'] = false;
-        $data['rq_display_daily_stats'         ] = true;
-        $data['rq_display_queteur_ranking'     ] = ULPreferencesEntity::$RQ_DISPLAY_QUETE_STATS_ALL;
-        $data['ul_id'                          ] = $ulId;
-
-        $ulPreferenceEntity = ULPreferencesEntity::withArray($data, $this->logger);
-
-        $this->uniteLocalePrefsFirestoreService ->updateUlPrefs($ulId, $ulPreferenceEntity);
-
-        $guiSettings->ul_settings = $this->uniteLocalePrefsFirestoreService ->getULPrefs           ($ulId);
-      }
 
       $ulTokens    = $this->uniteLocaleSettingsDBService->getUniteLocaleById($ulId);
 
       $guiSettings->ul_settings->token_benevole    = $ulTokens->token_benevole;
       $guiSettings->ul_settings->token_benevole_1j = $ulTokens->token_benevole_1j;
-
-      if(isset($guiSettings->ul_settings))
-        unset($guiSettings->ul_settings->FIRESTORE_DOC_ID);
     }
     $guiSettings->user        = $this->userDBService->getUserInfoWithUserId($userId, $ulId, $roleId);
 

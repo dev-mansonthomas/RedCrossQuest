@@ -15,9 +15,16 @@ class ClientInputValidatorSpecs
    */
   public string $parameterName;
   /**
-   * @var array that contains $parameterName as key to get the value that will be validated. InputArray can be null or the parameterName not be available as a key in the array
+   * @var array|null that contains $parameterName as key to get the value that will be validated.
+   *      Nullable because Slim's getParsedBody() / getQueryParams() can return null when the
+   *      request has no body or a content-type that no body parser handled. ClientInputValidator
+   *      already handles a null $inputArray downstream (treats every key as missing), and the
+   *      `notNull` flag on each spec then triggers a proper InvalidArgumentException -> 400.
+   *      Typing it as non-nullable `array` caused a TypeError on PHP 8 ("Cannot assign null to
+   *      property ... of type array") on every empty-body POST (legitimate or scanner), which
+   *      bubbled up as a 500 + Slack alert instead of the intended 400.
    */
-  public array $inputArray;
+  public ?array $inputArray;
   /**
    * @var int
    */
