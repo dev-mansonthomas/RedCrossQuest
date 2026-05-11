@@ -14,7 +14,10 @@ BACKEND_PORT="${BACKEND_PORT:-8080}"
 cd /app/client
 if [[ ! -x node_modules/.bin/gulp ]]; then
     echo "[rcq-node] node_modules missing → running npm install"
-    npm install --no-audit --no-fund
+    # --loglevel=error matches GCP/deploy_front.sh: AngularJS 1.8 / jQuery 2
+    # are EOL upstream and emit dozens of "deprecated" warnings on every
+    # install which drown out actionable output.
+    npm install --no-audit --no-fund --loglevel=error
 fi
 
 # Only start the forwarder for interactive serve targets, not for one-shot

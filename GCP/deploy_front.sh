@@ -65,7 +65,11 @@ docker compose run --rm --no-deps \
         # `npm install` + `npm audit fix` pair could silently bump versions
         # mid-deploy, producing a different artefact from what was tested
         # locally.
-        npm ci --no-audit --no-fund
+        # --loglevel=error suppresses the dozens of "deprecated" warnings
+        # for the AngularJS 1.8 / jQuery 2 dependency tree (AngularJS is
+        # officially EOL upstream - known issue, not actionable in this
+        # codebase; cf. docs/frontend_upgrade_audit.md).
+        npm ci --no-audit --no-fund --loglevel=error
         # `gulp build` produces dist/deploy.json with the current UTC build
         # timestamp and the minified versionNotes.html (versionNotes task in
         # client/gulp/build.js). The legacy sed + buildVersionNotes.php dance
