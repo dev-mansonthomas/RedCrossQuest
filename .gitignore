@@ -1,6 +1,9 @@
 ### Yeoman template
 client/node_modules/
 client/bower_components/
+# Local cache for Glyphicons Pro licensed fonts (synced from Google Drive
+# by client/sync_glyphicons_pro_cache.sh; must NEVER be committed - paid asset)
+client/.glyphicons-pro-cache/
 *.log
 
 build/

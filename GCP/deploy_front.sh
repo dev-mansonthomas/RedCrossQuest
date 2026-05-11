@@ -50,6 +50,14 @@ echo "***** client build (Docker node-client) *****"
 # Ensure the node-client image exists (first run will build it)
 docker compose build node-client
 
+# Glyphicons Pro is a licensed asset that cannot be committed; populate the
+# host-side cache (client/.glyphicons-pro-cache/) from Google Drive before
+# launching the build container. The cache is bind-mounted via
+# ./client:/app/client and consumed by install_glyphicons_pro_inside_container.sh
+# below - the same script run by run_local.sh, so dev and prod produce
+# identical CSS.
+bash client/sync_glyphicons_pro_cache.sh
+
 # Run the equivalent of the legacy client/build.sh inside the container.
 # --no-deps avoids starting php-fpm/nginx just for a front build.
 # --entrypoint "" bypasses the socat forwarder shipped for `gulp serve`.
@@ -70,6 +78,11 @@ docker compose run --rm --no-deps \
         # officially EOL upstream - known issue, not actionable in this
         # codebase; cf. docs/frontend_upgrade_audit.md).
         npm ci --no-audit --no-fund --loglevel=error
+        # Apply the Glyphicons Pro overlay (patched bootstrap-sass SCSS +
+        # licensed fonts from the host-side cache). MUST run after npm ci
+        # (overwrites files inside node_modules/bootstrap-sass) and before
+        # gulp build (which compiles the SCSS).
+        bash /app/client/install_glyphicons_pro_inside_container.sh
         # `gulp build` produces dist/deploy.json with the current UTC build
         # timestamp and the minified versionNotes.html (versionNotes task in
         # client/gulp/build.js). The legacy sed + buildVersionNotes.php dance
