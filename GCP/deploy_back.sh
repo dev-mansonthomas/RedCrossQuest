@@ -112,11 +112,14 @@ docker compose build php-fpm
 #DB Migration
 # --no-deps: don't start the local MariaDB, we target the Cloud SQL proxy.
 # Composer install is needed once; it's idempotent afterwards.
+# check:routes asserts the fail-fast allowlist in public/rest/index.php is in
+# sync with server/src/routes/*.php - drift would cause prod 404s on real APIs.
 docker compose run --rm --no-deps \
     -w /app/server \
     php-fpm bash -lc '
         set -e
         [[ -d vendor ]] || composer install --no-interaction --no-progress
+        composer check:routes
         php vendor/bin/phinx migrate -c /app/server/phinx.yml -e rcq-'"${COUNTRY}"'-'"${ENV}"'
     '
 
