@@ -49,7 +49,13 @@ module.exports = [
       // extra @eslint/js dependency for the handful of rules we actually
       // care about on a 14-year-old AngularJS 1 codebase in maintenance.
       'no-undef':                ['error'],
-      'no-unused-vars':          ['warn', { args: 'none' }],
+      // caughtErrors: 'none' matches the existing 'no-empty' allowEmptyCatch
+      // policy below — `try { ... } catch (e) { /* swallow */ }` is an
+      // intentional pattern in several legacy controllers and should not
+      // produce a lint warning for the unused binding. args: 'none' keeps
+      // unused function parameters (common in AngularJS callback signatures)
+      // silent.
+      'no-unused-vars':          ['warn', { args: 'none', caughtErrors: 'none' }],
       'no-redeclare':            ['error'],
       'no-dupe-keys':            ['error'],
       'no-dupe-args':            ['error'],
