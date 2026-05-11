@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# Fail-fast: any failed gcloud / docker / sed / cp aborts the deploy
+# instead of silently producing an inconsistent prod artefact. The trap
+# on EXIT (cleanup_cloud_sql_proxy) still runs on error so the cloud-sql
+# proxy is never left dangling on port 3310.
+set -euo pipefail
 
 COUNTRY=$1
 ENV=$2
