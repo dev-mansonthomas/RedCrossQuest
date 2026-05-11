@@ -83,7 +83,8 @@
     "scripts": {
         "phpstan":         "phpstan analyse --no-progress --memory-limit=1G",
         "phpcs:compat":    "phpcs --standard=phpcs.xml --no-colors",
-        "audit:php85":     ["@phpstan", "@phpcs:compat"],
+        "check:routes":    "php bin/check-route-allowlist.php",
+        "audit:php85":     ["@phpstan", "@phpcs:compat", "@check:routes"],
         "post-install-cmd": [
             "vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility > /dev/null 2>&1 || true"
         ],
