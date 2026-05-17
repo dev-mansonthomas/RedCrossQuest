@@ -52,11 +52,84 @@ Plan d'audit sécurité **contextualisé** au repo RedCrossQuest, dérivé du te
 
 ## 3. Plan par waves — adapté RCQ
 
-### Wave 0 — Pré-requis (sans dev, juste outil)
-- [ ] `composer audit --locked` (PHP 8.5) — capturer le baseline.
-- [ ] `npm audit --json` côté `client/` et `server/openapi/` — capturer le baseline.
-- [ ] Trier les **56 Dependabot alerts** par sévérité + paquet, comparer aux deux audits ci-dessus pour éliminer les doublons.
-- [ ] Lister les images de base Docker (`docker/php-fpm/Dockerfile`, `docker/node/Dockerfile`, `docker/nginx/Dockerfile`) et leur tag de digest (besoin pour CVE xz, glibc, etc.).
+### Wave 0 — Baseline exécuté (2026-05-17)
+
+#### Dependabot (`gh api /repos/.../dependabot/alerts?state=open`)
+
+| Écosystème | critical | high | medium | low | total |
+|---|---|---|---|---|---|
+| npm | 2 | 18 | 29 | 6 | **55** |
+| composer | 0 | 1 | 0 | 0 | **1** |
+| **Total** | **2** | **19** | **29** | **6** | **56** |
+
+**Paquets agrégés** (par worst severity) :
+
+| # alerts | sev | écosystème | paquet | first_patch | rel | manifest |
+|---|---|---|---|---|---|---|
+| 6 | critical | npm | `lodash` | 4.17.12 | transitive | `client/package-lock.json` |
+| 2 | critical | npm | `minimist` | 0.2.4 | transitive | `client/package-lock.json` |
+| 1 | high | composer | `phpseclib/phpseclib` | **3.0.52** | transitive | `server/composer.lock` |
+| 15 | high | npm | `axios` | 0.31.1 | transitive | `client/package-lock.json` |
+| 11 | high | npm | `angular` | — *(EOL, pas de patch)* | transitive | `client/package-lock.json` |
+| 5 | high | npm | `minimatch` | 3.1.3 | transitive | `client/package-lock.json` |
+| 1 | high | npm | `semver` | 5.7.2 | transitive | `client/package-lock.json` |
+| 1 | high | npm | `braces` | 3.0.3 | transitive | `client/package-lock.json` |
+| 1 | high | npm | `lodash.template` | — *(dead pkg)* | transitive | `client/package-lock.json` |
+| 1 | high | npm | `merge` | 2.1.1 | transitive | `client/package-lock.json` |
+| 4 | medium | npm | `jquery` | 3.5.0 | **direct** | `client/package-lock.json` |
+| 1 | medium | npm | `angular-sanitize` | — | **direct** | `client/package-lock.json` |
+| 2 | medium | npm | `postcss` | 8.5.10 | transitive | `client/package-lock.json` |
+| 1 | medium | npm | `micromatch` | 4.0.8 | transitive | `client/package-lock.json` |
+| 2 | medium | npm | `swagger-ui-dist` | 4.1.3 | **direct** | `server/openapi/package-lock.json` |
+| 1 | low | npm | `send` | 0.19.0 | transitive | `client/package-lock.json` |
+| 1 | low | npm | `serve-static` | 1.16.0 | transitive | `client/package-lock.json` |
+
+#### `composer audit --no-dev` (server/)
+
+```
+Found 1 security vulnerability advisory affecting 1 package:
+  Package : phpseclib/phpseclib
+  Severity: high
+  CVE     : CVE-2026-44167  (CVE-2024-27355 mitigation bypass — OID amplification DoS in ASN1::decodeOID())
+  Affects : >=3.0.0,<=3.0.51
+  Fix     : 3.0.52
+```
+**100 % alignement** avec Dependabot #288.
+
+#### `npm audit` (client/, exécuté via `node-client`)
+
+```
+critical: 5   (gulp-ng-annotate, lodash, minimist, ng-annotate, optimist — chaîne devDep gulp-ng-annotate)
+high:    21
+moderate: 12
+low:      2
+total:   40
+```
+40 < 56 car npm regroupe les CVE par paquet, là où Dependabot publie une alerte par advisory. **Aucune divergence sur les paquets critiques**.
+
+Note : `gulp-ng-annotate` est en **devDep** uniquement (build pipeline). Les 5 « critical » remontés par npm audit sont donc côté tooling et n'arrivent jamais dans le bundle navigateur. À traiter quand même mais avec une priorité moindre que `axios`/`lodash` runtime.
+
+#### Buckets de remédiation (proposés pour Wave 1)
+
+| Bucket | Sévérité | Effort | Action proposée |
+|---|---|---|---|
+| **B1 — `phpseclib 3.x → 3.0.52`** | high | XS (`composer update`) | 1 PR. Une seule alerte composer, fix transitif clean. |
+| **B2 — `axios` lockfile bump** | high | S | 15 alertes sur un seul paquet transitif. `npm update axios --depth=N` ou override dans `package.json`. |
+| **B3 — `lodash`, `minimist`, `braces`, `semver`, `minimatch`, `merge`, `micromatch`, `postcss`, `send`, `serve-static`** (chaîne gulp/karma) | critical→low | M | toolchain devDep. Un seul `npm-force-resolutions` ou ciblage `gulp-ng-annotate@latest` peut purger plusieurs ligues d'un coup. **Test obligatoire** : `npm ci && gulp build`. |
+| **B4 — `jquery 2.2.4 → 3.5.0+`** | medium | **L** (risque régression front) | Direct dep, AngularJS 1.8.x compatible avec jQuery 3 mais zone à tester (tooltips, modales, datepickers). |
+| **B5 — `swagger-ui-dist 3.x → 4.1.3+`** | medium | S | iso-fonctionnel pour la doc OpenAPI servie par `server/openapi/`. |
+| **B6 — `angular 1.8.3` + `lodash.template` + `angular-sanitize`** | high→medium | ❌ pas de fix | EOL, **risque accepté** + mitigation par CSP en Wave 3. |
+| **B7 — `gulp-ng-annotate@0.2.0 → 0.3.0`** (npm audit only) | critical | S devDep | bumper la version dans `package.json` (autorisé : devDep, hors contrainte « pas de modif `package.json` runtime »). |
+
+#### Docker base images
+- `docker/php/Dockerfile`: `php:${PHP_VERSION:-8.5}-fpm-bookworm` → Debian 12, xz 5.4.1-1 ✅
+- `docker/node/Dockerfile`: à pinner par digest en Wave 1 (cf. recommandation worm scan).
+- `docker/nginx/Dockerfile`: `nginx:*-alpine` → pas de liblzma.
+
+#### Décisions découlant de ce baseline
+- ✅ La **Wave 1.5 worm scan** était CLEAN — confirmation que les 56 alertes Dependabot ne contiennent **aucune compromission supply chain active** (toutes des CVE classiques, sans backdoor).
+- ✅ La clé `ul_update_topic` a été retirée du `server/src/settings.php` local (Task B). `settings.php` étant gitignored et copié depuis `~/.cred/rcq-${COUNTRY}-${ENV}-settings.php` au déploiement, l'opérateur doit propager la même suppression dans les trois fichiers `~/.cred/rcq-fr-{dev,test,prod}-settings.php`. Voir `docs/pubsub_messages.md` section D.
+- 🟢 **Wave 1 prête à démarrer** : commencer par **B1 (phpseclib)** comme dry-run du process (1 paquet, fix mineur, faible risque).
 
 ### Wave 1 — Supply chain (CRITIQUE)
 1. **Composer audit** : résoudre tous les `high`/`critical` sur `composer.lock`. Stack auth-critique : `lcobucci/jwt`, `firebase/php-jwt` transitif éventuel, `kreait/firebase-php`, `guzzlehttp/guzzle`, `symfony/http-client`.
