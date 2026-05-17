@@ -81,5 +81,8 @@
     "ngmap": "^1.18.5",
     "ngstorage": "^0.3.11",
     "zxcvbn": "^4.4.2"
+  },
+  "overrides": {
+    "axios": "^0.31.1"
   }
 }
