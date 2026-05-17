@@ -1,6 +1,6 @@
 # Inventaire des messages PubSub publiés par le serveur RedCrossQuest
 
-## 1. Vue d'ensemble — 3 topics utilisés sur 4 déclarés
+## 1. Vue d'ensemble — 3 topics actifs côté serveur PHP
 
 Déclaration dans `server/src/settings.php` (clé `PubSub`) :
 
@@ -9,9 +9,18 @@ Déclaration dans `server/src/settings.php` (clé `PubSub`) :
   'tronc_queteur_update_topic' => 'tronc_queteur_update',
   'tronc_queteur_create_topic' => 'tronc_queteur_create',
   'queteur_approval_topic'     => 'queteur_approval_topic',
-  'ul_update_topic'            => 'ul_update'
 ],
 ```
+
+> Historique : `ul_update_topic` a été retiré localement (orphelin — aucun publisher
+> côté PHP ni côté `rcq-functions-v2`). Le topic GCP `ul_update` reste provisionné
+> comme point d'entrée legacy/manuel pour `ul-queteur-stats-per-year` (Gen2).
+>
+> ⚠️ **Action opérateur requise** : `server/src/settings.php` est gitignored et
+> copié depuis `~/.cred/rcq-${COUNTRY}-${ENV}-settings.php` au déploiement
+> (cf. `GCP/deploy_back.sh:95`). Pour propager le cleanup en `dev`/`test`/`prod`,
+> supprimer la ligne `'ul_update_topic' => 'ul_update'` dans chacun des trois
+> fichiers `~/.cred/rcq-fr-{dev,test,prod}-settings.php`.
 
 Service générique : `server/src/Service/PubSubService.php::publish($topic, $data, $attributes, $jsonEncode=true, $raiseOnError=false)`.
 
@@ -51,14 +60,14 @@ Format publié = `{"data": json_encode($data), "attributes": {…}}`.
 | **Attributes** | `ulId`, `uId` (validateur), `queteurId`, `registrationId` |
 | **Finalité** | Déclenche la **Cloud Function `notifyRQOfRegistApproval`** (abonnée à ce topic — cf. `GCP/init_lib/common.sh:30`) qui notifie l'utilisateur RedQuest du verdict (approuvé/rejeté) et synchronise Firestore. |
 
-### D) `ul_update_topic` → `ul_update` — déclaré mais non utilisé côté serveur PHP
+### D) `ul_update` (topic GCP, plus exposé côté PHP)
 
 | | |
 |---|---|
-| **Sites côté PHP** | aucun (`grep` négatif sur `ul_update_topic` dans `server/src/**`) |
-| **Producteur réel** | la Cloud Function `ComputeULStats` (HTTP). |
-| **Consommateur** | la Cloud Function `ULTriggerRecompute` est abonnée à `trigger_ul_update` (pas `ul_update`) — cf. `GCP/init_lib/common.sh:32`. Le topic `ul_update` semble plutôt branché Firestore/BigQuery. |
-| **Constat** | La clé `ul_update_topic` dans `settings.php` est **morte côté backend RCQ** — c'est de la config résiduelle qui pourrait être nettoyée (à confirmer avec l'usage côté `rcq-functions-v2`). |
+| **Sites côté PHP** | aucun (retiré de `settings.php`, cleanup Wave 0). |
+| **Producteur côté Gen2** | aucun non plus (`rcq-functions-v2/functions/**` : `0` appel à `publish()`). `ul-trigger-recompute` dispatche via **Cloud Tasks**, pas PubSub. |
+| **Consommateur** | `ul-queteur-stats-per-year` (Gen2) abonné Eventarc → conservé comme point d'entrée manuel/legacy (`gcloud pubsub topics publish ul_update ...`). |
+| **À noter** | Topic GCP encore provisionné dans `GCP/init_lib/create_topics.sh`. À supprimer en même temps qu'une éventuelle décommission de `ul-queteur-stats-per-year`. Pas de décision dans ce repo pour l'instant. |
 
 ---
 
@@ -74,7 +83,7 @@ Format publié = `{"data": json_encode($data), "attributes": {…}}`.
 | `tronc_queteur_return` | ❌ aucun | ? | **mort** (idem `retour`) |
 | `tronc_queteur_updateAsAdmin` | ❌ aucun | ? | **mort** (flag `saveAsAdmin=1` dans `tronc_queteur_update`) |
 | `queteur_approval_topic` | ✅ Approve + Associate | ✅ `notifyRQOfRegistApproval` | **actif** |
-| `ul_update` | ❌ aucun (PHP) | ? | mort côté PHP |
+| `ul_update` | ❌ aucun (PHP ni Gen2) | `ul-queteur-stats-per-year` (Gen2) | legacy / point d'entrée manuel |
 | `trigger_ul_update` | ❌ aucun (PHP) | ✅ `ULTriggerRecompute` | trigger CF→CF, hors scope serveur |
 
 ---
@@ -86,7 +95,7 @@ Format publié = `{"data": json_encode($data), "attributes": {…}}`.
 | 1 | `tronc_queteur_create` | `PrepareTroncQueteur` | `TroncQueteurEntity` + `queteur` + `point_quete` (allégés, dates en string) | ulId, uId, queteurId, troncQueteurId | Synchro Firestore (RedQuest) + ingestion BigQuery |
 | 2 | `tronc_queteur_update` | `SaveCoinsOnTroncQueteur`, `SaveAsAdminOnTroncQueteur` | `TroncQueteurEntity` complet rechargé + flag `saveAsAdmin` | idem | Comptages → BigQuery, déclenche recompute stats UL |
 | 3 | `queteur_approval_topic` | `ApproveQueteurRegistration`, `AssociateRegistrationWithExistingQueteur` | `QueteurEntity` complet | ulId, uId, queteurId, registrationId | Trigger CF `notifyRQOfRegistApproval` → notif RedQuest + Firestore |
-| 4 | `ul_update` *(déclaré)* | — | — | — | Inutilisé côté PHP |
+
 
 ---
 
