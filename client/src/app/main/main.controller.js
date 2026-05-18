@@ -7,7 +7,8 @@
 
   /** @ngInject */
   function MainController($timeout, $localStorage, $scope, $rootScope,
-                          toastr, SettingsResource, PointQueteService)
+                          toastr, SettingsResource, PointQueteService,
+                          EmailValidationService)
   {
     var vm = this;
 
@@ -22,6 +23,8 @@
     vm.deploymentType = $localStorage.currentUser.d;
     vm.currentUserRole= $localStorage.currentUser.roleId;
 
+    vm.emailWarning   = false;
+    vm.userEmail      = '';
 
     //load in local storage the list of points de quete
     //used in preparationQuete for autocomplete
@@ -33,6 +36,8 @@
     {
       $localStorage.guiSettings = settings;
       vm.first_name = $localStorage.guiSettings.user.first_name;
+      vm.userEmail  = $localStorage.guiSettings.user.email || '';
+      vm.emailWarning = !EmailValidationService.isValidCroixRougeEmail(vm.userEmail);
       $rootScope.$emit('title-updated', 'Bienvenue '+vm.first_name);
     });
 
