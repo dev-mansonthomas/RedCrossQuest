@@ -91,8 +91,13 @@ class UserEntity extends Entity
    * @var ?string $last_name last name of the user
    */
   public ?string $last_name                   ;
+  /**
+   * @OA\Property()
+   * @var ?string $email email of the queteur attached to this user (joined from queteur table)
+   */
+  public ?string $email                       ;
 
-  protected array $_fieldList = ['id','nivol','queteur_id','password','password_defined','role','created','updated','active','last_failure_login_date','nb_of_failure','last_successful_login_date','init_passwd_date','first_name','last_name'];
+  protected array $_fieldList = ['id','nivol','queteur_id','password','password_defined','role','created','updated','active','last_failure_login_date','nb_of_failure','last_successful_login_date','init_passwd_date','first_name','last_name','email'];
   /**
    * Accept an array of data matching properties of this class
    * and create the class
@@ -122,5 +127,6 @@ class UserEntity extends Entity
 
     $this->getString ('first_name'                , $data, 100);
     $this->getString ('last_name'                 , $data, 100);
+    $this->getEmail  ('email'                     , $data);
   }
 }

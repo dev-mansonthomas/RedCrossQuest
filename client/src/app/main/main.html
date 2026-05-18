@@ -23,6 +23,16 @@
     </div>
   </div>
 
+  <div class="row" ng-show="main.emailWarning" style="margin-bottom: 10px;">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="alert alert-danger" role="alert">
+        <strong>Attention :</strong> Mettez à jour votre adresse email dans votre fiche queteur avec votre email Croix Rouge pour pouvoir accéder aux Graphiques de RedCrossQuest.<br/>
+        Utilisez votre email nominatif : <strong>prenom.nom@croix-rouge.fr</strong> (pas d'email de fonction)<br/>
+        Votre email est actuellement : <strong>{{main.userEmail}}</strong>
+      </div>
+    </div>
+  </div>
+
   <div class="row"
        style="margin-bottom: 10px;"
        ng-show="main.currentUserRole >= 4 && !(main.setupStatus.queteurIncomplete || main.setupStatus.userIncomplete || main.setupStatus.pointQueteIncomplete || main.setupStatus.dailyStatsIncomplete || main.setupStatus.troncsIncomplete) && !main.displayInstructions">
