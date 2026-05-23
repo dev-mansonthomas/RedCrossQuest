@@ -43,6 +43,14 @@ class ListTroncs extends Action
    */
   protected function action(): Response
   {
+    // Note sur le paramètre 'q' (préfixe de recherche par id de tronc) :
+    // Le formulaire de recherche est alimenté par un scan QR code décodé côté JS
+    // dans le navigateur (sans appel serveur). Les lecteurs QR peuvent produire des
+    // chaînes numériques aberrantes en cas de mauvaise lecture (ex: q=76457645 alors
+    // que max(tronc.id) ~= 7605). La borne max à 1 000 000 est volontairement très
+    // au-dessus des id réels et sert de garde-fou : elle rejette le bruit du scanner
+    // au lieu d'envoyer une requête SQL inutile. Les rejets logués en WARNING avec
+    // actionClass=ListTroncs sont donc attendus et ne traduisent pas un bug.
     $this->validateSentData(
       [
         ClientInputValidatorSpecs::withInteger('pageNumber'  , $this->queryParams, 100     , false    ),
