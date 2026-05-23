@@ -81,7 +81,7 @@ class SendPasswordInitializationMailAction extends Action
     }
     catch(Exception $e)
     {
-      $this->logger->warning("sendInit : Error while setting UUID for user with specified username",
+      $this->logger->warning("sendInit : user with specified username doesn't exist",
         array(
           "passedLogin"=>$username,
           Logger::$EXCEPTION=>$e));
@@ -95,11 +95,6 @@ class SendPasswordInitializationMailAction extends Action
       $this->emailBusinessService->sendInitEmail($queteur, $uuid);
       $this->logger->debug("sendInit: mail with uuid sent ", array('username' => $username, 'uuid'=>$uuid));
 
-    }
-    else
-    {//the user do not have an account
-      $this->logger->info("sendInit: user do not have an account ", array('username' => $username));
-      //Send identical response
     }
     $this->response->getBody()->write(json_encode(new SendPasswordInitializationMailResponse(true)));
     return $this->response;

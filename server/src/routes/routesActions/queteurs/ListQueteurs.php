@@ -56,6 +56,15 @@ class ListQueteurs extends Action
       return $this->response;
     }
 
+    // Note sur 'q' (recherche par id/nom/nivol) et 'queteurIds' (liste d'id séparés
+    // par des virgules pour la recherche QR multi-queteurs) :
+    // Ces deux champs sont fréquemment alimentés par un scan de QR code décodé côté
+    // JS dans le navigateur (sans appel serveur). Les lecteurs QR peuvent produire
+    // des chaînes aberrantes en cas de mauvaise lecture (caractères parasites, ids
+    // numériques fantaisistes, longueurs incohérentes). Les bornes (maxLength 100)
+    // et les rejets de validation associés sont volontaires : ils filtrent le bruit
+    // du scanner. Les WARNING 'Input value fails validations' avec actionClass=
+    // ListQueteurs sur ces paramètres sont donc attendus.
     $validations = [
       ClientInputValidatorSpecs::withInteger('pageNumber'         , $this->queryParams, 100 , false    ),
       ClientInputValidatorSpecs::withInteger('rowsPerPage'        , $this->queryParams, 100 , false    ),
