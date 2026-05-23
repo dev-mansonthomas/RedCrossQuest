@@ -116,11 +116,14 @@ class SaveCoinsOnTroncQueteur extends Action
       return $this->response->withStatus(500, "Error while updating TroncQueteur as admin") ;
     }
 
+    //PubSub publishing disabled — see docs/todo.md "PubSub cleanup".
+    //Topic `tronc_queteur_update` consumer (Google Spreadsheet feed) abandoned.
+    /*
     try
     {
       $tqUpdated = $this->troncQueteurDBService->getTroncQueteurById($tq->id, $ulId,$roleId);
       //var_dump($tqUpdated);
-      
+
       $tqUpdated->preparePubSubPublishing();
       if($adminMode)
       {
@@ -150,6 +153,7 @@ class SaveCoinsOnTroncQueteur extends Action
           Logger::$EXCEPTION => $exception));
       //do not rethrow
     }
+    */
 
     return $this->response;
   }

@@ -77,6 +77,9 @@ class SaveAsAdminOnTroncQueteur extends Action
       return $this->response->withStatus(500, "Error while updating TroncQueteur as admin") ;
     }
     
+    //PubSub publishing disabled — see docs/todo.md "PubSub cleanup".
+    //Topic `tronc_queteur_update` consumer (Google Spreadsheet feed) abandoned.
+    /*
     try
     {
       $tqUpdated = $this->troncQueteurDBService->getTroncQueteurById($tq->id, $ulId,$roleId);
@@ -105,6 +108,7 @@ class SaveAsAdminOnTroncQueteur extends Action
           Logger::$EXCEPTION => $exception));
       //do not rethrow
     }
+    */
 
     return $this->response;
   }

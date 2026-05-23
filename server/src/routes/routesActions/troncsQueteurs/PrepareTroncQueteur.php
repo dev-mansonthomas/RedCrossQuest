@@ -111,6 +111,10 @@ class PrepareTroncQueteur extends Action
       }
 
 
+      //PubSub publishing disabled — see docs/todo.md "PubSub cleanup".
+      //Topic `tronc_queteur_create` consumer (Google Spreadsheet feed) abandoned;
+      //in dev the topic doesn't exist → publish() raises NOT_FOUND, logged as error.
+      /*
       try
       {
         $tq         = $this->troncQueteurDBService->getTroncQueteurById($insertResponse->lastInsertId, $ulId, $roleId);
@@ -142,7 +146,7 @@ class PrepareTroncQueteur extends Action
           'queteurId'     => "".$tq->queteur_id,
           'troncQueteurId'=> "".$tq->id
         ];
-        
+
         $this->pubSubService->publish(
           $this->settings['PubSub']['tronc_queteur_create_topic'],
           $tq,
@@ -158,6 +162,7 @@ class PrepareTroncQueteur extends Action
             Logger::$EXCEPTION => $exception));
         //do not rethrow
       }
+      */
 
     }
     else
