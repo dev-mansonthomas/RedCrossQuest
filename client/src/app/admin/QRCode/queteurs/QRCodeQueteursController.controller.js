@@ -96,9 +96,12 @@
     {
       vm.confirmMarkAllAsNotPrinted = true;
     };
+    //Le backend met a jour TOUS les queteurs de l'UL (WHERE ul_id = :ul_id),
+    //pas seulement ceux affiches dans vm.list. Voir la doc de l'action
+    //MarkAllQueteurQRCodeAsPrinted::action() pour la justification.
     vm.doMarkAllAsNotPrinted=function()
     {
-      QueteurResource.markAllAsNotPrinted(vm.onSaveSuccess, vm.onSaveError);
+      QueteurResource.markAllAsNotPrinted({}, {printed: false}, vm.onSaveSuccess, vm.onSaveError);
       vm.updateQRCodeType='NON';
     };
     vm.cancelMarkAllAsNotPrinted=function()
@@ -110,9 +113,10 @@
     {
       vm.confirmMarkAllAsRead = true;
     };
+    //cf. doMarkAllAsNotPrinted : portee = tous les queteurs de l'UL.
     vm.doMarkAllAsPrinted=function()
     {
-      QueteurResource.markAllAsPrinted(vm.onSaveSuccess, vm.onSaveError);
+      QueteurResource.markAllAsPrinted({}, {printed: true}, vm.onSaveSuccess, vm.onSaveError);
       vm.updateQRCodeType='';
     };
     vm.cancelMarkAllAsPrinted=function()

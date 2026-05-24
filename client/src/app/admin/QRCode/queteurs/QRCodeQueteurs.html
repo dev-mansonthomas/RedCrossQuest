@@ -89,7 +89,7 @@
       <div class="col-md-3">
         Nombre de QRCodes: <span class="badge">{{qrcQueteurs.list.length}}</span>
 
-        <button type="button" id="markAllAsPrinted" name="markAllAsPrinted" class="btn btn-warning" ng-click="qrcQueteurs.markAllAsPrinted();">Marquer tous les QRCode des <br/>Quêteurs comme étant imprimés</button>
+        <button type="button" id="markAllAsPrinted" name="markAllAsPrinted" class="btn btn-warning" ng-click="qrcQueteurs.markAllAsPrinted();">Marquer tous les QRCode <br/>ci-dessous comme étant imprimés</button>
         <button class="btn btn-danger"
                 ng-show="qrcQueteurs.confirmMarkAllAsRead"
                 ng-click="qrcQueteurs.doMarkAllAsPrinted();"
@@ -166,7 +166,7 @@
                 id="markAllAsNotPrinted"
                 name="markAllAsNotPrinted"
                 class="btn btn-warning"
-                ng-click="qrcQueteurs.markAllAsNotPrinted();">Marquer tous les QRCode des <br/>Quêteurs comme étant <b>NON</b> imprimés</button>
+                ng-click="qrcQueteurs.markAllAsNotPrinted();">Marquer tous les QRCode des <br/>Quêteurs de l'UL comme étant <b>NON</b> imprimés</button>
       </div>
       <div class="col-md-3">
         <button class="btn btn-danger"
