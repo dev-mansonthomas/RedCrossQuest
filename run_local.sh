@@ -8,12 +8,17 @@
 #   * starts php-fpm + nginx + node-client
 #   * overlays Glyphicons Pro (licensed fonts from host Google Drive)
 #
-# Phinx migrations are NOT run automatically: launch them manually with
-#   make phinx cmd=migrate      (or status / rollback / ...)
+# Phinx migrations ARE run as part of this bootstrap, mirroring the pattern
+# used by GCP/deploy_back.sh: ~/.cred/phinx.yml (root credentials) is copied
+# over the gitignored server/phinx.yml, hosts are rewritten so the php-fpm
+# container reaches the host MySQL via host.docker.internal, migrations run
+# against the local-testing env, then server/phinx.yml is restored from the
+# repo template so no credentials live at rest in the working tree.
 #
-# Usage:  ./run_local.sh              (full bootstrap)
-#         ./run_local.sh --skip-deps  (skip composer/npm install)
-#         ./run_local.sh --rebuild    (force --no-cache build)
+# Usage:  ./run_local.sh                 (full bootstrap)
+#         ./run_local.sh --skip-deps     (skip composer/npm install)
+#         ./run_local.sh --skip-migrate  (skip phinx migrations)
+#         ./run_local.sh --rebuild       (force --no-cache build)
 # =============================================================================
 set -euo pipefail
 
@@ -21,12 +26,14 @@ HERE="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 cd "$HERE"
 
 SKIP_DEPS=0
+SKIP_MIGRATE=0
 REBUILD=0
 for arg in "$@"; do
     case "$arg" in
-        --skip-deps) SKIP_DEPS=1 ;;
-        --rebuild)   REBUILD=1   ;;
-        -h|--help)   sed -n '2,16p' "$0"; exit 0 ;;
+        --skip-deps)    SKIP_DEPS=1    ;;
+        --skip-migrate) SKIP_MIGRATE=1 ;;
+        --rebuild)      REBUILD=1      ;;
+        -h|--help)      sed -n '2,21p' "$0"; exit 0 ;;
         *) echo "Unknown flag: $arg" >&2; exit 1 ;;
     esac
 done
@@ -138,7 +145,35 @@ if [[ $SKIP_DEPS -eq 0 ]]; then
 fi
 
 # -----------------------------------------------------------------------------
-# 7bis. Glyphicons Pro overlay (licensed assets, mandatory)
+# 7bis. Phinx migrations (mirrors GCP/deploy_back.sh pattern)
+# -----------------------------------------------------------------------------
+# ~/.cred/phinx.yml carries root credentials for every env. Copy it onto the
+# gitignored server/phinx.yml, rewrite loopback hosts so the php-fpm container
+# reaches the host-published MySQL via host.docker.internal (same trick as
+# deploy_back.sh), then run pending migrations on local-testing. An EXIT trap
+# unconditionally restores server/phinx.yml from the repo template so no
+# credentials remain on disk if the script fails mid-way.
+if [[ $SKIP_MIGRATE -eq 0 ]]; then
+    HOST_PHINX_YML="${HOME}/.cred/phinx.yml"
+    [[ -f "$HOST_PHINX_YML" ]] || die "Missing $HOST_PHINX_YML (root creds needed for phinx)."
+    restore_phinx_template() {
+        cp "$HERE/server/phinx-template.yml" "$HERE/server/phinx.yml" 2>/dev/null || true
+    }
+    trap restore_phinx_template EXIT
+    say "Staging ~/.cred/phinx.yml into server/phinx.yml and rewriting hosts for Docker"
+    cp "$HOST_PHINX_YML" server/phinx.yml
+    sed -i '' -e 's/host: *127\.0\.0\.1/host: host.docker.internal/g' server/phinx.yml
+    sed -i '' -e 's/host: *localhost/host: host.docker.internal/g'    server/phinx.yml
+    say "Running phinx migrations (env: local-testing)"
+    docker compose exec -T -w /app/server php-fpm \
+        php vendor/bin/phinx migrate -c /app/server/phinx.yml -e local-testing
+    say "Restoring server/phinx.yml from repo template"
+    restore_phinx_template
+    trap - EXIT
+fi
+
+# -----------------------------------------------------------------------------
+# 7ter. Glyphicons Pro overlay (licensed assets, mandatory)
 # -----------------------------------------------------------------------------
 # Wait for the node-client entrypoint to finish `npm install` so that
 # node_modules/bootstrap-sass exists, then overlay the paid Glyphicons Pro
@@ -172,8 +207,6 @@ printf '  • %-24s %s\n'                        'MySQL (external)'     'rcq_mys
 cat <<'EOF'
 
 Next steps:
-  make phinx cmd=status   # inspect pending migrations
-  make phinx cmd=migrate  # apply them when you are ready
   make logs               # tail all services
   make shell-php          # shell inside php-fpm
   make down               # stop the stack

@@ -9,6 +9,7 @@ namespace RedCrossQuest\routes\routesActions\troncsQueteurs;
 use Carbon\Carbon;
 use DI\Attribute\Inject;
 use Exception;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use RedCrossQuest\DBService\TroncQueteurDBService;
@@ -109,6 +110,23 @@ class SaveCoinsOnTroncQueteur extends Action
 
       $this->troncQueteurDBService->updateCoinsCount($tq, $adminMode, $ulId, $userId);
 
+    }
+    catch(InvalidArgumentException $iae)
+    {
+      //CB payload validation failure thrown by CreditCardDBService::dedupAndValidateCBEntities
+      //(same amount with different quantities). The frontend should have caught this case via
+      //hasCBDetailsForDuplicateAmount(), so reaching this branch indicates a stale client, a
+      //replayed request, or a direct API call. Returning 400 with details lets the client
+      //surface the message; logged as ERROR with payload context for debugging.
+      $this->logger->error("CB payload validation failed on SaveCoinsOnTroncQueteur",
+        ["tq"=>$tq, "ulId"=>$ulId, "userId"=>$userId, Logger::$EXCEPTION => $iae]);
+      $response400 = $this->response->withStatus(400);
+      $response400->getBody()->write(json_encode([
+        "error"          => $iae->getMessage(),
+        "errorType"      => "cb_payload_validation",
+        "troncQueteurId" => $tq->id,
+      ], JSON_UNESCAPED_UNICODE));
+      return $response400;
     }
     catch(Throwable $exception)
     {

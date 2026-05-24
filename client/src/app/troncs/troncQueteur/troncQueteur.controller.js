@@ -278,16 +278,26 @@
 
     vm.save = function save()
     {
+      //double-submit guard: disable the main "Sauvegarder" button (bound on tq.confirmButtonDisabled
+      //in troncQueteur.html) as soon as save() is invoked, before any async work. covers all paths:
+      //form-only edits (savedSuccessfully -> $saveAsAdmin async), coins save ($saveCoins async),
+      //and prevents a rapid double-click from triggering two POSTs to credit_card persistence.
+      //the flag is reset in onSaveError() and savedSuccessfullyActions(). when a warning dialog is
+      //about to open (checkInputValues branch), we reset the flag because the same flag also gates
+      //the dialog's "Confirmer" button (ng-disabled=tq.confirmButtonDisabled in the modal); leaving
+      //it true would lock the user out of confirming. the main button is hidden behind the modal
+      //backdrop in that case, so resetting is safe vs double-clicks.
+      vm.confirmButtonDisabled=true;
 
       if(vm.checkInputValues() && vm.current.overrideWarning !== true)
       {
         vm.current.confirmInputValues=true;
+        vm.confirmButtonDisabled=false;
       }
       else
       {
         if(hasCoinsBeenModified())
         {
-          vm.confirmButtonDisabled=true;
           //remove deleted item that didn't exist in DB (ex: added, then removed, then save)
           vm.current.tronc_queteur.don_cb_details = vm.current.tronc_queteur.don_cb_details.filter(function(value) {
             return !(value.delete && !value.id)
@@ -425,6 +435,10 @@
 
     function savedSuccessfullyActions()
     {
+      //reset the double-submit guard in all branches: the main "Sauvegarder" button is gated on
+      //tq.confirmButtonDisabled (see troncQueteur.html) and must be re-enabled after every save
+      //completion, including the adminEditMode path which stays on the same page via loadData().
+      vm.confirmButtonDisabled=false;
       if(vm.current.adminEditMode === true)
       {
         vm.loadData();
@@ -435,7 +449,6 @@
         vm.savedSuccessfully=true;
         vm.errorWhileSaving = false;
         vm.errorWhileSavingDetails=null;
-        vm.confirmButtonDisabled=false;
         vm.current.troncsForComptage = TroncResource.troncForComptage();
         $timeout(function () { vm.savedSuccessfully=false; }, 10000);
       }
@@ -541,24 +554,48 @@
       //cb details is fetched ordered by amount asc in SQL
       //if there's some basic amount missing, we're filling it with quantity=0
 
-      var newCbDetails = [];
-      for(var i=1;i<11;i++)
-      {
-        newCbDetails[i] = {id:0,tronc_queteur_id:0,ul_id:0,quantity:0,amount:i};
-      }
-      //deal with integer amount first
+      //dedup pass: collapse rows with identical (amount, quantity) before merging into newCbDetails.
+      //a server-side bug (admin edit mode re-inserting CB rows without deleting the previous ones)
+      //can produce exact duplicates in the credit_card table for a given tronc_queteur_id.
+      //the 3 merge loops below handle duplicates inconsistently:
+      // - integer amounts 1..10 collapse silently via index-overwrite (newCbDetails[amount]=cbd)
+      // - non-integer amounts < 10 are splice-inserted -> each duplicate produces a visible row
+      // - amounts > 10 are pushed             -> each duplicate produces a visible row
+      //without this pass, saving the form would persist the polluted view back to DB and amplify
+      //the inconsistency at each edit. the root cause must still be fixed on the server (insert path).
+      var seenAmountQuantity = {};
+      var dedupedCbDetails   = [];
+      vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
+        var key = cbd.amount+'_'+cbd.quantity;
+        if(!seenAmountQuantity[key])
+        {
+          seenAmountQuantity[key] = true;
+          dedupedCbDetails.push(cbd);
+        }
+      });
+      vm.current.tronc_queteur.don_cb_details = dedupedCbDetails;
+
+      //(A) Build quick-entry preset rows for common CB donation amounts (rendered with quantity=0
+      //    when absent from DB) to accelerate data entry. We use a sparse array indexed by amount
+      //    so loop (B) can do O(1) overwrite when a DB row matches a preset amount.
+      //    1..10 are the historical default; 20 and 50 were added as frequent donation values.
+      var commonAmounts = [1,2,3,4,5,6,7,8,9,10,20,50];
+      var newCbDetails  = [];
+      commonAmounts.forEach(function(amount){
+        newCbDetails[amount] = {id:0,tronc_queteur_id:0,ul_id:0,quantity:0,amount:amount};
+      });
+      //(B) integer amount with a matching preset slot: overwrite the default qty=0 row.
+      //    presence-based test (newCbDetails[amount]) naturally covers 1..10 + 20 + 50.
       for(var j=0;j<vm.current.tronc_queteur.don_cb_details.length; j++)
       {
-        if(Number.isInteger(vm.current.tronc_queteur.don_cb_details[j].amount))
+        if(Number.isInteger(vm.current.tronc_queteur.don_cb_details[j].amount) &&
+           newCbDetails[vm.current.tronc_queteur.don_cb_details[j].amount])
         {
-          if(vm.current.tronc_queteur.don_cb_details[j].amount < 11)
-          {//if it's a basic amount (integer between 1 and 10), then overwrite the default set in the previous loop
-            newCbDetails[vm.current.tronc_queteur.don_cb_details[j].amount] = vm.current.tronc_queteur.don_cb_details[j];
-          }
+          newCbDetails[vm.current.tronc_queteur.don_cb_details[j].amount] = vm.current.tronc_queteur.don_cb_details[j];
         }
       }
-      //reverse walk the array to insert non integer value without messing up the order for the next iteration of the loop
-      //here we still assume the array index is equals to cbd.amount
+      //(C) reverse walk the array to insert non integer value without messing up the order for the next iteration of the loop
+      //    here we still assume the array index is equals to cbd.amount
       for(var x=vm.current.tronc_queteur.don_cb_details.length-1;x>=0; x--)
       {
         if(!Number.isInteger(vm.current.tronc_queteur.don_cb_details[x].amount) && vm.current.tronc_queteur.don_cb_details[x].amount < 10)
@@ -567,12 +604,24 @@
         }
       }
 
+      //(D) DB rows with amount > 10 NOT covered by a preset slot (e.g. 15, 25, 100) : append at end.
+      //    amounts matching a preset (20, 50) were already merged in (B); excluding them here
+      //    avoids producing a duplicate row alongside the preset.
+      var commonAmountSet = {};
+      commonAmounts.forEach(function(a){ commonAmountSet[a] = true; });
       vm.current.tronc_queteur.don_cb_details.forEach(function(cbd){
-        if(cbd.amount>10)
+        if(cbd.amount>10 && !commonAmountSet[cbd.amount])
         {
           newCbDetails.push(cbd);
         }
       });
+
+      //(E) Compact the sparse array (drop holes between preset indices) and sort by amount ascending.
+      //    Required because (D) pushes non-preset amounts > 10 (e.g. 15) at the end of the array,
+      //    landing them after preset slots 20 and 50. Final numerical sort gives a stable,
+      //    monotonic display order regardless of input shape.
+      newCbDetails = newCbDetails.filter(function(cbd){ return !!cbd; });
+      newCbDetails.sort(function(a,b){ return a.amount - b.amount; });
 
       //empty existing array
       vm.current.tronc_queteur.don_cb_details.length=0;
