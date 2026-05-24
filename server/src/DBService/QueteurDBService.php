@@ -1248,6 +1248,12 @@ AND   `ul_id`           = :ul_id
 
   /**
    * Mark All Queteur as printed
+   *
+   * Met a jour TOUS les queteurs de l'UL (filtre WHERE ul_id = :ul_id, pas
+   * de restriction supplementaire sur l'ensemble affiche cote UI).
+   * Comportement intentionnel - voir le commentaire dans
+   * MarkAllQueteurQRCodeAsPrinted::action() pour la justification metier.
+   *
    * @param int $ulId Id of the UL of the user (from JWT Token, to be sure not to update other UL data)
    * @param bool $printed :  mark queteur as printed or not printed
    * @throws PDOException if the query fails to execute on the server
