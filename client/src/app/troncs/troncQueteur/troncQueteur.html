@@ -1487,7 +1487,7 @@
           <div class="col-md-1">
             <button type="button"
                    class="btn btn-primary"
-                   ng-disabled="troncQueteurForm.$invalid"
+                   ng-disabled="troncQueteurForm.$invalid || tq.confirmButtonDisabled"
                    ng-click="tq.save()"
                    ng-if="tq.current.tronc_queteur.tronc_id > 0 && !tq.current.readOnlyView && tq.current.not_same_year!=true  || tq.current.adminEditMode == true"
                     ng-cloak
