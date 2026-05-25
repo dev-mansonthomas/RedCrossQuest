@@ -29,6 +29,11 @@ final class ULPreferencesEntity extends Entity
   /** @var ?bool $rq_autonomous_depart_and_return Can volunteers set the depart & return date themselves with RedQuest*/
   public ?bool $rq_autonomous_depart_and_return;
 
+  /** @var ?int $coin_order Display order of coins on the tronc_queteur counting form.
+   * 1 = by size (default), 2 = by value. UL-wide setting, replaces the legacy
+   * per-browser $localStorage.guiSettings.coins_order. */
+  public ?int $coin_order;
+
 
   /** @var ?string $token_benevole  token used for registration from RedQuest. Fetch from MySQL, not Firestore*/
   public ?string $token_benevole    = null                ;
@@ -39,8 +44,11 @@ final class ULPreferencesEntity extends Entity
   public static string $RQ_DISPLAY_QUETE_STATS_NONE      = "NONE"    ;
   public static string $RQ_DISPLAY_QUETE_STATS_1ST_PAGE  = "1ST_PAGE";
   public static string $RQ_DISPLAY_QUETE_STATS_ALL       = "ALL"     ;
-  
-  protected array $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'check_dates_not_in_the_past', 'rq_autonomous_depart_and_return', 'token_benevole', 'token_benevole_1j'];
+
+  public static int    $COIN_ORDER_BY_SIZE               = 1         ;
+  public static int    $COIN_ORDER_BY_VALUE              = 2         ;
+
+  protected array $_fieldList = ['ul_id', 'rq_display_daily_stats', 'rq_display_queteur_ranking', 'use_bank_bag', 'check_dates_not_in_the_past', 'rq_autonomous_depart_and_return', 'coin_order', 'token_benevole', 'token_benevole_1j'];
 
   /**
    * Accept an array of data matching properties of this class
@@ -59,6 +67,7 @@ final class ULPreferencesEntity extends Entity
     $this->getBoolean('rq_display_daily_stats'         , $data);
     $this->getBoolean('rq_autonomous_depart_and_return', $data);
     $this->getString ('rq_display_queteur_ranking'     , $data, 8);
+    $this->getInteger('coin_order'                     , $data);
   }
 
   /**

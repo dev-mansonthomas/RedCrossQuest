@@ -535,6 +535,41 @@
             </div>
           </div>
         </div>
+        <div class="row" style="padding-top:15px">
+          <div class="col-md-4">
+            <div class="form-group" ng-class="{'has-error':ulRedCrossQuestSettingsForm.CoinOrder.$invalid}">
+              <label for="CoinOrderRadio1" class="control-label">Ordre des pièces (machine à compter)</label> <br/>
+              <label class="radio-inline">
+                <input type="radio" name="CoinOrder" id="CoinOrderRadio1" ng-model="s.applicationSettings.coin_order" ng-value="1" ng-required> Par taille
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="CoinOrder" id="CoinOrderRadio2" ng-model="s.applicationSettings.coin_order" ng-value="2" ng-required> Par valeur
+              </label>
+              <span class="help-block">
+                Choisissez l'ordre d'affichage des pièces sur le formulaire de comptage en fonction de l'ordre des bacs de votre machine à compter les pièces. Ce paramètre est commun à toute l'UL pour éviter les erreurs de saisie entre différents utilisateurs.
+              </span>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="panel panel-info">
+              <div class="panel-heading">Aperçu de l'ordre d'affichage</div>
+              <div class="panel-body">
+                <div ng-if="s.applicationSettings.coin_order == 1 || !s.applicationSettings.coin_order">
+                  <strong>Par taille :</strong>
+                  <span style="font-family: monospace; font-size: 14px;">
+                    2&nbsp;€ &rarr; 50&nbsp;c &rarr; 1&nbsp;€ &rarr; 20&nbsp;c &rarr; 5&nbsp;c &rarr; 10&nbsp;c &rarr; 2&nbsp;c &rarr; 1&nbsp;c
+                  </span>
+                </div>
+                <div ng-if="s.applicationSettings.coin_order == 2">
+                  <strong>Par valeur :</strong>
+                  <span style="font-family: monospace; font-size: 14px;">
+                    2&nbsp;€ &rarr; 1&nbsp;€ &rarr; 50&nbsp;c &rarr; 20&nbsp;c &rarr; 10&nbsp;c &rarr; 5&nbsp;c &rarr; 2&nbsp;c &rarr; 1&nbsp;c
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row" style="padding-top:25px">
           <div class="col-md-2 col-md-offset-10">
             <button type="button" class="btn btn-primary" ng-disabled="ulApplicationSettingsForm.$invalid" ng-show="s.currentUserRole>=4" ng-click='s.updateRedCrossQuestSettings();'>Sauvegarder</button>

@@ -124,6 +124,7 @@ class GetAllULSettings extends Action
       $data['rq_autonomous_depart_and_return'] = false;
       $data['rq_display_daily_stats'         ] = true;
       $data['rq_display_queteur_ranking'     ] = ULPreferencesEntity::$RQ_DISPLAY_QUETE_STATS_ALL;
+      $data['coin_order'                     ] = ULPreferencesEntity::$COIN_ORDER_BY_SIZE;
       $data['ul_id'                          ] = $ulId;
 
       $ulPreferenceEntity = ULPreferencesEntity::withArray($data, $this->logger);
