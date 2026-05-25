@@ -714,15 +714,18 @@
                 <div class="col-md-2">
                   <strong>PIÈCES</strong>
                 </div>
-                <div class="col-md-4 col-md-offset-6"style="font-size:small">
-                  <div class="form-group">
-                    <label for="coins_order1" class="control-label">Ordre des pièces &nbsp;&nbsp;&nbsp;</label>
-                    <label class="radio-inline">
-                      <input type="radio" name="active" id="coins_order1" ng-model="tq.coins_order" ng-value="1" required ng-click="tq.setCoinsOrderInLocalCache(1)"> Par taille
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio" name="active" id="coins_order2" ng-model="tq.coins_order" ng-value="2" required ng-click="tq.setCoinsOrderInLocalCache(2)"> Par valeur
-                    </label>
+                <div class="col-md-8 col-md-offset-2" style="font-size:small">
+                  <!-- Coin order is now a UL-wide setting managed by admins.
+                       See client/src/app/admin/Settings/settings.html -->
+                  <div class="alert alert-danger" role="alert" style="border: 2px solid #a94442; margin-bottom: 0;">
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                    <strong>Ordre des pièces :</strong>
+                    <span ng-if="tq.coins_order == 1">par taille</span>
+                    <span ng-if="tq.coins_order == 2">par valeur</span>.
+                    Ce paramètre est désormais global pour toute l'UL.
+                    Pour le modifier, rendez-vous dans
+                    <strong>Administration &rarr; Paramétrage de l'UL &rarr; Paramètre RedCrossQuest</strong>
+                    (accessible aux profils Compteur, Admin et Superadmin).
                   </div>
                 </div>
               </div>

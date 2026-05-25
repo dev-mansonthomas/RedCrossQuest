@@ -22,16 +22,12 @@
     vm.onlyNumbers    = /^[0-9]{1,3}$/;
     vm.cbFormat       = /^[0-9]+(\.[0-9]{1,2})?$/;
 
-    vm.coins_order    = $localStorage.guiSettings.coins_order;
-    if(!vm.coins_order)
-    {//coins ordered by size by default
-      vm.coins_order = 1;
-    }
-
-    vm.setCoinsOrderInLocalCache=function(coins_order)
-    {
-      $localStorage.guiSettings.coins_order = coins_order;
-    };
+    //coin display order is now a UL-wide preference managed by admins from the
+    //settings page (Administration -> Paramétrage de l'UL -> Paramètre RCQ).
+    //The legacy per-browser $localStorage.guiSettings.coins_order has been removed:
+    //it caused inconsistent entries when multiple users counted on the same machine.
+    //Default to 1 (Par taille) if the UL has not been migrated yet.
+    vm.coins_order = ($localStorage.guiSettings.ul_settings && $localStorage.guiSettings.ul_settings.coin_order) || 1;
 
     vm.currentUserRole= $localStorage.currentUser.roleId;
     vm.currentUlMode  = $localStorage.currentUser.ulMode;

@@ -50,8 +50,17 @@ class UpdateRedCrossQuestSettings extends Action
       [
         ClientInputValidatorSpecs::withBoolean("use_bank_bag"                , $this->parsedBody, true, false),
         ClientInputValidatorSpecs::withBoolean("check_dates_not_in_the_past" , $this->parsedBody, true, true ),
+        ClientInputValidatorSpecs::withInteger("coin_order"                  , $this->parsedBody, 2  , false, ULPreferencesEntity::$COIN_ORDER_BY_SIZE),
       ]);
 
+    //coin_order is a UL-wide preference (1 = by size [default], 2 = by value),
+    //replacing the legacy per-browser $localStorage.guiSettings.coins_order on
+    //the tronc_queteur counting form. Normalize anything outside {1,2} to the default.
+    $coinOrder = $this->validatedData["coin_order"];
+    if($coinOrder !== ULPreferencesEntity::$COIN_ORDER_BY_SIZE && $coinOrder !== ULPreferencesEntity::$COIN_ORDER_BY_VALUE)
+    {
+      $coinOrder = ULPreferencesEntity::$COIN_ORDER_BY_SIZE;
+    }
 
     $ulId   = $this->decodedToken->getUlId();
 
@@ -64,6 +73,7 @@ class UpdateRedCrossQuestSettings extends Action
 
       $data['use_bank_bag'               ] = $this->validatedData["use_bank_bag"];
       $data['check_dates_not_in_the_past'] = $this->validatedData["check_dates_not_in_the_past"];
+      $data['coin_order'                 ] = $coinOrder;
 
       $data['ul_id'       ] = $ulId;
 
@@ -73,6 +83,7 @@ class UpdateRedCrossQuestSettings extends Action
     {
       $ulPreferenceEntity->use_bank_bag                = $this->validatedData["use_bank_bag"               ];
       $ulPreferenceEntity->check_dates_not_in_the_past = $this->validatedData["check_dates_not_in_the_past"];
+      $ulPreferenceEntity->coin_order                  = $coinOrder;
     }
 
     $this->ULPreferencesFirestoreDBService ->updateUlPrefs($ulId, $ulPreferenceEntity);

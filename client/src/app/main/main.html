@@ -1,5 +1,17 @@
 <acme-navbar></acme-navbar>
 <div class="container">
+  <!-- Permanent announcement banner: coin order is now a UL-wide setting (Firestore).
+       To be removed next year. -->
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-10 col-md-offset-1">
+      <uib-alert type="info">
+        <strong>Nouveau cette année :</strong> Le réglage <strong>Ordre des pièces</strong>
+        a été déplacé dans <strong>Administration &rarr; Paramétrage de l'UL &rarr; Paramètre RedCrossQuest</strong>.
+        Ce paramètre est désormais global pour l'UL afin d'éviter les erreurs de saisie entre différents utilisateurs.
+      </uib-alert>
+    </div>
+  </div>
+
   <div class="row hidden-sm hidden-xs" ng-show="main.currentUserRole >= 4">
     <div class="panel panel-default">
       <!-- Default panel contents -->
@@ -71,6 +83,7 @@
                 <li>Il y a 3 parties : Coordonnées de l'unité locales, Paramétrage de RedCrossQuest et Paramétrage de RedQuest</li>
                 <li>Coordonnées: email, téléphone, adresse postale (utilisé comme référence pour définir les trajets base à point de quête), les coordonnées des administrateurs, trésorier et président de l'unité locale.</li>
                 <li>RedCrossQuest : vous pouvez activer la fonction 'Sac de Banque', qui vous permet de définir dans quel sac vous versez le contenu d'un tronc. </li>
+                <li><b>Nouveau</b> : <b>Ordre des pièces</b> : en fonction de l'ordre d'affichage des pièces de votre machine à compter les pièces, choississez l'ordre des pièces par taille ou par valeur. Ce paramètre est désormais global à l'UL (auparavant il était propre à chaque navigateur).</li>
                 <li>RedQuest : Affichage dans l'application mobile pour le quêteur du classement des quêteurs (toutes les pages, premières pages, aucune), des stats journalières (en construction), laissez le quêteur définir son heure de départ et retour.</li>
               </ol>
             </li>
