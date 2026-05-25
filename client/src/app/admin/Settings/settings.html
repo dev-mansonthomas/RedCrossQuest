@@ -554,7 +554,11 @@
             <div class="panel panel-info">
               <div class="panel-heading">Aperçu de l'ordre d'affichage</div>
               <div class="panel-body">
-                <div ng-if="s.applicationSettings.coin_order == 1 || !s.applicationSettings.coin_order">
+                <div ng-if="!s.applicationSettings.coin_order" class="text-warning" style="font-weight: bold;">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  Veuillez choisir un ordre de pièces.
+                </div>
+                <div ng-if="s.applicationSettings.coin_order == 1">
                   <strong>Par taille :</strong>
                   <span style="font-family: monospace; font-size: 14px;">
                     2&nbsp;€ &rarr; 50&nbsp;c &rarr; 1&nbsp;€ &rarr; 20&nbsp;c &rarr; 5&nbsp;c &rarr; 10&nbsp;c &rarr; 2&nbsp;c &rarr; 1&nbsp;c

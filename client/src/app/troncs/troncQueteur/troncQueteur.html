@@ -717,7 +717,7 @@
                 <div class="col-md-8 col-md-offset-2" style="font-size:small">
                   <!-- Coin order is now a UL-wide setting managed by admins.
                        See client/src/app/admin/Settings/settings.html -->
-                  <div class="alert alert-danger" role="alert" style="border: 2px solid #a94442; margin-bottom: 0;">
+                  <div class="alert alert-danger" role="alert" style="border: 2px solid #a94442; margin-bottom: 0;" ng-if="!tq.coinOrderMissing">
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                     <strong>Ordre des pièces :</strong>
                     <span ng-if="tq.coins_order == 1">par taille</span>
@@ -726,6 +726,13 @@
                     Pour le modifier, rendez-vous dans
                     <strong>Administration &rarr; Paramétrage de l'UL &rarr; Paramètre RedCrossQuest</strong>
                     (accessible aux profils Compteur, Admin et Superadmin).
+                  </div>
+                  <div class="alert alert-success" role="alert" style="margin-bottom: 0; font-weight: bold;" ng-if="tq.coinOrderMissing">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <strong>Ordre des pièces non configuré pour votre UL.</strong>
+                    La sauvegarde du comptage est désactivée tant que ce paramètre n'a pas été figé par un administrateur.
+                    Rendez-vous dans <strong>Administration &rarr; Paramétrage de l'UL &rarr; Paramètre RedCrossQuest</strong>
+                    (accessible aux profils Compteur, Admin et Superadmin), choisissez l'ordre puis cliquez sur <strong>Sauvegarder</strong>.
                   </div>
                 </div>
               </div>
@@ -1490,12 +1497,22 @@
           <div class="col-md-1">
             <button type="button"
                    class="btn btn-primary"
-                   ng-disabled="troncQueteurForm.$invalid || tq.confirmButtonDisabled"
+                   ng-disabled="troncQueteurForm.$invalid || tq.confirmButtonDisabled || tq.coinOrderMissing"
                    ng-click="tq.save()"
                    ng-if="tq.current.tronc_queteur.tronc_id > 0 && !tq.current.readOnlyView && tq.current.not_same_year!=true  || tq.current.adminEditMode == true"
                     ng-cloak
             >Sauvegarder</button>
 
+          </div>
+        </div>
+        <div class="row" ng-if="tq.coinOrderMissing" ng-cloak style="margin-top: 20px;">
+          <div class="col-md-10 col-md-offset-1">
+            <div class="alert alert-danger" role="alert" style="text-align: center; font-weight: bold;">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              Sauvegarde désactivée : l'<strong>Ordre des pièces</strong> n'est pas configuré pour votre UL.
+              Veuillez contacter un administrateur pour qu'il le configure dans
+              <strong>Administration &rarr; Paramétrage de l'UL &rarr; Paramètre RedCrossQuest</strong>.
+            </div>
           </div>
         </div>
       </form>
