@@ -35,12 +35,14 @@ SELECT DISTINCT t.money_bag_id FROM
   WHERE  tq.$column   like :query
   AND YEAR(tq.depart) =    YEAR(NOW())
   AND tq.ul_id        =    :ul_id
+  AND tq.deleted      =    0
   UNION
   SELECT DISTINCT(nd.$column) as money_bag_id
   FROM   named_donation nd
   WHERE  nd.$column          like :query
   AND YEAR(nd.donation_date) =    YEAR(NOW())
   AND nd.ul_id               =    :ul_id
+  AND nd.deleted             =    0
 ) as t
 ORDER BY t.money_bag_id DESC
 ";
