@@ -131,6 +131,7 @@
                       <th>id                </th>
                       <th>Prénom            </th>
                       <th>Nom               </th>
+                      <th>Point de quête    </th>
                       <th>Départ            </th>
                       <th>TroncQueteur      </th>
                     </tr>
@@ -142,6 +143,7 @@
                       <td style="text-align: center">{{::t.id}}</td>
                       <td>{{::t.first_name  }}</td>
                       <td>{{::t.last_name   }}</td>
+                      <td>{{::t.point_quete_name}}</td>
                       <td>{{::t.depart | date:'dd/MM/yyyy HH:mm'}}</td>
                       <td style="text-align: center"><a ng-href="/#!/tronc_queteur/edit/{{::t.tronc_queteur_id}}" target='_blank'>{{::t.tronc_queteur_id}}</a></td>
                     </tr>

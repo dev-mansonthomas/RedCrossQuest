@@ -94,6 +94,13 @@ class TroncEntity extends Entity
    */
   public ?Carbon $retour ;
 
+  /**
+   * GetTroncForDepart, GetTroncForRetour where we list troncs with their assigned point de quête
+   * @OA\Property()
+   * @var ?string $point_quete_name Name of the associated point de quête
+   */
+  public ?string $point_quete_name;
+
 
 
   protected array $_fieldList = ['id','ul_id','created','enabled','notes','nombreTronc'];
@@ -121,6 +128,7 @@ class TroncEntity extends Entity
     $this->getDate   ('depart_theorique'  , $data);
     $this->getDate   ('depart'            , $data);
     $this->getDate   ('retour'            , $data);
+    $this->getString ('point_quete_name'  , $data, 100);
 
 
     }
