@@ -73,7 +73,7 @@ ORDER BY t.money_bag_id DESC
 
 
     $sql = "
-SELECT coins_money_bag_id,
+SELECT MIN(coins_money_bag_id) as coins_money_bag_id,
     COALESCE(SUM(
         euro2   * 2     +
         euro1   * 1     +
@@ -166,7 +166,7 @@ nd.cent1
     ];
 
     $sql = "
-SELECT bills_money_bag_id,
+SELECT MIN(bills_money_bag_id) as bills_money_bag_id,
        COALESCE(SUM(
         euro5    *5   +
         euro10   *10  +
