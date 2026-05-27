@@ -28,6 +28,9 @@
     //it caused inconsistent entries when multiple users counted on the same machine.
     //Default to 1 (Par taille) if the UL has not been migrated yet.
     vm.coins_order = ($localStorage.guiSettings.ul_settings && $localStorage.guiSettings.ul_settings.coin_order) || 1;
+    //When the UL has never persisted a coin_order, force the admin to go set it
+    //before any tronc can be saved (prevents inconsistent counts).
+    vm.coinOrderMissing = !($localStorage.guiSettings.ul_settings && $localStorage.guiSettings.ul_settings.coin_order);
 
     vm.currentUserRole= $localStorage.currentUser.roleId;
     vm.currentUlMode  = $localStorage.currentUser.ulMode;
