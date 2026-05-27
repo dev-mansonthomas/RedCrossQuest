@@ -145,6 +145,19 @@ if [[ $SKIP_DEPS -eq 0 ]]; then
 fi
 
 # -----------------------------------------------------------------------------
+# 7a. Refresh PHP-DI compiled container (catches stale wiring on rebuilds)
+# -----------------------------------------------------------------------------
+# The compiled container at /tmp/php-di-compiled/CompiledContainer.php is
+# persisted in the `php-di-cache` Docker volume across container restarts and
+# even `docker compose down`. Any change to dependencies.php (constructor
+# signatures, factory wiring) needs the compiled container to be regenerated,
+# otherwise the stale factory keeps injecting the previous arguments. Re-run
+# every bootstrap to guarantee freshness; the file is regenerated lazily on
+# the first request after deletion.
+say "Refreshing PHP-DI compiled container + optimizing autoload"
+docker compose exec -T -w /app/server php-fpm bash regenerate-php-di-cache.sh
+
+# -----------------------------------------------------------------------------
 # 7bis. Phinx migrations (mirrors GCP/deploy_back.sh pattern)
 # -----------------------------------------------------------------------------
 # ~/.cred/phinx.yml carries root credentials for every env. Copy it onto the

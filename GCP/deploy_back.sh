@@ -120,6 +120,7 @@ docker compose run --rm --no-deps \
         set -e
         [[ -d vendor ]] || composer install --no-interaction --no-progress
         composer check:routes
+        bash regenerate-php-di-cache.sh
         php vendor/bin/phinx migrate -c /app/server/phinx.yml -e rcq-'"${COUNTRY}"'-'"${ENV}"'
     '
 
