@@ -330,9 +330,11 @@ ORDER BY tq.`depart` DESC, tq.`id` desc
     $parameters = ["ul_id"  => $ulId];
     $sql = "
 SELECT t.`id`, tq.`id` as `tronc_queteur_id`, q.`first_name`, q.`last_name`, tq.`depart`, tq.`retour`,
-       t.`ul_id`, t.`created`, t.`enabled`, t.`notes`, t.`type`
-FROM   tronc         as t, 
-       tronc_queteur as tq, 
+       t.`ul_id`, t.`created`, t.`enabled`, t.`notes`, t.`type`,
+       pq.`name` as `point_quete_name`
+FROM   tronc         as t,
+       tronc_queteur as tq
+       LEFT JOIN point_quete as pq ON tq.`point_quete_id` = pq.`id`,
        queteur       as q
 where tq.`tronc_id`   = t.`id`
 AND   tq.`queteur_id` = q.`id`
@@ -341,7 +343,7 @@ AND   tq.`deleted`    = false
 AND   YEAR(tq.`depart_theorique`) = YEAR(CURRENT_DATE())
 AND   tq.`depart`     is not null
 AND   tq.`retour`     is not null
-AND   tq.`comptage`   is null  
+AND   tq.`comptage`   is null
 AND   t.`ul_id`       = :ul_id
 ORDER BY tq.`retour` DESC, tq.`id` desc
 ";
