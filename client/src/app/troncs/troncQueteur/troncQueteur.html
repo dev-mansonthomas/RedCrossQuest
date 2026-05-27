@@ -717,22 +717,18 @@
                 <div class="col-md-8 col-md-offset-2" style="font-size:small">
                   <!-- Coin order is now a UL-wide setting managed by admins.
                        See client/src/app/admin/Settings/settings.html -->
-                  <div class="alert alert-danger" role="alert" style="border: 2px solid #a94442; margin-bottom: 0;" ng-if="!tq.coinOrderMissing">
+                  <div class="alert alert-success" role="alert" style="margin-bottom: 0;" ng-if="!tq.coinOrderMissing">
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                    <strong>Ordre des pièces :</strong>
-                    <span ng-if="tq.coins_order == 1">par taille</span>
-                    <span ng-if="tq.coins_order == 2">par valeur</span>.
-                    Ce paramètre est désormais global pour toute l'UL.
-                    Pour le modifier, rendez-vous dans
-                    <strong>Administration &rarr; Paramétrage de l'UL &rarr; Paramètre RedCrossQuest</strong>
-                    (accessible aux profils Compteur, Admin et Superadmin).
+                    <strong>Ordre des pièces &mdash; Valeur configurée :</strong>
+                    <strong ng-if="tq.coins_order == 1">Par taille</strong>
+                    <strong ng-if="tq.coins_order == 2">Par valeur</strong>.
                   </div>
                   <div class="alert alert-success" role="alert" style="margin-bottom: 0; font-weight: bold;" ng-if="tq.coinOrderMissing">
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                     <strong>Ordre des pièces non configuré pour votre UL.</strong>
                     La sauvegarde du comptage est désactivée tant que ce paramètre n'a pas été figé par un administrateur.
-                    Rendez-vous dans <strong>Administration &rarr; Paramétrage de l'UL &rarr; Paramètre RedCrossQuest</strong>
-                    (accessible aux profils Compteur, Admin et Superadmin), choisissez l'ordre puis cliquez sur <strong>Sauvegarder</strong>.
+                    Un administrateur doit se rendre dans <strong>Administration &rarr; Paramétrage de l'UL &rarr; Paramètre RedCrossQuest</strong>,
+                    choisir l'ordre puis cliquer sur <strong>Sauvegarder</strong>.
                   </div>
                 </div>
               </div>
