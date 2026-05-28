@@ -918,7 +918,25 @@
 
     vm.print=function()
     {
-      window.print();
+      //instrumentation: helps diagnose user reports of "button stays greyed" or
+      //"nothing happens on click". the log line lets us confirm in the browser
+      //console (F12) that the handler is actually invoked and that the current
+      //tronc_queteur is loaded.
+      var tqId = (vm.current && vm.current.tronc_queteur) ? vm.current.tronc_queteur.id : null;
+      $log.debug("[print] click — tronc_queteur.id=" + tqId);
+      try
+      {
+        //after window.print() closes, the button keeps :focus and Bootstrap
+        //btn-info renders it darker, which users perceive as "greyed out".
+        //blur() before the call so the button returns to its default colour.
+        var el = document.getElementById("tronc_queteur_print");
+        if (el) { el.blur(); }
+        window.print();
+      }
+      catch (e)
+      {
+        $log.error("[print] window.print() failed", e);
+      }
     };
 
 

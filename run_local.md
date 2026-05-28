@@ -77,8 +77,17 @@ make ps              # services en cours
 ```bash
 make composer cmd="require foo/bar"
 make composer-install                # re-run composer install
+make refresh-di                      # purge cache PHP-DI + autoload optimisé
 make npm cmd="install --save-dev lodash"
 ```
+
+> 💡 `make refresh-di` est à lancer dès que `server/src/dependencies.php`
+> change (signature d'un constructeur de service, factory réécrite, etc.).
+> Le container compilé `/tmp/php-di-compiled/CompiledContainer.php` est
+> persisté dans le volume Docker `php-di-cache` et survit aux
+> `make restart` / `make down` : sans purge explicite, l'ancienne fabrique
+> continue d'injecter les anciens arguments. `run_local.sh` et
+> `GCP/deploy_back.sh` appellent déjà ce script automatiquement.
 
 > ⚠️ **Ne jamais lancer `npm install` / `gulp` directement depuis
 > l'hôte.** Le front tourne sur Node 22 + Gulp 5 + dart-sass dans le

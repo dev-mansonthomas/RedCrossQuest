@@ -395,9 +395,9 @@
         </div>
 
         <div class="row visible-lg-block" ng-show="!(tq.current.tronc_queteur.id>0)"  ng-cloak>
-          <div class="col-md-8 col-md-offset-4">
+          <div class="col-md-12">
 
-            <span class="label label-primary">Liste des troncs prêts au départ</span>
+            <span class="label label-primary">Liste des troncs prêts au comptage</span>
 
             <table class="table table-hover table-condensed histo" ng-cloak>
               <thead>
@@ -406,6 +406,7 @@
                 <th>ID                </th>
                 <th>Prénom            </th>
                 <th>Nom               </th>
+                <th>Point de quête    </th>
                 <th>Départ            </th>
                 <th>Retour            </th>
                 <th>TroncQueteur      </th>
@@ -418,6 +419,7 @@
                 <td>{{::t.id}}</td>
                 <td>{{::t.first_name  }}</td>
                 <td>{{::t.last_name   }}</td>
+                <td>{{::t.point_quete_name}}</td>
                 <td>{{::t.depart | date:'dd/MM/yyyy HH:mm'}}</td>
                 <td>{{::t.retour | date:'dd/MM/yyyy HH:mm'}}</td>
                 <td><a ng-href="/#!/tronc_queteur/edit/{{::t.tronc_queteur_id}}" target='_blank'>{{::t.tronc_queteur_id}}</a></td>
@@ -1312,28 +1314,28 @@
               <tr>
                 <th>Total</th>
                 <td>{{tq.current.coinsMoneyBagDetails.amount| currency : "€" : 2}}</td>
-                <td ng-hide="tq.current.readOnlyView">{{tq.current.coinsMoneyBagDetails.amount +
-                  tq.current.tronc_queteur.euro2   * 2     +
-                  tq.current.tronc_queteur.euro1   * 1     +
-                  tq.current.tronc_queteur.cents50 * 0.5   +
-                  tq.current.tronc_queteur.cents20 * 0.2   +
-                  tq.current.tronc_queteur.cents10 * 0.1   +
-                  tq.current.tronc_queteur.cents5  * 0.05  +
-                  tq.current.tronc_queteur.cents2  * 0.02  +
-                  tq.current.tronc_queteur.cent1   * 0.01  | currency : "€" : 2}}</td>
+                <td ng-hide="tq.current.readOnlyView">{{(tq.current.coinsMoneyBagDetails.amount || 0) +
+                  (tq.current.tronc_queteur.euro2   || 0) * 2     +
+                  (tq.current.tronc_queteur.euro1   || 0) * 1     +
+                  (tq.current.tronc_queteur.cents50 || 0) * 0.5   +
+                  (tq.current.tronc_queteur.cents20 || 0) * 0.2   +
+                  (tq.current.tronc_queteur.cents10 || 0) * 0.1   +
+                  (tq.current.tronc_queteur.cents5  || 0) * 0.05  +
+                  (tq.current.tronc_queteur.cents2  || 0) * 0.02  +
+                  (tq.current.tronc_queteur.cent1   || 0) * 0.01  | currency : "€" : 2}}</td>
               </tr>
               <tr>
                 <th>Poids</th>
                 <td>{{tq.current.coinsMoneyBagDetails.weight | currency : "g" : 2 }}</td>
-                <td ng-hide="tq.current.readOnlyView">{{tq.current.coinsMoneyBagDetails.weight +
-                  tq.current.tronc_queteur.euro2   *  8.5  +
-                  tq.current.tronc_queteur.euro1   *  7.5  +
-                  tq.current.tronc_queteur.cents50 *  7.8  +
-                  tq.current.tronc_queteur.cents20 *  5.74 +
-                  tq.current.tronc_queteur.cents10 *  4.1  +
-                  tq.current.tronc_queteur.cents5  *  3.92 +
-                  tq.current.tronc_queteur.cents2  *  3.06 +
-                  tq.current.tronc_queteur.cent1   *  2.3  | currency : "g" : 2 }}</td>
+                <td ng-hide="tq.current.readOnlyView">{{(tq.current.coinsMoneyBagDetails.weight || 0) +
+                  (tq.current.tronc_queteur.euro2   || 0) *  8.5  +
+                  (tq.current.tronc_queteur.euro1   || 0) *  7.5  +
+                  (tq.current.tronc_queteur.cents50 || 0) *  7.8  +
+                  (tq.current.tronc_queteur.cents20 || 0) *  5.74 +
+                  (tq.current.tronc_queteur.cents10 || 0) *  4.1  +
+                  (tq.current.tronc_queteur.cents5  || 0) *  3.92 +
+                  (tq.current.tronc_queteur.cents2  || 0) *  3.06 +
+                  (tq.current.tronc_queteur.cent1   || 0) *  2.3  | currency : "g" : 2 }}</td>
               </tr>
             </table>
 
@@ -1351,26 +1353,26 @@
               <tr>
                 <th>Total</th>
                 <td>{{tq.current.billsMoneyBagDetails.amount| currency : "€" : 2}}</td>
-                <td ng-hide="tq.current.readOnlyView">{{tq.current.billsMoneyBagDetails.amount +
-                 tq.current.tronc_queteur.euro5   * 5   +
-                 tq.current.tronc_queteur.euro10  * 10  +
-                 tq.current.tronc_queteur.euro20  * 20  +
-                 tq.current.tronc_queteur.euro50  * 50  +
-                 tq.current.tronc_queteur.euro100 * 100 +
-                 tq.current.tronc_queteur.euro200 * 200 +
-                 tq.current.tronc_queteur.euro500 * 500  | currency : "€" : 2}}</td>
+                <td ng-hide="tq.current.readOnlyView">{{(tq.current.billsMoneyBagDetails.amount || 0) +
+                 (tq.current.tronc_queteur.euro5   || 0) * 5   +
+                 (tq.current.tronc_queteur.euro10  || 0) * 10  +
+                 (tq.current.tronc_queteur.euro20  || 0) * 20  +
+                 (tq.current.tronc_queteur.euro50  || 0) * 50  +
+                 (tq.current.tronc_queteur.euro100 || 0) * 100 +
+                 (tq.current.tronc_queteur.euro200 || 0) * 200 +
+                 (tq.current.tronc_queteur.euro500 || 0) * 500  | currency : "€" : 2}}</td>
               </tr>
               <tr>
                 <th>Poids</th>
                 <td>{{tq.current.billsMoneyBagDetails.weight| currency : "g" : 2}}</td>
-                <td ng-hide="tq.current.readOnlyView">{{tq.current.billsMoneyBagDetails.weight +
-                 tq.current.tronc_queteur.euro5   *  1.1 +
-                 tq.current.tronc_queteur.euro10  *  1.1 +
-                 tq.current.tronc_queteur.euro20  *  1   +
-                 tq.current.tronc_queteur.euro50  *  0.9 +
-                 tq.current.tronc_queteur.euro100 *  0.8 +
-                 tq.current.tronc_queteur.euro200 *  0.7 +
-                 tq.current.tronc_queteur.euro500 *  0.6 | currency : "g" : 2}}</td>
+                <td ng-hide="tq.current.readOnlyView">{{(tq.current.billsMoneyBagDetails.weight || 0) +
+                 (tq.current.tronc_queteur.euro5   || 0) *  1.1 +
+                 (tq.current.tronc_queteur.euro10  || 0) *  1.1 +
+                 (tq.current.tronc_queteur.euro20  || 0) *  1   +
+                 (tq.current.tronc_queteur.euro50  || 0) *  0.9 +
+                 (tq.current.tronc_queteur.euro100 || 0) *  0.8 +
+                 (tq.current.tronc_queteur.euro200 || 0) *  0.7 +
+                 (tq.current.tronc_queteur.euro500 || 0) *  0.6 | currency : "g" : 2}}</td>
               </tr>
             </table>
           </div>

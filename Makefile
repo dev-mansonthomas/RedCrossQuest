@@ -15,6 +15,7 @@ NODE_EXEC:= $(DC) exec -T node-client
         phinx-migrate phinx-rollback phinx \
         gulp-serve gulp-build \
         shell-php shell-node \
+        refresh-di \
         clean nuke doctor
 
 help: ## Show available targets
@@ -57,6 +58,9 @@ composer-update: ## composer update
 
 composer: ## Arbitrary composer cmd: `make composer cmd="require foo/bar"`
 	$(PHP_EXEC) composer $(cmd)
+
+refresh-di: ## Purge compiled PHP-DI container + regenerate optimized autoloader
+	$(DC) exec -T -w /app/server php-fpm bash regenerate-php-di-cache.sh
 
 npm: ## npm in the node-client container: `make npm cmd="install"`
 	$(NODE_EXEC) npm $(cmd)

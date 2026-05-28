@@ -35,12 +35,14 @@ SELECT DISTINCT t.money_bag_id FROM
   WHERE  tq.$column   like :query
   AND YEAR(tq.depart) =    YEAR(NOW())
   AND tq.ul_id        =    :ul_id
+  AND tq.deleted      =    0
   UNION
   SELECT DISTINCT(nd.$column) as money_bag_id
   FROM   named_donation nd
   WHERE  nd.$column          like :query
   AND YEAR(nd.donation_date) =    YEAR(NOW())
   AND nd.ul_id               =    :ul_id
+  AND nd.deleted             =    0
 ) as t
 ORDER BY t.money_bag_id DESC
 ";
@@ -71,8 +73,8 @@ ORDER BY t.money_bag_id DESC
 
 
     $sql = "
-SELECT coins_money_bag_id,
-    SUM(
+SELECT MIN(coins_money_bag_id) as coins_money_bag_id,
+    COALESCE(SUM(
         euro2   * 2     +
         euro1   * 1     +
         cents50 * 0.5   +
@@ -81,7 +83,7 @@ SELECT coins_money_bag_id,
         cents5  * 0.05  +
         cents2  * 0.02  +
         cent1   * 0.01
-    ) as amount,
+    ), 0) as amount,
 SUM(euro2    *2   ) as  total_euro2  ,
 SUM(euro1    *1   ) as  total_euro1  ,
 SUM(cents50  *0.5 ) as  total_cents50,
@@ -98,7 +100,7 @@ SUM(cents10) as  count_cents10       ,
 SUM(cents5 ) as  count_cents5        ,
 SUM(cents2 ) as  count_cents2        ,
 SUM(cent1  ) as  count_cent1         ,
-    SUM(
+    COALESCE(SUM(
      euro2    * 8.5  +
      euro1    * 7.5  +
      cents50  * 7.8  +
@@ -107,7 +109,7 @@ SUM(cent1  ) as  count_cent1         ,
      cents5   * 3.92 +
      cents2   * 3.06 +
      cent1    * 2.3
-    ) as weight
+    ), 0) as weight
 from (
 select
 tq.coins_money_bag_id,
@@ -164,8 +166,8 @@ nd.cent1
     ];
 
     $sql = "
-SELECT bills_money_bag_id,
-       SUM(
+SELECT MIN(bills_money_bag_id) as bills_money_bag_id,
+       COALESCE(SUM(
         euro5    *5   +
         euro10   *10  +
         euro20   *20  +
@@ -173,7 +175,7 @@ SELECT bills_money_bag_id,
         euro100  *100 +
         euro200  *200 +
         euro500  *500
-    ) as amount,
+    ), 0) as amount,
 SUM(euro5    *5   ) as  total_euro5  ,
 SUM(euro10   *10  ) as  total_euro10 ,
 SUM(euro20   *20  ) as  total_euro20 ,
@@ -190,7 +192,7 @@ SUM(euro100) as  count_euro100       ,
 SUM(euro200) as  count_euro200       ,
 SUM(euro500) as  count_euro500       ,
 
-    SUM(
+    COALESCE(SUM(
      euro500  * 1.1  +
      euro200  * 1.1  +
      euro100  * 1    +
@@ -198,7 +200,7 @@ SUM(euro500) as  count_euro500       ,
      euro20   * 0.8  +
      euro10   * 0.7  +
      euro5    * 0.6
-    ) as weight
+    ), 0) as weight
 from (
 select
 tq.bills_money_bag_id,
