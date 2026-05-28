@@ -99,7 +99,9 @@
     vm.send = function()
     {
       vm.running = true;
-      MailingResource.save(vm.handleMailingSending, vm.handleMailingSendingError);
+      // Non-empty body required to bypass the anti-scan fail-fast filter in
+      // server/public/rest/index.php (rejects POST/PUT with Content-Length: 0)
+      MailingResource.save({}, {sendBatch: true}, vm.handleMailingSending, vm.handleMailingSendingError);
     };
 
 

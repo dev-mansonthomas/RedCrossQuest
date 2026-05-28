@@ -540,7 +540,9 @@
     vm.doExportQueteurData=function()
     {
       vm.current.doExportQueteurDataButtonDisabled=true;
-      QueteurResource.exportData({"id":vm.current.id}).$promise.then(function(result){
+      // Explicit non-empty body to bypass the anti-scan fail-fast filter in
+      // server/public/rest/index.php (rejects POST/PUT with Content-Length: 0)
+      QueteurResource.exportData({"id":vm.current.id}, {export: true}).$promise.then(function(result){
         vm.current.exportDataResult = result;
         vm.current.doExportQueteurDataButtonDisabled=false;
       }, vm.errorWhileSavingFunction);
