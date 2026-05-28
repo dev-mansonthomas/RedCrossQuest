@@ -661,7 +661,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
 
     $deploymentType = $this->appSettings['deploymentType'];
     $graphSubdomain = $deploymentType === 'D' ? 'dev.' : ($deploymentType === 'T' ? 'test.' : '');
-    $url = "https://".$graphSubdomain."graph.redcrossquest.com/?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
+    $url = "https://".$graphSubdomain."graph.redcrossquest.com/merci?uuid=".$mailingInfoEntity->spotfire_access_token;
 
     try
     {
