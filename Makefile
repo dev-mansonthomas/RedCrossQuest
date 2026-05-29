@@ -10,7 +10,7 @@ DC       := docker compose
 PHP_EXEC := $(DC) exec -T php-fpm
 NODE_EXEC:= $(DC) exec -T node-client
 
-.PHONY: help init up down restart build rebuild logs ps \
+.PHONY: help init up down restart build rebuild logs logs-php logs-php-errors ps \
         composer-install composer-update composer npm \
         phinx-migrate phinx-rollback phinx \
         gulp-serve gulp-build \
@@ -43,6 +43,12 @@ rebuild: ## Rebuild images from scratch (no cache)
 
 logs: ## Tail logs from all services (Ctrl-C to quit)
 	$(DC) logs -f --tail=100
+
+logs-php: ## Tail PHP-FPM logs (warnings/notices/deprecations are sent here, Ctrl-C to quit)
+	$(DC) logs -f --tail=200 php-fpm
+
+logs-php-errors: ## Show recent PHP errors/warnings/deprecations from the last 30 minutes
+	@$(DC) logs --since=30m php-fpm 2>&1 | grep -iE 'deprecated|warning|notice|fatal|parse error|uncaught' || echo "  (no PHP errors in the last 30 minutes)"
 
 ps: ## List running services
 	$(DC) ps

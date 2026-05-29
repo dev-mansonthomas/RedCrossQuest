@@ -24,7 +24,10 @@ class MailingInfoEntity extends Entity
 
   // not retrieved from DB
 
-  public ?int $status                      ;
+  // SendGrid HTTP status code (e.g. "202") on success, or the truncated
+  // exception message on failure. The DB column status_code is VARCHAR(40),
+  // hence the string type here.
+  public ?string $status                   ;
 
   protected array $_fieldList = ['id', 'email', 'first_name', 'last_name', 'secteur', 'man', 'spotfire_access_token', 'status'];
 

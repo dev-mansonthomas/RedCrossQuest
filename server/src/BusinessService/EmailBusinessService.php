@@ -661,7 +661,7 @@ La date d'anonymisation est le ".$anonymiseDateString." et ce token sont conserv
 
     $deploymentType = $this->appSettings['deploymentType'];
     $graphSubdomain = $deploymentType === 'D' ? 'dev.' : ($deploymentType === 'T' ? 'test.' : '');
-    $url = "https://".$graphSubdomain."graph.redcrossquest.com/?i=".$mailingInfoEntity->spotfire_access_token."&g=".$this->appSettings['queteurDashboard'];
+    $url = "https://".$graphSubdomain."graph.redcrossquest.com/merci?uuid=".$mailingInfoEntity->spotfire_access_token;
 
     try
     {
@@ -694,13 +694,39 @@ Pour cela, il suffit de cliquer sur l'image ci-dessous :<br/>
         null, null, $uniteLocaleEntity->email);
 
 
-      $mailingInfoEntity->status = $statusCode;
+      $mailingInfoEntity->status = (string) $statusCode;
       $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
     }
     catch(Exception $e)
     {
-      $mailingInfoEntity->status = substr($e->getMessage()."", 0,200);
-      $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
+      // status_code column is VARCHAR(40), truncate to 40 chars
+      $mailingInfoEntity->status = substr($e->getMessage()."", 0, 40);
+      $this->logger->error("sendThanksEmail failed - storing error as status",
+        [
+          'queteur_id' => $mailingInfoEntity->id,
+          'first_name' => $mailingInfoEntity->first_name,
+          'last_name'  => $mailingInfoEntity->last_name,
+          'email'      => $mailingInfoEntity->email,
+          'truncated_status' => $mailingInfoEntity->status,
+          Logger::$EXCEPTION => $e,
+        ]);
+      try
+      {
+        $this->mailingDBService->insertQueteurMailingStatus($mailingInfoEntity->id, $mailingInfoEntity->status);
+      }
+      catch(Exception $insertException)
+      {
+        // typically: duplicate entry on idx_queteur_year (queteur already mailed
+        // this year). Swallow to keep the batch alive — the original error is
+        // already logged above, and the duplicate is logged inside DBService.
+        $this->logger->warning("sendThanksEmail: could not persist error status (likely duplicate, ignoring)",
+          [
+            'queteur_id' => $mailingInfoEntity->id,
+            'first_name' => $mailingInfoEntity->first_name,
+            'last_name'  => $mailingInfoEntity->last_name,
+            Logger::$EXCEPTION => $insertException,
+          ]);
+      }
 
       //Do not rethrow, continue
     }

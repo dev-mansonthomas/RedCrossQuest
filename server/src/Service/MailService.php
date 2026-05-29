@@ -118,7 +118,15 @@ class MailService
         }
       }
 
-      $email->addContent("text/html", ($deployment!=''?$deployment.'<br/>':'').$content);
+      // Convert every non-ASCII character of the HTML body to a numeric HTML
+      // entity (`é` -> `&#233;`). The resulting payload is 7-bit ASCII, so it
+      // survives intermediate mail relays that mangle 8-bit UTF-8 bytes (seen
+      // on some Croix-Rouge MTAs where accents arrive as U+FFFD). The HTML
+      // renderer of the recipient mail client decodes the entities back to
+      // the original characters at display time.
+      $htmlBody = ($deployment!=''?$deployment.'<br/>':'').$content;
+      $htmlBody = mb_encode_numericentity($htmlBody, [0x80, 0x10FFFF, 0, 0x10FFFF], 'UTF-8');
+      $email->addContent("text/html", $htmlBody);
 
       if($fileName != null)
       {
@@ -132,7 +140,15 @@ class MailService
       // Prevent In-Reply-To / References headers that cause threading
       // SendGrid does not add them unless set explicitly, so nothing to remove
 
-
+      // Disable SendGrid click & open tracking. The branded link
+      // url8294.redcrossquest.com is served over plain HTTP (enabling HTTPS
+      // would require fronting it with a CDN + custom SSL certificate + a
+      // SendGrid Support ticket - see docs.sendgrid.com/ui/analytics-and-reporting/click-tracking-ssl).
+      // We track link engagement directly in RCQ (Spotfire uuid in the URL),
+      // so SendGrid tracking adds no value and only degrades the user
+      // experience with an HTTP warning on click.
+      $email->setClickTracking(false, false);
+      $email->setOpenTracking(false);
 
       $response = (new SendGrid($this->sendgridAPIKey))->send($email);
 

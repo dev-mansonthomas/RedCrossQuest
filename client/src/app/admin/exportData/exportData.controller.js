@@ -51,7 +51,9 @@
       vm.status   = null;
       //vm.password = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
       vm.exportInProgress = true;
-      ExportDataResource.save().$promise.then(vm.exportDataSuccess, vm.exportDataError);
+      // Send a non-empty body to bypass the anti-scan fail-fast filter in
+      // server/public/rest/index.php which rejects POST/PUT with Content-Length: 0
+      ExportDataResource.save({}, {export: true}).$promise.then(vm.exportDataSuccess, vm.exportDataError);
     };
 
   }
