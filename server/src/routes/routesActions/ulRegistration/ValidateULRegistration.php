@@ -90,7 +90,7 @@ class ValidateULRegistration extends Action
   {
     $this->validateSentData(
       [
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
+        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, ClientInputValidatorSpecs::TOKEN_MAX_LENGTH , true),
       ]);
 
     $token    = $this->validatedData["token"   ];

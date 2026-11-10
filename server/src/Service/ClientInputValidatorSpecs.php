@@ -7,6 +7,13 @@ namespace RedCrossQuest\Service;
 class ClientInputValidatorSpecs
 {
   /**
+   * Max accepted length of a Google reCAPTCHA / Firebase token sent by the client.
+   * Google does not document a maximum and tokens grew beyond 2000 chars in 2026 (was capped at 1500).
+   * The token is still verified server-side by Google; this cap only bounds the payload.
+   */
+  public const TOKEN_MAX_LENGTH = 8192;
+
+  /**
    * @var string
    */
   public string $methodName;

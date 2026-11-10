@@ -51,7 +51,7 @@ class ReCaptchaService
 
   /**
    *  Perform a ReCaptcha validation, with the hostname and remoteIp checks
-   *  * check that the token is not null, empty or length > 500
+   *  * check that the token is not null, empty or longer than ClientInputValidatorSpecs::TOKEN_MAX_LENGTH
    *  * in case of success
    *  * check the action send by the client match the one expected by the server ($actionRequired)
    *  * check that the score returned by ReCaptcha is greater than the one defined as the lowest acceptable value in the server configuration
@@ -81,7 +81,7 @@ class ReCaptchaService
     //discard token that are too long, null or empty
     if( $token         == null ||
         strlen($token) == 0    ||
-        strlen($token) >  1500  )
+        strlen($token) >  ClientInputValidatorSpecs::TOKEN_MAX_LENGTH  )
     {
       $this->logger->error(
         "ReCaptcha Token is too long",
