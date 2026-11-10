@@ -87,7 +87,7 @@ class FirebaseAuthenticateAction extends AuthenticateAbstractAction
     $this->validateSentData(
       [
         ClientInputValidatorSpecs::withString("email"   , $this->parsedBody, 255  , true),
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
+        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, ClientInputValidatorSpecs::TOKEN_MAX_LENGTH , true),
       ]);
 
     $email    = $this->validatedData["email"];

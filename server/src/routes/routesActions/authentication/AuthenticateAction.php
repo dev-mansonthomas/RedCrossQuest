@@ -75,7 +75,7 @@ class AuthenticateAction extends AuthenticateAbstractAction
       [
         ClientInputValidatorSpecs::withString("username", $this->parsedBody, 20   , true),
         ClientInputValidatorSpecs::withString("password", $this->parsedBody, 60   , true),
-        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, 1500 , true),
+        ClientInputValidatorSpecs::withString("token"   , $this->parsedBody, ClientInputValidatorSpecs::TOKEN_MAX_LENGTH , true),
     ]);
 
     $username = $this->validatedData["username"];
